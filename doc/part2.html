@@ -1,0 +1,446 @@
+<html><head><title>Introduction and Overview</title></head>
+<body bgcolor="ffffff">
+<a name = "2"><h2>Introduction and Overview</h2></a>Nyquist is a language for sound synthesis and music composition.  Unlike score
+languages that tend to deal only with events, or signal processing languages
+that tend to deal only with signals and synthesis, Nyquist handles both in a
+single integrated system.  Nyquist is also flexible and easy to use because it
+is based on an interactive Lisp interpreter.
+<p>
+With Nyquist, you can design instruments by combining functions (much as you
+would using the orchestra languages of Music V, cmusic, or Csound).  You can
+call upon these instruments and generate a sound just by typing a simple
+expression.  You can combine simple expressions into complex ones to create
+a whole composition.
+<p>
+Nyquist runs under any Unix environment, MacOS, Windows 95, and Windows NT, and it produces sound files as output (or direct audio output under Windows).  Under Unix, if you can play a sound file by typing a command to a Unix shell,
+then you can get Nyquist to play sounds for you.  Nyquist is currently
+configured to run on an IBM RS6000 with an ACPA audio board, or a NeXT
+machine, using the built-in sound system to play Nyquist output.  Recent versions have also run on SGI, DEC pmax, Linux, and Sun Sparc machines, and makefiles for these are included.  Let me know if you have problems with any of these machines.
+<p>
+To use Nyquist, you should have a basic knowledge of Lisp.  An excellent text
+by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part12.html#81">``XLISP: An Object-oriented Lisp''</a> is
+the reference manual for XLISP, of which Nyquist is a superset.
+<p>
+
+<a name = "3"><h3>Installation</h3></a>
+Nyquist is a C program intended to run under various operating systems including Unix, MacOS, and Windows.
+<a name = "4"><h4>Unix Installation</h4></a>
+For Unix systems, Nyquist is distributed as a compressed tar file named <code>nyquist2<i>nn</i>.zip</code>, where <i>nn</i> is the version number (e.g. v2.19 was <code>nyquist219.zip</code>).  To
+install Nyquist, copy <code>nyquist2<i>nn</i>.zip</code> to a fresh directory on your machine
+and type:
+<pre>
+gunzip nyquist2<i>nn</i>.zip
+ln -s sys/unix/linux/Makefile Makefile
+setenv XLISPPATH `pwd`/runtime:`pwd`/lib
+make
+</pre>
+
+The first line creates a <code>nyquist</code> directory and some subdirectories. The
+second line makes a link from the top-level directory to the Makefile for your
+system. In place of <code>linux</code> in <code>sys/unix/linux/Makefile</code>, you should
+substitute your system type. Current systems are <code>next</code>, <code>pmax</code>,
+<code>rs6k</code>, <code>sgi</code>, <code>linux</code>, and <code>sparc</code>.  The <code>setenv</code> 
+command tells Nyquist where to search for lisp files to be loaded when a file
+is not found in the current directory. The <code>runtime</code> directory should
+always be on your <code>XLISPPATH</code> when you run Nyquist, so you may want to
+set <code>XLISPPATH</code> in your shell startup file, e.g.  <code>.cshrc</code>.
+Assuming the make completes successfully, you can run Nyquist as follows:
+<pre>
+./ny
+</pre>
+
+When you get the prompt, you may begin typing expressions such as
+the ones in the following ``Examples'' section.  
+<p>
+<b><i>Note:</i></b> Nyquist looks for the file <code>init.lsp</code> in the current
+directory.  If you look in the <code>init.lsp</code> in <code>src</code>, you
+will notice two things.  First, <code>init.lsp</code> loads <code>nyquist.lsp</code>
+from the Nyquist directory, and second, <code>init.lsp</code> loads <code>system.lsp</code>
+which in turn defines the macro
+<code>play</code>.  You may have to modify <code>system.lsp</code> to invoke
+the right programs on your machine.
+<p>
+<a name = "5"><h4>Win32 Installation</h4></a>
+The Win32 version of Nyquist is packaged in three versions: the source version and two runtime versions. The source version is a superset of the runtime version intended for developers who
+want to recompile Nyquist. The source version exists as a <code>.zip</code> file, so you need a utility like WinZip to unpack them.  The URL <code>http://www.winzip.com/</code> has information on this product.  Typically, the contents of the zip file are extracted to the <code>C:\nyquist</code> directory, but you can put it anywhere you like. You can then open the workspace file, nyquist.dsw, using Microsoft
+Visual C++. You can build and run the command line and the NyqWin versions of Nyquist
+from within Visual C++.
+<p>
+The runtime versions contain everything you need to run Nyquist, including the executable,
+examples, and documentation. Each runtime version is packaged as an executable installer program.
+I recommend NyqIDE.exe, a graphical interface written in Delphi that runs nyquist.exe as
+a separate process. NyqIDE.exe has a simple lisp editor built in. Alternatively, you can install
+NyqWin.exe, a different graphical interface written in C++. Just copy the installer you want
+to your system and run it. Then find Nyquist in your Start menu to run it. 
+You may begin typing expressions such as
+the ones in the following ``Examples'' section.  
+<p>
+<b><i>Optional:</i></b> Nyquist needs to know where to find the standard runtime files. The location of runtime files must be stored in the Registry. The installers create a registry entry, but if
+you move Nyquist or deal with different versions, you can edit the Registry manually as follows:
+<ul>
+<li>
+Run the Registry editor. Under Windows NT, run <code>C:\WINNT\system32\regedt32.exe</code>. Under Windows95, run <code>C:\WINDOWS\regedit.exe</code>.
+<li>Find and highlight the <code>SOFTWARE</code> key under <code>HKEY_LOCAL_MACHINE</code>.
+<li>Choose <code>Add key ...</code> from the <code>Edit</code> menu, type <code>CMU</code>, and click the <code>OK</code> button.
+<li>Highlight the new <code>CMU</code> key.
+<li>Choose <code>Add key ...</code> from the <code>Edit</code> menu, type <code>Nyquist</code>, and click the <code>OK</code> button.  (Note that <code>CMU</code> and <code>Nyquist</code> are case sensitive.)
+<li>Highlight the new <code>Nyquist</code> key.
+<li>Choose <code>Add value ...</code> from the <code>Edit</code> menu, type <code>XLISPPATH</code>, and click the <code>OK</code> button.
+<li>In the String Edit box, type a list of paths you want Nyquist to search for lisp files. For example, if you installed Nyquist as <code>C:\nyquist</code>, then type:
+<pre>
+C:\nyquist\runtime, C:\nyquist\lib
+</pre>
+
+The paths should be separated by a comma (and an optional space). The <code>runtime</code> path is essential, and the <code>lib</code> path may become essential in a future release. You can also add paths to personal libraries of Lisp and Nyquist code.
+<li>Click the <code>OK</code> button of the string box and exit from the Registry Editor application.
+</ul>
+<p>
+<a name = "6"><h5>What if Nyquist functions are undefined?</h5></a>
+If you do not have administrative privileges for your machine, the installer may fail to set up the Registry entry that Nyquist uses to find initialization files. In this case, Nyquist will run a lisp interpreter, but many Nyquist functions will not be defined. If you can log in as administrator, do it and reinstall Nyquist. If you do not have permission, you can still run Nyquist as follows:
+<p>
+Create a file named <code>init.lsp</code> in the same directory as Nyquist.exe (the default location is <code>C:\Program Files\Nyquist</code>, but you may have installed it in some other location.) Put the following text in <code>init.lsp</code>:
+<blockquote>
+(setf *search-path* "C:/Program Files/Nyquist/runtime,C:/Program Files/Nyquist/lib")<br>
+
+(load "C:/Program Files/Nyquist/runtime/init.lsp")<br>
+
+</blockquote>
+<b><i>Note:</i></b> in the three places where you see <code>C:/Program Files/Nyquist</code>, insert the full path where Nyquist is actually installed. Use forward slashes (<code>/</code>) rather than back slashes (<code>\</code>) to separate directories. For example, if Nyquist is installed at <code>D:\rbd\nyquist</code>, then <code>init.lsp</code> should contain:
+<blockquote>
+(setf *search-path* "D:/rbd/nyquist/runtime,D:/rbd/nyquist/lib")<br>
+
+(load "d:/rbd/nyquist/runtime/init.lsp")<br>
+
+</blockquote>
+The variable <code>*search-path*</code>, if defined, is used in place of the registry to determine search paths for files.
+<p>
+<a name = "7"><h4>MacOS Installation</h4></a>
+The MacOS version of Nyquist is packaged in two versions: the source version and the runtime version. The source version is a superset of the runtime version. Both exist as self extracting archives, so you just need to copy the archive file of your choice to your machine and double click on its icon.  You can extract the archive to any folder you like.
+<p>
+You will find <code>Nyquist</code> in the <code>runtime</code> folder. Double click on it and you should see a text window with some information that Nyquist has started and has loaded some files.  You may begin typing expressions such as the ones in the following section.
+<p>
+On the Macintosh, Nyquist automatically creates a file 
+<code>"System:Preferences:XLisp Preferences"</code> with a
+default search path for files. You can edit this file to add new locations, although this
+should not be necessary for most uses.
+<p>
+<a name = "8"><h3>Helpful Hints</h3></a>
+Under Win95 and Win98, the console sometimes locks up. Activating another window and then reactivating the Nyquist window should unlock the output. (We are working on this apparent bug.)
+<p>
+You can cut and paste text into Nyquist, but for serious work, you will want to use the Lisp <code>load</code> command. To save even more time, write a function to load your working file, e.g. <code>(defun l () (load "myfile.lsp"))</code>. Then you can type <code>(l)</code> to (re)load your file.
+<p>
+Under Windows, if you encounter an error while loading a file, the file is left open, and you may not be able to overwrite the file with a correction. To close the file, type <code>(top)</code> to exit the debugger and resume at the top level of the interpreter. You may need to type <code>(gc)</code> to force a garbage collection. This will free and close the file. Now you can modify the file with your text editor.
+<p>
+The Emacs editor is free GNU software and will help you balance parentheses if you use Lisp mode. Also, the NyqIDE version has a built-in lisp editor. If your editor does not help you balance parentheses, you may find yourself counting parens and searching for unbalanced expressions. If you are desparate, type <code>(file-sexprs)</code> and type the lisp file name at the prompt. This function will read and print expressions from the file, reporting an error when an extra paren or end-of-file is reached unexpectedly. By looking at the last expression printed, you can at least tell where the unbalanced expression starts. Alternatively, try the verbose mode of the <code>load</code> command.
+<p>
+<a name = "9"><h3>Examples</h3></a>
+We will begin with some simple Nyquist programs.
+Detailed explanations of the functions used in these examples will be
+presented in later chapters, so at this point, you should just read these
+examples to get a sense of how Nyquist is used and what it can do.  The
+details will come later.  Most of these examples can be found in the
+file <code>nyquist/sndtest/tutorial.lsp</code>.
+<p>
+Our first example makes and plays a sound:<a name="index5"><a name="index6">
+<pre>
+<i>;; Making a sound.</i>
+(play (osc 60))  <i>; generate a loud sine wave</i>
+</pre>
+
+This example is about the simplest way to create a sound with Nyquist.  The
+<code>osc</code> function generates a sound using a table-lookup oscillator.
+There are a number of optional parameters, but the default is to compute a
+sinusoid with an amplitude of 1.0.  The parameter <code>60</code> designates a
+pitch of middle C.  (Pitch specification will be described in greater detail
+later.)  The result of the <code>osc</code> function is a sound.  To hear a sound,
+you must use the <code>play</code> function, which under Unix writes the sound as a 16-bit sound file and runs a Unix program that plays the file through the machine's D/A converters. On the Macintosh, you have to explicitly play the file from another program, e.g. SoundApp, which is included in the Macintosh release. Under Windows, Nyquist outputs audio directly. It also writes a soundfile in case the computation cannot keep up with real time. You can then (re)play the file by typing:
+<pre>
+(r)
+</pre>
+
+This <code>(r)</code> command is a general command to ``replay'' the last thing written by <code>play</code>.
+<p>
+Note: when Nyquist plays a sound, it scales the signal by 2^(15)-1 and (by default) converts to a 16-bit integer format. A signal like  <code>(osc 60)</code>, which ranges from +1 to -1, will play as a full-scale 16-bit audio signal. Signals are not normalized to full-scale, however, so an amplitude in excess of 1 will be clipped.  See Section <a href = "part5.html#33">``Memory Space and Normalization''</a> for information about normalization.
+<p>
+<a name = "10"><h4>Waveforms</h4></a>
+
+Our next example will be presented in several steps.  The goal is to create a
+sound using a
+wavetable consisting of several harmonics as opposed to a simple sinusoid.
+In order to build a table, we will use a function that computes a single 
+harmonic and add harmonics to form a wavetable.  An oscillator
+will be used to compute the harmonics.
+<p>
+The function
+<code>mkwave<a name="index7"></code> calls upon
+<code>build-harmonic<a name="index8"></code> to generate a total of four
+harmonics with amplitudes 1.0, 0.5, 0.25, and 0.12.  These are scaled (using
+<code>scale<a name="index9"></code>) and added (using <code>sim<a name="index10"></code>) to
+create a waveform which is bound temporarily to <code>*table*</code>.  
+<p>
+A complete Nyquist waveform is a list consisting of a sound, a pitch,
+ and <code>T</code>, indicating a periodic waveform.  The pitch gives the
+nominal pitch of the sound.  (This is implicit in a single cycle wave
+table, but a sampled sound may have many periods of the fundamental.)
+Pitch is expressed in half-steps, where middle C is 60 steps, as in MIDI
+pitch numbers.
+The list of sound, pitch, and <code>T</code> is formed in the last line of
+<code>mkwave</code>: since <code>build-harmonic</code> computes signals with a duration
+of one second, the fundamental is 1 Hz, and the <code>hz-to-step</code> function
+converts to pitch (in units of steps) as required.
+<p>
+<pre>
+(defun mkwave ()
+  (setf *table* (sim (scale 0.5  (build-harmonic 1.0 2048))
+                    (scale 0.25  (build-harmonic 2.0 2048))
+                    (scale 0.125 (build-harmonic 3.0 2048))
+                    (scale 0.062 (build-harmonic 4.0 2048))))
+  (setf *table* (list *table* (hz-to-step 1) T)))
+</pre>
+
+<p>
+Now that we have defined a function, the last step of this example is to
+build the wave.  The following code calls
+<code>mkwave</code> the first time the code is executed (loaded from a file).  The second time, the variable <code>*mkwave*</code> will be true, so <code>mkwave</code> will not be invoked:
+<pre>
+(cond ((not (boundp<a name="index11"> '*mkwave*))
+       (mkwave)
+       (setf *mkwave* t)))
+</pre>
+
+<p>
+<a name = "11"><h4>Wavetables</h4></a><a name="index12"><a name="index13"><a name="index14"><a name="index15">
+When Nyquist starts, several waveforms are created and stored in global variables for convenience. They are: <code>*sine-table*</code>, <code>*saw-table*</code>, and <code>*tri-table*</code>, implementing sinusoid, sawtooth, and triangle waves, respectively. The variable <code>*table*</code> is initialized to <code>*sine-table*</code>, and it is <code>*table*</code> that forms the default wave table for many Nyquist oscillator behaviors. If you want a proper, band-limited waveform, you should construct it yourself, but if you do not understand this sentence and/or you do not mind a bit of aliasing, give <code>*saw-table*</code> and <code>*tri-table*</code> a try.
+<p>
+Note that in Lisp, global variables often start and end with asterisks (*). These are not special syntax, they just happen to be legal characters for names, and their use is purely a convention.
+<p>
+<a name = "12"><h4>Sequences</h4></a><a name="index16">
+Finally, we define <code>note<a name="index17"></code> to use the waveform, and play several notes
+in a simple score:
+<pre>
+(defun note (pitch dur) 
+  (osc pitch dur *table*))
+<p>
+(play (seq (note c4 i)
+           (note d4 i)
+           (note f4 i)
+           (note g4 i)
+           (note d4 q)))
+</pre>
+
+Here, <code>note</code> is defined to take pitch and duration as parameters;
+it calls <code>osc</code> to do the work of generating a waveform, using
+<code>*table*</code> as a wave table.
+<p>
+The <code>seq</code> function is used to invoke a sequence of behaviors.  Each
+note is started at the time the previous note finishes.  The parameters to
+<code>note</code> are predefined in Nyquist: <code>c4</code> is middle C, <code>i</code> (for
+eIghth note) is 0.5, and <code>q</code> (for Quarter note) is 1.0.  See Section
+<a href = "#15">``Predefined Constants''</a> for a complete description.  The result is the sum of
+all the computed sounds.
+<p>
+<a name = "13"><h4>Envelopes</h4></a><a name="index18">
+The next example will illustrate the use of envelopes.  In Nyquist,
+envelopes are just ordinary sounds (although they normally have a low sample
+rate).  An envelope<a name="index19"> is applied to another sound by
+multiplication using the <code>mult<a name="index20"></code> function.  The code shows
+the definition of <code>env-note<a name="index21"></code>, defined in terms of the
+<code>note</code> function in the previous example.  In <code>env-note</code>, a 4-phase
+envelope is generated using the <code>env<a name="index22"></code> function, which is
+illustrated in Figure <a href = "#13">1</a>.
+<p>
+<hr>
+<blockquote></blockquote>
+<img src="fig1.gif"><br><br>
+
+<p>
+<b>Figure 1: </b>An envelope generated by the <code>env</code> function.
+
+<hr>
+<p>
+<pre>
+<i>; env-note produces an enveloped note.  The duration
+;   defaults to 1.0, but stretch can be used to change
+;   the duration.
+;</i>
+(defun env-note (p)
+  (mult (note p 1.0)
+	(env 0.05 0.1 0.5 1.0 0.5 0.4)))
+<p>
+<i>; try it out:
+;</i>
+(play (env-note c4))
+<p>
+<i>; now use stretch to play different durations
+;</i>
+(play
+       (seq (stretch 0.25 
+		     (seq (env-note c4)
+			  (env-note d4)))
+	    (stretch 0.5 
+		     (seq (env-note f4)
+			  (env-note g4)))
+	    (env-note c4)))
+</pre>
+
+<p>
+The end of this example shows the use of <code>stretch<a name="index23"></code> to
+modify durations.  There are several transformations supported by Nyquist,
+and transformations of abstract behaviors is perhaps <i>the</i> fundamental
+idea behind Nyquist.  Chapter <a href = "part3.html#16">``Behavioral Abstraction''</a> is devoted to
+explaining this concept, and further elaboration can be found elsewhere
+ <a href = "http://www.cs.cmu.edu/~rbd/bib-arctic.html#icmcfugue">(Dannenberg and Frayley 1989)</a>.
+<p>
+<a name = "14"><h4>Piece-wise Linear Functions</h4></a>
+It is often convenient to construct signals in Nyquist using a list of
+(time, value) breakpoints which are linearly interpolated to form a smooth
+signal.  Envelopes created by <code>env</code> are a special case of the more
+general piece-wise linear functions created by <code>pwl</code>.  Since <code>pwl</code>
+is used in some examples later on, we will take a look at <code>pwl</code>
+now.  The <code>pwl</code> function takes a list of parameters which denote (time,
+value) pairs.  There is an implicit initial (time, value) pair of (0, 0),
+and an implicit final value of 0.  There should always be an odd number of
+parameters, since the final time is not implicit.  Here are some examples:
+<pre>
+<i>; symetric rise to 10 (at time 1) and fall back to 0 (at time 2):
+;</i>
+(pwl 1 10 2)
+<p>
+<i>; a square pulse of height 10 and duration 5. 
+; Note that the first pair (0, 10) overrides the default initial
+; point of (0, 0).  Also, there are two points specified at time 5:
+; (5, 10) and (5, 0).  (The last 0 is implicit).  The conflict is
+; automatically resolved by pushing the (5, 10) breakpoint back to
+; the previous sample, so the actual time will be 5 - 1/sr, where
+; sr is the sample rate.
+;</i>
+(pwl 0 10 5 10 5)
+<p>
+<i>; a constant function with the value zero over the time interval
+; 0 to 3.5.  This is a very degenerate form of pwl.  Recall that there
+; is an implicit initial point at (0, 0) and a final implicit value of
+; 0, so this is really specifying two breakpoints: (0, 0) and (3.5, 0):
+;</i>
+(pwl 3.5)
+<p>
+<i>; a linear ramp from 0 to 10 and duration 1.
+; Note the ramp returns to zero at time 1.  As with the square pulse
+; above, the breakpoint (1, 10) is pushed back to the previous sample.
+;</i>
+(pwl 1 10 1)
+<p>
+<i>; If you really want a linear ramp to reach its final value at the 
+; specified time, you need to make a signal that is one sample longer.
+; The RAMP function does this:
+;</i>
+(ramp 10) <i>; ramp from 0 to 10 with duration 1 + one sample period
+;
+; RAMP is based on PWL; it is defined in <b><i>nyquist.lsp</i></b>.
+;</i>
+</pre>
+
+<p>
+<a name = "15"><h3>Predefined Constants</h3></a>
+
+For convenience and readability, Nyquist pre-defines some constants, mostly
+based on the notation of the Adagio score language, as follows:
+<ul>
+<li>
+<b>Dynamics</b>
+Note: these dynamics values are subject to change.
+<blockquote>
+<tt>lppp<a name="index24"></tt> = -12.0 (dB)<br>
+
+<tt>lpp<a name="index25"></tt> = -9.0<br>
+
+<tt>lp<a name="index26"></tt> = -6.0<br>
+
+<tt>lmp<a name="index27"></tt> = -3.0<br>
+
+<tt>lmf<a name="index28"></tt> = 3.0<br>
+
+<tt>lf<a name="index29"></tt> = 6.0<br>
+
+<tt>lff<a name="index30"></tt> = 9.0<br>
+
+<tt>lfff<a name="index31"></tt> = 12.0<br>
+
+<tt>dB0<a name="index32"></tt> = 1.00<br>
+
+<tt>dB1<a name="index33"></tt> = 1.122<br>
+
+<tt>dB10<a name="index34"></tt> = 3.1623<br>
+
+</blockquote>
+<li><b>Durations<a name="index35"></b>
+<blockquote>
+<tt>s<a name="index36"></tt> = Sixteenth<a name="index37"> = 0.25<br>
+
+<tt>i<a name="index38"></tt> = eIghth<a name="index39"> = 0.5<br>
+
+<tt>q<a name="index40"></tt> = Quarter<a name="index41"> = 1.0<br>
+
+<tt>h<a name="index42"></tt> = Half<a name="index43"> = 2.0<br>
+
+<tt>w<a name="index44"></tt> = Whole<a name="index45"> = 4.0<br>
+
+<tt>sd<a name="index46">, id<a name="index47">, qd<a name="index48">, hd<a name="index49">, wd<a name="index50"></tt> = dotted durations<a name="index51">.<br>
+
+<tt>st<a name="index52">, it<a name="index53">, qt<a name="index54">, ht<a name="index55">, wt<a name="index56"></tt> = triplet<a name="index57"> durations.<br>
+
+</blockquote>
+<li><b>Pitches<a name="index58"></b>
+Pitches are based on an A4 of 440Hz.  To achieve a different tuning,
+set <code>*A4-Hertz*</code> to the desired frequency for A4, and call
+<code>(set-pitch-names)</code>.  This will recompute the names listed below with a
+different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
+440Hz, but fractional values are allowed, so for example, if you set
+<code>*A4-Hertz*</code> to 444 (Hz), then the symbol <code>A4</code> will be bound to
+69.1567, and <code>C4</code> (middle C), which is normally 60.0, will be 60.1567.
+<blockquote>
+<tt>c0</tt> = 12.0<br>
+
+<tt>cs0, df0</tt> = 13.0<br>
+
+<tt>d0</tt> = 14.0<br>
+
+<tt>ds0, ef0</tt> = 15.0<br>
+
+<tt>e0</tt> = 16.0<br>
+
+<tt>f0</tt> = 17.0<br>
+
+<tt>fs0, gf0</tt> = 18.0<br>
+
+<tt>g0</tt> = 19.0<br>
+
+<tt>gs0, af0</tt> = 20.0<br>
+
+<tt>a0</tt> = 21.0<br>
+
+<tt>as0, bf0</tt> = 22.0<br>
+
+<tt>b0</tt> = 23.0<br>
+
+<tt>c1</tt> ... <tt>b1</tt> = 24.0 ... 35.0<br>
+
+<tt>c2</tt> ... <tt>b2</tt> = 36.0 ... 47.0<br>
+
+<tt>c3</tt> ... <tt>b3</tt> = 48.0 ... 59.0<br>
+
+<tt>c4</tt> ... <tt>b4</tt> = 60.0 ... 71.0<br>
+
+<tt>c5</tt> ... <tt>b5</tt> = 72.0 ... 83.0<br>
+
+<tt>c6</tt> ... <tt>b6</tt> = 84.0 ... 95.0<br>
+
+<tt>c7</tt> ... <tt>b7</tt> = 96.0 ... 107.0<br>
+
+<tt>c8</tt> ... <tt>b8</tt> = 108.0 ... 119.0<br>
+
+</blockquote>
+</ul>
+<p>
+<hr>
+<a href = "part1.html">Previous Section</a> | <a href = "part3.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+</body></html>

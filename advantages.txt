@@ -1,0 +1,27 @@
+This is a list of things I see people trying to do with other systems that are natural in Nyquist:
+
+1. computing wavetables from mathematical functions: Nyquist tables are just sounds; 
+anything you can synthesize works as a wavetable
+
+2. generating "events" from within "instruments": Nyquist has no separation between
+scores and instruments, so this restriction does not exist.
+
+3. parameterize sounds with complex control functions: rather than defining an
+instrument with its one envelope generator, limiting envelopes to a few parameters,
+in Nyquist it is easy to make the envelope a parameter so that you can pass in
+any desired envelope shape. This flexibility actually makes instrument definitions
+simpler while at the same time making them more powerful.
+
+4. synthesizing control functions: In Nyquist, you can use the full power of the
+synthesis capabilities to generate control parameters. For example, you can use
+a low-pass filter to smooth an amplitude envelope.
+
+5. routing instrument sounds to further processing: Nyquist instruments are
+functions that can be combined to any level of hierarchy, so you do not need to
+employ tricks like assigning sounds to global variables or defining reverb as
+an "instrument" that reads from a special global buffer.
+
+6. inspecting sounds at the sample level: Nyquist is a complete language, so you
+can examine and process sounds down to the sample level if necessary. (This is
+too slow for production synthesis, but the flexibility is there and useful.)
+ 

@@ -1,0 +1,64 @@
+<html><head><title>Time/Frequency Transformation</title></head>
+<body bgcolor="ffffff">
+<a name = "62"><h2>Time/Frequency Transformation</h2></a>
+Nyquist provides functions for FFT and inverse FFT operations on streams of audio data.
+Because sounds can be of any length, but an FFT operates on a fixed amount of data, FFT
+processing is typically done in short blocks or windows that move through the audio. Thus,
+a stream of samples is converted in to a sequence of FFT frames representing short-term
+spectra. 
+<p>
+Nyquist does not have a special data type corresponding to a sequence of FFT frames.
+This would be nice, but it would require creating a large set of operations suitable for
+processing frame sequences. Another approach, and perhaps the most ``pure'' would
+be to convert a single sound into a multichannel sound, with one channel per bin of the
+FFT. 
+<p>
+Instead, Nyquist violates its ``pure'' functional model and resorts to objects
+for FFT processing. A sequence of frames is represented by an XLISP object. Whenever you
+send the selector <code>:next</code> to the object, you get back either NIL, indicating the
+end of the sequence, or you get an array of FFT coefficients. 
+<p>
+The Nyquist function <code>snd-fft</code> (mnemonic, isn't it?) returns one of the frame sequence
+generating objects. You can pass any frame sequence generating object to another function,
+<code>snd-ifft</code>, and turn the sequence back into audio. 
+<p>
+With <code>snd-fft</code> and <code>snd-ifft</code>, you can create all sorts of interesting processes. The main
+idea is to create intermediate objects that both accept and generate sequences of frames.
+These objects can operate on the frames to implement the desired spectral-domain
+processes. Examples of this can be found in the file <code>fft_tutorial.htm</code>, which is part of the standard Nyquist release. The documentation for <code>snd-fft</code> and <code>snd-ifft</code> follows.
+<p>
+<code>(snd-fft<a name="index476"><a name="index477"> <i>sound</i> <i>length</i> <i>skip</i> <i>window</i>)</code>This
+function performs an FFT on the first samples in <i>sound</i> and returns a Lisp array of <code>FLONUM</code>s. 
+The function modifies the <i>sound</i>, violating the normal rule that sounds are immutable in Nyquist, so 
+it is advised that you copy the sound using <code>snd-copy</code> if there are any other references to 
+<i>sound</i>. The length of the FFT is specified by <i>length</i>, a <code>FIXNUM</code> (integer). After 
+each FFT, the sound is advanced by <i>skip</i> samples, also of type <code>FIXNUM</code>. Overlapping FFTs, 
+where <i>skip</i> is less than <i>length</i>, are allowed. If <i>window</i> is not <code>NIL</code>, it must be a sound. 
+The first <i>length</i> samples of <i>window</i> are multiplied by <i>length</i> samples of <i>sound</i> before
+performing the FFT. When there are no more samples in <i>sound</i> to transform,
+this function returns <code>NIL</code>. The coefficients in the returned array, in order, are the DC coefficient,
+the first real, the first imaginary, the second real, the second imaginary, etc. If the length is even, 
+the last array element corresponds to the real coefficient at the Nyquist frequency.
+<p>
+<code>(snd-ifft<a name="index478"><a name="index479"><a name="index480"> <i>time</i> <i>srate</i> <i>iterator</i> <i>skip</i> <i>window</i>)</code>This function performs an IFFT on a sequence of spectral frames obtained from <i>iterator</i> 
+and returns a sound. The start time of the sound is given by <i>time</i>. Typically, this would be computed 
+by calling <code>(local-to-global 0)</code>. The sample rate is given by <i>srate</i>. Typically, this would 
+be <code>*sound-srate*</code>, but it might also depend upon the sample rate of the sound from which the 
+spectral frames were derived. To obtain each frame, the function sends the message <code>:next</code> to the 
+<i>iterator</i> object, using XLisp's primitives for objects and message passing. The object should return
+an array in the same format as obtained from <code>snd-fft</code>, and the object should return <code>NIL</code>
+when the end of the sound is reached. After each frame is inverse transformed into the time domain, it is 
+added to the resulting sound. Each successive frame is added with a sample offset specified by <i>skip</i> 
+relative to the previous frame. This must be an integer greater than zero. If <i>window</i> is 
+not <code>NIL</code>, it must be a sound. This window signal is multiplied by the inverse transformed frame 
+before the frame is added to the output sound. The length of each frame should be the same. The length
+is implied by the array returned by <i>iterator</i>, so it does not appear as a parameter. This length
+is also the number of samples used from <i>window</i>. Extra samples are ignored, and window is padded
+with zeros if necessary, so be sure <i>window</i> is the right length. The resulting sound is computed on
+demand as with other Nyquist sounds, so <code>:next</code> messages are sent to <i>iterator</i> only when new
+frames are needed. One should be careful not to reuse or modify <i>iterator</i> once it is passed to
+<code>snd-ifft</code>.
+<p>
+<hr>
+<a href = "part7.html">Previous Section</a> | <a href = "part9.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+</body></html>

@@ -1,0 +1,432 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>Nyquist FFT and Inverse FFT Tutorial</title>
+</head>
+
+<body>
+
+<h1>Nyquist FFT and Inverse FFT Tutorial</h1>
+
+<p>Nyquist provides functions for FFT and inverse FFT operations on streams of audio data.
+Because sounds can be of any length, but an FFT operates on a fixed amount of data, FFT
+processing is typically done in short blocks or windows that move through the audio. Thus,
+a stream of samples is converted in to a sequence of FFT frames representing short-term
+spectra. </p>
+
+<p>Nyquist does not have a special data type corresponding to a sequence of FFT frames.
+This would be nice, but it would mean creating a large set of operations suitable for
+processing frame sequences. Another approach, and perhaps the most &quot;pure&quot; would
+be to convert a single sound into a multichannel sound, with one channel per bin of the
+FFT. </p>
+
+<p>Instead, Nyquist violates its &quot;pure&quot; functional model and resorts to objects
+for FFT processing. A sequence of frames is represented by an XLISP object. Whenever you
+send the selector <tt>:next</tt> to the object, you get back either NIL, indicating the
+end of the sequence, or you get an array of FFT coefficients. </p>
+
+<p>The Nyquist function FFT (mnemonic, isn't it?) returns one of the frame sequence
+generating objects. You can pass any frame sequence generating object to another function,
+IFFT, and turn the sequence back into audio. </p>
+
+<p>With&nbsp; FFT and IFFT, you can create all sorts of interesting processes. The main
+idea is to create intermediate objects that both accept and generate sequences of frames.
+These objects can operate on the frames to implement the desired spectral-domain
+processes. Examples of this will follow, but first, let's try something simpler. </p>
+
+<h2>Simple FFT Example</h2>
+
+<p>Just to convince ourselves that this works and to explore the FFT function, let's
+perform an FFT on a sinusoid. To make the outcome predictable, we will use 32 samples of
+sinusoid with a period of 8 samples. If we take a 32-point FFT, the spectrum should show a
+strong 4th harmonic (there are 4 8-sample periods) and zero everywhere else. </p>
+
+<p>Before the test, we will introduce a simple function to create an FFT sequence
+generating object, which is called an iterator: The function is called <tt>make-fft1-iterator</tt>,
+and creates an object of class <tt>fft1-class</tt> (I am using <tt>fft1</tt> rather than <tt>fft</tt>
+because this is a simplified version that will be improved later): </p>
+
+<pre>(setf fft1-class (send class :new '(sound length skip)))
+
+(send fft1-class :answer :next '() '(
+&nbsp;&nbsp;&nbsp; (snd-fft sound length skip nil)))
+
+(send fft1-class :answer :isnew '(snd len skp) '(
+&nbsp;&nbsp;&nbsp; (setf sound snd)
+&nbsp;&nbsp;&nbsp; (setf length len)
+&nbsp;&nbsp;&nbsp; (setf skip skp)))
+
+(defun make-fft1-iterator (sound length skip)
+&nbsp; (send fft1-class :new (snd-copy sound) length skip))</pre>
+
+<p>Some notes about the code: A new class is created by sending <tt>:new</tt> to the <tt>class</tt>
+object. The parameter names the instance variables for the new class. Instances are
+created by sending <tt>:new</tt> to the new class. Any parameters to <tt>:new</tt> are
+sent to the <tt>:isnew</tt> method of the new instance. In this code, parameters are used
+to initialize the instance variables. </p>
+
+<p>The length parameter tells the length of each FFT, and the skip parameter tells how
+many samples to move the window after each sound. Using this function, we make an iterator
+to perform the FFT of a sinusoid: </p>
+
+<pre>;; create a 1-second sinusoid with points samples at cycles hz:
+(defun short-sine (points cycles)
+&nbsp; (control-srate-abs points (lfo cycles)))
+
+(defun fft-test ()
+&nbsp; (let (fft-iter)
+&nbsp;&nbsp;&nbsp; ;; signal will have 4 cycles in 32 points:
+&nbsp;&nbsp;&nbsp; (setf fft-iter (make-fft1-iterator (short-sine 32 4) 32 32))
+&nbsp;&nbsp;&nbsp; (display &quot;fft-test&quot; (send fft-iter :next))))</pre>
+
+<p>Running this prints an array of nearly-zero values except for the 9th element (index
+8), which is -1. The layout is as follows: 
+
+<ul>
+  <li>the DC component goes in array element 0</li>
+  <li>the Cosine part is in elements 2i - 1</li>
+  <li>the Sine part is in elements 2i</li>
+  <li>the Nyquist frequency component is in the last element</li>
+</ul>
+
+<p>Thus, the element at index 8 is the 4th Sine component, indicating a 4th harmonic as
+expected. </p>
+
+<h2>Simple Inverse FFT Example</h2>
+
+<p>Now, let's try to reverse the FFT and recover the sinusoid. We will use the <tt>ifft</tt>
+function, which takes three parameters: 
+
+<ul>
+  <li>the starting time of the resulting sound</li>
+  <li>the sample rate of the resulting sound</li>
+  <li>the iterator object, which will be called to obtain short term spectra (frames)</li>
+  <li>the step-size, how many samples to advance for each frame</li>
+  <li>the window (or NIL), by which each frame is multiplied after the IFFT</li>
+</ul>
+
+<pre>(defun ifft-test ()
+&nbsp; (let (fft-iter ifft-snd)
+&nbsp;&nbsp;&nbsp; (setf fft-iter (make-fft1-iterator (short-sine 32 4) 32 32))
+&nbsp;&nbsp;&nbsp; (setf ifft-snd (snd-ifft 0 32 fft-iter 32 NIL))
+&nbsp;&nbsp;&nbsp; (display &quot;fft-ifft&quot; (snd-length ifft-snd 200))
+&nbsp;&nbsp;&nbsp; (display &quot;fft-ifft&quot; (snd-samples ifft-snd 200)) ))</pre>
+
+<p>Looking at the printed samples, you can see that the result is a close approximation to
+the expected sinusoid. </p>
+
+<p><b>Exercise: </b>Modify <tt>short-sine</tt> to produce a cosine and observe the
+difference in the FFT. Confirm that the IFFT reproduces the original cosine. (Hint: the
+parameters to <tt>LFO</tt> should be: <tt>(lfo cycles 1.0 *sine-table* 90.0)</tt>,
+indicating frequency, duration, the waveform, and the initial phase, respectively.) <br>
+&nbsp; </p>
+
+<h2>Sequence of FFT Frames</h2>
+
+<p>Let's create an FFT iterator that reads sounds from a file: </p>
+
+<pre>(defun file-fft1 (filename frame-length skip)
+&nbsp; (make-fft1-iterator (s-read filename) frame-length skip))</pre>
+
+<p>And here is a function to recover the sound file from spectral frames and play it:: </p>
+
+<pre>(defun play-fft1 (iterator skip)
+&nbsp; (play (snd-ifft 0 *sound-srate* iterator skip NIL)))</pre>
+
+<p>Finally, here is some code to test it: </p>
+
+<pre>;; a convenient sound file name (change this to one of your soundfiles):
+(setf sfn &quot;D:\\brain\\outro\\soup.wav&quot;)</pre>
+
+<pre>(defun file-test () (play-fft1 (file-fft1 sfn 512 512) 512))</pre>
+
+<p>If you do not hear your original file, try playing the original file by typing <tt>(play-file
+sfn)</tt>, and make sure the file is a mono file at 44,100 Hz sample rate (to match <tt>*sound-srate*</tt>
+used in <tt>play-fft1</tt>). Check out the file by typing <tt>(sf-info sfn)</tt>.</p>
+
+<h2>XLisp and Garbage Collection</h2>
+
+<p>In the previous example, you may have noticed a lot of messages that look something
+like the following:</p>
+
+<pre>[ gc: total 18640, 3114 free; samples 49KB, 39KB free ]</pre>
+
+<h3>What the gc: Messages Mean</h3>
+
+<p>These messages are printed whenever the garbage collector runs to reclaim memory that
+was allocated but is no longer in use by the program. The memory found by the garbage
+collector is reused in future computation to avoid allocating more memory than is
+necessary. The particular message here says that 18640 &quot;cells&quot; have been
+allocated. Each cell is 10 bytes, so there are 186,400 bytes, or about 186KB used to store
+XLisp programs and data. This does not include the XLisp interpreter, Nyquist functions,
+and system libraries, that take an additional 500KB or so. It also does not include audio
+samples, which are stored separately. Of the 18640 cells, 3114 were free after garbage
+collection. Of the 49KB of audio data (samples) allocated by Nyquist, 39KB were free for
+reuse after after garbage collection.</p>
+
+<h3>Making GC More Effective</h3>
+
+<p>Nyquist and XLisp do a pretty good job of effective, automatic garbage collection, but
+since XLisp was designed to run on small machines, it favors using a minimal amount of
+memory, and this may result in frequent garbage collections. FFT processing, in
+particular, makes heavy use of XLisp, since every floating point number in every FFT frame
+requires the allocation of a 10-byte cell. When you are processing with FFTs, you can
+often gain some speed by telling XLisp to allocate more memory cells. Do this by calling <tt>expand</tt>:</p>
+
+<pre>(expand 100)</pre>
+
+<p>The parameter tells how many additional internal blocks of memory to allocate. Each
+block is 2000 cells, or about 20KB, so if the parameter is 100, you will allocate about
+2MB. After allocating memory, the next garbage collection might look like:</p>
+
+<pre>[ gc: total 218640, 204298 free; samples 49KB, 44KB free ]</pre>
+
+<p>Notice that now, garbage collection frees a higher proportion of memory than before
+&nbsp; (204298 out of 218640 cells). Garbage collection is more efficient when there is a
+higher proportion of memory to free.</p>
+
+<p>On the other hand, you should not allocate more memory than necessary. If you allocate
+too much, parts of Nyquist and other programs will be paged out of RAM and onto your disk
+drive. Since Nyquist must access all of its memory for every garbage collection, it is
+very inefficient to have any of that memory reside on disk.</p>
+
+<p>Should you always expand memory? Almost all non-FFT audio processing uses special data
+structures that are outside of XLisp and are managed without the use of the garbage
+collector. Since audio processing normally takes over 95% of the execution time, you
+normally do not have to worry much about the efficiency of XLisp.</p>
+
+<h2>Simple Spectral Processing</h2>
+
+<p>The main purpose of FFT and IFFT functions is to enable processing in the spectral
+domain. Let's create a very simple example in which certain frequencies are set to zero,
+creating a filter effect. (Note that this is not a very good way to create filters because
+of boundary effects.) We need to create an object that will access an FFT iterator to get
+frames, and that will serve as an iterator to deliver frames. The code is as follows: </p>
+
+<pre>(setf fft-hp-class (send class :new '(source bins)))
+
+(send fft-hp-class :answer :next '() '(
+&nbsp; (let ((frame (send source :next)))
+&nbsp;&nbsp;&nbsp; (cond (frame
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (dotimes (i bins)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (setf (aref frame i) 0.0))))
+&nbsp;&nbsp;&nbsp; frame)))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+(send fft-hp-class :answer :isnew '(s b) '(
+&nbsp;&nbsp;&nbsp; (setf source s)
+&nbsp;&nbsp;&nbsp; (setf bins b)))
+
+(defun make-fft-hp (source bins)
+&nbsp; (send fft-hp-class :new source bins))
+
+(defun hp-test ()
+&nbsp; (play-fft1 (make-fft-hp (file-fft1 sfn 512 512) 11) 512))</pre>
+
+<p>Note that <tt>make-fft-hp</tt> takes a parameter, bins, that tells how many
+coefficients of the FFT to zero. At 44,100 Hz, the frame rate is 44100/512 = 86.13 Hz, and
+this corresponds to the first bin (coefficients at locations 1 and 2). Since we specified
+11 for the bins parameter, this will zero the DC component and 5 complex pairs,
+representing frequencies up to 86.12 * 5 = 430.7 Hz. (If you are trying this on a laptop
+computer with small speakers, or if you are using a sound without low frequencies, you may
+want to increase the number of bins in <tt>hp-test</tt> from 11 to 30 to make the effect
+really obvious.)</p>
+
+<p>You will notice some raspy sounds in the output. Since the FFT frames are not smoothed
+by any window or overlapped, there are serious windowing artifacts that are easily heard.
+We will look at ways to reduce this problem later. </p>
+
+<h2>Spectral Modulation</h2>
+
+<p>An interesting effect is to let one spectrum modulate another one. By multiplying the
+amplitude spectrum of one signal onto that of another, one can superimpose the two
+signals. (Note that adding spectra is simply a way to mix them and is equivalent to
+addition in the time domain.) </p>
+
+<p>Let's create a bright FM sound to serve as a spectral modulation &quot;carrier&quot;.
+First, create the FM sound. This sound has an initial, middle, and fiinal modulation index
+as well as a (constant) pitch:</p>
+
+<pre>(defun fm-tone (step mi1 mi2 mi3)
+&nbsp; (let ((hz (step-to-hz step)))
+&nbsp;&nbsp;&nbsp; (setf mi1 (* mi1 hz))
+&nbsp;&nbsp;&nbsp; (setf mi2 (* mi2 hz))
+&nbsp;&nbsp;&nbsp; (setf mi3 (* mi3 hz))
+&nbsp;&nbsp;&nbsp; (fmosc c4 (partial step&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (control-srate-abs *sound-srate*&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (pwl 0 mi1 0.5 mi2 1 mi3 1))))))</pre>
+
+<p>The modulated sound will be a cluster of three FM tones. You could use just one tone,
+but I have had better luck with chords or noise. You want to make sure the signal has
+plenty of amplitude at many frequencies; otherwise, the spectral modulation will not have
+anything to modulate.</p>
+
+<pre>(defun mod-snd ()
+  (sum
+    (fm-tone c3 15 20 15)   ;; adjust FM parameters here
+    (fm-tone d3 15 20 15)   ;; adjust FM parameters here
+    (fm-tone e3 15 20 15))) ;; adjust FM parameters here</pre>
+
+<p>Next, we need a class to do the modulation. As before, objects of this class respond to
+the <tt>:next </tt>message. In this case, the <tt>:next</tt> method sends&nbsp; <tt>:next</tt>
+to both sources. It then multiplies the coefficients of one by the computed amplitude
+spectrum of the other. </p>
+
+<pre>(setf fft-modulator-class (send class :new '(src1 src2)))
+
+(send fft-modulator-class :answer :isnew '(s1 s2) '(
+&nbsp;&nbsp;&nbsp; (setf src1 s1)
+&nbsp;&nbsp;&nbsp; (setf src2 s2)))
+
+(send fft-modulator-class :answer :next '() '(
+&nbsp; (let ((frame1 (send src1 :next))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (frame2 (send src2 :next))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; n half_n)
+&nbsp;&nbsp;&nbsp; (cond ((and frame1 frame2)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; multiply frame2 by the amplitude coefficients of frame1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (setf (aref frame2 0) (* (aref frame2 0) (aref frame1 0))) ;; DC
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (setf n (- (length frame1) 1))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Subtracted 1 because we already took care of DC component
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (setf half_n (/ n 2)) ; integer divide
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (dotimes (i half_n)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (let* ((i2 (+ i i 2))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (i2m1 (- i2 1))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (amp (sqrt (+ (* (aref frame1 i2m1) (aref frame1 i2m1))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (* (aref frame1 i2)&nbsp;&nbsp; (aref frame1 i2))))))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (setf (aref frame2 i2m1) (* (aref frame2 i2m1) amp))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (setf (aref frame2 i2) (* (aref frame2 i2) amp))))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (cond ((= n (+ half_n half_n 2)) ;; n is even -&gt; nyquist component
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (setf (aref frame2 n) (* (aref frame2 n) (aref frame1 n)))))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; frame2)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (t nil)))))
+
+(defun make-fft-modulator (src1 src2)
+&nbsp; (send fft-modulator-class :new src1 src2))</pre>
+
+<p>The code for&nbsp; <tt>:next</tt> is longer than you might expect, but it is basically
+just a vector multiplication. Lisp is not ideal for numerical algorithms like this. The
+following code will test the new class: </p>
+
+<pre>(defun mod-test ()
+&nbsp; (let ((fs 512)) ;; frame size
+&nbsp;&nbsp;&nbsp; (play-fft1 (make-fft-modulator&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (file-fft1 sfn fs fs)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (make-fft1-iterator (mod-snd) fs fs))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  fs)))</pre>
+
+<p>Here, we pass in iterators for the sound stored in a file and for the modulated sound.
+This example seems to work best if the sound in the file is a voice. You can also try
+stretching the speech by reducing the step parameter to <tt>file-fft</tt> and by making
+the modulated sound longer. You might also try different sizes of FFTs using the frame
+size (<tt>fs</tt>) parameter. If the FFT frame size is too big, you will resolve
+individual harmonics of the voice, and if it is too small, you will not resolve formants.
+256 and 512 seem to be good numbers when working at 44,100 Hz sampling rates.</p>
+
+<h2>Smoothing Windows</h2>
+
+<p>In the previous examples, and especially in the last one, a lot of buzzing and noise is
+created because the boundaries of the FFT frames are no longer continuous when the
+spectrum is altered. To reduce the buzzing effect, we can multiply the frame by a
+smoothing window before reconstructing the time domain signal. We can also use a smoothing
+window on the input side, before taking the FFT. For now, we will try just a smoothing
+window on the IFFT side. </p>
+
+<p>The smoothing window will be a raised cosine pulse, although other window shapes could
+be used. The following code implements a raised cosine. (A raised cosine is a smooth
+bell-shaped curve that rises from zero to 1 and back again. The curve is one period of a
+sinusoid or cosine, but &quot;raised&quot; so that its minimum value is at zero.) The lfo
+function computes a sine curve, so we use an initial phase of 270 degrees to get the
+proper shape: </p>
+
+<pre>(defun raised-cosine ()
+&nbsp; (scale 0.5&nbsp;
+&nbsp;&nbsp;&nbsp; (sum (const 1)&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lfo (/ 1.0 (get-duration 1)) 1 *sine-table* 270))))</pre>
+
+<p>Next, we need a function to create a window of the proper length. The sample rate of
+the window does not matter because the FFT and IFFT functions will simply take the proper
+number of samples (without any interpolation or resampling). Therefore, we will use the <tt>frame-size</tt>
+as the sample rate, insuring that there are <tt>frame-size</tt> samples: </p>
+
+<pre>(defun fft-window (frame-size)
+&nbsp; (control-srate-abs frame-size (raised-cosine)))</pre>
+
+<p>Now we can pass in a window to the IFFT. Let's redo the spectral modulation example
+with smoothing windows on the IFFT side. First, we will rewrite <tt>play-fft</tt> to use
+windowing: </p>
+
+<pre>(defun play-fft (iterator frame-size skip)
+&nbsp; (play (snd-ifft 0 *sound-srate* iterator&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; skip (fft-window frame-size))))</pre>
+
+<p>Now, we can rewrite <tt>mod-test:</tt> </p>
+
+<pre>(defun mod-test-w ()
+&nbsp; (let ((fs 512)) ;; frame size
+&nbsp;&nbsp;&nbsp; (play-fft (make-fft-modulator&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (file-fft1 sfn fs (/ fs 2))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (make-fft1-iterator (mod-snd) fs (/ fs 2)))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fs (/ fs 2))))</pre>
+
+<p>Notice that we reduced the step size to half the frame size. This is because we want
+the windows to overlap by 50%, creating a nice cross-fade from one frame to the next. </p>
+
+<p>You might guess that the square windowing on the analysis (FFT) side is injecting high
+frequencies into the spectrum. We can introduce windowing there too. We can modify <tt>make-fft-iterator</tt>
+to use a window. This will require changes to <tt>fft1-class</tt>, so we will use the name
+<tt>fft-class:</tt> </p>
+
+<pre>(setf fft-class (send class :new '(sound length skip window)))
+
+(send fft-class :answer :next '() '(
+&nbsp;&nbsp;&nbsp; (snd-fft sound length skip window)))
+
+(send fft-class :answer :isnew '(snd len skp) '(
+&nbsp;&nbsp;&nbsp; (setf sound snd)
+&nbsp;&nbsp;&nbsp; (setf length len)
+&nbsp;&nbsp;&nbsp; (setf skip skp)
+&nbsp;&nbsp;&nbsp; (setf window (fft-window len)) ))
+
+(defun make-fft-iterator (sound length skip)
+&nbsp; (send fft-class :new (snd-copy sound) length skip))</pre>
+
+<p>Now, we can rewrite <tt>file-fft</tt> to use windowing: </p>
+
+<pre>(defun file-fft (filename frame-length skip)
+&nbsp; (make-fft-iterator (s-read filename) frame-length skip))</pre>
+
+<p>Now, we can rewrite <tt>mod-test</tt> yet again: </p>
+
+<pre>(defun mod-test-ww ()
+&nbsp; (let ((fs 512)) ;; frame size
+&nbsp;&nbsp;&nbsp; (play-fft (make-fft-modulator&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (file-fft sfn fs (/ fs 2))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (make-fft-iterator (mod-snd) fs (/ fs 2)))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fs (/ fs 2))))</pre>
+
+<p>This version seems to have less definition for speech input than the previous one. It
+might be that some windowing artifacts in the right places are actually beneficial! In
+fact, some simple experiments indicate that, in this example, the speech sounds better
+when the (mod-snd) sound is analyzed without windowing. This probably creates more noise
+to be modulated by the speech signal, so more speech information gets through. </p>
+
+<p>We can also stretch the result by taking smaller steps during the analysis (FFT) stage
+so that more frames are generated. I will also increase the frame size to obtain fewer
+frames/second. </p>
+
+<pre>(defun mod-test-wws ()
+&nbsp; (let ((fs 1024)) ;; frame size
+&nbsp;&nbsp;&nbsp; (play-fft (make-fft-modulator&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (file-fft sfn fs (/ fs 16))
+                (make-fft1-iterator (mod-snd) fs (/ fs 16)))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fs (/ fs 2))))</pre>
+
+<h2>Acknowledgments</h2>
+
+<p>Cort Lippe and Zack Settel have explored cross synthesis and other effects with FFTs
+extensively, and their work inspired these examples.</p>
+</body>
+</html>
+

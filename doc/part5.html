@@ -1,0 +1,528 @@
+<html><head><title>More Examples</title></head>
+<body bgcolor="ffffff">
+<a name = "30"><h2>More Examples</h2></a>This chapter explores Nyquist through additional examples.  The reader may
+wish to browse through these and move on to Chapter <a href = "part6.html#38">``Nyquist Functions''</a>, which
+is a reference section describing Nyquist functions.
+<p>
+<a name = "31"><h3>Stretching Sampled Sounds</h3></a><a name="index81">This example illustrates how to stretch a sound, resampling it in the process.
+Because sounds in Nyquist are <i>values</i> that contain the sample rate, start
+time, etc., use <code>sound</code> to convert a sound into a behavior that can be
+stretched, e.g. <code>(sound a-snd)</code>. This behavior stretches a sound according
+to the stretch factor in the environment, set using <code>stretch</code>. For
+accuracy and efficiency, Nyquist does not resample a stretched sound until
+absolutely necessary. The <code>force-srate</code> function is used to resample
+the result so that we end up with a ``normal'' sample rate that is playable
+on ordinary sound cards.
+<p>
+<pre>
+<i>; if a-snd is not loaded, load sound sample:
+;</i>
+(if (not (boundp 'a-snd)) 
+    (setf a-snd 
+       (s-read "demo-snd.nh" :srate 22050.0)))
+<p>
+<i>; the SOUND operator shifts, stretches, clips and scales 
+; a sound according to the current environment
+;</i>
+(play (force-srate *default-sound-srate* 
+                   (stretch 3.0 (sound a-snd))))
+<p>
+(defun down ()
+  (force-srate *default-sound-srate*
+    (seq (stretch 0.2 (sound a-snd))
+         (stretch 0.3 (sound a-snd))
+         (stretch 0.4 (sound a-snd))
+         (stretch 0.5 (sound a-snd))
+         (stretch 0.6 (sound a-snd)))))
+<p>
+(play (down))
+<p>
+<i>; that was so much fun, let's go back up:
+;</i>
+(defun up ()
+  (force-srate *default-sound-srate*
+    (seq (stretch 0.5 (sound a-snd))
+         (stretch 0.4 (sound a-snd))
+         (stretch 0.3 (sound a-snd))
+         (stretch 0.2 (sound a-snd)))))
+<p>
+<i>; and write a sequence
+;</i>
+(play (seq (down) (up) (down)))
+<p>
+</pre>
+Notice the use of the <code>sound</code> behavior as opposed to <code>cue</code>.  The
+<code>cue</code> behavior shifts and scales its sound according to <code>*warp*</code>
+and <code>*loud*</code>, but it does not change the duration or resample the
+sound.  In contrast, <code>sound</code> not only shifts and scales its sound, but
+it also stretches it by resampling or changing the effective sample rate
+ according to <code>*warp*</code>.  If
+<code>*warp*</code> is a continuous warping function, then the sound will be
+stretched by time-varying amounts.
+(The <code>*transpose*</code> element of the environment is
+ignored by both <code>cue</code> and <code>sound</code>.)  
+<p>
+<b><i>Note:</i></b> <code>sound</code> may use linear interpolation rather than a high-quality resampling algorithm.  In some cases, this may introduce errors audible as noise. Use <code>resample</code> (see Section <a href = "part6.html#46">``Sound Synthesis''</a>) for high-quality interpolation.
+<p>
+In the functions <code>up</code> and <code>down</code>, the <code>*warp*</code> is set by
+<code>stretch</code>, which simply scales time by a constant scale factor. In this case,
+<code>sound</code> can ``stretch'' the signal simply by changing the sample rate without
+any further computation. When <code>seq</code> tries to add the signals together, it
+discovers the sample rates do not match and uses linear interpolation to adjust
+all sample rates to match that of the first sound in the sequence. The result of
+<code>seq</code> is then converted using <code>force-srate</code> to convert the sample rate,
+again using linear interpolation. It would be slightly better, from a computational
+standpoint, to apply <code>force-srate</code> individually to each stretched sound rather
+than applying <code>force-srate</code> after <code>seq</code>.
+<p>
+Notice that the overall duration of <code>(stretch 0.5 (sound a-snd))</code> will
+be half the duration of <code>a-snd</code>.
+<p>
+<a name = "32"><h3>Saving Sound Files</h3></a><a name="index82">So far, we have used the <code>play</code> function to play a sound.  The
+<code>play</code> function works by writing a sound to a file and then running a
+system program to play the file.  This can be done one step at a time, and
+it is often convenient to save a sound to a particular file for later use:
+<pre>
+<i>; write the sample to a file, 
+;    the file name can be any Unix filename.  Prepending a "./" tells
+;    s-save to not prepend *default-sf-dir*
+;</i>
+(s-save a-snd 1000000000 "./a-snd-file.snd")
+<p>
+<i>; play a file
+; (only works if you have a Unix program called "play")</i>
+(system "play a-snd-file.snd")
+<p>
+<i>; delete the file (do this with care!)
+;</i>
+(system "rm a-snd-file.snd")
+<p>
+<i>; now let's do it using a variable as the file name
+;</i>
+(setf my-sound-file "./a-snd-file.snd")
+<p>
+(s-save a-snd 1000000000 my-sound-file)
+<p>
+(system (strcat "play " my-sound-file))
+<p>
+(system (strcat "rm " my-sound-file))
+<p>
+</pre>
+
+This example shows how <code>s-save</code> can be used to save a sound to a file.
+<p>
+This example also shows how the <code>system</code> function can be used to invoke
+Unix shell commands, such as a command to play a file or remove it.
+Finally, notice that <code>strcat</code> can be used to concatenate a command name
+to a file name to create a complete command that is then passed to
+<code>system</code>.  (This is convenient if the sound file name is stored in a
+parameter or variable.)
+<p>
+<a name = "33"><h3>Memory Space and Normalization</h3></a>
+
+<a name="index83"><a name="index84"><a name="index85"><a name="index86"><a name="index87"><a name="index88"><a name="index89"><a name="index90">
+Sound samples take up lots of memory, and often, there is not enough primary (RAM) memory to hold a complete composition.  For this reason, Nyquist can compute sounds incrementally, saving the final result on disk.  <i>However,</i> Nyquist can also save sounds in memory so that they can be reused efficiently.  In general, if a sound is saved in a global variable, memory will be allocated as needed to save and reuse it.
+<p>
+The standard way to compute a sound and write it to disk is to pass an expression to the <code>play</code> command:
+<pre>
+(play (my-composition))
+</pre>
+
+<p>
+
+Often it is nice to <i>normalize</i> sounds so that they use the full available
+dynamic range of 16 bits.  At present, the only way to do this is to first
+compute the maximum value of the signal, forcing the signal to be evaluated, and then to write the signal to disk.  The <code>peak</code>
+function computes the maximum value.  The peak value is also returned from the <code>play</code> macro. You can normalize in memory if you have enough memory; otherwise you can compute the sound twice.  The two techniques are illustrated here:
+<pre>
+<i>; normalize in memory.  First, assign the sound to a variable so
+; it will be retained:</i>
+(setf mysound (sim (osc c4) (osc c5)))
+<i>; now compute the maximum value (ny:all is 1 giga-samples, you may want a
+; smaller constant if you have less than 4GB of memory :-):</i>
+(setf mymax (peak mysound NY:ALL))
+(display "Computed max" mymax)
+<i>; now write out and play the sound from memory with a scale factor:</i>
+(play (scale (/ 1.0 mymax) mysound))
+<p>
+<i>; if you don't have space in memory, here's how to do it:</i>
+(defun myscore () (sim (osc c4) (osc c5)))
+<i>; compute the maximum:</i>
+(setf mymax (peak (myscore) NY:ALL))
+(display "Computed max" mymax)
+<i>; now we know the max, but we don't have a the sound (it was garbage
+; collected and never existed all at once in memory).  Compute the sound
+; again, this time with a scale factor:</i>
+(play (scale (/ 1.0 mymax) (myscore)))
+</pre>
+
+<p>
+Another approach is to write the sound out once to figure out the maximum
+value (the maximum value is returned by <code>s-save</code> and <code>play</code>).  Then compute the file again with the
+proper scaling.
+<p>
+This technique has been automated in Nyquist.  Nyquist saves the peak value every time you save a file. It then adjusts an internal scale factor so that if you play the same file again, the peak amplitude will be 0.9 (less than 1.0 to allow for slight increases in amplitude in case you play something different). You can turn this feature off by executing:
+<pre>
+(autonorm-off)<a name="index91">
+</pre>
+
+and turn it back on by typing:
+<pre>
+(autonorm-on)<a name="index92">
+</pre>
+
+<p>
+This is slower than just using <code>peak</code> the first time, but you can also write a sound as a floating point file.  This
+file can then be converted to 16-bit integer with the proper scaling
+applied.  If a long computation was involved, it should be much faster to scale the saved sound file than to recompute the sound from scratch. Although not implemented yet in Nyquist, some header formats can
+store maximum amplitudes, and some soundfile player programs can rescale floating point files on the fly, allowing normalized soundfile playback
+without an extra normalization pass (but at a cost of twice the disk space
+of 16-bit samples).  The Win32 version of Nyquist can output audio directly, so you can use Nyquist to rescale a floating point file and convert it to 16-bit samples for playback.
+<p>
+<a name = "34"><h3>Frequency Modulation</h3></a><a name="index93">
+The next example uses the Nyquist frequency modulation behavior <code>fmosc</code>
+to generate various sounds.  The parameters to <code>fmosc</code> are:
+<pre>
+(fmosc <i>pitch</i> <i>modulator</i> <i>table</i> <i>phase</i>)
+</pre>
+
+but only the first two parameters are required:
+<pre>
+<i>; make a short sine tone with no frequency modulation
+;</i>
+(play (fmosc c4 (pwl 0.1)))
+<p>
+<i>; make a longer sine tone -- note that the duration of
+;   the modulator determines the duration of the tone
+;</i>
+(play (fmosc c4 (pwl 0.5)))
+</pre>
+
+In the example above, <code>pwl</code> (for Piece-Wise Linear) is used to generate
+sounds that are zero for the durations of <code>0.1</code> and <code>0.5</code> seconds,
+respectively.  In effect, we are using an FM oscillator with no modulation
+input, and the result is a sine tone.  The duration of the modulation
+determines the duration of the generated tone (when the modulation signal
+ends, the oscillator stops).
+<p>
+The next example uses a more interesting modulation function, a ramp from
+zero to C4, expressed in hz.  More explanation of <code>pwl</code> is in
+order.  This operation constructs a piece-wise linear function sampled at
+the <code>*control-srate*</code>.  The first breakpoint is always at <code>(0,
+0)</code>, so the first two parameters give the time and value of the second
+breakpoint, the second two parameters give the time and value of the third
+breakpoint, and so on.  The last breakpoint has a value of <code>0</code>, so only
+the time of the last breakpoint is given.  In this case, we want the ramp to
+end at C4, so we cheat a bit by having the ramp return to zero
+``almost'' instantaneously between times <code>0.5</code> and <code>0.501</code>.
+<p>
+The <code>pwl</code> behavior always expects an odd number of parameters.  The
+resulting function is shifted and stretched linearly according to
+<code>*warp*</code> in the environment.  Now, here is the example:
+<pre>
+<i>; make a frequency sweep of one octave; the piece-wise linear function
+; sweeps from 0 to (step-to-hz c4) because, when added to the c4
+; fundamental, this will double the frequency and cause an octave sweep.
+;</i>
+(play (fmosc c4 (pwl 0.5 (step-to-hz c4) 0.501)))
+</pre>
+
+<p>
+The same idea can be applied to a non-sinusoidal carrier.  Here, we assume that <code>*fm-voice*</code> is predefined (the next section shows how to define it):
+<pre>
+<i>; do the same thing with a non-sine table
+;</i>
+(play (fmosc cs2 (pwl 0.5 (step-to-hz cs2) 0.501) 
+             *fm-voice* 0.0))
+</pre>
+
+<p>
+The next example shows how a function can be used to make a special
+frequency modulation contour.  In this case the contour generates a sweep
+from a starting pitch to a destination pitch:
+<pre>
+<i>; make a function to give a frequency sweep, starting
+; after &ltdelay&gt seconds, then sweeping from &ltpitch-1&gt
+; to &ltpitch-2&gt in &ltsweep-time&gt seconds and then
+; holding at &ltpitch-2&gt for &lthold-time&gt seconds.
+;</i>
+(defun sweep (delay pitch-1 sweep-time pitch-2 hold-time)
+  (let ((interval (- (step-to-hz pitch-2)
+		     (step-to-hz pitch-1))))
+    (pwl delay 0.0 
+	 <i>; sweep from pitch 1 to pitch 2</i>
+	 (+ delay sweep-time) interval
+	 <i>; hold until about 1 sample from the end</i>
+	 (+ delay sweep-time hold-time -0.0005) interval
+	 <i>; quickly ramp to zero (pwl always does this,</i>
+	 <i>;    so make it short)</i>
+	 (+ delay sweep-time hold-time))))
+<p>
+<i>; now try it out
+;</i>
+(play (fmosc cs2 (sweep 0.1 cs2 0.6 gs2 0.5) 
+	     *fm-voice* 0.0))
+</pre>
+
+<p>
+FM can be used for vibrato as well as frequency sweeps.  Here, we use the
+<code>lfo</code> function to generate vibrato.  The <code>lfo</code> operation is
+similar to <code>osc</code>, except it generates sounds at the
+<code>*control-srate*</code>, and the parameter is hz rather than a pitch:
+<pre>
+(play (fmosc cs2 (scale 10.0 (lfo 6.0)) 
+             *fm-voice* 0.0))
+</pre>
+
+<p>
+What kind of manual would this be without the obligatory fm sound?  Here, a
+sinusoidal modulator (frequency C4) is multiplied by a slowly increasing
+ramp from zero to <code>1000.0</code>.
+<pre>
+(setf modulator (mult (pwl 1.0 1000.0 1.0005)
+			(osc c4)))
+<p>
+<i>; make the sound</i>
+(play (fmosc c4 modulator))
+</pre>
+
+<p>
+<a name = "35"><h3>Building a Wavetable</h3></a>
+In Section <a href = "part2.html#10">``Waveforms''</a>, we saw how to synthesize a wavetable.   A
+wavetable for <code>osc</code> also can be extracted from any sound.  This is
+especially interesting if the sound is digitized from some external sound
+source and loaded using the <code>s-read</code> function.  Recall that a table
+is a list consisting of a sound, the pitch of that sound, and T (meaning the
+sound is periodic).
+<p>
+In the following, a sound is first read from the file <code>demo-snd.nh</code>.
+Then, the <code>extract</code> function is used
+to extract the portion of the sound between 0.110204 and 0.13932 seconds.
+(These numbers might be obtained by first plotting the sound and estimating
+the beginning and end of a period, or by using some software to look for
+good zero crossings.)  The result of <code>extract</code> becomes the first
+element of a list.  The next element is the pitch (24.848422), and the last
+element is <code>T</code>.  The list is assigned to <code>*fm-voice*</code>.
+<pre>
+(if (not (boundp 'a-snd))
+    (setf a-snd (s-read "demo-snd.nh" :srate 22050.0)))
+<p>
+(setf *fm-voice* (list 
+                  (extract 0.110204 0.13932 (cue a-snd))
+                  24.848422
+                  T))
+</pre>
+
+<p>
+The file
+<i>examples.lsp</i> contains an extensive example of how to locate
+zero-crossings, extract a period, build a waveform, and generate a tone from it.  (See <code>ex37</code> through <code>ex40</code> in the file.)
+<p>
+<a name = "36"><h3>Filter Examples</h3></a>Nyquist provides a few simple filters.  All of these filters take either
+real numbers or signals as parameters.  If you pass a signal as a filter
+parameter, the filter coefficients are recomputed at the sample rate of the
+<i>control</i> signal.  Since filter coefficients are generally expensive to
+compute, you may want to select filter control rates carefully.  Use
+<code>control-srate-abs</code> (Section <a href = "part6.html#51">``Transformations''</a>) to specify
+the default control sample rate, or use <code>force-srate</code> (Section
+<a href = "part6.html#46">``Sound Synthesis''</a>) to resample a signal before passing it to a filter.  
+<p>
+Before presenting examples, let's generate some unfiltered white noise:
+<pre>
+(play (noise))
+</pre>
+
+Now low-pass filter the noise with a 1000Hz cutoff:
+<pre>
+(play (lp (noise) 1000.0))
+</pre>
+
+The high-pass filter is the inverse of the low-pass:
+<pre>
+(play (hp (noise) 1000.0))
+</pre>
+
+<p>
+Here is a low-pass filter sweep from 100Hz to 2000Hz:
+<pre>
+(play (lp (noise) (pwl 0.0 100.0 1.0 2000.0 1.0))))
+</pre>
+
+And a high-pass sweep from 50Hz to 4000Hz:
+<pre>
+(play (hp (noise) (pwl 0.0 50.0 1.0 4000.0 1.0)))
+</pre>
+
+<p>
+The band-pass filter takes a center frequency and a bandwidth parameter.
+This example has a 500Hz center frequency with a 20Hz bandwidth.  The scale
+factor is necessary because, due to the resonant peak of the filter, the
+signal amplitude exceeds 1.0:
+<pre>  
+(play (reson (scale 0.005 (noise)) 500.0 20.0)))
+</pre>
+
+In the next example, the center frequency is swept from 100 to 1000Hz, using a constant 20Hz bandwidth:
+<pre>
+(play (reson (scale 0.005 (noise))
+             (pwl 0.0 100.0 1.0 1000.0 1.0) 20.0)))
+</pre>
+
+<p>
+<a name = "37"><h3>DSP in Lisp</h3></a>
+In almost any signal processing system, the vast majority of computation
+takes place in the inner loops of DSP algorithms, and Nyquist is designed so
+that these time-consuming inner loops are in highly-optimized
+machine code rather than relatively slow interpreted lisp code. As a result,
+Nyquist typically spends 95% of its time in these inner loops; the overhead
+of using a Lisp interpreter is negligible.
+<p>
+The drawback is that Nyquist must provide the DSP operations you need, or
+you are out of luck. When Nyquist is found lacking, you can either write a
+new primitive signal operation, or you can perform DSP in Lisp code. Neither
+option is recommended for inexperienced programmers. Instructions for
+extending Nyquist are given in Appendix <a href = "part10.html#64">``Extending Nyquist''</a>. This section
+describes the process of writing a new signal processing function in Lisp.
+<p>
+Before implementing a new DSP function, you should decide which approach is
+best. First, figure out how much of the new function can be implemented
+using existing Nyquist functions. For example, you might think that a
+tapped-delay line would require a new function, but in fact, it can be
+implemented by composing sound transformations to accomplish delays, scale
+factors for attenuation, and additions to combine the intermediate results.
+This can all be packaged into a new Lisp function, making it easy to use.
+If the function relies on built-in DSP primitives, it will execute very
+efficiently.
+<p>
+Assuming that built-in functions cannot be used, try to define a new
+operation that will be both simple and general. Usually, it makes sense to
+implement only the kernel of what you need, combining it with existing
+functions to build a complete instrument or operation.  For example, if you
+want to implement a physical model that requires a varying breath pressure
+with noise and vibrato, plan to use Nyquist functions to add a basic
+pressure envelope to noise and vibrato signals to come up with a composite
+pressure signal. Pass that signal into the physical model rather than
+synthesizing the envelope, noise, and vibrato within the model. This not
+only simplifies the model, but gives you the flexibility to use all of
+Nyquist's operations to synthesize a suitable breath pressure signal.
+<p>
+Having designed the new ``kernel'' DSP operation that must be implemented,
+decide whether to use C or Lisp. To use C, you must have a C compiler, the
+full source code for Nyquist, and you must learn about extending Nyquist by
+reading Appendix <a href = "part10.html#64">``Extending Nyquist''</a>. This is the more complex approach, but
+the result will be very efficient. A C implementation will deal properly
+with sounds that are not time-aligned or matched in sample rates.
+To use Lisp, you must learn something
+about the XLisp object system, and the result will be about 50 times slower
+than C. Also, it is more difficult to deal with time alignment and
+differences in sample rates.
+The remainder of this section gives an example of a Lisp version of
+<code>snd-prod</code> to illustrate how to write DSP functions for Nyquist in Lisp.
+<p>
+The <code>snd-prod</code> function is the low-level multiply routine. It has two
+sound parameters and returns a sound which is the product of the two. To
+keep things simple, we will assume that two sounds to be multiplied have a
+matched sample rate and matching start times. The DSP algorithm for each
+output sample is simply to fetch a sample from each sound, multiply them,
+and return the product.
+<p>
+To implement <code>snd-prod</code> in Lisp, three components are required:
+<ol>
+<li>
+An object is used to store the two parameter sounds. This object will be
+called upon to yield samples of the result sound;
+<li>Within the object, the <code>snd-fetch</code> routine is used to fetch samples
+from the two input sounds as needed;
+<li>The result must be of type <code>SOUND</code>, so <code>snd-fromobject</code> is used
+to create the result sound.
+</ol>
+<p>
+The combined solution will work as follows: The result is a value of type
+<code>sound</code> that retains a reference to the object.  When Nyquist needs
+samples from the sound, it invokes the sound's ``fetch'' function, which in
+turn sends an XLisp message to the object. The object will use
+<code>snd-fetch</code> to get a sample from each stored sound, multiply the
+samples, and return a result.
+<p>
+Thus the goal is to design an XLisp object that, in response to a
+<code>:next</code> message will return a proper sequence of samples.  When the
+sound reaches the termination time, simply return <code>NIL</code>.
+<p>
+The XLisp manual (see Appendix <a href = "part12.html#81">``XLISP: An Object-oriented Lisp''</a> describes the object system,
+but in a very terse style, so this example will include some explanation of
+how the object system is used. First, we need to define a class for the
+objects that will compute sound products. Every class is a subclass of class
+<code>class</code>, and you create a subclass by sending <code>:new</code> to a class.
+<pre>
+(setf product-class (send class :new '(s1 s2)))
+</pre>
+
+The parameter <code>'(s1 s2)</code> says that the new class will have two instance
+variables, <code>s1</code> and <code>s2</code>. In other words, every object which is an
+instance of class <code>product-class</code> will have its own copy of 
+these two variables.
+<p>
+Next, we will define the <code>:next</code> method for <code>product-class</code>:
+<pre>
+(send product-class :answer :next '()
+  '((let ((f1 (snd-fetch s1))
+          (f2 (snd-fetch s2)))
+      (cond ((and f1 f2)
+             (* f1 f2))
+            (t nil)))))
+</pre>
+
+The <code>:answer</code> message is used to insert a new method into our new
+<code>product-class</code>. The method is described in three parts: the name
+(<code>:next</code>), a parameter list (empty in this case), and a list of
+expressions to be evaluated. In this case, we fetch samples from <code>s1</code>
+and <code>s2</code>. If both are numbers, we return their product. If either is
+<code>NIL</code>, we terminate the sound by returning <code>nil</code>.
+<p>
+The <code>:next</code> method assumes that <code>s1</code> and <code>s2</code> hold the sounds
+to be multiplied. These must be installed when the object is created.
+Objects are created by sending <code>:new</code> to a class. A new object is
+created, and any parameters passed to <code>:new</code> are then sent in a
+<code>:isnew</code> message to the new object. Here is the <code>:isnew</code>
+definition for <code>product-class</code>:
+<pre>
+(send product-class :answer :isnew '(p1 p2) 
+  '((setf s1 (snd-copy p1))
+    (setf s2 (snd-copy p2))))
+</pre>
+
+Take careful note of the use of <code>snd-copy</code> in this initialization. The
+sounds <code>s1</code> and <code>s2</code> are modified when accessed by
+<code>snd-fetch</code> in the <code>:next</code> method defined above, but this destroys
+the illusion that sounds are immutable values. The solution is to copy the
+sounds before accessing them; the original sounds are therefore unchanged.
+(This copy also takes place implicitly in most Nyquist sound functions.)
+<p>
+To make this code safer for general use, we should add checks that <code>s1</code>
+and <code>s2</code> are sounds with identical starting times and sample rates;
+otherwise, an incorrect result might be computed.
+<p>
+Now we are ready to write <code>snd-product</code>, an approximate replacement for
+<code>snd-prod</code>:
+<pre>
+(defun snd-product (s1 s2)
+  (let (obj)
+    (setf obj (send product-class :new s1 s2))
+    (snd-fromobject (snd-t0 s1) (snd-srate s1) obj)))
+</pre>
+
+This code first creates <code>obj</code>, an instance of <code>product-class</code>, to
+hold <code>s1</code> and <code>s2</code>. Then, it uses <code>obj</code> to create a sound
+using <code>snd-fromobject</code>. This sound is returned from
+<code>snd-product</code>.  Note that in <code>snd-fromobject</code>, you must also
+specify the starting time and sample rate as the first two parameters. These
+are copied from <code>s1</code>, again assuming that <code>s1</code> and <code>s2</code> have
+matching starting times and sample rates.
+<p>
+Note that in more elaborate DSP algorithms we could expect the object to
+have a number of instance variables to hold things such as previous samples,
+waveform tables, and other parameters.
+<p>
+<hr>
+<a href = "part4.html">Previous Section</a> | <a href = "part6.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+</body></html>

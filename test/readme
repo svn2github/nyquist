@@ -1,0 +1,3 @@
+running ../ny from test causes a 0 block length error.
+
+fix: I'm not sure how this is supposed to work.  I'm recompiling with small block size. Make a sample that terminates and/or logical stops on a block boundary (1 input) and see how this is handled.  It looks like prod has a special "break" command to get out of the inner loop and terminate the signal when this happens.

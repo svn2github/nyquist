@@ -1,0 +1,279 @@
+<html><head><title>Continuous Transformations and Time Warps</title></head>
+<body bgcolor="ffffff">
+<a name = "25"><h2>Continuous Transformations and Time Warps</h2></a>
+
+Nyquist transformations were discussed in the previous chapter, but all of
+the examples used scalar values.  For example, we saw the <code>loud</code>
+transformation used to change loudness by a fixed amount.  What if we want
+to specify a crescendo, where the loudness changes gradually over time?
+<p>
+It turns out that all transformations can accept signals as well as numbers,
+so transformations can be continuous over time.  This raises some
+interesting questions about how to interpret continuous transformations.
+Should a loudness transformation apply to the internal details of a note or
+only affect the initial loudness?  It might seem unnatural for a decaying 
+piano note to perform a crescendo.  On the other hand, a sustained
+trumpet sound should probably crescendo continuously.  In the case of time
+warping (tempo changes), it might be best for a drum roll to maintain a
+steady rate, a trill may or may not change rates with tempo, and a run of
+sixteenth notes will surely change its rate.
+<p>
+These issues are complex, and Nyquist cannot hope to automatically do the
+right thing in all cases.  However, the concept of behavioral abstraction
+provides an elegant solution.  Since transformations merely modify the
+environment, behaviors are not forced to implement any particular style of
+transformation.  Nyquist is designed so that the default transformation is
+usually the right one, but it is always possible to override the default
+transformation to achieve a particular effect.
+<p>
+<a name = "26"><h3>Simple Transformations</h3></a>
+The ``simple'' transformations affect some parameter, but have no effect on time itself.  The simple transformations that support continuously changing parameters are: <code>sustain</code>, <code>loud</code>, and <code>transpose</code>.
+<p>
+As a first example, Let us use <code>transpose</code> to create a chromatic scale.
+First define a sequence of tones at a steady pitch:
+<code>
+(defun tone-seq ()
+  (seqrep (i 16)
+          (stretch 0.25 (osc-note c4))))	
+</code>
+Now define a linearly increasing ramp to serve as a transposition function:
+<code>
+(defun pitch-rise () (stretch 4.0 (scale 16 (ramp))))
+</code>
+This ramp has a duration of 4 seconds, and over that interval it rises from
+0 to 16 (corresponding to the 16 semitones we want to transpose). Now,
+<code>pitch-rise</code> is used to transpose <code>tone-seq</code>:
+<code>
+(defun chromatic-scale ()
+  (transpose (pitch-rise) (tone-seq)))
+</code>
+<p>
+Similar transformations can be constructed to change the sustain or ``duty
+factor'' of notes and their loudness.  The following expression plays the
+previously constructed chromatic scale with increasing note durations.  The
+rhythm is unchanged, but the note length changes from staccato to legato:
+<code>
+(sustain (stretch 4 (sum 0.2 (ramp)))
+	 (chromatic-scale))
+</code>
+The resulting sustain function will ramp from 0.2 to 1.2.  A sustain of 1.2
+denotes a 20 percent overlap between notes.  The <code>sum</code> has a stretch
+factor of 4, so it will extend over the 4 second duration of
+<code>chromatic-scale</code>.
+<p>
+What do these transformations mean?  How did the system know to produce a
+pitch rise rather than a continuous glissando?  This all relates to the idea
+of behavioral abstraction.  It is possible to design sounds that <i>do</i>
+glissando under the transpose transform, and you can even make sounds that
+<i>ignore</i> transpose altogether.  As explained in Chapter 
+<a href = "part3.html#16">``Behavioral Abstraction''</a>, the transformations modify the
+environment, and behaviors can reference the environment to determine what
+signals to generate.  All built-in functions, such as <code>osc</code>, have a
+default behavior.
+<p>
+The default behavior for sound primitives under <code>transpose</code>, 
+<code>sustain</code>, and <code>loud</code> transformations is
+to sample the environment at the beginning of the
+note.  Transposition is not quantized to semitones or any other scale,
+but in our example, we arranged for the transposition to work out to integer
+numbers of semitones, so we got a chromatic scale.
+<p>
+Transposition only applies to the oscillator and sampling primitives
+<code>osc</code>, <code>partial</code>, <code>sampler</code>, <code>sine</code>, <code>fmosc</code>,
+and <code>amosc</code>.  Sustain applies to <code>osc</code>, <code>env</code>, and
+<code>pwl</code>. (Note that <code>amosc</code> and <code>fmosc</code> get their durations
+from the modulation signal, so they may indirectly depend upon the sustain.)
+Loud applies to <code>osc</code>, <code>sampler</code>, <code>cue</code>, <code>sound</code>,
+<code>fmosc</code>, and <code>amosc</code>. (But not <code>pwl</code> or <code>env</code>.)
+<p>
+<a name = "27"><h3>Time Warps</h3></a>
+The most interesting transformations have to do with transforming time
+itself.  The <code>warp</code> transformation provides a mapping function from
+logical (score) time to real time.  The slope of this function tells us how
+many units of real time are covered by one unit of score time.  This is
+proportional to 1/tempo.  A higher slope corresponds to a slower tempo.
+<p>
+To demonstrate <code>warp</code>, we will define a time warp function using
+<code>pwl</code>:
+<pre>
+(defun warper ()
+  (pwl .25 .4 .75 .6 1.0 1.0 2.0 2.0 2.0))
+</pre>
+
+This function has an initial slope of .4/.25 = 1.6.  It may be easier to
+think in reciprocal terms: the initial tempo is .25/.4 = .625.  Between 0.25
+and 0.75, the tempo is .5/.2 = 2.5, and from 0.75 to 1.0, the tempo is again
+.625.  It is important for warp functions to completely span the interval of
+interest (in our case it will be 0 to 1), and it is safest to extend a bit
+beyond the interval, so we extend the function on to 2.0 with a
+tempo of 1.0.  Next, we stretch and scale the <code>warper</code> function to
+cover 4 seconds of score time and 4 seconds of real time:
+<pre>
+(defun warp4 () (stretch 4 (scale 4 (warper))))
+</pre>
+
+<p>
+<hr>
+<blockquote></blockquote>
+<img src="fig2.gif"><br><br>
+
+<p>
+<b>Figure 2: </b>The result of <code>(warp4)</code>, intended to map 4 seconds of
+score time into 4 seconds of real time.  The function extends beyond 4
+seconds (the dashed lines) to make sure the function is well-defined at
+location (4, 4).  Nyquist sounds are ordinarily open on the right.
+
+<hr>
+<p>
+Figure <a href = "#27">2</a> shows a plot of this warp function.  Now, we can
+warp the tempo of the <code>tone-seq</code> defined above using <code>warp4</code>:
+<pre>
+(play (warp (warp4) (tone-seq)))
+</pre>
+
+Figure <a href = "#27">3</a> shows the result graphically.  Notice that the
+durations of the tones are warped as well as their onsets.  Envelopes are 
+not shown in detail in the figure.  Because of the way <code>env</code> is
+defined, the tones will have constant attack and decay times, and the
+sustain will be adjusted to fit the available time.
+<p>
+<hr>
+<blockquote></blockquote>
+<img src="fig3.gif"><br><br>
+
+<p>
+<b>Figure 3: </b>When <code>(warp4)</code> is applied to <code>(tone-seq-2)</code>, the note onsets and durations are warped.
+
+<hr>
+<p>
+<a name = "28"><h3>Abstract Time Warps</h3></a>
+We have seen a number of examples where the default behavior did the
+``right thing,'' making the code straightforward.  This is not always the
+case.  Suppose we want to warp the note onsets but not the durations.  We
+will first look at an incorrect solution and discuss the error.  Then we
+will look at a slightly more complex (but correct) solution.  
+<p>
+The default behavior for most Nyquist built-in functions is to sample the
+time warp function at the nominal starting and ending score times of the
+primitive.  For many built-in functions, including <code>osc</code>, the starting
+logical time is 0 and the ending logical time is 1, so the time warp
+function is evaluated at these points to yield real starting and stopping
+times, say 15.23 and 16.79.  The difference (e.g. 1.56) becomes the signal
+duration, and there is no internal time warping.  The <code>pwl</code> function
+behaves a little differently.  Here, each breakpoint is warped individually,
+but the resulting function is linear between the breakpoints.
+<p>
+A consequence of the default behavior is that notes stretch when the tempo
+slows down.  Returning to our example, recall that we want to warp only the
+note onset times and not the duration.  One would think that the following
+would work:
+<pre>
+(defun tone-seq-2 ()
+  (seqrep (i 16)
+	  (stretch-abs 0.25 (osc-note c4))))
+<p>
+(play (warp (warp4) (tone-seq-2)))
+</pre>
+
+Here, we have redefined <code>tone-seq</code>, renaming it to <code>tone-seq-2</code>
+and changing the <code>stretch</code> to <code>stretch-abs</code>.  The
+<code>stretch-abs</code> should override the warp function and produce a fixed
+duration.
+<p>
+If you play the example, you will hear steady
+sixteenths and no tempo changes.  What is wrong?  In a sense, the ``fix''
+works too well.  Recall that sequences (including <code>seqrep</code>) determine
+the starting time of the next note from the logical stop time of the
+previous sound in the sequence.  When we forced the stretch to 0.25, we also
+forced the logical stop time to 0.25 real seconds from the beginning, so
+every note starts 0.25 seconds after the previous one, resulting in a
+constant tempo.
+<p>
+Now let us design a proper solution.  The trick is to use <code>stretch-abs</code>
+as before to control the duration, but to restore the logical stop time to a
+value that results in the proper inter-onset time interval:
+<pre>
+(defun tone-seq-3 ()
+  (seqrep (i 16)
+	  (set-logical-stop
+             (stretch-abs 0.25 (osc-note c4))
+             0.25)))
+<p>
+(play (warp (warp4) (tone-seq-3)))
+</pre>
+
+Notice the addition of <code>set-logical-stop</code> enclosing the
+<code>stretch-abs</code> expression to set the logical stop time.  A possible
+point of confusion here is that the logical stop time is set to 0.25, the
+same number given to <code>stretch-abs</code>!  How does setting the logical stop
+time to 0.25 result in a tempo change?  When used within a <code>warp</code>
+transformation, the second argument to <code>set-logical-stop</code> refers to
+<i>score</i> time rather than <i>real</i> time.  Therefore, the score duration of
+0.25 is warped into real time, producing tempo changes according to the
+enviroment.  Figure <a href = "#28">4</a> illustrates the result graphically.
+<p>
+<hr>
+<blockquote></blockquote> 
+<img src="fig4.gif"><br><br>
+
+<p>
+<b>Figure 4: </b>When <code>(warp4)</code> is applied
+to <code>(tone-seq-3)</code>, the note onsets are warped, but not the duration,
+which remains a constant 0.25 seconds.  In the fast middle section, this
+causes notes to overlap.  Nyquist will sum (mix) them.
+
+<hr>
+<p>
+<a name = "29"><h3>Nested Transformations</h3></a>
+Transformations can be nested.  In particular, a simple transformation such
+as transpose can be nested within a time warp transformation.  Suppose we
+want to warp our chromatic scale example with the <code>warp4</code> time warp
+function.  As in the previous section, we will show an erroneous simple
+solution followed by a correct one.
+<p>
+The simplest approach to a nested transformation is to simply combine them
+and hope for the best:
+<pre>
+(play (warp (warp4)
+            (transpose (pitch-rise) (tone-seq))))
+</pre>
+
+This example will not work the way you might expect.  Here is why: the warp
+transformation applies to the <code>(pitch-rise)</code> expression, which is
+implemented using the <code>ramp</code> function.  The default
+behavior of <code>ramp</code> is to interpolate linearly (in real time) between two points.
+Thus, the ``warped'' <code>ramp</code> function will not truly reflect the internal
+details of the intended time warp.  What we need is a way to properly
+compose the warp and ramp functions.  This will lead to a correct solution.
+<p>
+Here is the modified code to properly warp a transposed sequence.  Note that
+the original sequence is used without modification.  The only complication
+is producing a properly warped transposition function:
+<pre>
+(play (warp (warp4)
+            (transpose 
+                (control-warp (get-warp)
+                              (warp-abs nil (pitch-rise)))
+                (tone-seq))))
+</pre>
+
+To properly warp the <code>pitch-rise</code> transposition function, we use
+<code>control-warp</code>, which applies a warp function to a function of score time,
+yielding a function of real time.  We need to pass the warp desired function
+to <code>control-warp</code>, so we fetch it  from the environment ith
+<code>(get-warp)</code>.  Finally, since the warping is done here, we want to
+shield the <code>pitch-rise</code> expression from further warping, so we enclose
+it in <code>(warp-abs nil ...)</code>.
+<p>
+ <i>An aside:</i> This last example illustrates a difficulty in the design of
+Nyquist.  To support behavioral abstraction universally, we must rely upon
+behaviors to ``do the right thing.''  In this case, we would like the
+<code>ramp</code> function to warp continuously according to the environment.  But
+this is inefficient and unnecessary in many other cases where <code>ramp</code>
+and especially <code>pwl</code> are used.  (<code>pwl</code> warps its breakpoints, but still interpolates linearly between them.)  Also, if the default behavior of
+primitives is to warp in a continuous manner, this makes it difficult to
+build custom abstract behaviors.  The final vote is not in.
+<p>
+<hr>
+<a href = "part3.html">Previous Section</a> | <a href = "part5.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+</body></html>

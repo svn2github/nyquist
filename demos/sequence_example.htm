@@ -1,0 +1,52 @@
+<html>
+
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>Sequence Example</title>
+</head>
+
+<body>
+
+<h1>Sequence Example</h1>
+
+<p>A sequence of notes is often specified by a &quot;note list,&quot; consisting of times,
+durations, other transformations, and a parameterized behavior to generate the sound. The
+following is an example:</p>
+
+<pre>(defun ringpat1 () 
+  (scale 0.8 
+    (sim
+      (scale 0.6 (at 0.0 (ring 0.6 45 2)))
+      (scale 0.5 (at 0.2 (ring 0.8 40 1.5)))
+      (scale 0.8 (at 0.6 (ring 1 44 1)))
+      (scale 0.7 (at 0.8 (ring 1.2 32 0.8))) 
+    )))</pre>
+
+<p>Notice that there are 4 sounds. The sounds are shifted in time using the <code>at</code>
+transformation, and all four sounds are combined using the <code>sim</code> construction.
+Because of the time shifts, the sounds do not take place simultaneously, but they may
+overlap somewhat.</p>
+
+<p>Durations are specified by the first parameter to <code>ring</code>, so no <code>stretch</code>
+transformations are used here. Each sound is individually scaled.</p>
+
+<p>To play this sound, you need the <code>ring</code> function from <a
+href="scratch_tutorial.htm">Vinal Scratch Tutorial</a>. Then you can type:</p>
+
+<pre>(play (ringpat1))</pre>
+
+<p>Try the following combination, which plays a short and long version of <code>ringpat1</code>
+at about the same time:</p>
+
+<pre>(play (sim
+        (scale 1.0 (at 0.0 (ringpat1)))
+        (scale 0.7 (at 0.05 (stretch 1.5 (ringpat1)))) ))</pre>
+
+<pre>
+
+
+</pre>
+</body>
+</html>
+

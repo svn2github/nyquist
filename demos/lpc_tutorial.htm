@@ -1,0 +1,186 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.75 [en] (Windows NT 5.0; U) [Netscape]">
+   <title>Nyquist FFT and Inverse FFT Tutorial</title>
+</head>
+<body>
+
+<h1>
+Nyquist LPC Analysis and Synthesis</h1>
+Nyquist provides functions for LPC analysis and synthesis on streams of
+audio data. For analysis, the audio stream is broken into successive frames,
+each of which is analyzed, resulting in a small set of coefficients. For
+synthesis, these frames control a time-varying filter which can be applied
+to an audio signal.
+<p>As with FFT frames, Nyquist does not have a special data type corresponding
+to a sequence of LPC frames. Instead, a sequence of frames is represented
+by an XLISP object. Whenever you send the selector <tt>:next</tt> to the
+object, you get back either NIL, indicating the end of the sequence, or
+you get an LPC frame. (Note that FFT frames and LPC frames are not compatible.)
+<p>This tutorial is based on the file <tt>lpcdemo.lsp</tt> in the <tt>demos</tt>
+folder fo the Nyquist release. Not every line is covered, but this tutorial
+should give you a pretty full explanation of how to use LPC in Nyquist.
+<h2>
+Preliminaries</h2>
+Before using LPC functions, you must load the LPC library:
+<pre>(load "lpc")</pre>
+At the top of <tt>lpcdemo.lsp</tt>, you see the following lines:
+<pre>(setf *lpc-path* (current-path))
+(setf *lpc-data* (strcat *lpc-path* "lpc-exmpl.dat"))</pre>
+The <tt>(current-path)</tt> function call returns the full file system
+path to the file being loaded (<tt>lpcdemo.lsp</tt>). We save this into
+<tt>*lpc-path*</tt>
+so we can find other related files later, even if the current directory
+is changed. <tt>*lpc-data*</tt> is one of the file names we will use later.
+<h2>
+LPC Analysis</h2>
+Another file we want is <tt>a-snd-file.snd</tt>, a very short vocal sound
+that is part of the Nyquist release (it is also used by <tt>examples.lsp)</tt>.
+To get this file, we concatenate it with the path we obtained above. The
+resulting full path can be passed to <tt>s-read </tt>to read the sound.
+Find the expressions in the following function that build a file name and
+read the file as a sound:
+<pre>(defun do-lpc-analysis ()
+&nbsp; (let ((myfile (strcat *lpc-path* "a-snd-file.snd")))
+&nbsp;&nbsp;&nbsp; (save-lpc-file (make-lpanal-iterator (s-read *myfile*) 0.08 0.04 50)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "temp.dat")))</pre>
+You can analyze a sound using <tt>make-lpanal-iterator</tt>. This function
+takes a sound, a frame size, a step size, and the number of poles. In <tt>do-lpc-analysis</tt>
+(above), we used 0.08 seconds, 0.04 seconds, and 50 poles for these parameters.
+The result of <tt>make-lpanal-iterator</tt> is an object that will deliver
+LPC frames on demand. In this function, we will grab all of the frames
+and write them to a file using <tt>save-lpc-file</tt>. The data is written
+to <tt>"temp.dat"</tt>. You should run this function and look at the file,
+which contains ASCII data. Later, we will use this data to filter a sound.
+<p>Since <tt>a-snd-file.snd</tt> is a very short and uninteresting sound,
+we will use a different set of LPC frames in the following synthesis examples.
+The data is in <tt>lpc-exmpl.dat</tt>, and the full path for this file
+was computed earlier and stored in <tt>*lpc-data*</tt>.
+<p>The first example will just show how to read the LPC data file using
+<tt>make-lpc-file-iterator</tt>,
+which takes the file name as a parameter. You can print some frame data
+using <tt>show-lpc-data</tt> as shown in the following:
+<pre>(defun ex-1 ()&nbsp;
+&nbsp; (show-lpc-data (make-lpc-file-iterator *lpc-data*) 100 120 NIL))</pre>
+The additional parameters to <tt>show-lpc-data</tt> are the starting frame
+(100), the ending frame (120), and a flag (<tt>NIL</tt>)&nbsp; indicating
+whether to print filter coefficients. If you want to look a little closer
+at the inner workings of this code, you can send a <tt>:next</tt> message
+to an LPC iterator object as follows:
+<pre>(setf iterator (make-lpc-file-iterator *lpc-data*))
+(send iterator :next)</pre>
+This will return the first frame of the LPC analysis. Send <tt>:next</tt>
+again&nbsp; to get the next frame.
+<h2>
+LPC Synthesis With Fixed All-Pole Filter</h2>
+The next example creates a sequence of vowel sounds. The vowel filters
+are based on the
+<br>30th, 60th, and 100th frames taken from the file <tt>lpc-exmpl.dat</tt>.
+We use <tt>make-lpc-file-iterator</tt> as before to read the LPC frames
+from the file, but we use <tt>nth-frame</tt> to get the desired frames.
+<p>The function <tt>allpoles-from-lpc</tt> constructs a filter from the
+frame and applies it to a sound. In this case, the source sound is created
+by <tt>buzz</tt> with a little vibrato provided by <tt>lfo</tt>:
+<br>&nbsp;
+<pre>(defun ex-4 ()&nbsp;
+&nbsp; (play (seq
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (allpoles-from-lpc (buzz 12 f2 (lfo 5.0 4.0))&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (nth-frame (make-lpc-file-iterator *lpc-data*)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (allpoles-from-lpc (buzz 12 f2 (lfo 5.1 4.0))&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (nth-frame (make-lpc-file-iterator *lpc-data*)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 60))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (allpoles-from-lpc (buzz 12 g2 (lfo 5.3 4.0))&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (nth-frame (make-lpc-file-iterator *lpc-data*)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 100)) )))</pre>
+Rather than iterate through a file to find the desired frame, you can also
+just store the desired frames as in the following:
+<pre>(setf a-lpcdata
+&nbsp; '(63.2144 0.674387 0.103287
+&nbsp;&nbsp;&nbsp; #(-0.0381026 0.00804115 0.0109905 0.0145117 0.00199174&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.00129314 0.0171826 0.0181176 0.00179391 -0.0114089&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.0120949 -0.000410595 -0.0122539 -0.0209354 -0.00804976&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.00345041 -0.00409532 -0.00227011 0.014224 0.0135451
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0056023 -0.00651142 -0.00564953 -0.0168921 -0.0377939
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.0449506 -0.0355592 -0.0339316 -0.0454434 1.19336)))</pre>
+
+<pre>(setf e-lpcdata
+&nbsp; '(40.7157 0.149753 0.0606467
+&nbsp;&nbsp;&nbsp; #(0.0244574 -0.0225545 -0.0172724 -0.0122709 -0.0042946
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00886974 0.0121516 0.0120936 0.00197545 -0.00582163
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.018367 -0.0201546 -0.00440599 0.00638936 0.0166275
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0185066 0.00890464 -0.00158013 -0.00494974 -0.00479037
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0130814 0.0138648 -0.0022018 -0.021368 -0.0343532&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.0312712 -0.0574975 -0.0918824 -0.112016 1.31398)))</pre>
+
+<pre>(setf i-lpcdata
+&nbsp; '(5.5391 0.0321825 0.0762238&nbsp;
+&nbsp;&nbsp;&nbsp; #(-0.0341124 -0.0149688 -0.00585657 -0.0111572 0.00769712
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0190367 0.00885366 0.0112762 0.0118286 -0.00059044&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.0140864 -0.0123688 -0.0151128 0.00214354 -0.00810219&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.00538188 0.00631382 0.020771 0.0356498 0.0295531
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0242797 0.0124296 0.00445127 -0.013062 -0.0387178&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -0.0527783 -0.0685511 -0.076575 -0.0846335 1.24521)))</pre>
+The following function applies a filter to noise:
+<pre>(defun noise-vocal (lpcdata dur)
+&nbsp; (allpoles-from-lpc (noise dur) lpcdata))</pre>
+Combining this with our definitions of different frames, we can write a
+little sequence
+<br>of vowel sounds:
+<pre>(defun ex-5 ()
+&nbsp; (play
+&nbsp;&nbsp;&nbsp; (seq (noise-vocal a-lpcdata 1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (noise-vocal e-lpcdata 1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (noise-vocal i-lpcdata 1))))</pre>
+We can do the same thing using a buzz sound rather than noise:
+<pre>(defun buzz-vocal (lpcdata dur)
+&nbsp; (allpoles-from-lpc (buzz 16 e2 (const 0.0 dur))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpcdata))</pre>
+
+<pre>(defun ex-6 ()
+&nbsp; (play
+&nbsp;&nbsp;&nbsp;&nbsp; (seq (buzz-vocal a-lpcdata 1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (buzz-vocal e-lpcdata 1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (buzz-vocal i-lpcdata 1))))</pre>
+
+<h2>
+Time-Varying LPC Filter</h2>
+The most interesting LPC effect is to use a sequence of frames to drive
+a time-varying all-pole filter. If the frames were analyzed from a vocal
+source, then the resulting filter will transfer the speech articulation
+(or at least some of it) to another sound. The time-varying LPC filter
+is called <tt>lpreson</tt>.
+<p>Here, the LPC data from <tt>*lpc-data*</tt> is used to modulate noise:
+<pre>(defun ex-7a ()
+&nbsp; ;; parameters are sound, lpc-iterator, skiptime
+&nbsp; (lpreson (noise 6.5) (make-lpc-file-iterator *lpc-data*) 0.04))</pre>
+
+<pre>(defun ex-7 ()
+&nbsp; (play (ex-7a)))</pre>
+The same thing can be done to filter a buzz sound. This example generates
+some vocal-like sounds in two-part harmony:
+<br>(defun ex-8a (p dur)<br>
+&nbsp; (lpreson (buzz 16 p (scale 1.5 (lfo 3.0 dur)))&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (make-lpc-file-iterator
+*lpc-data*)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.04))<br>
+<br>
+(defun ex-8 ()<br>
+&nbsp; (play<br>
+&nbsp;&nbsp;&nbsp; (sim (seq (ex-8a c4 1) (ex-8a g3 1) (ex-8a a3 1) (ex-8a
+b3 1) (ex-8a c4 1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (seq (ex-8a c2 2) (ex-8a
+f2 1) (ex-8a g2 1) (ex-8a e2 1)))))<br>
+<br>
+Note that you can change the <i>skiptime</i> parameter to <tt>lpreson</tt>
+to change the rate at which the filter moves through the frames. The result
+is to caues the speech articulations to go faster or slower.
+<p>More examples can be found in <tt>lpcdemo.lsp</tt>.
+<h2>
+Acknowledgments</h2>
+Pedro J. Morales created the LPC functions for Nyquist and wrote <tt>lpcdemo.lsp</tt>
+on which this tutorial is based.
+</body>
+</html>

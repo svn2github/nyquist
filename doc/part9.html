@@ -1,0 +1,41 @@
+<html><head><title>Debugging Nyquist</title></head>
+<body bgcolor="ffffff">
+<a name = "63"><h2>Debugging Nyquist</h2></a>
+<a name="index481">
+There are a number of tools, functions, and techniques that can help to debug Nyquist programs. Since these are described in many places throughout this manual, this chapter brings together many suggestions and techniques for debugging.
+<p>
+Probably the most important debugging tool is the backtrace. When Nyquist encounters an error, it suspends execution and prints an error message. To find out where in the program the error occurred and how you got there, start by typing <code>(bt)</code>. This will print out the last several function calls and their arguments, which is usually sufficient to see what is going on.
+<p>
+In order for <code>(bt)</code> to work, you must have a couple of global variables set: <code>*tracenable*</code> is ordinarily set to <code>NIL</code>.  If it is true, then a backtrace is automatically printed when an error occurs; <code>*breakenable*</code> must be set to <code>T</code>, as it enables the execution to be suspended when an error is encountered. If <code>*breakenable*</code> is <code>NIL</code> (false), then execution stops when an error occurs but the stack is not saved and you cannot get a backtrace. Finally, <code>bt</code> is just a macro to save typing.  The actual backtrace function is <code>baktrace</code>, which takes an integer argument telling how many levels to print.  All of these things are set up by default when you start Nyquist.
+<p>
+Since Nyquist sounds are executed with a lazy evaluation scheme, some errors are encountered when samples are being generated.  In this case, it may not be clear which expression is in error. Sometimes, it is best to explore a function or set of functions by examining intermediate results. Any expression that yields a sound can be assigned to a variable and examined using one or more of: <code>s-plot</code>, <code>snd-print-tree</code>, and of course <code>play</code>. The <code>snd-print-tree</code> function prints a lot of detail about the inner representaion of the sound.
+<p>
+Another technique is to use low sample rates so that it is easier to plot results or look at samples directly. The calls:
+<pre>
+(set-sound-srate 100)
+(set-control-srate 100)
+</pre>
+
+set the default sample rates to 100, which is too slow for audio, but useful for examining programs and results. The function
+<pre>
+(snd-samples <i>sound</i> <i>limit</i>)
+</pre>
+
+will convert up to <i>limit</i> samples from <i>sound</i> into a Lisp array. This is another way to look at results in detail.
+<p>
+The <code>trace</code> function is sometimes useful.  It prints the name of a function and its arguments everytimg the function is called, and the result is printed when the function exits.  To trace the osc function, type:
+<pre>
+(trace osc)
+</pre>
+
+and to stop tracing, type <code>(untrace osc)</code>.
+<p>
+If a variable needs a value or a function is undefined, you can fix the error (by setting the variable or loading the function definition) and keep going.  Use <code>(co)</code>, short for <code>(continue)</code> to reevaluate the variable or function and continue execution.
+<p>
+When you finish debugging a particular call, you can ``pop'' up to the top level by typing <code>(top)</code>, a short name for <code>(top-level)</code>.
+<p>
+
+
+<hr>
+<a href = "part8.html">Previous Section</a> | <a href = "part10.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+</body></html>

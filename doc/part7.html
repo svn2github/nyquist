@@ -1,0 +1,28 @@
+<html><head><title>Nyquist Globals</title></head>
+<body bgcolor="ffffff">
+<a name = "61"><h2>Nyquist Globals</h2></a>
+<a name="index475">
+There are many global variables in Nyquist. A convention in Lisp is to place asterisks (*) around global variables, e.g. <code>*table*</code>. This is only a convention, and the asterisks are just like any other letter as far as variable names are concerned. Here are some globals users should know about:
+<p>
+<dl>
+<dt>
+<code>*table*</code><dd>Default table used by <code>osc</code> and other oscillators.<br><br>
+<dt><code>*A4-Hertz*</code><dd>Frequency of A4 in Hertz.. Note: you must call <code>(set-pitch-names)</code> to recompute pitches after changing <code>*A4-Hertz*</code>.<br><br>
+<dt><code>*breakenable*</code><dd>Controls whether XLisp enters a break loop when an error is encountered.<br><br>
+<dt><code>*control-srate*</code><dd>Part of the environment, establishes the control sample rate. See Section <a href = "part3.html#17">``The Environment''</a> for details.<br><br>
+<dt><code>*default-sf-bits*</code><dd>The default bits-per-sample for sound files. Typically 16.<br><br>
+<dt><code>*default-sf-dir*</code><dd>The default sound file directory.  Unless you give a full path for a file, audio files are assumed to be in this directory.<br><br>
+<dt><code>*default-sf-format*</code><dd>The default sound file format. When you write a file, this will be the default format: AIFF for Mac and most Unix systems, NeXT for NeXT systems, and WAV for Win32.<br><br>
+<dt><code>*default-sf-srate*</code><dd>The default sample rate for sound files. Typically  44100.0, but often set to 22050.0 for speed in non-critical tasks.<br><br>
+<dt><code>*default-control-srate*</code><dd>Default value for <code>*control-srate*</code>. This value is restored when you execute <code>(top)</code> to pop out of a debugging session. Change it by calling <code>(set-control-srate <i>value</i>)</code>.<br><br>
+<dt><code>*default-sound-srate*</code><dd>Default value for <code>*sound-srate*</code>. This value is restored when you execute <code>(top)</code> to pop out of a debugging session. Change it by calling <code>(set-sound-srate <i>value</i>)</code>.<br><br>
+<dt><code>*file-separator*</code><dd>The character that separates directories in a path, e.g. ``<code>/</code>'' for Unix, ``<code>:</code>'' for Mac, and ``<code>\</code>'' for Win32. This is normally set in <code>system.lsp</code>.<br><br>
+<dt><code>*rslt*</code><dd>When a function returns more than one value, <code>*rslt*</code> is set to a list of the ``extra'' values. This provides a make-shift version of the <code>multiple-value-return</code> facility in Common Lisp.<br><br>
+<dt><code>*sound-srate*</code><dd>Part of the environment, establishes the audio sample rate. See Section <a href = "part3.html#17">``The Environment''</a> for details.<br><br>
+<dt><code>*soundenable*</code><dd>Controls whether writes to a sound file will also be played as audio.  Set this variable by calling <code>(sound-on)</code> or <code>(sound-off)</code>.<br><br>
+<dt><code>*tracenable*</code><dd>Controls whether XLisp prints a backtrace when an error is encountered.<br><br>
+<dt><code>Environment variables</code><dd>See <a href = "part3.html#17">``The Environment''</a> for definitions of variables used in the environment for behaviors. In general, you should never set or access these variables directly.<br><br>
+<dt><code>Various constants</code><dd>See <a href = "part2.html#15">``Predefined Constants''</a> for definitions of predefined constants for loudness, duration, and pitch.<br><br>
+<dt></dl><hr>
+<a href = "part6.html">Previous Section</a> | <a href = "part8.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+</body></html>

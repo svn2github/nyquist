@@ -1,0 +1,236 @@
+<html><head><title>Appendix 2: Intgen</title></head>
+<a name = "74"><h2>Appendix 2: Intgen</h2></a><a name="index482">
+
+
+This documentation describes Intgen, a program for generating XLISP to C
+interfaces.  Intgen works by scanning <code>.h</code> files with special comments in
+them.  Intgen builds stubs that implement XLISP SUBR's.  When the SUBR is
+called, arguments are type-checked and passed to the C routine declared in
+the <code>.h</code> file.  Results are converted into the appropriate XLISP type and
+returned to the calling XLISP function.  Intgen lets you add C functions
+into the XLISP environment with very little effort.
+<p>
+The interface generator will take as command-line input:
+<ul>
+<li>
+the name of the <code>.c</code> file to generate (do not include the <code>.c</code> extension; e.g. write
+<code>xlexten</code>, not <code>xlexten.c</code>);
+<li>a list of <code>.h</code> files.
+</ul>
+Alternatively, the command line may specify a command file from which to read file names. The command file name should be preceded by "@", for example:
+<pre>
+intgen @sndfns.cl
+</pre>
+
+reads sndfns.cl to get the command-line input.  Only one level of indirection is allowed.
+<p>
+The output is:
+<ul>
+<li>
+a single <code>.c</code> file with one SUBR defined for each designated
+routine in a <code>.h</code> file. 
+<li>a <code>.h</code> file that declares each new C routine.  E.g. if the <code>.c</code> file is named <code>xlexten.c</code>, this file will be named <code>xlextendefs.h</code>;
+<li>a <code>.h</code> file that extends the SUBR table used by Xlisp.  E.g. if the <code>.c</code> file is named <code>xlexten.c</code>, then this file is named <code>xlextenptrs.h</code>;
+<li>a <code>.lsp</code> file with lisp initialization expressions copied from the
+<code>.h</code>
+files.  This file is only generated if at least one initialization expression is encountered.
+</ul>
+<p>
+For example, the command line
+<pre>
+intgen seint ~setypes.h access.h
+</pre>
+
+generates the file <code>seint.c</code>, using declarations in <code>setypes.h</code>
+and <code>access.h</code>.  Normally, the <code>.h</code> files are included by the
+generated file using <code>#include</code> commands.  A <code>~</code> before a file
+means do not include the <code>.h</code> file.  (This may be useful if you extend
+<code>xlisp.h</code>, which will be included anyway).  Also generated will be
+<code>setintdefs.h</code> and <code>seintptrs.h</code>.
+<p>
+<a name = "75"><h4>Extending Xlisp</h4></a><a name="index483">
+Any number of <code>.h</code> files may be named on the command line to Intgen,
+and Intgen will make a single <code>.c</code> file with interface routines for all
+of the <code>.h</code> files.  On the other hand, it is not necessary to put all
+of the extensions to Xlisp into a single interface file.  For example, you
+can run Intgen once to build interfaces to window manager routines, and
+again to build interfaces to a new data type.  Both interfaces can be linked
+into Xlisp.
+<p>
+To use the generated files, you must compile the <code>.c</code> files and link
+them with all of the standard Xlisp object files.  In addition, you must
+edit the file <code>localdefs.h</code> to contain an <code>#include</code> for each
+<code>*defs.h</code> file, and edit the file <code>localptrs.h</code> to include each
+<code>*ptrs.h</code> file.  For example, suppose you run Intgen to build
+<code>soundint.c</code>, <code>fugueint.c</code>, and <code>tableint.c</code>.  You would then
+edit <code>localdefs.h</code> to contain the following:
+<pre>
+#include "soundintdefs.h"
+#include "fugueintdefs.h"
+#include "tableintdefs.h"
+</pre>
+
+and edit <code>localptrs.h</code> to contain:
+<pre>
+#include "soundintptrs.h"
+#include "fugueintptrs.h"
+#include "tableintptrs.h"
+</pre>
+
+These <code>localdefs.h</code> and <code>localptrs.h</code> files are in turn included
+by <code>xlftab.c</code> which is where Xlisp builds a table of SUBRs.
+<p>
+To summarize, building an interface requires just a few simple steps:
+<ul>
+<li>
+Write C code to be called by Xlisp interface routines.  This C code does the
+real work, and in most cases is completely independent of Xlisp.
+<li>Add comments to <code>.h</code> files to tell Intgen which routines to build
+interfaces to, and to specify the types of the arguments.
+<li>Run Intgen to build interface routines.
+<li>Edit <code>localptrs.h</code> and <code>localdefs.h</code> to include generated
+<code>.h</code> files.
+<li>Compile and link Xlisp, including the new C code.
+</ul>
+<p>
+<a name = "76"><h3>Header file format</h3></a><a name="index484">Each routine to be interfaced with Xlisp must be declared as
+follows:
+<pre>
+<i>type-name</i> <i>routine-name</i>(); /* LISP: (<i>func-name</i> <i>type1</i> <i>type2</i> ...) */
+</pre>
+
+The comment may be on the line following the declaration, but the
+declaration and the comment must each be on no more than one line.
+The characters <code>LISP:</code> at the beginning of the comment mark routines
+to put in the interface.  The comment also gives the
+type and number of arguments.  The function, when accessed from lisp will
+be known as <i>func-name</i>, which need not bear any relationship to
+<i>routine-name</i>.  By convention, underscores in the C <i>routine-name</i>
+should be converted to dashes in <i>func-name</i>, and <i>func-name</i> should be in
+all capitals.  None of this is enforced or automated though.
+<p>
+Legal type_names are:
+<dl>
+<dt> 
+<code>LVAL</code><dd>returns an Xlisp datum.<br><br>
+<dt><code>atom_type</code><dd>equivalent to <code>LVAL</code>, but the result is expected to
+be an atom.<br><br>
+<dt><code>value_type</code><dd>a value as used in Dannenberg's score editor.<br><br>
+<dt><code>event_type</code><dd>an event as used in Dannenberg's score editor.<br><br>
+<dt><code>int</code><dd>interface will convert int to Xlisp <code>FIXNUM</code>.<br><br>
+<dt><code>boolean</code><dd>interface will convert int to <code> T</code> or <code>nil</code>.<br><br>
+<dt><code>float</code> or <code>double</code><dd>interface converts to <code>FLONUM</code>.<br><br>
+<dt><code>char *</code> or <code>string</code> or <code>string_type</code><dd>interface converts to <code>STRING</code>.  The result string will be copied into the XLISP heap.<br><br>
+<dt>	void<dd>interface will return <code>nil</code>.
+</dl>
+<p>
+It is easy to extend this list.  Any unrecognized type will 
+be coerced to an <code>int</code> and then returned as a <code>FIXNUM</code>, and a warning will be
+issued.
+<p>
+The ``<code>*</code>'' after char must be followed by <i>routine-name</i> with
+no intervening space.
+<p>
+Parameter types may be any of the following:
+<dl>
+<dt>
+<code>FIXNUM</code><dd>C routine expects an int.<br><br>
+<dt><code>FLONUM</code> or <code>FLOAT</code><dd>C routine expects a <code>double</code>.<br><br>
+<dt><code>STRING</code><dd>C routine expects <code>char *</code>, the string is not copied.<br><br>
+<dt><code>VALUE</code><dd>C routine expects a <code>value_type</code>.  (Not applicable to Fugue.)<br><br>
+<dt><code>EVENT</code><dd>C routine expects an <code>event_type</code>.  (Not applicable to Fugue.)<br><br>
+<dt><code>ANY</code><dd>C routine expects <code>LVAL</code>.<br><br>
+<dt><code>ATOM</code><dd>C routine expects <code>LVAL</code> which is a lisp atom.<br><br>
+<dt><code>FILE</code><dd>C routine expects <code>FILE *</code>.<br><br>
+<dt><code>SOUND</code><dd>C routine expects a <code>SoundPtr</code>.<br><br>
+<dt></dl>
+Any of these may be followed by ``<code>*</code>'': <code>FIXNUM*</code>, <code>FLONUM*</code>, <code>STRING*</code>, <code>ANY*</code>, <code>FILE*</code>,
+indicating C routine expects <code>int *</code>, <code>double *</code>, <code>char **</code>,  <code>LVAL *</code>, or <code>FILE **</code> .
+This is basically a mechanism for returning more than one value, <i>not</i>
+a mechanism for clobbering XLisp values.  In this spirit, the interface
+copies the value (an <code>int</code>, <code>double</code>, <code>char *</code>,  <code>LVAL</code>, or <code>FILE *</code>) to a local variable
+and passes the address of that variable to the C routine.  On return,
+a list of resulting ``<code>*</code>''  parameters is constructed and bound to the
+global XLisp symbol <code>*RSLT*<a name="index485"></code>.  (Strings are copied.)  If the C routine is void, then the result list is also returned by the corresponding XLisp function.
+<p>
+Note 1: this does not support C routines like strcpy that modify strings, 
+because the C routine gets a pointer to the string in the XLisp heap.
+However, you can always add an intermediate routine that allocates
+space and then calls <code>strcpy</code>, or whatever.
+<p>
+Note 2: it follows that a new XLisp <code>STRING</code> will be created for each <code>STRING*</code> parameter.
+<p>
+Note 3: putting results on a (global!) symbol seems a bit unstructured, but note that one could write a multiple-value binding macro that hides this ugliness from the user if desired.  In practice, I find that pulling the extra result values from <code>*RSLT*</code> when needed is perfectly acceptable.
+<p>
+For parameters that are result values only, the character ``<code>^</code>'' may
+be substituted for ``<code>*</code>''.  In this case, the parameter is <i>not</i> to be passed in the XLisp calling site.
+However, the address of an initialized
+local variable of the given type is passed to the corresponding
+C function, and the resulting value is passed back through <code>*RSLT*</code> as
+ordinary result parameter as described above.
+The local variables are initialized to zero or <code>NULL</code>.
+<p>
+<a name = "77"><h3>Using #define'd macros</h3></a><a name="index486">
+If a comment of the form:
+<pre>
+/* LISP: <i>type-name</i> (<i>routine-name-2</i> <i>type-1</i> <i>type-2</i> ...) */
+</pre>
+
+appears on a line by itself and there was a <code>#define</code> on the previous
+line, then the preceding <code>#define</code> is treated as a C routine, e.g.
+<pre>
+#define leftshift(val, count) ((val) &lt&lt (count))
+/* LISP: int (LOGSHIFT INT INT) */
+</pre>
+
+will implement the LeLisp function <code>LOGSHIFT</code>.
+<p>
+The <i>type-name</i> following ``<code>LISP:</code>'' should have no spaces, e.g. use <code>ANY*</code>, not 
+<code>ANY *</code>.
+<p>
+<a name = "78"><h3>Lisp Include Files</h3></a><a name="index487">
+Include files often define constants that we would like to have around
+in the Lisp world, but which are easier to initialize just by loading
+a text file.  Therefore, a comment of the form:
+<pre>
+/* LISP-SRC: (any lisp expression) */
+</pre>
+
+will cause Intgen to open a file <i>name</i><code>.lsp</code> and append
+<pre>
+(any lisp expression)
+</pre>
+
+to <i>name</i><code>.lsp</code>, where <i>name</i> is the interface name passed on the command line.  If none of the include files examined have comments of
+this form, then no <i>name</i><code>.lsp</code> file is generated.
+<b><i>Note:</i></b> <i>the LISP-SRC comment must be on a new line.</i>
+<p>
+<a name = "79"><h3>Example</h3></a>
+This file was used for testing Intgen.  It uses a trick (ok, it's a hack) to interface
+to a standard library macro (tolower).  Since tolower is already
+defined, the macro ToLower is defined just to give Intgen a name
+to call.  Two other routines, strlen and tough, are interfaced as
+well.
+<pre>
+/* igtest.h -- test interface for intgen */
+<p>
+#define ToLower(c) tolower(c)
+/* LISP: int (TOLOWER FIXNUM) */
+<p>
+int strlen();	/* LISP: (STRLEN STRING) */
+<p>
+void tough(); 
+  /* LISP: (TOUGH FIXNUM* FLONUM* STRING ANY FIXNUM) */
+</pre>
+
+<p>
+<a name = "80"><h3>More Details</h3></a>Intgen has some compiler switches to enable/disable the use of certain types, including
+<code>VALUE</code> and <code>EVENT</code> types used by Dannenberg's score editing work, the <code>SOUND</code> type used by Fugue, and <code>DEXT</code> and <code>SEXT</code> types added for Dale Amon.
+Enabling all of these is not likely to cause problems,
+and the chances of an accidental use of these types getting through
+the compiler and linker seems very small.
+
+<p>
+<hr>
+<a href = "part10.html">Previous Section</a> | <a href = "part12.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+</body></html>

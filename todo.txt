@@ -1,0 +1,123 @@
+
+
+detect newline problems, e.g. a stray ^M at end of file seems to cause read error, but
+the char does not show up in most editors including jnyqide.
+
+
+=================
+Documentation for Adagio should go somewhere. It's mentioned in the nyquist 
+manual, but there's no reference or URL for CMT.
+
+=================
+
+Thanks for the prompt response.
+it may help if I give you the preference file (OS9) that I created for 
+v 2.29 that caused(?) the error message:
+
+PREF File in OS9 prefs folder:
+> XLISPPATH=Macintosh HD:Users:robwilkinson:SUBJECT
+> index:PROJECTS:Nyquist/Audacity Plugins:nyquist.229:runtime
+
+Resulting error message: XLISP version 2.0, Copyright (c) 1986, by 
+David Betz
+> CMU MIDI Toolkit, Copyright (c) 1993,1994, by Roger B. Dannenberg 
+> Macintosh interface by Brian Kendig, Erik A. Dahl, and Dominic 
+> Mazzoni.
+> error: file name too long - NIL
+
+Regards
+Rob
+
+
+
+No matter what I do to the file name by altering the preferences file I get the same message.
+I thought it might have something to do with the extended(>32) filename length in OSX but even very short 
+names do not work.
+Otherwise 2.29 works fine.
+
+2) Version 2.30 unpacked ok but there was no file named Nyquist and no icon. Could not persuade it to run. 
+Altho very late at night I tried to invoke "ny" using Terminal and remember getting the above error message. 
+Could not repeat the experience tho'.
+
+I downloaded Nyquist to experiment with making a Declipper Effect for Audacity.
+In the learning process I found that none of the Nyquist effects actually work in Audacity. 
+In particular the lp and hp effects. Wrote a simple clipper effect & it did not work either. 
+Is this of interest to you?
+
+Finally have you any suggestions which Nyquist functions I should focus on to find flat topped 
+peaks in a sound file.
+ie to find 3 or more adjacent identical samples not just test for equality to +/- maximum value. 
+The maths for splining in sine or parabolic cap are straight forward if I can extract the flat 
+section and the 3 samples that precede and follow it.
+
+I'm a semi-retired EE not experienced in Lisp or C
+
+
+Regards
+Rob Wilkinson.
+=======================================================================================
+
+missing end-of-line causes crash? - not on windows, try others
+
+======================================================
+
+
+fix, test seqmidi to take note, ctrl, prgm, etc.
+-----
+
+multiseq.c assumes all signals have same sample rate.  I think this could
+be fixed merely by saving an array of sample rates so that zero signals
+of the proper rate could be generated later.  Also be sure to free the
+array of sample rates when the multiseq struct is freed.
+
+bvg================
+
+
+Each chapter requires:
+
+* Programming Instructions (this is done)
+* Programming Tips (this need more work)
+* Programming Misconceptions (this you do at times)
+* Conceptual overview
+    1. details for particular cases
+    2. generalization of the particular cases
+    3. summary notes for each chapter
+The idea of a user manual in addition to a documentation manual
+for nyquist is in order.
+
+Something with more step by step instructions. You may not have a graphic 
+interface but the manual could have a more graphic approach to nyquist.
+
+The issue of analysis/resynthesis within nyquist is not spelled out. Since 
+the technique of analysis/resynthesis was such a force in the creation of 
+Nyquist you could think of gearing your presentation of Nyquist in those 
+terms within a User's Manual for Nyquist.  The point of which is to give a better presentation of 
+Nyquist as a tool for analysis/resynthesis rather than a theory on 
+analysis/resynthesis.
+
+An example of the problem with the manual is evident in the \
+like of treatment of say recorded samples (soundfiles and sound synthesis):
+
+1. mono
+2. stereo
+3. mixing
+
+There is the additional question of using a soundfile to go between one of 
+these 3 cases.  All of this would fill a section on Multichannels.  
+There are sets of terminology which could be listed at the start of each 
+chapter which could be organized in some kind of concept graph.  \
+
+Warping
+Behavior
+Abstract Behavior:
+    * Parameterization of Behaviors
+    * Flexibility of Parameterization \
+Transformation
+Transformation Environment
+
+These ideas are very dense and need more development within a user's manual.
+In part the matter of warping in nyquist and time-warping Practices could 
+also be discussed (discrete and continuous).
+
+================
+

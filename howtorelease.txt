@@ -1,0 +1,50 @@
+How to release Nyquist (notes from RBD to RBD):
+
+New primitives should be entered into misc\transfiles.lsp
+and then makefile.lsp should be used to generate a new
+Makefile as well as sndfn.cl and sndfn.wcl. Run intgen
+under Windows (or Mac) using intgen @sndfn.wcl
+
+Edit Readme.txt to contain correct version number at top.
+
+Add changes to Readme.txt changelog.
+
+Edit runtime/nyinit.lsp to contain correct version number.
+
+Edit documentation to contain correct version number.
+
+Is documentation current and installed?
+[Update and Commit via CVS]
+
+Search for temp.wav in c:\rbd\nyquist, and delete them all.
+
+Run release.bat to create release directory for nyquist_setup
+Run Setup Generator and select nyquist_setup
+Make sure Files:Source Directory is set to proper nyqrel just created by release.bat
+Click Make
+
+Run releasenyqwin.bat to create release directory for nyqwin_setup
+Run Setup Generator and select nyqwin_setup
+Make sure Files:Source Directory is set to proper nyqrelwin just created by releasenyqwin.bat
+Click Make
+
+Run releasenyqide.bat to create release directory for nyqide_setup
+Run Setup Generator and select nyqide_setup
+Make sure Files:Source Directory is set to proper nyqrelide just
+created by releasenyqide.bat
+Click Make
+
+run misc/cmu/cmuinstall.bat
+
+
+FOR THE MAC
+
+run MacProject:release-script
+use StuffIt to make nyquist227exe and nyquist227src
+be sure you made the archives self-extracting
+ftp to UX7
+fix web page and delete old files
+
+FOR UNIX
+
+make release

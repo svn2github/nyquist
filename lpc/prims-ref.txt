@@ -1,0 +1,57 @@
+====================================
+Reference of LPC primitive functions 
+====================================
+
+
+
+
+snd-lpanal  ARGS: snd-array  npoles
+
+   snd-array:  array of samples from a sound to be analyzed
+   npoles:     number of poles for LPC analysis
+
+   returns:    a list (RMS1 RMS2 ERR VECTOR)
+               where  RMS1:    energy of input data (not rms value!)
+                      RMS2:    energy of residual
+                      ERR:     sqrt(RMS2/RMS1)
+                      VECTOR:  array of LPC filter coefficients
+
+   Note: this analysis lacks pitch detection
+
+-------------------------------------------------------------------
+
+snd-allpoles  ARGS: snd  coefs  gain
+
+   snd:        A sound
+   coefs:      Array of coefficients of an allpoles filter.
+               The format of this array is the same of the fourth
+               element of the list returned by snd-lpcanal.
+               (see details in lpc.lsp)
+   gain:       gain of the LPC filter (a FLONUM)
+
+   returns:    The sound filtered by the specified allpoles filter
+
+   Note: This is a static filter. Coefficients do not change. 
+
+--------------------------------------------------------------------
+
+snd-lpreson   ARGS: snd  lpc-obj skiptime
+ 
+    snd:      A sound
+    lpc-obj   A Lisp object such as when a :next message is send to 
+              this object it returns a list of two elements (GAIN COEFS)
+              where:
+                     GAIN:  gain of the filter
+                     COEFS: coefficients of LPC filter
+    skiptime: a FLONUM. This is the frame duration for resyntesis.
+
+    returns: The sound snd filtered by a dinamic LPC filter.
+             The coefficients and gain of LPC filter are changed every frame
+             The data for every frame is obtained by sending a :next message to
+             lpc-obj.
+             The output sound finish when input sound finish or when lpc-obj
+             returns NIL
+
+
+ 
+
