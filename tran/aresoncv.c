@@ -124,7 +124,8 @@ void aresoncv_ns_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;current = *s1_ptr_reg++;
+            register double y0, current;
+            current = *s1_ptr_reg++;
             *out_ptr_reg++ = (float) (y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg);
             y2_reg = y1_reg; y1_reg = y0 - current;
 	} while (--n); /* inner loop */
@@ -252,7 +253,8 @@ void aresoncv_ni_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
 		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
 	    }
-current = *s1_ptr_reg++;
+
+            current = *s1_ptr_reg++;
             *out_ptr_reg++ = (float) (y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg);
             y2_reg = y1_reg; y1_reg = y0 - current;
 	    bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
@@ -381,7 +383,8 @@ void aresoncv_nr_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;current = *s1_ptr_reg++;
+            register double y0, current;
+            current = *s1_ptr_reg++;
             *out_ptr_reg++ = (float) (y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg);
             y2_reg = y1_reg; y1_reg = y0 - current;
 	} while (--n); /* inner loop */

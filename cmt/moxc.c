@@ -215,10 +215,16 @@ void cause(delay_type delay, ...)
         gprintf(ERROR,"cause called with NULL routine\n");
         EXIT(1);
 #ifndef DOS     /* IBM allows odd addresses */
+#if (__APPLE__ != 1 || __i386__ != 1) /* Intel Mac allows odd addresses */
     } else if (((long) call->u.e.routine) & 1) {
         gprintf(ERROR, "cause called with bad routine address: 0x%lx\n",
                 call->u.e.routine);
+#ifndef GCC_MODEL_CPU
+#define GCC_MODEL_CPU "GCC_MODEL_CPU is undefined for this compilation"
+#endif
+		gprintf(ERROR, GCC_MODEL_CPU);
         EXIT(1);
+#endif
 #endif
     }
 #endif
@@ -281,10 +287,12 @@ void causepri(delay_type delay, int pri, ...)
         gprintf(ERROR,"cause called with NULL routine\n");
         EXIT(1);
 #ifndef DOS     /* IBM allows odd addresses */
+#if (__APPLE__ != 1 || __i386__ != 1) /* Intel Mac allows odd addresses */
     } else if (((long) call->u.e.routine) & 1) {
         gprintf(ERROR, "causepri called with bad routine address: 0x%lx\n",
                 call->u.e.routine);
         EXIT(1);
+#endif
 #endif
     }
 #endif

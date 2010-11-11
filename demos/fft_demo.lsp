@@ -1,6 +1,9 @@
 ;; this code is extracted from fft_tutorial.htm
 ;;
 ;; Roger B. Dannenberg, 2001
+;; 
+;; Please see fft_tutorial.htm for more in-depth comments and explanations.
+;;
 
 (setf fft1-class (send class :new '(sound length skip)))
 
@@ -39,7 +42,7 @@
   (play (snd-ifft 0 *sound-srate* iterator skip NIL)))
 
 ;; a convenient sound file name (change this to one of your soundfiles):
-(setf sfn "D:\\brain\\outro\\soup.wav")
+(setf sfn "/Users/rbd/class/icm2009/sounds/talking.wav") 
 
 (defun file-test () (play-fft1 (file-fft1 sfn 512 512) 512))
 
@@ -72,11 +75,14 @@
                        (control-srate-abs *sound-srate* 
                          (pwl 0 mi1 0.5 mi2 1 mi3 1))))))
 
-(defun mod-snd ()
-  (sum
-    (fm-tone c3 15 20 15)   ;; adjust FM parameters here
-    (fm-tone d3 15 20 15)   ;; adjust FM parameters here
-    (fm-tone e3 15 20 15))) ;; adjust FM parameters here
+(defun mod-snd (sfn)
+  ; to get duration of file, open it and look at the 6th element
+  ; of the extra return values in *rslt*
+  (stretch (nth 6 (progn (s-read sfn) *rslt*))
+    (sum
+      (fm-tone c3 15 20 15)    ;; adjust FM parameters here
+      (fm-tone d3 15 20 15)    ;; adjust FM parameters here
+      (fm-tone e3 15 20 15)))) ;; adjust FM parameters here
 
 (setf fft-modulator-class (send class :new '(src1 src2)))
 
@@ -113,7 +119,7 @@
   (let ((fs 512)) ;; frame size
     (play-fft1 (make-fft-modulator 
                  (file-fft1 sfn fs fs)
-                 (make-fft1-iterator (mod-snd) fs fs))
+                 (make-fft1-iterator (mod-snd sfn) fs fs))
                fs)))
 
 (defun raised-cosine ()
@@ -133,7 +139,7 @@
   (let ((fs 512)) ;; frame size
     (play-fft (make-fft-modulator 
                 (file-fft1 sfn fs (/ fs 2))
-                (make-fft1-iterator (mod-snd) fs (/ fs 2)))
+                (make-fft1-iterator (mod-snd sfn) fs (/ fs 2)))
               fs (/ fs 2))))
 
 
@@ -158,13 +164,13 @@
   (let ((fs 512)) ;; frame size
     (play-fft (make-fft-modulator 
                 (file-fft sfn fs (/ fs 2))
-                (make-fft-iterator (mod-snd) fs (/ fs 2)))
+                (make-fft-iterator (mod-snd sfn) fs (/ fs 2)))
               fs (/ fs 2))))
 
 (defun mod-test-wws ()
   (let ((fs 1024)) ;; frame size
     (play-fft (make-fft-modulator 
                 (file-fft sfn fs (/ fs 16))
-                (make-fft1-iterator (mod-snd) fs (/ fs 16)))
+                (make-fft1-iterator (mod-snd sfn) fs (/ fs 16)))
               fs (/ fs 2))))
 

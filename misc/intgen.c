@@ -463,6 +463,8 @@ static void process_file(fname, out)
     in = fopen(fname, "r");
     if (in == NULL) {
         fprintf(errfile, "couldn't open %s\n", fname);
+        /* however, we still write the file as an #include ... */
+        fprintf(out, "#include \"%s\"\n\n", fname);
         return;
     }
 

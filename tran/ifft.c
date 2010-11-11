@@ -1,4 +1,6 @@
 #include "stdio.h"
+#define _USE_MATH_DEFINES 1 /* for Visual C++ to get M_LN2 */
+#include <math.h>
 #ifndef mips
 #include "stdlib.h"
 #endif
@@ -63,7 +65,10 @@ typedef struct ifft_susp_struct {
  */
 
 #include "samples.h"
-#include "fftn.h"
+#include "fftext.h"
+
+#define MUST_BE_FLONUM(e) \
+    if (!(e) || ntype(e) != FLONUM) { xlerror("flonum expected", (e)); }
 
 table_type get_window_samples(LVAL window, sample_type **samples, long *len)
 {
@@ -108,8 +113,7 @@ out:        togo = 0;   /* indicate termination */
         }
         if (susp->index >= susp->stepsize) {
             long i;
-            long half_i;
-            int n;
+            long m, n;
             LVAL elem;
             susp->index = 0;
             susp->array = 
@@ -130,55 +134,49 @@ out:        togo = 0;   /* indicate termination */
                 if (susp->window && (susp->window_len != susp->length))
                     xlerror("window size and spectrum size differ", 
                             susp->array);
-                susp->samples = 
-                    (sample_type *) calloc(susp->length * 2,
-                                           sizeof(sample_type));
+                /* tricky non-power of 2 detector: only if this is a
+                 * power of 2 will the highest 1 bit be cleared when
+                 * we subtract 1 ...
+                 */
+                if (susp->length & (susp->length - 1))
+                    xlfail("spectrum size must be a power of 2");
+                susp->samples = (sample_type *) calloc(susp->length,
+                                                       sizeof(sample_type));
                 susp->outbuf = (sample_type *) calloc(susp->length, 
-                    sizeof(sample_type));
+                                                      sizeof(sample_type));
             } else if (getsize(susp->array) != susp->length) {
                 xlerror("arrays must all be the same length", susp->array);
             }
 
             /* at this point, we have a new array to put samples */
-            /* real part will be susp->samples[0:n-1], */
-            /* im part in samples[n:2*n-1] */
+            /* the incoming array format is [DC, R1, I1, R2, I2, ... RN]
+             * where RN is the real coef at the Nyquist frequency
+             * but susp->samples should be organized as [DC, RN, R1, I1, ...]
+             */
             n = susp->length;
+            /* get the DC (real) coef */
             elem = getelement(susp->array, 0);
-            if (ntype(elem) != FLONUM) {
-                xlerror("flonum expected", elem);
-            }
+            MUST_BE_FLONUM(elem)
             susp->samples[0] = (sample_type) getflonum(elem);
-            susp->samples[n] = 0;
-            half_i = 0;
-            for (i = 1; i < n - 1; i += 2) {
-                half_i++;
-                elem = getelement(susp->array, i);
-                if (ntype(elem) != FLONUM) {
-                    xlerror("flonum expected", elem);
-                }
-                susp->samples[half_i] = susp->samples[n - half_i] = 
-                    (sample_type) (getflonum(elem) / 2.0);
 
-                elem = getelement(susp->array, i + 1);
-                if (ntype(elem) != FLONUM) {
-                    xlerror("flonum expected", elem);
-                }
-                susp->samples[n + half_i] =
-                    -(susp->samples[2*n - half_i] =
-                          (sample_type) (getflonum(elem) / 2.0));
-            }
-            if (n % 2 == 0) {
-                elem = getelement(susp->array, n - 1);
-                if (ntype(elem) != FLONUM) {
-                    xlerror("flonum expected", elem);
-                }
-                susp->samples[n / 2] = (sample_type) getflonum(elem);
-                susp->samples[n + (n / 2)] = 0;
+            /* get the Nyquist (real) coef */
+            elem = getelement(susp->array, n - 1);
+            MUST_BE_FLONUM(elem);
+            susp->samples[1] = (sample_type) getflonum(elem);
+
+            /* get the remaining coef */
+            for (i = 1; i < n - 1; i++) {
+                elem = getelement(susp->array, i);
+                MUST_BE_FLONUM(elem)
+                susp->samples[i + 1] = (sample_type) getflonum(elem);
             }
             susp->array = NULL; /* free the array */
 
             /* here is where the IFFT and windowing should take place */
-            fftnf(1, &n, susp->samples, susp->samples + n, -1, 1.0);
+            //fftnf(1, &n, susp->samples, susp->samples + n, -1, 1.0);
+            m = round(log(n) / M_LN2);
+            if (!fftInit(m)) riffts(susp->samples, m, 1);
+            else xlfail("FFT initialization error");
             if (susp->window) {
                 n = susp->length;
                 for (i = 0; i < n; i++) {
@@ -202,23 +200,6 @@ out:        togo = 0;   /* indicate termination */
             for (i = 0; i < n; i++) {
                 susp->outbuf[i] += susp->samples[i];
             }
-/*
-            temp_fft = (double *) malloc (susp->length * sizeof(double));
-            if (temp_fft == 0) return;
-            big_samples = (double *) malloc (susp->length * sizeof(double));
-            if (big_samples == 0) return;
-            for (i = 0; i < susp->length; i++) {
-                big_samples[i] = (double) susp->samples[i];
-            }
-            rp = rfftw_create_plan(susp->length, FFTW_COMPLEX_TO_REAL, FFTW_ESTIMATE);
-            rfftw_one(rp, big_samples, temp_fft);
-            rfftw_destroy_plan(rp);
-            free(big_samples);
-            for (i = 0; i < susp->length; i++) {
-                setelement(result, i, cvflonum(temp_fft[i]));
-            }
-            free (temp_fft);
-*/
         }
         togo = min(togo, susp->stepsize - susp->index);
 

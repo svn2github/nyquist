@@ -10,7 +10,7 @@
 int snd_file_open(char *fname, int mode);
 int snd_file_creat(char *fname);
 int snd_file_lseek(int file, long offset, int param);
-long snd_file_read(int fp, char *data, long len);
-long snd_file_write(int fp, char *data, long len);
-int snd_file_close(int fp);
+long snd_file_read(SNDFILE *fp, float *data, long len);
+long snd_file_write(SNDFILE *fp, float *data, long len);
+long snd_file_close(SNDFILE *fp);
 long snd_file_len(int fp);

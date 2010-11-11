@@ -46,8 +46,11 @@ void close_loadingfiles()
      */
     while (consp(getvalue(s_loadingfiles)) && 
            consp(cdr(getvalue(s_loadingfiles))) &&
-           streamp(car(cdr(getvalue(s_loadingfiles))))) {
+           streamp(car(cdr(getvalue(s_loadingfiles)))) &&
+		   getfile(car(cdr(getvalue(s_loadingfiles))))) {
         osclose(getfile(car(cdr(getvalue(s_loadingfiles)))));
+        /* make the file NULL so GC will not close it again */
+        setfile(car(cdr(getvalue(s_loadingfiles))), NULL);
         setvalue(s_loadingfiles, cdr(cdr(getvalue(s_loadingfiles))));
     }
 }

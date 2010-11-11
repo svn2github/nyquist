@@ -287,7 +287,7 @@ private void smfw_process_event(seq)
         (((vc_voice(event->nvoice) - 16) == smfw_seq.track) 
             && (smfw_seq.track > 0)) ||
         /* acknowledge clock change on all tracks*/
-        (event->value == CLOCK_VALUE)) {
+        (event->value == CLOCK_VALUE && vc_ctrl(event->nvoice) == ESC_CTRL)) {
 
         /* process all current (and earlier) events */
         if (is_note(event)) {   /*** play a note or rest ***/
@@ -346,81 +346,81 @@ private void smfw_process_event(seq)
             switch (event->value) {
               time_type this_event;
               case CALL_VALUE:       /*called routine will write to midifile in execution */
-            sequence = seq;
-            (*(event->u.call.routine))(event->u.call.args);
-            break;
+                sequence = seq;
+                (*(event->u.call.routine))(event->u.call.args);
+                break;
               case CLOCK_VALUE:
-            clock_ticksize = event->u.clock.ticksize;
-            if(debug)    gprintf(TRANS, "clockevent! ticksize: %lu (time:%ld)\n",
-                clock_ticksize, virttime);
+                clock_ticksize = event->u.clock.ticksize;
+                if(debug)    gprintf(TRANS, "clockevent! ticksize: %lu (time:%ld)\n",
+                    clock_ticksize, virttime);
     
-            if (virttime > 0) {  /* any clock before this is already recorded in the header */
-                if (smfw_seq.track == 0) {             /* record clock event on tempo track = 0 */
-                /* cause clock write in half a newtick, because it was written .5 tick early*/
-                cause((delay_type) (clock_ticksize >> 17), smfw_clock_event, 
-                      last_tick_size, clock_ticksize);
-                last_tick_size = clock_ticksize; /*set new ticksize*/
-                } else { /*not on tempo track*/
-                this_event = ((virttime - last_clock_event) *
-                        ((2500L << 16) / last_tick_size)) / 100;
-                if(debug)   gprintf(TRANS, "track != 0: Lastev: %ld Thisev: %ld NewLast: %ld\n", 
-                last_event, this_event, this_event - last_event);
-                last_event = 0L - (this_event - last_event);
-                    last_clock_event = virttime;
-                /*last_event is negative, so will be ADDED to next this_event*/
+                if (virttime > 0) {  /* any clock before this is already recorded in the header */
+                    if (smfw_seq.track == 0) {             /* record clock event on tempo track = 0 */
+                    /* cause clock write in half a newtick, because it was written .5 tick early*/
+                    cause((delay_type) (clock_ticksize >> 17), smfw_clock_event, 
+                          last_tick_size, clock_ticksize);
+                    last_tick_size = clock_ticksize; /*set new ticksize*/
+                    } else { /*not on tempo track*/
+                    this_event = ((virttime - last_clock_event) *
+                            ((2500L << 16) / last_tick_size)) / 100;
+                    if(debug)   gprintf(TRANS, "track != 0: Lastev: %ld Thisev: %ld NewLast: %ld\n", 
+                    last_event, this_event, this_event - last_event);
+                    last_event = 0L - (this_event - last_event);
+                        last_clock_event = virttime;
+                    /*last_event is negative, so will be ADDED to next this_event*/
     
-                last_tick_size = clock_ticksize;
-                }               
-            } else if (debug) gprintf(TRANS, "IGNORED\n");/* if virttime <= 0 */
-            break;
+                    last_tick_size = clock_ticksize;
+                    }               
+                } else if (debug) gprintf(TRANS, "IGNORED\n");/* if virttime <= 0 */
+                break;
               case MACCTRL_VALUE:
-            if (!enabled) break;
-            if (debug) gprintf(TRANS, "MACCTRL %d: %d (time:%ld)\n", 
-                    event->u.macctrl.ctrl_number, event->u.macctrl.value, virttime);
-            smfw_deltatime();
-            putc(MIDI_CTRL | (voice - 1), smfw_seq.outfile);
-            putc(0xFF & event->u.macctrl.ctrl_number, smfw_seq.outfile);
-            putc(0xFF & event->u.macctrl.value, smfw_seq.outfile);
-            break;
+                if (!enabled) break;
+                if (debug) gprintf(TRANS, "MACCTRL %d: %d (time:%ld)\n", 
+                        event->u.macctrl.ctrl_number, event->u.macctrl.value, virttime);
+                smfw_deltatime();
+                putc(MIDI_CTRL | (voice - 1), smfw_seq.outfile);
+                putc(0xFF & event->u.macctrl.ctrl_number, smfw_seq.outfile);
+                putc(0xFF & event->u.macctrl.value, smfw_seq.outfile);
+                break;
               case MACRO_VALUE:
-            if (!enabled) break;
-            if (debug) gprintf(TRANS, "MACRO sent to...\n");
-            smfw_send_macro(event->u.macro.definition,
-              voice, event->u.macro.parameter, -1, 0);
-            break;
+                if (!enabled) break;
+                if (debug) gprintf(TRANS, "MACRO sent to...\n");
+                smfw_send_macro(event->u.macro.definition,
+                  voice, event->u.macro.parameter, -1, 0);
+                break;
               case CTRLRAMP_VALUE:
               case DEFRAMP_VALUE: {
-            int from, to;
-            if (!enabled) break;
-            step = event->u.ramp.step;
-            if (event->value == CTRLRAMP_VALUE) {
-            if(debug)   gprintf(TRANS, "CTRLRAMP (time:%ld)...", virttime);
-                from = event->u.ramp.u.ctrl.from_value;
-                to = event->u.ramp.u.ctrl.to_value;
-            } else {
-                if (debug) gprintf(TRANS, "DEFRAMP (time:%ld)...", virttime);
-                from = event->u.ramp.u.def.parameter[
-                    event->u.ramp.u.def.parm_num];
-                to = event->u.ramp.u.def.to_value;
-            }
-            delta = to - from;
-            increment = delta;
-            if (delta < 0) delta = -delta;
-            /* RBD - Note: Step is always non-zero */
-            n = event->u.ramp.dur / step;
-            increment = (increment << 8) / n;
-            smfw_ramp_event(seq, event, from << 8, to << 8, 
-                   increment, step, n);
-            seq->noteoff_count++;
-            break;
+                int from, to;
+                if (!enabled) break;
+                step = event->u.ramp.step;
+                if (event->value == CTRLRAMP_VALUE) {
+                if(debug)   gprintf(TRANS, "CTRLRAMP (time:%ld)...", virttime);
+                    from = event->u.ramp.u.ctrl.from_value;
+                    to = event->u.ramp.u.ctrl.to_value;
+                } else {
+                    if (debug) gprintf(TRANS, "DEFRAMP (time:%ld)...", virttime);
+                    from = event->u.ramp.u.def.parameter[
+                        event->u.ramp.u.def.parm_num];
+                    to = event->u.ramp.u.def.to_value;
+                }
+                delta = to - from;
+                increment = delta;
+                if (delta < 0) delta = -delta;
+                /* RBD - Note: Step is always non-zero */
+                n = event->u.ramp.dur / step;
+                increment = (increment << 8) / n;
+                smfw_ramp_event(seq, event, from << 8, to << 8, 
+                       increment, step, n);
+                seq->noteoff_count++;
+                break;
               }
               case SETI_VALUE:
-            seti_counter++; /*will be printed after writing is completed*/
-            *(event->u.seti.int_to_set) = event->u.seti.value;
-            break;
+                seti_counter++; /*will be printed after writing is completed*/
+                *(event->u.seti.int_to_set) = event->u.seti.value;
+                break;
               default:
-            gprintf(TRANS, "unexpected ESC_CTRL value\n");
-            break;
+                gprintf(TRANS, "unexpected ESC_CTRL value\n");
+                break;
             }
             break;
           default:
@@ -518,7 +518,10 @@ void seq_write_smf(seq, outfile)
 {
     time_type put_tick_size;
     int i;
-    time_type starting_ticksize = 1638400L;/*default midifile tempo 100*/
+    /* ticksize is milliseconds << 16, and tickrate = 24*tempo
+       60000ms/min / (24 * tempo) = 2500/tempo = 25
+       25 << 16 = 1638400 */
+    time_type starting_ticksize = 1638400L; /*default midifile tempo 100*/
     int track_count = 0;
     long track_count_marker;
     register event_type event;
@@ -540,13 +543,13 @@ void seq_write_smf(seq, outfile)
 
     /*search for clock events up till start of score*/
     while(event->ntime <= 0){
-    if(debug)   gprintf(TRANS, "event (time:%ld)\n", event->ntime); 
-    if(event->value == CLOCK_VALUE) {
-        if(debug)   gprintf(TRANS, "clock %lu at 0\n", event->u.clock.ticksize);
-        starting_ticksize = event->u.clock.ticksize;
-        break;
-        }
-    event = event->next;
+        if(debug)   gprintf(TRANS, "event (time:%ld)\n", event->ntime); 
+        if(vc_ctrl(event->nvoice) == ESC_CTRL && event->value == CLOCK_VALUE) {
+            if(debug)   gprintf(TRANS, "clock %lu at 0\n", event->u.clock.ticksize);
+            starting_ticksize = event->u.clock.ticksize;
+            break;
+            }
+        event = event->next;
     }
 
     putc(0x4D, smfw_seq.outfile); /*header:  MThd*/
@@ -584,24 +587,30 @@ void seq_write_smf(seq, outfile)
         putc(0x00, smfw_seq.outfile);
         putc(0x00, smfw_seq.outfile);
 
-    if(i == 0) { /*tempo and time signature track*/
-        putc(0x00, smfw_seq.outfile);/* default time sig stuff*/
-        putc(0xFF, smfw_seq.outfile);
-        putc(0x58, smfw_seq.outfile);
-        putc(0x04, smfw_seq.outfile);
-        putc(0x04, smfw_seq.outfile);
-        putc(0x02, smfw_seq.outfile);
-        putc(0x18, smfw_seq.outfile);
-        putc(0x08, smfw_seq.outfile);
-        putc(0x00, smfw_seq.outfile);
+        if(i == 0) { /*tempo and time signature track*/
+            putc(0x00, smfw_seq.outfile);/* default time sig stuff*/
+            putc(0xFF, smfw_seq.outfile);
+            putc(0x58, smfw_seq.outfile);
+            putc(0x04, smfw_seq.outfile);
+            putc(0x04, smfw_seq.outfile);
+            putc(0x02, smfw_seq.outfile);
+            putc(0x18, smfw_seq.outfile);
+            putc(0x08, smfw_seq.outfile);
+            putc(0x00, smfw_seq.outfile);
             
-        putc(0xFF, smfw_seq.outfile);/*TEMPO: inserted here in case default is used*/
-        putc(0x51, smfw_seq.outfile);
-        putc(0x03, smfw_seq.outfile);
-        put_tick_size = scale(clock_ticksize, 375L, 1024L);
-        putc((int) ((put_tick_size >> 16) & 0xFF), smfw_seq.outfile);
-        putc((int) ((put_tick_size >> 8) & 0xFF), smfw_seq.outfile);
-        putc((int) (put_tick_size & 0xFF), smfw_seq.outfile);
+            putc(0xFF, smfw_seq.outfile);/*TEMPO: inserted here in case default is used*/
+            putc(0x51, smfw_seq.outfile);
+            putc(0x03, smfw_seq.outfile);
+            /* ticksize is in ms<<16, so to get milliseconds per tick, it's
+               ticksize / 65536. To get beat durations, multiply by 24 to get
+               ticksize * 24 / 65536. To get microseconds, multiply by 1000:
+               ticksize * 24000 / 65536. Divide both constants by 64 to get
+               ticksize * 375 / 1024 = microseconds per quarter note.
+            */
+            put_tick_size = scale(clock_ticksize, 375L, 1024L);
+            putc((int) ((put_tick_size >> 16) & 0xFF), smfw_seq.outfile);
+            putc((int) ((put_tick_size >> 8) & 0xFF), smfw_seq.outfile);
+            putc((int) (put_tick_size & 0xFF), smfw_seq.outfile);
         }
         smfw_seq.track = i;
         smfw_dotrack(smfw_seq.seq);
@@ -635,7 +644,7 @@ private void writevarlen(value)
     for(;;) {
     if(debug) gprintf(TRANS, " byte ");
     putc((int) (buffer & 0xFF), smfw_seq.outfile);
-    if (buffer & 0x80)	buffer >>= 8;
+    if (buffer & 0x80)  buffer >>= 8;
     else break;
     }
     if(debug) gprintf(TRANS, "written!\n");

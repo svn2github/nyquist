@@ -1,20 +1,20 @@
 /* this typedef goes here because it is needed by multiseq.c */
 
 typedef struct add_susp_struct {
-    snd_susp_node		susp;
-    boolean			started;
+    snd_susp_node               susp;
+    boolean                     started;
     int                         terminate_bits;
-    long			terminate_cnt;
+    long                        terminate_cnt;
     int                         logical_stop_bits;
-    boolean			logically_stopped;
-    sound_type			s1;
-    long			s1_cnt;
-    sample_block_type		s1_bptr;	/* block pointer */
-    sample_block_values_type	s1_ptr;
-    sound_type			s2;
-    long			s2_cnt;
-    sample_block_type		s2_bptr;	/* block pointer */
-    sample_block_values_type	s2_ptr;
+    boolean                     logically_stopped;
+    sound_type                  s1;
+    long                        s1_cnt;
+    sample_block_type           s1_bptr;        /* block pointer */
+    sample_block_values_type    s1_ptr;
+    sound_type                  s2;
+    long                        s2_cnt;
+    sample_block_type           s2_bptr;        /* block pointer */
+    sample_block_values_type    s2_ptr;
 
 #ifdef UPSAMPLECODE
     /* support for interpolation of s2 */
@@ -26,8 +26,8 @@ typedef struct add_susp_struct {
     double output_per_s2;
 #endif
     /* pointer used to synchronize adds in multiseq */
-    struct multiseq_struct	*multiseq;
-    long			s1_prepend; /* offset to susp.current */
+    struct multiseq_struct      *multiseq;
+    long                        s1_prepend; /* offset to susp.current */
 } add_susp_node, *add_susp_type;
 
 sound_type snd_make_add();

@@ -1,41 +1,40 @@
-<html><head><title>Debugging Nyquist</title></head>
+<html><head><title>Nyquist Globals</title></head>
 <body bgcolor="ffffff">
-<a name = "63"><h2>Debugging Nyquist</h2></a>
-<a name="index481">
-There are a number of tools, functions, and techniques that can help to debug Nyquist programs. Since these are described in many places throughout this manual, this chapter brings together many suggestions and techniques for debugging.
-<p>
-Probably the most important debugging tool is the backtrace. When Nyquist encounters an error, it suspends execution and prints an error message. To find out where in the program the error occurred and how you got there, start by typing <code>(bt)</code>. This will print out the last several function calls and their arguments, which is usually sufficient to see what is going on.
-<p>
-In order for <code>(bt)</code> to work, you must have a couple of global variables set: <code>*tracenable*</code> is ordinarily set to <code>NIL</code>.  If it is true, then a backtrace is automatically printed when an error occurs; <code>*breakenable*</code> must be set to <code>T</code>, as it enables the execution to be suspended when an error is encountered. If <code>*breakenable*</code> is <code>NIL</code> (false), then execution stops when an error occurs but the stack is not saved and you cannot get a backtrace. Finally, <code>bt</code> is just a macro to save typing.  The actual backtrace function is <code>baktrace</code>, which takes an integer argument telling how many levels to print.  All of these things are set up by default when you start Nyquist.
-<p>
-Since Nyquist sounds are executed with a lazy evaluation scheme, some errors are encountered when samples are being generated.  In this case, it may not be clear which expression is in error. Sometimes, it is best to explore a function or set of functions by examining intermediate results. Any expression that yields a sound can be assigned to a variable and examined using one or more of: <code>s-plot</code>, <code>snd-print-tree</code>, and of course <code>play</code>. The <code>snd-print-tree</code> function prints a lot of detail about the inner representaion of the sound.
-<p>
-Another technique is to use low sample rates so that it is easier to plot results or look at samples directly. The calls:
-<pre>
-(set-sound-srate 100)
-(set-control-srate 100)
-</pre>
-
-set the default sample rates to 100, which is too slow for audio, but useful for examining programs and results. The function
-<pre>
-(snd-samples <i>sound</i> <i>limit</i>)
-</pre>
-
-will convert up to <i>limit</i> samples from <i>sound</i> into a Lisp array. This is another way to look at results in detail.
-<p>
-The <code>trace</code> function is sometimes useful.  It prints the name of a function and its arguments everytimg the function is called, and the result is printed when the function exits.  To trace the osc function, type:
-<pre>
-(trace osc)
-</pre>
-
-and to stop tracing, type <code>(untrace osc)</code>.
-<p>
-If a variable needs a value or a function is undefined, you can fix the error (by setting the variable or loading the function definition) and keep going.  Use <code>(co)</code>, short for <code>(continue)</code> to reevaluate the variable or function and continue execution.
-<p>
-When you finish debugging a particular call, you can ``pop'' up to the top level by typing <code>(top)</code>, a short name for <code>(top-level)</code>.
-<p>
-
-
+<a href = "part8.html">Previous Section</a> | <a href = "part10.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a href = "part8.html">Previous Section</a> | <a href = "part10.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+<a name = "107"><h2>Nyquist Globals</h2></a>
+<a name="index781">
+There are many global variables in Nyquist. A convention in Lisp is to place asterisks (*) around global variables, e.g. <code>*table*</code>. This is only a convention, and the asterisks are just like any other letter as far as variable names are concerned. Here are some globals users should know about:
+<p>
+<dl>
+<dt>
+<code>*table*</code><a name="index782"><dd>Default table used by <code>osc</code> and other oscillators.<br><br>
+<dt><code>*A4-Hertz*</code><a name="index783"><dd>Frequency of A4 in Hertz.. Note: you must call <code>(set-pitch-names)</code> to recompute pitches after changing <code>*A4-Hertz*</code>.<br><br>
+<dt><code>*autonorm*</code><a name="index784"><dd>The normalization factor to be applied to the next sound when <code>*autonorm-type*</code> is <code>'previous</code>. See Sections <a href = "part6.html#48">"Memory Space and Normalization"</a> and <a href = "part8.html#99">"Sound File Input and Output"</a>.<br><br>
+<dt><code>*autonormflag*</code><a name="index785"><dd>Enables the automatic normalization feature of the <code>play</code> command. You should use <code>(autonorm-on)</code> and <code>(autonorm-off)</code> rather than setting <code>*autonormflag*</code> directly. See Sections <a href = "part6.html#48">"Memory Space and Normalization"</a> and <a href = "part8.html#99">"Sound File Input and Output"</a>.<br><br>
+<dt><code>*autonorm-max-samples*</code><a name="index786"><dd>Specifies how many samples will be computed searching for a peak value when <code>*autonorm-type*</code> is <code>'lookahead</code>. See Sections <a href = "part6.html#48">"Memory Space and Normalization"</a> and <a href = "part8.html#99">"Sound File Input and Output"</a>.<br><br>
+<dt><code>*autonorm-previous-peak*</code><a name="index787"><dd>The peak of the previous sound generated by <code>play</code>. This is used to compute the scale factor for the next sound when <code>*autonorm-type*</code> is <code>'previous</code>. See Sections <a href = "part6.html#48">"Memory Space and Normalization"</a> and <a href = "part8.html#99">"Sound File Input and Output"</a>.<br><br>
+<dt><code>*autonorm-target*</code><a name="index788"><dd>The target peak amplitude for the autonorm feature. The default value is 0.9. See Sections <a href = "part6.html#48">"Memory Space and Normalization"</a> and <a href = "part8.html#99">"Sound File Input and Output"</a>.<br><br>
+<dt><code>*autonorm-type*</code><a name="index789"><dd>Determines how the autonorm feature is implemented. Valid values are <code>'lookahead</code> (the default) and <code>'previous</code>. See Sections <a href = "part6.html#48">"Memory Space and Normalization"</a> and <a href = "part8.html#99">"Sound File Input and Output"</a>.<br><br>
+<dt><code>*breakenable*</code><a name="index790"><dd>Controls whether XLISP enters a break loop when an error is encountered. See Section <a href = "part19.html#221">"Profiling"</a>.<br><br>
+<dt><code>*control-srate*</code><a name="index791"><dd>Part of the environment, establishes the control sample rate. See Section <a href = "part4.html#30">"The Environment"</a> for details.<br><br>
+<dt><code>*default-sf-bits*</code><a name="index792"><dd>The default bits-per-sample for sound files. Typically 16.<br><br>
+<dt><code>*default-sf-dir*</code><a name="index793"><dd>The default sound file directory.  Unless you give a full path for a file, audio files are assumed to be in this directory. (Applies to many functions that deal with sound files. Check the function description to see if <code>*default-sf-dir*</code> applies.)<br><br>
+<dt><code>*default-sf-format*</code><a name="index794"><dd>The default sound file format. When you write a file, this will be the default format: AIFF for Mac and most Unix systems, NeXT for NeXT systems, and WAV for Win32.<br><br>
+<dt><code>*default-sf-srate*</code><a name="index795"><dd>The default sample rate for sound files. Typically  44100.0, but often set to 22050.0 for speed in non-critical tasks.<br><br>
+<dt><code>*default-control-srate*</code><a name="index796"><dd>Default value for <code>*control-srate*</code>. This value is restored when you execute <code>(top)</code> to pop out of a debugging session. Change it by calling <code>(set-control-srate <i>value</i>)</code>.<br><br>
+<dt><code>*default-sound-srate*</code><a name="index797"><dd>Default value for <code>*sound-srate*</code>. This value is restored when you execute <code>(top)</code> to pop out of a debugging session. Change it by calling <code>(set-sound-srate <i>value</i>)</code>.<br><br>
+<dt><code>*file-separator*</code><a name="index798"><dd>The character that separates directories in a path,
+e.g. "<code>/</code>" for Unix, "<code>:</code>" for Mac, and "<code>\</code>" for Win32.
+This is normally set in <code>system.lsp</code>.<br><br>
+<dt><code>*rslt*</code><a name="index799"><dd>When a function returns more than one value, <code>*rslt*</code> is set to a list of the "extra" values. This provides a make-shift version of the <code>multiple-value-return</code> facility in Common Lisp.<br><br>
+<dt><code>*sound-srate*</code><a name="index800"><dd>Part of the environment, establishes the audio sample rate. See Section <a href = "part4.html#30">"The Environment"</a> for details.<br><br>
+<dt><code>*soundenable*</code><a name="index801"><dd>Controls whether writes to a sound file will also be played as audio.  Set this variable by calling <code>(sound-on)</code> or <code>(sound-off)</code>.<br><br>
+<dt><code>*tracenable*</code><a name="index802"><dd>Controls whether XLISP prints a backtrace when an error is encountered.<br><br>
+<dt><b>XLISP variables</b><dd>See Section <a href = "part19.html#221">"Profiling"</a> for a list of 
+global variables defined by XLISP.<br><br>
+<dt><b>Environment variables</b><dd>See Section <a href = "part4.html#30">"The Environment"</a> for definitions of variables used in the environment for behaviors. In general, you should never set or access these variables directly.<br><br>
+<dt><b>Various constants</b><dd>See Section <a href = "part2.html#20">"Predefined Constants"</a> for definitions of predefined constants for loudness, duration, and pitch.<br><br>
+<dt></dl><hr>
+<a href = "part8.html">Previous Section</a> | <a href = "part10.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 </body></html>

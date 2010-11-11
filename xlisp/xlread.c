@@ -20,6 +20,10 @@
 #include "macstuff.h"
 #endif
 
+#ifdef DEBUG_INPUT
+extern FILE *debug_input_fp;
+#endif
+
 /* symbol parser modes */
 #define DONE	0
 #define NORMAL	1
@@ -35,12 +39,12 @@ extern char buf[];
 /* external routines */
 extern FILE *osaopen();
 /* on the NeXT, atof is a macro in stdlib.h */
-#ifndef atof
-extern double atof();
+#if !defined(atof) && !defined(_WIN32) 
+   extern double atof();
 #endif
 #ifndef __MWERKS__
-#ifdef ITYPE
-extern ITYPE;
+#if !defined(ITYPE) && !defined(_WIN32) 
+   extern ITYPE;
 #endif
 #endif
 
@@ -69,6 +73,11 @@ static char save_file_name[STRMAX+1]; /* keeps files opened by prompt */
 static int sfn_valid = FALSE;
 #endif
 
+#ifdef DEBUG_INPUT
+extern FILE *read_by_xlisp;
+#endif
+
+
 /* xlload - load a file of xlisp expressions */
 int xlload(char *fname, int vflag, int pflag)
 {
@@ -87,7 +96,10 @@ int xlload(char *fname, int vflag, int pflag)
     xlsave(expr);
 
     /* space for copy + extension? */
-    if (strlen(fname) > STRMAX - 4) goto toolong;
+    if (strlen(fname) > STRMAX - 4) {
+	    expr = cvstring(fname);
+		goto toolong;
+	}
     strcpy(fullname,fname);
 #ifdef WINDOWS
 #ifdef WINGUI
@@ -116,31 +128,43 @@ int xlload(char *fname, int vflag, int pflag)
     }
 #endif
 
-    /* default the extension if there is room */
-    if (needsextension(fullname)) {
-        strcat(fullname,".lsp");
-    }
-
     /* allocate a file node */
     fptr = cvfile(NULL);
 
     /* open the file */
-    if ((fp = osaopen(fullname,"r")) == NULL) {
+    fp = osaopen(fullname, "r");
+    if (fp == NULL) {
+        /* default the extension if there is room */
+        if (needsextension(fullname)) {
+            char fullname_plus[STRMAX+1];
+            strcpy(fullname_plus, fullname);
+            strcat(fullname_plus, ".lsp");
+            fp = osaopen(fullname_plus, "r");
+            if (fp) strcpy(fullname, fullname_plus);
+        }
+    }
+    if (fp == NULL) {
         /* new cross-platform code by dmazzoni - new xlisp_path
            implementation is in path.c */
         const char *newname = find_in_xlisp_path(fullname);
         if (newname && newname[0]) {
-            if (strlen(newname) > STRMAX)
+            if (strlen(newname) > STRMAX) {
+			    expr = cvstring(newname);
                 goto toolong;
+			}
             strcpy(fullname, newname);
             fp = osaopen(fullname, "r");
         }
-
-        if (!fp) {
-           /* the file STILL wasn't found */
-           xlpopn(2);
-           return (FALSE);
-        }
+    }
+    if (fp == NULL) {
+        /* the file STILL wasn't found */
+#ifdef DEBUG_INPUT
+        if (read_by_xlisp) {
+		    fprintf(read_by_xlisp, ";;;;xlload: failed to open %s\n", fullname);
+	    }
+#endif
+        xlpopn(2);
+        return (FALSE);
     }
 
     setfile(fptr,fp);
@@ -151,23 +175,76 @@ int xlload(char *fname, int vflag, int pflag)
     if (vflag)
         { sprintf(buf,"; loading \"%s\"\n",fullname); stdputstr(buf); }
 
+#ifdef DEBUG_INPUT
+	if (read_by_xlisp) {
+		fprintf(read_by_xlisp, ";;;;xlload: begin loading %s\n", fullname);
+	}
+#endif
+
     /* read, evaluate and possibly print each expression in the file */
     xlbegin(&cntxt,CF_ERROR,s_true);
     if (setjmp(cntxt.c_jmpbuf))
         sts = FALSE;
+        #ifdef DEBUG_INPUT
+            if (read_by_xlisp) {
+		fprintf(read_by_xlisp, ";;;;xlload: catch longjump, back to %s\n", fullname);
+            }
+        #endif
     else {
-        while (xlread(fptr,&expr,FALSE)) {
+        #ifdef DEBUG_INPUT
+            if (read_by_xlisp) {
+		fprintf(read_by_xlisp, ";;;;xlload: about to read from %s (%x)\n", fullname, fptr);
+            }
+        #endif
+        /* a nested load that fails will cause all loading files to be closed,
+         * so check to make sure fptr is still valid each time through the loop */
+        while (getfile(fptr) && xlread(fptr,&expr,FALSE)) {
+            #ifdef DEBUG_INPUT
+                if (debug_input_fp) {
+                    int c = getc(debug_input_fp);
+                    ungetc(c, debug_input_fp);
+                }
+            #endif
+            
             expr = xleval(expr);
+            
+            #ifdef DEBUG_INPUT
+                if (debug_input_fp) {
+                    int c = getc(debug_input_fp);
+                    ungetc(c, debug_input_fp);
+                }
+            #endif
+            
             if (pflag)
                 stdprint(expr);
+                
+            #ifdef DEBUG_INPUT
+                if (debug_input_fp) {
+                    int c = getc(debug_input_fp);
+                    ungetc(c, debug_input_fp);
+                }
+            #endif
+            #ifdef DEBUG_INPUT
+                if (read_by_xlisp) {
+                    fprintf(read_by_xlisp, ";;;;xlload: about to read from %s (%x)\n", fullname, fptr);
+                }
+            #endif
         }
-        sts = TRUE;
+        #ifdef DEBUG_INPUT
+            if (read_by_xlisp) {
+                fprintf(read_by_xlisp, ";;;;xlload: xlread returned false for %s (%x)\n", fullname, fptr);
+            }
+        #endif
+        /* return success only if file did not disappear out from under us */
+        sts = (getfile(fptr) != NULL);
     }
     xlend(&cntxt);
 
     /* close the file */
-    osclose(getfile(fptr));
-    setfile(fptr,NULL);
+    if (getfile(fptr)) { /* test added by RBD, see close_loadingfiles() */
+        osclose(getfile(fptr));
+        setfile(fptr,NULL);
+    }
     if (consp(getvalue(s_loadingfiles)) && 
         consp(cdr(getvalue(s_loadingfiles))) &&
         car(cdr(getvalue(s_loadingfiles))) == fptr) {
@@ -177,11 +254,17 @@ int xlload(char *fname, int vflag, int pflag)
     /* restore the stack */
     xlpopn(2);
 
+#ifdef DEBUG_INPUT
+	if (read_by_xlisp) {
+		fprintf(read_by_xlisp, ";;;;xlload: finished loading %s\n", fullname);
+	}
+#endif
+
     /* return status */
     return (sts);
 
 toolong:
-    xlcerror("ignore file", "file name too long", NIL);
+    xlcerror("ignore file", "file name too long", expr);
     xlpopn(2);
     return FALSE;
 }
@@ -193,6 +276,12 @@ int xlread(LVAL fptr, LVAL *pval, int rflag)
 
     /* read an expression */
     while ((sts = readone(fptr,pval)) == FALSE)
+#ifdef DEBUG_INPUT
+    if (debug_input_fp) {
+        int c = getc(debug_input_fp);
+        ungetc(c, debug_input_fp);
+    }
+#endif
         ;
 
     /* return status */
@@ -205,6 +294,12 @@ int readone(LVAL fptr, LVAL *pval)
     LVAL val,type;
     int ch;
 
+#ifdef DEBUG_INPUT
+    if (debug_input_fp) {
+        int c = getc(debug_input_fp);
+        ungetc(c, debug_input_fp);
+    }
+#endif
     /* get a character and check for EOF */
     if ((ch = xlgetc(fptr)) == EOF)
         return (EOF);
@@ -238,8 +333,13 @@ int readone(LVAL fptr, LVAL *pval)
     }
 
     /* handle illegal characters */
-    else
+    else {
         xlerror("illegal character",cvfixnum((FIXTYPE)ch));
+        /* this point will never be reached because xlerror() does a
+           longjmp(). The return is added to avoid false positive 
+           error messages from static analyzers and compilers */
+        return (FALSE);
+    }
 }
 
 /* rmhash - read macro for '#' */

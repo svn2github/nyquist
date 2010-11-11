@@ -17,11 +17,18 @@
 #include "extern.h"
 #include "debug.h"
 #include "assert.h"
+#ifdef OSC
+#include "nyq-osc-server.h"
+#endif
+#include "cext.h"
+#include "userio.h"
 
 /* #define GC_DEBUG */
 #ifdef GC_DEBUG
-sound_type sound_to_watch;
+extern sound_type sound_to_watch;
 #endif
+
+snd_list_type list_watch; //DBY
 
 /* #define SNAPSHOTS */
 
@@ -34,6 +41,7 @@ snd_list_type zero_snd_list;
 
 xtype_desc sound_desc;
 LVAL a_sound;
+LVAL s_audio_markers;
 
 static void sound_xlfree();
 static void sound_xlprint();
@@ -48,6 +56,22 @@ void sample_block_unref(sample_block_type sam);
 boolean sound_created_flag = false;
 #endif
 
+#ifdef OSC
+int nosc_enabled = false;
+#endif
+
+double sound_latency = 0.3; /* default value */
+/* these are used so get times for *AUDIO-MARKERS* */
+double sound_srate = 44100.0;
+long sound_frames = 0;
+
+double snd_set_latency(double latency)
+{
+    double r = sound_latency;
+	sound_latency = latency;
+	return r;
+}
+
 
 /* xlbadsr - report a "bad combination of sample rates" error */
 LVAL snd_badsr(void)
@@ -61,7 +85,7 @@ LVAL snd_badsr(void)
  *  the nominal pitch (in half steps), the table length, and the sample
  *  rate, compute the sample number corresponding to the phase.  This
  *  routine makes it easy to initialize the table pointer at the beginning
- *  of various oscillator implementations in Fugue.  Note that the table
+ *  of various oscillator implementations in Nyquist.  Note that the table
  *  may represent several periods, in which case phase 360 is not the same
  *  as 0.  Also note that the phase increment is also computed and returned
  *  through incr_ptr.
@@ -234,9 +258,9 @@ sound_type sound_create(
     falloc_sound(sound, "sound_create");
     if (((long) sound) & 3) errputstr("sound not word aligned\n");
     last_sound = sound; /* debug */
+    if (t0 < 0) xlerror("attempt to create a sound with negative starting time", s_unbound); 
     /* nyquist_printf("sound_create %p gets %g\n", sound, t0); */
-    sound->t0 = t0;
-    sound->time = t0;
+    sound->t0 = sound->true_t0 = sound->time = t0;
     sound->stop = MAX_STOP;
     sound->sr = sr;
     sound->current = 0;
@@ -308,7 +332,7 @@ void sound_prepend_zeros(sound_type snd, time_type t0)
     /* compute the true t0 which corresponds to the time of first sample */
     snd->true_t0 -= (n / snd->sr);
     /* make caller happy by claiming the sound now starts at exactly t0;
-     * this is always true within 0.5 samples as allowed by Fugue. */
+     * this is always true within 0.5 samples as allowed by Nyquist. */
     snd->t0 = t0;
 /*    nyquist_printf("sound_prepend_zeros: snd %p true_t0 %g sr %g n %d\n", 
            snd, snd->true_t0, snd->sr, n);*/
@@ -341,14 +365,15 @@ LVAL sound_array_copy(LVAL sa)
 sound_type sound_copy(sound_type snd)
 {
     sound_type sndcopy;
-
     falloc_sound(sndcopy, "sound_copy");
     *sndcopy = *snd;    /* copy the whole structure */
+    sndcopy->extra = NULL; /* except for the (private) extra data */
     snd_list_ref(snd->list);    /* copied a reference so fix the count */
 /*    nyquist_printf("sound_copy'd %p to %p\n", snd, sndcopy); */
     if (snd->table) snd->table->refcount++;
 #ifdef GC_DEBUG
-    if (sndcopy == sound_to_watch) abort();
+    if (sndcopy == sound_to_watch) 
+		printf("sndcopy->table %x\n", sndcopy->table);
 #endif
     return sndcopy;
 }
@@ -836,7 +861,8 @@ sample_block_type SND_flush(sound_type snd, long * cnt)
 {
     long mycnt;
     sample_block_type block = SND_get_first(snd, &mycnt);
-    while (snd->current < 0) {
+    /* changed from < to <= because we want to read at least the first sample */
+    while (snd->current <= 0) {
         block = SND_get_next(snd, &mycnt);
     }
     /* at this point, we've read to and including the block with
@@ -1062,8 +1088,10 @@ sample_block_type SND_get_first(sound_type snd, long * cnt)
     /* this should never happen */
     if (*cnt == 0) {
         stdputstr("SND_get_first returned 0 samples\n");
+#if DEBUG_MEM
         dbg_mem_print("snd_list info:", snd_list);
         dbg_mem_print("block info:", snd_list->block);
+#endif
         sound_print_tree(snd);
         stdputstr("It is possible that you created a recursive sound\n");
         stdputstr("using something like: (SETF X (SEQ (SOUND X) ...))\n");
@@ -1178,7 +1206,7 @@ void sound_init(void)
     { long s;
       stdputstr("sound_to_watch: ");
       scanf("%p", &s);
-      watch_sound(s);
+      watch_sound((sound_type) s);
     }
 #endif
    sound_desc = create_desc("SOUND", sound_xlfree, sound_xlprint,
@@ -1414,6 +1442,9 @@ void sound_play(snd_expr)
     */
     s = sound_copy(s);
     while (1) {
+#ifdef OSC
+        if (nosc_enabled) nosc_poll();
+#endif
         sampblock = sound_get_next(s, &blocklen);
         if (sampblock == zero_block || blocklen == 0) {
             break;
@@ -1454,6 +1485,10 @@ void sound_print_tree_1(snd, n)
         stdputstr("... (skipping remainder of sound)\n");
         return;
     }
+    if (!snd) {
+        stdputstr("\n");
+        return;
+    }
     nyquist_printf("sound_type@%p(%s@%p)t0 "
                    "%g stop %d sr %g lsc %d scale %g pc %d",
                    snd, 
@@ -1462,10 +1497,6 @@ void sound_print_tree_1(snd, n)
                    snd->get_next, snd->t0, (int)snd->stop, snd->sr, 
                    (int)snd->logical_stop_cnt, snd->scale,
                    (int)snd->prepend_cnt);
-    if (!snd) {
-        stdputstr("\n");
-        return;
-    }
     snd_list = snd->list;
     nyquist_printf("->snd_list@%p", snd_list);
     if (snd_list == zero_snd_list) {
@@ -1497,6 +1528,22 @@ void sound_print_tree_1(snd, n)
         }
         snd_list = snd_list->u.next;
     }
+}
+
+
+/* mark_audio_time -- record the current playback time
+ *
+ * The global variable *audio-markers* is treated as a list.
+ * When the user types ^Q, this function pushes the current
+ * playback time onto the list
+ */
+void mark_audio_time()
+{
+    double playback_time = sound_frames / sound_srate - sound_latency;
+    LVAL time_node = cvflonum(playback_time);
+    setvalue(s_audio_markers, cons(time_node, getvalue(s_audio_markers)));
+    gprintf(TRANS, " %g ", playback_time); 
+    fflush(stdout);
 }
 
 
@@ -1617,6 +1664,8 @@ sound_type s;
 void sound_symbols()
 {
    a_sound = xlenter("SOUND");
+   s_audio_markers = xlenter("*AUDIO-MARKERS*");
+   setvalue(s_audio_markers, NIL);
 }
 
 
@@ -1640,9 +1689,12 @@ sound_type sound_zero(time_type t0,rate_type sr)
     sound->get_next = SND_get_first;
     sound->list = zero_snd_list;
     sound->logical_stop_cnt = sound->current = 0;
-    sound->true_t0 = sound->t0 = t0;
+    sound->true_t0 = sound->t0 = sound->time = t0;
+    sound->stop = MAX_STOP;
     sound->sr = sr;
     sound->scale = 1.0F;
+    sound->table = NULL;
+    sound->extra = NULL;
 
     return sound;
 }

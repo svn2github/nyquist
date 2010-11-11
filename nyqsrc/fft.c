@@ -1,5 +1,6 @@
 /* fft.c -- implement snd_fft */
 
+#define _USE_MATH_DEFINES 1 /* for Visual C++ to get M_LN2 */
 #include <math.h>
 #include <stdio.h>
 #ifndef mips
@@ -9,7 +10,7 @@
 #include "sound.h"
 #include "falloc.h"
 #include "fft.h"
-#include "fftn.h"
+#include "fftext.h"
 
 /* CHANGE LOG
  * --------------------------------------------------------------------
@@ -31,8 +32,8 @@
  * extra[3] -> FILLCNT (how many samples in buffer)
  * extra[4] -> TERMCNT (how many samples until termination)
  * extra[5 .. 5+len-1] -> samples (stored as floats)
- * extra[5+len .. 5+3*len-1] -> real and imag. arrays for fft
- * extra[5+3*len ... 5+4*len-1] -> window coefficients
+ * extra[5+len .. 5+2*len-1] -> array of samples to fft
+ * extra[5+2*len ... 5+3*len-1] -> window coefficients
  * 
  * Termination details:
  *   Return NIL when the sound terminates.
@@ -87,7 +88,7 @@ void n_samples_from_sound(sound_type s, long n, float *table)
 
 LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
 {
-    long i, maxlen, skip, fillptr;
+    long i, m, maxlen, skip, fillptr;
     float *samples;
     float *temp_fft;
     float *window;
@@ -107,12 +108,12 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
         /* note: any storage required by fft must be allocated here in a 
          * contiguous block of memory who's size is given by the first long
          * in the block. Here, there are 4 more longs after the size, and 
-         * then room for 4*len floats (assumes that floats and longs take 
+         * then room for 3*len floats (assumes that floats and longs take 
          * equal space).
          *
-         * The reason for 4*len floats is to provide space for:
+         * The reason for 3*len floats is to provide space for:
          *    the samples to be transformed (len)
-         *    the complex FFT result (2*len)
+         *    the complex FFT result (len)
          *    the window coefficients (len)
          *
          * The reason for this storage restriction is that when a sound is 
@@ -121,12 +122,12 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
          * structure (this could be added in sound.c, however, if it's 
          * really necessary).
          */
-        s->extra = (long *) malloc(sizeof(long) * (4 * len + OFFSET));
-        s->extra[0] = sizeof(long) * (4 * len + OFFSET);
+        s->extra = (long *) malloc(sizeof(long) * (3 * len + OFFSET));
+        s->extra[0] = sizeof(long) * (3 * len + OFFSET);
         s->CNT = s->INDEX = s->FILLCNT = 0;
         s->TERMCNT = -1;
         maxlen = len;
-        window = (float *) &(s->extra[OFFSET + 3 * len]);
+        window = (float *) &(s->extra[OFFSET + 2 * len]);
         /* fill the window from w */
         if (!w) {
             for (i = 0; i < len; i++) *window++ = 1.0F;
@@ -134,12 +135,12 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
             n_samples_from_sound(w, len, window);
         }
     } else {
-        maxlen = ((s->extra[0] / sizeof(long)) - OFFSET) / 4;
+        maxlen = ((s->extra[0] / sizeof(long)) - OFFSET) / 3;
         if (maxlen != len) xlfail("len changed from initial value");
     }
     samples = (float *) &(s->extra[OFFSET]);
     temp_fft = samples + len;
-    window = temp_fft + 2 * len;
+    window = temp_fft + len;
     /* step 1: refill buffer with samples */
     fillptr = s->FILLCNT;
     while (fillptr < maxlen) {
@@ -174,17 +175,18 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
      */
     for (i = 0; i < len; i++) {
         temp_fft[i] = samples[i] * *window++;
-        temp_fft[i + len] = 0.0F;
     }
     /* perform the fft: */
-    fftnf(1, (const int *) &len, temp_fft, temp_fft + len, 1, -1.0);
+    m = round(log(len) / M_LN2); /* compute log-base-2(len) */
+    if (!fftInit(m)) rffts(temp_fft, m, 1);
+    else xlfail("FFT initialization error");
+
+    /* move results to Lisp array */
     setelement(result, 0, cvflonum(temp_fft[0]));
-    for (i = 2; i < len; i += 2) {
-        setelement(result, i - 1, cvflonum(temp_fft[i / 2] * 2));
-        setelement(result, i, cvflonum(temp_fft[len + (i / 2)] * -2));
+    setelement(result, len - 1, cvflonum(temp_fft[1]));
+    for (i = 2; i < len; i++) {
+        setelement(result, i - 1, cvflonum(temp_fft[i]));
     }
-    if (len % 2 == 0)
-        setelement(result, len - 1, cvflonum(temp_fft[len / 2]));
 
     /* step 3: shift samples by step */
     if (step < 0) xlfail("step < 0");

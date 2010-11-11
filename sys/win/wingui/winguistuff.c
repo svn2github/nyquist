@@ -11,6 +11,11 @@
 #include "xlisp.h"
 #include "textio.h"
 
+#if OSC
+#include "sliders.h" /* define sliders */
+#include "sound.h" /* define nosc_enabled */
+#endif
+
 const char os_pathchar = '\\';
 const char os_sepchar = ',';
 
@@ -43,26 +48,6 @@ void osinit (char *banner) {
     nyquist_printf(version);
 }
 
-/* osrand - return next random number in sequence */
-long osrand (long rseed) {
-#ifdef OLDBUTINTERESTING
-// note that this takes a seed and returns a big number,
-// whereas I think XLisp's RANDOM is defined differently
-    long k1;
-
-    /* make sure we don't get stuck at zero */
-    if (rseed == 0L) rseed = 1L;
-
-    /* algorithm taken from Dr. Dobbs Journal, November 1985, page 91 */
-    k1 = rseed / 127773L;
-    if ((rseed = 16807L * (rseed - k1 * 127773L) - k1 * 2836L) < 0L)
-    rseed += 2147483647L;
-
-    /* return a random number between 0 and MAXFIX */
-    return rseed;
-#endif
-    return rand() % rseed;	// rseed is a misnomer
-}
 
 FILE *osaopen (char *name, char *mode) {
     return fopen (name, mode);
@@ -77,6 +62,7 @@ FILE *osbopen (char *name, char *mode) {
 int osclose (FILE *fp) { return (fclose (fp)); }
 int osaputc (int ch, FILE *fp) { return (putc (ch, fp)); }
 int osbputc (int ch, FILE *fp) { return (putc (ch, fp)); }
+void osoutflush(FILE *fp) { fflush(fp); }
 
 /* osagetc - get a character from an ascii file */
 int osagetc(fp)
@@ -247,6 +233,16 @@ void ostputc (int ch) {
     if (tfp) osaputc (ch, tfp);
 }
 
+void ostoutflush()
+{
+    if (tfp) fflush(tfp);
+    /* since ostputc calls gputchar which just calls putchar,
+       I'm going to flush stdout rather than extending the
+       "g" abstraction with a gflush() call. -RBD
+     */
+    fflush(stdout);
+}
+
 void osflush (void) {
     lindex = lcount = lposition = 0; 
     line_edit = TRUE;
@@ -254,7 +250,12 @@ void osflush (void) {
 
 extern int abort_flag;
 
-void oscheck (void) { 
+void oscheck (void) {
+
+#if OSC
+    if (nosc_enabled) nosc_poll();
+#endif
+
     check_aborted(); 
     if (abort_flag == ABORT_LEVEL) {
         abort_flag = 0;
@@ -284,42 +285,60 @@ void osfinish (void) {
 int renamebackup (char *filename) { return 0; }
 
 
-long randomseed = 1L;
 
-long random () {
-// note that this takes a seed and returns a big number,
-// whereas I think XLisp's RANDOM is defined differently
-    long k1;
+static WIN32_FIND_DATA FindFileData;
+static HANDLE hFind = INVALID_HANDLE_VALUE;
+#define OSDIR_LIST_READY 0
+#define OSDIR_LIST_STARTED 1
+#define OSDIR_LIST_DONE 2
+static osdir_list_status = OSDIR_LIST_READY;
+#define OSDIR_MAX_PATH 256
+static char osdir_path[OSDIR_MAX_PATH];
 
-    /* algorithm taken from Dr. Dobbs Journal, November 1985, page 91 */
-    k1 = randomseed / 127773L;
-    if ((randomseed = 16807L * (randomseed - k1 * 127773L) - k1 * 2836L) < 0L)
-      randomseed += 2147483647L;
-
-    /* return a random number between 0 and MAXFIX */
-    return randomseed;
-}
-
-/* Added by Ning Hu		May.2001 
-xsetdir - set current directory of the process */
-LVAL xsetdir() {
-    TCHAR ssCurDir[MAX_PATH], szCurDir[MAX_PATH];
-
-    strcpy(ssCurDir, getstring(xlgastring()));
-    xllastarg();
-    if (SetCurrentDirectory(ssCurDir)) {
-        if (GetCurrentDirectory(
-            sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {	
-        /* create the result string */
-            stdputstr("Current Directory:");
-            stdputstr(szCurDir);
-            stdputstr("\n");
-        }	
-        else stdputstr("Directory Setting Error\n");
+// osdir_list_start -- prepare to list a directory
+int osdir_list_start(char *path)
+{
+    if (strlen(path) >= OSDIR_MAX_PATH - 2) {
+        xlcerror("LISTDIR path too big", "return nil", NULL);
+        return FALSE;
     }
-    else stdputstr("Directory Setting Error\n");
-
-    /* return the new string */
-    return (NIL);
+    strcpy(osdir_path, path);
+    strcat(osdir_path, "/*"); // make a pattern to match all files
+    if (osdir_list_status != OSDIR_LIST_READY) {
+        osdir_list_finish(); // close previously interrupted listing
+    }
+    hFind = FindFirstFile(osdir_path, &FindFileData); // get the "."
+    if (hFind == INVALID_HANDLE_VALUE) return FALSE;
+    if (FindNextFile(hFind, &FindFileData) == 0) return FALSE; // get the ".."
+    osdir_list_status = OSDIR_LIST_STARTED;
+    return TRUE;
 }
-//Updated End
+
+
+char *osdir_list_next()
+{
+    if (FindNextFile(hFind, &FindFileData) == 0) {
+        osdir_list_status = OSDIR_LIST_DONE;
+        return NULL;
+    }
+    return FindFileData.cFileName;
+}
+
+void osdir_list_finish()
+{
+    if (osdir_list_status != OSDIR_LIST_READY) {
+        FindClose(hFind);
+    }
+    osdir_list_status = OSDIR_LIST_READY;
+}
+
+
+/* xechoenabled -- set/clear echo_enabled flag (unix only) */
+LVAL xechoenabled()
+{
+	int flag = (xlgetarg() != NULL);
+    xllastarg();
+	// echo_enabled = flag; -- do nothing in Windows
+	return NULL;
+}
+

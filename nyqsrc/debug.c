@@ -24,7 +24,7 @@ typedef struct {
 
 static long dbg_mem_last_seq_num = 0;
 long dbg_mem_seq_num = 0;
-long dbg_mem_trace = 0;
+long dbg_mem_trace = 0x410988;
 
 void dbg_mem_pause(void)
 {
@@ -246,3 +246,4 @@ void test_it()
         stdputstr("WE FOUND A SERIOUS PROBLEM\n");
 }
 #endif
+

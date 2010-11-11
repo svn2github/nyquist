@@ -1,5 +1,35 @@
 ;## misc.lsp -- a collection of useful support functions
 
+;; Garbage collection "improvement" -- XLISP will GC without allocation
+;; as long as it does not run out of cells. This can make it very slow
+;; since GC does work proportional to the heap size. If there were
+;; always at least, say, 1/3 of the heap free after GC, then allocating
+;; cells would be more-or-less a constant time operation (amortized).
+;;
+;; So, after GC, we'll expand until we have 1/3 of the heap free.
+;;
+(defun ny:gc-hook (heap-size free-cells)
+  (cond ((< (* free-cells 2) heap-size) ;; free cells is < 1/3 heap
+         ;; expand. Each expansion unit is 2000 cons cells
+         (let* ((how-many-not-free (- heap-size free-cells))
+                (should-be-free (/ how-many-not-free 2))
+                (how-many-more (- should-be-free free-cells))
+                (expand-amount (/ how-many-more 2000)))
+           (cond ((> expand-amount 0)
+                  (if *gc-flag*
+                      (format t
+                       "[ny:gc-hook allocating ~A more cells] "
+                       (* expand-amount 2000)))
+                  (expand expand-amount)))))))
+
+(setf *gc-hook* 'ny:gc-hook)
+
+
+; set global if not already set
+;
+(defmacro init-global (symb expr)
+  `(if (boundp ',symb) ,symb (setf ,symb ,expr)))
+
 ; enable or disable breaks
 (defun bkon () (setq *breakenable* T))
 (defun bkoff () (setq *breakenable* NIL))
@@ -24,7 +54,7 @@
 ;; (push val <place>) - cons val to list
 ;;
 (defmacro push (val lis) `(setf ,lis (cons ,val ,lis)))
-(defmacro pop (lis) `(setf ,lis (cdr ,lis)))
+(defmacro pop (lis) `(prog1 (car ,lis) (setf ,lis (cdr ,lis))))
 
 ;; include this to use RBD's XLISP profiling hooks
 ;;(load "/afs/andrew/usr/rbd/lib/xlisp/profile.lsp")
@@ -52,8 +82,6 @@
 (defmacro while (cond &rest stmts)
   `(prog () loop (if ,cond () (return)) ,@stmts (go loop)))
 
-(defmacro when (test action)
-        (list 'cond (list test action)))
 
 ; when parens/quotes don't match, try this
 ; 
@@ -73,25 +101,56 @@
              (cond ((equal (char fullpath i) *file-separator*)
                     (setf n i))))
            (setf fullpath (subseq fullpath 0 (1+ n)))
+
+;;         REMOVED SUPPORT FOR MAC OS-9 AND BELOW -RBD
            ;; if this is a Mac, use ':' in place of empty path
-           (cond ((and (equal fullpath "") 
-                       (equal *file-separator* #\:))
-                  (setf fullpath ":")))
+;;           (cond ((and (equal fullpath "") 
+;;                       (equal *file-separator* #\:))
+;;                  (setf fullpath ":")))
+;;         END MAC OS-9 CODE
+
+           ;; Here's an interesting problem: fullpath is now the path
+           ;; specified to LOAD, but it may be relative to the current
+           ;; directory. What if we want to load a sound file from the
+           ;; current directory? It seems that S-READ gives priority to
+           ;; the *DEFAULT-SF-DIR*, so it will follow fullpath STARTING
+           ;; FROM *DEFAULT-SF-DIR*. To fix this, we need to make sure
+           ;; that fullpath is either an absolute path or starts with
+           ;; and explicit ./ which tells s-read to look in the current
+           ;; directory.
+           (cond ((> (length fullpath) 0)
+		  (cond ((full-name-p fullpath))
+			(t ; not absolute, make it explicitly relative
+			 (setf fullpath (strcat "./" fullpath)))))
+                 (t (setf fullpath "./"))) ; use current directory
            fullpath)
           (t nil))))
           
 ;; real-random -- pick a random real from a range
 ;;
 (defun real-random (from to)
-  (cond ((= from to) from)
-          (t
-         (+ from
-           (* (random 10000)
-              0.0001
-              (- to from))))))
+  (+ (* (rrandom) (- to from)) from))
 
 ;; power -- raise a number to some power x^y
 ;;
 (defun power (x y)
   (exp (* (log (float x)) y)))
   
+;; require-from -- load a file if a function is undefined
+;;
+;; fn-symbol -- the function defined when the file is loaded
+;; file-name -- the name of file to load if fn-symbol is undefined
+;; path -- if t, load from current-path; if a string, prepend string
+;;         to file-name; if nil, ignore it
+;;
+(defmacro require-from (fn-symbol file-name &optional path)
+  (cond ((eq path t)
+         (setf file-name `(strcat (current-path) ,file-name)))
+        (path
+         (setf file-name `(strcat ,path ,file-name))))
+  ; (display "require-from" file-name)
+  `(if (fboundp (quote ,fn-symbol))
+       t
+       ;; search for either .lsp or .sal file
+       (sal-load ,file-name)))
+

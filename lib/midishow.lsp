@@ -1,9 +1,9 @@
-(defun midi-show-file (score-name)
-  (let ((infile (open score-name :direction :input)))
+(defun midi-show-file (score-name &optional (out-file t))
+  (let ((infile (open-binary score-name :direction :input)))
     (setf my-seq (seq-create))
-    (seq-read my-seq infile)
+    (seq-read-smf my-seq infile)
     (close infile)
-    (midi-show my-seq)))
+    (midi-show my-seq out-file)))
 
 
 ;iterate over midi sequence and prints events

@@ -143,7 +143,7 @@
             ((< the-snd-srate feedback-srate)
              (format t "Warning: down-sampling feedback in alpass~%")
              (setf feedback (snd-down the-snd-srate feedback))))
-      (display "snd-alpasscv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
+      ;(display "snd-alpasscv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
       (snd-alpasscv the-snd delay feedback)))
 
     
@@ -159,9 +159,9 @@
       (setf max-delay (/ 1.0 min-hz))
       ; make sure delay is between 0 and max-delay
       ; use clip function, which is symetric, with an offset
-      (setf delay (snd-offset (clip (snd-offset delay (* max-delay 0.5))
-                                    max-delay)
-                              (* max-delay -0.5)))
+      (setf delay (snd-offset (clip (snd-offset delay (* max-delay -0.5))
+                                    (* max-delay 0.5))
+                              (* max-delay 0.5)))
       ; now delay is between 0 and max-delay, so we won't crash nyquist when
       ; we call snd-alpassvv, which doesn't test for out-of-range data
       (cond ((> the-snd-srate feedback-srate)
@@ -174,7 +174,7 @@
             ((< the-snd-srate delay-srate)
              (format t "Warning: down-sampling delay in alpass~%")
              (setf delay (snd-down the-snd-srate delay))))
-      ;(display "snd-alpassvv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
+      (display "snd-alpassvv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
       (snd-alpassvv the-snd delay feedback max-delay)))
 
 (setf alpass-implementations
@@ -188,6 +188,11 @@
 (defun nyq:alpass1 (snd delay feedback min-hz)
   (select-implementation-1-2 alpass-implementations
                              snd delay feedback min-hz))
+
+;; CONGEN -- contour generator, patterned after gated analog env gen
+;;
+(defun congen (gate rise fall) (multichan-expand #'snd-congen gate rise fall))
+
 
 ;; S-EXP -- exponentiate a sound
 ;;
@@ -241,7 +246,7 @@
                                                  (floor 0.01) (threshold 0.01))
   (let ((rms (lp (mult snd snd) (/ *control-srate* 10.0))))
     (setf threshold (* threshold threshold))
-    (mult snd (gate rms lookahead risetime falltime floor threshold))))
+    (mult snd (gate rms floor risetime falltime lookahead threshold))))
 
 
 ;; QUANTIZE -- quantize a sound
@@ -262,6 +267,8 @@
 ;;
 (defun rms (s &optional (rate 100.0) window-size)
   (let (rslt step-size)
+    (cond ((not (eq (type-of s) 'SOUND))
+	   (break "in RMS, first parameter must be a monophonic SOUND")))
     (setf step-size (round (/ (snd-srate s) rate)))
     (cond ((null window-size)
                (setf window-size step-size)))
@@ -302,7 +309,7 @@
 (defun nyq:slope (s)
   (let* ((sr (snd-srate s))
          (sr-inverse (/ sr)))
-    (snd-xform (snd-slope s) sr (- sr-inverse) 0.0 MAX-STOP-TIME 1.0)))
+    (snd-xform (snd-slope s) sr 0 sr-inverse MAX-STOP-TIME 1.0)))
 
 
 ;; lp - lowpass filter
@@ -321,6 +328,8 @@
 
 
 ;;; fixed-parameter filters based on snd-biquad
+;;; note: snd-biquad is implemented in biquadfilt.[ch],
+;;; while BiQuad.{cpp,h} is part of STK
 
 (setf Pi 3.14159265358979)
 
@@ -548,3 +557,22 @@
                                                 hz 0.66045510) 
                                                 hz 0.94276399)
                                                 hz 2.57900101))
+
+; YIN
+; maybe this should handle multiple channels, etc.
+(setfn yin snd-yin)
+
+
+; FOLLOW
+(defun follow (sound floor risetime falltime lookahead)
+  ;; use 10000s as "infinite" -- that's about 2^30 samples at 96K
+  (setf lookahead (round (* lookahead (snd-srate sound))))
+  (extract (/ lookahead (snd-srate sound)) 10000
+           (snd-follow sound floor risetime falltime lookahead)))
+
+; Note: gate implementation moved to nyquist.lsp
+;(defun gate (sound floor risetime falltime lookahead threshold)
+;  (setf lookahead (round (* lookahead (snd-srate sound))))
+;  (setf lookahead (/ lookahead (snd-srate sound)))
+;  (extract lookahead 10000
+;           (snd-gate sound lookahead risetime falltime floor threshold)))

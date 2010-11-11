@@ -1,10 +1,10 @@
-copy ..\..\setup\setupnyrun.exe g:\user\rbd\music\web\nyquist\setupnyrun229.exe
-copy ..\..\winsetup\setupnywinrun.exe g:\user\rbd\music\web\nyquist\setupnywinrun229.exe
-copy ..\..\idesetup\setupnyiderun.exe g:\user\rbd\music\web\nyquist\setupnyiderun229.exe
-copy new.html g:\user\rbd\music\web\music.software.html
+copy ..\..\setup\setupnyqrun.exe q:\web\nyquist\setupnyqrun231.exe
+copy ..\..\setup\setupnyqwinrun.exe q:\web\nyquist\setupnyqwinrun231.exe
+copy ..\..\setup\setupnyqiderun.exe q:\web\nyquist\setupnyqiderun231.exe
+copy new.html q:\web\music.software.html
 call cleanup.bat
-echo "In d:\rbd, make nyquist.zip from nyquist now..."
+echo "In d:\rbd, make nyquist.zip from nyquist now...then type return to the pause..."
 pause
-move ..\..\..\nyquist.zip ..\..\..\nyquist229.zip
-copy ..\..\..\nyquist229.zip g:\user\rbd\music\web\nyquist\nyqsrc229.zip
+move ..\..\..\nyquist.zip ..\..\..\nyquist231.zip
+copy ..\..\..\nyquist231.zip q:\web\nyquist\nyqsrc231.zip
 call restore.bat

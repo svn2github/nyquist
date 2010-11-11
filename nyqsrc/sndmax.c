@@ -4,6 +4,7 @@
 /* CHANGE LOG
  * --------------------------------------------------------------------
  * 28Apr03  dm  min->MIN; fix compiler warning
+ * 31Jan07 rbd  handle negative scale factors
  */
 
 #ifdef UNIX
@@ -66,7 +67,7 @@ double sound_max(LVAL snd_expr, long n)
         xlerror("sound_max: expression did not return a sound",
                  s_as_lval);
     }
-    return maximum * s->scale;
+    return fabs(maximum * s->scale);
 }
 
 

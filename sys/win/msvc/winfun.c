@@ -10,6 +10,56 @@
 #include "xlisp.h"
 #include "sound.h"
 
+/* Added by Ning Hu		May.2001 
+xsetdir - set current directory of the process */
+LVAL xsetdir() {
+    TCHAR ssCurDir[MAX_PATH], szCurDir[MAX_PATH];
+
+    strcpy(ssCurDir, getstring(xlgastring()));
+    xllastarg();
+    if (SetCurrentDirectory(ssCurDir)) {
+        if (GetCurrentDirectory(
+            sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {
+            return cvstring(szCurDir);
+        /* create the result string
+            stdputstr("Current Directory: ");
+            stdputstr(szCurDir);
+            stdputstr("\n"); */
+        }	
+    }
+    stdputstr("Directory Setting Error\n");
+
+    /* return nil on error*/
+    return NIL;
+}
+
+/* xget_temp_path -- get a path to create temp files */
+LVAL xget_temp_path()
+{
+    char *p;
+    char szDir[MAX_PATH];
+    char szDirLC[MAX_PATH];
+    int rslt = GetTempPath(MAX_PATH, szDir);
+    if (rslt > MAX_PATH || rslt <= 0) {
+        return cvstring("");
+    } else {
+        /* Vista apparently treats c:\windows with
+         * special semantics, so just don't allow
+         * GetTempPath to put us in c:\windows...
+         */
+        strcpy(szDirLC, szDir); /* convert to lower case */
+        for (p = szDirLC; *p; p++) { 
+            *p = tolower(*p);
+        }
+        if (strstr(szDirLC, "c:\\windows")) {
+            /* c:\windows is bad. */
+            return cvstring("");
+        }
+        return cvstring(szDir);
+    }
+}
+
+//Updated End
 
 
 /* osbgetc - get a character from a binary file ======  added for console*/
@@ -82,7 +132,6 @@ LVAL xsetupconsole()
     return NIL;
 }
 
-
 void get_xlisp_path(char *p, long p_max)
 {
     HKEY hkey;
@@ -119,6 +168,13 @@ void get_xlisp_path(char *p, long p_max)
         return;
     }
 }
+
+LVAL xget_user()
+{
+    // not implemented for Windows, just use "nyquist"
+    return cvstring("nyquist");
+}
+
 
 #ifdef WINGUI
 /* NOTE: define WINGUI in the Project Settings for the NyqWin projects.

@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 (defun env31 ()
   (pwlv 0.99 25e-3 0.99 225e-3 0.318 275e-3 0.318 475e-3 0.99 500e-3 0.99))

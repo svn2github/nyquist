@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 (defun tibetan-wave ()
   (setf *tibetan-table*
@@ -25,7 +26,7 @@
                   (osc (hz-to-step (+ frq (* off offset))) dur *tibetan-table*))
                '(0 1 2 3 4 -1 -2 -3 -4)))))
 
-(play
+(defun tibetan-sequence ()
     (scale 0.1 (vector (sim (at 0.0 (tibetan 110 0.03 35 0.07 21))
                             (at 20.0 (tibetan 110 0.04 20 2 4))
                             (at 28.0 (tibetan 220 0.04 30 3 6))
@@ -34,3 +35,6 @@
                             (at 20.0 (tibetan 220 0.05 15  1.5 3))
                             (at 32.0 (tibetan 110 0.025 26 2.6 5.2))
                             (at 36.0 (tibetan 55 0.01 22 0.04 13))))))
+
+(defun tibetan-demo () (play (tibetan-sequence)))
+

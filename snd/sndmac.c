@@ -7,7 +7,9 @@
 #include "wx/filefn.h"
 #endif
 
-
+/* FIX -- take out all this because by using libsndfile, file I/O should be
+   machine independent
+ */
 int snd_file_open(char *fname, int mode)
 {
     // this function should work like open(), so it returns -1 on failure. 
@@ -51,21 +53,30 @@ long snd_file_len(int file)
 }
 
 
-long snd_file_read(int fp, char *data, long len)
+long snd_file_read(SNDFILE *fp, float *data, long len)
 {
+  /* Original code 
     return fread(data, 1, len, (FILE *)fp);
+  */
+  return sf_readf_float(fp, data, len);
 }
 
 
-long snd_file_write(int fp, char *data, long len)
+long snd_file_write(SNDFILE *fp, float *data, long len)
 {
+  /*
     return fwrite(data, 1, len, (FILE *)fp);
+  */
+  return sf_writef_float(fp, data, len);
 }
 
 
-int snd_file_close(int fp)
+long snd_file_close(SNDFILE *fp)
 {
+/*
     return fclose((FILE *)fp);
+     */
+    return sf_close(fp);
 }
 
 int snd_file_lseek(int file, long offset, int param)

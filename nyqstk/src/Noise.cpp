@@ -6,39 +6,46 @@
     C rand() function.  The quality of the rand()
     function varies from one OS to another.
 
-    by Perry R. Cook and Gary P. Scavone, 1995 - 2002.
+    by Perry R. Cook and Gary P. Scavone, 1995 - 2005.
 */
 /***************************************************/
 
 #include "Noise.h"
 #include <stdlib.h>
+#include <time.h>
 
-Noise :: Noise() : Stk()
-{    
-  lastOutput = (MY_FLOAT) 0.0;
+using namespace Nyq;
+
+Noise :: Noise() : Generator()
+{
+  // Seed the random number generator with system time.
+  this->setSeed( 0 );
+  lastOutput_ = (StkFloat) 0.0;
+}
+
+Noise :: Noise( unsigned int seed ) : Generator()
+{
+  // Seed the random number generator
+  this->setSeed( seed );
+  lastOutput_ = (StkFloat) 0.0;
 }
 
 Noise :: ~Noise()
 {
 }
 
-MY_FLOAT Noise :: tick()
+void Noise :: setSeed( unsigned int seed )
 {
-  lastOutput = (MY_FLOAT) (2.0 * rand() / (RAND_MAX + 1.0) );
-  lastOutput -= 1.0;
-  return lastOutput;
+  if ( seed == 0 )
+    srand( (unsigned int) time(NULL) );
+  else
+    srand( seed );
 }
 
-MY_FLOAT *Noise :: tick(MY_FLOAT *vector, unsigned int vectorSize)
+StkFloat Noise :: computeSample()
 {
-  for (unsigned int i=0; i<vectorSize; i++)
-    vector[i] = tick();
-
-  return vector;
-}
-
-MY_FLOAT Noise :: lastOut() const
-{
-  return lastOutput;
+  lastOutput_ = (StkFloat) (2.0 * rand() / (RAND_MAX + 1.0) );
+  lastOutput_ -= 1.0;
+  return lastOutput_;
 }
 

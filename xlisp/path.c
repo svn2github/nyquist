@@ -8,6 +8,18 @@
  * is NULL, the old platform-specific methods are still
  * used.
  */
+/* CHANGE LOG
+ *
+ * 24-dec-05  RBD
+ *    Made ';' a valid path separator for every system (to work
+ *    around a windows installer limitation)
+ *
+ * 22-jul-07  RBD
+ *    Added get_user_id() 
+ *
+ *  9-jan-08  RBD
+ *    Added find-in-xlisp-path as XLISP primitive
+ */
 
 #include <string.h>
 
@@ -35,12 +47,14 @@ const char *unix_return_xlisp_path()
     char *paths = getenv("XLISPPATH");
     if (!paths || !*paths) {
         char msg[512];
-        sprintf(msg, "\n%s\n%s\n%s\n%s\n%s\n",
+        sprintf(msg, "\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
                 "Warning: XLISP failed to find XLISPPATH in the environment.",
                 "If you are using Nyquist, probably you should cd to the",
                 "nyquist directory and type:",
                 "    setenv XLISPPATH `pwd`/runtime:`pwd`/lib",
-                "or set XLISPPATH in your .login or .cshrc file.");
+                "or set XLISPPATH in your .login or .cshrc file.",
+                "If you use the bash shell, try:",
+                "    XLISPPATH=`pwd`/runtime:`pwd`/lib; export XLISPPATH");
         errputstr(msg);
     }
     return paths;
@@ -66,6 +80,7 @@ const char *windows_return_xlisp_path()
 
     return paths;
 }
+
 #endif
 
 #ifdef MACINTOSH
@@ -95,6 +110,12 @@ const char *mac_return_xlisp_path()
 
     return paths;
 }
+
+const char *get_user_id()
+{
+    // not implemented for MACINTOSH (OS 9), just use "nyquist"
+    return "nyquist";
+}
 #endif
 
 const char *return_xlisp_path()
@@ -116,7 +137,7 @@ const char *return_xlisp_path()
 
 char *g_xlptemp = NULL;
 
-// find_in_xlisp_path -- find fname by searching XLISP_PATH
+// find_in_xlisp_path -- find fname or fname.lsp by searching XLISP_PATH
 //
 // NOTE: this module owns the string. The string is valid
 // until the next call to find_in_xlisp_path()
@@ -133,11 +154,11 @@ const char *find_in_xlisp_path(const char *fname)
         int len;
 
         /* skip over separator */
-        while (*paths == os_sepchar) paths++;
+        while (*paths == os_sepchar || *paths == ';') paths++;
 
         /* find next directory */
         start = paths;
-        while (*paths && (*paths != os_sepchar))
+        while (*paths && (*paths != os_sepchar && *paths != ';'))
             paths++;
 
         if (g_xlptemp) {
@@ -161,11 +182,19 @@ const char *find_in_xlisp_path(const char *fname)
         len += strlen(fname);
         g_xlptemp[len] = 0;
 
-        /* append the .lsp extension */
-        if (needsextension(g_xlptemp))
-           strcat(g_xlptemp, ".lsp");
 
+        /* printf("Attempting to open %s, start is %s\n", g_xlptemp, start); */
         fp = osaopen(g_xlptemp, "r");
+        if (!fp) {
+            /* try appending the .lsp extension */
+            if (needsextension(g_xlptemp)) {
+                strcat(g_xlptemp, ".lsp");
+                fp = osaopen(g_xlptemp, "r");
+                if (!fp) {
+                    g_xlptemp[strlen(g_xlptemp) - 4] = 0; /* remove .lsp */
+                }
+            }
+        }
         if (fp) {
            fclose(fp);
 
@@ -183,4 +212,15 @@ const char *find_in_xlisp_path(const char *fname)
 
     /* It wasn't found */
     return NULL;
+}
+
+
+/* xfind_in_xlisp_path -- search XLISPPATH for file, return full path */
+LVAL xfind_in_xlisp_path()
+{
+   LVAL string = xlgastring();
+   const char *path = (const char *) getstring(string);
+   xllastarg();
+   path = find_in_xlisp_path(path);
+   return (path ? cvstring(path) : NULL);
 }

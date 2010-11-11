@@ -1,0 +1,753 @@
+<html><head><title>Nyquist Libraries</title></head>
+<body bgcolor="ffffff">
+<a href = "part14.html">Previous Section</a> | <a href = "part16.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
+<hr>
+<a name = "166"><h2>Nyquist Libraries</h2></a>
+<a name="index1151">
+Nyquist is always growing with new functions. Functions that are most fundamental
+are added to the core language. These functions are automatically loaded when you 
+start Nyquist, and they are documented in the preceding chapters. Other functions seem
+less central and are implemented as lisp files that you can load. These are called
+library functions, and they are described here. 
+<p>
+To use a library function, you
+must first load the library, e.g. <code>(load "pianosyn")</code> loads the piano synthesis
+library. The libraries are all located in the <code>lib</code> directory, and you 
+should therefore include this directory on your <code>XLISPPATH</code> variable. (See 
+Section <a href = "part2.html#2">"Introduction and Overview"</a>.) Each library is documented in one of the following
+sections. When you load the library described by the section, all functions
+documented in that section become available.
+<p>
+<a name = "167"><h3>Piano Synthesizer</h3></a>
+The piano synthesizer (library name is <code>pianosyn.lsp</code>) generates
+realistic piano tones using a multiple wavetable implementation by Zheng (Geoffrey)
+Hua and Jim Beauchamp, University of Illinois. Please see the notice about
+acknowledgements that prints when you load the file. Further informations and
+example code can be found in 
+<code>demos/piano.htm</code><a name="index1152"><a name="index1153">. 
+There are several useful functions in this library:
+<dl>
+<dt>
+<code>piano-note(<a name="index1154"><a name="index1155"><i>duration</i>, <i>step</i>, 
+ <i>dynamic</i>)</code><dd>Synthesizes a piano tone. <i>Duration</i> is the duration to the point of
+key release, after which there is a rapid decay. <i>Step</i> is the pitch in half
+steps, and <i>dynamic</i> is approximately equivalent to a MIDI key velocity
+parameter. Use a value near 100 for a loud sound and near 10 for a soft sound.<br><br>
+<dt><code>piano-note-2(<a name="index1156"><i>step</i>, <i>dynamic</i>)</code><dd>Similar to <code>piano-note</code> except the duration is nominally 1.0.<br><br>
+<dt><code>piano-midi(<a name="index1157"><i>midi-file-name</i>)</code><dd>Use the piano synthesizer 
+to play a MIDI file. The file name (a string) is given by <i>midi-file-name</i>.<br><br>
+<dt><code>piano-midi2file(<a name="index1158"><i>midi-file-name</i>, 
+<i>sound-file-name</i>)</code><dd>Use the piano synthesizer to play a MIDI file. The MIDI file
+is given by <i>midi-file-name</i> and the (monophonic) result is written to the file
+named <i>sound-file-name</i>.
+</dl>
+<p>
+<a name = "168"><h3>Dymanics Compression</h3></a>
+To use these functions, load the file <code>compress.lsp</code>. This library 
+implements a compressor originally intended for noisy speech audio, but
+usable in a variety of situations.
+There are actually two compressors that can be used in 
+series. The first, <code>compress</code>, is
+a fairly standard one: it detects signal level with an RMS
+detector and uses table-lookup to determine how much gain
+to place on the original signal at that point. One bit of
+cleverness here is that the RMS envelope is "followed" or
+enveloped using <code>snd-follow</code>, which does look-ahead to anticipate
+peaks before they happen.
+<p>
+The other interesting feature is <code>compress-map</code>, which builds 
+a map in terms of compression and expansion. For speech, the recommended
+procedure is to figure out the noise floor on the signal you are compressing
+(for example, look at the signal where the speaker is not talking).
+Use a compression map that leaves the noise alone and boosts
+signals that are well above the noise floor. Alas, the <code>compress-map</code>
+function is not written in these terms, so some head-scratching is
+involved, but the results are quite good.
+<p>
+The second compressor is called <code>agc</code>, and it implements automatic gain
+control that keeps peaks at or below 1.0. By combining <code>compress</code> and 
+<code>agc</code>, you can process poorly recorded speech for playback on low-quality
+speakers in noisy environments. The <code>compress</code> function modulates the 
+short-term gain to to minimize the total dynamic range, keeping the speech at
+a generally loud level, and the <code>agc</code> function rides the long-term gain
+to set the overall level without clipping.
+<p>
+<dl>
+<dt>
+<code>compress-map(<a name="index1159"><i>compress-ratio</i>, 
+<i>compress-threshold</i>, 
+<i>expand-ratio</i>, <i>expand-ratio</i>[ ,limit: <i>limit</i>] [, transition: 
+<i>transition</i>])</code><dd>Construct
+a map for the compress function. The map consists of two parts: a compression
+part and an expansion part.
+The intended use is to compress everything above compress-threshold by
+compress-ratio, and to downward expand everything below expand-ratio
+by expand-ratio.  Thresholds are in dB and ratios are dB-per-dB.
+0dB corresponds to a peak amplitude of 1.0 or rms amplitude of 0.7
+If the input goes above 0dB, the output can optionally be limited
+by setting <code>:limit</code> (a keyword parameter) to <code>T</code>. 
+This effectively changes 
+the compression ratio to infinity at 0dB.  If <code>:limit</code> is <code>nil</code>
+(the default), then the compression-ratio continues to apply above 0dB.<br><br>
+<dt>Another keyword parameter, <code>:transition</code>, sets the amount below the
+thresholds (in dB) that a smooth transition starts. The default is 0,
+meaning that there is no smooth transition. The smooth transition is a
+2nd-order polynomial that matches the slopes of the straight-line compression
+curve and interpolates between them.<br><br>
+<dt>It is assumed that expand-threshold &lt;= compress-threshold &lt;= 0
+The gain is unity at 0dB so if compression-ratio &gt; 1, then gain
+will be greater than unity below 0dB.<br><br>
+<dt>The result returned by this function is a sound for use in the <code>shape</code>
+function. The sound maps input
+dB to gain. Time 1.0 corresponds to 0dB, time 0.0 corresponds to
+-100 dB, and time 2.0 corresponds to +100dB, so this is a 
+100hz "sample rate" sound. The sound gives gain in dB.<br><br>
+<dt><code>db-average(<a name="index1160"><i>input</i>)</code><dd>Compute the average amplitude 
+of <i>input</i> in dB.<br><br>
+<dt><code>compress(<a name="index1161"><i>input</i>, <i>map</i>, <i>rise-time</i>, <i>fall-time</i>,
+[<i>lookahead</i>])</code><dd>Compress 
+<i>input</i> using <i>map</i>, a compression curve
+probably generated by <code>compress-map</code> (see above). Adjustments in gain have
+the given <i>rise-time</i> and <i>fall-time</i>. Lookahead tells how far ahead to look
+at the signal, and is <i>rise-time</i> by default.<br><br>
+<dt><code>agc(<a name="index1162"><a name="index1163"><a name="index1164"><i>input</i>,
+<i>range</i>, <i>rise-time</i>, <i>fall-time</i>[ ,<i>lookahead</i>])</code><dd>An automatic
+gain control applied to <i>input</i>. The maximum gain in dB is <i>range</i>. Peaks
+are attenuated to 1.0, and gain is controlled with the given <i>rise-time</i> and
+<i>fall-time</i>. The look-ahead time default is <i>rise-time</i>.
+</dl>
+<p>
+<a name = "169"><h3>Clipping Softener</h3></a>
+This library, in <code>soften.lsp</code>, was written to improve the quality of
+poorly recorded speech. In recordings of speech, extreme clipping generates
+harsh high frequency noise. This can sound particulary bad on small speakers
+that will emphasize high frequencies. This problem can be ameliorated by 
+low-pass filtering regions where clipping occurs. The effect is to dull the
+harsh clipping. Intelligibility is not affected by much, and the result can
+be much more pleasant on the ears. Clipping is detected simply by looking for
+large signal values. Assuming 8-bit recording, this level is set to 126/127.
+<p>
+The function works by cross-fading between the normal signal and a filtered 
+signal as opposed to changing filter coefficients.
+<p>
+<dl>
+<dt>
+<code>soften-clipping(<a name="index1165"><a name="index1166"><i>snd</i>, 
+<i>cutoff</i>)</code><dd>Filter the loud regions of a signal where clipping is likely
+to have generated additional high frequencies. The input signal is <i>snd</i>
+and <i>cutoff</i> is the filter cutoff frequency
+(4 kHz is recommended for speech).
+</dl>
+<p>
+<a name = "170"><h3>Graphical Equalizer</h3></a>
+There's nothing really "graphical" about this library (<code>grapheq.lsp</code>), but 
+this is a common term for multi-band equalizers. This implementation uses
+Nyquist's <code>eq-band</code> function to split the incoming signal into different
+frequency bands. Bands are spaced geometrically, e.g. each band could be one
+octave, meaning that each successive band has twice the bandwidth. An interesting
+possibility is using computed control functions to make the equalization change
+over time.
+<p>
+<dl>
+<dt>
+<code>nband-range(<a name="index1167"><a name="index1168"><a name="index1169"><i>input</i>, <i>gains</i>, <i>lowf</i>, <i>highf</i>)</code><dd>A graphical equalizer applied to 
+<i>input</i> (a <code>SOUND</code>). The gain controls and number of bands is given by <i>gains</i>, an
+ARRAY of <code>SOUND</code>s (in other words, a Nyquist multichannel <code>SOUND</code>). Any sound in the
+array may be replaced by a <code>FLONUM</code>. The bands are
+geometrically equally spaced from the lowest frequency <i>lowf</i> to the
+highest frequency <i>highf</i> (both are <code>FLONUM</code>s).<br><br>
+<dt><code>nband(<a name="index1170"><i>input</i>, <i>gains</i>)</code><dd>A graphical equalizer, identical 
+to <code>nband-range</code> with a range of 20 to 20,000 Hz.
+</dl>
+<p>
+<a name = "171"><h3>Sound Reversal</h3></a>
+The <code>reverse.lsp</code> library implements functions to play sounds in reverse.
+<p>
+<dl>
+<dt>
+<code>s-reverse(<a name="index1171"><a name="index1172"><a name="index1173"><a name="index1174"><i>snd</i>)</code><dd>Reverses <i>snd</i> (a <code>SOUND</code>). Sound must be shorter
+than <code>*max-reverse-samples*</code>, which is currently initialized to 
+25 million samples. Reversal allocates about 4 bytes per sample. This function
+uses XLISP in the inner sample loop, so do not be surprised if it calls the 
+garbage collector a lot and runs slowly. The result starts at the starting
+time given by the current environment (not necessarily the starting time 
+of <i>snd</i>). If <i>snd</i> has multiple channels, a multiple channel, 
+reversed sound is returned.<br><br>
+<dt><code>s-read-reverse(<a name="index1175"><a name="index1176"><i>filename</i>[ ,time-offset: <i>offset</i>] [, srate: <i>sr</i>] [, dur: <i>dur</i>] [, nchans: <i>chans</i>] [, format: <i>format</i>] [, mode: <i>mode</i>] [, bits: <i>n</i>] [, swap: <i>flag</i>])</code><dd>This function is identical to <code>s-read</code> (see <a href = "part8.html#99">"Sound File Input and Output"</a>), except it reads the indicated samples in reverse. Like
+<code>s-reverse</code> (see above), it uses XLISP in the inner loop, so it is slow.
+Unlike <code>s-reverse</code>, <code>s-read-reverse</code> uses a fixed amount of 
+memory that is independent of how many samples are computed. Multiple channels
+are handled. 
+</dl>
+<p>
+<a name = "172"><h3>Time Delay Functions</h3></a>
+The <code>time-delay-fns.lsp</code> library implements chorus, phaser, and flange effects.
+<p>
+<dl>
+<dt>
+<code>phaser(<a name="index1177"><a name="index1178"><i>snd</i>)</code><dd>A phaser effect
+applied to <i>snd</i> (a <code>SOUND</code>). There are no parameters, 
+but feel free to modify the source code of this one-liner.<br><br>
+<dt><code>flange(<a name="index1179"><a name="index1180"><a name="index1181"><i>snd</i>)</code><dd>A flange effect
+applied to <i>snd</i>. To vary the rate and other parameters, see the source code.<br><br>
+<dt><code>stereo-chorus(<a name="index1182"><a name="index1183"><i>snd</i>)</code><dd>A chorus effect applied to <i>snd</i>,
+a <code>SOUND</code> (monophonic). The output is a stereo sound. All parameters are built-in,
+but see the simple source code to make modifications.<br><br>
+<dt><code>chorus(<a name="index1184"><a name="index1185"><i>snd</i>, <i>maxdepth</i>, <i>depth</i>, <i>rate</i>, 
+<i>saturation</i>)</code><dd>A chorus effect applied to <i>snd</i>. All parameters may be arrays
+as usual. The <i>maxdepth</i> is a <code>FLONUM</code> giving twice the maximum value of <i>depth</i>, 
+which may be a <code>FLONUM</code> or a <code>SOUND</code>. The chorus is implemented as a variable delay 
+modulated by a sinusoid running at <i>rate</i> Hz (a <code>FLONUM</code>). The sinusoid is 
+scaled by <i>depth</i> and offset by <i>maxdepth</i>/2. The delayed signal is mixed
+with the original, and <i>saturation</i> gives the fraction of the delayed signal
+(from 0 to 1) in the mix. A reasonable choice of parameter values is 
+<i>maxdepth</i> = 0.05, <i>depth</i> = 0.025, <i>rate</i> = 0.5, and <i>saturation</i> = 0.5.
+</dl>
+<p>
+<a name = "173"><h3>Multiple Band Effects</h3></a>
+<a name="index1186"><a name="index1187">
+The <code>bandfx.lsp</code> library implements several effects based on multiple
+frequency bands. The idea is to separate a signal into different frequency
+bands, apply a slightly different effect to each band, and sum the effected
+bands back together to form the result. This file includes its own set of
+examples. After loading the file, try <code>f2()</code>, <code>f3()</code>, <code>f4()</code>,
+and <code>f5()</code> to hear them.
+<p>
+There is much room for expansion and experimentation with this library. Other
+effects might include distortion in certain bands (for example, there are
+commercial effects that add distortion to low frequencies to enhance the sound
+of the bass), separating bands into different channels for stereo or multi-channel
+effects, adding frequency-dependent reverb, and performing dynamic compression, 
+limiting, or noise gate functions on each band. There are also opportunities for
+cross-synthesis: using the content of bands extracted from one signal to modify
+the bands of another. The simplest of these would be to apply amplitude envelopes
+of one sound to another. Please contact us (dannenberg@cs.cmu.edu) if you 
+are interested in working on this library.
+<p>
+<dl>
+<dt>
+<code>apply-banded-delay( <a name="index1188"><a name="index1189"><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>lowd</i>, <i>highd</i>, <i>fb</i>, <i>wet</i>)</code><dd>Separates
+input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> bands from a low frequency
+of <i>lowp</i> to a high frequency of <i>highp</i> (these are <code>FLONUMS</code> that specify
+steps, not Hz), and applies a delay to each band. The delay for the lowest band is
+given by the <code>FLONUM</code> <i>lowd</i> (in seconds) and the delay for the highest band
+is given by the <code>FLONUM</code> <i>highd</i>. The delays for other bands are linearly
+interpolated between these values. Each delay has feedback gain controlled by
+<code>FLONUM</code> <i>fb</i>. The delayed bands are scaled by <code>FLONUM</code> <i>wet</i>, and 
+the original sound is scaled by 1 - <i>wet</i>. All are summed to form the result, 
+a <code>SOUND</code>.<br><br>
+<dt><code>apply-banded-bass-boost(<a name="index1190"><a name="index1191"><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code><dd>Applies a boost to 
+low frequencies. Separates
+input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> bands from a low frequency
+of <i>lowp</i> to a high frequency of <i>highp</i> (these are <code>FLONUMS</code> that specify
+steps, not Hz), and scales the lowest <i>num-boost</i> (a <code>FIXNUM</code>) bands by <i>gain</i>,
+a <code>FLONUM</code>. The bands are summed to form the result, a <code>SOUND</code>.<br><br>
+<dt><code>apply-banded-treble-boost(<a name="index1192"><a name="index1193"><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code><dd>Applies a boost to 
+high frequencies. Separates
+input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> bands from a low frequency
+of <i>lowp</i> to a high frequency of <i>highp</i> (these are <code>FLONUMS</code> that specify
+steps, not Hz), and scales the highest <i>num-boost</i> (a <code>FIXNUM</code>) bands by <i>gain</i>,
+a <code>FLONUM</code>. The bands are summed to form the result, a <code>SOUND</code>.
+</dl>
+<p>
+<a name = "174"><h3>Granular Synthesis</h3></a>
+Some granular synthesis functions are implemented in the <code>gran.lsp</code> library
+file. There are many variations and control schemes one could adopt for granular
+synthesis, so it is impossible to create a single universal granular synthesis
+function. One of the advantages of Nyquist is the integration of control and
+synthesis functions, and users are encouraged to build their own granular synthesis
+functions incorporating their own control schemes. The <code>gran.lsp</code> file
+includes many comments and is intended to be a useful starting point. Another 
+possibility is to construct a score with an event for each grain. Estimate a
+few hundred bytes per score event (obviously, size depends on the number of
+parameters) and avoid using all of your computer's memory.
+<p>
+<dl>
+<dt>
+<code>sf-granulate(<a name="index1194"><a name="index1195"><i>filename</i>, <i>grain-dur</i>, <i>grain-dev</i>, <i>ioi</i>, <i>ioi-dev</i>, <i>pitch-dev</i>,
+[<i>file-start</i>] [, <i>file-end</i>])</code><dd>Granular synthesis using a sound file
+named <i>filename</i> as the source for grains. Grains are extracted from
+a sound file named by <i>filename</i> by stepping through the file in equal
+increments. Each grain duration is the 
+sum of <i>grain-dur</i> and a random number from 0 to <i>grain-dev</i>. Grains are 
+then multiplied by a raised cosine smoothing window and resampled at a ratio
+between 1.0 and <i>pitch-dev</i>. If <i>pitch-dev</i> is greater than one, grains are
+stretched and the pitch (if any) goes down. If <i>pitch-dev</i> is less than one,
+grains are shortened and the pitch goes up. Grains are then output
+with an 
+inter-onset interval between successive grains (which may overlap) 
+determined by the sum of
+<i>ioi</i> and a random number from 0 to <i>ioi-dev</i>. 
+The duration of the resulting sound is determined by
+the stretch factor (not by the sound file). The number of grains is
+the total sound duration (determined by the stretch factor)
+divided by the mean inter-onset interval, 
+which is <i>ioi</i> + <i>ioi-dev</i> * 0.5. 
+The grains are taken from equally-spaced starting points in <i>filename</i>,
+and depending on grain size and number, the grains may or may not overlap.
+The output duration will simply be the sum of the inter-onset intervals
+and the duration of the last grain. If <i>ioi-dev</i> is non-zero, the
+output duration will vary, but the expected value of the duration is
+the stretch factor.
+To achieve a rich granular synthesis effect, it is often a good idea to
+sum four or more copies of <code>sf-granulate</code> together. (See the <code>gran-test</code>
+function in <code>gran.lsp</code>.)
+</dl>
+<p>
+<a name = "175"><h3>MIDI Utilities</h3></a>
+The <code>midishow.lsp</code> library has functions that can print the contents fo MIDI
+files. This intended as a debugging aid.
+<p>
+<dl>
+<dt>
+<code>midi-show-file(<a name="index1196"><a name="index1197"><a name="index1198"><i>file-name</i>)</code><dd>Print the contents of a MIDI file to the console.<br><br>
+<dt><code>midi-show(<a name="index1199"><i>the-seq</i>[ ,<i>out-file</i>])</code><dd>Print the
+contents of the sequence <i>the-seq</i> to the file <i>out-file</i> (whose default value
+is the console.)
+</dl>
+<p>
+<a name = "176"><h3>Reverberation</h3></a>
+The <code>reverb.lsp</code> library implements artificial reverberation.
+<p>
+<dl>
+<dt>
+<code>reverb(<a name="index1200"><a name="index1201"><i>snd</i>, 
+<i>time</i>)</code><dd>Artificial reverberation applied to <i>snd</i> with a decay time of
+<i>time</i>.
+</dl>
+<p>
+<a name = "177"><h3>DTMF Encoding</h3></a>
+<a name="index1202"><a name="index1203">
+The <code>dtmf.lsp</code> library implements DTMF encoding. DTMF is the 
+"touch tone" code used by telephones.
+<p>
+<dl>
+<dt>
+<code>dtmf-tone(<a name="index1204"><i>key</i>, <i>len</i>, <i>space</i>)</code><dd>Generate a
+single DTMF tone. The <i>key</i> parameter is either a digit (a <code>FIXNUM</code>
+from 0 through 9) or the atom <code>STAR</code> or <code>POUND</code>. The duration of
+the done is given by <i>len</i> (a <code>FLONUM</code>) and the tone is followed by
+silence of duration <i>space</i> (a <code>FLONUM</code>).<br><br>
+<dt><code>speed-dial(<a name="index1205"><i>thelist</i>)</code><dd>Generates a sequence
+of DTMF tones using the keys in <i>thelist</i> (a <code>LIST</code> of keys as
+described above under <code>dtmf-tone</code>). The duration of each tone is 0.2
+seconds, and the space between tones is 0.1 second. Use <code>stretch</code> to
+change the "dialing" speed.
+</dl>
+<p>
+<a name = "178"><h3>Dolby Surround(R), Stereo and Spatialization Effects</h3></a>
+<a name="index1206"><a name="index1207"><a name="index1208"><a name="index1209">The <code>spatial.lsp</code> library implements various functions for stereo
+manipulation and spatialization. It also includes some functions for
+Dolby Pro-Logic panning, which encodes left, right, center, and surround 
+channels into stereo. The stereo signal can then be played through
+a Dolby decoder to drive a surround speaker array. This library has
+a somewhat simplified encoder, so you should certainly test the
+output. Consider using a high-end encoder for critical work. There
+are a number of functions in <code>spatial.lsp</code> for testing. See the
+source code for comments about these.
+<p>
+<dl>
+<dt>
+<code>stereoize(<a name="index1210"><a name="index1211"><a name="index1212"><i>snd</i>)</code><dd>Convert a mono sound, <i>snd</i>, to stereo. Four bands of 
+equalization and some delay are used to create a stereo effect.<br><br>
+<dt><code>widen(<a name="index1213"><a name="index1214"><i>snd</i>, <i>amt</i>)</code><dd>Artificially
+widen the stereo field in <i>snd</i>, a two-channel sound. The amount of widening
+is <i>amt</i>, which varies from 0 (<i>snd</i> is unchanged) to 1 (maximum widening).
+The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
+<dt><code>span(<a name="index1215"><a name="index1216"><a name="index1217"><a name="index1218"><i>snd</i>, <i>amt</i>)</code><dd>Pan the virtual center channel of a stereo sound, <i>snd</i>,
+by <i>amt</i>, where 0 pans all the way to the left, while 1 pans all the way 
+to the right. The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
+<dt><code>swapchannels(<a name="index1219"><a name="index1220"><a name="index1221"><i>snd</i>)</code><dd>Swap left and right channels in <i>snd</i>, a stereo sound.<br><br>
+<dt><code>prologic(<a name="index1222"><a name="index1223"><a name="index1224"><i>l</i>, <i>c</i>, 
+<i>r</i>, <i>s</i>)</code><dd>Encode four monaural <code>SOUND</code>s representing the front-left,
+front-center, front-right, and rear channels, respectively. 
+The return value is a stereo sound, which is a Dolby-encoded mix of the
+four input sounds. <br><br>
+<dt><code>pl-left(<a name="index1225"><i>snd</i>)</code><dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front left channel.<br><br>
+<dt><code>pl-center(<a name="index1226"><i>snd</i>)</code><dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front center channel.<br><br>
+<dt><code>pl-right(<a name="index1227"><i>snd</i>)</code><dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front right channel.<br><br>
+<dt><code>pl-rear(<a name="index1228"><i>snd</i>)</code><dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the rear, or surround, channel.<br><br>
+<dt><code>pl-pan2d(<a name="index1229"><i>snd</i>, <i>x</i>, <i>y</i>)</code><dd>Comparable to Nyquist's
+existing pan function, <code>pl-pan2d</code> provides not only left-to-right
+panning, but front-to-back panning as well. The function
+accepts three parameters: <i>snd</i> is the (monophonic) input <code>SOUND</code>, 
+<i>x</i> is a left-to-right position, and <i>y</i> is a front-to-back position.
+Both position parameters may be numbers or <code>SOUND</code>s. An <i>x</i> value 
+of 0 means left, and 1 means right. Intermediate values map linearly
+between these extremes. Similarly, a <i>y</i> value of 0 causes the sound
+to play entirely through the front speakers(s), while 1 causes it to play
+entirely through the rear. Intermediate values map linearly.
+Note that, although there are usually two rear speakers in Pro-Logic systems,
+they are both driven by the same signal. Therefore any sound that is
+panned totally to the rear will be played over both rear speakers. For
+example, it is not possible to play a sound exclusively through the 
+rear left speaker.<br><br>
+<dt><code>pl-position(<a name="index1230"><i>snd</i>, <i>x</i>, <i>y</i>, <i>config</i>)</code><dd>The
+position function builds upon speaker panning to allow more abstract
+placement of sounds. Like <code>pl-pan2d</code>, it accepts a (monaural) input
+sound as well as left-to-right (<i>x</i>) and front-to-back (<i>y</i>) coordinates,
+which may be <code>FLONUM</code>s or <code>SOUND</code>s. A fourth parameter <i>config</i> 
+specifies the distance from listeners to the speakers (in meters). Current
+settings assume this to be constant for all speakers, but this assumption 
+can be changed easily (see comments in the code for more detail).
+There are several important differences between <code>pl-position</code> and 
+<code>pl-pan2d</code>. First, <code>pl-position</code> uses a Cartesian coordinate 
+system that allows x and y coordinates outside of the
+range (0, 1). This model assumes a listener position of (0,0). Each speaker
+has a predefined position as well. The input sound's position,
+relative to the listener, is given by the vector (<i>x</i>,<i>y</i>).<br><br>
+<dt><code>pl-doppler(<a name="index1231"><a name="index1232"><i>snd</i>, 
+<i>r</i>)</code><dd>Pitch-shift moving sounds according to the equation: <i>fr</i> =
+<i>f0</i>((<i>c</i>+<i>vr</i>)/<i>c</i>), where <i>fr</i> is the output frequency, 
+<i>f0</i> is the emitted (source) 
+frequency, <i>c</i> is the speed of sound (assumed to be 344.31 m/s), and 
+<i>vr</i> is the speed at which the emitter approaches the receiver. (<i>vr</i>
+is the first derivative of parameter <i>r</i>, the distance from the listener
+in meters.<br><br>
+<dt></dl><a name = "179"><h3>Drum Machine</h3></a>The drum machine software in <code>demos/plight</code> deserves further explanation. 
+to use the software, load the code by evaluating:
+<pre>
+load "../demos/plight/drum.lsp"
+exec load-props-file(strcat(*plight-drum-path*, 
+                            "beats.props"))
+exec create-drum-patches()
+exec create-patterns()
+</pre>
+
+<p>
+Drum sounds and patterns are specified in the <code>beats.props</code> file (or
+whatever name you give to <code>load-props-file</code>). This file
+contains two types of specifications. First, there are sound file specifications.
+Sound files are located by a line of the form:
+<pre>
+set sound-directory = "kit/"
+</pre>
+
+This gives the name of the sound file directory, relative to the 
+ <code>beats.props</code> file. Then, for each sound file, there should be a line of
+the form:
+<pre>
+track.2.5 = big-tom-5.wav
+</pre>
+
+This says that on track 2, a velocity value of 5 means to play the sound file
+ <code>big-tom-5.wav</code>. (Tracks and velocity values are described below.) 
+The <code>beats.props</code> file contains specifications for all the sound files
+in <code>demos/plight/kit</code> using 8 tracks. If you make your own specifications
+file, tracks should be numbered consecutively from 1, and velocities should be
+in the range of 1 to 9.
+<p>
+The second set of specifications is of beat patterns. A beat pattern is given
+by a line in the following form:
+<pre>
+beats.5 = 2--32--43-4-5---
+</pre>
+
+The number after <code>beats</code> is just a pattern number. Each pattern
+is given a unique number. After the equal sign, the digits and dashes are
+velocity values where a dash means "no sound." Beat patterns should be
+numbered consecutively from 1.
+<p>
+Once data is loaded, there are several functions to access drum patterns and 
+create drum sounds (described below). The <code>demos/plight/drums.lsp</code> file
+contains an example function <code>plight-drum-example</code> to play some drums.
+There is also the file <code>demos/plight/beats.props</code> to serve as an
+example of how to specify sound files and beat patterns.
+<p>
+<dl>
+<dt>
+<code>drum(<a name="index1233"><i>tracknum</i>, <i>patternnum</i>, <i>bpm</i>)</code><dd>Create
+a sound by playing drums sounds associated with track <i>tracknum</i> (a 
+FIXNUM) using pattern <i>patternnum</i>. The tempo is given by <i>bpm</i> in
+beats per minute. Normally patterns are a sequence of sixteenth notes, so
+the tempo is in <i>sixteenth notes per minute</i>. For example,
+if <i>patternnum</i> is 10,
+then use the pattern specified for <code>beats.10</code>. If the third character
+of this pattern is 3 and <i>tracknum</i> is 5, then on the third beat, play
+the soundfile assigned to <code>track.5.3</code>. This function returns a <code>SOUND</code>.<br><br>
+<dt><code>drum-loop(<a name="index1234"><i>snd</i>, <i>duration</i>, <i>numtimes</i>)</code><dd>Repeat the sound given by <i>snd</i> <i>numtimes</i> times. The repetitions occur at a time offset of <i>duration</i>, regardless of the actual duration of <i>snd</i>. A <code>SOUND</code> is returned.<br><br>
+<dt><code>length-of-beat(<a name="index1235"><i>bpm</i>)</code><dd>Given a tempo of 
+<i>bpm</i>, return the duration of the beat in seconds. Note that this software
+has no real notion of beat. A "beat" is just the duration of each character
+in the beat pattern strings. This function returns a <code>FLONUM</code>.
+</dl>
+<p>
+<a name = "180"><h3>Minimoog-inspired Synthesis</h3></a>
+<a name="index1236"><a name="index1237"><a name="index1238">The <code>moog.lsp</code> library gives the Nyquist user easy access to "classic"
+synthesizer sounds through an emulation of the Minimoog Synthesizer.
+Unlike modular Moogs that were very large, the Minimoog was the first
+successful and commonly used portable synthesizer. The trademark filter attack
+was unique and easily recognizable. The goal of this Nyquist instrument is not
+only to provide the user with default sounds, but also to give control over
+many of the "knobs" found on the Minimoog. In this implementation, these
+parameters are controlled using keywords. The input to the <code>moog</code> 
+instrument is a user-defined sequence of notes, durations, and articulations
+that simulate notes played on a keyboard. These are translated into 
+control voltages that drive multiple oscillators, similar to the Voltage
+Controlled Oscillator or VCO found in the original analog Moog.
+<p>
+The basic functionality of the Minimoog has been implemented, including the
+often-used "glide". The glide feature essentially low-pass filters the control
+voltage sequence in order to create sweeps between notes. 
+Figure <a href = "#180">21</a> is a simplified schematic of the data flow in the Moog. 
+The control lines have been omitted.
+<p>
+<hr>
+<blockquote></blockquote>
+<img src="moog-fig.gif" width=558><br><br>
+
+<p>
+<b>Figure 21: </b>System diagram for Minimoog emulator.
+
+<hr>
+<p>
+The most recognizable feature of the Minimoog is its resonant filter, a 
+Four-Pole Ladder Filter invented by Robert Moog. It is simply implemented 
+in a circuit with four transistors and provides an outstanding 24 dB/octave 
+rolloff. It is modeled here using the built-in Nyquist resonant filter. 
+One of the Moog filter features is a constant Q, or center frequency to 
+bandwidth ratio. This is implemented and the user can control the Q. 
+<p>
+The user can control many parameters using keywords. Their default values,
+acceptable ranges, and descriptions are shown below. The defaults were
+obtained by experimenting with the official Minimoog software synthesizer
+by Arturia.
+<p>
+<a name = "181"><h4>Oscillator Parameters</h4></a>
+<code>range-osc1</code> (2)<br>
+
+<code>range-osc2</code> (1)<br>
+
+<code>range-osc3</code> (3)<br>
+
+These parameters control the octave of each oscillator. A value of 1
+corresponds to the octave indicated by the input note. A value of 3
+is two octaves above the fundamental. The allowable range is 1 to 7.
+<p>
+<code>detun2</code> (-.035861)<br>
+
+<code>detun3</code> (.0768)<br>
+
+Detuning of two oscillators adds depth to the sound. A value of 1 corresponds
+to an increase of a single semitone and a -1 corresponds to a decrease
+in a semitone. The range is -1 to 1.
+<p>
+<code>shape-osc1</code> (<code>*saw-table*</code>)<br>
+
+<code>shape-osc2</code> (<code>*saw-table*</code>)<br>
+
+<code>shape-osc3</code> (<code>*saw-table*</code>)<br>
+
+Oscilators can use any wave shape. The default sawtooth waveform is
+a built-in Nyquist variable. Other waveforms can be defined by the user.
+<p>
+<code>volume-osc1</code> (1)<br>
+
+<code>volume-osc2</code> (1)<br>
+
+<code>volume-osc3</code> (1)<br>
+
+These parameters control the relative volume of each oscillator. The range
+is any <code>FLONUM</code> greater than or equal to zero.
+<p>
+<a name = "182"><h4>Noise Parameters</h4></a>
+<code>noiselevel</code> (.05)<br>
+
+This parameter controls the relative volume of the noise source. The range
+is any <code>FLONUM</code> greater than or equal to zero.
+	
+<a name = "183"><h4>Filter Parameters</h4></a>
+<code>filter-cutoff</code> (768)<br>
+
+The cutoff frequency of the filter in given in Hz. The range is zero
+to 20,000 Hz.
+<p>
+<code>Q</code> (2)<br>
+
+Q is the ratio of center frequency to bandwidth. It is held constant by
+making the bandwidth a function of frequency. The range is any
+<code>FLONUM</code> greater than zero.
+<p>
+<code>contour</code> (.65)<br>
+
+Contour controls the range of the transient frequency sweep from a high
+to low cutoff frequency when a 	note is played. The high frequency is
+proportional to contour. A contour of 0 removes this sweep. The range
+is 0 to 1.
+<p>
+<code>filter-attack</code> (.0001)<br>
+
+Filter attack controls the attack time of the filter, i.e. the time to
+reach the high cutoff frequency. The range is any <code>FLONUM</code> greater
+than zero (seconds).
+<p>
+<code>filter-decay</code> (.5)<br>
+
+Filter decay controls the decay time of the filter, i.e. the time of the
+sweep from the high to low cutoff frequency. The range is 
+any <code>FLONUM</code> greater than zero (seconds).
+<p>
+<code>filter-sustain</code> (.8)<br>
+
+Filter sustain controls the percentage of the filter cutoff frequency that
+the filter settles on following the sweep. The range is 0 to 1.
+	
+<a name = "184"><h4>Amplitude Parameters</h4></a>
+<code>amp-attack</code> (.01)<br>
+
+This parameter controls the amplitude envelope attack time, i.e. the time to
+reach maximum amplitude. The range is 
+any <code>FLONUM</code> greater than zero (seconds).
+<p>
+<code>amp-decay</code> (1)<br>
+
+This parameter controls the amplitude envelope decay time, i.e. the time
+between the maximum and sustain volumes. The range is
+any <code>FLONUM</code> greater than zero (seconds).
+<p>
+<code>amp-sustain</code> (1)<br>
+
+This parameter controls the amplitude envelope sustain volume, a fraction
+of the maximum. The range is 0 to 1.
+<p>
+<code>amp-release</code> (0)<br>
+
+This parameter controls the amplitude envelope release time, i.e. the time
+it takes between the sustain volume and 0 once the note ends. 
+The duration controls the overall length of the sound. The range of <code>amp-release</code> is any <code>FLONUM</code> greater than zero (seconds).
+<p>
+<a name = "185"><h4>Other Parameters</h4></a>
+<code>glide</code> (0)<br>
+
+Glide controls the low-pass filter on the control voltages. This models the
+glide knob on a Minimoog. A higher value corresponds to a lower cutoff
+frequency and hence a longer "glide" between notes. A value of 0
+corresponds to no glide. The range is zero to 10.
+<p>
+<a name = "186"><h4>Input Format</h4></a>
+A single note or a series of notes can be input to the Moog instrument
+by defining a list with the following format:
+<blockquote>
+(list (list <i>frequency duration articulation</i>) ... )<br>
+
+</blockquote>
+where <i>frequency</i> is a <code>FLONUM</code> in steps, <i>duration</i> is the duration
+of each note in seconds (regardless of the release time of the amplifier), 
+and <i>articulation</i> is a percentage of the duration that a sound will be
+played, representing the amount of time that a key is pressed. The filter 
+and amplitude envelopes are only triggered if a note is played when
+the articulation of the previous note is less than 1, or a key is not down at
+the same time. This Moog instrument is a monophonic instrument, so only
+one note can sound at a time. The release section of the amplifier is
+triggered when the articulation is less than 1 at the time 
+(<i>duration</i> * <i>articulation</i>).
+<p>
+<a name = "187"><h4>Sample Code/Sounds</h4></a><b>Sound 1 (default parameters):</b>
+<blockquote>
+<code>
+set s = {{24 .5 .99} {26 .5 .99} {28 .5 .99} <br>
+
+         {29 .5 .99} {31 2 1}}<br>
+
+play moog(s)<br>
+
+</code>
+</blockquote>
+<p>
+<b>Sound 2 (articulation, with amplitude release):</b>
+<blockquote>
+<code>
+set s = {{24 .5 .5} {26 .5 1} {28 .5 .25} {29 .5 1} {31 1 .8}}<br>
+
+play moog(s, amp-release: .2)<br>
+
+</code>
+</blockquote>
+<p>
+<b>Sound 3 (glide):</b>
+<blockquote>
+<code>
+set s = {{24 .5 .5} {38 .5 1} {40 .5 .25}<br>
+
+         {53 .5 1} {55 2 1} {31 2 .8} {36 2 .8}}<br>
+
+play moog(s, amp-release: .2, glide: .5)<br>
+
+</code>
+</blockquote>
+<p>
+<b>Sound 4 (keyword parameters):</b> Filter attack and decay are purposely
+longer than notes being played with articulation equal to 1.
+<blockquote>
+<code>
+set s = {{20 .5 1} {27 .5 1} {26 .5 1} {21 .5 1}<br>
+
+         {20 .5 1} {27 .5 1} {26 .5 1} {21 .5 1}}<br>
+
+play moog(s, shape-osc1: *tri-table*, shape-osc2: *tri-table*,<br>
+
+             filter-attack: 2, filter-decay: 2,<br>
+
+             filter-cutoff: 300, contour: .8, glide: .2, Q: 8)<br>
+
+</code>
+</blockquote>
+<p>
+<b>Sound 5:</b> This example illustrates the ability to completely define a new 
+synthesizer with different parameters creating a drastically different
+sound. Sine waves are used for wavetables. There is a high value for glide.
+<blockquote>
+<code>
+define function my-moog(freq) <br>
+
+  return moog(freq,<br>
+
+    range-osc1: 3, range-osc2: 2, range-osc3: 4,<br>
+
+    detun2: -.043155, detun3: .015016,<br>
+
+    noiselevel: 0,<br>
+
+    filter-cutoff: 400, Q: .1, contour: .0000001,<br>
+
+    filter-attack: 0, filter-decay: .01, filter-sustain: 1,<br>
+
+    shape-osc1: *sine-table*, shape-osc2: *sine-table*,<br>
+
+    shape-osc3: *sine-table*, volume-osc1: 1, volume-osc2: 1,<br>
+
+    volume-osc3: .1, amp-attack: .1, amp-decay: 0,<br>
+
+    amp-sustain: 1, amp-release: .3, glide: 2)
+<p>
+set s = {{80 .4 .75} {28 .2 1} {70 .5 1} {38 1 .5}}<br>
+
+play my-moog(s)<br>
+
+</code>
+</blockquote>
+<p>
+<b>Sound 6:</b> This example has another variation on the default
+ parameters.
+<blockquote>
+<code>
+set s = {{24 .5 .99} {26 .5 .99} {28 .5 .99} <br>
+
+         {29 .5 .99} {31 2 1}}<br>
+
+play moog(s, shape-osc1: *tri-table*, shape-osc2: *tri-table*,<br>
+
+             filter-attack: .5, contour: .5)<br>
+
+</code>
+</blockquote>
+<p>
+
+
+<hr>
+<a href = "part14.html">Previous Section</a> | <a href = "part16.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
+</body></html>

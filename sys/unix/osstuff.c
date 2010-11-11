@@ -1,6 +1,21 @@
 /* unixtuff.c - unix interface routines for xlisp
 
  * HISTORY
+ * 5-Mar-07 Dannenberg
+ *  worked on hidden_msg() and hidden message handling
+ *
+ * 23-Dec-05	Dannenberg
+ *  still more hacks: Mac and Linux don't disable character echo like 
+ *  windows does using a pipe to an IDE. To make UNIX versions match
+ *  the Windows behavior (which is preferable), added
+ *  echo_enabled flag and a function to set/clear it from XLisp.
+ *  This will give unix-specific behavior to compensate for the
+ *  unix-specific character echo. This worked, but printed
+ *  (echoenabled nil) on the console, which was pretty ugly, so I
+ *  added ctrl-e and ctrl-f handlers to turn echo on and off. Now
+ *  Java can just send ctrl-f before anything else. Windows must
+ *  ignore ctrl-f.
+ *
  * 28-Apr-03	Mazzoni
  *  many changes for new conditional compilation organization
  *
@@ -19,6 +34,8 @@
  *	switched from rand to random package. Corrected bug in osrand(). It
  *	did not use the argument n to calculate a rand in range 0 to n-1 as
  *	advertised.
+ * 28-OCT-05    Roger Dannenberg at CMU-SCS
+ *      added directory listing functions
  */
 
 #include "switches.h"
@@ -28,10 +45,18 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/types.h>
+#include <dirent.h>
+
 #include "xlisp.h"
 #include "term.h"
 #include "cext.h"
-
+#include "userio.h"
+#include "exitpa.h"
+#include "sliders.h" /* define sliders -- not just for OSC */
+#if OSC
+#include "sound.h" /* define nosc_enabled */
+#endif
 #define LBSIZE 200
 
 /* external variables */
@@ -53,12 +78,12 @@ static char lbuf[LBSIZE];
 static int lpos[LBSIZE];
 #endif
 
+static int echo_enabled = 1;
+
 /* forward declarations */
 FORWARD LOCAL void xflush();
 FORWARD LOCAL int xcheck();
-
-void term_character(void);
-int term_testchar();
+FORWARD LOCAL void hidden_msg();
 
 /*==========================================================================*/
 /* control-c interrupt handling routines and variables. Uses B4.2 signal
@@ -83,7 +108,8 @@ const char os_sepchar = ':';
 
 /* osinit - initialize */
 void osinit(char *banner)
-{	printf("%s\n",banner);
+{	
+    printf("%s\n",banner);
 
     /* start the random number generator. Older version was srand(1)
        seed of 1 makes the sequence repeatable. Random gives better
@@ -121,18 +147,20 @@ void osfinish(void)
 /* oserror - print an error message */
 void oserror(char *msg) {printf("error: %s\n",msg);}
 
-#ifdef USE_RAND
-long osrand(long n) {return (((int) rand()) % n);}
-#endif
-
-#ifdef USE_RANDOM
-long osrand(long n) {return (((long) random()) % n);}
-#endif
 
 /* osaopen - open an ascii file */
 FILE *osaopen(name,mode) char *name,*mode; {
     FILE *fp;
     fp = fopen(name,mode);
+#ifdef DEBUG_INPUT
+    printf("osaopen on %s yields %x\n", name, fp);
+    if (strcmp(name, "/home/rbd/nyquist/lib/xm-test.lsp") == 0) {
+        // when DEBUG_INPUT is set, this generates a compiler error
+        // on linux -RBD
+        debug_input_fp = fp;
+        printf("osaopen: debug_input_fp gets %x\n", debug_input_fp);
+    }
+#endif    
     return fp;
 }
 
@@ -146,23 +174,45 @@ FILE *osbopen(name,mode) char *name,*mode;
  }
 
 /* osclose - close a file */
-int osclose(fp) FILE *fp; {
-    return (fclose(fp));}
+int osclose(fp) FILE *fp;
+{
+#ifdef DEBUG_INPUT
+    if (debug_input_fp == fp) {
+        debug_input_fp = NULL;
+        printf("osclose: debug_input_fp gets %x\n", debug_input_fp);
+    }
+#endif
+    /* when XLISP is loading files and an error is encountered, the files
+     * are automatically closed so that the OS will not lock them, confusing
+     * the user. So we could get here and the file could already be closed
+     */
+    return (fp ? fclose(fp) : 0);
+}
 
 /* osagetc - get a character from an ascii file */
-int osagetc(fp) FILE *fp; {return (getc(fp));}
+int osagetc(fp) FILE *fp; {
+#ifdef DEBUG_INPUT
+    int c = getc(fp);
+    ungetc(c, fp);
+#endif
+    return (getc(fp));
+}
 
 /* osaputc - put a character to an ascii file */
-int osaputc(ch,fp) int ch; FILE *fp; {return (putc(ch,fp));}
+int osaputc(int ch, FILE *fp) { return (putc(ch,fp)); }
+
+/* osoutflush - flush output to a file */
+void osoutflush(FILE *fp) { fflush(fp); }
 
 extern int dbgflg;
 
 /* osbgetc - get a character from a binary file */
 /* int osbgetc(fp) FILE *fp; {return (getc(fp));} */
-int osbgetc(fp) FILE *fp; {int c; c = (getc(fp));
-/*	if (dbgflg) printf("osbgetc: got %d from FILE %x\n", c, fp);
- *	return c;
- */
+int osbgetc(FILE *fp) { 
+    int c = (getc(fp));
+    /*	if (dbgflg) printf("osbgetc: got %d from FILE %x\n", c, fp);
+     */
+    return c;
 }
 
 /* osbputc - put a character to a binary file */
@@ -173,7 +223,7 @@ int osbputc(ch,fp) int ch; FILE *fp; {return (putc(ch,fp));}
 int ostgetc()
 {
     int ch;
-    switch (ch = getchar()) {
+    switch (ch = term_getchar()) {
     case '\n':
         lbuf[lcount++] = '\n';
         lposition = 0;
@@ -230,7 +280,7 @@ int ostgetc()
 {   int ch;
 
     for (;;) {
-    ch = getchar();
+    ch = term_getchar();
     oscheck();
     switch (ch) {
       case '\003':	xltoplevel();	/* control-c */
@@ -308,6 +358,23 @@ void end_of_line_edit()
 }
 
 /* THIS IS THE "REAL" ostgetc(): */
+LOCAL int rawtchar()
+{
+    int ch;
+    if (typeahead_tail != typeahead_head) {
+        ch = typeahead[typeahead_head++];
+        typeahead_head &= (typeahead_max - 1);
+        /* printf("[%c]", ch); */
+        if (ch == 0xFF) ch = -1; /* char to int conversion of EOF */
+    } else {
+        fflush(stdout); /* necessary on OS X with Java IDE - I don't know why. */
+        /* don't use getchar() or buffering will cause out-of-order input */
+        ch = term_getchar();
+        /* printf("{%c}", ch); */
+    }
+    return ch;
+}
+
 int ostgetc()
 {
 /*
@@ -322,13 +389,8 @@ int ostgetc()
     int ch;
 
     while (line_edit) {
-        if (typeahead_tail != typeahead_head) {
-            ch = typeahead[typeahead_head++];
-            typeahead_head &= (typeahead_max - 1);
-        }
-        else {
-            ch = getchar();
-        }
+        ch = rawtchar();
+        if (ch == EOF) xlisp_wrapup();
         oscheck(); /* in case user typed ^C */
         /* assume for now we should add the character */
         lbuf[lcount] = ch;
@@ -338,36 +400,47 @@ int ostgetc()
         
         /* now do all the special character processing */
         switch (ch) {
+        case '\001': /* take out non-printing character */
+            lcount--;
+            lposition--;
+            mark_audio_time();
+            break;
         case '\n':
-           lposition = 0;
-           end_of_line_edit();
-           osaputc('\r', stdout);
-           osaputc(ch, stdout);
-           break;
-           /* delete key generates: 1b, 5b, 33, 7E
-              which is: ESC, [, 3, ~ */
+            lposition = 0;
+            end_of_line_edit();
+            if (echo_enabled) {
+		        osaputc('\r', stdout);
+                osaputc(ch, stdout);
+            }
+		    break;
+            /* delete key generates: 1b, 5b, 33, 7E
+               which is: ESC, [, 3, ~ */
         case '\010':	/* backspace */
         case '\177':	/* delete */
-           lcount--; /* take out backspace or delete char */
-           lposition--;
-           if (lcount) {
-              lcount--;
-              while (lposition > lpos[lcount]) {
-                 putchar('\010');
-                 putchar(' ');
-                 putchar('\010');
-                 lposition--;
-              }
+            lcount--; /* take out backspace or delete char */
+            lposition--;
+            if (lcount) {
+                lcount--;
+                while (lposition > lpos[lcount]) {
+		 		    if (echo_enabled) {
+                        putchar('\010');
+                        putchar(' ');
+                        putchar('\010');
+					}
+			    	lposition--;
+                }
            }
            break;
         case '\025': /* control-u */
-           lcount--;
-           lposition--;
-           if (lcount) {
-              while (lposition > lpos[0]) {
-                 putchar('\010');
-                 putchar(' ');
-                 putchar('\010');
+            lcount--;
+            lposition--;
+            if (lcount) {
+                while (lposition > lpos[0]) {
+				    if (echo_enabled) {
+                        putchar('\010');
+                        putchar(' ');
+                        putchar('\010');
+					}
                  lposition--;
               }
               lcount = 0;
@@ -380,40 +453,66 @@ int ostgetc()
            lcount = 0;
            break;
         case '\007':	/* control-g */
+            lcount--; /* take out non-printing char */
+            lposition--;
            xlcleanup();
            lcount = 0;
            break;
+        case '\016':
+            lcount--; /* take out non-printing char */
+            lposition--;
+            hidden_msg(); /* process hidden msg chars */
+            break;
         case '\020':	/* control-p */
+            lcount--; /* take out non-printing char */
+            lposition--;
            xlcontinue();
            lcount = 0;
            break;
         case '\002':
+            lcount--; /* take out non-printing char */
+            lposition--;
            xflush();	/* control-b */
            xlbreak("BREAK",s_unbound);
            break;
+        case '\005':	/* control-e */
+            lcount--; /* take out non-printing char */
+            lposition--;
+	    echo_enabled = TRUE;
+	    break;
+        case '\006':    /* control-f */
+            lcount--; /* take out non-printing char */
+            lposition--;
+	    echo_enabled = FALSE;
+	    break;
         case '\024':	/* control-t */
+            lcount--; /* take out non-printing char */
+            lposition--;
            xinfo(); 
            lcount = 0;
            break;
+		   
         case '\t':	/* TAB */
            lposition--; /* undo the increment above */
            do {
-              lposition++;
-              osaputc(' ', stdout);
+               lposition++;
+               if (echo_enabled) osaputc(' ', stdout);
            } while (lposition & 7);
            break;
         default:
-           osaputc(ch, stdout);
+           if (echo_enabled) osaputc(ch, stdout);
            break;
         }
         // avoid line buffer overflow here:
         if (lposition > LBSIZE - 10) {
-           // buffer is about to overflow, so write newline and
-           // feed chars to XLISP
-           osaputc('\r', stdout);
-           osaputc('\n', stdout);
-           lposition = 0;
-           end_of_line_edit();
+            // buffer is about to overflow, so write newline and
+            // feed chars to XLISP
+		    if (echo_enabled) {
+                osaputc('\r', stdout);
+                osaputc('\n', stdout);
+		    }
+            lposition = 0;
+            end_of_line_edit();
         }
     }
     if (lindex + 1 >= lcount) {
@@ -421,8 +520,8 @@ int ostgetc()
        line_edit = TRUE;
     }
     ch = lbuf[lindex++];
-    /* printf("[%c]", ch); */
-    fflush(stdout);
+    /* printf("-%c-", ch); */
+    if (echo_enabled) fflush(stdout);
     return ch;
 }
 #endif
@@ -443,6 +542,13 @@ void ostputc(int ch)
     if (tfp) osaputc(ch,tfp);
     putchar(((char) ch));
  }
+ 
+/* ostoutflush - flush output buffer */
+void ostoutflush()
+{
+    if (tfp) fflush(tfp);
+    fflush(stdout);
+}
 
 /* osflush - flush the terminal input buffer */
 void osflush(void)
@@ -450,6 +556,43 @@ void osflush(void)
     lindex = lcount = lposition = 0; 
     line_edit = TRUE;
 }
+
+
+/* hidden_msg - process a "hidden message" 
+/*
+ * NOTE: a "hidden message" is a sequence of characters starting
+ * with '\016' and ending with '\021'. These are designed to allow
+ * a graphical interface, namely jNyqIDE, to control sliders in
+ * real-time (during synthesis). The character sequences are hidden
+ * meaning they are not echoed and they are not interpreted as LISP.
+ *
+ * This function assumes that '\016' has been received already.
+ */
+LOCAL void hidden_msg()
+{
+#define MSGBUF_MAX 64
+    char msgbuf[MSGBUF_MAX];
+    int msgbufx = 0;
+    char type_char = rawtchar();
+    char ch;
+    // message is terminated by '\021'
+    while ((ch = term_getchar()) != '\021' && ch != EOF &&
+        msgbufx < MSGBUF_MAX - 1) {
+        msgbuf[msgbufx++] = ch;
+    }
+    msgbuf[msgbufx++] = 0;
+    // printf("hidden message: %s, len %ld\n", msgbuf, (long) strlen(msgbuf));
+    if (msgbufx < MSGBUF_MAX) {
+        if (type_char == 'S') { // slider change message
+            int index;
+            float value;
+            if (sscanf(msgbuf, "%d %g", &index, &value) == 2) {
+                set_slider(index, value);
+            }
+        }
+    } /* other hidden messages could be parsed here */
+}
+
 
 /* oscheck - check for control characters during execution */
 /*
@@ -459,6 +602,11 @@ void osflush(void)
 void oscheck(void)
 {
     int ch;
+    int k, v, n;
+		
+#if OSC
+    if (nosc_enabled) nosc_poll();
+#endif
 
     if (ctc) { /* control-c */
         /* printf("[oscheck: control-c detected]"); */
@@ -468,15 +616,33 @@ void oscheck(void)
 
     if ((ch = xcheck()))
     switch (ch) {
-      case '\002':	xflush(); xlbreak("BREAK",s_unbound);
-            break;			/* control-b */
-      case '\024':	xinfo(); break;		/* control-t */
+      case BREAK_CHAR:	/* control-b */
+        /* printf("BREAK_CHAR\n"); */
+        xflush(); xlbreak("BREAK",s_unbound); break; 
+      case '\024':      /* control-t */
+        /* printf("control-t\n"); */
+        xinfo(); break;
+      case '\025':      /* control-u */
+        /* printf("control-u\n"); */
+        xcleanup();
+      case '\016': {    /* begin hidden message */
+        /* printf("hidden msg\n"); */
+        hidden_msg();
+        break;
+      }
+      case '\001':  /* control-a -- mark audio time */
+        mark_audio_time(); break;
       default:
-         #ifndef READ_LINE
-         typeahead[typeahead_tail++] = ch;
-         typeahead_tail &= (typeahead_max - 1);
-         #endif
-         break;
+        /* printf("Got %d\n", ch); */
+        #ifndef READ_LINE
+		 /* printf("+%c+", ch); */
+        typeahead[typeahead_tail++] = ch;
+        typeahead_tail &= (typeahead_max - 1);
+        if (typeahead_tail == typeahead_head) {
+            oserror("Input buffer overflow\n");
+        }
+        #endif
+        break;
     }
 }
 
@@ -493,7 +659,7 @@ LVAL xsystem()
     unsigned char *cmd = NULL;
 
     if (moreargs())
-    cmd = (unsigned char *)getstring(xlgastring());
+        cmd = (unsigned char *)getstring(xlgastring());
     xllastarg();
     return (system((char *) cmd) == -1 ? cvfixnum((FIXTYPE)errno) : s_true);
 }
@@ -502,14 +668,99 @@ LVAL xsystem()
 /* xsetdir -- set current directory of the process */
 LVAL xsetdir()
 {
-    char *dir = getstring(xlgastring());
-    int result;
-    xllastarg();
-    result = chdir(dir);
-    if (result) {
-        perror("SETDIR");
+   char *dir = (char *)getstring(xlgastring());
+   int result;
+   LVAL cwd = NULL;
+   xllastarg();
+   result = chdir(dir);
+   if (result) {
+      /* perror("SETDIR"); -- Nyquist uses SETDIR to search for directories
+       * at startup, so failures are normal, and seeing error messages
+       * could be confusing, so don't print them. The NULL return indicates
+       * an error, but doesn't tell which one it is.
+       */
+      return NULL;
+   }
+   dir = getcwd(NULL, 1000);
+   if (dir) {
+       cwd = cvstring(dir);
+       free(dir);
     }
-    return NULL;
+   return cwd;
+}
+
+/* xget_temp_path -- get a path to create temp files */
+LVAL xget_temp_path()
+{
+    return cvstring("/tmp/");
+}
+
+/* xget_user -- get a string identifying the user, for use in file names */
+LVAL xget_user()
+{
+    char *user = getenv("USER");
+    if (!user || !*user) {
+        errputstr("Warning: could not get user ID, using 'nyquist'\n");
+        user = "nyquist";
+    }
+    return cvstring(user);
+}
+
+
+/* xechoenabled -- set/clear echo_enabled flag (unix only) */
+LVAL xechoenabled()
+{
+	int flag = (xlgetarg() != NULL);
+    xllastarg();
+	echo_enabled = flag;
+	return NULL;
+}
+
+
+#define OSDIR_LIST_READY 0
+#define OSDIR_LIST_STARTED 1
+#define OSDIR_LIST_DONE 2
+static int osdir_list_status = OSDIR_LIST_READY;
+static DIR *osdir_dir;
+
+/* osdir_list_start -- open a directory listing */
+int osdir_list_start(char *path)
+{    
+    if (osdir_list_status != OSDIR_LIST_READY) {
+        osdir_list_finish(); /* close current listing */
+    }
+    osdir_dir = opendir(path);
+    if (!osdir_dir) {
+        return FALSE;
+    }
+    osdir_list_status = OSDIR_LIST_STARTED;
+    return TRUE;
+}
+
+
+/* osdir_list_next -- read the next entry from a directory */
+char *osdir_list_next()
+{
+    if (osdir_list_status != OSDIR_LIST_STARTED) {
+        return NULL;
+    }
+    struct dirent *entry = readdir(osdir_dir);
+    if (!entry) {
+        osdir_list_status = OSDIR_LIST_DONE;
+        return NULL;
+    } else {
+        return entry->d_name;
+    }
+}
+
+
+/* osdir_list_finish -- close an open directory */
+void osdir_list_finish()
+{
+    if (osdir_list_status != OSDIR_LIST_READY) {
+        closedir(osdir_dir);
+    }
+    osdir_list_status = OSDIR_LIST_READY;
 }
 
 
@@ -522,13 +773,11 @@ LOCAL int xcheck()
 }
 
 /* xgetkey - get a key from the keyboard */
-LVAL xgetkey() {xllastarg(); return (cvfixnum((FIXTYPE)getchar()));}
+LVAL xgetkey() {xllastarg(); return (cvfixnum((FIXTYPE)term_getchar()));}
 
 /* ossymbols - enter os specific symbols */
 void ossymbols(void) {}
 
 /* xsetupconsole -- used to configure window in Win32 version */
 LVAL xsetupconsole() { return NIL; }
-
-
 

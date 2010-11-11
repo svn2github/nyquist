@@ -8,6 +8,38 @@
 
  (setf snd-head-Wave 4) 
 
+ (setf snd-head-PAF 5) 
+
+ (setf snd-head-SVX 6) 
+
+ (setf snd-head-NIST 7) 
+
+ (setf snd-head-VOC 8) 
+
+ (setf snd-head-W64 9) 
+
+ (setf snd-head-MAT4 10) 
+
+ (setf snd-head-MAT5 11) 
+
+ (setf snd-head-PVF 12) 
+
+ (setf snd-head-XI 13) 
+
+ (setf snd-head-HTK 14) 
+
+ (setf snd-head-SDS 15) 
+
+ (setf snd-head-AVR 16) 
+
+ (setf snd-head-SD2 17) 
+
+ (setf snd-head-FLAC 18) 
+
+ (setf snd-head-CAF 19) 
+
+ (setf snd-head-raw 20) 
+
  (setf snd-head-channels 1) 
 
  (setf snd-head-mode 2) 
@@ -35,6 +67,16 @@
  (setf snd-mode-upcm 5) 
 
  (setf snd-mode-unknown 6) 
+
+ (setf snd-mode-double 7) 
+
+ (setf snd-mode-GSM610 8) 
+
+ (setf snd-mode-DWVW 9) 
+
+ (setf snd-mode-DPCM 10) 
+
+ (setf snd-mode-msadpcm 11) 
 
  (SETF MAX-STOP-TIME 10E20) 
 

@@ -5,6 +5,9 @@
 
 /* HISTORY
  *
+ * 11-Dec-09    Roger Dannenberg
+ *  Added getenv
+ *
  * 28-Apr-03	Dominic Mazzoni
  *  Eliminated some compiler warnings
  *
@@ -28,9 +31,9 @@
 #include "xlisp.h"
 
 /* profile variables */
-static int invisible_counter;
-int *profile_count_ptr = &invisible_counter;
-int profile_flag = FALSE;
+static FIXTYPE invisible_counter;
+FIXTYPE *profile_count_ptr = &invisible_counter;
+FIXTYPE profile_flag = FALSE;
 
 
 /* external variables */
@@ -48,6 +51,20 @@ extern LVAL s_true;
 /* external routines */
 extern FILE *osaopen();
 extern LVAL exttype();
+
+/* xget_env - get the value of an environment variable */
+LVAL xget_env(void)
+{
+    const char *name = (char *) getstring(xlgetfname());
+    char *val;
+
+    /* check for too many arguments */
+    xllastarg();
+
+    /* get the value of the environment variable */
+    val = getenv(name);
+    return (val ? cvstring(val) : NULL);
+}
 
 /* xload - read and evaluate expressions from a file */
 LVAL xload(void)
@@ -159,6 +176,7 @@ LVAL xexit(void)
     return NIL; /* never happens */
 }
 
+#ifdef PEEK_AND_POKE
 /* xpeek - peek at a location in memory */
 LVAL xpeek(void)
 {
@@ -203,6 +221,7 @@ LVAL xaddrs(void)
     /* return the address of the node */
     return (cvfixnum((FIXTYPE)val));
 }
+#endif PEEK_AND_POKE
 
 /* xprofile - turn profiling on and off */
 LVAL xprofile()
@@ -219,3 +238,34 @@ LVAL xprofile()
     if (!profile_flag) profile_count_ptr = &invisible_counter;
     return result;
 }
+
+
+#ifdef DEBUG_INPUT
+FILE *debug_input_fp = NULL;
+
+FILE *to_input_buffer = NULL;
+FILE *read_by_xlisp = NULL;
+
+LVAL xstartrecordio()
+{
+	to_input_buffer = fopen("to-input-buffer.txt", "w");
+	read_by_xlisp = fopen("read-by-xlisp.txt", "w");
+	if (!to_input_buffer || !read_by_xlisp) {
+		return NIL;
+	}
+	return s_true;
+}
+
+
+LVAL xstoprecordio()
+{
+	if (to_input_buffer) fclose(to_input_buffer);
+	if (read_by_xlisp) fclose(read_by_xlisp);
+	to_input_buffer = NULL;
+	read_by_xlisp = NULL;
+	return NIL;
+}
+
+#endif
+
+

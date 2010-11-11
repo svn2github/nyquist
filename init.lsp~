@@ -1,0 +1,4 @@
+(load "misc/makefile.lsp")
+(setf sys-type 'linux)
+(makefile)
+(exit)

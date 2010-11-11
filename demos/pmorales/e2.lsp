@@ -5,7 +5,10 @@
 
 ;;; WARNING: needs REVERB.LSP
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
+(if (not (fboundp 'reverb)) (load "reverb"))
+
 
 ; Chowning BELL -----------------------------------------------------
 (defun exp-env (amp dur)
@@ -58,15 +61,6 @@
 ; Chowning VARIABLE FM INSTRUMENT -----------------------------------
 ; este instrumento hay que mejorarlo
 
-; load REVERB
-(if (not (boundp '*REVERB*))
-  (prog ()
-    (print "Loading REVERB..")
-    (load "reverb")
-    (setfn tone lp)
-    (setf *REVERB* T)))
-
-    
 (defun variable-fm-env (amp break mid dur)
   (scale amp (pwev (* mid 64e-4) break mid dur (* mid 64e-4))))
   
@@ -150,13 +144,14 @@
   (pwlv -1.0 (* 0.25 dur) 0.1 (* 0.5 dur) 0.0 dur))
 
 
-(ss (seq (fm-bell 100.0 (/ 5.0 7.0) 10 10 1.0)
-         (fm-bell 150.0 (/ 5.0 7.0) 7  10 1.0)
-         (fm-bell 200.0 (/ 5.0 7.0) 15 7 1.0)
-         (fm-w-d a2) (fm-w-d b2) (fm-w-d c3) (fm-w-d d3) (fm-w-d e3)
-         (fm-w-d f3) (fm-w-d g3) (fm-w-d a3)
-         (fm-w-d a1) (fm-w-d b1) (fm-w-d c2) (fm-w-d d2) (fm-w-d e2)
-         (fm-w-d f2) (fm-w-d g2) (fm-w-d a2)
-         (fm-br c4) (fm-br d4) (fm-br e4) (fm-br f4) (fm-br g4)
-         (fm-br a4) (fm-br b4) (fm-br c5)
-         (double-carrier 0.6 440.0 1.0 1.0 0.5 3 1 (/ 3.0 1.5))))
+(defun chowning-fm-demo ()
+  (ss (seq (fm-bell 100.0 (/ 5.0 7.0) 10 10 1.0)
+           (fm-bell 150.0 (/ 5.0 7.0) 7  10 1.0)
+           (fm-bell 200.0 (/ 5.0 7.0) 15 7 1.0)
+           (fm-w-d a2) (fm-w-d b2) (fm-w-d c3) (fm-w-d d3) (fm-w-d e3)
+           (fm-w-d f3) (fm-w-d g3) (fm-w-d a3)
+           (fm-w-d a1) (fm-w-d b1) (fm-w-d c2) (fm-w-d d2) (fm-w-d e2)
+           (fm-w-d f2) (fm-w-d g2) (fm-w-d a2)
+           (fm-br c4) (fm-br d4) (fm-br e4) (fm-br f4) (fm-br g4)
+           (fm-br a4) (fm-br b4) (fm-br c5)
+           (double-carrier 0.6 440.0 1.0 1.0 0.5 3 1 (/ 3.0 1.5)))))

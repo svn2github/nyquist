@@ -130,6 +130,17 @@ void change_byte_order(snd_type snd, void *buffer, long length)
       case 2:
         _swab((char *) buffer, (char *) buffer, length);
         break;
+      case 3: {
+        char *buff = (char *) buffer;
+        while (length > 0) {
+            char b = buff[0];
+            buff[0] = buff[2];
+            buff[2] = b;
+            buff += 3;
+            length -= 3;
+        }
+        break;
+      }
       case 4: {
         long *buff = (long *) buffer;
         while (length > 0) {
@@ -149,13 +160,16 @@ void change_byte_order(snd_type snd, void *buffer, long length)
     }
 }
 
-
+/* jlh Here I probably just need to make sure that swap is ALWAYS 0,
+   and that snd/sndlinux.c/snd_file_read gives me what multiread_fetch
+   and read__fetch expect, as in a sane batch of frames containing
+   channels of samples. */
 static long file_read(snd_type snd, void *buffer, long length)
 {
     long togo, cnt;
     togo = snd->u.file.end_offset - snd->u.file.current_offset;
     if (length > togo) length = togo;
-    cnt = snd_file_read(snd->u.file.file, (char *) buffer, length);
+    cnt = snd_file_read(snd->u.file.sffile, (float *) buffer, length);
     snd->u.file.current_offset += cnt;
     if (snd->u.file.swap) change_byte_order(snd, buffer, cnt);
     return cnt;
@@ -185,7 +199,7 @@ static long file_write(snd_type snd, void *buffer, long length)
 {
     long cnt;
     if (snd->u.file.swap) change_byte_order(snd, buffer, length);
-    cnt = snd_file_write(snd->u.file.file, (char *) buffer, length);
+    cnt = snd_file_write(snd->u.file.sffile, (float *) buffer, length);
     snd->u.file.end_offset += cnt;	/* keep track of how much data */
     return cnt;
 }
@@ -223,10 +237,13 @@ static int none_open(snd_type snd, long *flags)
 
 static int file_close(snd_type snd)
 {
-    if (snd->write_flag == SND_WRITE) {
+  /* jlh dropping this code, libsndfile does all this for me 
+     if (snd->write_flag == SND_WRITE) {
         write_sndheader_finish(snd);
     }
-    return snd_file_close(snd->u.file.file);
+    end of dropped code jlh */
+
+    return snd_file_close(snd->u.file.sffile);
 }
 
 
@@ -249,7 +266,9 @@ static int mem_reset(snd_type snd)
 
 #define none_reset failure_fn
 
-
+/* jlh I'm concerned about this; it would be easy to write... When I
+   have things working I'll have to put a message into file_flush and
+   see if it ever gets called. */
 #define file_flush success_fn
 
 #define mem_flush success_fn
@@ -284,21 +303,26 @@ long snd_poll(snd_type snd)
 }
 
 
-/* snd_read -- read up to length bytes from source into buffer */
+/* snd_read -- read up to length frames from source into buffer */
 /*
- * returns number of bytes actually read
+ * returns number of frames actually read
  */
 long snd_read(snd_type snd, void *buffer, long length)
 {
-    int bpf = snd_bytes_per_frame(snd);
-    return ((*snd->dictionary->read)(snd, buffer, length * bpf)) / bpf;
+  /* jlh betcha dollars to donuts this collapses to 1, since I am
+     doing things in units of frames rather than bytes. No -- what is
+     length? frames or samples??? must be frames, must be, must be!
+     YES! IT IS! JACKPOT! */
+  int bpf = 1; /*snd_bytes_per_frame(snd);*/
+  return ((*snd->dictionary->read)(snd, buffer, length * bpf)) / bpf;
 }
 
 
 long snd_write(snd_type snd, void *buffer, long length)
+/* note: length is in frames, returns number of frames actually written */
 {
-    int bpf = snd_bytes_per_frame(snd);
-    return (*snd->dictionary->write)(snd, buffer, length * bpf) / bpf;
+  int bpf = 1; /* snd_bytes_per_frame(snd);*/
+  return (*snd->dictionary->write)(snd, buffer, length * bpf / bpf);
 }
 
 
@@ -359,4 +383,101 @@ int snd_flush(snd_type snd)
         return (*snd->dictionary->flush)(snd);
     }
     return SND_SUCCESS;
+}
+
+/* jlh Code lifted from sndcvt.c 
+long snd_bytes_per_frame(snd_type snd)
+{
+    return (((snd->format.bits + 7) >> 3) * snd->format.channels);
+}
+
+and my version thereof.  I'll have to see if it flies... */
+
+long snd_bytes_per_frame(snd_type snd)
+{
+  return (sizeof(float) * snd->format.channels);
+}
+
+/* jlh more code lifted from sndcvt.c, and rewritten to move samples
+   where needed. 
+
+long cvt_from_float_32(void *buf1, void *buf2, long len2, float scale, float *peak)
+{
+    float *floats1 = (float *) buf1;
+    float *floats2 = (float *) buf2;
+    int i;
+    for (i = 0; i < len2; i++) {
+    *floats1++ = *floats2++ * scale;
+    }
+    return len2;
+}
+
+long cvt_to_float_32(void *buf1, void *buf2, long len2, float scale, float *peak)
+{
+
+    /* rbd I think this worked because when "converting" floats the conversion
+       was always in place so really the task here is to compute peak and scale.
+       Maybe I'm wrong -- there should at least be big warning comments that
+       buf1 is ignored 
+===> There appears to have been a missing line here, I don't see how
+this function could have ever worked. Compare with cvt_to_pcm_16, for
+instance.
+
+    float *floats = (float *) buf2;
+    int i;
+    FASTFLOAT max_sample = 0.0;
+    
+    for (i = 0; i < len2; i++) {
+        FASTFLOAT s = *floats++ * scale;
+        if (s > max_sample)
+            max_sample = s;
+        if (-s > max_sample)
+            max_sample = -s;
+        *floats++ = (float) s;
+    }
+    *peak = (float) max_sample;
+
+    return len2;
+}
+
+
+What was _from_ was called on the read and I'm replacing _from_ with
+move_samples_inward.
+
+What was _to_ was called on the write and had the scale and peak
+calculations and I'm replacing _to_ with move_samples_outward.
+
+
+*/
+
+long move_samples_inward(void *buf1, void *buf2, long len2, float scale, float *peak)
+{
+    float *floats1 = (float *)buf1;
+    float *floats2 = (float *)buf2;
+    int i;
+
+    for (i = 0; i < len2; i++) {
+    *floats1++ = *floats2++ * scale;
+    }
+    return len2;
+}
+
+long move_samples_outward(void *buf1, void *buf2, long len2, float scale, float *peak)
+{
+    float *floats1 = (float *)buf1;
+    float *floats2 = (float *)buf2;
+    int i;
+    FASTFLOAT max_sample = 0.0;
+    
+    for (i = 0; i < len2; i++) {
+        FASTFLOAT s = *floats2++ * scale;
+        if (s > max_sample)
+            max_sample = s;
+        if (-s > max_sample)
+            max_sample = -s;
+        *floats1++ = (float) s;
+    }
+    *peak = (float) max_sample;
+
+    return len2;
 }

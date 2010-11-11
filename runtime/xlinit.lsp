@@ -42,12 +42,12 @@
 
 ; (objectp expr) - object predicate
 ;
-(defun objectp (x) (eq (type x) 'OBJ))
+;this is built-in: (defun objectp (x) (eq (type-of x) 'OBJ))
 
 
 ; (filep expr) - file predicate
 ;
-(defun filep (x) (eq (type x) 'FPTR))
+(defun filep (x) (eq (type-of x) 'FPTR))
 
 (load "profile.lsp" :verbose NIL)
 

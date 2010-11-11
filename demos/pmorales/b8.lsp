@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 (defun drum-env (amp dur)
   (pwev amp dur (* 12e-5 amp)))
@@ -37,10 +38,14 @@
        (inh-component amp dur frq)
        (fund-component amp dur frq)))
 
-(ss (sim
+(defun risset-drum-sequence ()
+  (sim
     (at 0.0 (risset-drum 1.0 3.0 100.0))
     (at 0.5 (risset-drum 1.0 1.0 50.0))
     (at 1.0 (risset-drum 1.0 1.0 75.0))
     (at 1.2 (risset-drum 1.0 1.0 200.0))
     (at 1.4 (risset-drum 1.0 3.0 300.0))
     (at 1.8 (risset-drum 1.0 6.0 500.0))))
+
+(defun risset-drum-demo () (ss (risset-drum-sequence)))
+

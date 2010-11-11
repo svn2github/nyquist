@@ -71,16 +71,18 @@
   (mult (pwl 0.2 1 (- dur 0.4) 1 dur)
         (formants (vib-buzz pitch dur) 300 870 2240)))
 
-; TEST
-(defun buzz-test ()
-  (play (seq (ah c3 1)(eeh c3 1)(ooh c3 1)
-             (ah c2 1)(eeh c2 1)(ooh c2 1)
-             (ah c4 1)(eeh c4 1)(ooh c4 1)
-             (ah d4 1)(eeh d4 1)(ooh d4 1)
-             (ah g4 1)(eeh g4 1)(ooh g4 1)
-             (ah c5 1)(eeh c5 1)(ooh c5 1)
-             (ah c4 1)(eh  b3 0.5)(ah c4 0.5)
-             (eeh e4 1)(eeh d4 1)(ah c4 3))))
+(defun buzz-demo ()
+  (seq (ah c3 1)(eeh c3 1)(ooh c3 1)
+       (ah c2 1)(eeh c2 1)(ooh c2 1)
+       (ah c4 1)(eeh c4 1)(ooh c4 1)
+       (ah d4 1)(eeh d4 1)(ooh d4 1)
+       (ah g4 1)(eeh g4 1)(ooh g4 1)
+       (ah c5 1)(eeh c5 1)(ooh c5 1)
+       (ah c4 1)(eh  b3 0.5)(ah c4 0.5)
+       (eeh e4 1)(eeh d4 1)(ah c4 3)))
 
-(buzz-test)
+; TEST
+(defun buzz-test () (play (buzz-demo)))
+
+; (buzz-test)
 

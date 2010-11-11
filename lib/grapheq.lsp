@@ -10,6 +10,7 @@
 ;    2000 f2k 0.33)
 ;   4000 f4k 0.33))
 
+(setf *grapheq-loaded* t)
 
 ;; inf-const -- stretch a number into an "infinite" signal
 ;; Nyquist does not have infinite signals, so just make it very long

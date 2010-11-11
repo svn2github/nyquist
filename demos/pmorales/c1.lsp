@@ -3,7 +3,9 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
+
 
 (defun simple-noise ()
   (mult (noise 4.0)
@@ -21,7 +23,10 @@
 
 ;(ss (seq (simple-noise) (simple-randi 200) (simple-randi 400)))
 
-(ss (seq (tenney 200.0 400.0 4.0) (tenney 800.0 300.0 2.0)
-         (tenney 400.0 1600.0 4.0)))
+(defun tenny-sequence ()
+  (seq (tenney 200.0 400.0 4.0)
+       (tenney 800.0 300.0 2.0)
+       (tenney 400.0 1600.0 4.0)))
 
+(defun tenny-demo () (ss (tenny-sequence)))
 

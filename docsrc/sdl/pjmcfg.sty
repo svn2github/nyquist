@@ -1,0 +1,127 @@
+% ------------------------
+% PAQUETE DE CONFIGURACION
+% EJERCICIO FINAL de LaTeX
+% pjm. Junio, 2007
+% ------------------------
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pjmcfg}[2007/06/07 pjm]
+
+
+% Estilo de pagina
+
+\newcommand{\ps@pjmx}{%
+  \renewcommand{\@oddhead}{\sffamily \rightmark \hfill \thepage}
+  \renewcommand{\@evenhead}{\sffamily \thepage \hfill Score Description Library}
+  \renewcommand{\@oddfoot}{}
+  \renewcommand{\@evenfoot}{}
+  \renewcommand{\sectionmark}[1]{%
+     \markright{\MakeUppercase{\thesection.\quad ##1}}}}
+
+% Dimensiones
+
+\setlength{\hoffset}{-1in}
+\setlength{\oddsidemargin}{2cm}
+\setlength{\evensidemargin}{2.5cm}
+\setlength{\textwidth}{\paperwidth}
+\addtolength{\textwidth}{-\oddsidemargin}
+\addtolength{\textwidth}{-\evensidemargin}
+\setlength{\voffset}{-1in}
+\setlength{\topmargin}{2cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\footskip}{1.5cm}
+\setlength{\textheight}{\paperheight}
+\addtolength{\textheight}{-2\topmargin}
+\addtolength{\textheight}{-\footskip}
+
+
+% Titulos de secciones
+
+\renewcommand{\section}{\@startsection{section}{1}{0ex}%
+  {-3.5ex plus -1ex minus -0.2ex}%
+  {2.3ex plus 0.2ex}%
+  {\normalfont\Large\bfseries\sffamily}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0ex}%
+  {-3.25ex plus -1ex minus -0.2ex}%
+  {1.5ex plus 0.2ex}%
+  {\normalfont\large\bfseries\sffamily}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0ex}%
+  {-3.25ex plus -1ex minus -0.2ex}%
+  {1.5ex plus 0.2ex}%
+  {\normalfont\normalsize\bfseries\itshape}}
+
+% estos mantienen su configuracion por defecto
+% \newcommand{\paragraph}{\@startsection{paragraph}{4}{0ex}%
+%   {3.25ex plus 1ex minus 0.2ex}%
+%   {-1em}%
+%   {\normalfont\normalsize\bfseries}}
+% \newcommand{\subparagraph}{\@startsection{subparagraph}{5}{\parindent}%
+%   {3.25ex plus 1ex minus 0.2ex}%
+%   {-1em}%
+%   {\normalfont\normalsize\bfseries}}
+
+
+% Leyenda de figuras y cuadros
+
+\renewcommand{\@makecaption}[2]{%
+  \vspace{\abovecaptionskip}
+  \sbox{\@tempboxa}{\textbf{#1}. #2}%
+  \ifdim \wd\@tempboxa >\linewidth
+    \textbf{#1}. #2\par
+  \else
+    \global\@minipagefalse
+    \makebox[\linewidth]{\hfil\usebox{\@tempboxa}\hfil}%
+  \fi
+  \vspace{\belowcaptionskip}}
+
+
+
+% Definicion de ordenes
+
+
+% flecha para resaltar el inicio de un parrafo
+\newcommand{\flecha}{\noindent\ding{'324}}
+
+
+% -----------------------------------------------------------
+% \figura{nombre-fichero}{argumentos}{titulo}{etiqueta}
+% Resultado:
+% Inserta una figura. ``La figura~\ref{etiqueta} muestra...''
+% permite referenciar la figura desde el texto.
+% Argumentos: width=Xcm,height=Ycm,angle=Z
+% ------------------------------------------------------------
+
+\newcommand{\figura}[4]{%
+
+  \begin{figure}[ht]
+    \begin{center}
+      \includegraphics[#2]{#1}
+      \caption{#3}
+      \label{#4}
+      \end{center}
+    \end{figure}
+}
+
+% Entornos
+
+% -----------------------------------------------------------
+% \begin{tabla}{titulo}{etiqueta}
+% ... (contenido tabla)
+% \end{tabla}
+% Resultado:
+% Inserta una tabla.
+% Contenido de la tabla se define mediante el entorno 'tabular'
+% ``Tabla~\ref{etiqueta}'' permite referenciar la tabla.
+% -----------------------------------------------------------
+
+\newenvironment{tabla}[2]{%
+  \begin{table}[ht]
+    \caption{#1}
+    \label{#2}
+    \begin{center}}
+  {\end{center}
+    \end{table}}
+
+
+% fin del paquete
+\endinput

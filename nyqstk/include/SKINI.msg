@@ -11,6 +11,9 @@
 */
 /*********************************************************/
 
+namespace Nyq
+{
+
 /***** MIDI COMPATIBLE MESSAGES *****/
 /***** Status Bytes Have Channel=0 **/
 
@@ -121,4 +124,4 @@
 #define __SK_SINGER_RndVibAmt_       3008
 #define __SK_SINGER_VibFreq_         __SK_Expression_
 
-
+} // namespace Nyq

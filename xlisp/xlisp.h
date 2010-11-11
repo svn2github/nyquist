@@ -127,10 +127,6 @@ extern long ptrtoabs();
 #define XL_BIG_ENDIAN
 #endif
 
-#ifdef ANDREW
-#define STDERR stdout
-#endif
-
 /* Mac Metrowerks CW 6 */
 #ifdef __MWERKS__
 #define LSC
@@ -147,7 +143,7 @@ extern long ptrtoabs();
 #endif
 
 /* Linux on Pentium */
-#ifdef __linux__
+#if defined(__linux__) || defined(__GLIBC__)
 #include <endian.h>
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 #define XL_LITTLE_ENDIAN
@@ -163,7 +159,13 @@ extern long ptrtoabs();
 #define OFFTYPE long
 #define NIL (void *)0
 #define SAVERESTORE
+#include <sys/types.h>
+/* #if __BYTE_ORDER == __LITTLE_ENDIAN */
+#if defined(__LITTLE_ENDIAN__)
+#define XL_LITTLE_ENDIAN
+#else
 #define XL_BIG_ENDIAN
+#endif
 #endif
 
 /* default important definitions */
@@ -235,7 +237,11 @@ extern long ptrtoabs();
 #include "xldmem.h"
 
 /* program limits */
-#define STRMAX		100		/* maximum length of a string constant */
+#define STRMAX		250		/* maximum length of a string constant */
+/* this was 100 -- I had a perfectly good full path to init.lsp using
+   a directory structure created by Apple's Xcode that was about 108
+   characters, so I picked a bigger value. -RBD */
+
 #define HSIZE		1499		/* symbol hash table size */
 #define SAMPLE		1000		/* control character sample rate */
 
@@ -254,6 +260,7 @@ extern long ptrtoabs();
 #define FT_OBISNEW	13
 #define FT_OBCLASS	14
 #define FT_OBSHOW	15
+#define FT_OBISA        16
         
 /* macro to push a value onto the argument stack */
 #define pusharg(x)	{if (xlsp >= xlargstktop) xlargstkoverflow();\
@@ -575,7 +582,7 @@ void close_loadingfiles(void);
 /* xldmem.c */
 
 LVAL cons(LVAL x, LVAL y);
-LVAL cvstring(char *str);
+LVAL cvstring(const char *str);
 LVAL new_string(int size);
 LVAL cvsymbol(char *pname);
 LVAL cvsubr(LVAL (*fcn)(void), int type, int offset);
@@ -645,6 +652,7 @@ LVAL xmkstroutput(void);
 LVAL xgetstroutput(void);
 LVAL xgetlstoutput(void);
 LVAL xformat(void);
+LVAL xlistdir(void);
 
 
 /* xlimage.c */
@@ -665,9 +673,11 @@ int xlgetc(LVAL fptr);
 void xlungetc(LVAL fptr, int ch);
 int xlpeek(LVAL fptr);
 void xlputc(LVAL fptr, int ch);
+void xloutflush(LVAL fptr);
 void xlflush(void);
 void stdprint(LVAL expr);
 void stdputstr(char *str);
+void stdflush();
 void errprint(LVAL expr);
 void errputstr(char *str);
 void dbgprint(LVAL expr);
@@ -677,6 +687,8 @@ void trcputstr(char *str);
 
 
 /* xlisp.c */
+long xlrand(long range);
+double xlrealrand(void);
 void xlrdsave(LVAL expr);
 void xlevsave(LVAL expr);
 void xlfatal(char *msg);
@@ -818,6 +830,7 @@ int xlobsetvalue(LVAL pair, LVAL sym, LVAL val);
 LVAL obisnew(void);
 LVAL obclass(void);
 LVAL obshow(void);
+LVAL obisa(void);
 LVAL clnew(void);
 LVAL clisnew(void);
 LVAL clanswer(void);
@@ -948,6 +961,7 @@ LVAL findprop(LVAL sym, LVAL prp);
 
 /* xlsys.c */
 
+LVAL xget_env(void);
 LVAL xload(void);
 LVAL xtranscript(void);
 LVAL xtype(void);
@@ -969,17 +983,22 @@ int osclose(FILE *fp);
 void osflush(void);
 void oscheck(void);
 int osaputc(int ch, FILE *fp);
+void osoutflush(FILE *fp);
 int osbputc(int ch, FILE *fp);
 void ostputc(int ch);
+void ostoutflush();
 int osagetc(FILE *fp);
 int osbgetc(FILE *fp);
 int ostgetc(void);
 void ossymbols(void);
-long osrand(long rseed);
-/* Added by Ning Hu		May.2001*/
 LVAL xlinfo(void);
 LVAL xsetdir(void);
-/* Added End */
+int osdir_list_start(char *path);
+char *osdir_list_next();
+void osdir_list_finish();
+LVAL xosc_enable();
+LVAL xget_temp_path();
+LVAL xfind_in_xlisp_path();
 
 /* These are now implemented in path.c   -dmazzoni */
 const char *return_xlisp_path();

@@ -105,7 +105,7 @@ void pluck_initialize(sample_type *shiftreg, sample_type *array,
            values to +1 or -1. The following does the same
            thing with much less code:
          */
-        *array = (float) ((krand() & 2) - 1);
+        *array = (krand() & 2) - 1;
         suma += *array; /* compute sum for the average */
     }
     avea = suma / len;
@@ -164,7 +164,7 @@ void pluck__fetch(register pluck_susp_type susp, snd_list_type snd_list)
 	endptr_reg = susp->endptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            sample_type sum = (float)
+            sample_type sum = (sample_type)
                 ((*i1_reg++ * x2_reg) + (*i2_reg++ * x3_reg) + 
                  (*i3_reg++ * stretch_reg) - (*i4_reg++ * cons_reg));
             /* wrap pointers around shift register if necessary */
@@ -174,7 +174,7 @@ void pluck__fetch(register pluck_susp_type susp, snd_list_type snd_list)
             if (i4_reg == endptr_reg) i4_reg = susp->shiftreg;
 
             /* store new value in shift register */
-            *i4_reg = (float) (sum * loss_reg);
+            *i4_reg = (sample_type) (sum * loss_reg);
 
             /* deliver sample */
             *out_ptr_reg++ = sum;

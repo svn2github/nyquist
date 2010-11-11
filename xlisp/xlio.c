@@ -14,6 +14,10 @@
 extern LVAL s_stdin,s_stdout,s_stderr,s_debugio,s_traceout,s_unbound;
 extern int xlfsize;
 
+#ifdef DEBUG_INPUT
+extern FILE *read_by_xlisp;
+#endif
+
 /* xlgetc - get a character from a file or stream */
 int xlgetc(LVAL fptr)
 {
@@ -50,6 +54,11 @@ int xlgetc(LVAL fptr)
             ch = ostgetc();
         else
             ch = osagetc(fp);
+#ifdef DEBUG_INPUT
+        if (read_by_xlisp && ch != -1) {
+			putc(ch, read_by_xlisp);
+		}
+#endif
     }
 
     /* return the character */
@@ -146,6 +155,27 @@ void xlputc(LVAL fptr, int ch)
     }
 }
 
+/* xloutflush -- flush output buffer */
+void xloutflush(LVAL fptr)
+{
+    FILE *fp;
+
+    /* check for output to nil or unnamed stream */
+    if (fptr == NIL || ustreamp(fptr))
+        ;
+
+    /* otherwise, check for terminal output or file output */
+    else {
+        fp = getfile(fptr);
+        if (!fp)
+            xlfail("file not open");
+        else if (fp == stdout || fp == STDERR)
+            ostoutflush();
+        else
+            osoutflush(fp);
+    }    
+}
+
 /* xlflush - flush the input buffer */
 void xlflush(void)
 {
@@ -163,6 +193,12 @@ void stdprint(LVAL expr)
 void stdputstr(char *str)
 {
     xlputstr(getvalue(s_stdout),str);
+}
+
+/* stdflush - flush the *standard-output* buffer */
+void stdflush()
+{
+    xloutflush(getvalue(s_stdout));
 }
 
 /* errprint - print to *error-output* */

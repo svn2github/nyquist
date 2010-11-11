@@ -3,12 +3,10 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
-(defun twopi ()
-  (setf *twopi* (* 2 3.141592653589793)))
-
-(if (not (boundp '*twopi*)) (twopi))
+(setf *twopi* (* 2 pi))
 
 (defun bell-table ()
   (setf *bell-table* (make-array 512))
@@ -33,9 +31,12 @@
 
 (setf *endless-partial* (endless-partial))
 
-(autonorm-off)
-
-(play (scale 0.25 (apply #'sim (mapcar #'(lambda (x) (at x (cue *endless-partial*)))
+(defun risset-endless ()
+  (scale 0.25 (apply #'sim (mapcar #'(lambda (x) 
+				       (at x (cue *endless-partial*)))
             '(0.0 2.0 4.0 6.0 8.0 10.0 12.0
              14.0 16.0 18.0 20.0)))))
+
+(defun risset-endless-demo () (ss (risset-endless)))
+
 

@@ -1,9 +1,10 @@
 /*
  * falloc.c
- * data for fugue memory allocation.
+ * data for Nyquist memory allocation.
  */
 
 #include <stdio.h>
+#include <assert.h>
 #include "xlisp.h"
 #include "sound.h"
 #include "falloc.h"
@@ -32,7 +33,17 @@ void falloc_init(void)
 /* memory pool */
 char *poolp = NULL;
 char *poolend = NULL;
+
+/* sample block memory pool */
+char *spoolp = NULL;
+char *spoolend = NULL;
+
 int npools = 0;
+
+#if defined(TRACK_POOLS) && TRACK_POOLS
+#define POOL_HEAD_SIZE (round_size(sizeof(CQUE)))
+CQUE *pools = NULL;
+#endif
 
 void sound_already_free_test(s)
   sound_type s;
@@ -53,14 +64,42 @@ void sound_already_free_test(s)
 void new_pool(void)
 {
     poolp = (char *) malloc(MAXPOOLSIZE);
+
     if (poolp == NULL) {
-        fprintf(stderr, "fugue: out of memory!\n");
+        fprintf(STDERR, "Nyquist: out of memory!\n");
         EXIT(1);
     }
+
     poolend = poolp + MAXPOOLSIZE;
     npools++;
     /* stick to double word boundaries */
     poolp = (char *) round_size(((long) poolp));
+}
+
+/* new_spool -- allocate a new spool from which sample blocks are allocated */
+/**/
+void new_spool(void)
+{
+#if defined(TRACK_POOLS) && TRACK_POOLS
+    spoolp = (char *) malloc(MAXSPOOLSIZE + POOL_HEAD_SIZE);
+#else
+    spoolp = (char *) malloc(MAXSPOOLSIZE);
+#endif
+
+    if (spoolp == NULL) {
+        fprintf(STDERR, "Nyquist: out of memory!\n");
+        EXIT(1);
+    }
+
+#if defined(TRACK_POOLS) && TRACK_POOLS
+    Qenter(pools, spoolp);
+    spoolp += POOL_HEAD_SIZE;
+#endif
+
+    spoolend = spoolp + MAXSPOOLSIZE;
+    npools++;
+    /* stick to double word boundaries */
+    spoolp = (char *) round_size(((long) spoolp));
 }
 
 
@@ -78,10 +117,10 @@ sample_block_type find_sample_block(void)
 {	
     sample_block_type sp;
     if (sample_block_total < sample_block_low_water + BLOCKS_PER_GC &&
-        check_pool(round_size(sizeof(sample_block_node)))) {
-        if (DEBUG_MEM) poolp += DEBUG_MEM_INFO_SIZE;
-        sp = (sample_block_type) poolp;
-        poolp += round_size(sizeof(sample_block_node));
+        check_spool(round_size(sizeof(sample_block_node)))) {
+        if (DEBUG_MEM) spoolp += DEBUG_MEM_INFO_SIZE;
+        sp = (sample_block_type) spoolp;
+        spoolp += round_size(sizeof(sample_block_node));
         sample_block_total++;
 /*	printf("fp%d ", sample_block_total - sample_block_low_water); */
     } else {
@@ -91,19 +130,19 @@ sample_block_type find_sample_block(void)
         if (!Qempty(sample_block_free)) {
             Qget(sample_block_free, sample_block_type, sp);
 /*	    printf("gc, then from freelist\n"); */
-        } else if (check_pool(round_size(sizeof(sample_block_node)))) {
-            if (DEBUG_MEM) poolp += DEBUG_MEM_INFO_SIZE;
-            sp = (sample_block_type) poolp;
-            poolp += sizeof(sample_block_node);
+        } else if (check_spool(round_size(sizeof(sample_block_node)))) {
+            if (DEBUG_MEM) spoolp += DEBUG_MEM_INFO_SIZE;
+            sp = (sample_block_type) spoolp;
+            spoolp += round_size(sizeof(sample_block_node));
             sample_block_total++;
-/*	    printf("gc, then from pool\n"); */
+/*	    printf("gc, then from spool\n"); */
         } else {
-            new_pool();
-            if (DEBUG_MEM) poolp += DEBUG_MEM_INFO_SIZE;
-            sp = (sample_block_type) poolp;
-            poolp += round_size(sizeof(sample_block_node));
+            new_spool();
+            if (DEBUG_MEM) spoolp += DEBUG_MEM_INFO_SIZE;
+            sp = (sample_block_type) spoolp;
+            spoolp += round_size(sizeof(sample_block_node));
             sample_block_total++;
-/*	    printf("gc, then new pool\n"); */
+/*	    printf("gc, then new spool\n"); */
         }
     }
     return sp;
@@ -122,5 +161,112 @@ char *get_from_pool(size_t siz)
     if (DEBUG_MEM) poolp += DEBUG_MEM_INFO_SIZE; /* allow for debug info */
     return poolp - siz;
 }
+
+
+#if defined(TRACK_POOLS) && TRACK_POOLS
+
+/* falloc_gc -- return empty pools to the system */
+/*
+ * Algorithm: for each pool, move all free sample blocks 
+ * (on the sample_block_free list) to tlist. If tlist
+ * has ALL of the blocks in the pool (determined by
+ * byte counts), the pool is returned to the heap.
+ */
+void falloc_gc()
+{
+   CQUE *lp = NULL;
+   CQUE *cp;
+   CQUE *np;
+   CQUE *tlist = NULL;
+
+   /* Scan all allocated pools */
+   for (cp = pools; cp; lp = cp, cp = np) {
+      char *str = ((char *)cp) + POOL_HEAD_SIZE;
+      char *end = str + MAXSPOOLSIZE;
+      long tsiz = end - str;
+      long csiz = 0;
+      CQUE *tsave = NULL;
+      CQUE *ln = NULL;
+      CQUE *cn;
+      CQUE *nn;
+
+      /* Save pointer to next pool */
+      np = cp->qnext;
+
+      /* Remember head of temp free list */
+      tsave = tlist;
+
+      /* Scan all nodes on the free list */
+      for (cn = sample_block_free; cn; ln = cn, cn = nn) {
+
+         /* Get next node */
+         nn = cn->qnext;
+
+         /* Count it if the node belongs to this pool */
+         if (cn >= (CQUE *) str && cn <= (CQUE *) end) {
+            csiz += round_size(sizeof(sample_block_node));
+
+            Qenter(tlist, cn);
+
+            /* Unlink the node */
+            if (cn == sample_block_free) {
+               sample_block_free = nn;
+               cn = NULL;
+            }
+            else {
+               ln->qnext = nn;
+               cn = ln;
+            }
+         }
+      }
+
+      /* The pool had inuse nodes */
+      if (csiz != tsiz) {
+         continue;
+      }
+   
+      /* Remove the nodes from the temp free list */
+      tlist = tsave;
+
+      /* Maintain stats */
+      sample_block_total -= (tsiz / round_size(sizeof(sample_block_node)));
+      npools--;
+
+      /* If this is the active pool, then reset current pointers */
+      if (spoolp >= str && spoolp <= end) {
+         spoolp = NULL;
+         spoolend = NULL;
+      }
+
+      /* Release the pool to the system */
+      free(cp);
+
+      /* Unlink this pool from the list */
+      if (cp == pools) {
+         pools = np;
+         cp = NULL;
+      }
+      else {
+         /* lp cannot be null here: On 1st iteration, lp == NULL, but
+          * cp == pools, so code above is executed. Before the for-loop
+          * iterates, pools == np (assigned above), and cp == NULL. The
+          * for-loop update (lp=cp,cp=np) produces lp == NULL, cp == pools.
+          * Since cp == pools, this else branch will not be taken.
+          * The other path to this code is via the "continue" above. In that
+          * case, the update (lp=cp,cp=np) makes lp a valid pointer or else
+          * the loop exits.
+          * The assert(lp) is here to possibly make static analyzers happy.
+          */
+         assert(lp);
+         lp->qnext = np;
+         cp = lp;
+      }
+   }
+
+   /* Resave list of free nodes */
+   sample_block_free = tlist;
+}
+
+#endif
 
 

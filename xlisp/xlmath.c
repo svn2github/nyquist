@@ -35,6 +35,7 @@ LVAL xexpt(void)   { return (binary('E')); } /* expt */
 LVAL xlogand(void) { return (binary('&')); } /* logand */
 LVAL xlogior(void) { return (binary('|')); } /* logior */
 LVAL xlogxor(void) { return (binary('^')); } /* logxor */
+LVAL xatan(void)   { return (binary('A')); } /* atan */
 
 /* xgcd - greatest common divisor */
 LVAL xgcd(void)
@@ -109,6 +110,17 @@ LOCAL LVAL binary(int fcn)
                 fval = 1.0 / fval;
                 break;
             }
+            break;
+        case 'A':
+            switch (mode) {
+            case 'I':
+                mode = 'F';
+                fval = ival;
+            case 'F':
+                fval = atan(fval);
+                break;
+            }
+            break;
         }
     }
 
@@ -158,6 +170,10 @@ LOCAL LVAL binary(int fcn)
             case '&':	ival &= iarg; break;
             case '|':	ival |= iarg; break;
             case '^':	ival ^= iarg; break;
+            case 'A':   fval = atan2((double) ival, (double) iarg);
+                        mode = 'F';
+                        xllastarg();
+                        break;
             default:	badiop();
             }
             break;
@@ -170,6 +186,9 @@ LOCAL LVAL binary(int fcn)
             case 'M':	if (farg > fval) fval = farg; break;
             case 'm':	if (farg < fval) fval = farg; break;
             case 'E':	fval = pow(fval,farg); break;
+            case 'A':   fval = atan2(fval, farg);
+	                xllastarg();
+			break;
             default:	badfop();
             }
                 break;
@@ -209,6 +228,13 @@ void checkfneg(FLOTYPE farg)
         xlfail("square root of a negative number");
 }
 
+/* real-random */
+LVAL xrealrand(void)
+{
+    xllastarg();
+    return cvflonum(xlrealrand());
+}
+
 /* unary functions */
 LVAL xlognot(void) { return (unary('~')); } /* lognot */
 LVAL xabs(void)    { return (unary('A')); } /* abs */
@@ -244,7 +270,7 @@ LOCAL LVAL unary(int fcn)
         case '-':	ival--; break;
         case 'I':	break;
         case 'F':	return (cvflonum((FLOTYPE)ival));
-        case '?':	ival = (FIXTYPE)osrand((int)ival); break;
+        case '?':	ival = (FIXTYPE)xlrand((int)ival); break;
         default:	badiop();
         }
         return (cvfixnum(ival));

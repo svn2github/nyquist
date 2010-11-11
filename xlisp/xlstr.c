@@ -364,6 +364,10 @@ LVAL xstring(void)
         buf[0] = (int)getchcode(arg);
         buf[1] = '\0';
         return (cvstring(buf));
+    case FIXNUM:
+        buf[0] = getfixnum(arg);
+        buf[1] = '\0';
+        return (cvstring(buf));
     default:
         xlbadtype(arg);
         return NIL; /* never happens */
@@ -512,8 +516,8 @@ LVAL xchrgtr(void) { return (chrcompare('>',FALSE)); } /* char> */
 /* character comparision functions (case insensitive) */
 LVAL xchrilss(void) { return (chrcompare('<',TRUE)); } /* char-lessp */
 LVAL xchrileq(void) { return (chrcompare('L',TRUE)); } /* char-not-greaterp */
-LVAL xchrieql(void) { return (chrcompare('=',TRUE)); } /* char-equalp */
-LVAL xchrineq(void) { return (chrcompare('#',TRUE)); } /* char-not-equalp */
+LVAL xchrieql(void) { return (chrcompare('=',TRUE)); } /* char-equal */
+LVAL xchrineq(void) { return (chrcompare('#',TRUE)); } /* char-not-equal */
 LVAL xchrigeq(void) { return (chrcompare('G',TRUE)); } /* char-not-lessp */
 LVAL xchrigtr(void) { return (chrcompare('>',TRUE)); } /* char-greaterp */
 

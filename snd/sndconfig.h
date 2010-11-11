@@ -71,9 +71,13 @@ void snd_free(void *a);
   #endif
   #include "sndwin32.h"
 
-#elif defined(macintosh) || defined(__WXMAC__)
+#elif defined(macintosh) || defined(__WXMAC__) || defined(__APPLE__)
+/* notice that now MAC can mean either PPC or i386 -RBD */
   #ifndef MAC
     #define MAC
   #endif
+/* include sndmac.h for both ppc and i386 architectures */
   #include "sndmac.h"
+#else
+Error: No system selected in sndconfig.h
 #endif

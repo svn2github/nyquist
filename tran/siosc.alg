@@ -23,6 +23,7 @@ void siosc_table_init(siosc_susp_type susp)
     susp->table_b_samps = susp->table_b_ptr_ptr->samples;
     susp->lis = cdr(susp->lis);
     susp->table_sr = snd->sr;
+    susp->table_len = susp->table_b_ptr_ptr->length;
 }
 
 /* siosc_table_update -- outer loop processing, get next table */

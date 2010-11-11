@@ -1,0 +1,87 @@
+\documentclass[a4paper,11pt,twoside,titlepage]{article}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{amsmath}
+\usepackage{pifont}
+\usepackage{fancyvrb}
+\usepackage{pjmcfg}
+
+% subordinacion de contadores
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\numberwithin{equation}{section} % AVISO: no hay ecuaciones numeradas en el texto
+
+
+\makeindex
+
+\pagestyle{pjmx}
+
+
+
+\begin{document}
+
+% TITULO -----------------------------------------------------------------------
+
+\begin{titlepage}
+
+% titulo
+ {\ \vfill \Huge\bfseries\sffamily \hfill Score Description Library\\[0.5cm]
+        \mdseries \mbox{} \hfill Reference Manual\\
+        \rule{\textwidth}{1mm}} \\[0.2cm]
+% autor 
+ {\sffamily \mbox{} \hfill Pedro J. Morales.} \\
+{\sffamily \mbox{} \hfill English translation by Luis Rodr\'iguez and Pedro J. Morales.} \\
+
+
+% fecha
+ {\sffamily \hfill \today} \\[1cm]
+
+\end{titlepage}
+
+% REVERSO DEL TITULO EN BLANCO ------------------------------------------------
+\thispagestyle{empty}
+\mbox{}
+\pagebreak
+
+
+% TABLA DE CONTENIDOS, FIGURAS, CUADROS ---------------------------------------
+
+% inicia contador de paginas (MANEJO DE CONTADORES)
+\setcounter{page}{1}
+% numeracion de paginas en roman
+\renewcommand{\thepage}{\roman{page}}
+% comando equivalente
+% \pagenumbering{roman}
+
+
+\tableofcontents
+%\listoffigures
+%\listoftables
+
+\newpage
+
+% INICIO DEL TEXTO ------------------------------------------------------------
+
+% inicia contador de paginas 
+\setcounter{page}{1}
+% las paginas se numeran en arabic
+\renewcommand{\thepage}{\arabic{page}}
+% comando equivalente
+% \pagenumbering{arabic}
+
+
+\input{part1} 
+
+
+% referencias
+% \bibliographystyle{alpha}
+% \bibliography{ejfinal}
+
+
+% indice alfabetico
+% \printindex
+
+\end{document}

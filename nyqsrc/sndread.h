@@ -5,11 +5,10 @@
 
 typedef struct read_susp_struct {
     snd_susp_node susp;
-    snd_node snd;
+    SNDFILE *sndfile;
+    SF_INFO sf_info;
     snd_list_type *chan;	/* array of back pointers */
-    long bytes_per_sample;	/* handy for calculations */
     long cnt;	/* how many sample frames to read */
-    cvtfn_type cvtfn;
 } read_susp_node, *read_susp_type;
 
 

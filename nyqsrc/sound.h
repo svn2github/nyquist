@@ -8,6 +8,13 @@
 #include <math.h>
 #include "stdefs.h"
 
+/* used for *AUDIO-MARKERS* */
+extern long sound_frames;
+extern double sound_srate;
+
+#if OSC
+extern int nosc_enabled; /* enable polling for OSC messages */
+#endif
 
 #if USE_PRINTF
 #define nyquist_printf printf
@@ -27,6 +34,7 @@
 /* conversion from float to integer */
 #define SCALE_FACTOR_TO_BYTE 127
 #define SCALE_FACTOR_TO_SHORT 32767
+#define SCALE_FACTOR_TO_24BIT 0x7FFFFF
 #define SCALE_FACTOR_TO_LONG 2147483647
 
 /* Note that the values assigned here are not arbitrary, but represent
@@ -123,7 +131,7 @@ typedef double promoted_sample_type;
 /* used by sndwrite.c for output buffers.  This should be
  * eliminated:
  */
-#define MAX_SND_CHANNELS 8
+#define MAX_SND_CHANNELS 24
 
 #define max_table_len 100000
 /* Set to 4 for debugging block allocation stuff, 1012? for
@@ -175,7 +183,7 @@ typedef struct snd_list_struct {
     boolean             logically_stopped;
 } snd_list_node, *snd_list_type;
 
-snd_list_type list_watch; //DBY
+extern snd_list_type list_watch; //DBY
 
 
 typedef struct table_struct {
@@ -226,6 +234,10 @@ extern sample_block_type internal_zero_block;
 extern snd_list_type zero_snd_list;
 
 extern sound_type printing_this_sound;  /* debugging global */
+
+extern double sound_latency; /* controls output latency */
+double snd_set_latency(double latency); 
+/* LISP: (SND-SET-LATENCY FLONUM) */
 
 double compute_phase(double phase, double key, long n, double srate,
                      double new_srate, double freq, double *incr_ptr);
@@ -304,6 +316,8 @@ void stats();
     /* LISP: (STATS) */
 void sound_print_tree(sound_type snd);
     /* LISP: (SND-PRINT-TREE SOUND) */
+    
+void mark_audio_time();
 
 void sound_print_tree_1(sound_type snd, int n);
 
@@ -390,19 +404,39 @@ double step_to_hz();
  * if new ones are fetched, then run termination test and logical stop
  * test on signal and record results.  In this case, termination and logical
  * stop happen at the MAXIMUM of termination and logical stop times, resp.
+ *
+ * Originally, this code assumed that logical stops occurred on block boundaries,
+ * but because of the SET-LOGICAL-STOP function, which just writes a stop time
+ * into the sound_struct, the logical stop can be anywhere. As soon as the 
+ * logical stop is known, we want to propagate the value from the sound being
+ * read into the sound being computed. The propagation should set the logical
+ * stop of the computed sound to the MAX of any current value and the new 
+ * value. When the bit fields indicate that all logical stop times have been
+ * encountered, then the sound being computed will make the logical stop happen
+ * on a block boundary and set the flag on the block of samples where the stop
+ * occurs.
  */
 #define susp_check_term_log_block_samples(sound, sample_block_ptr, sample_ptr, sample_cnt, bit, all) \
     if (susp->sample_cnt == 0) { \
         susp_get_block_samples(sound, sample_block_ptr, sample_ptr, sample_cnt); \
-        if (susp->sound->logical_stop_cnt ==\
+/*OLD   if (susp->sound->logical_stop_cnt ==                  \
             susp->sound->current - susp->sample_cnt) { \
+*/ \
+        if (susp->sound->logical_stop_cnt != UNKNOWN && \
+            !(susp->logical_stop_bits & bit)) { \
             susp->logical_stop_bits |= bit; \
+/*OLD \
             if (susp->logical_stop_bits == all) { \
                 susp->susp.log_stop_cnt = (long) \
                  ((((susp->sound->current - susp->sample_cnt) / \
                    susp->sound->sr + susp->sound->t0) - \
                    susp->susp.t0) * susp->susp.sr + 0.5); \
                 assert(susp->susp.log_stop_cnt >= 0); } } \
+*/ \
+            susp->susp.log_stop_cnt = max(susp->susp.log_stop_cnt, \
+                    (((susp->sound->logical_stop_cnt / \
+                       susp->sound->sr + susp->sound->t0) - \
+                      susp->susp.t0) * susp->susp.sr + 0.5)); } \
         if (susp->sample_ptr == zero_block->samples) { \
             susp->terminate_bits |= bit; \
             if (susp->terminate_bits == all) { \

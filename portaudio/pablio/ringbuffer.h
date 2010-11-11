@@ -6,7 +6,7 @@ extern "C"
 #endif /* __cplusplus */
 
 /*
- * $Id: ringbuffer.h,v 1.1.1.1 2004-11-10 16:07:44 rbd Exp $
+ * $Id: ringbuffer.h,v 1.2 2004/12/01 20:43:40 rbd Exp $
  * ringbuffer.h
  * Ring Buffer utility..
  *

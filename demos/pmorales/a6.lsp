@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 (defun saw-table ()
   (setf *saw-table* (pwlv 1.0 1.0 0.0))
@@ -22,10 +23,11 @@
         (fmosc frq (mult (const vib-w dur)
                          (sine (hz-to-step vib-r) dur)))))
 
-(ss (seq (sim (at 0.0 (cheap 80 a4 6.5 3 1000))
-              (at 2.5 (cheap 150 a5 6.5 3 750)))
-         (callas 1 a4 5 24)
-         (callas 0.5 e5 5 24) (callas 0.5 f5 5 24) (callas 1 a5 5 24)
-         (callas 1 c6 5 24) (callas 1 e6 5 24)
-         (callas 1 g4 5 24) (callas 1 f4 5 24)
-         (callas 3 e4 5 24)))
+(defun callas-demo ()
+  (ss (seq (sim (at 0.0 (cheap 80 a4 6.5 3 1000))
+                (at 2.5 (cheap 150 a5 6.5 3 750)))
+           (callas 1 a4 5 24)
+           (callas 0.5 e5 5 24) (callas 0.5 f5 5 24) (callas 1 a5 5 24)
+           (callas 1 c6 5 24) (callas 1 e6 5 24)
+           (callas 1 g4 5 24) (callas 1 f4 5 24)
+          (callas 3 e4 5 24))))

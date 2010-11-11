@@ -11,128 +11,320 @@
 # This is the resulting executable (normally "ny"):
 NY = ny
 
-EVERYTHING = $(NY) runtime/system.lsp
+OPT = -O2 -m32
+# OPT = -g -m32
+
+EVERYTHING = $(NY) runtime/system.lsp jnyqide/jNyqIDE.jar \
+           bin/ser-to-osc bin/test-client
 
 CURRENT = $(EVERYTHING)
 
 current: $(CURRENT)
 
+onlyny: $(NY) runtime/system.lsp
+
+JAVASRC = jnyqide/browser.java jnyqide/NyquistThread.java \
+          jnyqide/Pair.java jnyqide/BareBonesBrowserLaunch.java \
+          jnyqide/EnvelopeFrame.java jnyqide/Piano_Roll.java \
+          jnyqide/FindDialog.java jnyqide/PlotFrame.java \
+          jnyqide/InstrumentCharacteristics.java \
+          jnyqide/PlotMouseAdapter.java \
+          jnyqide/Jslide.java jnyqide/PopupListener.java \
+          jnyqide/LispFileFilter.java jnyqide/PreferencesDialog.java \
+          jnyqide/MainFrame_AboutBox.java jnyqide/ReplaceDialog.java \
+          jnyqide/MainFrame.java jnyqide/SpringUtilities.java \
+          jnyqide/Main.java \
+          jnyqide/NotFoundDialog.java jnyqide/TextColor.java \
+          jnyqide/NyqPlot.java jnyqide/Trie.java \
+          jnyqide/NyquistFile.java jnyqide/WordList.java
+
+
+jnyqide/jNyqIDE.jar: $(JAVASRC)
+	if [ -r jnyqide/SpecialMacHandler.java ] ; then \
+	mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden ;\
+	fi 
+	javac jnyqide/*.java 
+	mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java 
+	rm -rf jnyqide/jNyqIDE.jar 
+	jar -cfm jnyqide/jNyqIDE.jar jnyqide/manifest.txt jnyqide/*.class 
+
 # Standard list of includes (common to all unix versions)
-INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Isnd -Ifft \
-   -Inyqstk/include -Inyqstk -Iportaudio/pa_common
+# Keeping portaudio and libsndfile sources local to nyquist
+INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Iffts/src \
+   -Inyqstk/include -Inyqstk -Iportaudio/include -Iportaudio/src/common \
+   -Iportaudio/src/os/unix \
+   -Iliblo -Inylsf
 
 # system dependent stuff for linux:
 
 CC = gcc
-# to enable command line editing, use -DREADLINE. WARNING: THIS WILL DISABLE THE
-# ABILITY TO INTERRUPT LISP AND USE SOME OTHER HANDY CONTROL CHARACTERS
-# using OSS because at the time of testing, ALSA had problems unless the number of channels
-#   matched the hardware
-CFLAGS = -DCMTSTUFF -DPA_LITTLE_ENDIAN -g $(INCL) -DHAVE_LIBPTHREAD=1 -DPA_USE_OSS=1 -DPA_USE_ALSA=1
-LN = g++
-# to disable command line editing, take out -lreadline -lcurses
-LFLAGS = -lm -lreadline -lcurses -lpthread -lasound
+
+LIBPA_PATH = portaudio/lib/.libs
+
+LIBLO_PATH = liblo/src/.libs
+
+# to enable command line editing, use -DREADLINE. WARNING: THIS WILL 
+# DISABLE THE ABILITY TO INTERRUPT LISP AND USE SOME OTHER HANDY 
+# CONTROL CHARACTERS (You will also need the readline and curses libraries)
+CFLAGS = -DOSC -DCMTSTUFF -DPA_LITTLE_ENDIAN $(OPT) $(INCL) \
+    -DHAVE_LIBPTHREAD=1 -D_FILE_OFFSET_BITS=64 \
+    -DSTK_NYQUIST -DUSE_VSPRINTF \
+    -DHAVE_CONFIG_H
+LN = g++ -m32
+AR = ar
+# to enable command line editing, insert -lreadline -lcurses
+LFLAGS = $(LIBPA_PATH)/libportaudio.a -lm -lpthread -lasound -llo -L$(LIBLO_PATH)
+
 TAGS:
 	find . ( -name 
 
 INTGEN = misc/intgen
 
 # Object files for Nyquist:
-OBJECTS = xlisp/extern.o xlisp/xldmem.o xlisp/xlbfun.o xlisp/xlcont.o  \
-	xlisp/xldbug.o xlisp/xleval.o xlisp/xlfio.o xlisp/xlftab.o  \
-	xlisp/xlglob.o xlisp/xlimage.o xlisp/xlinit.o xlisp/xlio.o  \
-	xlisp/xlisp.o xlisp/xljump.o xlisp/xllist.o xlisp/xlmath.o  \
-	xlisp/xlobj.o xlisp/xlpp.o xlisp/xlprin.o xlisp/xlread.o  \
-	xlisp/xlstr.o xlisp/xlsubr.o xlisp/xlsym.o xlisp/xlsys.o  \
-	xlisp/path.o tran/abs.o tran/allpoles.o tran/alpass.o  \
-	tran/alpasscv.o tran/alpassvv.o tran/amosc.o tran/areson.o  \
-	tran/aresonvc.o tran/aresoncv.o tran/aresonvv.o tran/atone.o  \
-	tran/atonev.o tran/biquad.o tran/buzz.o tran/chase.o  \
-	tran/clip.o tran/congen.o tran/const.o tran/coterm.o  \
-	tran/delaycc.o tran/delaycv.o tran/eqbandvvv.o tran/exp.o  \
-	tran/follow.o tran/fmosc.o tran/fromobject.o tran/fromarraystream.o  \
-	tran/gate.o tran/ifft.o tran/instrclar.o tran/instrclarall.o  \
-	tran/instrclarfreq.o tran/instrsax.o tran/instrsaxall.o tran/instrsaxfreq.o  \
-	tran/integrate.o tran/log.o tran/lpreson.o tran/maxv.o  \
-	tran/offset.o tran/oneshot.o tran/osc.o tran/partial.o  \
-	tran/pluck.o tran/prod.o tran/pwl.o tran/quantize.o  \
-	tran/recip.o tran/reson.o tran/resonvc.o tran/resoncv.o  \
-	tran/resonvv.o tran/sampler.o tran/scale.o tran/shape.o  \
-	tran/sine.o tran/siosc.o tran/slope.o tran/sqrt.o  \
-	tran/tapf.o tran/tapv.o tran/tone.o tran/tonev.o  \
-	tran/upsample.o tran/white.o cmt/cext.o cmt/cleanup.o  \
-	cmt/cmdline.o cmt/cmtcmd.o cmt/moxc.o cmt/mem.o  \
-	cmt/midifile.o cmt/midifns.o cmt/record.o cmt/seq.o  \
-	cmt/seqmread.o cmt/seqmwrite.o cmt/seqread.o cmt/seqwrite.o  \
-	cmt/tempomap.o cmt/timebase.o cmt/userio.o nyqsrc/debug.o  \
-	nyqsrc/falloc.o nyqsrc/add.o nyqsrc/local.o nyqsrc/convolve.o  \
-	nyqsrc/downsample.o nyqsrc/handlers.o nyqsrc/multiread.o nyqsrc/multiseq.o  \
-	nyqsrc/samples.o nyqsrc/seqext.o nyqsrc/seqinterf.o nyqsrc/sndread.o  \
-	nyqsrc/sndseq.o nyqsrc/yin.o nyqsrc/sndwritepa.o nyqsrc/sndmax.o  \
-	nyqsrc/sound.o nyqsrc/stats.o nyqsrc/compose.o nyqsrc/inverse.o  \
-	nyqsrc/resamp.o nyqsrc/resampv.o nyqsrc/ffilterkit.o nyqsrc/avg.o  \
-	nyqsrc/fft.o nyqsrc/sndfail.o nyqsrc/lpanal.o nyqstk/src/Clarinet.o  \
-	nyqstk/src/Delay.o nyqstk/src/DelayL.o nyqstk/src/Envelope.o nyqstk/src/Filter.o  \
-	nyqstk/src/Instrmnt.o nyqstk/src/Noise.o nyqstk/src/OneZero.o nyqstk/src/ReedTabl.o  \
-	nyqstk/src/Saxofony.o nyqstk/src/Stk.o nyqstk/src/WaveLoop.o nyqstk/src/WvIn.o  \
-	nyqstk/stkinit.o nyqstk/instr.o fft/fftn.o nyqsrc/sndfnint.o  \
-	nyqsrc/seqfnint.o snd/audiooss.o snd/sndlinux.o snd/ieeecvt.o  \
-	snd/snd.o snd/sndcvt.o snd/sndio.o snd/sndheader.o  \
-	portaudio/pa_common/pa_front.o portaudio/pa_unix/pa_unix_hostapis.o portaudio/pa_unix_oss/pa_unix_oss.o portaudio/pa_unix/pa_unix_util.o  \
-	portaudio/pa_linux_alsa/pa_linux_alsa.o \
-	portaudio/pa_common/pa_cpuload.o portaudio/pa_common/pa_allocation.o portaudio/pa_common/pa_stream.o portaudio/pa_common/pa_converters.o  \
-	portaudio/pa_common/pa_process.o portaudio/pa_common/pa_dither.o portaudio/pa_common/pa_trace.o sys/unix/osstuff.o  \
-	sys/unix/term.o 
+OBJECTS = xlisp/extern.o xlisp/xldmem.o  \
+	xlisp/xlbfun.o xlisp/xlcont.o  \
+	xlisp/xldbug.o xlisp/xleval.o  \
+	xlisp/xlfio.o xlisp/xlftab.o  \
+	xlisp/xlglob.o xlisp/xlimage.o  \
+	xlisp/xlinit.o xlisp/xlio.o  \
+	xlisp/xlisp.o xlisp/xljump.o  \
+	xlisp/xllist.o xlisp/xlmath.o  \
+	xlisp/xlobj.o xlisp/xlpp.o  \
+	xlisp/xlprin.o xlisp/xlread.o  \
+	xlisp/xlstr.o xlisp/xlsubr.o  \
+	xlisp/xlsym.o xlisp/xlsys.o  \
+	xlisp/path.o tran/abs.o  \
+	tran/allpoles.o tran/alpass.o  \
+	tran/alpasscv.o tran/alpassvv.o  \
+	tran/amosc.o tran/areson.o  \
+	tran/aresonvc.o tran/aresoncv.o  \
+	tran/aresonvv.o tran/atone.o  \
+	tran/atonev.o tran/biquadfilt.o  \
+	tran/buzz.o tran/chase.o  \
+	tran/clip.o tran/congen.o  \
+	tran/const.o tran/coterm.o  \
+	tran/delaycc.o tran/delaycv.o  \
+	tran/eqbandvvv.o tran/exp.o  \
+	tran/follow.o tran/fmosc.o  \
+	tran/fromobject.o tran/fromarraystream.o  \
+	tran/gate.o tran/ifft.o  \
+	tran/instrclar.o tran/instrclarall.o  \
+	tran/instrclarfreq.o tran/instrsax.o  \
+	tran/instrsaxall.o tran/instrsaxfreq.o  \
+	tran/integrate.o tran/log.o  \
+	tran/lpreson.o tran/maxv.o  \
+	tran/offset.o tran/oneshot.o  \
+	tran/osc.o tran/partial.o  \
+	tran/pluck.o tran/prod.o  \
+	tran/pwl.o tran/quantize.o  \
+	tran/recip.o tran/reson.o  \
+	tran/resonvc.o tran/resoncv.o  \
+	tran/resonvv.o tran/sampler.o  \
+	tran/scale.o tran/shape.o  \
+	tran/sine.o tran/siosc.o  \
+	tran/slope.o tran/sqrt.o  \
+	tran/tapf.o tran/tapv.o  \
+	tran/tone.o tran/tonev.o  \
+	tran/upsample.o tran/white.o  \
+	tran/stkrev.o tran/stkpitshift.o  \
+	tran/stkchorus.o tran/instrbow.o  \
+	tran/instrbowedfreq.o tran/instrbanded.o  \
+	tran/instrmandolin.o tran/instrsitar.o  \
+	tran/instrmodalbar.o tran/instrflute.o  \
+	tran/instrflutefreq.o tran/instrfluteall.o  \
+	tran/fmfb.o tran/fmfbv.o  \
+	cmt/cext.o cmt/cleanup.o  \
+	cmt/cmdline.o cmt/cmtcmd.o  \
+	cmt/moxc.o cmt/mem.o  \
+	cmt/midifile.o cmt/midifns.o  \
+	cmt/record.o cmt/seq.o  \
+	cmt/seqmread.o cmt/seqmwrite.o  \
+	cmt/seqread.o cmt/seqwrite.o  \
+	cmt/tempomap.o cmt/timebase.o  \
+	cmt/userio.o nylsf/aiff.o  \
+	nylsf/alaw.o nylsf/au.o  \
+	nylsf/avr.o nylsf/broadcast.o  \
+	nylsf/caf.o nylsf/command.o  \
+	nylsf/common.o nylsf/dither.o  \
+	nylsf/double64.o nylsf/dwd.o  \
+	nylsf/dwvw.o nylsf/file_io.o  \
+	nylsf/flac.o nylsf/float32.o  \
+	nylsf/gsm610.o nylsf/htk.o  \
+	nylsf/ima_adpcm.o nylsf/interleave.o  \
+	nylsf/ircam.o nylsf/macbinary3.o  \
+	nylsf/macos.o nylsf/mat4.o  \
+	nylsf/mat5.o nylsf/ms_adpcm.o  \
+	nylsf/nist.o nylsf/ogg.o  \
+	nylsf/paf.o nylsf/pcm.o  \
+	nylsf/pvf.o nylsf/raw.o  \
+	nylsf/rx2.o nylsf/sd2.o  \
+	nylsf/sds.o nylsf/sndfile.o  \
+	nylsf/strings.o nylsf/svx.o  \
+	nylsf/txw.o nylsf/ulaw.o  \
+	nylsf/voc.o nylsf/vox_adpcm.o  \
+	nylsf/w64.o nylsf/wav.o  \
+	nylsf/wav_w64.o nylsf/wve.o  \
+	nylsf/xi.o nylsf/g72x.o  \
+	nylsf/GSM610/add.o nylsf/GSM610/code.o  \
+	nylsf/GSM610/decode.o nylsf/GSM610/gsm_create.o  \
+	nylsf/GSM610/gsm_decode.o nylsf/GSM610/gsm_destroy.o  \
+	nylsf/GSM610/gsm_encode.o nylsf/GSM610/gsm_option.o  \
+	nylsf/GSM610/long_term.o nylsf/GSM610/lpc.o  \
+	nylsf/GSM610/preprocess.o nylsf/GSM610/rpe.o  \
+	nylsf/GSM610/short_term.o nylsf/GSM610/table.o  \
+	nylsf/G72x/g721.o nylsf/G72x/g723_16.o  \
+	nylsf/G72x/g723_24.o nylsf/G72x/g723_40.o  \
+	nylsf/G72x/g72x.o nyqsrc/debug.o  \
+	nyqsrc/falloc.o nyqsrc/local.o  \
+	nyqsrc/handlers.o nyqsrc/multiread.o  \
+	nyqsrc/seqext.o nyqsrc/seqinterf.o  \
+	nyqsrc/stats.o nyqsrc/ffilterkit.o  \
+	nyqsrc/sliders.o nyqsrc/sound.o  \
+	nyqsrc/add.o nyqsrc/avg.o  \
+	nyqsrc/compose.o nyqsrc/convolve.o  \
+	nyqsrc/downsample.o nyqsrc/fft.o  \
+	nyqsrc/inverse.o nyqsrc/multiseq.o  \
+	nyqsrc/resamp.o nyqsrc/resampv.o  \
+	nyqsrc/samples.o nyqsrc/sndmax.o  \
+	nyqsrc/sndread.o nyqsrc/sndseq.o  \
+	nyqsrc/sndwritepa.o nyqsrc/yin.o  \
+	nyqsrc/nyq-osc-server.o nyqsrc/trigger.o  \
+	nyqsrc/lpanal.o nyqsrc/phasevocoder.o  \
+	nyqsrc/pvshell.o nyqstk/src/Generator.o  \
+	nyqstk/src/SineWave.o nyqstk/src/Function.o  \
+	nyqstk/src/FileRead.o nyqstk/src/FileWvIn.o  \
+	nyqstk/src/Effect.o nyqstk/src/Clarinet.o  \
+	nyqstk/src/Delay.o nyqstk/src/DelayL.o  \
+	nyqstk/src/Envelope.o nyqstk/src/Filter.o  \
+	nyqstk/src/Instrmnt.o nyqstk/src/Noise.o  \
+	nyqstk/src/OneZero.o nyqstk/src/ReedTable.o  \
+	nyqstk/src/Saxofony.o nyqstk/src/Stk.o  \
+	nyqstk/src/WaveLoop.o nyqstk/src/WvIn.o  \
+	nyqstk/src/NRev.o nyqstk/src/JCRev.o  \
+	nyqstk/src/PRCRev.o nyqstk/src/PitShift.o  \
+	nyqstk/src/Chorus.o nyqstk/src/Bowed.o  \
+	nyqstk/src/BowTable.o nyqstk/src/ADSR.o  \
+	nyqstk/src/OnePole.o nyqstk/src/BiQuad.o  \
+	nyqstk/src/BandedWG.o nyqstk/src/DelayA.o  \
+	nyqstk/src/Mandolin.o nyqstk/src/PluckTwo.o  \
+	nyqstk/src/Sitar.o nyqstk/src/ModalBar.o  \
+	nyqstk/src/Modal.o nyqstk/src/Flute.o  \
+	nyqstk/src/JetTable.o nyqstk/src/PoleZero.o  \
+	nyqstk/stkinit.o nyqstk/instr.o  \
+	nyqstk/stkint.o ffts/src/fftext.o  \
+	ffts/src/fftlib.o ffts/src/matlib.o  \
+	nyqsrc/sndfnint.o nyqsrc/seqfnint.o  \
+	sys/unix/osstuff.o sys/unix/term.o 
 
 # Sound functions to add to xlisp
-NYQHDRS = snd/snd.h nyqsrc/sound.h nyqsrc/add.h nyqsrc/avg.h  \
-	nyqsrc/compose.h nyqsrc/convolve.h nyqsrc/downsample.h nyqsrc/fft.h  \
-	nyqsrc/inverse.h nyqsrc/multiseq.h nyqsrc/resamp.h nyqsrc/resampv.h  \
-	nyqsrc/samples.h nyqsrc/sndmax.h nyqsrc/sndread.h nyqsrc/sndseq.h  \
-	nyqsrc/sndwrite.h nyqsrc/yin.h tran/abs.h tran/allpoles.h  \
-	tran/alpass.h tran/alpasscv.h tran/alpassvv.h tran/amosc.h  \
-	tran/areson.h tran/aresonvc.h tran/aresoncv.h tran/aresonvv.h  \
-	tran/atone.h tran/atonev.h tran/biquad.h tran/buzz.h  \
-	tran/chase.h tran/clip.h tran/congen.h tran/const.h  \
-	tran/coterm.h tran/delaycc.h tran/delaycv.h tran/eqbandvvv.h  \
-	tran/exp.h tran/follow.h tran/fmosc.h tran/fromobject.h  \
-	tran/fromarraystream.h tran/gate.h tran/ifft.h tran/instrclar.h  \
-	tran/instrclarall.h tran/instrclarfreq.h tran/instrsax.h tran/instrsaxall.h  \
-	tran/instrsaxfreq.h tran/integrate.h tran/log.h tran/lpreson.h  \
-	tran/maxv.h tran/offset.h tran/oneshot.h tran/osc.h  \
-	tran/partial.h tran/pluck.h tran/prod.h tran/pwl.h  \
-	tran/quantize.h tran/recip.h tran/reson.h tran/resonvc.h  \
-	tran/resoncv.h tran/resonvv.h tran/sampler.h tran/scale.h  \
-	tran/shape.h tran/sine.h tran/siosc.h tran/slope.h  \
-	tran/sqrt.h tran/tapf.h tran/tapv.h tran/tone.h  \
-	tran/tonev.h tran/upsample.h tran/white.h 
+NYQHDRS = nyqsrc/sndfmt.h nylsf/sndfile.h  \
+	nyqsrc/sound.h nyqsrc/add.h  \
+	nyqsrc/avg.h nyqsrc/compose.h  \
+	nyqsrc/convolve.h nyqsrc/downsample.h  \
+	nyqsrc/fft.h nyqsrc/inverse.h  \
+	nyqsrc/multiseq.h nyqsrc/resamp.h  \
+	nyqsrc/resampv.h nyqsrc/samples.h  \
+	nyqsrc/sndmax.h nyqsrc/sndread.h  \
+	nyqsrc/sndseq.h nyqsrc/sndsliders.h  \
+	nyqsrc/sndwrite.h nyqsrc/yin.h  \
+	nyqsrc/nyq-osc-server.h nyqsrc/trigger.h  \
+	nyqsrc/lpanal.h nyqsrc/phasevocoder.h  \
+	nyqsrc/pvshell.h tran/abs.h  \
+	tran/allpoles.h tran/alpass.h  \
+	tran/alpasscv.h tran/alpassvv.h  \
+	tran/amosc.h tran/areson.h  \
+	tran/aresonvc.h tran/aresoncv.h  \
+	tran/aresonvv.h tran/atone.h  \
+	tran/atonev.h tran/biquadfilt.h  \
+	tran/buzz.h tran/chase.h  \
+	tran/clip.h tran/congen.h  \
+	tran/const.h tran/coterm.h  \
+	tran/delaycc.h tran/delaycv.h  \
+	tran/eqbandvvv.h tran/exp.h  \
+	tran/follow.h tran/fmosc.h  \
+	tran/fromobject.h tran/fromarraystream.h  \
+	tran/gate.h tran/ifft.h  \
+	tran/instrclar.h tran/instrclarall.h  \
+	tran/instrclarfreq.h tran/instrsax.h  \
+	tran/instrsaxall.h tran/instrsaxfreq.h  \
+	tran/integrate.h tran/log.h  \
+	tran/lpreson.h tran/maxv.h  \
+	tran/offset.h tran/oneshot.h  \
+	tran/osc.h tran/partial.h  \
+	tran/pluck.h tran/prod.h  \
+	tran/pwl.h tran/quantize.h  \
+	tran/recip.h tran/reson.h  \
+	tran/resonvc.h tran/resoncv.h  \
+	tran/resonvv.h tran/sampler.h  \
+	tran/scale.h tran/shape.h  \
+	tran/sine.h tran/siosc.h  \
+	tran/slope.h tran/sqrt.h  \
+	tran/tapf.h tran/tapv.h  \
+	tran/tone.h tran/tonev.h  \
+	tran/upsample.h tran/white.h  \
+	tran/stkrev.h tran/stkpitshift.h  \
+	tran/stkchorus.h tran/instrbow.h  \
+	tran/instrbowedfreq.h tran/instrbanded.h  \
+	tran/instrmandolin.h tran/instrsitar.h  \
+	tran/instrmodalbar.h tran/instrflute.h  \
+	tran/instrflutefreq.h tran/instrfluteall.h  \
+	tran/fmfb.h tran/fmfbv.h 
 
-CMTHDRS = cmt/seqdecls.h nyqsrc/seqext.h cmt/seq.h nyqsrc/seqinterf.h  \
-	cmt/seqread.h cmt/seqmread.h cmt/seqwrite.h cmt/seqmwrite.h 
+CMTHDRS = cmt/seqdecls.h nyqsrc/seqext.h  \
+	cmt/seq.h nyqsrc/seqinterf.h  \
+	cmt/seqread.h cmt/seqmread.h  \
+	cmt/seqwrite.h cmt/seqmwrite.h 
 
 
 
-$(NY): $(OBJECTS)
+bin:
+	mkdir bin
+
+liblo/Makefile:
+	cd liblo; ./configure --enable-static --disable-shared
+
+$(LIBLO_PATH)/liblo.a: liblo/Makefile
+	cd liblo; make
+
+bin/ser-to-osc: bin $(LIBLO_PATH)/liblo.a
+	$(CC) -c $(CFLAGS) liblo/ser-to-osc/ser-to-osc.cpp \
+	      -o liblo/ser-to-osc/ser-to-osc.o
+	$(LN)  liblo/ser-to-osc/ser-to-osc.o -o bin/ser-to-osc $(LFLAGS)
+
+bin/test-client: bin $(LIBLO_PATH)/liblo.a
+	$(CC) -c $(CFLAGS) liblo/test-client/test-client.c \
+	      -o liblo/test-client/test-client.o
+	$(LN) liblo/test-client/test-client.o -o bin/test-client  $(LFLAGS)
+
+portaudio/Makefile:
+	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32
+
+$(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
+	cd portaudio; make
+
+$(NY): $(OBJECTS) $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a
 	$(LN) $(OBJECTS) $(LFLAGS) -o $(NY)
 
 # copy appropriate system.lsp and make it read-only;
 # changes should be made to sys/unix/<system>/system.lsp
 runtime/system.lsp: sys/unix/linux/system.lsp
+	# make sure it's there before you make it writeable
+	touch runtime/system.lsp
 	chmod +w runtime/system.lsp
 	cp -p sys/unix/linux/system.lsp runtime/system.lsp
 	chmod -w runtime/system.lsp
 
-nyqsrc/debug.o: nyqsrc/debug.c nyqsrc/debug.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/debug.c -o nyqsrc/debug.o $(CFLAGS)
-
-nyqsrc/falloc.o: nyqsrc/falloc.c nyqsrc/falloc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/falloc.c -o nyqsrc/falloc.o $(CFLAGS)
+nyqsrc/sound.o: nyqsrc/sound.c nyqsrc/sound.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/sound.c -o nyqsrc/sound.o $(CFLAGS)
 
 nyqsrc/add.o: nyqsrc/add.c nyqsrc/add.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/add.c -o nyqsrc/add.o $(CFLAGS)
 
-nyqsrc/local.o: nyqsrc/local.c xlisp/xlisp.h nyqsrc/sound.h
-	$(CC) -c nyqsrc/local.c -o nyqsrc/local.o $(CFLAGS)
+nyqsrc/avg.o: nyqsrc/avg.c nyqsrc/avg.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/avg.c -o nyqsrc/avg.o $(CFLAGS)
+
+nyqsrc/compose.o: nyqsrc/compose.c nyqsrc/compose.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/compose.c -o nyqsrc/compose.o $(CFLAGS)
 
 nyqsrc/convolve.o: nyqsrc/convolve.c nyqsrc/convolve.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/convolve.c -o nyqsrc/convolve.o $(CFLAGS)
@@ -140,50 +332,14 @@ nyqsrc/convolve.o: nyqsrc/convolve.c nyqsrc/convolve.h nyqsrc/sound.h nyqsrc/fal
 nyqsrc/downsample.o: nyqsrc/downsample.c nyqsrc/downsample.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/downsample.c -o nyqsrc/downsample.o $(CFLAGS)
 
-nyqsrc/handlers.o: nyqsrc/handlers.c 
-	$(CC) -c nyqsrc/handlers.c -o nyqsrc/handlers.o $(CFLAGS)
-
-nyqsrc/multiread.o: nyqsrc/multiread.c nyqsrc/multiread.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/multiread.c -o nyqsrc/multiread.o $(CFLAGS)
-
-nyqsrc/multiseq.o: nyqsrc/multiseq.c nyqsrc/multiseq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/multiseq.c -o nyqsrc/multiseq.o $(CFLAGS)
-
-nyqsrc/samples.o: nyqsrc/samples.c nyqsrc/samples.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/samples.c -o nyqsrc/samples.o $(CFLAGS)
-
-nyqsrc/seqext.o: nyqsrc/seqext.c nyqsrc/seqext.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/seqext.c -o nyqsrc/seqext.o $(CFLAGS)
-
-nyqsrc/seqinterf.o: nyqsrc/seqinterf.c nyqsrc/seqinterf.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/seqinterf.c -o nyqsrc/seqinterf.o $(CFLAGS)
-
-nyqsrc/sndread.o: nyqsrc/sndread.c nyqsrc/sndread.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/sndread.c -o nyqsrc/sndread.o $(CFLAGS)
-
-nyqsrc/sndseq.o: nyqsrc/sndseq.c nyqsrc/sndseq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/sndseq.c -o nyqsrc/sndseq.o $(CFLAGS)
-
-nyqsrc/yin.o: nyqsrc/yin.c nyqsrc/yin.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/yin.c -o nyqsrc/yin.o $(CFLAGS)
-
-nyqsrc/sndwritepa.o: nyqsrc/sndwritepa.c nyqsrc/sndwrite.h
-	$(CC) -c nyqsrc/sndwritepa.c -o nyqsrc/sndwritepa.o $(CFLAGS)
-
-nyqsrc/sndmax.o: nyqsrc/sndmax.c nyqsrc/sndmax.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/sndmax.c -o nyqsrc/sndmax.o $(CFLAGS)
-
-nyqsrc/sound.o: nyqsrc/sound.c nyqsrc/sound.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/sound.c -o nyqsrc/sound.o $(CFLAGS)
-
-nyqsrc/stats.o: nyqsrc/stats.c nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/stats.c -o nyqsrc/stats.o $(CFLAGS)
-
-nyqsrc/compose.o: nyqsrc/compose.c nyqsrc/compose.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/compose.c -o nyqsrc/compose.o $(CFLAGS)
+nyqsrc/fft.o: nyqsrc/fft.c nyqsrc/fft.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/fft.c -o nyqsrc/fft.o $(CFLAGS)
 
 nyqsrc/inverse.o: nyqsrc/inverse.c nyqsrc/inverse.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/inverse.c -o nyqsrc/inverse.o $(CFLAGS)
+
+nyqsrc/multiseq.o: nyqsrc/multiseq.c nyqsrc/multiseq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/multiseq.c -o nyqsrc/multiseq.o $(CFLAGS)
 
 nyqsrc/resamp.o: nyqsrc/resamp.c nyqsrc/resamp.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/resamp.c -o nyqsrc/resamp.o $(CFLAGS)
@@ -191,44 +347,80 @@ nyqsrc/resamp.o: nyqsrc/resamp.c nyqsrc/resamp.h nyqsrc/sound.h nyqsrc/falloc.h 
 nyqsrc/resampv.o: nyqsrc/resampv.c nyqsrc/resampv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/resampv.c -o nyqsrc/resampv.o $(CFLAGS)
 
-nyqsrc/ffilterkit.o: nyqsrc/ffilterkit.c nyqsrc/ffilterkit.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/ffilterkit.c -o nyqsrc/ffilterkit.o $(CFLAGS)
+nyqsrc/samples.o: nyqsrc/samples.c nyqsrc/samples.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/samples.c -o nyqsrc/samples.o $(CFLAGS)
 
-nyqsrc/avg.o: nyqsrc/avg.c nyqsrc/avg.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/avg.c -o nyqsrc/avg.o $(CFLAGS)
+nyqsrc/sndmax.o: nyqsrc/sndmax.c nyqsrc/sndmax.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/sndmax.c -o nyqsrc/sndmax.o $(CFLAGS)
 
-nyqsrc/fft.o: nyqsrc/fft.c nyqsrc/fft.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/fft.c -o nyqsrc/fft.o $(CFLAGS)
+nyqsrc/sndread.o: nyqsrc/sndread.c nyqsrc/sndread.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/sndread.c -o nyqsrc/sndread.o $(CFLAGS)
 
-nyqsrc/sndfail.o: nyqsrc/sndfail.c 
-	$(CC) -c nyqsrc/sndfail.c -o nyqsrc/sndfail.o $(CFLAGS)
+nyqsrc/sndseq.o: nyqsrc/sndseq.c nyqsrc/sndseq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/sndseq.c -o nyqsrc/sndseq.o $(CFLAGS)
+
+nyqsrc/sndsliders.o: nyqsrc/sndsliders.c nyqsrc/sndsliders.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/sndsliders.c -o nyqsrc/sndsliders.o $(CFLAGS)
+
+nyqsrc/sndwritepa.o: nyqsrc/sndwritepa.c nyqsrc/sndwrite.h
+	$(CC) -c nyqsrc/sndwritepa.c -o nyqsrc/sndwritepa.o $(CFLAGS)
+
+nyqsrc/yin.o: nyqsrc/yin.c nyqsrc/yin.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/yin.c -o nyqsrc/yin.o $(CFLAGS)
+
+nyqsrc/nyq-osc-server.o: nyqsrc/nyq-osc-server.c nyqsrc/nyq-osc-server.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/nyq-osc-server.c -o nyqsrc/nyq-osc-server.o $(CFLAGS)
+
+nyqsrc/trigger.o: nyqsrc/trigger.c nyqsrc/trigger.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/trigger.c -o nyqsrc/trigger.o $(CFLAGS)
 
 nyqsrc/lpanal.o: nyqsrc/lpanal.c nyqsrc/lpanal.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/lpanal.c -o nyqsrc/lpanal.o $(CFLAGS)
 
-snd/audiooss.o: snd/audiooss.c snd/snd.h
-	$(CC) -c snd/audiooss.c -o snd/audiooss.o $(CFLAGS)
+nyqsrc/phasevocoder.o: nyqsrc/phasevocoder.c nyqsrc/phasevocoder.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/phasevocoder.c -o nyqsrc/phasevocoder.o $(CFLAGS)
 
-snd/sndlinux.o: snd/sndlinux.c snd/sndlinux.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c snd/sndlinux.c -o snd/sndlinux.o $(CFLAGS)
+nyqsrc/pvshell.o: nyqsrc/pvshell.c nyqsrc/pvshell.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/pvshell.c -o nyqsrc/pvshell.o $(CFLAGS)
 
-snd/ieeecvt.o: snd/ieeecvt.c snd/ieeecvt.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c snd/ieeecvt.c -o snd/ieeecvt.o $(CFLAGS)
+nyqsrc/debug.o: nyqsrc/debug.c nyqsrc/debug.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/debug.c -o nyqsrc/debug.o $(CFLAGS)
 
-snd/snd.o: snd/snd.c snd/snd.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c snd/snd.c -o snd/snd.o $(CFLAGS)
+nyqsrc/falloc.o: nyqsrc/falloc.c nyqsrc/falloc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/falloc.c -o nyqsrc/falloc.o $(CFLAGS)
 
-snd/sndcvt.o: snd/sndcvt.c snd/snd.h
-	$(CC) -c snd/sndcvt.c -o snd/sndcvt.o $(CFLAGS)
+nyqsrc/local.o: nyqsrc/local.c xlisp/xlisp.h nyqsrc/sound.h
+	$(CC) -c nyqsrc/local.c -o nyqsrc/local.o $(CFLAGS)
 
-snd/sndio.o: snd/sndio.c snd/snd.h
-	$(CC) -c snd/sndio.c -o snd/sndio.o $(CFLAGS)
+nyqsrc/handlers.o: nyqsrc/handlers.c 
+	$(CC) -c nyqsrc/handlers.c -o nyqsrc/handlers.o $(CFLAGS)
 
-snd/sndheader.o: snd/sndheader.c snd/sndheader.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c snd/sndheader.c -o snd/sndheader.o $(CFLAGS)
+nyqsrc/multiread.o: nyqsrc/multiread.c nyqsrc/multiread.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/multiread.c -o nyqsrc/multiread.o $(CFLAGS)
 
-fft/fftn.o: fft/fftn.c fft/fftn.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c fft/fftn.c -o fft/fftn.o $(CFLAGS)
+nyqsrc/seqext.o: nyqsrc/seqext.c nyqsrc/seqext.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/seqext.c -o nyqsrc/seqext.o $(CFLAGS)
+
+nyqsrc/seqinterf.o: nyqsrc/seqinterf.c nyqsrc/seqinterf.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/seqinterf.c -o nyqsrc/seqinterf.o $(CFLAGS)
+
+nyqsrc/stats.o: nyqsrc/stats.c nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/stats.c -o nyqsrc/stats.o $(CFLAGS)
+
+nyqsrc/ffilterkit.o: nyqsrc/ffilterkit.c nyqsrc/ffilterkit.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/ffilterkit.c -o nyqsrc/ffilterkit.o $(CFLAGS)
+
+nyqsrc/sliders.o: nyqsrc/sliders.c nyqsrc/sliders.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c nyqsrc/sliders.c -o nyqsrc/sliders.o $(CFLAGS)
+
+ffts/src/fftext.o: ffts/src/fftext.c ffts/src/fftext.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c ffts/src/fftext.c -o ffts/src/fftext.o $(CFLAGS)
+
+ffts/src/fftlib.o: ffts/src/fftlib.c ffts/src/fftlib.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c ffts/src/fftlib.c -o ffts/src/fftlib.o $(CFLAGS)
+
+ffts/src/matlib.o: ffts/src/matlib.c ffts/src/matlib.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c ffts/src/matlib.c -o ffts/src/matlib.o $(CFLAGS)
 
 tran/abs.o: tran/abs.c tran/abs.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c tran/abs.c -o tran/abs.o $(CFLAGS)
@@ -266,8 +458,8 @@ tran/atone.o: tran/atone.c tran/atone.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cq
 tran/atonev.o: tran/atonev.c tran/atonev.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c tran/atonev.c -o tran/atonev.o $(CFLAGS)
 
-tran/biquad.o: tran/biquad.c tran/biquad.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c tran/biquad.c -o tran/biquad.o $(CFLAGS)
+tran/biquadfilt.o: tran/biquadfilt.c tran/biquadfilt.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/biquadfilt.c -o tran/biquadfilt.o $(CFLAGS)
 
 tran/buzz.o: tran/buzz.c tran/buzz.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c tran/buzz.c -o tran/buzz.o $(CFLAGS)
@@ -425,6 +617,48 @@ tran/upsample.o: tran/upsample.c tran/upsample.h nyqsrc/sound.h nyqsrc/falloc.h 
 tran/white.o: tran/white.c tran/white.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c tran/white.c -o tran/white.o $(CFLAGS)
 
+tran/stkrev.o: tran/stkrev.c tran/stkrev.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/stkrev.c -o tran/stkrev.o $(CFLAGS)
+
+tran/stkpitshift.o: tran/stkpitshift.c tran/stkpitshift.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/stkpitshift.c -o tran/stkpitshift.o $(CFLAGS)
+
+tran/stkchorus.o: tran/stkchorus.c tran/stkchorus.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/stkchorus.c -o tran/stkchorus.o $(CFLAGS)
+
+tran/instrbow.o: tran/instrbow.c tran/instrbow.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrbow.c -o tran/instrbow.o $(CFLAGS)
+
+tran/instrbowedfreq.o: tran/instrbowedfreq.c tran/instrbowedfreq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrbowedfreq.c -o tran/instrbowedfreq.o $(CFLAGS)
+
+tran/instrbanded.o: tran/instrbanded.c tran/instrbanded.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrbanded.c -o tran/instrbanded.o $(CFLAGS)
+
+tran/instrmandolin.o: tran/instrmandolin.c tran/instrmandolin.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrmandolin.c -o tran/instrmandolin.o $(CFLAGS)
+
+tran/instrsitar.o: tran/instrsitar.c tran/instrsitar.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrsitar.c -o tran/instrsitar.o $(CFLAGS)
+
+tran/instrmodalbar.o: tran/instrmodalbar.c tran/instrmodalbar.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrmodalbar.c -o tran/instrmodalbar.o $(CFLAGS)
+
+tran/instrflute.o: tran/instrflute.c tran/instrflute.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrflute.c -o tran/instrflute.o $(CFLAGS)
+
+tran/instrflutefreq.o: tran/instrflutefreq.c tran/instrflutefreq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrflutefreq.c -o tran/instrflutefreq.o $(CFLAGS)
+
+tran/instrfluteall.o: tran/instrfluteall.c tran/instrfluteall.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/instrfluteall.c -o tran/instrfluteall.o $(CFLAGS)
+
+tran/fmfb.o: tran/fmfb.c tran/fmfb.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/fmfb.c -o tran/fmfb.o $(CFLAGS)
+
+tran/fmfbv.o: tran/fmfbv.c tran/fmfbv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+	$(CC) -c tran/fmfbv.c -o tran/fmfbv.o $(CFLAGS)
+
 nyqsrc/sndfnint.o: nyqsrc/sndfnint.c 
 	$(CC) -c nyqsrc/sndfnint.c -o nyqsrc/sndfnint.o $(CFLAGS)
 
@@ -436,6 +670,27 @@ nyqstk/stkinit.o: nyqstk/stkinit.cpp nyqstk/stkinit.h
 
 nyqstk/instr.o: nyqstk/instr.cpp nyqstk/instr.h
 	g++ -c nyqstk/instr.cpp -o nyqstk/instr.o $(CFLAGS)
+
+nyqstk/stkint.o: nyqstk/stkint.cpp nyqstk/stkint.h
+	g++ -c nyqstk/stkint.cpp -o nyqstk/stkint.o $(CFLAGS)
+
+nyqstk/src/Generator.o: nyqstk/src/Generator.cpp nyqstk/include/Generator.h
+	g++ -c nyqstk/src/Generator.cpp -o nyqstk/src/Generator.o $(CFLAGS)
+
+nyqstk/src/SineWave.o: nyqstk/src/SineWave.cpp nyqstk/include/SineWave.h
+	g++ -c nyqstk/src/SineWave.cpp -o nyqstk/src/SineWave.o $(CFLAGS)
+
+nyqstk/src/Function.o: nyqstk/src/Function.cpp nyqstk/include/Function.h
+	g++ -c nyqstk/src/Function.cpp -o nyqstk/src/Function.o $(CFLAGS)
+
+nyqstk/src/FileRead.o: nyqstk/src/FileRead.cpp nyqstk/include/FileRead.h
+	g++ -c nyqstk/src/FileRead.cpp -o nyqstk/src/FileRead.o $(CFLAGS)
+
+nyqstk/src/FileWvIn.o: nyqstk/src/FileWvIn.cpp nyqstk/include/FileWvIn.h
+	g++ -c nyqstk/src/FileWvIn.cpp -o nyqstk/src/FileWvIn.o $(CFLAGS)
+
+nyqstk/src/Effect.o: nyqstk/src/Effect.cpp nyqstk/include/Effect.h
+	g++ -c nyqstk/src/Effect.cpp -o nyqstk/src/Effect.o $(CFLAGS)
 
 nyqstk/src/Clarinet.o: nyqstk/src/Clarinet.cpp nyqstk/include/Clarinet.h
 	g++ -c nyqstk/src/Clarinet.cpp -o nyqstk/src/Clarinet.o $(CFLAGS)
@@ -461,8 +716,8 @@ nyqstk/src/Noise.o: nyqstk/src/Noise.cpp nyqstk/include/Noise.h
 nyqstk/src/OneZero.o: nyqstk/src/OneZero.cpp nyqstk/include/OneZero.h
 	g++ -c nyqstk/src/OneZero.cpp -o nyqstk/src/OneZero.o $(CFLAGS)
 
-nyqstk/src/ReedTabl.o: nyqstk/src/ReedTabl.cpp nyqstk/include/ReedTabl.h
-	g++ -c nyqstk/src/ReedTabl.cpp -o nyqstk/src/ReedTabl.o $(CFLAGS)
+nyqstk/src/ReedTable.o: nyqstk/src/ReedTable.cpp nyqstk/include/ReedTable.h
+	g++ -c nyqstk/src/ReedTable.cpp -o nyqstk/src/ReedTable.o $(CFLAGS)
 
 nyqstk/src/Saxofony.o: nyqstk/src/Saxofony.cpp nyqstk/include/Saxofony.h
 	g++ -c nyqstk/src/Saxofony.cpp -o nyqstk/src/Saxofony.o $(CFLAGS)
@@ -475,6 +730,66 @@ nyqstk/src/WaveLoop.o: nyqstk/src/WaveLoop.cpp nyqstk/include/WaveLoop.h
 
 nyqstk/src/WvIn.o: nyqstk/src/WvIn.cpp nyqstk/include/WvIn.h
 	g++ -c nyqstk/src/WvIn.cpp -o nyqstk/src/WvIn.o $(CFLAGS)
+
+nyqstk/src/NRev.o: nyqstk/src/NRev.cpp nyqstk/include/NRev.h
+	g++ -c nyqstk/src/NRev.cpp -o nyqstk/src/NRev.o $(CFLAGS)
+
+nyqstk/src/JCRev.o: nyqstk/src/JCRev.cpp nyqstk/include/JCRev.h
+	g++ -c nyqstk/src/JCRev.cpp -o nyqstk/src/JCRev.o $(CFLAGS)
+
+nyqstk/src/PRCRev.o: nyqstk/src/PRCRev.cpp nyqstk/include/PRCRev.h
+	g++ -c nyqstk/src/PRCRev.cpp -o nyqstk/src/PRCRev.o $(CFLAGS)
+
+nyqstk/src/PitShift.o: nyqstk/src/PitShift.cpp nyqstk/include/PitShift.h
+	g++ -c nyqstk/src/PitShift.cpp -o nyqstk/src/PitShift.o $(CFLAGS)
+
+nyqstk/src/Chorus.o: nyqstk/src/Chorus.cpp nyqstk/include/Chorus.h
+	g++ -c nyqstk/src/Chorus.cpp -o nyqstk/src/Chorus.o $(CFLAGS)
+
+nyqstk/src/Bowed.o: nyqstk/src/Bowed.cpp nyqstk/include/Bowed.h
+	g++ -c nyqstk/src/Bowed.cpp -o nyqstk/src/Bowed.o $(CFLAGS)
+
+nyqstk/src/BowTable.o: nyqstk/src/BowTable.cpp nyqstk/include/BowTable.h
+	g++ -c nyqstk/src/BowTable.cpp -o nyqstk/src/BowTable.o $(CFLAGS)
+
+nyqstk/src/ADSR.o: nyqstk/src/ADSR.cpp nyqstk/include/ADSR.h
+	g++ -c nyqstk/src/ADSR.cpp -o nyqstk/src/ADSR.o $(CFLAGS)
+
+nyqstk/src/OnePole.o: nyqstk/src/OnePole.cpp nyqstk/include/OnePole.h
+	g++ -c nyqstk/src/OnePole.cpp -o nyqstk/src/OnePole.o $(CFLAGS)
+
+nyqstk/src/BiQuad.o: nyqstk/src/BiQuad.cpp nyqstk/include/BiQuad.h
+	g++ -c nyqstk/src/BiQuad.cpp -o nyqstk/src/BiQuad.o $(CFLAGS)
+
+nyqstk/src/BandedWG.o: nyqstk/src/BandedWG.cpp nyqstk/include/BandedWG.h
+	g++ -c nyqstk/src/BandedWG.cpp -o nyqstk/src/BandedWG.o $(CFLAGS)
+
+nyqstk/src/DelayA.o: nyqstk/src/DelayA.cpp nyqstk/include/DelayA.h
+	g++ -c nyqstk/src/DelayA.cpp -o nyqstk/src/DelayA.o $(CFLAGS)
+
+nyqstk/src/Mandolin.o: nyqstk/src/Mandolin.cpp nyqstk/include/Mandolin.h
+	g++ -c nyqstk/src/Mandolin.cpp -o nyqstk/src/Mandolin.o $(CFLAGS)
+
+nyqstk/src/PluckTwo.o: nyqstk/src/PluckTwo.cpp nyqstk/include/PluckTwo.h
+	g++ -c nyqstk/src/PluckTwo.cpp -o nyqstk/src/PluckTwo.o $(CFLAGS)
+
+nyqstk/src/Sitar.o: nyqstk/src/Sitar.cpp nyqstk/include/Sitar.h
+	g++ -c nyqstk/src/Sitar.cpp -o nyqstk/src/Sitar.o $(CFLAGS)
+
+nyqstk/src/ModalBar.o: nyqstk/src/ModalBar.cpp nyqstk/include/ModalBar.h
+	g++ -c nyqstk/src/ModalBar.cpp -o nyqstk/src/ModalBar.o $(CFLAGS)
+
+nyqstk/src/Modal.o: nyqstk/src/Modal.cpp nyqstk/include/Modal.h
+	g++ -c nyqstk/src/Modal.cpp -o nyqstk/src/Modal.o $(CFLAGS)
+
+nyqstk/src/Flute.o: nyqstk/src/Flute.cpp nyqstk/include/Flute.h
+	g++ -c nyqstk/src/Flute.cpp -o nyqstk/src/Flute.o $(CFLAGS)
+
+nyqstk/src/JetTable.o: nyqstk/src/JetTable.cpp nyqstk/include/JetTable.h
+	g++ -c nyqstk/src/JetTable.cpp -o nyqstk/src/JetTable.o $(CFLAGS)
+
+nyqstk/src/PoleZero.o: nyqstk/src/PoleZero.cpp nyqstk/include/PoleZero.h
+	g++ -c nyqstk/src/PoleZero.cpp -o nyqstk/src/PoleZero.o $(CFLAGS)
 
 xlisp/xlftab.o: nyqsrc/sndfnintptrs.h nyqsrc/sndfnintdefs.h nyqsrc/seqfnintptrs.h nyqsrc/seqfnintdefs.h
 	$(CC) -c xlisp/xlftab.c -o xlisp/xlftab.o $(CFLAGS)
@@ -602,6 +917,204 @@ cmt/timebase.o: cmt/timebase.c
 cmt/userio.o: cmt/userio.c
 	$(CC) -c cmt/userio.c -o cmt/userio.o $(CFLAGS)
 
+nylsf/aiff.o: nylsf/aiff.c
+	$(CC) -c nylsf/aiff.c -o nylsf/aiff.o $(CFLAGS)
+
+nylsf/alaw.o: nylsf/alaw.c
+	$(CC) -c nylsf/alaw.c -o nylsf/alaw.o $(CFLAGS)
+
+nylsf/au.o: nylsf/au.c
+	$(CC) -c nylsf/au.c -o nylsf/au.o $(CFLAGS)
+
+nylsf/avr.o: nylsf/avr.c
+	$(CC) -c nylsf/avr.c -o nylsf/avr.o $(CFLAGS)
+
+nylsf/broadcast.o: nylsf/broadcast.c
+	$(CC) -c nylsf/broadcast.c -o nylsf/broadcast.o $(CFLAGS)
+
+nylsf/caf.o: nylsf/caf.c
+	$(CC) -c nylsf/caf.c -o nylsf/caf.o $(CFLAGS)
+
+nylsf/command.o: nylsf/command.c
+	$(CC) -c nylsf/command.c -o nylsf/command.o $(CFLAGS)
+
+nylsf/common.o: nylsf/common.c
+	$(CC) -c nylsf/common.c -o nylsf/common.o $(CFLAGS)
+
+nylsf/dither.o: nylsf/dither.c
+	$(CC) -c nylsf/dither.c -o nylsf/dither.o $(CFLAGS)
+
+nylsf/double64.o: nylsf/double64.c
+	$(CC) -c nylsf/double64.c -o nylsf/double64.o $(CFLAGS)
+
+nylsf/dwd.o: nylsf/dwd.c
+	$(CC) -c nylsf/dwd.c -o nylsf/dwd.o $(CFLAGS)
+
+nylsf/dwvw.o: nylsf/dwvw.c
+	$(CC) -c nylsf/dwvw.c -o nylsf/dwvw.o $(CFLAGS)
+
+nylsf/file_io.o: nylsf/file_io.c
+	$(CC) -c nylsf/file_io.c -o nylsf/file_io.o $(CFLAGS)
+
+nylsf/flac.o: nylsf/flac.c
+	$(CC) -c nylsf/flac.c -o nylsf/flac.o $(CFLAGS)
+
+nylsf/float32.o: nylsf/float32.c
+	$(CC) -c nylsf/float32.c -o nylsf/float32.o $(CFLAGS)
+
+nylsf/gsm610.o: nylsf/gsm610.c
+	$(CC) -c nylsf/gsm610.c -o nylsf/gsm610.o $(CFLAGS)
+
+nylsf/htk.o: nylsf/htk.c
+	$(CC) -c nylsf/htk.c -o nylsf/htk.o $(CFLAGS)
+
+nylsf/ima_adpcm.o: nylsf/ima_adpcm.c
+	$(CC) -c nylsf/ima_adpcm.c -o nylsf/ima_adpcm.o $(CFLAGS)
+
+nylsf/interleave.o: nylsf/interleave.c
+	$(CC) -c nylsf/interleave.c -o nylsf/interleave.o $(CFLAGS)
+
+nylsf/ircam.o: nylsf/ircam.c
+	$(CC) -c nylsf/ircam.c -o nylsf/ircam.o $(CFLAGS)
+
+nylsf/macbinary3.o: nylsf/macbinary3.c
+	$(CC) -c nylsf/macbinary3.c -o nylsf/macbinary3.o $(CFLAGS)
+
+nylsf/macos.o: nylsf/macos.c
+	$(CC) -c nylsf/macos.c -o nylsf/macos.o $(CFLAGS)
+
+nylsf/mat4.o: nylsf/mat4.c
+	$(CC) -c nylsf/mat4.c -o nylsf/mat4.o $(CFLAGS)
+
+nylsf/mat5.o: nylsf/mat5.c
+	$(CC) -c nylsf/mat5.c -o nylsf/mat5.o $(CFLAGS)
+
+nylsf/ms_adpcm.o: nylsf/ms_adpcm.c
+	$(CC) -c nylsf/ms_adpcm.c -o nylsf/ms_adpcm.o $(CFLAGS)
+
+nylsf/nist.o: nylsf/nist.c
+	$(CC) -c nylsf/nist.c -o nylsf/nist.o $(CFLAGS)
+
+nylsf/ogg.o: nylsf/ogg.c
+	$(CC) -c nylsf/ogg.c -o nylsf/ogg.o $(CFLAGS)
+
+nylsf/paf.o: nylsf/paf.c
+	$(CC) -c nylsf/paf.c -o nylsf/paf.o $(CFLAGS)
+
+nylsf/pcm.o: nylsf/pcm.c
+	$(CC) -c nylsf/pcm.c -o nylsf/pcm.o $(CFLAGS)
+
+nylsf/pvf.o: nylsf/pvf.c
+	$(CC) -c nylsf/pvf.c -o nylsf/pvf.o $(CFLAGS)
+
+nylsf/raw.o: nylsf/raw.c
+	$(CC) -c nylsf/raw.c -o nylsf/raw.o $(CFLAGS)
+
+nylsf/rx2.o: nylsf/rx2.c
+	$(CC) -c nylsf/rx2.c -o nylsf/rx2.o $(CFLAGS)
+
+nylsf/sd2.o: nylsf/sd2.c
+	$(CC) -c nylsf/sd2.c -o nylsf/sd2.o $(CFLAGS)
+
+nylsf/sds.o: nylsf/sds.c
+	$(CC) -c nylsf/sds.c -o nylsf/sds.o $(CFLAGS)
+
+nylsf/sndfile.o: nylsf/sndfile.c
+	$(CC) -c nylsf/sndfile.c -o nylsf/sndfile.o $(CFLAGS)
+
+nylsf/strings.o: nylsf/strings.c
+	$(CC) -c nylsf/strings.c -o nylsf/strings.o $(CFLAGS)
+
+nylsf/svx.o: nylsf/svx.c
+	$(CC) -c nylsf/svx.c -o nylsf/svx.o $(CFLAGS)
+
+nylsf/txw.o: nylsf/txw.c
+	$(CC) -c nylsf/txw.c -o nylsf/txw.o $(CFLAGS)
+
+nylsf/ulaw.o: nylsf/ulaw.c
+	$(CC) -c nylsf/ulaw.c -o nylsf/ulaw.o $(CFLAGS)
+
+nylsf/voc.o: nylsf/voc.c
+	$(CC) -c nylsf/voc.c -o nylsf/voc.o $(CFLAGS)
+
+nylsf/vox_adpcm.o: nylsf/vox_adpcm.c
+	$(CC) -c nylsf/vox_adpcm.c -o nylsf/vox_adpcm.o $(CFLAGS)
+
+nylsf/w64.o: nylsf/w64.c
+	$(CC) -c nylsf/w64.c -o nylsf/w64.o $(CFLAGS)
+
+nylsf/wav.o: nylsf/wav.c
+	$(CC) -c nylsf/wav.c -o nylsf/wav.o $(CFLAGS)
+
+nylsf/wav_w64.o: nylsf/wav_w64.c
+	$(CC) -c nylsf/wav_w64.c -o nylsf/wav_w64.o $(CFLAGS)
+
+nylsf/wve.o: nylsf/wve.c
+	$(CC) -c nylsf/wve.c -o nylsf/wve.o $(CFLAGS)
+
+nylsf/xi.o: nylsf/xi.c
+	$(CC) -c nylsf/xi.c -o nylsf/xi.o $(CFLAGS)
+
+nylsf/g72x.o: nylsf/g72x.c
+	$(CC) -c nylsf/g72x.c -o nylsf/g72x.o $(CFLAGS)
+
+nylsf/GSM610/add.o: nylsf/GSM610/add.c
+	$(CC) -c nylsf/GSM610/add.c -o nylsf/GSM610/add.o $(CFLAGS)
+
+nylsf/GSM610/code.o: nylsf/GSM610/code.c
+	$(CC) -c nylsf/GSM610/code.c -o nylsf/GSM610/code.o $(CFLAGS)
+
+nylsf/GSM610/decode.o: nylsf/GSM610/decode.c
+	$(CC) -c nylsf/GSM610/decode.c -o nylsf/GSM610/decode.o $(CFLAGS)
+
+nylsf/GSM610/gsm_create.o: nylsf/GSM610/gsm_create.c
+	$(CC) -c nylsf/GSM610/gsm_create.c -o nylsf/GSM610/gsm_create.o $(CFLAGS)
+
+nylsf/GSM610/gsm_decode.o: nylsf/GSM610/gsm_decode.c
+	$(CC) -c nylsf/GSM610/gsm_decode.c -o nylsf/GSM610/gsm_decode.o $(CFLAGS)
+
+nylsf/GSM610/gsm_destroy.o: nylsf/GSM610/gsm_destroy.c
+	$(CC) -c nylsf/GSM610/gsm_destroy.c -o nylsf/GSM610/gsm_destroy.o $(CFLAGS)
+
+nylsf/GSM610/gsm_encode.o: nylsf/GSM610/gsm_encode.c
+	$(CC) -c nylsf/GSM610/gsm_encode.c -o nylsf/GSM610/gsm_encode.o $(CFLAGS)
+
+nylsf/GSM610/gsm_option.o: nylsf/GSM610/gsm_option.c
+	$(CC) -c nylsf/GSM610/gsm_option.c -o nylsf/GSM610/gsm_option.o $(CFLAGS)
+
+nylsf/GSM610/long_term.o: nylsf/GSM610/long_term.c
+	$(CC) -c nylsf/GSM610/long_term.c -o nylsf/GSM610/long_term.o $(CFLAGS)
+
+nylsf/GSM610/lpc.o: nylsf/GSM610/lpc.c
+	$(CC) -c nylsf/GSM610/lpc.c -o nylsf/GSM610/lpc.o $(CFLAGS)
+
+nylsf/GSM610/preprocess.o: nylsf/GSM610/preprocess.c
+	$(CC) -c nylsf/GSM610/preprocess.c -o nylsf/GSM610/preprocess.o $(CFLAGS)
+
+nylsf/GSM610/rpe.o: nylsf/GSM610/rpe.c
+	$(CC) -c nylsf/GSM610/rpe.c -o nylsf/GSM610/rpe.o $(CFLAGS)
+
+nylsf/GSM610/short_term.o: nylsf/GSM610/short_term.c
+	$(CC) -c nylsf/GSM610/short_term.c -o nylsf/GSM610/short_term.o $(CFLAGS)
+
+nylsf/GSM610/table.o: nylsf/GSM610/table.c
+	$(CC) -c nylsf/GSM610/table.c -o nylsf/GSM610/table.o $(CFLAGS)
+
+nylsf/G72x/g721.o: nylsf/G72x/g721.c
+	$(CC) -c nylsf/G72x/g721.c -o nylsf/G72x/g721.o $(CFLAGS)
+
+nylsf/G72x/g723_16.o: nylsf/G72x/g723_16.c
+	$(CC) -c nylsf/G72x/g723_16.c -o nylsf/G72x/g723_16.o $(CFLAGS)
+
+nylsf/G72x/g723_24.o: nylsf/G72x/g723_24.c
+	$(CC) -c nylsf/G72x/g723_24.c -o nylsf/G72x/g723_24.o $(CFLAGS)
+
+nylsf/G72x/g723_40.o: nylsf/G72x/g723_40.c
+	$(CC) -c nylsf/G72x/g723_40.c -o nylsf/G72x/g723_40.o $(CFLAGS)
+
+nylsf/G72x/g72x.o: nylsf/G72x/g72x.c
+	$(CC) -c nylsf/G72x/g72x.c -o nylsf/G72x/g72x.o $(CFLAGS)
+
 sys/unix/osstuff.o: sys/unix/osstuff.c
 	$(CC) -c sys/unix/osstuff.c -o sys/unix/osstuff.o $(CFLAGS)
 
@@ -614,7 +1127,7 @@ misc/unpacker: misc/unpacker.c misc/convert.c
 misc/packer: misc/packer.c misc/convert.c
 	cd misc; make packer
 
-nyqsrc/sndfnintptrs.h: $(NYQHDRS) snd/snd.h misc/intgen
+nyqsrc/sndfnintptrs.h: $(NYQHDRS) misc/intgen
 	$(INTGEN) nyqsrc/sndfnint $(NYQHDRS)
 
 nyqsrc/seqfnintptrs.h: $(CMTHDRS) misc/intgen
@@ -622,6 +1135,8 @@ nyqsrc/seqfnintptrs.h: $(CMTHDRS) misc/intgen
 
 clean:
 	cd misc; make clean
+	cd liblo; make clean
+	cd portaudio; make clean
 	rm -f $(OBJECTS)
 # These could be deleted, but they're part of the release, so we won't
 # Note that these files are machine-generated:
@@ -640,7 +1155,7 @@ cleaner: clean
 	rm -f *.gold */*.gold
 	rm -f playparms
 	rm -f points.dat
-	rm -f core
+	rm -f core.* core
 	rm -f $(NY)
 
 release: cleaner

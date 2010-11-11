@@ -231,7 +231,8 @@
 ;;
 ;;************
 (defun write-prime (alg stream interp sound-names)
- (let ((step-function (get-slot alg 'step-function)))
+ (let ((step-function (get-slot alg 'step-function))
+       (internal-scaling (get-slot alg 'internal-scaling)))
   ;------------------------------
   ;   /* make sure sounds are primed with first values */
   ;------------------------------
@@ -265,9 +266,14 @@
              ;--------------------
              (format stream "\t~A(~A, ~A_ptr, ~A_cnt);~%"
               (susp-check-fn name alg) name name name)
-             (format stream 
-              "\tsusp->~A_x1_sample = susp_fetch_sample(~A, ~A_ptr, ~A_cnt);~%"
-              name name name name)
+             (cond ((member (name-to-symbol name) internal-scaling)
+                    (format stream
+                     "\tsusp->~A_x1_sample = (susp->~A_cnt--, *(susp->~A_ptr));~%"
+                     name name name))
+                   (t
+                    (format stream 
+                     "\tsusp->~A_x1_sample = susp_fetch_sample(~A, ~A_ptr, ~A_cnt);~%"
+                    name name name name)))
              (setf is-step (member (name-to-symbol name) step-function))
              (cond (is-step
                     (fixup-depends-prime alg stream name "\t"
@@ -325,6 +331,7 @@
 (defun write-susp (alg stream)
   (let* ((interp (get alg 'interpolation))
          (encoding (encode interp))
+         (internal-scaling (get alg 'internal-scaling))
          (sound-names (get alg 'sound-names))
          (name (get-slot alg 'name))
          (logical-stop (car (get-slot alg 'logical-stop)))
@@ -466,9 +473,13 @@
                 ;-------------
                 ;  susp->NAME_x2_sample = susp->NAME->scale * susp->NAME_x2_ptr);
                 ;-------------
-                (format stream
-                 "    ~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
-                 name name name))
+                (cond ((member (name-to-symbol name) internal-scaling)
+                       (format stream
+                        "    ~A_x2_sample = *(susp->~A_ptr);~%" name name))
+                      (t
+                	  (format stream
+                        "    ~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
+                        name name name))))
                ((eq method 'INTERP)
                 ;-------------
                 ;
@@ -478,9 +489,13 @@
                 ;----------------
                 ; susp->NAME_x2_sample = susp_current_sample(NAME, NAME_ptr);
                 ;----------------
-                (format stream 
+                (cond ((member (name-to-symbol name) internal-scaling)
+                       (format stream
+                        "    ~A_x2_sample = *(susp->~A_ptr);~%" name name))
+                      (t
+                       (format stream 
                         "    ~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
-                        name name name))
+                        name name name))))
                ((eq method 'RAMP)
                 ))))
 
@@ -562,9 +577,13 @@
                 (format stream "\t    susp->~A_pHaSe -= 1.0;~%" name);
                 (format stream "\t    ~A(~A, ~A_ptr, ~A_cnt);~%"
                  (susp-check-fn name alg) name name name)
-                (format stream 
-                 "\t    ~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
-                 name name name)
+                (cond ((member (name-to-symbol name) internal-scaling)
+                       (format stream
+                        "\t    ~A_x2_sample = *(susp->~A_ptr);~%" name name))
+                      (t
+                       (format stream 
+                        "\t    ~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
+                        name name name)))
                 (format stream
                  "\t    /* ~A_n gets number of samples before phase exceeds 1.0: */~%"
                         name)

@@ -218,7 +218,7 @@
 (defun db-average (input)
   (let (y)
     (setf y (mult input input)) ; first square input
-    (setf y (snd-avg y 1000 500)) ; then time average
+    (setf y (snd-avg y 1000 500 op-average)) ; then time average
     (setf y (snd-log (scale 2.0 y))) ; peak normalization, then take log
     (setf y (scale (/ 10.0 (log 10.0)) y))  ; see below for scaling explanation
     y))

@@ -97,7 +97,7 @@
 (defun msa () (translate "sampler"))
 (defun msio () (translate "siosc"))
 (defun mq () (translate "quantize"))
-(defun mbq () (translate "biquad"))
+(defun mbq () (translate "biquadfilt"))
 (defun mabs () (translate "abs"))
 (defun msqrt () (translate "sqrt"))
 
@@ -119,6 +119,7 @@
 (defun mlr () (translate "lpreson"))
 
 (defun mstk () (icl) (isx) (icla) (isxa) (iclf) (isxf))
+(defun mfmfb () (translate "fmfb") (translate "fmfbv"))
 
 (defun m () (mf) (mp) (mc) (mcl) (mg)
 ;;;;;;      (mr) (msfr) (md)
@@ -129,7 +130,7 @@
             (mrvv) (marvv) (me) (msa) (msio) (mq) (mcg) (mifft) 
             (mfas) (mfo) (mct) (mal) (mos) (mch) (mbq) (mpl)
             (mabs) (msqrt) (macv) (mavv) ; (mcv) must be managed by hand
-            (mstk) (mla) (mlr))
+            (mstk) (mla) (mlr) (load "translate-stk") (mfmfb))
 
 ; call this when you change writesusp.lsp: "N"ew "S"usp
 (defun ns () (ls) (m))
@@ -769,7 +770,7 @@
 
   (dolist 
        (slot 
-     '(name inner-loop sample-rate support-functions inline-interpolation delay
+     '(name lispname inner-loop sample-rate support-functions inline-interpolation delay
        )) 
        (put-slot alg (car (get-slot alg slot)) slot))
 
@@ -849,7 +850,9 @@
 (defun write-header (alg stream)
 ;;  (format stream "sound_type snd_make_~A();~%" (get-slot alg 'name))
     (let ((arguments (get-slot alg 'arguments))
-      (name (get-slot alg 'name)))
+      (name (get-slot alg 'name))
+      (lisp-name (get-slot alg 'lispname)))
+       (cond ((null lisp-name) (setf lisp-name name)))
        (format stream "sound_type snd_make_~A" name)
        (write-ansi-prototype-list stream "" arguments)
        (format stream ";~%")
@@ -860,7 +863,7 @@
        (format stream ";~%")
 
        ; write the type specification for intgen
-       (format stream "    /* LISP: (snd-~A" name)
+       (format stream "    /* LISP: (snd-~A" lisp-name)
        (dolist (arg arguments)
      (let ((xltype (assoc (car arg) c-to-xlisp-type :test #'equal)))
        (cond ((null xltype)

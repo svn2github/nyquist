@@ -165,7 +165,7 @@ sound_type snd_make_recip(sound_type s1)
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, recip_susp_node, "snd_make_recip");
-    susp->scale = s1->scale;
+    susp->scale = 1.0 / s1->scale;
     susp->susp.fetch = recip_n_fetch;
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */

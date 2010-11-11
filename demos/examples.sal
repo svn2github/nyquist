@@ -1,0 +1,518 @@
+;; examples.lsp -- these are from the Nyquist Manual examples
+
+define function ex1()
+  play osc(60)
+
+define function ex2()
+  play 0.5 * osc(60)
+
+; build-harmonic is already defined in nyquist.lsp
+;
+;(defun build-harmonic (n) (snd-sine 0 n tablesize 1))
+
+define function mkwave()
+  begin
+    set *table* = 0.5 * build-harmonic(1.0, 2048) +
+                  0.25 * build-harmonic(2.0, 2048) +
+                  0.125 * build-harmonic(3.0, 2048) +
+                  0.0625 * build-harmonic(4.0, 2048)
+    set *table* = list(*table*, hz-to-step(1.0), #t)
+  end
+
+
+if ! boundp(quote(*mkwave*)) then
+  begin
+    exec mkwave()
+    set *mkwave* = #t
+  end
+
+
+define function my-note(pitch, dur)
+  return osc(pitch, dur, *table*)
+
+
+define function ex3()
+  play seq(my-note(c4, i), my-note(d4, i), my-note(f4, i), 
+           my-note(g4, i), my-note(d4, q))
+
+
+define function env-note(p)
+  return my-note(p, 1.0) *
+         env(0.05, 0.1, 0.5, 1.0, 0.5, 0.4)
+
+
+define function ex4()
+  play env-note(c4)
+
+
+define function ex5()
+  play seq(seq(env-note(c4), env-note(d4)) ~ 0.25,
+           seq(env-note(f4), env-note(g4)) ~ 0.5,
+           env-note(c4))
+
+
+define function ex6()
+  play seq(my-note(c4, q), my-note(d4, i))
+
+
+define function ex7()
+  play 0.5 * sim(my-note(c4, q), my-note(d4, i))
+
+;; previous versions could not get current-path to locate demo-snd.aiff...
+;(format t "~%examples.lsp tries to load demo-snd.aiff from the~%")
+;(format t "default sound file directory, which is stored in~%")
+;(format t "the variable *default-sf-dir*. The current value is:~%")
+;(format t "\"~A\". If you get an error immediately, you should~%"
+;        *default-sf-dir*)
+;(format t "either set *default-sf-dir* or copy demo-snd.aiff~%")
+;(format t "where Nyquist will find it.~%")
+
+set a-snd = s-read(strcat(current-path(), "demo-snd.aiff"))
+
+
+define function ex8()
+  play a-snd
+
+
+define function ex9()
+  play seq(cue(a-snd), cue(a-snd))
+
+
+define function ex10()
+  play sim(cue(a-snd) @ 0.0,
+           cue(a-snd) @ 0.7,
+           cue(a-snd) @ 1.0,
+           cue(a-snd) @ 1.2)
+
+
+define function ex11()
+  play sim(cue(a-snd),
+           loud(6.0, cue(a-snd) @ 3))
+
+
+define function ex12()
+  play loud(6.0, sim(cue(a-snd) @ 0.0,
+                     cue(a-snd) @ 0.7))
+
+
+define function snds(dly)
+  return sim(cue(a-snd) @ 0.0,
+             cue(a-snd) @ 0.7,
+             cue(a-snd) @ 1.0,
+             cue(a-snd) @ (1.2 + dly))
+
+
+define function ex13()
+  play snds(0.1)
+
+
+define function ex14()
+  play loud(0.25, snds(0.3) ~ 0.9)
+
+
+define function ex15()
+  play sound-srate-abs(44100.0, osc(c4))
+
+
+define function tone-seq()
+  return seqrep(i, 16,
+                osc-note(c4) ~ 0.25)
+
+
+define function pitch-rise()
+  ; pitch-rise turns tone-seq into a chromatic scale 
+  ; through transposition
+  ; override sustain to avoid changing ramp duration
+  return sustain-abs(1.0, 16 * ramp() ~ 4)
+
+
+define function chromatic-scale()
+  return transpose(pitch-rise(), tone-seq())
+
+
+define function ex16()
+  play chromatic-scale()
+
+
+define function ex17()
+  play sustain((0.2 + ramp()) ~ 4,
+               chromatic-scale())
+
+
+define function warper()
+  ; between 0 and 1, warper goes slow/fast/slow, then
+  ; it adds extra 1-to-1 mapping from 1 to 2, which is
+  ; just "padding" to avoid numerical problems near 1.0
+  return pwl(0.25, .4, .75, .6, 1.0, 1.0, 2.0, 2.0, 2.0)
+
+
+define function warp4()
+  ; stretch by 4 and scale by 4: now we're warping
+  ; a 4 second sequence within a 4 second duration
+  return 4 * warper() ~ 4
+
+
+define function ex18()
+  play warp(warp4(), tone-seq())
+
+
+; note: as explained in the manual, the following is NOT
+; the solution to a fixed duration/variable tempo sequence:
+;
+define function tone-seq-2 ()
+  return seqrep(i, 16,
+                osc-note(c4) ~~ 0.25)
+
+
+define function ex19()
+  play warp(warp4(), tone-seq-2())
+
+; here is the proper solution (vs. ex19):
+;
+define function tone-seq-3()
+  return seqrep(i, 16,
+                set-logical-stop(osc-note(c4) ~~ 0.25, 0.25))
+
+
+define function ex20()
+  play warp(warp4(), tone-seq-3())
+
+
+define function ex21()
+  play warp(warp4(),
+            transpose(pitch-rise(), tone-seq()))
+
+
+define function ex22()
+  play warp(warp4(),
+            transpose(control-warp(get-warp(),
+                                   warp-abs(nil, pitch-rise())),
+                      tone-seq()))
+
+
+if not(boundp(quote(a-snd))) then
+  set a-snd = s-read("demo-snd.aiff")
+
+
+define function ex23()
+  play force-srate(*default-sound-srate*,  sound(a-snd) ~ 3.0)
+
+define function down()
+  return force-srate(*default-sound-srate*, 
+                     seq(sound(a-snd) ~ 0.2,
+                         sound(a-snd) ~ 0.3,
+                         sound(a-snd) ~ 0.4,
+                         sound(a-snd) ~ 0.6))
+
+
+define function ex24()
+  play down()
+
+define function up()
+  return force-srate(*default-sound-srate*,
+                     seq(sound(a-snd) ~ 0.5,
+                         sound(a-snd) ~ 0.4,
+                         sound(a-snd) ~ 0.3,
+                         sound(a-snd) ~ 0.2))
+
+
+define function ex25()
+  play seq(down(), up(), down())
+
+
+define function ex26()
+  begin
+    exec s-save(a-snd, 1000000000, "./a-snd-file.snd")
+    play "./a-snd-file.snd"
+    exec system("rm ./a-snd-file.snd")
+  end
+
+
+define function ex27()
+  begin
+    set my-sound-file = "./a-snd-file.snd"
+    exec s-save(a-snd, 1000000000, my-sound-file)
+    exec play-file(my-sound-file)
+    exec system(strcat("rm ", my-sound-file))
+  end
+
+
+; note that Nyquist's "Autonorm" facility probably makes this example
+; superfluous
+define function ex28()
+  begin
+    ; normalize in memory.  First, assign the sound to a variable so 
+    ; it will be retained:
+    set mysound = sim(osc(c4), osc(c5))
+    ; now compute the maximum value (ny:all is a 1 giga-samples, you may want a
+    ; smaller constant if you have less than 4GB of memory :-):
+    set mymax = snd-max(mysound, NY:ALL)
+    display "Computed max", mymax
+    ; now write out and play the sound from memory with a scale factor:
+    play mysound * (0.9 / mymax)
+  end
+
+
+define function myscore()
+  return sim(osc(c4), osc(c5))
+
+
+define function ex29()
+  begin
+    ; if you don't have space in memory, here's how to do it:
+    ; Compute the maximum. This is a bit tricky in SAL because snd-max
+    ; is looking for an expression (in LISP) to evaluate, not a sound.
+    ; Use list and quote to create the LISP expression '(myscore):
+    set mymax = snd-max(list(quote(myscore)), NY:ALL)
+    display "Computed max", mymax
+    ; now we know the max, but we don't have a the sound (it was garbage
+    ; collected and never existed all at once in memory).  Compute the sound
+    ; again, this time with a scale factor:]
+    play myscore() * (0.9 / mymax)
+  end
+
+
+define function ex30()
+  play fmosc(c4, pwl(0.1))
+
+
+define function ex31()
+  play fmosc(c4, pwl(0.5))
+
+
+define function ex32()
+  play fmosc(c4, pwl(0.5, step-to-hz(c4),  0.501))
+
+
+define function ex33()
+  begin
+    set *fm-voice* = list(extract(0.110204, 0.13932, cue(a-snd)),
+                          24.848422,
+                          #T)
+    play fmosc(cs2, pwl(0.5, step-to-hz(cs2), 0.501),
+               *fm-voice*, 0.0)
+  end
+
+
+define function sweep(delay, pitch-1, sweep-time, pitch-2, hold-time)
+  begin
+    with interval = step-to-hz(pitch-2) - step-to-hz(pitch-1)
+    return pwl(delay, 0.0,
+               ; sweep from pitch 1 to pitch 2
+               delay + sweep-time, interval,
+               ; hold until about 1 sample from the end
+               delay + sweep-time + hold-time - 0.0005, interval,
+               ; quickly ramp to zero (pwl always does this,
+               ;    so make it short)
+               delay + sweep-time + hold-time)
+  end
+
+
+define function ex34()
+  play fmosc(cs2, sweep(0.1, cs2, 0.6, gs2, 0.5),
+             *fm-voice*, 0.0)
+
+
+define function ex35() 
+  play fmosc(cs2, 10.0 * lfo(6.0), *fm-voice*, 0.0)
+
+
+define function ex36()
+  begin
+    with modulator
+    set modulator = pwl(1.0, 1000.0, 1.0005) * 
+                    osc(c4)
+    play fmosc(c4, modulator)
+  end
+
+
+;;; FINDING ZERO CROSSINGS, SND-SAMPLES
+
+set max-samples-for-zeros = 1000
+
+define function zeros(snd)
+  begin
+    ; start by getting the samples, only take 1000 samples max
+    with s = snd-samples(snd, max-samples-for-zeros),
+         newsign, sign, n, len, result, result2, starttime, srate
+    ; go through the array looking for zero crossings
+    set len = length(s)
+    ; stop if there are no samples
+    if len = 0 then return nil
+    set sign = 0.0 > s[0]
+    ; get the start time and sample rate of the sound for use below
+    set starttime = car(snd-extent(snd, max-samples-for-zeros))
+    set srate = snd-srate(snd)
+    set n = 1
+    loop
+      until n >= len
+      set newsign = 0.0 > s[n]
+      if not(eq(sign, newsign)) then
+        set result = cons(n, result)
+      set sign = newsign
+      set n += 1
+    end
+    ; now we have the zero crossings, convert them to times
+    loop
+      with result2 = nil
+      for num in result
+      ; return the time of the zero crossing, which is the start time
+      ; of the snd plus the sample number / srate
+      set result2 = cons(starttime + num / srate, result2)
+      finally return result2
+    end
+  end
+
+
+define function ex37()
+  begin
+    ; extract a short piece of this sample
+    set short = extract(0.1, 0.14, cue(a-snd))
+    set z = zeros(short)
+    exec format(t, "Zero crossings from a-snd: ~A~%", z)
+  end
+
+
+; find the differences between zero crossings reported by zeros
+; print the result in terms of samples for readability
+;
+define function periods(lis, short)
+  begin
+    with result, prev, srate
+    if null(lis) then return nil
+    set srate = snd-srate(short)
+    loop
+      set prev = car(lis)
+      set lis = cdr(lis)
+      if null(lis) then return reverse(result)
+      set result = cons(srate * car(lis) - prev, result)
+    end
+  end
+
+define function ex38()
+  ; ex38 depends upon z, set by (ex37)
+  begin
+    if not(boundp(quote(z))) then exec ex37()
+    set p = periods(z, short)
+    exec format(t, 
+                "The intervals (in samples) between zero crossings are: ~%~A~%",
+                p)
+  end
+
+
+; build a wavetable using zero crossing information
+;
+; I interactively played with the data and decided to extract from the
+; 5th period to the 21st period (these had 86 and 87 samples each and
+; seem to indicate some kind of periodicity).  The 1st period measures
+; from the zeroth zero crossing to the first, so the 5th period measures
+; from the 4th zero crossing to the 5th.  I'll arbitrarily take
+; the 4th and 20th zero crossing times (the 5th and 20th should work as
+; well), and from the data, this looks like 2 waveform periods.
+; This is very clear if you plot the data.
+;
+; arguments are:
+;  snd - the sound to extract from
+;  zeros - the result of (zeros snd)
+;  start - the number of the starting zero crossing
+;  stop - the number of the ending zero crossing
+;  n - number of periods contained in the extracted sound
+;
+define function extract-table(snd, zeros, start, stop, n)
+  begin
+    with starttime, extent, hz
+    ; Start by shifting snd to time zero:
+    set starttime = car(snd-extent(snd, max-samples-for-zeros))
+    set snd = cue(snd) @  - starttime
+
+    exec format(t, "~A~%", snd)
+    ; also get the start and stop times and shift them:
+    set start = nth(start, zeros) - starttime
+    set stop = nth(stop, zeros) - starttime
+
+    exec format(t, "table ~A start ~A stop ~A~%", snd, start, stop)
+
+    ; now extract the samples of interest, note that we are
+    ; overwriting our pointer to the snd argument
+    set snd = extract(start, stop, cue(snd))
+    exec format(t, "table now ~A~%", snd)
+
+    ; now we need to figure out the pitch this sound would represent
+    ; when played at its samplerate.  The pitch in hz is 1 / duration,
+    ; and duration is the extent of the sound / n.  Therefore, take
+    ; n/extent
+    set extent = snd-extent(snd, max-samples-for-zeros)
+    set hz = n / (cadr(extent) - car(extent))
+    ; an osc table is a list of the sound, pitch number, and T (periodic)
+    return list(snd, hz-to-step(hz), #t)
+  end
+
+
+define function ex39()
+  begin
+    ; try it out
+    set *a-voice* = extract-table(short, z, 4, 20, 2)
+    ; now use the table with an oscillator
+    play osc(c3, 1.0, *a-voice*)
+  end
+
+
+define function ex40()
+  ; play it at its normal pitch
+  play osc(cadr(*a-voice*), 1.0, *a-voice*)
+
+
+define function ex41()
+  play noise()
+
+
+define function ex42()
+  play lp(noise(), 1000.0)
+
+
+define function ex43()
+  play hp(noise(), 1000.0) * 0.5
+
+
+; low pass sweep from 100 hz to 2000 hz
+define function ex44()
+  play lp(noise(), pwl(0.0, 100.0, 1.0, 2000.0, 1.0))
+
+
+; high pass sweep from 50 hz to 4000 hz
+define function ex45()
+  play hp(noise(), pwl(0.0, 50.0, 1.0, 4000.0, 1.0)) * 0.5
+
+
+; band pass at 500 hz, 20 hz bandwidth
+define function ex46()
+  play reson(10.0 * noise(), 500.0, 20.0, 1)
+
+
+; band pass sweep from 100 to 1000 hz, 20 hz bandwidth
+define function ex47()
+  play reson(0.04 * noise(),
+             pwl(0.0, 200.0, 1.0, 1000.0, 1.0),
+             20.0)
+
+
+exec format(t, "\nType (ex1) through (ex47) to run these examples.\n")
+exec format(t, "See demos/stktest.lsp for more simple sound examples.\n")
+exec format(t, "\nI'm turning off Auto-normalization.  See AUTONORM-ON\n")
+exec format(t, "in the documentation for an explanation:\n\n")
+exec autonorm-off()
+
+define function ex-all ()
+  begin
+    exec format(t, "Warning: turning automatic normalization feature off~%")
+    exec autonorm-off()
+    loop
+      for i from 1 to 47
+      for fn = list(intern(format(nil, "EX~A", i)))
+      exec format(t, "~A~%", fn)
+      exec eval(fn)
+    end
+  end
+
+
+exec format(t, "\n\"exec ex-all()\" in SAL or (ex-all) in Lisp will compute and play all examples for testing purposes.\n")

@@ -17,11 +17,19 @@ error here
 #include <stdlib.h>
 
 #include "sndconfig.h"
+/* FIX - remove stuff here */
+/* jlh -- don't think this is being used at all
 #ifdef PORTAUDIO
 #include "pablio.h"
 #endif
+*/
+
+/* libsndfile includes */
+#include <sndfile.h>
+
 
 /* header formats */
+/* jlh -- looks like lisp uses these; keep them. But I may be wanting to add more... */
 #define SND_HEAD_NONE 0
 /* LISP-SRC: (setf snd-head-none 0) */
 #define SND_HEAD_AIFF 1
@@ -32,7 +40,37 @@ error here
 /* LISP-SRC: (setf snd-head-NeXT 3) */
 #define SND_HEAD_WAVE 4
 /* LISP-SRC: (setf snd-head-Wave 4) */
-#define SND_NUM_HEADS 5
+#define SND_HEAD_PAF 5
+/* LISP-SRC: (setf snd-head-PAF 5) */
+#define SND_HEAD_SVX 6
+/* LISP-SRC: (setf snd-head-SVX 6) */
+#define SND_HEAD_NIST 7
+/* LISP-SRC: (setf snd-head-NIST 7) */
+#define SND_HEAD_VOC 8
+/* LISP-SRC: (setf snd-head-VOC 8) */
+#define SND_HEAD_W64 9
+/* LISP-SRC: (setf snd-head-W64 9) */
+#define SND_HEAD_MAT4 10
+/* LISP-SRC: (setf snd-head-MAT4 10) */
+#define SND_HEAD_MAT5 11
+/* LISP-SRC: (setf snd-head-MAT5 11) */
+#define SND_HEAD_PVF 12
+/* LISP-SRC: (setf snd-head-PVF 12) */
+#define SND_HEAD_XI 13
+/* LISP-SRC: (setf snd-head-XI 13) */
+#define SND_HEAD_HTK 14
+/* LISP-SRC: (setf snd-head-HTK 14) */
+#define SND_HEAD_SDS 15
+/* LISP-SRC: (setf snd-head-SDS 15) */
+#define SND_HEAD_AVR 16
+/* LISP-SRC: (setf snd-head-AVR 16) */
+#define SND_HEAD_SD2 17
+/* LISP-SRC: (setf snd-head-SD2 17) */
+#define SND_HEAD_FLAC 18
+/* LISP-SRC: (setf snd-head-FLAC 18) */
+#define SND_HEAD_CAF 19
+/* LISP-SRC: (setf snd-head-CAF 19) */
+#define SND_NUM_HEADS 20
 
 /* bitfields for soundheaders */
 #define SND_HEAD_CHANNELS (1<<0)
@@ -54,6 +92,7 @@ error here
 /* LISP-SRC: (setf snd-head-type 64) */
 
 /* modes */
+/* IMA ADPCM */
 #define SND_MODE_ADPCM 0
 /* LISP-SRC: (setf snd-mode-adpcm 0) */
 #define SND_MODE_PCM   1
@@ -69,7 +108,19 @@ error here
 /* LISP-SRC: (setf snd-mode-upcm 5) */
 #define SND_MODE_UNKNOWN 6
 /* LISP-SRC: (setf snd-mode-unknown 6) */
-#define SND_NUM_MODES  7
+#define SND_MODE_DOUBLE 7
+/* LISP-SRC: (setf snd-mode-double 7) */
+#define SND_MODE_GSM610 8
+/* LISP-SRC: (setf snd-mode-GSM610 8) */
+#define SND_MODE_DWVW 9
+/* LISP-SRC: (setf snd-mode-DWVW 9) */
+#define SND_MODE_DPCM 10
+/* LISP-SRC: (setf snd-mode-DPCM 10) */
+/* microsoft ADPCM */
+#define SND_MODE_MSADPCM 11
+/* LISP-SRC: (setf snd-mode-msadpcm 11) */
+#define SND_NUM_MODES 12
+
 
 /* if snd_open fails, source is set to SND_DEVICE_NONE */
 #define SND_DEVICE_NONE 0
@@ -180,13 +231,31 @@ typedef struct snd_struct {
     union {
       struct {
         char filename[snd_string_max];  /* file name */
-        char filetype[snd_string_max];  /* file type/format description */
+
+        /* jlh - this doesn't seem to be used anywhere
+	  char filetype[snd_string_max];  /* file type/format description */
+
         int file;               /* OS file number */
+
+	SNDFILE *sffile;        /* libsndfile audio file pointer */
+	SF_INFO sfinfo;         /* libsndfile audio file info */
+
+	/* jlh - used in lisp code, I believe */
         long header; /* None, AIFF, IRCAM, NEXT, WAVE */
+
+	/* jlh I have changed these from byte units to frame units;
+	   see comments in sndread.c for justification. */
         long byte_offset;       /* file offset of first sample */
         long end_offset; /* byte_offset of last byte + 1 */
         long current_offset;  /* current (computed) file offset */
+
+	/* jlh Probably not needed ever again. */
         int swap;       /* flag to swap bytes on input/output */
+
+
+          /* FIX -- these are important for Nyquist, I hope libsndfile 
+           supports them */
+	/* jlh -- leave filling these out 'til later. */
         /* fields from AIFF sample files: */
         int loop_info; /* Boolean: is this loop info valid? */
         double native_hz; /* original pitch in hz */
@@ -235,7 +304,10 @@ extern "C" {
 void snd_init();
 void snd_add_device(char *interf, char *device, snd_fns_type dictionary);
 
+  /* jlh The next three are ones I messed with */
 long snd_bytes_per_frame(snd_type snd);
+long move_samples_inward(void *buf1, void *buf2, long len2, float scale, float *peak);
+long move_samples_outward(void *buf1, void *buf2, long len2, float scale, float *peak);
 
 int snd_open(snd_type snd, long *flags);
 
@@ -264,9 +336,11 @@ cvtfn_type select_cvtfn(snd_type snd1, snd_type snd2);
 
 extern cvtfn_type cvt_from_8[];
 extern cvtfn_type cvt_from_16[];
+extern cvtfn_type cvt_from_24[];
 extern cvtfn_type cvt_from_32[];
 extern cvtfn_type cvt_to_8[];
 extern cvtfn_type cvt_to_16[];
+extern cvtfn_type cvt_to_24[];
 extern cvtfn_type cvt_to_32[];
 
 long cvt_from_unknown(void *buf1, void *buf2, long len2, 

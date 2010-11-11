@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 ; Probar con las dos envolventes
 ;(defun sac-env (dur)
@@ -33,10 +34,12 @@
 (defun st-sac (frq dur offset-entry num-harm)
   (sac-left-right (sac frq dur offset-entry (1+ num-harm))))
 
-(autonorm-off)
-(play (scale 0.17 (sim (at 0.0 (st-sac as6 7.5 2.5 5))
-                        (at 0.01 (st-sac b5 7.5 2.5 5))
-                        (at 3.75 (st-sac e5 3.75 1.25 9))
-                        (at 3.76 (st-sac g5 3.75 1.25 9))
-                        (at 5.5 (st-sac d4 2 1.0 11))
-                        (at 5.51 (st-sac gs3 2 1.0 11)))) )
+(defun st-sac-sequence ()
+  (scale 0.17 (sim (at 0.0 (st-sac as6 7.5 2.5 5))
+                   (at 0.01 (st-sac b5 7.5 2.5 5))
+                   (at 3.75 (st-sac e5 3.75 1.25 9))
+                   (at 3.76 (st-sac g5 3.75 1.25 9))
+                   (at 5.5 (st-sac d4 2 1.0 11))
+                   (at 5.51 (st-sac gs3 2 1.0 11)))))
+
+(defun st-sac-demo () (ss (st-sac-sequence)))

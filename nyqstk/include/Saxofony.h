@@ -31,26 +31,32 @@
        - Vibrato Gain = 1
        - Breath Pressure = 128
 
-    by Perry R. Cook and Gary P. Scavone, 1995 - 2002.
+    by Perry R. Cook and Gary P. Scavone, 1995 - 2005.
 */
 /***************************************************/
 
-#if !defined(__SAXOFONY_H)
-#define __SAXOFONY_H
+#ifndef STK_SAXOFONY_H
+#define STK_SAXOFONY_H
 
 #include "Instrmnt.h"
 #include "DelayL.h"
-#include "ReedTabl.h"
+#include "ReedTable.h"
 #include "OneZero.h"
 #include "Envelope.h"
 #include "Noise.h"
-#include "WaveLoop.h"
+#include "SineWave.h"
+
+namespace Nyq
+{
 
 class Saxofony : public Instrmnt
 {
  public:
   //! Class constructor, taking the lowest desired playing frequency.
-  Saxofony(MY_FLOAT lowestFrequency);
+  /*!
+    An StkError will be thrown if the rawwave path is incorrectly set.
+  */
+  Saxofony(StkFloat lowestFrequency);
 
   //! Class destructor.
   ~Saxofony();
@@ -59,42 +65,44 @@ class Saxofony : public Instrmnt
   void clear();
 
   //! Set instrument parameters for a particular frequency.
-  void setFrequency(MY_FLOAT frequency);
+  void setFrequency(StkFloat frequency);
 
   //! Set the "blowing" position between the air column terminations (0.0 - 1.0).
-  void setBlowPosition(MY_FLOAT aPosition);
+  void setBlowPosition(StkFloat aPosition);
 
   //! Apply breath pressure to instrument with given amplitude and rate of increase.
-  void startBlowing(MY_FLOAT amplitude, MY_FLOAT rate);
+  void startBlowing(StkFloat amplitude, StkFloat rate);
 
   //! Decrease breath pressure with given rate of decrease.
-  void stopBlowing(MY_FLOAT rate);
+  void stopBlowing(StkFloat rate);
 
   //! Start a note with the given frequency and amplitude.
-  void noteOn(MY_FLOAT frequency, MY_FLOAT amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude);
 
   //! Stop a note with the given amplitude (speed of decay).
-  void noteOff(MY_FLOAT amplitude);
-
-  //! Compute one output sample.
-  MY_FLOAT tick();
+  void noteOff(StkFloat amplitude);
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  void controlChange(int number, MY_FLOAT value);
+  void controlChange(int number, StkFloat value);
 
  protected:
-  DelayL *delays[2];
-  ReedTabl *reedTable;
-  OneZero *filter;
-  Envelope *envelope;
-  Noise *noise;
-  WaveLoop *vibrato;
-  long length;
-  MY_FLOAT outputGain;
-  MY_FLOAT noiseGain;
-  MY_FLOAT vibratoGain;
-  MY_FLOAT position;
+
+  StkFloat computeSample( void );
+
+  DelayL    delays_[2];
+  ReedTable reedTable_;
+  OneZero   filter_;
+  Envelope  envelope_;
+  Noise     noise_;
+  SineWave vibrato_;
+  unsigned long length_;
+  StkFloat outputGain_;
+  StkFloat noiseGain_;
+  StkFloat vibratoGain_;
+  StkFloat position_;
 
 };
+
+} // namespace Nyq
 
 #endif

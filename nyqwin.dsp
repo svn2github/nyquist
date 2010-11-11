@@ -40,7 +40,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir ".\NyqWinRel"
 # PROP Ignore_Export_Lib 0
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /FR /YX /c
-# ADD CPP /nologo /W3 /GX /O2 /I ".\xlisp" /I ".\snd" /I ".\nyqsrc" /I ".\tran" /I ".\cmt" /I ".\sys\win\msvc" /I ".\fft" /D "NDEBUG" /D "WIN32" /D "CMTSTUFF" /D "WINGUI" /D "STK_NYQUIST" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I ".\xlisp" /I ".\snd" /I ".\nyqsrc" /I ".\tran" /I ".\cmt" /I ".\sys\win\msvc" /I ".\fft" /I ".\portaudio\pa_common" /I ".\nyqstk" /I ".\nyqstk\include" /D "NDEBUG" /D "WIN32" /D "CMTSTUFF" /D "WINGUI" /D "PA_NO_ASIO" /D "PA_NO_DS" /D "STK_NYQUIST" /YX /FD /c
 # SUBTRACT CPP /Fr
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -64,7 +64,7 @@ LINK32=link.exe
 # PROP Intermediate_Dir ".\NyqWinDebug"
 # PROP Ignore_Export_Lib 0
 # ADD BASE CPP /nologo /W3 /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /FR /YX /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".\xlisp" /I ".\snd" /I ".\nyqsrc" /I ".\tran" /I ".\cmt" /I ".\sys\win\msvc" /I ".\fft" /I ".\portaudio\pa_common" /I ".\nyqstk" /I ".\nyqstk\include" /D "_DEBUG" /D "PA_NO_ASIO" /D "PA_NO_DS" /D "WIN32" /D "CMTSTUFF" /D "WINGUI" /D "STK_NYQUIST" /YX /FD /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".\xlisp" /I ".\snd" /I ".\nyqsrc" /I ".\tran" /I ".\cmt" /I ".\sys\win\msvc" /I ".\fft" /I ".\portaudio\pa_common" /I ".\nyqstk" /I ".\nyqstk\include" /D "PA_NO_ASIO" /D "PA_NO_DS" /D "CMTSTUFF" /D "WINGUI" /D "STK_NYQUIST" /D "WIN32" /D "_DEBUG" /D "DEBUG_INPUT" /YX /FD /c
 # SUBTRACT CPP /Fr
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -92,6 +92,10 @@ SOURCE=.\tran\abs.c
 # Begin Source File
 
 SOURCE=.\nyqsrc\add.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tran\allpoles.c
 # End Source File
 # Begin Source File
 
@@ -348,6 +352,10 @@ SOURCE=.\tran\log.c
 # Begin Source File
 
 SOURCE=.\sys\win\wingui\longque.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\tran\lpreson.c
 # End Source File
 # Begin Source File
 

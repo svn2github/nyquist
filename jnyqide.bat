@@ -1,1 +1,2 @@
-java jnyqide/Main
+java -jar jnyqide/jNyqIDE.jar
+

@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 (defun bell-partial (amp dur frq)
   (amosc (hz-to-step frq) (pwev amp dur (* amp 12e-5))))
@@ -23,7 +24,7 @@
     (bell-partial (* amp 1.33) (* dur .075) (* frq 4.07))))
 
 
-(defun m ()
+(defun risset-bell-sequence ()
   (sim (at 0.0 (risset-bell 1.0 4.0 999.0))
        (at 2.0 (risset-bell 1.0 4.0 633.0))
        (at 4.0 (risset-bell 1.0 4.0 211.0))
@@ -33,7 +34,7 @@
        (at 12.0 (risset-bell 0.7 20.0 999.0))
        (at 14.0 (risset-bell 0.7 20.0 80.0))))
 
-(ss (m))
+(defun risset-bell-demo () (ss (m)))
   
 
 

@@ -58,7 +58,9 @@ void xlinit(void)
 #ifdef SAVERESTORE
     if (!xlirestore("xlisp.wks"))
 #endif
+	{
         initwks();
+	}
     /* note: localinit creates type descriptors, but these
        may be necessary for xlirestore to work.  On the other
        hand, localinit creates atoms, so it needs obarray to
@@ -66,7 +68,6 @@ void xlinit(void)
        have a circular dependency to break before xlirestore
        will work
      */
-
     localinit();	 /* initialize lisp extensions */ 
 }
 

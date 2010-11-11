@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 (defun shiver (dur frq noise-percent noise-frq)
   (mult (osc frq dur)
@@ -15,9 +16,10 @@
 ; this would be avoided if randi function were multiplied by a smooth envelope
 ; WARNING: randi1 is defined in PJMG.LSP
 
-(ss (seq (shiver 1 c5 20 40)
-         (shiver 1 b4 50 40)
-         (shiver 1 a4 80 40)
-         (shiver 1 g4 20 300)
-         (shiver 1 f4 50 300)
-         (shiver 1 d4 80 300)))
+(defun shiver-demo ()
+  (ss (seq (shiver 1 c5 20 40)
+           (shiver 1 b4 50 40)
+           (shiver 1 a4 80 40)
+           (shiver 1 g4 20 300)
+           (shiver 1 f4 50 300)
+           (shiver 1 d4 80 300))))

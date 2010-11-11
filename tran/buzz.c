@@ -480,11 +480,11 @@ sound_type snd_make_buzz(long n, rate_type sr, double hz, time_type t0, sound_ty
     falloc_generic(susp, buzz_susp_node, "snd_make_buzz");
     susp->ph_incr = 0;
     susp->n_2_r = 1.0F / (n * 2);
-    susp->n_2_p1 = (float) ((n * 2) + 1);
+    susp->n_2_p1 = (n * 2) + 1;
     susp->phase = compute_phase(PI*0.5, 69.0, SINE_TABLE_LEN,
-        SINE_TABLE_LEN * 440.0, sr, hz, &susp->ph_incr);
+        SINE_TABLE_LEN * 440.0, sr, hz * 0.5, &susp->ph_incr);
     s_fm->scale *= hz != 0 ? (sample_type) (susp->ph_incr / hz)
-                           : (sample_type) (SINE_TABLE_LEN / sr);
+                           : (sample_type) (SINE_TABLE_LEN * 0.5 / sr);
 
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s_fm, sr);

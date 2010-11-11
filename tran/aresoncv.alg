@@ -29,7 +29,8 @@
 (CONSTANT "c1" "c2" "c3co" "coshz" "normalization")
 (FORCE-INTO-REGISTER normalization coshz scale1)
 (INNER-LOOP-LOCALS "            register double y0, current;")
-(INNER-LOOP "current = s1;
+(INNER-LOOP "
+            current = s1;
             output = (float) (y0 = c1 * current + c2 * y1 - c3co * y2);
             y2 = y1; y1 = y0 - current")
 )

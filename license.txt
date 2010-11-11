@@ -3,6 +3,12 @@ LICENSE INFORMATION
 Nyquist is built upon and derived from XLISP. Both are copyrighted software.
 Two copyright notices and licenses appear below.
 
+In addition, Nyquist uses two LGPL libraries: libsndfile and liblo.
+These libraries are NOT covered by the Nyquist license, and Nyquist
+is NOT licensed under or restricted by GPL or LGPL licenses. The
+license agreements for libsndfile and liblo can be found in the 
+Nyquist source libraries nyquist/nylsf and nyquist/liblo, respectively.
+
 --------------------------------------------------------------------------------
 COPYRIGHT AND LICENSE INFORMATION FOR NYQUIST
 

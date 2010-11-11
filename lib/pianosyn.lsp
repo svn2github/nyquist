@@ -1,5 +1,5 @@
 ;; ================================================
-;; Program Information Showing
+;; Show Program Information
 ;; ================================================
 (princ "\n\nPiano Synthesizer V1.2 (Feb 2004)\n")
 (princ "    Original algorithm and program by Zheng (Geoffrey) Hua\n")
@@ -13,7 +13,6 @@
 (princ "    Program Initializing...\n")
 
 (setf *pianosyn-path* (current-path))
-(print *pianosyn-path*)
 
 ;; ================================================
 ;; Function definition
@@ -67,7 +66,7 @@
 ; Algorithm:
 ;   figure out how many repetitions of the seq-array[igroup] to
 ;   add onto the attack to make the envelope long enough. Multiply
-;   by an exponential decay startgin at the duration -- effectively
+;   by an exponential decay starting at the duration -- effectively
 ;   the damper hits the string at sc-duration.
 ;
 (defun piano-envelope (igroup sc-duration gmagendtime gmagendtimemini 
@@ -100,15 +99,19 @@
 ;; *	Produce single piano note           *
 ;; ******************************************
 (defun piano-note (duration pitch dynamic)
-  (let ((full-dur (get-duration duration))
+  (let ((ioi (get-duration duration))
         (full-pitch (+ (get-transpose) pitch))
         (full-dynamic (+ (get-loud) dynamic))
         ;; note: the "loud" is nominally in dB, but
         ;; piano-note-abs uses something akin to midi velocity
         ;; we should probably work out a better conversion
-        (start-time (local-to-global 0)))
-    (abs-env (at start-time 
-                 (piano-note-abs full-dur full-pitch full-dynamic)))))
+        (start-time (local-to-global 0))
+        on-dur)
+    (setf on-dur (* ioi (get-sustain)))
+    (set-logical-stop
+      (abs-env (at start-time 
+                   (piano-note-abs on-dur full-pitch full-dynamic)))
+      ioi)))
 
 
 ;; PIANO-NOTE-ABS -- private function to do the work; assumes 
@@ -121,15 +124,29 @@
     ;; ******************************************
     (setq attnamp 0.03) 
     
-    (setq freq (step-to-hz sc-pitch))
     ; key is midi pitch number 
     (setq key (truncate (+ sc-pitch 0.000001)))
+    (cond ((< key 21) ;; 21 is A0, lowest pitch on this piano
+	   (break "piano-note-abs pitch is too low" sc-pitch)
+	   ;; continued -- transpose up to lowest octave
+	   (while (< key 21)
+             (setf sc-pitch (+ sc-pitch 12))
+	     (setf key (truncate (+ sc-pitch 0.000001)))))
+          ((> key 108) ;; 108 is c9, highest pitch on this piano
+	   (break "piano-note-abs pitch is too high" sc-pitch)
+	   ;; continued -- transpose down to highest octave
+           (while (> key 108)
+	     (setf sc-pitch (- sc-pitch 12))
+	     (setf key (truncate (+ sc-pitch 0.000001))))))
+    (setq freq (step-to-hz sc-pitch))
+	   
     (setq whichone -2)
     (dotimes (i GROUPCON)  
         (if (and (= whichone -2)
                  (< freq (- (aref fa i) 0.001)))
             (setq whichone (- i 1))))
     ;; Have to use (- (aref fa i) 0.001) because of the calculation precision of Nyquist
+           
     (setq whichone1 (1+ whichone))
     (setq ngroup2 (aref ngroup whichone1))
 
@@ -209,7 +226,8 @@
 ;; ====================================
 ;; Main Program       
 ;; ====================================
-(expand 70) ;; we'll allocate a lot of nodes for data, so expand now
+(if (not (boundp '*piano-srate*)) ;; if pianosyn.lsp wasn't loaded already
+    (expand 70)) ;; we'll allocate a lot of nodes for data, so expand now
 (setf *pianosyn-save-gc-flag* *gc-flag*)
 (setf *gc-flag* nil) ;; we'll do a lot of gc, so turn off messages
 ;; Definite some constant
@@ -314,7 +332,7 @@
   (setq COMMCK-npts (read-int fp) COMMCK-ngroup (read-int fp))
   (setf (aref npts pncount) COMMCK-npts)
   (setf (aref nptsmini pncount) 
-        (1+ (truncate (/ (- COMMCK-npts (nth pncount hkframe)) 10))))
+        (truncate (/ (+ 9 (- COMMCK-npts (nth pncount hkframe))) 10)))
   (setf (aref ngroup pncount) COMMCK-ngroup)
 
   ;; Read DATACK in cwxx.cwd
@@ -333,13 +351,12 @@
   (if (= GRUPCK-ckID 1196578128) () (error "GRUPCK chunk not found."))
   (setf (aref hfrom pncount) (make-array (aref ngroup pncount)))
   (setf (aref hto pncount) (make-array (aref ngroup pncount)))  
+  ;(display "reading grupck" (aref ngroup pncount) (aref nhar pncount) pncount)
   (dotimes (count (aref ngroup pncount))   
-     (if (< count (aref nhar pncount)) 
-         (setf (aref (aref hfrom pncount) count)
-               (read-float fp))))
+    (setf (aref (aref hfrom pncount) count)
+	  (read-float fp)))
   (dotimes (count (aref ngroup pncount)) 
-     (if (< count (aref nhar pncount)) 
-         (setf (aref (aref hto pncount) count) (read-float fp))))
+    (setf (aref (aref hto pncount) count) (read-float fp)))
 
   ;; Read GMAGCK in cwxx.cwd
   (setq GMAGCK-ckID (read-int fp))  
@@ -350,8 +367,9 @@
   (close fp)
   (setf (aref gmag pncount) (make-array (aref ngroup pncount)))
   (setq gmagrate (/ 1 (aref dt pncount)))  
-  (setq gmagdur (/ (nth pncount hkframe) gmagrate))  
+  (setq gmagdur (/ (nth pncount hkframe) gmagrate))
 
+  ; (display "gmagmini" pncount (aref ngroup pncount))
   (setf (aref gmagmini pncount) (make-array (aref ngroup pncount)))  
   (setq gmagratemini (/ 1 (aref dtmini pncount)))
   (setq gmagdurmini (/ (aref nptsmini pncount) gmagratemini))
@@ -359,17 +377,21 @@
   (dotimes (i (aref ngroup pncount))
     (let (gmaghead1 samps gmaghead1mini)
       (setf gmaghead1 (/ (float gmaghead) (* gmagrate (/ bits 8))))
+      ;(display "gmag read" i gmaghead1 gmagrate filename)
       (setf samps (s-read filename :time-offset gmaghead1 :srate gmagrate 
-                  :dur gmagdur :mode snd-head-mode-float 
-                  :format snd-head-none :bits bits :endian :big))
+                  :dur gmagdur :mode snd-mode-float 
+                  :format snd-head-raw :bits bits :endian :big))
       (if samps (snd-length samps ny:all)) ; force read into memory
       (setf (aref (aref gmag pncount) i) samps)
       (setq gmaghead (+ gmaghead (* 4 (nth pncount hkframe))))
       (setq gmaghead1mini (/ (float gmaghead) (* gmagratemini (/ bits 8))))  
+      ;(display "gmag read mini" i gmaghead1mini gmagratemini filename)
       (setf samps (s-read filename :time-offset gmaghead1mini :srate gmagratemini 
-            :dur gmagdurmini :mode snd-head-mode-float :format snd-head-none
+            :dur gmagdurmini :mode snd-mode-float :format snd-head-raw
             :bits bits :endian :big))
       (if samps (snd-length samps ny:all)) ; force read into memory
+      ;(display "read gmagmini" filename pncount i
+      ;         (if samps (snd-length samps ny:all)))
       (setf (aref (aref gmagmini pncount) i) samps)
       (setq gmaghead (+ gmaghead (* 4 (aref nptsmini pncount))))
     ))
@@ -433,8 +455,8 @@
 (setf filename (strcat *pianosyn-path* "piano" 
                         (string *file-separator*) filename))
 (setf attsound 
-    (s-read filename :srate attsrate :dur attndur :format snd-head-none 
-            :mode snd-head-mode-pcm :bits 16 :endian :big))                         
+    (s-read filename :srate attsrate :dur attndur :format snd-head-raw
+            :mode snd-mode-pcm :bits 16 :endian :big))                         
 
 (princ "=============================================\n")
 (princ "End instrument-wise initialization\n")
@@ -448,5 +470,110 @@
 (setf *gc-flag* *pianosyn-save-gc-flag*) ;; restore original value
 
 
+#|
+
+;;================= DEBUGGING CODE =========================
+;;
+;; run (show-cn-file n) to dump some data from pn??.cod
+;; 
+;;==========================================================
 
 
+;; INT-HEX -- convert integer to hex string
+;;
+(defun int-hex (int)
+  (let ((result "") ch)
+    (while (/= int 0)
+      (setf ch (char "0123456789ABCDEF" (logand int 15)))
+      (setf result (strcat (string ch) result))
+      (setf int (/ int 16)))
+    (if (equal result "") "0" result)))
+
+(defun int-4char (int)
+  (strcat (string (int-char (logand 255 (/ int (* 256 256 256)))))
+	  (string (int-char (logand 255 (/ int (* 256 256)))))
+	  (string (int-char (logand 255 (/ int 256))))
+	  (string (int-char (logand 255 int)))))
+
+(defun show-cn-file (pncount)
+  (let (filename fp cwdhdr-ckid cwdhdr-type)
+    (setq filename (strcat "pn" 
+			   (string (int-char (+ (truncate (/ pncount 10)) 48)))
+			   (string (int-char (+ (rem pncount 10) 48)))
+			   ".cod"))
+    (setf filename (strcat *pianosyn-path* "piano" 
+			   (string *file-separator*) filename))
+    (format t "SHOW-CN-FILE ~A (~A)~%" pncount filename)
+    (setf fp (open-binary filename))
+    ;; Read cwdHdr in cwxx.cwd
+    (setq cwdHdr-ckID (read-int fp) cwdHdr-type (read-int fp))
+    (format t "header ckID: ~A (~A)~%" (int-hex cwdhdr-ckid)
+	                             (int-4char cwdhdr-ckid))
+    (format t "header type: ~A (~A)~%" (int-hex cwdhdr-type)
+	                             (int-4char cwdhdr-type))
+    (setq COMMCK-ckID (read-int fp))
+    (format t "header ckID: ~A (~A)~%" (int-hex commck-ckid)
+	                               (int-4char commck-ckid))
+    (setq COMMCK-fa (read-float fp) COMMCK-dt (read-float fp))
+    (format t "commck-fa ~A commck-dt ~A~%" commck-fa commck-dt)
+    (setq COMMCK-npts (read-int fp) COMMCK-ngroup (read-int fp))
+    (format t "commck-npts ~A commck-ngroup ~A~%" commck-npts commck-ngroup)
+    (setq DATACK-ckID (read-int fp))  
+    (format t "header ckID: ~A (~A)~%" (int-hex datack-ckid)
+	                               (int-4char datack-ckid))
+    (setf datack-nhar (read-int fp))
+    (format t "datack-nhar ~A~%cw data:" datack-nhar)
+    (dotimes (i datack-nhar) 
+      (if (and (zerop (rem i 10)) (or (< i 10) (> i (- datack-nhar 10))))
+	  (format t "~%  ~A:" i))
+      (setf data-cw (read-float fp))
+      (if (or (< i 10) (>= i (* (/ datack-nhar 10) 10)))
+          (format t " ~A" data-cw)))
+    (format t "~%phase data:")
+    (dotimes (i datack-nhar)
+      (if (and (zerop (rem i 10)) (or (< i 10) (> i (- datack-nhar 10))))
+	  (format t "~%  ~A:" i))
+      (setf data-phase (read-float fp))
+      (if (or (< i 10) (> i (- datack-nhar 10))) (format t " ~A" data-cw)))
+    (format t "~%")
+    (setf grupck-ckid (read-int fp))
+    (format t "header ckID: ~A (~A)~%hfrom data:" 
+	    (int-hex grupck-ckid) (int-4char grupck-ckid))
+    (dotimes (count commck-ngroup)
+      (setf data-hfrom (read-float fp))
+      (if (zerop (rem count 10))
+	  (format t "~%  ~A:" count))
+      (format t " ~A" data-hfrom))
+    (format t "~%hto data:")
+    (dotimes (count commck-ngroup)
+      (setf data-hto (read-float fp))
+      (if (zerop (rem count 10))
+	  (format t "~%  ~A:" count))
+      (format t " ~A" data-hto))
+    (setf gmagck-ckid (read-int fp))
+    (format t "~%header ckID: ~A (~A)~%"
+	    (int-hex gmagck-ckid) (int-4char gmagck-ckid))
+    (setf gmaghead (read-int fp))
+    (format t "gmaghead ~A" gmaghead)
+    (format t "~%")
+    ;; compute range of data to be read
+    (setf offset gmaghead)
+    (dotimes (i commck-ngroup)
+      (format t "gmag: group ~A offset ~A length ~A end ~A~%"
+	      i offset (* 4 (nth pncount hkframe))
+	      (+ offset (* 4 (nth pncount hkframe))))
+      (setf offset (+ offset (* 4 (nth pncount hkframe))))
+      (format t "gmagmini: group ~A offset ~A length ~A end ~A~%"
+	      i offset (* 4 (aref nptsmini pncount))
+	      (+ offset (* 4 (aref nptsmini pncount))))
+      (setf offset (+ offset (* 4 (aref nptsmini pncount)))))
+      
+    (close fp)
+
+    (setf gmag-and-gmagmini 
+     (s-read filename 
+	     :time-offset (* (float gmaghead) 0.25 commck-dt)
+	     :srate (/ 1.0 commck-dt)
+	     :mode snd-mode-float :format snd-head-raw
+	     :bits 32 :endian :big))))
+|#

@@ -47,6 +47,7 @@ cdddr
 case
 cerror
 char
+code-char
 char-code
 char-upcase
 char-downcase
@@ -228,6 +229,7 @@ peak
 peek
 peek-char
 play
+play-file
 pluck
 plusp
 poke
@@ -321,6 +323,7 @@ set-control-srate
 set-logical-stop
 set-pitch-names
 set-sound-srate
+setdir
 setf
 setq
 setup-console

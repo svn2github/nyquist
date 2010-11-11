@@ -13,6 +13,7 @@
 #endif
 #include "xlisp.h"
 #include "sound.h"
+#include "assert.h"
 
 #include "falloc.h"
 #include "cext.h"
@@ -157,7 +158,6 @@ static int SrcUD(float X[], float Y[], double factor, double *Time,
 
 void resample__fetch(register resample_susp_type susp, snd_list_type snd_list)
 {
-    int cnt = 0; /* how many samples computed */
     int togo;
     int n;
     int Nout;
@@ -201,52 +201,16 @@ samples need to be shifted from the end of X to the beginning.
     }
 
     while (susp->Xp < susp->Xsize) { /* outer loop */
-
         /* read samples from susp->s into X */
-
         togo = susp->Xsize - susp->Xp;
-        /* don't run past the s input sample block: */
+        /* don't run past the s input sample block. If termination or
+         * logical stop info become available, translate to susp->terminate_cnt
+         * and susp->log_stop_cnt.
+         */
         susp_check_term_log_samples(s, s_ptr, s_cnt);
         togo = MIN(togo, susp->s_cnt);
-
-        /* don't run past logical stop time */
-        if (!susp->logically_stopped && 
-            susp->susp.log_stop_cnt != UNKNOWN) {
-            int to_stop = susp->susp.log_stop_cnt - 
-                (susp->susp.current + cnt);
-            /* break if to_stop == 0 (we're at the logical stop)
-             * AND cnt > 0 (we're not at the beginning of the
-             * output block).
-             */
-            if (to_stop < togo) {
-                if (to_stop == 0) {
-                    if (cnt) {
-                        togo = 0;
-                        break;
-                    } else /* keep togo as is: since cnt == 0, we
-                            * can set the logical stop flag on this
-                            * output block
-                            */
-                        susp->logically_stopped = true;
-                } else /* limit togo so we can start a new
-                        * block at the LST
-                        */
-                    togo = to_stop;
-            }
-        }
-
-        n = togo;
-        s_ptr_reg = susp->s_ptr;
-        X_ptr_reg = &(susp->X[susp->Xp]);
-
-/*	nyquist_printf("fetch %d samples, offset %d\n", togo, susp->Xp);*/
-
-        if (n) do { /* the inner sample computation loop */
-/*	    if (*s_ptr_reg == 0.0) nyquist_printf("fetched zero to X[%d]\n", X_ptr_reg - susp->X); */
-            *X_ptr_reg++ = *s_ptr_reg++;
-        } while (--n); /* inner loop */
-
-        /* using s_ptr_reg is a bad idea on RS/6000: */
+        
+        memcpy(susp->X + susp->Xp, susp->s_ptr, togo * sizeof(sample_type));
         susp->s_ptr += togo;
         susp_took(s_cnt, togo);
         susp->Xp += togo;
@@ -261,6 +225,15 @@ samples need to be shifted from the end of X to the beginning.
     if (susp->terminate_cnt != UNKNOWN &&
         susp->terminate_cnt <= susp->susp.current + max_sample_block_len) {
         togo = susp->terminate_cnt - susp->susp.current;
+    }
+    if (!susp->logically_stopped &&
+        susp->susp.log_stop_cnt != UNKNOWN) {
+        int to_stop = susp->susp.log_stop_cnt - susp->susp.current;
+        assert(to_stop >= 0);
+        if (to_stop < togo) {
+            if (to_stop == 0) susp->logically_stopped = true;
+            else togo = to_stop;
+        }
     }
     if (togo == 0) {
 /*	stdputstr("resamp calling snd_list_terminate\n"); */

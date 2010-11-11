@@ -93,7 +93,7 @@ void allpoles_s_fetch(register allpoles_susp_type susp, snd_list_type snd_list)
 
 
       if (susp->ak_array == NULL) {
-out:         togo = 0; /* indicate termination */
+             togo = 0; /* indicate termination */
              break;    /* we're done */
       }
       else if (!vectorp(susp->ak_array))

@@ -1,9 +1,16 @@
 How to release Nyquist (notes from RBD to RBD):
 
+Note: releases are now on sourceforge. The file names are
+      nyqosx30n.tgz
+      nyqsrc30n.zip
+      setupnyqiderun30n.exe
+
 New primitives should be entered into misc\transfiles.lsp
 and then makefile.lsp should be used to generate a new
 Makefile as well as sndfn.cl and sndfn.wcl. Run intgen
 under Windows (or Mac) using intgen @sndfn.wcl
+
+ON EITHER WINDOWS OR MAC
 
 Edit Readme.txt to contain correct version number at top.
 
@@ -16,7 +23,73 @@ Edit documentation to contain correct version number.
 Is documentation current and installed?
 [Update and Commit via CVS]
 
+To rebuild documentation:
+    cd docsrc
+    toafs.bat (or toafs.sh) -- copies source to afs
+    on afs, scribe nyquistman
+        ps2pdf nyquistman.ps
+    on afs, scribe nyquistman to text: 
+        scribe nyquistman.mss -file
+        copy nyquistman.doc to nyqman.txt
+    copy nyquistman.pdf to doc
+    copy nyqman.txt to doc
+    cd docsrc/s2h
+    nyquist
+    (load "$system-dir$/system.lsp") -- use the appropriate one
+    (load "s2h")
+    (load "citations")
+    (load "do-nyquist-manual")
+    (load "do-nyquist-manual") -- 2nd time to get cross-references
+    (exit)
+    mv doc/NyquistWords.txt to jnyqide/NyquistWords.txt
+
+CVS commit -- documentation?
+
+ON WINDOWS AND MAC
+
 Search for temp.wav in c:\rbd\nyquist, and delete them all.
+Search for points.dat in c:\rbd\nyquist, and delete them all.
+
+Check for and delete editor backup files in:
+      jnyqide
+      runtime
+      lib
+
+ON WINDOWS
+
+Run releasenyqide.bat to create release directory for nyqide_setup
+Run Setup Generator and select nyqide_setup
+Make sure Files:Source Directory is set to proper nyqrelide just
+created by releasenyqide.bat
+Click Make
+
+rename setup/setupnyqiderun.exe to setup/setupnyqiderunNNN.exe, using
+the version number for NNN
+
+Visit https://frs.sourceforge.net/webupload and upload setup/setupnyqiderun.exe
+
+copy the documentation from d:/rbd/nyquist to AFS, or
+    scp /Volumes/rbd/nyquist/doc/* rbd@linux.gp.cs.cmu.edu:www/doc/nyquist/
+
+FOR THE MAC
+
+build jNyqIDE project with xcode.
+source cmuinstallmac.sh
+
+FOR PLIGHT DRUM MACHINE -- SHOULD NOT BE NECESSARY
+
+(this is a separate download because it is large)
+source install-plight.sh
+
+FOR THE MAC TO BUILD RELEASE FOR UNIX
+
+source release is build along with Mac release by cmuinstallmac.sh
+
+******************************************************
+* OLD INSTRUCTIONS FOR AUTOMATIC RELEASE TO CMU WEB: *
+******************************************************
+
+ON WINDOWS
 
 Run release.bat to create release directory for nyquist_setup
 Run Setup Generator and select nyquist_setup
@@ -28,23 +101,21 @@ Run Setup Generator and select nyqwin_setup
 Make sure Files:Source Directory is set to proper nyqrelwin just created by releasenyqwin.bat
 Click Make
 
-Run releasenyqide.bat to create release directory for nyqide_setup
-Run Setup Generator and select nyqide_setup
-Make sure Files:Source Directory is set to proper nyqrelide just
-created by releasenyqide.bat
-Click Make
+... releasenyqide.bat ...
 
-run misc/cmu/cmuinstall.bat
+from the nyquist directory:
+make sure nyquist/ny exists for execution by misc/cmu/cmuinstall.sh
+    (copy it to nyquist/ny if not)
+cd misc/cmu
+run cmuinstall.bat or source cmuinstall.sh
 
+IGNORE THIS -- DELETE AFTER VERSION 3.02
+same thing on PPC, but use
+cd ~/nyquist/misc/cmu
+bash cmuinstallmac.sh
+--- and use something like 232ppc for the version number
 
-FOR THE MAC
+FOR THE MAC TO BUILD RELEASE FOR UNIX
 
-run MacProject:release-script
-use StuffIt to make nyquist227exe and nyquist227src
-be sure you made the archives self-extracting
-ftp to UX7
-fix web page and delete old files
+the cmuinstall.sh file builds a source zip file and installs it
 
-FOR UNIX
-
-make release

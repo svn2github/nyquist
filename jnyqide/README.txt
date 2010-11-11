@@ -72,3 +72,81 @@ Source Code:
 		change on how far to scroll.
 
 * not currently used, but the framework is there
+
+----- design notes for SAL -----
+
+to move to SAL, we must support two languages: XLISP and SAL
+
+when you open an edit window, the type, XLISP or SAL, should become
+a property of the window. I think we can just assume XLISP unless
+the file extension is SAL. Another option would be to try to detect
+the file type if the extension is not .lsp, .sal, or .ny. Maybe we could
+compute the ratio of parens to non-parens, but this might fail for
+data files (lists of numbers, in XLISP syntax), so we could add other
+features like counts of SAL keywords, etc. Let's try the simple
+file extension test first.
+
+When you open a new file, the editor should know whether it's a
+new lisp window or a new sal window. We won't support a new
+text window, but users can edit text and ignore syntax coloring
+if they want to.
+
+Syntax editor is needed for SAL. Coloring should match SAL examples
+on the CLM/SAL web pages, which look very good.
+
+Indentation should be suggested by the editor when you type newline.
+It would be great if TAB would indent the line instead of inserting a TAB.
+
+The IDE needs know when the user is in SAL mode or LISP mode. SAL
+prompts with "SAL>", so the sequence "\nSAL> " should put the IDE
+into SAL mode. In SAL mode, the IDE should expect SAL to be 
+entered into the input window. Input should only be parsed when
+the user types two newlines in a row -- that allows multiple line
+input.
+
+Also, in SAL mode, errors need to be detected, parsed, and used
+to position the cursor at the error location in an edit window.
+
+----- notes on Java -----
+
+DETECTING A MAC
+
+    if (System.getProperty("mrj.version") == null) {   
+       mb.add(createJUnitMenu());
+    } else {                                               
+          // the Mac specific code will go here           
+    }                                                             
+
+from http://java.sun.com/developer/technicalArticles/JavaLP/JavaToMac2/
+
+	public boolean isMac() {
+		return System.getProperty("mrj.version") != null;
+	}
+
+from http://www.kfu.com/~nsayer/Java/reflection.html
+
+LOADING CLASSES ONLY ON MAC
+
+That is, we really want to do this:
+
+	if (isMac()) {
+		new SpecialMacHandler(this);
+	}
+but we will land in hot water because the class loader doesn't know what isMac() will return. It will only see that SpecialMacHandler wants com.apple.mrj.MRJApplicationUtils and fail to start the program on non-Macs. We must achieve the same end without referencing the class directly in the code. Reflection offers us the way. The reflected version of the same code looks like this:
+
+	if (isMac()) {
+		try {
+			Object[] args = { this };
+			Class[] arglist = { Program.class };
+			Class mac_class = class.forName("SpecialMacHandler");
+			Constructor new_one = mac_class.getConstructor(arglist);
+			new_one.newInstance(args);
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+
+from http://www.kfu.com/~nsayer/Java/reflection.html
+
+

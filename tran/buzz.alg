@@ -8,10 +8,14 @@
 (STATE ("double" "ph_incr" "0")
        ("float" "n_2_r" "1.0F / (n * 2)")
        ("float" "n_2_p1" "(n * 2) + 1")
+	;; note: hz * 0.5 because this formula generates tones an octave up,
+	;; we also have to correct for the modulation s_fm. If hz != 0, then
+    	;; ph_incr is the increment per hz, so ph_incr/hz is the right scale
+	;; factor. If hz == 0, then the ph_incr/hz is SINE_TABLE_LEN * 0.5 / sr.
        ("double" "phase" "compute_phase(PI*0.5, 69.0, SINE_TABLE_LEN,
-        SINE_TABLE_LEN * 440.0, sr, hz, &susp->ph_incr);
+        SINE_TABLE_LEN * 440.0, sr, hz * 0.5, &susp->ph_incr);
     s_fm->scale *= hz != 0 ? (sample_type) (susp->ph_incr / hz)
-                           : (sample_type) (SINE_TABLE_LEN / sr)"));cancel 0/0
+                           : (sample_type) (SINE_TABLE_LEN * 0.5 / sr)")) ;cancel 0/0
 
 (ALWAYS-SCALE s_fm)
 (INLINE-INTERPOLATION T) ; so that modulation can be low frequency

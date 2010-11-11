@@ -1,0 +1,174 @@
+<html><head><title>Developing and Debugging in Nyquist</title></head>
+<body bgcolor="ffffff">
+<a href = "part12.html">Previous Section</a> | <a href = "part14.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
+<hr>
+<a name = "138"><h2>Developing and Debugging in Nyquist</h2></a>
+<a name="index973"><a name="index974">
+There are a number of tools, functions, and techniques that can help to debug Nyquist programs. Since these are described in many places 
+throughout this manual, this chapter brings together many suggestions and techniques for developing code and debugging. You <i>really</i> 
+should read this chapter before you spend too much time with Nyquist. Many problems that you will certainly run into are addressed here.
+<p>
+<a name = "139"><h3>Debugging</h3></a>
+Probably the most important debugging tool is the backtrace. When 
+Nyquist encounters an error, it suspends execution and prints an 
+error message. To find out where in the program the error occurred 
+and how you got there, start by typing <code>(bt)</code>. This will print 
+out the last several function calls and their arguments, which is 
+usually sufficient to see what is going on.
+<p>
+In order for <code>(bt)</code> to work, you must have a couple of global 
+variables set: <code>*tracenable*</code> is ordinarily set to <code>NIL</code>.  
+If it is true, then a backtrace is automatically printed when an 
+error occurs; <code>*breakenable*</code> must be set to <code>T</code>, as 
+it enables the execution to be suspended when an error is 
+encountered. If <code>*breakenable*</code> is <code>NIL</code> (false), 
+then execution stops when an error occurs but the stack is 
+not saved and you cannot get a backtrace. Finally, <code>bt</code> 
+is just a macro to save typing.  The actual backtrace function 
+is <code>baktrace</code>, which takes an integer argument telling how 
+many levels to print.  All of these things are set up by default 
+when you start Nyquist.  
+<p>
+Since Nyquist sounds are executed with a lazy evaluation scheme, some
+errors are encountered when samples are being generated.  In this
+case, it may not be clear which expression is in error. Sometimes, it
+is best to explore a function or set of functions by examining
+intermediate results. Any expression that yields a sound can be
+assigned to a variable and examined using one or more of:
+<code>s-plot</code>, <code>snd-print-tree</code>, and of course <code>play</code>. The
+<code>snd-print-tree</code> function prints a lot of detail about the inner
+representaion of the sound. Keep in mind that if you assign a sound
+to a global variable and then look at the samples (e.g. with 
+<code>play</code> or <code>s-plot</code>), the samples will be retained in
+memory. At 4 bytes per sample, a big sound may use all of your 
+memory and cause a crash.
+<p>
+Another technique is to use low sample rates so that it is easier to 
+plot results or look at samples directly. The calls:
+<pre>
+set-sound-srate(100)
+set-control-srate(100)
+</pre>
+
+set the default sample rates to 100, which is too slow for audio, but useful for examining programs and results. The function
+<pre>
+snd-samples(<i>sound</i>, <i>limit</i>)
+</pre>
+
+will convert up to <i>limit</i> samples from <i>sound</i> into a Lisp 
+array. This is another way to look at results in detail.
+<p>
+The <code>trace</code> function is sometimes useful.  It prints the name of
+a function and its arguments everytimg the function is called, and the
+result is printed when the function exits.  To trace the osc function,
+type:
+<pre>
+trace(osc)
+</pre>
+
+and to stop tracing, type <code>untrace(osc)</code>.
+<p>
+If a variable needs a value or a function is undefined, and if <code>*breakenable*</code> was set, you will get a prompt where you can fix
+the error (by setting the variable or loading the function definition)
+and keep going.  At the debug (or break) prompt, your input must 
+be in XLISP, not SAL syntax. Use <code>(co)</code>, short for <code>(continue)</code> to
+reevaluate the variable or function and continue execution.
+<p>
+When you finish debugging a particular call, you can "pop" 
+up to the top level by typing <code>(top)</code>, a short name for <code>(top-level)</code>.
+There is a button named "Top" in the NyquistIDE that takes you back to the
+top level (ready to accept XLISP expressions), 
+and another button named "SAL" that puts you back in SAL mode.
+<p>
+<a name = "140"><h3>Useful Functions</h3></a>
+<dl>
+<dt>
+<code>grindef(<a name="index975"><a name="index976"><i>name</i>)</code><dd>Prints
+a formatted listing of a lisp function. This is often useful to quickly inspect
+a function without searching for it in source files. Do not forget to quote the
+name, e.g. <code>(grindef 'prod)</code>.<br><br>
+<dt><code>args(<a name="index977"><a name="index978"><i>name</i>)</code><dd>Similar
+to <code>grindef</code>, this function prints the arguments to a function. This may
+be faster than looking up a function in the documentation if you just need a
+reminder. For example, <code>(args 'lp)</code> prints "(LP S C)," which may help you
+to remember that the arguments are a sound (S) followed by the cutoff (C) 
+frequency.
+</dl>
+<p>
+The following functions are useful short-cuts that might have been included in 
+XLISP. They are so useful that they are defined as part of Nyquist.
+<p>
+<dl>
+<dt>
+<code>incf(<a name="index979"><a name="index980"><i>symbol</i>)</code><dd>Increment <i>symbol</i>
+by one. This is a macro, and <i>symbol</i> can be anything that can be set by
+<code>setf</code>. Typically, <i>symbol</i> is a variable: "<code>(incf i)</code>," but
+<i>symbol</i> can also be an array element: "<code>(incf (aref myarray i))</code>."<br><br>
+<dt><code>decf(<a name="index981"><a name="index982"><i>symbol</i>)</code><dd>Decrement <i>symbol</i>
+by one. (See <code>incf</code>, above.)<br><br>
+<dt><code>push(<a name="index983"><i>val</i>, <i>lis</i>)</code><dd>Push <i>val</i> onto <i>lis</i> (a Lisp
+list). This is a macro that is equivalent to writing 
+<code>(setf <i>lis</i> (cons <i>val</i> <i>lis</i>))</code>.<br><br>
+<dt><code>pop(<a name="index984"><i>lis</i>)</code><dd>Remove (pop) the first item from <i>lis</i> (a
+Lisp list). This is a macro that is equivalent to writing 
+<code>(setf <i>lis</i> (cdr <i>lis</i>))</code>. Note that the remaining list is returned,
+not the head of the list that has been popped. Retrieve the head of the list
+(i.e. the top of the stack) using <code>first</code> or, equivalently, <code>car</code>.
+</dl>
+<p>
+The following macros are useful control constructs.
+<p>
+<dl>
+<dt>
+<code>while(<a name="index985"><i>test</i>, <i>stmt1</i>, <i>stmt2</i>, ...)</code><dd>A conventional
+"while" loop. If <i>test</i> is true, perform the statements
+ (<i>stmt1</i>, <i>stmt2</i>, etc.) and repeat. If <i>test</i> is false, return. This
+ expression evaluates to NIL unless the expression <code>(return <i>expr</i>)</code>
+ is evaluated, in which case the value of <i>expr</i> is returned.<br><br>
+<dt><code>when(<a name="index986"><i>test</i>, <i>action</i>)</code><dd>A conventional "if-then" 
+statement. If <i>test</i> is true, <i>action</i> is evaluated and returned. Otherwise,
+NIL is returned. (Use <code>if</code> or <code>cond</code> to implement
+ "if-then-else" and more complex conditional forms.
+</dl>
+<p>
+It is often necessary to load a file <i>only if</i> it has not already been
+loaded. For example, the <code>pianosyn</code> library loads very slowly, so if
+some other file already loaded it, it would be good to avoid loading it
+again. How can you load a file once? Nyquist does not keep track of files
+that are loaded, but you must be loading a file to define some function,
+so the idea is to tell Nyquist "I require <i>function</i> from <i>file</i>"; if
+the function does not yet exist, Nyquist satisfies the requirement by loading
+the file.
+<dl>
+<dt>
+<code>require-from(<a name="index987"><a name="index988"><i>fnsymbol</i>, 
+<i>filename</i> [, <i>path</i>])</code><dd>Tests whether <i>fnsymbol</i>, an unquoted 
+function name, is defined. If 
+not, <i>filename</i>, a <code>STRING</code>,
+is loaded. Normally <i>fnsymbol</i> is a function that will be called from
+within the current file, and <i>filename</i> is the file that defines 
+<i>fnsymbol</i>. The <i>path</i>, if a <code>STRING</code>, is prepended to <i>filename</i>.
+If <i>path</i> is <code>t</code> (true), then the directory of the current file is
+used as the path.
+</dl>
+<p>
+Sometimes it is important to load files relative to the current file. For example,
+the <code>lib/piano.lsp</code> library loads data files from the <code>lib/piano</code> directory,
+but how can we find out the full path of <code>lib</code>? The solution is:
+<dl>
+<dt>
+<code>current-path(<a name="index989"><a name="index990"><a name="index991">)</code><dd>Returns the full path name of the file that is
+currently being loaded (see <code>load</code>). Returns NIL if no file is being loaded.
+</dl> 
+<p>
+Finally, there are some helpful math functions:
+<dl>
+<dt>
+<code>real-random(<a name="index992"><a name="index993"><a name="index994"><i>from</i>, <i>to</i>)</code><dd>Returns a random <code>FLONUM</code> between <i>from</i> and <i>to</i>. (See also <code>rrandom</code>, which is equivalent to <code>(real-random 0 1</code>)).<br><br>
+<dt><code>power(<a name="index995"><a name="index996"><i>x</i>, <i>y</i>)</code><dd>Returns <i>x</i> raised to
+the <i>y</i> power.
+</dl>
+<p>
+<hr>
+<a href = "part12.html">Previous Section</a> | <a href = "part14.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
+</body></html>

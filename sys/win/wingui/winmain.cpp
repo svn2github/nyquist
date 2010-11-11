@@ -470,8 +470,8 @@ long CALLBACK MainWndProc(
             int wid = LOWORD(wParam);
             HWND hwndCtrl = (HWND) lParam;
             if (code == 0 && wid == IDM_ABOUT) {
-                DialogBox(hInst,/*current inst*/, "ABOUTBOX",/*resource to use*/
-                    hWnd,/* parent*/,(DLGPROC) About/*About() instance address*/);
+                DialogBox(hInst, /*current inst*/ "ABOUTBOX", /*resource to use*/
+                    hWnd, /* parent*/ (DLGPROC) About /*About() instance address*/);
             } else if (code == 0 && wid == ID_FILE_LOAD) {
                 type_this(button_msgs[0]);
             } else if (code == 0 && wid == ID_FILE_RELOAD) {

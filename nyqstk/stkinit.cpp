@@ -2,7 +2,7 @@
 
 #include "stdlib.h"
 #include "string.h"
-#include "instr.h"
+// #include "instr.h"
 #include "Stk.h"
 #include "stkinit.h"
 
@@ -15,6 +15,8 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+using namespace Nyq;
 
 const char *rawwave_path = NULL;
 
@@ -42,6 +44,7 @@ extern "C" void stk_init()
     path[strlen(path) - 12] = '\0'; 
     rawwave_path = strcpy((char *) malloc(strlen(path) + 1), path); /* keep a copy */
     /* note: rawwave_path is allocated but never freed */
+   Stk::setRawwavePath(path); // PJM
 }
 
 

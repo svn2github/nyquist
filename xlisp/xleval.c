@@ -380,11 +380,10 @@ LOCAL int evpushargs(LVAL fun, LVAL args)
     pusharg(cvfixnum((FIXTYPE)(newfp - xlfp)));
     pusharg(fun);
     pusharg(NIL); /* will be argc */
-
     /* evaluate and push each argument */
-    for (argc = 0; consp(args); args = cdr(args), ++argc)
+    for (argc = 0; consp(args); args = cdr(args), ++argc) {
         pusharg(xleval(car(args)));
-
+    }
     /* establish the new stack frame */
     newfp[2] = cvfixnum((FIXTYPE)argc);
     xlfp = newfp;

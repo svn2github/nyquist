@@ -5,7 +5,7 @@
 #ifndef mips
 #include "stdlib.h"
 #endif
-#include "snd.h"
+#include "sndfmt.h"
 #include "xlisp.h"
 #include "sound.h"
 #include "falloc.h"
@@ -155,7 +155,6 @@ void yin_compute(yin_susp_type susp, float *pitch, float *harmonicity)
 
     float *samples = susp->block;
     int middle = susp->middle;
-    int n = middle * 2;
     int m = susp->m;
     float threshold = 0.1F;
     float *results = susp->temp;
@@ -163,7 +162,6 @@ void yin_compute(yin_susp_type susp, float *pitch, float *harmonicity)
     // work from the middle of the buffer:
     int i, j; // loop counters
     // how many different lags do we compute?
-    int iterations = middle + 1 - m;
     float left_energy = 0;
     float right_energy = 0;
     float left, right, non_periodic;
@@ -526,7 +524,6 @@ LVAL snd_make_yin(sound_type s, double low_step, double high_step, long stepsize
     register yin_susp_type susp;
     rate_type sr = s->sr;
     time_type t0 = s->t0;
-    time_type t0_min = t0;
 
     falloc_generic(susp, yin_susp_node, "snd_make_yin");
     susp->susp.fetch = yin_fetch;

@@ -2,6 +2,14 @@
 /* Written by Chris Tchou. */
 /* This file contains the stuff that the other xlisp files call directly. */
 
+/* Changes by Roger Dannenberg, Jan 2006:
+Previously, the input thread would block on input, so if a command line
+instantiation of Nyquist called (EXIT), the process would still block
+in getchar() until the user typed a newline. Now, I only start the 
+input thread if ostgetc is called (input is really needed). This will
+still read ahead and block, but only in cases where you are already
+interactive.
+
 /* Changes by Roger Dannenberg, April 2004:
 To support interrupts to Lisp processing, XLISP call oscheck frequently to
 test for an abort or break condition. This condition can be activated by
@@ -37,6 +45,7 @@ continuing to check for Windows process messages.
 #include <signal.h>   /* Added by Dannneberg, Apr 2004 */
 #include "exitpa.h"   /* Added by Dannneberg, Apr 2004 */
 
+
 const char os_pathchar = '\\';
 const char os_sepchar = ',';
 
@@ -50,6 +59,8 @@ const char os_sepchar = ',';
 #include "xlisp.h"
 #include "cext.h"
 #include "userio.h"
+#include "sliders.h"
+#include "sound.h" /* define nosc_enabled */
 
 /* externals */
 extern FILE *tfp;  /* transcript file pointer */
@@ -66,12 +77,14 @@ static char *linebuf = NULL, *lineptr;
 static int numChars;
 
 /* input thread */
-unsigned long input_thread_handle = 0;
+unsigned long input_thread_handle = -1;
+#define NEED_INPUT if (input_thread_handle == -1) start_input_thread();
 #define input_buffer_max 1024
 #define input_buffer_mask (input_buffer_max - 1)
 char input_buffer[1024];
 volatile int input_buffer_head = 0;
 volatile int input_buffer_tail = 0;
+volatile int buffer_eof = 0;
 HANDLE input_buffer_ready = NULL;
 
 BOOL WINAPI ctrl_c_handler(DWORD dwCtrlType)
@@ -83,6 +96,9 @@ BOOL WINAPI ctrl_c_handler(DWORD dwCtrlType)
     return FALSE;
 }
 
+#ifdef DEBUG_INPUT
+extern FILE *to_input_buffer;
+#endif
 
 void input_thread_run(void *args)
 {
@@ -92,13 +108,14 @@ void input_thread_run(void *args)
      * CTRL-C, so call it here to be safe.
      */
     SetConsoleCtrlHandler(ctrl_c_handler, TRUE);
+    /* printf("input_thread_run\n"); */
 
-    while (TRUE) {
+    while (!buffer_eof) {
         int head;
         c = getchar();
-        if (redirect_flag == 0 && c == EOF && abort_flag) {
-            // you cannot have EOF on a console, but when user types ^C,
-            // an EOF is generated for some reason. Ignore it...
+        if (c == EOF && abort_flag) {
+            // when user types ^C, an EOF is generated for some reason. 
+			// Ignore it...
             if (abort_flag == ABORT_LEVEL) c = ABORT_CHAR;
             else c = BREAK_CHAR;
         } else if (c == ABORT_CHAR) {
@@ -109,90 +126,94 @@ void input_thread_run(void *args)
             abort_flag = BREAK_LEVEL;
         } else if (c == BREAK_CHAR) {
             ; // ignore this because abort_flag is set to ABORT_LEVEL
+		} else if (c == '\005' || c == '\006') { // control-e or control-f
+		  ; // ignore these. IDE will send control-f to turn off echo, but
+			  // under Windows, echo is already turned off. We filter control-f
+			  // here to avoid generating an error message. Maybe the IDE should
+		  // not send control-f in the first place, but the IDE is cross-platform
+		  // and does not know it's running under Windows, whereas this file
+		  // is platform dependent.
+        } else if (c == '\016') { // begin hidden message
+#define MSGBUF_MAX 64
+            char msgbuf[MSGBUF_MAX];
+            int msgbufx = 0;
+            char type_char = getchar(); // read message type character
+            printf("begin hidden message: %c\n", type_char);
+            if (type_char == EOF) buffer_eof = TRUE;
+            else {
+                // message is terminated by '\021'
+                while ((c = getchar()) != '\021' && 
+                       c != EOF &&
+                       msgbufx < MSGBUF_MAX - 1) {
+                    msgbuf[msgbufx++] = c;
+                }
+                msgbuf[msgbufx++] = 0;
+                printf("message: %s\n", msgbuf);
+                if (c == EOF) buffer_eof = TRUE;
+                else if (msgbufx < MSGBUF_MAX) {
+                    if (type_char == 'S') {  // slider change message
+                        // message format is index<space>value
+                        int index;
+                        float value;
+                        if (sscanf(msgbuf, "%d %g", &index, &value) == 2) {
+                            set_slider(index, value);
+                            printf("set_slider %d %g\n", index, value);
+                        }
+                    }
+                }
+            }
+		} else if (c == EOF) {
+			buffer_eof = TRUE;
         } else {
             // insert character into the FIFO
             head = (input_buffer_head + 1) & input_buffer_mask;
             while (head == input_buffer_tail) Sleep(100);
             input_buffer[input_buffer_head] = c;
+#ifdef DEBUG_INPUT
+			if (to_input_buffer) putc(c, to_input_buffer);
+#endif
             input_buffer_head = head;
         }
-        if (c == '\n' || abort_flag) {
+        if (c == '\n' || abort_flag || buffer_eof) {
             SetEvent(input_buffer_ready);
             // wake up Nyquist if it is waiting for input
         }
     } 
-    printf("Input thread exiting\n");
+    // printf("Input thread exiting\n");
 }
 
 //int isascii (char c) { return 1; }  /* every char is an ascii char, isn't it? */
 
-void osinit (char *banner) {
-//	int i;
+void start_input_thread()
+{
+    // create thread to process input
+    input_thread_handle = _beginthread(input_thread_run, 0, NULL);
+    if (input_thread_handle == -1) {
+        printf("Unable to create input thread, errno = %d\n", errno);
+        EXIT(1);
+    }
+}
 
-    char version[] = "\nWindows console interface by Chris Tchou and Morgan Green.\n";
-//	InitMac ();  /* initialize the mac interface routines */
-//	lposition = 0;  /* initialize the line editor */
-//	for (i = 0; banner[i] != '\0'; i++) macputc (banner[i]);
-//	for (i = 0; version[i] != '\0'; i++) macputc (version[i]);
+void osinit (char *banner) 
+{
     printf(banner);
-    printf(version);
-
-    // Added by Ning Hu, to communicate between compiler GUI and Nyquist console	Apr.2001
-    if (_isatty( _fileno( stdout ) ) ){
+    if (_isatty( _fileno( stdin ) ) ){
         redirect_flag = 0;
 #ifdef DEBUG
         printf( "stdout has not been redirected to a file\n" );		//for debugging use
 #endif
-        /* if this is a console, disable ^C 
-            (this doesn't seem to retain other features like input editing)
-
-        SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE),
-                       ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT); 
-         */
     } else {
         redirect_flag = 1;
 #ifdef DEBUG
         printf( "stdout has been redirected to a file\n");			//for debugging use
 #endif
     }
-    // Add End
-
-    /* SetConsoleCtrlHandler(NULL, TRUE); */
     // signal when input is ready
     input_buffer_ready = CreateEvent(NULL, FALSE, FALSE, NULL);
     if (input_buffer_ready == NULL) {
         printf("Unable to create Event object\n");
         EXIT(1);
     }
-    // create thread to process input
-    /**/
-    input_thread_handle = _beginthread(input_thread_run, 0, NULL);
-    if (input_thread_handle == -1) {
-        printf("Unable to create input thread, errno = %d\n", errno);
-        EXIT(1);
-    }
-    /**/
-}
-
-/* osrand - return next random number in sequence */
-long osrand (long rseed) {
-#ifdef OLDBUTINTERESTING
-// note that this takes a seed and returns a big number,
-// whereas I think XLisp's RANDOM is defined differently
-    long k1;
-
-    /* make sure we don't get stuck at zero */
-    if (rseed == 0L) rseed = 1L;
-
-    /* algorithm taken from Dr. Dobbs Journal, November 1985, page 91 */
-    k1 = rseed / 127773L;
-    if ((rseed = 16807L * (rseed - k1 * 127773L) - k1 * 2836L) < 0L)
-    rseed += 2147483647L;
-
-    /* return a random number between 0 and MAXFIX */
-    return rseed;
-#endif
-    return rand() % rseed;	// rseed is a misnomer
 }
 
 FILE *osaopen (char *name, char *mode) {
@@ -208,6 +229,7 @@ FILE *osbopen (char *name, char *mode) {
 int osclose (FILE *fp) { return (fclose (fp)); }
 int osaputc (int ch, FILE *fp) { return (putc (ch, fp)); }
 int osbputc (int ch, FILE *fp) { return (putc (ch, fp)); }
+void osoutflush(FILE *fp) { fflush(fp); }
 
 /* osagetc - get a character from an ascii file */
 int osagetc(fp)
@@ -218,45 +240,25 @@ int osagetc(fp)
 
 extern int abort_flag;
 extern int redirect_flag;			//Added by Ning Hu	Apr.2001
-
-int ostgetc (void) {
-    //  return getchar(); //Old code--removed by Ning Hu
-    /* Added by Ning Hu		Apr.2001 
-    int ch = getchar();
-    oscheck(); // in case user typed ^C
-    if (ch == BREAK_CHAR && abort_flag == BREAK_LEVEL) {
-        abort_flag = 0;
-    }
-    switch (ch) {
-          case ABORT_CHAR:	// control-c
-            xltoplevel();
-            break;
-          case '\025':	// control-u
-            xlcleanup();
-          case '\020':	// control-p
-            xlcontinue();
-            break;
-          case BREAK_CHAR:
-            ostputc('\n');	// control-b
-            xlbreak("BREAK",s_unbound);
-            break;
-          default:
-            break;
-    }
-    return ch;
-    //Add End
-    */
+int ostgetc (void) 
+{
     int c;
-    while (input_buffer_tail == input_buffer_head) {
+	NEED_INPUT;
+    while (!buffer_eof && (input_buffer_tail == input_buffer_head)) {
         oscheck();
         WaitForSingleObject(input_buffer_ready, INFINITE);
     }
-    c = input_buffer[input_buffer_tail];
-    input_buffer_tail = (input_buffer_tail + 1) & input_buffer_mask;
+	if (buffer_eof) c = EOF;
+	else {
+        c = input_buffer[input_buffer_tail];
+	    input_buffer_tail = (input_buffer_tail + 1) & input_buffer_mask;
+	}
     if (c == '\025') { // control-u
         xlcleanup();
-    } else if (c == '\020') {
+    } else if (c == '\020') { // control-p
         xlcontinue();
+    } else if (c == '\024') { // control-t
+        xinfo();
     }
     return c;
 }
@@ -269,6 +271,12 @@ void ostputc (int ch) {
     if (tfp) osaputc (ch, tfp);
 }
 
+void ostoutflush()
+{
+    if (tfp) fflush(tfp);
+    fflush(stdout);
+}
+
 
 void osflush (void) {
     lineptr = linebuf;
@@ -279,8 +287,14 @@ void osflush (void) {
 
 void oscheck (void) {				
     MSG lpMsg;
+
+#if OSC
+    if (nosc_enabled) nosc_poll();
+#endif
+
     // check_aborted();	-- call to userio.c superceded by code here in winstuff.c
 //	printf("Current Thread: %d\n", GetCurrentThreadId());		//for debugging use
+	// look for Windows messages from NyqIDE (a Delphi program)
     if ((redirect_flag) && (PeekMessage(&lpMsg, NULL, 0, 0, PM_REMOVE)!=0)) { 
         if (lpMsg.message == WM_CHAR) {
             switch (lpMsg.wParam) {
@@ -323,43 +337,62 @@ void osfinish(void) {
 int renamebackup (char *filename) { return 0; }
 
 
-long randomseed = 1L;
 
-long random () {
-// note that this takes a seed and returns a big number,
-// whereas I think XLisp's RANDOM is defined differently
-    long k1;
 
-    /* algorithm taken from Dr. Dobbs Journal, November 1985, page 91 */
-    k1 = randomseed / 127773L;
-    if ((randomseed = 16807L * (randomseed - k1 * 127773L) - k1 * 2836L) < 0L)
-      randomseed += 2147483647L;
+static WIN32_FIND_DATA FindFileData;
+static HANDLE hFind = INVALID_HANDLE_VALUE;
+#define OSDIR_LIST_READY 0
+#define OSDIR_LIST_STARTED 1
+#define OSDIR_LIST_DONE 2
+static int osdir_list_status = OSDIR_LIST_READY;
+#define OSDIR_MAX_PATH 256
+static char osdir_path[OSDIR_MAX_PATH];
 
-    /* return a random number between 0 and MAXFIX */
-    return randomseed;
-}
-
-/* Added by Ning Hu		May.2001 
-xsetdir - set current directory of the process */
-LVAL xsetdir() {
-    TCHAR ssCurDir[MAX_PATH], szCurDir[MAX_PATH];
-
-    strcpy(ssCurDir, getstring(xlgastring()));
-    xllastarg();
-    if (SetCurrentDirectory(ssCurDir)) {
-        if (GetCurrentDirectory(
-            sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {	
-        /* create the result string */
-            stdputstr("Current Directory: ");
-            stdputstr(szCurDir);
-            stdputstr("\n");
-        }	
-        else stdputstr("Directory Setting Error\n");
+// osdir_list_start -- prepare to list a directory
+int osdir_list_start(char *path)
+{
+    if (strlen(path) >= OSDIR_MAX_PATH - 2) {
+        xlcerror("LISTDIR path too big", "return nil", NULL);
+        return FALSE;
     }
-    else stdputstr("Directory Setting Error\n");
-
-    /* return the new string */
-    return (NIL);
+    strcpy(osdir_path, path);
+    strcat(osdir_path, "/*"); // make a pattern to match all files
+    if (osdir_list_status != OSDIR_LIST_READY) {
+        osdir_list_finish(); // close previously interrupted listing
+    }
+    hFind = FindFirstFile(osdir_path, &FindFileData); // get the "."
+    if (hFind == INVALID_HANDLE_VALUE) return FALSE;
+    if (FindNextFile(hFind, &FindFileData) == 0) return FALSE; // get the ".."
+    osdir_list_status = OSDIR_LIST_STARTED;
+    return TRUE;
 }
-//Updated End
+
+
+char *osdir_list_next()
+{
+    if (FindNextFile(hFind, &FindFileData) == 0) {
+        osdir_list_status = OSDIR_LIST_DONE;
+        return NULL;
+    }
+    return FindFileData.cFileName;
+}
+
+void osdir_list_finish()
+{
+    if (osdir_list_status != OSDIR_LIST_READY) {
+        FindClose(hFind);
+    }
+    osdir_list_status = OSDIR_LIST_READY;
+}
+
+
+/* xechoenabled -- set/clear echo_enabled flag (unix only) */
+LVAL xechoenabled()
+{
+	int flag = (xlgetarg() != NULL);
+    xllastarg();
+	// echo_enabled = flag; -- do nothing in Windows
+	return NULL;
+}
+
 

@@ -17,6 +17,10 @@
 #include "string.h"
 #include "xlisp.h"
 
+#ifdef WIN32
+#include "malloc.h" // defines alloca()
+#endif
+
 /* node flags */
 #define MARK	1
 #define LEFT	2
@@ -24,6 +28,10 @@
 /* macro to compute the size of a segment */
 #define segsize(n) (sizeof(SEGMENT)+((n)-1)*sizeof(struct node))
 
+
+#ifdef DEBUG_INPUT
+extern FILE *debug_input_fp;
+#endif
 
 /* variables local to xldmem.c and xlimage.c */
 SEGMENT *segs,*lastseg,*fixseg,*charseg;
@@ -95,7 +103,7 @@ LVAL cons(LVAL x, LVAL y)
 }
 
 /* cvstring - convert a string to a string node */
-LVAL cvstring(char *str)
+LVAL cvstring(const char *str)
 {
     LVAL val;
     xlsave1(val);
@@ -123,13 +131,22 @@ LVAL new_string(int size)
 /* cvsymbol - convert a string to a symbol */
 LVAL cvsymbol(char *pname)
 {
+    /* pname points to a global buffer space. This is ok unless you have
+     * a gc hook that writes things and therefore uses the buffer. Then
+     * if newvector causes a GC, pname is overwritten before cvstring is
+     * called and the symbol will have the wrong name!
+     * The bug is fixed by copying pname to the stack.
+     */
     LVAL val;
+    int len = strlen(pname) + 1; /* don't forget the terminating zero */
+    char *local_pname_copy = (char *) alloca(len);
+    memcpy(local_pname_copy, pname, len);
     xlsave1(val);
     val = newvector(SYMSIZE);
     val->n_type = SYMBOL;
     setvalue(val,s_unbound);
     setfunction(val,s_unbound);
-    setpname(val,cvstring(pname));
+    setpname(val,cvstring(local_pname_copy));
     xlpop();
     return (val);
 }
@@ -348,7 +365,14 @@ void gc(void)
         /* print additional info (e.g. sound blocks in Nyquist) */
         print_local_gc_info();
         stdputstr(" ]\n");
+        stdflush(); /* output in a timely fashion so user sees progress */
     }
+#ifdef DEBUG_INPUT
+    if (debug_input_fp) {
+        int c = getc(debug_input_fp);
+        ungetc(c, debug_input_fp);
+    }
+#endif
 }
 
 /* mark - mark all accessible nodes */
@@ -730,6 +754,7 @@ void xlminit(void)
     /* allocate the argument stack */
     if ((xlargstkbase = (LVAL *)malloc(ADEPTH * sizeof(LVAL))) == NULL)
         xlfatal("insufficient memory");
+    // printf("ADEPTH is %d\n", ADEPTH);
     xlargstktop = xlargstkbase + ADEPTH;
     xlfp = xlsp = xlargstkbase;
     *xlsp++ = NIL;

@@ -1,10 +1,9 @@
 (CLIP-ALG
   (NAME "clip")
   (ARGUMENTS ("sound_type" "s") ("double" "level")) 
-  (LINEAR s) ; this will move the scale factor to the result
-  (STATE ("double" "lev" "level * s->scale"))
+  (STATE ("sample_type" "level" "(sample_type) level"))
   (START (MIN s))
-  (INNER-LOOP "double x = s; output = (sample_type) (x > lev ? lev : (x < -lev ? -lev : x))")
+  (INNER-LOOP "double x = s; output = (sample_type) (x > level ? level : (x < -level ? -level : x))")
   (TERMINATE (MIN s))
   (LOGICAL-STOP (MIN s))
 )

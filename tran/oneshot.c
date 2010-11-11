@@ -92,14 +92,12 @@ void oneshot_n_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double x = *input_ptr_reg++;
+        double x = *input_ptr_reg++;
         if (x > lev_reg) cnt_reg = oncount_reg;
         cnt_reg--;
         *out_ptr_reg++ = (cnt_reg >= 0 ? 1.0F : 0.0F);;
 	} while (--n); /* inner loop */
 
-	susp->lev = lev_reg;
-	susp->oncount = oncount_reg;
 	susp->cnt = cnt_reg;
 	/* using input_ptr_reg is a bad idea on RS/6000: */
 	susp->input_ptr += togo;
@@ -122,6 +120,103 @@ double x = *input_ptr_reg++;
 	susp->logically_stopped = true;
     }
 } /* oneshot_n_fetch */
+
+
+void oneshot_s_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
+{
+    int cnt = 0; /* how many samples computed */
+    int togo;
+    int n;
+    sample_block_type out;
+    register sample_block_values_type out_ptr;
+
+    register sample_block_values_type out_ptr_reg;
+
+    register double lev_reg;
+    register long oncount_reg;
+    register long cnt_reg;
+    register sample_type input_scale_reg = susp->input->scale;
+    register sample_block_values_type input_ptr_reg;
+    falloc_sample_block(out, "oneshot_s_fetch");
+    out_ptr = out->samples;
+    snd_list->block = out;
+
+    while (cnt < max_sample_block_len) { /* outer loop */
+	/* first compute how many samples to generate in inner loop: */
+	/* don't overflow the output sample block: */
+	togo = max_sample_block_len - cnt;
+
+	/* don't run past the input input sample block: */
+	susp_check_term_log_samples(input, input_ptr, input_cnt);
+	togo = min(togo, susp->input_cnt);
+
+	/* don't run past terminate time */
+	if (susp->terminate_cnt != UNKNOWN &&
+	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo == 0) break;
+	}
+
+
+	/* don't run past logical stop time */
+	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+	    /* break if to_stop == 0 (we're at the logical stop)
+	     * AND cnt > 0 (we're not at the beginning of the
+	     * output block).
+	     */
+	    if (to_stop < togo) {
+		if (to_stop == 0) {
+		    if (cnt) {
+			togo = 0;
+			break;
+		    } else /* keep togo as is: since cnt == 0, we
+		            * can set the logical stop flag on this
+		            * output block
+		            */
+			susp->logically_stopped = true;
+		} else /* limit togo so we can start a new
+		        * block at the LST
+		        */
+		    togo = to_stop;
+	    }
+	}
+
+	n = togo;
+	lev_reg = susp->lev;
+	oncount_reg = susp->oncount;
+	cnt_reg = susp->cnt;
+	input_ptr_reg = susp->input_ptr;
+	out_ptr_reg = out_ptr;
+	if (n) do { /* the inner sample computation loop */
+        double x = (input_scale_reg * *input_ptr_reg++);
+        if (x > lev_reg) cnt_reg = oncount_reg;
+        cnt_reg--;
+        *out_ptr_reg++ = (cnt_reg >= 0 ? 1.0F : 0.0F);;
+	} while (--n); /* inner loop */
+
+	susp->cnt = cnt_reg;
+	/* using input_ptr_reg is a bad idea on RS/6000: */
+	susp->input_ptr += togo;
+	out_ptr += togo;
+	susp_took(input_cnt, togo);
+	cnt += togo;
+    } /* outer loop */
+
+    /* test for termination */
+    if (togo == 0 && cnt == 0) {
+	snd_list_terminate(snd_list);
+    } else {
+	snd_list->block_len = cnt;
+	susp->susp.current += cnt;
+    }
+    /* test for logical stop */
+    if (susp->logically_stopped) {
+	snd_list->logically_stopped = true;
+    } else if (susp->susp.log_stop_cnt == susp->susp.current) {
+	susp->logically_stopped = true;
+    }
+} /* oneshot_s_fetch */
 
 
 void oneshot_toss_fetch(susp, snd_list)
@@ -177,10 +272,18 @@ sound_type snd_make_oneshot(sound_type input, double level, double ontime)
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, oneshot_susp_node, "snd_make_oneshot");
-    susp->lev = level * input->scale;
+    susp->lev = level;
     susp->oncount = round(ontime * input->sr);
     susp->cnt = 0;
-    susp->susp.fetch = oneshot_n_fetch;
+
+    /* select a susp fn based on sample rates */
+    interp_desc = (interp_desc << 2) + interp_style(input, sr);
+    switch (interp_desc) {
+      case INTERP_n: susp->susp.fetch = oneshot_n_fetch; break;
+      case INTERP_s: susp->susp.fetch = oneshot_s_fetch; break;
+      default: snd_badsr(); break;
+    }
+
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < input->t0) sound_prepend_zeros(input, t0);

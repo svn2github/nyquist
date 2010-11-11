@@ -1,1517 +1,573 @@
-<html><head><title>Nyquist Functions</title></head>
+<html><head><title>More Examples</title></head>
 <body bgcolor="ffffff">
-<a name = "38"><h2>Nyquist Functions</h2></a>
+<a href = "part5.html">Previous Section</a> | <a href = "part7.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
+<hr>
+<a name = "45"><h2>More Examples</h2></a>This chapter explores Nyquist through additional examples.  The reader may
+wish to browse through these and move on to Chapter <a href = "part8.html#82">"Nyquist Functions"</a>, which
+is a reference section describing Nyquist functions.
+<p>
+<a name = "46"><h3>Stretching Sampled Sounds</h3></a><a name="index143">This example illustrates how to stretch a sound, resampling it in the process.
+Because sounds in Nyquist are <i>values</i> that contain the sample rate, start
+time, etc., use <code>sound</code> to convert a sound into a behavior that can be
+stretched, e.g. <code>sound(a-snd)</code>. This behavior stretches a sound according
+to the stretch factor in the environment, set using <code>stretch</code>. For
+accuracy and efficiency, Nyquist does not resample a stretched sound until
+absolutely necessary. The <code>force-srate</code> function is used to resample
+the result so that we end up with a "normal" sample rate that is playable
+on ordinary sound cards.
+<p>
+<pre>
+<i>; if a-snd is not loaded, load sound sample:
+;</i>
+if not(boundp(quote(a-snd))) then
+  set a-snd = s-read("demo-snd.aiff")
+<p>
+<i>; the SOUND operator shifts, stretches, clips and scales 
+; a sound according to the current environment
+;</i>
+define function ex23()
+  play force-srate(*default-sound-srate*,  sound(a-snd) ~ 3.0)
+<p>
+define function down()
+  return force-srate(*default-sound-srate*, 
+                     seq(sound(a-snd) ~ 0.2,
+                         sound(a-snd) ~ 0.3,
+                         sound(a-snd) ~ 0.4,
+                         sound(a-snd) ~ 0.6))
+play down()
+<p>
+<i>; that was so much fun, let's go back up:
+;</i>
+define function up()
+  return force-srate(*default-sound-srate*,
+                     seq(sound(a-snd) ~ 0.5,
+                         sound(a-snd) ~ 0.4,
+                         sound(a-snd) ~ 0.3,
+                         sound(a-snd) ~ 0.2))
+<p>
+<i>; and write a sequence
+;</i>
+play seq(down(), up(), down())
+</pre>
 
-This chapter provides a language reference for Nyquist.  Operations
-are categorized by functionality and abstraction level.
-Nyquist is implemented in two important levels: the ``high level'' supports
-behavioral abstraction, which means that operations like <code>stretch</code> and
-<code>at</code> can be applied.  These functions are the ones that typical users
-are expected to use, and most of these functions are written in XLISP.
 <p>
-The ``low-level'' primitives directly operate on sounds, but know nothing of
-environmental variables (such as <code>*warp*</code>, etc.).  The
-names of most of these low-level functions start with ``<code>snd-</code>''.  In
-general, programmers should avoid any function with the ``<code>snd-</code>''
-prefix.  Instead, use the ``high-level'' functions, which know about the
-environment and react appropriately.  The names of high-level functions
-do not have prefixes like the low-level functions.  
+Notice the use of the <code>sound</code> behavior as opposed to <code>cue</code>.  The
+<code>cue</code> behavior shifts and scales its sound according to <code>*warp*</code>
+and <code>*loud*</code>, but it does not change the duration or resample the
+sound.  In contrast, <code>sound</code> not only shifts and scales its sound, but
+it also stretches it by resampling or changing the effective sample rate
+ according to <code>*warp*</code>.  If
+<code>*warp*</code> is a continuous warping function, then the sound will be
+stretched by time-varying amounts.
+(The <code>*transpose*</code> element of the environment is
+ignored by both <code>cue</code> and <code>sound</code>.)  
 <p>
-There are certain low-level operations that apply directly to sounds (as
-opposed to behaviors) and are relatively ``safe'' for ordinary use.  These
-are marked as such.
+<b><i>Note:</i></b> <code>sound</code> may use linear interpolation rather than a high-quality resampling algorithm.  In some cases, this may introduce errors audible as noise. Use <code>resample</code> (see Section <a href = "part8.html#90">"Sound Synthesis"</a>) for high-quality interpolation.
 <p>
-Nyquist uses both linear frequency and equal-temperament pitch numbers to
-specify repetition rates.  Frequency is always specified in either cycles
-per second (hz), or pitch numbers, also referred to as ``steps,'' as in
-steps of the chromatic scale.  Steps are floating point numbers such that 60
-= Middle C, 61 = C#, 61.23 is C# plus 23 cents, etc.  The mapping from pitch
-number to frequency is the standard exponential conversion, and fractional
-pitch numbers are allowed:
+In the functions <code>up</code> and <code>down</code>, the <code>*warp*</code> is set by
+<i>stretch</i> (<code>~</code>), which simply scales time by a constant scale factor. In this case,
+<code>sound</code> can "stretch" the signal simply by changing the sample rate without
+any further computation. When <code>seq</code> tries to add the signals together, it
+discovers the sample rates do not match and uses linear interpolation to adjust
+all sample rates to match that of the first sound in the sequence. The result of
+<code>seq</code> is then converted using <code>force-srate</code> to convert the sample rate,
+again using linear interpolation. 
+It would be slightly better, from a computational
+standpoint, to apply <code>force-srate</code> individually 
+to each stretched sound rather
+than applying <code>force-srate</code> after <code>seq</code>.
+<p>
+Notice that the overall duration of <code>sound(a-snd) ~ 0.5</code> will
+be half the duration of <code>a-snd</code>.
+<p>
+<a name = "47"><h3>Saving Sound Files</h3></a><a name="index144">So far, we have used the <code>play</code> command to play a sound.  The
+<code>play</code> command works by writing a sound to a file while 
+simultaneously playing it.
+This can be done one step at a time, and
+it is often convenient to save a sound to a particular file for later use:
+<pre>
+<i>; write the sample to a file, 
+;    the file name can be any Unix filename.  Prepending a "./" tells
+;    s-save to not prepend *default-sf-dir*
+;</i>
+exec s-save(a-snd, 1000000000, "./a-snd-file.snd")
+<p>
+<i>; play a file
+; play command normally expects an expression for a sound
+; but if you pass it a string, it will open and play a
+; sound file</i>
+play "./a-snd-file.snd"
+<p>
+<i>; delete the file (do this with care!)
+; only works under Unix (not Windows)</i>
+exec system("rm ./a-snd-file.snd")
+<p>
+<i>; now let's do it using a variable as the file name
+;</i>
+set my-sound-file = "./a-snd-file.snd"
+<p>
+exec s-save(a-snd, 1000000000, my-sound-file)
+<p>
+<i>; play-file is a function to open and play a sound file</i>
+exec play-file(my-sound-file)
+<p>
+exec system(strcat("rm ", my-sound-file))
+</pre>
 
-<blockquote>frequency = 440 * 2^((pitch - 69)/12)</blockquote>
-There are many
-predefined pitch names.  By default these are tuned in equal temperament,
-with A4 = 440Hz, but these may be changed.  (See Section <a href = "part2.html#15">``Predefined Constants''</a>).
+This example shows how <code>s-save</code> can be used to save a sound to a file.
 <p>
-<a name = "39"><h3>Sounds</h3></a><a name="index94">
-A sound is a primitive data type in Nyquist.  Sounds can be created, passed
-as parameters, garbage collected, printed, and set to variables just like
-strings, atoms, numbers, and other data types.  
+This example also shows how the <code>system</code> function can be used to invoke
+Unix shell commands, such as a command to play a file or remove it.
+Finally, notice that <code>strcat</code> can be used to concatenate a command name
+to a file name to create a complete command that is then passed to
+<code>system</code>.  (This is convenient if the sound file name is stored in a
+parameter or variable.)
 <p>
-<a name = "40"><h4>What is a Sound?</h4></a>
-Sounds have 5 components:
-<ul>
+<a name = "48"><h3>Memory Space and Normalization</h3></a>
+
+<a name="index145"><a name="index146"><a name="index147"><a name="index148"><a name="index149"><a name="index150"><a name="index151"><a name="index152">
+Sound samples take up lots of memory, and often, there is not enough primary (RAM) memory to hold a complete composition.  For this reason, Nyquist can compute sounds incrementally, saving the final result on disk.  <i>However,</i> Nyquist can also save sounds in memory so that they can be reused efficiently.  In general, if a sound is saved in a global variable, memory will be allocated as needed to save and reuse it.
+<p>
+The standard way to compute a sound and write it to disk is to pass an expression to the <code>play</code> command:
+<pre>
+play my-composition()
+</pre>
+
+<p>
+
+Often it is nice to <i>normalize</i> sounds so that they use the full available
+dynamic range of 16 bits.  Nyquist has an automated facility to help with
+normalization. By default, Nyquist computes up to 1 million samples (using 
+about 4MB of memory) looking for the peak. The entire sound is normalized so
+that this peak will not cause clipping. If the sound has less than 1 million
+samples, or if the first million samples are a good indication of the overall
+peak, then the signal will not clip.
+<p>
+With this automated normalization technique, you can choose the desired 
+peak value by setting <code>*autonorm-target*</code>, which is initialized to 0.9.
+The number of samples examined is <code>*autonorm-max-samples*</code>, initially
+1 million. You can turn this feature off by executing:
+<pre>
+exec autonorm-off()<a name="index153">
+</pre>
+
+and turn it back on by typing:
+<pre>
+exec autonorm-on()<a name="index154">
+</pre>
+
+This normalization technique is in effect when <code>*autonorm-type*</code> is 
+<code>quote(lookahead</code>), which is the default.
+<p>
+An alternative normalization method uses the peak value from the previous
+call to <code>play</code>. After playing a file, Nyquist can adjust an internal
+scale factor so that if you play the same file again, the peak amplitude
+will be <code>*autonorm-target*</code>, which is initialized to 0.9. This can 
+be useful if you want to carefully normalize a big sound that does not
+have its peak near the beginning. To select this style of normalization,
+set <code>*autonorm-type*</code> to the (quoted) atom <code>quote(previous</code>). 
+<p>
+You can also create your own normalization method in Nyquist. 
+The <code>peak</code> function computes the maximum value of a sound.  
+The peak value is also returned from the <code>play</code> macro. You can
+normalize in memory if you have enough memory; otherwise you can compute 
+the sound twice.  The two techniques are illustrated here:
+<pre>
+<i>; normalize in memory.  First, assign the sound to a variable so
+; it will be retained:</i>
+set mysound = sim(osc(c4), osc(c5))
+<i>; now compute the maximum value (ny:all is 1 giga-samples, you may want a
+; smaller constant if you have less than 4GB of memory:</i>
+set mymax = snd-max(mysound, NY:ALL)
+display "Computed max", mymax
+<i>; now write out and play the sound from memory with a scale factor:</i>
+play mysound * (0.9 / mymax)
+<p>
+<i>; if you don't have space in memory, here's how to do it:</i>
+define function myscore()
+  return sim(osc(c4), osc(c5))
+<i>; compute the maximum:</i>
+set mymax = snd-max(list(quote(myscore)), NY:ALL)
+display "Computed max", mymax
+<i>; now we know the max, but we don't have a the sound (it was garbage
+; collected and never existed all at once in memory).  Compute the sound
+; again, this time with a scale factor:</i>
+play myscore() * (0.9 / mymax)
+</pre>
+
+<p>
+You can also write a sound as a floating point file.  This
+file can then be converted to 16-bit integer with the proper scaling
+applied.  If a long computation was involved, it should be much faster
+to scale the saved sound file than to recompute the sound from scratch. 
+Although not implemented yet in Nyquist, some header formats can
+store maximum amplitudes, and some soundfile player programs can 
+rescale floating point files on the fly, allowing normalized 
+soundfile playback without an extra normalization pass (but at a cost
+of twice the disk space of 16-bit samples).  
+You can use Nyquist to rescale a floating point file and
+convert it to 16-bit samples for playback.
+<p>
+<a name = "49"><h3>Frequency Modulation</h3></a><a name="index155">
+The next example uses the Nyquist frequency modulation behavior <code>fmosc</code>
+to generate various sounds.  The parameters to <code>fmosc</code> are:
+<pre>
+fmosc(<i>pitch</i> <i>modulator</i> <i>table</i> <i>phase</i>)
+</pre>
+
+Note that pitch is the number of half-steps, e.g. <code>c4</code> has the value of 60 which is middle-C, and phase is in degrees.  Only the first two parameters are required:
+<pre>
+<i>; make a short sine tone with no frequency modulation
+;</i>
+play fmosc(c4, pwl(0.1))
+<p>
+<i>; make a longer sine tone -- note that the duration of
+;   the modulator determines the duration of the tone
+;</i>
+play fmosc(c4, pwl(0.5))
+</pre>
+
+In the example above, <code>pwl</code> (for Piece-Wise Linear) is used to generate
+sounds that are zero for the durations of <code>0.1</code> and <code>0.5</code> seconds,
+respectively.  In effect, we are using an FM oscillator with no modulation
+input, and the result is a sine tone.  The duration of the modulation
+determines the duration of the generated tone (when the modulation signal
+ends, the oscillator stops).
+<p>
+The next example uses a more interesting modulation function, a ramp from
+zero to C4, expressed in hz.  More explanation of <code>pwl</code> is in
+order.  This operation constructs a piece-wise linear function sampled at
+the <code>*control-srate*</code>.  The first breakpoint is always at <code>(0,
+0)</code>, so the first two parameters give the time and value of the second
+breakpoint, the second two parameters give the time and value of the third
+breakpoint, and so on.  The last breakpoint has a value of <code>0</code>, so only
+the time of the last breakpoint is given.  In this case, we want the ramp to
+end at C4, so we cheat a bit by having the ramp return to zero
+"almost" instantaneously between times <code>0.5</code> and <code>0.501</code>.
+<p>
+The <code>pwl</code> behavior always expects an odd number of parameters.  The
+resulting function is shifted and stretched linearly according to
+<code>*warp*</code> in the environment.  Now, here is the example:
+<pre>
+<i>; make a frequency sweep of one octave; the piece-wise linear function
+; sweeps from 0 to (step-to-hz c4) because, when added to the c4
+; fundamental, this will double the frequency and cause an octave sweep.
+;</i>
+play fmosc(c4, pwl(0.5, step-to-hz(c4),  0.501))
+</pre>
+
+<p>
+The same idea can be applied to a non-sinusoidal carrier.  Here, we assume that <code>*fm-voice*</code> is predefined (the next section shows how to define it):
+<pre>
+<i>; do the same thing with a non-sine table
+;</i>
+play fmosc(cs2, pwl(0.5, step-to-hz(cs2), 0.501),
+           *fm-voice*, 0.0)
+</pre>
+
+<p>
+The next example shows how a function can be used to make a special
+frequency modulation contour.  In this case the contour generates a sweep
+from a starting pitch to a destination pitch:
+<pre>
+<i>; make a function to give a frequency sweep, starting
+; after &lt;delay&gt; seconds, then sweeping from &lt;pitch-1&gt;
+; to &lt;pitch-2&gt; in &lt;sweep-time&gt; seconds and then
+; holding at &lt;pitch-2&gt; for &lt;hold-time&gt; seconds.
+;</i>
+define function sweep(delay, pitch-1, sweep-time, 
+                      pitch-2, hold-time)
+  begin
+    with interval = step-to-hz(pitch-2) - step-to-hz(pitch-1)
+    return pwl(delay, 0.0,
+               <i>; sweep from pitch 1 to pitch 2</i>
+               delay + sweep-time, interval,
+               <i>; hold until about 1 sample from the end</i>
+               delay + sweep-time + hold-time - 0.0005, 
+               interval,
+               <i>; quickly ramp to zero (pwl always does this,</i>
+               <i>;    so make it short)</i>
+               delay + sweep-time + hold-time)
+  end
+<p>
+<i>; now try it out
+;</i>
+play fmosc(cs2, sweep(0.1, cs2, 0.6, gs2, 0.5),
+           *fm-voice*, 0.0)
+</pre>
+
+<p>
+FM can be used for vibrato as well as frequency sweeps.  Here, we use the
+<code>lfo</code> function to generate vibrato.  The <code>lfo</code> operation is
+similar to <code>osc</code>, except it generates sounds at the
+<code>*control-srate*</code>, and the parameter is hz rather than a pitch:
+<pre>
+play fmosc(cs2, 10.0 * lfo(6.0), *fm-voice*, 0.0)
+</pre>
+
+<p>
+What kind of manual would this be without the obligatory FM sound?  Here, a
+sinusoidal modulator (frequency C4) is multiplied by a slowly increasing
+ramp from zero to <code>1000.0</code>.
+<pre>
+set modulator = pwl(1.0, 1000.0, 1.0005) * 
+                osc(c4)
+<i>; make the sound</i>
+play fmosc(c4, modulator)
+</pre>
+
+<p>
+For more simple examples of FM in Nyquist, see 
+<a name="index156"><a name="index157"><a name="index158"><a name="index159">
+<code>demos/warble_tutorial.htm</code>. Another interesting FM sound 
+reminiscent of "scratching" can be found with a detailed explanation
+in <code>demos/scratch_tutorial.htm</code>.<a name="index160">
+<a name="index161"><a name="index162">.
+<p>
+<a name = "50"><h3>Building a Wavetable</h3></a>
+In Section <a href = "part2.html#15">"Waveforms"</a>, we saw how to synthesize a wavetable.   A
+wavetable for <code>osc</code> also can be extracted from any sound.  This is
+especially interesting if the sound is digitized from some external sound
+source and loaded using the <code>s-read</code> function.  Recall that a table
+is a list consisting of a sound, the pitch of that sound, and T (meaning the
+sound is periodic).
+<p>
+In the following, a sound is first read from the file <code>demo-snd.nh</code>.
+Then, the <code>extract</code> function is used
+to extract the portion of the sound between 0.110204 and 0.13932 seconds.
+(These numbers might be obtained by first plotting the sound and estimating
+the beginning and end of a period, or by using some software to look for
+good zero crossings.)  The result of <code>extract</code> becomes the first
+element of a list.  The next element is the pitch (24.848422), and the last
+element is <code>T</code>.  The list is assigned to <code>*fm-voice*</code>.
+<pre>
+if not(boundp(quote(a-snd))) then
+  set a-snd = s-read("demo-snd.aiff")
+<p>
+set *fm-voice* = list(extract(0.110204, 0.13932, cue(a-snd)),
+                      24.848422,
+                      #T)
+</pre>
+
+<p>
+The file
+<i>demos/examples.sal</i> contains an extensive example of how to locate
+zero-crossings, extract a period, build a waveform, and generate a tone from it.  (See <code>ex37</code> through <code>ex40</code> in the file.)
+<p>
+<a name = "51"><h3>Filter Examples</h3></a>Nyquist provides a variety of filters.  All of these filters take either
+real numbers or signals as parameters.  If you pass a signal as a filter
+parameter, the filter coefficients are recomputed at the sample rate of the
+<i>control</i> signal.  Since filter coefficients are generally expensive to
+compute, you may want to select filter control rates carefully.  Use
+<code>control-srate-abs</code> (Section <a href = "part8.html#97">"Transformations"</a>) to specify
+the default control sample rate, or use <code>force-srate</code> (Section
+<a href = "part8.html#90">"Sound Synthesis"</a>) to resample a signal before passing it to a filter.  
+<p>
+Before presenting examples, let's generate some unfiltered white noise:
+<pre>
+play noise()
+</pre>
+
+Now low-pass filter the noise with a 1000Hz cutoff:
+<pre>
+play lp(noise(), 1000.0)
+</pre>
+
+The high-pass filter is the inverse of the low-pass:
+<pre>
+play hp(noise(), 1000.0)
+</pre>
+
+<p>
+Here is a low-pass filter sweep from 100Hz to 2000Hz:
+<pre>
+play lp(noise(), pwl(0.0, 100.0, 1.0, 2000.0, 1.0))
+</pre>
+
+And a high-pass sweep from 50Hz to 4000Hz:
+<pre>
+play hp(noise(), pwl(0.0, 50.0, 1.0, 4000.0, 1.0))
+</pre>
+
+<p>
+The band-pass filter takes a center frequency and a bandwidth parameter.
+This example has a 500Hz center frequency with a 20Hz bandwidth.  The scale
+factor is necessary because, due to the resonant peak of the filter, the
+signal amplitude exceeds 1.0:
+<pre>  
+play reson(10.0 * noise(), 500.0, 20.0, 1)
+</pre>
+
+In the next example, the center frequency is swept from 100 to 1000Hz, using a constant 20Hz bandwidth:
+<pre>
+play reson(0.04 * noise(),
+           pwl(0.0, 200.0, 1.0, 1000.0, 1.0),
+           20.0)
+</pre>
+
+<p>
+For another example with explanations, see 
+<a name="index163"><a name="index164"><a name="index165">
+<a name="index166">
+<code>demos/wind_tutorial.htm</code>.
+<p>
+<a name = "52"><h3>DSP in Lisp</h3></a>
+<a name="index167"><a name="index168">In almost any 
+signal processing system, the vast majority of computation
+takes place in the inner loops of DSP algorithms, and Nyquist is designed so
+that these time-consuming inner loops are in highly-optimized
+machine code rather than relatively slow interpreted lisp code. As a result,
+Nyquist typically spends 95% of its time in these inner loops; the overhead
+of using a Lisp interpreter is negligible.
+<p>
+The drawback is that Nyquist must provide the DSP operations you need, or
+you are out of luck. When Nyquist is found lacking, you can either write a
+new primitive signal operation, or you can perform DSP in Lisp code. Neither
+option is recommended for inexperienced programmers. Instructions for
+extending Nyquist are given in Appendix <a href = "part16.html#188">"Extending Nyquist"</a>. This section
+describes the process of writing a new signal processing function in Lisp.
+<p>
+Before implementing a new DSP function, you should decide which approach is
+best. First, figure out how much of the new function can be implemented
+using existing Nyquist functions. For example, you might think that a
+tapped-delay line would require a new function, but in fact, it can be
+implemented by composing sound transformations to accomplish delays, scale
+factors for attenuation, and additions to combine the intermediate results.
+This can all be packaged into a new Lisp function, making it easy to use.
+If the function relies on built-in DSP primitives, it will execute very
+efficiently.
+<p>
+Assuming that built-in functions cannot be used, try to define a new
+operation that will be both simple and general. Usually, it makes sense to
+implement only the kernel of what you need, combining it with existing
+functions to build a complete instrument or operation.  For example, if you
+want to implement a physical model that requires a varying breath pressure
+with noise and vibrato, plan to use Nyquist functions to add a basic
+pressure envelope to noise and vibrato signals to come up with a composite
+pressure signal. Pass that signal into the physical model rather than
+synthesizing the envelope, noise, and vibrato within the model. This not
+only simplifies the model, but gives you the flexibility to use all of
+Nyquist's operations to synthesize a suitable breath pressure signal.
+<p>
+Having designed the new "kernel" DSP operation that must be implemented,
+decide whether to use C or Lisp. (At present, SAL is not a good option
+because it has no support for object-oriented programming.) 
+To use C, you must have a C compiler, the
+full source code for Nyquist, and you must learn about extending Nyquist by
+reading Appendix <a href = "part16.html#188">"Extending Nyquist"</a>. This is the more complex approach, but
+the result will be very efficient. A C implementation will deal properly
+with sounds that are not time-aligned or matched in sample rates.
+To use Lisp, you must learn something
+about the XLISP object system, and the result will be about 50 times slower
+than C. Also, it is more difficult to deal with time alignment and
+differences in sample rates.
+The remainder of this section gives an example of a Lisp version of
+<code>snd-prod</code> to illustrate how to write DSP functions for Nyquist in Lisp.
+<p>
+The <code>snd-prod</code> function is the low-level multiply routine. It has two
+sound parameters and returns a sound which is the product of the two. To
+keep things simple, we will assume that two sounds to be multiplied have a
+matched sample rate and matching start times. The DSP algorithm for each
+output sample is simply to fetch a sample from each sound, multiply them,
+and return the product.
+<p>
+To implement <code>snd-prod</code> in Lisp, three components are required:
+<ol>
 <li>
-<code>srate<a name="index95"></code> - the sample rate of the sound.
-<li><code>samples<a name="index96"></code> - the samples.
-<li><code>signal-start<a name="index97"></code> - the time of the first sample.
-<li><code>signal-stop<a name="index98"></code> - the time of one past the last sample.
-<li><code>logical-stop<a name="index99"></code> - the time at which the sound logically ends, e.g. a 
-sound may end at the beginning of a decay.  This value defaults 
-to <code>signal-stop</code>,
-but may be set to any value.  
-</ul>
-It may seem that there should be <code>logical-start</code> to indicate the
-logical or perceptual beginning of a sound as well as a <code>logical-stop</code>
-to indicate the logical ending of a sound.  In practice, only
-<code>logical-stop</code> is needed; this attribute tells when the next sound
-should begin to form a sequence of sounds.  In this respect, Nyquist sounds
-are asymmetric: it is possible to compute sequences forward in time by
-aligning the logical start of each sound with the <code>logical-stop</code> of the
-previous one, but one cannot compute ``backwards'', aligning the logical end
-of each sound with the logical start of its successor.  The root of this
-asymmetry is the fact that when we invoke a behavior, we say when to start,
-and the result of the behavior tells us its logical duration.  There is no
-way to invoke a behavior with a direct specification of when to
-stop <a href = "foot.html#foot1">(Footnote 1)</a> .  
+An object is used to store the two parameter sounds. This object will be
+called upon to yield samples of the result sound;
+<li>Within the object, the <code>snd-fetch</code> routine is used to fetch samples
+from the two input sounds as needed;
+<li>The result must be of type <code>SOUND</code>, so <code>snd-fromobject</code> is used
+to create the result sound.
+</ol>
 <p>
-<b><i>Note:</i></b> there is no way to enforce the
-intended ``perceptual'' interpretation of 
-<code>logical-stop</code>.  As far as Nyquist is concerned, these are just numbers to
-guide the alignment of sounds within various control constructs.
+The combined solution will work as follows: The result is a value of type
+<code>sound</code> that retains a reference to the object.  When Nyquist needs
+samples from the sound, it invokes the sound's "fetch" function, which in
+turn sends an XLISP message to the object. The object will use
+<code>snd-fetch</code> to get a sample from each stored sound, multiply the
+samples, and return a result.
 <p>
-<a name = "41"><h4>Multichannel Sounds</h4></a>
-<a name="index100">
-Multichannel sounds are represented by Lisp arrays of sounds.  To create an
-array of sounds the XLISP <code>vector</code> function is useful.  Most low-level 
-Nyquist functions (the ones starting with <code>snd-</code>) do not operate on
-multichannel sounds.  Most high-level functions do operate on multichannel
-sounds.
+Thus the goal is to design an XLISP object that, in response to a
+<code>:next</code> message will return a proper sequence of samples.  When the
+sound reaches the termination time, simply return <code>NIL</code>.
 <p>
-<a name = "42"><h4>Accessing and Creating Sound</h4></a>
-Several functions display information concerning a sound and can be used to
-query the components of a sound. There are functions that access samples in
-a sound and functions that construct sounds from samples.
-<p>
-<dl>
-<dt>
-<code>(sref<a name="index101"><a name="Sound, accessing point102"> <i>sound</i> <i>time</i>)</code><dd>Accesses <i>sound</i> at the point <i>time</i>, which is a local time. If <i>time</i> does not correspond to a sample time, then the nearest samples are linearly interpolated to form the result.  To access a particular sample, either convert the sound to an array (see <code>snd-samples</code> below), or use <code>snd-srate</code> and <code>snd-t0</code> (see below) to find the sample rate and starting time,  and compute a time (<i>t</i>) from the sample number (<i>n</i>):
+The XLISP manual (see Appendix <a href = "part19.html#207">"XLISP: An Object-oriented Lisp"</a> describes the object system,
+but in a very terse style, so this example will include some explanation of
+how the object system is used. First, we need to define a class for the
+objects that will compute sound products. Every class is a subclass of class
+<code>class</code>, and you create a subclass by sending <code>:new</code> to a class.
+<pre>
+(setf product-class (send class :new '(s1 s2)))
+</pre>
 
-<blockquote>t = (n / srate) + t0</blockquote>
-Thus, the lisp code to access the n^(th) sample of a sound would look like:
-<code>
-(sref sound (global-to-local (+ (/ n (snd-srate sound)) (snd-t0 sound))))
-</code>
-Here is why <code>sref</code> interprets its time argument as a local time:
-<code>
-&gt (sref (ramp 1) 0.5) <i>; evaluate a ramp at time 0.5</i>
-0.5
-&gt (at 2.0 (sref (ramp 1) 0.5)) <i>; ramp is shifted to start at 2.0</i>
-		<i>; the time, 0.5, is shifted to 2.5</i>
-0.5
-</code>
-If you were to use <code>snd-sref</code>, which treats time as global, instead of <code>sref</code>, which treats time as local, then the first example above would return the same answer (0.5), but the second example would return 0.  Why? Because the <code>(ramp 1)</code> behavior would be shifted to start at time 2.0, but the resulting sound would be evaluated at global time 0.5.  By definition, sounds have a value of zero before their start time.<br><br>
-<dt><code>(sref-inverse<a name="index103"> <i>sound</i> <i>value</i>)</code><dd>Search <i>sound</i> for the first point at which it achieves <i>value</i> and return the corresponding (linearly interpolated) time.  If no inverse exists, an error is raised.  This function is used by Nyquist in the implementation of time warping.<br><br>
-<dt>
-<code>(snd-from-array<a name="Sound, creating from array104"><a name="index105"> <i>t0</i> <i>sr</i>
-<i>array</i>)</code><dd>Converts a lisp array of FLONUMs into a sound with starting
-time <i>t0</i> and sample rate <i>sr</i>.  Safe for ordinary use.  Be aware that
-arrays of floating-point samples use 14 bytes per sample, and an additional
-4 bytes per sample are allocated by this function to create a sound type.<br><br>
-<dt><code>(snd-fromarraystream<a name="index106"> <i>t0</i><i>sr</i> <i>object</i>)</code><dd>Creates a sound for which samples come from
-<i>object</i>. The starting time is <i>t0</i> (a FLONUM), and the sample rate is
-<i>sr</i>. The <i>object</i> is an XLisp object (see Section <a href = "part12.html#91">``Objects''</a> for
-information on objects.) A sound is returned.  When the sound needs samples,
-they are generated by sending the message <code>:next</code> to <i>object</i>. If
-<i>object</i> returns <code>NIL</code>, the sound terminates. Otherwise, <i>object</i>
-must return an array of FLONUMs.  The values in these arrays are
-concatenated to form the samples of the resulting sound.
-There is no provision for <i>object</i> to specify the
-logical stop time of the sound, so the logical stop time is the termination
-time. <br><br>
-<dt><code>(snd-fromobject<a name="index107"><a name="index108">
-<i>t0</i> <i>sr</i> <i>object</i>)</code><dd>Creates a sound for which samples come from
-<i>object</i>. The starting time is <i>t0</i> (a FLONUM), and the sample rate is
-<i>sr</i>. The <i>object</i> is an XLisp object (see Section <a href = "part12.html#91">``Objects''</a> for
-information on objects. A sound is returned.  When the sound needs samples,
-they are generated by sending the message <code>:next</code> to <i>object</i>. If
-<i>object</i> returns <code>NIL</code>, the sound terminates. Otherwise, <i>object</i>
-must return a FLONUM.  There is no provision for <i>object</i> to specify the
-logical stop time of the sound, so the logical stop time is the termination
-time.<br><br>
-<dt><code>(snd-extent<a name="index109"> <i>sound</i> <i>maxsamples</i>)</code><dd>Returns a list of two numbers: the starting time of <i>sound</i> and the terminate time of <i>sound</i>.  Finding the terminate time requires that samples be computed.  Like most Nyquist functions, this is non-destructive, so memory will be allocated to preserve the sound samples.  If the sound is very long or infinite, this may exhaust all memory, so the <i>maxsamples</i> parameter specifies a limit on how many samples to compute.  If this limit is reached, the terminate time will be (incorrectly) based on the sound having <i>maxsamples</i> samples.  This function is safe for ordinary use.<br><br>
-<dt><code>(snd-fetch<a name="index110"><a name="index111"><a name="index112"><a name="index113"> <i>sound</i>)</code><dd>Reads samples
-sequentially from <i>sound</i>. This returns a FLONUM after each call, or
-<code>NIL</code> when <i>sound</i> terminates. <b><i>Note:</i></b> <code>snd-fetch</code> modifies
-<i>sound</i>; it is strongly recommended to copy <i>sound</i> using
-<code>snd-copy</code> and access only the copy with <code>snd-fetch</code>.<br><br>
-<dt><code>(snd-fetch-array<a name="index114"> <i>sound</i> <i>len</i>
-<i>step</i>)</code><dd>Reads sequential arrays of samples from <i>sound</i>, returning
-either an array of FLONUMs or <code>NIL</code> when the sound terminates. The
-<i>len</i> parameter, a FIXNUM, indicates how many samples should be returned
-in the result array.  After the array is returned, <i>sound</i> is modified by
-skipping over <i>step</i> (a FIXNUM) samples. If <i>step</i> equals <i>len</i>, then
-every sample is returned once.  If <i>step</i> is less than <i>len</i>, each
-returned array will overlap the previous one, so some samples will be
-returned more than once. If <i>step</i> is greater than <i>len</i>, then some
-samples will be skipped and not returned in any array. The <i>step</i> 
-and <i>len</i> may change at each call, but in the current implementation, an
-internal buffer is allocated for <i>sound</i> on the first call, so subsequent
-calls may not specify a greater <i>len</i> than the first. <b><i>Note:</i></b>
-<code>snd-fetch-array</code> modifies
-<i>sound</i>; it is strongly recommended to copy <i>sound</i> using
-<code>snd-copy</code> and access only the copy with <code>snd-fetch-array</code>.<br><br>
-<dt><code>(snd-flatten<a name="index115"> <i>sound</i> <i>maxlen</i>)</code><dd>This function is identical 
-to <code>snd-length</code>. You would use this function to force samples to be computed in memory. Normally, this is not a good thing to do, but here is one appropriate use: In the case of sounds intended for wavetables, the unevaluated 
-sound may be larger than the evaluated (and typically short) one. 
-Calling <code>snd-flatten</code> will compute the samples and allow the unit generators to be freed in the next garbage collection. <b><i>Note:</i></b> If a sound is computed from many instances of table-lookup oscillators, calling <code>flatten</code> will free the oscillators and their tables. Calling <code>(stats)</code> will print how many total bytes have been allocated to tables.<br><br>
-<dt> <code>(snd-length<a name="index116"> <i>sound</i> <i>maxlen</i>)</code><dd>Counts the
-number of samples in <i>sound</i> up to the physical stop time.  If the sound
-has more than <i>maxlen</i> samples, <i>maxlen</i> is returned.  Calling this
-function will cause all samples of the sound to be computed and saved in
-memory (about 4 bytes per sample).  Otherwise, this function is safe for ordinary use.<br><br>
-<dt> <code>(snd-maxsamp<a name="index117"> <i>sound</i>)</code><dd>Computes the maximum of
-the absolute value of the samples in <i>sound</i>.  Calling this function will
-cause samples to be computed and saved in memory.  (This function should
-have a <i>maxlen</i> parameter to allow self-defense against sounds that would
-exhaust available memory.)  Otherwise, this function is safe for ordinary use.
-This function will probably be removed in a future version.  See <code>peak</code>, a replacement (<a href = "#57">``Signal Operations''</a>).<br><br>
-<dt> <code>(snd-play<a name="index118"> <i>expression</i>)</code><dd>Evaluates <i>expression</i>
-to obtain a sound or array of sounds, computes all of the samples (without
-retaining them in memory), and returns.  If this happens faster than real
-time for interesting sounds, you might want to modify Nyquist to actually
-write the samples directly to an audio output device.  Meanwhile, since this
-function does not save samples in memory or write them to a disk, it is
-useful in determining how much time is spent calculating samples.  See
-<code>s-save</code> (Section <a href = "#53">``Sound File Input and Output''</a>) for saving samples to a file, and
- <code>play</code> (Section <a href = "#53">``Sound File Input and Output''</a>) to play a sound.  This function is
-safe for ordinary use.<br><br>
-<dt><code>(snd-print-tree<a name="index119"> <i>sound</i>)</code><dd>Prints an ascii
-representation of the internal data structures representing a sound.  This
-is useful for debugging Nyquist.  This function is
-safe for ordinary use.<br><br>
-<dt> <code>(snd-samples<a name="index120"><a name="index121"><a name="index122"><a name="index123"> <i>sound</i> <i>limit</i>)</code><dd>Converts the
-samples into a lisp array.  The data is taken directly from the samples,
-ignoring shifts.  For example, if the sound starts at 3.0 seconds, the first
-sample will refer to time 3.0, not time 0.0.  A maximum of <i>limit</i> samples
-is returned.  This function is safe for ordinary use, but like
-<code>snd-from-array</code>, it requires a total of slightly over 18 bytes per
-sample.<br><br>
-<dt> <code>(snd-srate<a name="index124"> <i>sound</i>)</code><dd>Returns the sample rate of
-the sound. Safe for ordinary use.<br><br>
-<dt><code>(snd-time<a name="index125"> <i>sound</i>)</code><dd>Returns the start time of the
-sound.  This will probably go away in a future version, so use <code>snd-t0</code>
-instead.<br><br>
-<dt><code>(snd-t0<a name="index126"> <i>sound</i>)</code><dd>Returns the time of the
-first sample of the sound.  Note that Nyquist operators such as add always
-copy the sound and are allowed to shift the copy up to one half sample
-period in either direction to align the samples of two operands.  Safe for
-ordinary use.<br><br>
-<dt><code>(snd-print<a name="index127"> <i>expression</i> <i>maxlen</i>)</code><dd>Evaluates
-<i>expression</i> to yield a sound or an array of sounds, then prints up to
-<i>maxlen</i> samples to the screen (stdout).  This is similar to
-<code>snd-save</code>, but samples appear in text on the screen instead of in
-binary in a file.  This function is intended for debugging<a name="index128">.
-Safe for ordinary use.<br><br>
-<dt> <code>(snd-set-logical-stop<a name="index129"> <i>sound</i>
-<i>time</i>)</code><dd>Returns a sound which is 
-<i>sound</i>, except that the logical stop of the sound occurs at <i>time</i>.
- <b><i>Note:</i></b> do not call this function.  When defining a behavior, use
-<code>set-logical-stop</code> or <code>set-logical-stop-abs</code> instead.<br><br>
-<dt><code>(snd-sref<a name="index130"> <i>sound</i> <i>time</i>)</code><dd>Evaluates <i>sound</i> 
-at the global time given by <i>time</i>.  Safe for ordinary use, but normally, you should
-call <code>sref</code> instead.<br><br>
-<dt> <code>(snd-stop-time <i>sound</i>)</code><dd>Returns the stop time of <i>sound</i>.
-Sounds can be ``clipped'' or truncated at a particular time.  This function
-returns that time or MAX-STOP-TIME if he programmer has not specified a stop
-time for the sound.  Safe for ordinary use.<br><br>
-<dt><code>(soundp<a name="index131"> <i>sound</i>)</code><dd>Returns true iff <i>sound</i> is a
-SOUND.  Safe for ordinary use.<br><br>
-<dt><code>(stats<a name="index132"><a name="index133"><a name="index134">)</code><dd>Prints the memory usage status.  See also the 
-XLISP <code>mem</code> function.  Safe for ordinary use. This is the only way to find out how much memory is being used by table-lookup oscillator instances.<br><br>
-<dt></dl><a name = "43"><h4>Miscellaneous Functions</h4></a>
-These are all safe and recommended for ordinary use.
+The parameter <code>'(s1 s2)</code> says that the new class will have two instance
+variables, <code>s1</code> and <code>s2</code>. In other words, every object which is an
+instance of class <code>product-class</code> will have its own copy of 
+these two variables.
 <p>
-<dl>
-<dt>
-<code>(db-to-linear<a name="index135"> <i>x</i>)</code><dd>Returns the conversion of <i>x</i> from decibels to linear.  0dB is converted to 1.  20dB represents a linear factor of 10. If <i>x</i> is a sound, each sample is converted and a sound is returned.  If <i>x</i> is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  <b><i>Note:</i></b> With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Sample rates, start times, etc. are taken from <i>x</i>.<br><br>
-<dt><code>(hz-to-step<a name="index136"> <i>freq</i>)</code><dd>Returns a pitch number for <i>freq</i> (in hz).<br><br>
-<dt><code>(linear-to-db<a name="index137"> <i>x</i>)</code><dd>Returns the conversion of <i>x</i> from linear to decibels.  1 is converted to 0.  0 is converted to -INF (a special IEEE floating point value.)  A factor of 10 represents a 20dB change.  If <i>x</i> is a sound,  each sample is converted and a sound is returned.  If <i>x</i> is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  <b><i>Note:</i></b> With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Start times, sample rates, etc. are taken from <i>x</i>.<br><br>
-<dt><code>(log<a name="index138"> <i>x</i>)</code><dd>Calculates the natural log of <i>x</i> (a FLONUM). (See <code>s-log</code> for a version that operates on signals.)<br><br>
-<dt><code>(set-control-srate<a name="index139"><a name="index140"> <i>rate</i>)</code><dd>Sets the default sampling rate for control signals to <i>rate</i> by setting <code>*default-control-srate*</code> and reinitializing the environment.  Do not call this within any synthesis function (see the <code>control-srate-abs</code> transformation, Section <a href = "#51">``Transformations''</a>).<br><br>
-<dt><code>(set-sound-srate<a name="index141"><a name="index142"> <i>rate</i>)</code><dd>Sets the default sampling rate for audio signals to <i>rate</i> by setting <code>*default-sound-srate*</code> and reinitializing the environment.  Do not call this within any synthesis function (see the <code>sound-srate-abs</code> transformation, Section <a href = "#51">``Transformations''</a>).<br><br>
-<dt><code>(set-pitch-names<a name="index143">)</code><dd>Initializes pitch variables (<code>c0</code>, <code>cs0</code>, <code>df0</code>, <code>d0</code>, ... <code>b0</code>, <code>c1</code>, ... <code>b7</code>).  A440 (the default tuning) is represented by the step 69.0, so the variable <code>a4</code> (fourth octave A) is set to 69.0.  You can change the tuning by setting <code>*A4-Hertz*</code><a name="index144"><a name="index145"><a name="index146"> to a value (in Hertz) and calling <code>set-pitch-names</code> to reinitialize the pitch variables.  Note that this will result in non-integer step values.  It does not alter the mapping from step values to frequency.  There is no built-in provision for stretched scales or non-equal temperament, although users can write or compute any desired fractional step values.<br><br>
-<dt> <code>(step-to-hz<a name="index147"> <i>pitch</i>)</code><dd>Returns a frequency in hz
-for <i>pitch</i>, a pitch  number.
-</dl>
-<p>
-<a name = "44"><h3>Behaviors</h3></a><a name="index148">
-<a name = "45"><h4>Using Previously Created Sounds</h4></a>
+Next, we will define the <code>:next</code> method for <code>product-class</code>:
+<pre>
+(send product-class :answer :next '()
+  '((let ((f1 (snd-fetch s1))
+          (f2 (snd-fetch s2)))
+      (cond ((and f1 f2)
+             (* f1 f2))
+            (t nil)))))
+</pre>
 
-These behaviors take a sound and transform that sound according to the
-environment.  These are useful when writing code to make
-a high-level function from a low-level function, or when cuing sounds
-which were previously created:
-<dl>
-<dt>
-<code>(cue<a name="index149"> <i>sound</i>)</code><dd>Applies <code>*loud*</code>, the starting time from <code>*warp*</code>, <code>*start*</code>,
- and <code>*stop*</code> to <i>sound</i>.<br><br>
-<dt><code>(cue-file<a name="index150"> <i>filename</i>)</code><dd>Same as <code>cue</code>, except
-the sound comes from the named file, which is assumed to have the current default <code>*sound-srate*</code> sample rate.  <b><i>Note:</i></b> this function is not
-implemented.<br><br>
-<dt><code>(sound<a name="index151"> <i>sound</i>)</code><dd>Applies <code>*loud*</code>, <code>*warp*</code>, 
-<code>*start*</code>, and <code>*stop*</code> to <i>sound</i>.<br><br>
-<dt><code>(control<a name="index152"> <i>sound</i>)</code><dd>This function is identical to
-<code>sound</code>, but by convention is used when <i>sound</i> is a control signal
-rather than an audio signal.
-</dl>
+The <code>:answer</code> message is used to insert a new method into our new
+<code>product-class</code>. The method is described in three parts: the name
+(<code>:next</code>), a parameter list (empty in this case), and a list of
+expressions to be evaluated. In this case, we fetch samples from <code>s1</code>
+and <code>s2</code>. If both are numbers, we return their product. If either is
+<code>NIL</code>, we terminate the sound by returning <code>nil</code>.
 <p>
-<a name = "46"><h4>Sound Synthesis</h4></a>These functions provide musically interesting creation behaviors that
-react to their environment; these are the ``unit generators'' of Nyquist:
+The <code>:next</code> method assumes that <code>s1</code> and <code>s2</code> hold the sounds
+to be multiplied. These must be installed when the object is created.
+Objects are created by sending <code>:new</code> to a class. A new object is
+created, and any parameters passed to <code>:new</code> are then sent in a
+<code>:isnew</code> message to the new object. Here is the <code>:isnew</code>
+definition for <code>product-class</code>:
+<pre>
+(send product-class :answer :isnew '(p1 p2) 
+  '((setf s1 (snd-copy p1))
+    (setf s2 (snd-copy p2))))
+</pre>
+
+Take careful note of the use of <code>snd-copy</code> in this initialization. The
+sounds <code>s1</code> and <code>s2</code> are modified when accessed by
+<code>snd-fetch</code> in the <code>:next</code> method defined above, but this destroys
+the illusion that sounds are immutable values. The solution is to copy the
+sounds before accessing them; the original sounds are therefore unchanged.
+(This copy also takes place implicitly in most Nyquist sound functions.)
 <p>
-<dl>
-<dt>
-<code>(const<a name="index153"><a name="index154"> <i>value</i> [<i>duration</i>])</code><dd>Creates a constant function at the <code>*control-srate*</code>.  Every sample has the given <i>value</i>, and the default <i>duration</i> is 1.0.  See also <code>s-rest</code>, which is equivalent to calling <code>const</code> with zero, and note that you can pass scalar constants (numbers) to <code>sim</code>, <code>sum</code>, and <code>mult</code> where they are handled more efficiently than constant functions.<br><br>
-<dt><code>(env<a name="index155"> <i>t1</i> <i>t2</i> <i>t4</i> <i>l1</i> <i>l2</i> <i>l3</i> 
-[<i>dur</i>])</code><dd>Creates a 4-phase envelope.
-<i>t<i>i</i></i> is the duration of phase <i>i</i>, and <i>l<i>i</i></i> 
-is the final level of phase <i>i</i>.  <i>t3</i> is implied by the duration
-<i>dur</i>, and <i>l4</i> is <code>0.0</code>.  If <i>dur</i> is not supplied, then
-<code>1.0</code> is assumed.  The envelope duration is the product of <i>dur</i>,
-<code>*stretch*</code>, and <code>*sustain*</code>.  If 
-<i>t1</i> + <i>t2</i> + 2ms + <i>t4</i> is greater than the envelope 
-duration, then a two-phase envelope is
-substituted that has an attack/release time ratio of <i>t1</i>/<i>t4</i>.
-The sample rate of the returned sound is <code>*control-srate*</code>.  (See
-<code>pwl</code> for a more general piece-wise linear function generator.)
-The effect of time warping is to warp the starting time and ending time.
-The intermediate breakpoints are then computed as described above.<br><br>
-<dt><code>(exp-dec<a name="index156"><a name="index157"> <i>hold</i> <i>halfdec</i> <i>length</i>)</code><dd>This convenient envelope shape is a special case of <code>pwev</code> (see Section <a href = "#48">``Piece-wise Approximations''</a>). The envelope starts at 1 and is constant for <i>hold</i> seconds. It then decays with a half life of <i>halfdec</i> seconds until <i>length</i>. (The total duration is <i>length</i>.) In other words, the amplitude falls by half each <i>halfdec</i> seconds. When stretched, this envelope scales linearly, which means the hold time increases and the half decay time increases.<br><br>
-<dt>
-<code>(force-srate<a name="index158"><a name="index159"><a name="index160"> <i>srate</i> <i>sound</i>)</code><dd>Returns a sound which is up- or
-down-sampled to <i>srate</i>.  Interpolation is linear, and no prefiltering is
-applied in the down-sample case, so aliasing may occur. See also
-<code>resample</code>.<br><br>
-<dt><code>(lfo<a name="index161"><a name="index162">
- <i>freq</i> [<i>duration</i> <i>table</i> <i>phase</i>])</code><dd>Just
-like <code>osc</code> (below)
-except this computes at the <code>*control-srate*</code> and frequency
-is specified in Hz.  The <code>*transpose*</code> and <code>*sustain*</code> is not
-applied.  The effect of time warping is to warp the starting and ending
-times.  The signal itself will have a constant unwarped frequency.<br><br>
-<dt><code>(fmlfo<a name="index163"> <i>freq</i> [<i>table</i> <i>phase</i>])</code><dd>A low-frequency oscillator
-that computes at the <code>*control-srate*</code> using a sound to specify a time-varying 
-frequency in Hz. The duration of the result is determined by <i>freq</i>.<br><br>
-<dt><code>(maketable<a name="index164"> <i>sound</i>)</code><dd>Assumes that
-the samples in <i>sound</i> constitute one period of a wavetable, and returns a wavetable
-suitable for use as the <i>table</i> argument to the <code>osc</code> function (see
-below).  Currently, tables are limited to 1,000,000 samples.  This limit is the compile-time constant <code>max_table_len</code> set in <code>sound.h</code>.<br><br>
-<dt><code>(build-harmonic<a name="index165"> <i>n</i> <i>table-size</i>)</code><dd>Intended for
-constructing wavetables, this function returns a sound of length <i>table-size</i>
-samples containing <i>n</i> periods of a sinusoid.  These can be scaled and
-summed to form a waveform with the desired harmonic content.  See <a href = "part2.html#10">``Waveforms''</a> for an example.<br><br>
-<dt><code>(control-warp<a name="index166"> <i>warp-fn</i> <i>signal</i>   [<i>wrate</i>])</code><dd>Applies a
-warp function <i>warp-fn</i> to <i>signal</i> using function composition.  If <i>wrate</i> is omitted, linear
-interpolation is used.  <i>warp-fn</i> is a mapping from score (logical) time
-to real time, and <i>signal</i> is a function from score time to real values.
-The result is a function from real time to real values at a sample rate of
-<code>*control-srate*</code>. See <code>sound-warp</code> for an explanation of
-<i>wrate</i> and high-quality warping.<br><br>
-<dt>
-<code>(mult<a name="index167"> <i>beh1</i> <i>beh2</i> ...)</code><dd>Returns the product of
-behaviors.  The arguments may also be numbers, in which case simple multiplication is performed.  If a number and sound are mixed, the <code>scale</code> function is used to scale the sound by the number. When sounds are multiplied, the resulting sample rate is the maximum sample rate of the factors.<br><br>
-<dt><code>(prod<a name="index168"> <i>beh1</i> <i>beh2</i> ...)</code><dd>Same as <code>mult</code>.<br><br>
-<dt>
-<code>(pan<a name="index169"><a name="index170"> <i>sound</i> <i>where</i>)</code><dd>Pans <i>sound</i> (a behavior) according  to <i>where</i> (another behavior or a number). <i>Sound</i> must be monophonic. <i>Where</i> may be a monophonic sound (e.g. <code>(ramp)</code> or simply a number (e.g. <code>0.5</code>). In either case, <i>where</i> should range from 0 to 1, where 0 means pan completely left, and 1 means pan completely right. For intermediate values, the sound to each channel is scaled linearly. Presently, <code>pan</code> does not check its arguments carefully.<br><br>
-<dt><code>(prod<a name="index171"> <i>beh1</i> <i>beh2</i> ...)</code><dd>Same as <code>mult</code>.<br><br>
-<dt>
-<code>(resample<a name="index172"> <i>sound</i> <i>srate</i>)</code><dd>Similar to <code>force-srate</code>, except
-high-quality interpolation is used to prefilter and reconstruct the signal
-at the new sample rate. (See also <code>sound-warp</code>.)<br><br>
-<dt>
-<code>(scale<a name="index173"> <i>scale</i> <i>sound</i>)</code><dd>Scales the amplitude of <i>sound</i> by the factor <i>scale</i>.  Identical function to <code>snd-scale</code>, except that it handles multichannel sounds.  Sample rates, start times, etc. are taken from <i>sound</i>.<br><br>
-<dt><code>(scale-db<a name="index174"> <i>db</i> <i>sound</i>)</code><dd>Scales the amplitude of <i>sound</i> by the factor <i>db</i>, expressed in decibels.  Sample rates, start times, etc. are taken from <i>sound</i>.<br><br>
-<dt><code>(scale-srate<a name="index175"> <i>sound</i> <i>scale</i>)</code><dd>Scales the sample rate of <i>sound</i> by <i>scale</i> factor.  This has the effect of linearly shrinking or stretching time (the sound is not upsampled or downsampled).  This is a special case of <code>snd-xform</code> (see Section <a href = "#57">``Signal Operations''</a>).<br><br>
-<dt><code>(shift-time<a name="index176"> <i>sound</i> <i>shift</i>)</code><dd>Shift <i>sound</i>
-by <i>shift</i> seconds.  If the sound is 
+To make this code safer for general use, we should add checks that <code>s1</code>
+and <code>s2</code> are sounds with identical starting times and sample rates;
+otherwise, an incorrect result might be computed.
+<p>
+Now we are ready to write <code>snd-product</code>, an approximate replacement for
+<code>snd-prod</code>:
+<pre>
+(defun snd-product (s1 s2)
+  (let (obj)
+    (setf obj (send product-class :new s1 s2))
+    (snd-fromobject (snd-t0 s1) (snd-srate s1) obj)))
+</pre>
 
-f(t), then the result is
-
-f(t - shift).
-See Figure <a href = "#46">5</a>.  This is a special
-case of <code>snd-xform</code> (see Section <a href = "#57">``Signal Operations''</a>).
-</dl>
+This code first creates <code>obj</code>, an instance of <code>product-class</code>, to
+hold <code>s1</code> and <code>s2</code>. Then, it uses <code>obj</code> to create a sound
+using <code>snd-fromobject</code>. This sound is returned from
+<code>snd-product</code>.  Note that in <code>snd-fromobject</code>, you must also
+specify the starting time and sample rate as the first two parameters. These
+are copied from <code>s1</code>, again assuming that <code>s1</code> and <code>s2</code> have
+matching starting times and sample rates.
+<p>
+Note that in more elaborate DSP algorithms we could expect the object to
+have a number of instance variables to hold things such as previous samples,
+waveform tables, and other parameters.
 <p>
 <hr>
-<blockquote></blockquote>
-<img src="fig5.gif"><br><br>
-
-<p>
-<b>Figure 5: </b>The <code>shift-time</code> function shifts a sound in time
-according to its <i>shift</i> argument.
-
-<hr>
-<p>
-<dl>
-<dt>
-<code>(sound-warp<a name="index177"> <i>warp-fn</i> <i>signal</i> [<i>wrate</i>])</code><dd>Applies a
-warp function <i>warp-fn</i> to <i>signal</i> using function composition.  If the optional parameter <i>wrate</i> is omitted or NIL, linear
-interpolation is used.  <i>warp-fn</i> is a mapping from score (logical) time
-to real time, and <i>signal</i> is a function from score time to real values.
-The result is a function from real time to real values at a sample rate of <code>*sound-srate*</code>.
-See also <code>control-warp</code>.
-<br><br>
-<dt>
-If <i>wrate</i> is not NIL, it must be a number. The parameter indicates that
-high-quality resampling should be used and specifies the sample rate for the
-inverse of <i>warp-fn</i>. Use the lowest number you can.
- (See below for details.) Note that high-quality resampling is
-much slower than linear interpolation. 
-<br><br>
-<dt>
-To perform high-quality resampling by a fixed ratio, as opposed to a
-variable ratio allowed in <code>sound-warp</code>, use <code>scale-srate</code> to
-stretch or shrink the sound, and then <code>resample</code> to restore the
-original sample rate.
-<br><br>
-<dt>
-<code>Sound-warp</code> and <code>control-warp</code> both take the inverse of
-<i>warp-fn</i> to get a function from real time to score time. Each sample
-of this inverse is thus a score time; <i>signal</i> is evaluated at each of
-these score times to yield a value, which is the desired result. The 
-sample rate of the inverse warp function is somewhat arbitrary. With linear
-interpolation, the inverse warp function sample rate is taken to be the
-output sample rate. Note, however, that the samples of the inverse warp
-function are stored as 32-bit floats, so they have limited precision. Since
-these floats represent sample times, rounding can be a problem. Rounding
-in this case is equivalent to adding jitter to the sample times. Nyquist
-ignores this problem for ordinary warping, but for high-quality warping, the
-jitter cannot be ignored. 
-<br><br>
-<dt>
-The solution is to use a rather low sample rate
-for the inverse warp function. <code>Sound-warp</code> can then linearly
-interpolate this signal using double-precision floats to minimize jitter
-between samples. The sample rate is a compromise: a low sample rate
-minimizes jitter, while a high sample rate does a better job of capturing
-detail (e.g. rapid fluctuations) in the warp function. A good rule of thumb
-is to use at most 1,000 to 10,000 samples for the inverse warp function. For
-example, if the result will be 1 minute of sound, use a sample rate of
-3000 samples / 60 seconds = 50 samples/second. Because Nyquist has no
-advance information about the warp function, the inverse warp function
-sample rate must be provided as a parameter.  When in doubt, just try
-something and let your ears be the judge.<br><br>
-<dt><code>(integrate<a name="index178"><a name="index179"> <i>signal</i>)</code><dd>Computes the integral of <i>signal</i>. The start time, sample rate, etc. are taken from <i>signal</i>.<br><br>
-<dt><code>(slope<a name="index180"><a name="index181"><a name="index182"> <i>signal</i>)</code><dd>Computes the first derivative (slope) of <i>signal</i>.  The start time, sample rate, etc. are taken from <i>signal</i>.
-</dl>
-<p>
-<a name = "47"><h5>Oscillators</h5></a>
-
-<dl>
-<dt>
-<code>(osc<a name="index183"> <i>pitch</i> [<i>duration</i> <i>table</i> <i>phase</i>])</code><dd>Returns 
-a sound which
-is the <i>table</i> oscillated at <i>pitch</i> for the given <i>duration</i>,
-starting with the <i>phase</i>.  Defaults are:  <i>duration</i> <code>1.0</code> 
-(second), <i>table</i> <code>*table*</code>,
-<i>phase</i> <code>0.0</code>.  The default value of <code>*table*</code> is a sinusoid. Duration is stretched by <code>*warp*</code> and 
-<code>*sustain*</code>, amplitude is nominally 1, but scaled by <code>*loudness*</code>, the start time is logical time 0, transformed by <code>*warp*</code>, and the sample rate is <code>*sound-srate*</code>.
-The effect of time-warping is to warp the starting and ending times only; the
-signal has a constant unwarped frequency.
- <b><i>Note 1:</i></b> <i>table</i> is a list of the form
-<blockquote>
-(<i>sound</i> <i>pitch-number</i> <i>periodic</i>)<br>
-
-</blockquote>
-where the first element is a sound, the second is the pitch of the sound 
-(this is not redundant, because the sound may represent any number of
-periods), and the third element is <code>T</code> if the sound is one period of
-a periodic signal, or <code>nil</code> if the sound is a sample that should not
-be looped.  The maximum table size is set by <code>max_table_len</code> in <code>sound.h</code>, and is currently set to 1,000,000.
-<b><i>Note 2:</i></b> in the current implementation, it is assumed that the
-output should be periodic.  See <code>snd-down</code> and <code>snd-up</code> for resampling one-shot sounds to a desired sample rate.  A future version of <code>osc</code>
-will handle both cases.  
-<b><i>Note 3:</i></b> When <code>osc</code> is called, memory is allocated for the table, and samples are copied from the sound (the first element of the list which is the <i>table</i> parameter) to the memory.  Every instance of <code>osc</code> has a private copy of the table, so the total storage can become large in some cases, for example in granular synthesis with many instances of <code>osc</code>. In some cases, it may make sense to use <code>snd-flatten</code> (see Section <a href = "#42">``Accessing and Creating Sound''</a>) to cause the sound to be fully realized, after which the <code>osc</code> and its table memory can be reclaimed by garbage collection. The <code>partial</code> function (see below) does not need a private table and does not use much space.<br><br>
-<dt>
-<code>(partial<a name="index184"> <i>pitch</i> <i>env</i>)</code><dd>Returns a sinusoid at
-the indicated pitch; the sound is multiplied by <i>env</i>.  The start time and
-duration are taken from <i>env</i>, which is of course subject to
-transformations.  The sample rate is <code>*sound-srate*</code>.  The <code>partial</code>
-function is faster than <code>osc</code>.<br><br>
-<dt>
-<code>(sine<a name="index185"> <i>pitch</i> [<i>duration</i>])</code><dd>Returns a sinusoid at
-the indicated pitch.  The sample rate is <code>*sound-srate*</code>.  
-This function is like <code>osc</code> with
-respect to transformations.  The <code>sine</code> function is faster than
-<code>osc</code>.<br><br>
-<dt><code>(hzosc<a name="index186"> <i>hz</i> [<i>table</i> <i>phase</i>])</code><dd>Returns a sound which is the <i>table</i> oscillated at <i>hz</i> starting at <i>phase</i>. The default <i>table</i> is <code>*table*</code> and the default <i>phase</i> is <i>0.0</i>. The default duration is <code>1.0</code>, but this is stretched as in <code>osc</code> (see above). The <i>hz</i> parameter may be a <code>SOUND</code>, in which case the duration of the result is the duration of <i>hz</i>. The sample rate is <code>*sound-srate*</code>.<br><br>
-<dt><code>(osc-saw<a name="index187"><a name="index188"> <i>hz</i>)</code><dd>Returns a sawtooth waveshape at the indicated frequency (in Hertz). The sample rate is <code>*sound-srate*</code>. The <i>hz</i> parameter may be a sound as in <i>hzosc</i> (see above).<br><br>
-<dt><code>(osc-tri<a name="index189"><a name="index190"> <i>hz</i>)</code><dd>Returns a triangle waveshape at the indicated frequency (in Hertz). The sample rate is <code>*sound-srate*</code>. The <i>hz</i> parameter may be a sound as in <i>hzosc</i> (see above).<br><br>
-<dt><code>(osc-pulse<a name="index191"><a name="index192"><a name="index193"> <i>hz</i> <i>bias</i> [<i>compare-shape</i>])</code><dd>Returns a square pulse with variable width at the indicated frequency (in Hertz). The <i>bias</i> parameter controls the pulse width and should be between <code>-1</code> and <code>+1</code>, giving a pulse width from 0% (always at <code>-1</code>) to 100% (always at <code>+1</code>). When bias is zero, a square wave is generated. Bias may be a <code>SOUND</code> to create varying pulse width. If bias changes rapidly, strange effects may occur. The optional <i>compare-shape</i> defaults to a hard step at zero, but other shapes may be used to achieve non-square pulses. The <code>osc-pulse</code> behavior is written in terms of other behaviors and defined in the file <code>nyquist.lsp</code> using just a few lines of code. Read the code for the complete story.<br><br>
-<dt>
-<code>(amosc<a name="index194"> <i>pitch</i> <i>modulation</i> [<i>table</i>
-<i>phase</i>])</code><dd>Returns a
-sound which is <i>table</i> oscillated at <i>pitch</i>.  The output
-is multiplied by <i>modulation</i>
-for the duration of the sound <i>modulation</i>.  
-<i>osc-table</i> defaults to
-<code>*table*</code>, and <i>phase</i> is the starting phase (default 0.0 radians)
-within <i>osc-table</i>.  The sample rate is <code>*sound-srate*</code>.  <br><br>
-<dt>
-<code>(fmosc<a name="index195"> <i>pitch</i> <i>modulation</i> [<i>table</i>
-<i>phase</i>])</code><dd>Returns a
-sound which is <i>table</i> oscillated at <i>pitch</i> plus <i>modulation</i>
-for the duration of the sound <i>modulation</i>.  
-<i>osc-table</i> defaults to
-<code>*table*</code>, and <i>phase</i> is the starting phase (default 0.0 radians)
-within <i>osc-table</i>.  The <i>modulation</i>
-is expressed in hz, e.g. a sinusoid modulation signal with an
-amplitude of 1.0 (2.0 peak to peak), will cause a +/- 1.0 hz 
-frequency deviation in <i>sound</i>.  Negative frequencies are correctly
-handled.  The sample rate is <code>*sound-srate*</code>.  <br><br>
-<dt>
-<code>(buzz<a name="index196"> <i>n</i> <i>pitch</i> <i>modulation</i>)</code><dd>Returns a
-sound with <i>n</i> harmonics of equal amplitude and a total amplitude
-of 1.0, using a well-known function of two cosines. If <i>n</i> (an integer)
-is less than 1, it is set to 1. Aliasing will occur if <i>n</i> is too large.
-The duration is
-determined by the duration of the sound <i>modulation</i>, which is a
-frequency modulation term expressed in Hz (see Section <a href = "#47">``Oscillators''</a>).
-Negative frequencies are correctly handled.
-The sample rate is <code>*sound-srate*</code>.<br><br>
-<dt>
-<code>(pluck<a name="index197"><a name="index198"><a name="index199"><a name="index200">
-<i>pitch</i> [<i>duration</i>] [<i>final-amplitude</i>])</code><dd>Returns a sound at the 
-given <i>pitch</i> created using a modified Karplus-Strong plucked string
-algorithm. The tone decays from an amplitude of about 1.0 to about
-<i>final-amplitude</i> in <i>duration</i> seconds. The default values are to
-decay to 0.001 (-60dB) in 1 second. The sample rate is <code>*sound-srate*</code>.<br><br>
-<dt>
-<code>(siosc<a name="index201"><a name="index202"> <i>pitch</i>
-<i>modulation</i> <i>tables</i>)</code><dd>Returns a sound constructed by
-interpolating through a succession of periodic waveforms. The frequency is
-given (in half steps) by <i>pitch</i> to which a <i>modulation</i> signal (in hz)
-is added, exactly as in <code>fmosc</code>. The <i>tables</i> specify a list of
-waveforms as follows: (<i>table0</i> <i>time1</i> <i>table2</i> ... <i>timeN</i>
-<i>tableN</i>), where each <i>table</i> is a sound representing one period. Each
-<i>time</i> is a time interval measured from the starting time. The time is
-scaled by the nominal duration (computed using <code>(local-to-global
-(get-sustain))</code>) to get the actual time. Note that this implies linear
-stretching rather than continuous timewarping of the interpolation or the
-breakpoints. The waveform is <i>table0</i> at the starting time, <i>table1</i>
-after <i>time1</i> (scaled as described), and so on. The duration and logical
-stop time is given by <i>modulation</i>. If <i>modulation</i> is shorter than
-<i>timeN</i>, then the full sequence of waveforms is not used.  If
-<i>modulation</i> is longer than <i>timeN</i>, <i>tableN</i> is used after <i>timeN</i>
-without further interpolation.<br><br>
-<dt>
-<code>(sampler<a name="index203"> <i>pitch</i> <i>modulation</i> [<i>sample</i> <i>npoints</i>])</code><dd>Returns a sound constructed by reading a sample from beginning to end and then splicing on copies of the same sound from a loop point to the end.  
-The <i>pitch</i> and <i>modulation</i> parameters are used as in <code>fmosc</code>
-described above.  The optional <i>sample</i> (which defaults to the global
-variable <code>*table*</code> is a list of the form
-<blockquote>
-(<i>sound</i> <i>pitch-number</i> <i>loop-start</i>)<br>
-
-</blockquote>
-where the first element is a sound containing the sample, the second is the
-pitch of the sample, and the third element is the time of the loop point. If
-the loop point is not in the bounds of the sound, it is set to zero.
-The optional <i>npoints</i> specifies how many points should be used for sample
-interpolation.  Currently this parameter defaults to 2 and only 2-point
-(linear) interpolation is implemented.  It is an error to modulate such that the frequency
-negative, or at least the current implementation will not wrap around from the loop point
-to the end of the sample. Note also that the loop point may be fractional.
-The sample rate is <code>*sound-srate*</code>.  
-</dl>
-<p>
-<a name = "48"><h5>Piece-wise Approximations</h5></a>
-<a name="index204"><a name="index205"><a name="index206">
-There are a number of related behaviors for piece-wise approximations to functions.  The simplest of these, <code>pwl</code> was mentioned earlier in the manual.  It takes a list of breakpoints, assuming an initial point at (0, 0), and a final value of 0.  An analogous piece-wise exponential function, <code>pwe</code>, is provided. Its implicit starting and stopping values are 1 rather than 0.  Each of these has variants.   You can specify the initial and final values (instead of taking the default).  You can specify time in intervals rather than cummulative time.  Finally, you can pass a list rather than an argument list.  This leads to 16 versions:
-<blockquote></blockquote>
-<pre><b>Piece-wise Linear Functions:</b>
-	<i>Cummulative Time:</i>
-		<i>Default initial point at (0, 0), final value at 0:</i>
-			pwl
-			pwl-list
-		<i>Explicit initial value:</i>
-			pwlv
-			pwlv-list
-	<i>Relative Time:</i>
-		<i>Default initial point at (0, 0), final value at 0:</i>
-			pwlr
-			pwlr-list
-		<i>Explicit initial value:</i>
-			pwlvr
-			pwlvr-list
-<p>
-<b>Piece-wise Exponential Functions:</b>
-	<i>Cummulative Time:</i>
-		<i>Default initial point at (0, 1), final value at 1:</i>
-			pwe
-			pwe-list
-		<i>Explicit initial value:</i>
-			pwev
-			pwev-list
-	<i>Relative Time:</i>
-		<i>Default initial point at (0, 1), final value at 1:</i>
-			pwer
-			pwer-list
-		<i>Explicit initial value:</i>
-			pwevr
-			pwevr-list
-</pre>
-All of these functions are implemented in terms of <code>pwl</code> (see <code>nyquist.lsp</code> for the implementations.  There are infinite opportunities for errors in these functions: if you leave off a data point, try to specify points in reverse order, try to create an exponential that goes to zero or negative values, or many other bad things, the behavior is not well-defined.  Nyquist should not crash, but Nyquist does not necessarily attempt to report errors at this time.
-<p>
-<dl>
-<dt>
-
-<code>(pwl<a name="index207"> <i>t1</i> <i>l1</i> <i>t2</i> <i>l2</i> ... <i>tn</i>)</code><dd>Creates
-a piece-wise linear envelope with breakpoints at (0, 0), (<i>t1</i>,
-<i>l1</i>), (<i>t2</i>, <i>l2</i>), ... (<i>tn</i>, 0).  The breakpoint
-times are scaled linearly by the value of <code>*sustain*</code> (if
-<code>*sustain*</code> is a <code>SOUND</code>, it is evaluated once at the starting
-time of the envelope).  Each breakpoint time is then mapped according to
-<code>*warp*</code>.  The result is a linear interpolation (unwarped) between 
-the breakpoints.  The sample rate is <code>*control-srate*</code>.  Breakpoint
-times are quantized to the nearest sample time.  If you specify one or more
-breakpoints withing one sample period, <code>pwl</code> attempts to give a good
-approximation to the specified function.  In particular, if two breakpoints
-are simultaneous, <code>pwl</code> will move one of them to an adjacent sample,
-producing a steepest possible step in the signal.  The exact details of this
-``breakpoint munging'' is subject to change in future versions.  Please report
-any cases where breakpoint lists give unexpected behaviors.  The author will
-try to apply the ``principle of least surprise'' to the design.  Note that
-the times are relative to 0; they are not durations of each envelope
-segment.<br><br>
-<dt><code>(pwl-list<a name="index208"> <i>breakpoints</i>)</code><dd>If you have a list of
-breakpoints, you can use <code>apply</code> to apply the <code>pwl</code> function to
-the breakpoints, but if the list is very long (hundreds or thousands of
-points), you might get a stack overflow because XLisp has a fixed-size
-argument stack.  Instead, call <code>pwl-list</code>, passing one argument, the
-list of breakpoints.<br><br>
-<dt><code>(pwlv<a name="index209"> <i>l1</i> <i>t2</i> <i>l2</i> <i>t3</i> <i>t3</i> ... <i>tn</i> <i>ln</i>)</code><dd>Creates
-a piece-wise linear envelope with breakpoints at (0, l1), (<i>t2</i>, <i>l2</i>), etc., ending with (<i>tn, <i>ln</i></i>.  Otherwise, the behavior is like that of <code>pwl</code>.<br><br>
-<dt><code>(pwlv-list<a name="index210"> <i>breakpoints</i>)</code><dd>A version of <code>pwlv</code> that takes a single list of breakpoints as its argument.  See <code>pwl-list</code> above for the rationale.<br><br>
-<dt><code>(pwlr<a name="index211"> <i>i1</i> <i>l1</i> <i>i2</i> <i>l2</i> ... <i>in</i>)</code><dd>Creates
-a piece-wise linear envelope with breakpoints at (0, 0), (<i>t1</i>,
-<i>l1</i>), (<i>t2</i>, <i>l2</i>), ... (<i>tn</i>, 0), where <i>tj</i> is the sum of <i>i1</i> through <i>ij</i>.  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of <code>pwl</code>.<br><br>
-<dt><code>(pwlr-list<a name="index212"> <i>breakpoints</i>)</code><dd>A version of <code>pwlr</code> that takes a single list of breakpoints as its argument.  See <code>pwl-list</code> above for the rationale.<br><br>
-<dt><code>(pwlvr<a name="index213"> <i>l1</i> <i>i2</i> <i>l2</i> <i>i3</i> <i>i3</i> ... <i>in</i> <i>ln</i>)</code><dd>Creates
-a piece-wise linear envelope with breakpoints at (0, l1), (<i>t2</i>, <i>l2</i>), etc., ending with (<i>tn, <i>ln</i></i>, where <i>tj</i> is the sum of <i>i2</i> through <i>ij</i>.  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of <code>pwlv</code>.<br><br>
-<dt><code>(pwlvr-list<a name="index214"> <i>breakpoints</i>)</code><dd>A version of <code>pwlvr</code> that takes a single list of breakpoints as its argument.  See <code>pwl-list</code> above for the rationale.<br><br>
-<dt><code>(pwe<a name="index215"> <i>t1</i> <i>l1</i> <i>t2</i> <i>l2</i> ... 
-<i>tn</i>)</code><dd>Creates
-a piece-wise exponential envelope with breakpoints at (0, 1), (<i>t1</i>,
-<i>l1</i>), (<i>t2</i>, <i>l2</i>), ... (<i>tn</i>, 1).  Exponential segments means that the ratio of values from sample to sample is constant within the segment.  (The current implementation actually takes the log of each value, computes a piece-wise exponential from the points using <code>pwl</code>, then exponentiates each resulting sample.  A faster implementation is certainly possible!)  Breakpoint values (<i>lj</i>) must be greater than zero.  Otherwise, this function is similar to <code>pwl</code>, including stretch by <code>*sustain*</code>, mapping according to <code>*warp*</code>, sample rate based on <code>*control-srate*</code>, and "breakpoint munging" (see <code>pwl</code> described above).  <i>Default initial and final values are of dubious value with exponentials.  See <code>pwev</code> below for the function you are probably looking for.</i><br><br>
-<dt><code>(pwe-list<a name="index216"> <i>breakpoints</i>)</code><dd>A version of <code>pwe</code> that takes a single list of breakpoints as its argument.  See <code>pwl-list</code> above for the rationale.<br><br>
-<dt>
-<code>(pwev<a name="index217"> <i>l1</i> <i>t2</i> <i>l2</i> <i>t3</i> <i>t3</i> ... <i>tn</i> <i>ln</i>)</code><dd>Creates
-a piece-wise exponential envelope with breakpoints at (0, l1), (<i>t2</i>, <i>l2</i>), etc., ending with (<i>tn, <i>ln</i></i>.  Otherwise, the behavior is like that of <code>pwe</code>.  <br><br>
-<dt><code>(pwev-list<a name="index218"> <i>breakpoints</i>)</code><dd>A version of <code>pwev</code> that takes a single list of breakpoints as its argument.  See <code>pwl-list</code> above for the rationale.<br><br>
-<dt><code>(pwer<a name="index219"> <i>i1</i> <i>l1</i> <i>i2</i> <i>l2</i> ... <i>in</i>)</code><dd>Creates
-a piece-wise exponential envelope with breakpoints at (0, 1), (<i>t1</i>,
-<i>l1</i>), (<i>t2</i>, <i>l2</i>), ... (<i>tn</i>, 1), where <i>tj</i> is the sum of <i>i1</i> through <i>ij</i>.  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of <code>pwe</code>.  Consider using <code>pwerv</code> instead of this one.<br><br>
-<dt><code>(pwer-list<a name="index220"> <i>breakpoints</i>)</code><dd>A version of <code>pwer</code> that takes a single list of breakpoints as its argument.  See <code>pwl-list</code> above for the rationale.<br><br>
-<dt><code>(pwevr<a name="index221"><a name="index222"> <i>l1</i> <i>i2</i> <i>l2</i> <i>i3</i> <i>i3</i> ... <i>in</i> <i>ln</i>)</code><dd>Creates
-a piece-wise exponential envelope with breakpoints at (0, l1), (<i>t2</i>, <i>l2</i>), etc., ending with (<i>tn, <i>ln</i></i>, where <i>tj</i> is the sum of <i>i2</i> through <i>ij</i>.  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of <code>pwev</code>.  Note that this is similar to the csound GEN05 generator.  Which is uglier, <i>GEN05</i> or <i>pwevr</i>?<br><br>
-<dt><code>(pwevr-list<a name="index223"> <i>breakpoints</i>)</code><dd>A version of <code>pwevr</code> that takes a single list of breakpoints as its argument.  See <code>pwl-list</code> above for the rationale.
-</dl>
-<a name = "49"><h5>Filter Behaviors</h5></a>
-<dl>
-<dt>
-
-<code>(alpass <a name="index224"><a name="index225"> <i>sound</i> <i>decay</i> <i>hz</i> [<i>minhz</i>])</code><dd>Applies an all-pass filter to <i>sound</i>.  This all-pass filter creates a delay effect without the resonances of a comb filter. The decay time of the filter is given by <i>decay</i>.  The <i>hz</i> parameter must be a number or sound greater than zero.  It is used to compute delay, which is then rounded to the nearest integer number of samples (so the frequency is not always exact.  Higher sampling rates yield better delay resolution.)  The <i>decay</i> may be a sound or a number.  In either case, it must also be positive.  (Implementation note: an exponentiation is needed to convert <i>decay</i> into the <i>feedback</i> parameter, and exponentiation is typically more time-consuming than the filter operation itself.  To get high performance, provide <i>decay</i> at a low sample rate.)  The resulting sound will have the start time, sample rate, etc. of <i>sound</i>. If <i>hz</i> is of type <code>SOUND</code>, the delay may be time-varying. Linear interpolation is then used for fractional sample delay, but it should be noted that linear interpolation implies a low-pass transfer function. Thus, this filter may behave differently with a constant <code>SOUND</code> than it does with a <code>FLONUM</code> value for <i>hz</i>. In addition, if <i>hz</i> is of type <code>SOUND</code>, then <i>minhz</i> is required. The <i>hz</i> parameter will be clipped to be greater than <i>minhz</i>, placing an upper bound on the delay buffer length.<br><br>
-<dt>
-<code>(comb <a name="index226"> <i>sound</i> <i>hz</i> <i>decay</i>)</code><dd>Applies a comb filter to <i>sound</i>.  A comb filter emphasizes (resonates at) frequencies that are multiples of a <i>hz</i>. The decay time of the resonance is given by <i>decay</i>.  This is a variation on <code>feedback-delay</code> (see below).  The <i>hz</i> parameter must be a number greater than zero.  It is used to compute delay, which is then rounded to the nearest integer number of samples (so the frequency is not always exact.  Higher sampling rates yield better delay resolution.)  The <i>decay</i> may be a sound or a number.  In either case, it must also be positive.  (Implementation note: an exponentiation is needed to convert <i>decay</i> into the <i>feedback</i> parameter for <code>feedback-delay</code>, and exponentiation is typically more time-consuming than the filter operation itself.  To get high performance, provide <i>decay</i> at a low sample rate.)  The resulting sound will have the start time, sample rate, etc. of <i>sound</i>.<br><br>
-<dt>
-<code>(congen<a name="index227"><a name="index228"><a name="index229"> <i>gate</i> <i>risetime</i> <i>falltime</i>)</code><dd>Implements an analog synthesizer-style contour generator. The input <i>gate</i> normally goes from 0.0 to 1.0 to create an attack and from 1.0 to 0.0 to start a release.  During the attack (output is increasing), the output converges half-way to <i>gate</i> in <i>risetime</i> (a FLONUM) seconds. During the decay, the half-time is <i>falltime</i> seconds. The sample rate, start time, logical stop, and terminate time all come from <i>gate</i>. If you want a nice decay, be sure that the <i>gate</i> goes to zero and stays there for awhile before <i>gate</i> terminates, because <code>congen</code> (and all Nyquist sounds) go immediately to zero at termination time.  For example, you can use <code>pwl</code> to build a pulse followed by some zero time:
-<pre>
-(pwl 0 1 duty 1 duty 0 1)
-</pre>
-
-Assuming <i>duty</i> is less than 1.0, this will be a pulse of duration <i>duty</i> followed by zero for a total duration of 1.0.
-<pre>
-(contour (pwl 0 1 duty 1 duty 0 1) 0.01 0.05)
-</pre>
-
-will have a duration of 1.0 because that is the termination time of the <code>pwl</code> input. The decaying release of the resulting envelope will be truncated to zero at time 1.0. (Since the decay is theoretically infinite, there is no way to avoid truncation, although you could multiply by another envelope that smoothly truncates to zero in the last millisecond or two to get both an exponential decay and a smooth final transition to zero.)<br><br>
-<dt>
-<code>(convolve<a name="index230"><a name="index231"> <i>sound</i>
-<i>response</i>)</code><dd>Convolves two signals. The first can be any length, but the
-computation time per sample and the total space required are proportional to
-the length of <i>response</i>.<br><br>
-<dt>
-<code>(feedback-delay<a name="index232"><a name="index233"><a name="index234"> <i>sound</i> <i>delay</i> <i>feedback</i>)</code><dd>Applies feedback delay to <i>sound</i>.  The <i>delay</i> must be a number (in seconds).  It is rounded to the nearest sample to determine the length of the delay.  The sample rate is the maximum from <i>sound</i> and <i>feedback</i> (if feedback is also a sound).  The amound of <i>feedback</i> should be less than one to avoid an exponential increase in amplitude.  The start time and stop time, and logical stop time are taken from <i>sound</i>.  Since output is truncated at the stop time of <i>sound</i>, you may want to append some silence to <i>sound</i> to give the filter time to decay.<br><br>
-<dt>
-<code>(lp<a name="index235"><a name="index236"> <i>sound</i> <i>cutoff</i>)</code><dd>Filters <i>sound</i>
-using a first-order Butterworth low-pass filter.  <i>Cutoff</i> may be a float
-or a signal (for time-varying filtering) and expresses hertz.  Filter
-coefficients (requiring trig functions) are recomputed at the sample rate of
-<i>cutoff</i>.  The resulting sample rate, start time, etc. are taken from <i>sound</i>.<br><br>
-<dt><code>(tone<a name="index237"> <i>sound</i> <i>cutoff</i>)</code><dd>No longer defined; use <code>lp</code> instead, or define it by adding <code>(setfn tone lp)</code> to your program.<br><br>
-<dt>
-<code>(hp<a name="index238"><a name="index239"> <i>sound</i> <i>cutoff</i>)</code><dd>Filters <i>sound</i>
-using a first-order Butterworth high-pass filter.  <i>Cutoff</i> may be a
-float or a signal (for time-varying filtering) and expresses hertz.  Filter
-coefficients (requiring trig functions) are recomputed at the sample rate of
-<i>cutoff</i>.  This filter is an exact complement of <code>lp</code>.<br><br>
-<dt><code>(atone<a name="index240"> <i>sound</i> <i>cutoff</i>)</code><dd>No longer defined; use <code>hp</code> instead, or define it by adding <code>(setfn atone hp)</code> to your program.<br><br>
-<dt>
-<code>(reson<a name="index241"><a name="index242"> <i>sound</i> <i>center</i> <i>bandwidth</i> <i>n</i>)</code><dd>Apply
-a resonating filter to <i>sound</i> with center frequency <i>center</i> (in hertz),
-which may be a float or a signal.  <i>Bandwidth</i> is the filter bandwidth (in
-hertz), which may also be a signal.  Filter coefficients (requiring trig
-functions) are recomputed at each new sample of either <i>center</i> or
-<i>bandwidth</i>, and coefficients are <i>not</i> interpolated.  The last
-parameter <i>n</i> specifies the type of normalization as in Csound: A value of 1 specifies a peak amplitude
-response of 1.0; all frequencies other than <i>hz</i> are attenuated.  A
-value of 2 specifies the overall RMS value of the amplitude response
-is 1.0; thus filtered white noise would retain the same power.  A value of
-zero specifies no scaling.  The resulting sample rate, start time, etc. are taken from <i>sound</i>.<br><br>
-<dt>
-<code>(areson<a name="index243"><a name="index244"> <i>sound</i> <i>center</i> <i>bandwidth</i> <i>n</i>)</code><dd>The <code>areson</code> filter is an exact
-complement of <code>reson</code> such that if both are applied to the
-same signal with the same parameters, the sum of the results yeilds
-the original signal.<br><br>
-<dt>
-<code>(shape<a name="index245"><a name="index246"><a name="index247"> <i>signal</i> <i>table</i> <i>origin</i>)</code><dd>A waveshaping function.  Use <i>table</i> as a function; apply the function to each sample of <i>signal</i> to yield a new sound.  <i>Signal</i> should range from -1 to +1.  Anything beyond these bounds is clipped.  <i>Table</i> is also a sound, but it is converted into a lookup table (similar to table-lookup oscillators).  The <i>origin</i> is a FLONUM and gives the time which should be considered the origin of <i>table</i>.  (This is important because <i>table</i> cannot have values at negative times, but <i>signal</i> will often have negative values.  The <i>origin</i> gives an offset so that you can produce suitable tables.)  The output at time <i>t</i> is:
-<blockquote>
-<i>table</i>(<i>origin</i> + clip(<i>signal</i>(<i>t</i>))<br>
-
-</blockquote>
-where clip(<i>x</i>) = <i>max</i>(1, <i>min</i>(-1, <i>x</i>)).
-(E.g. if <i>table</i> is a signal defined over the interval [0, 2], then <i>origin</i> should be 1.0.  The value of <i>table</i> at time 1.0 will be output when the input signal is zero.)  The output has the same start time, sample rate, etc. as <i>signal</i>.  The <code>shape</code> function will also accept multichannel <i>signal</i>s and <i>table</i>s.<br><br>
-<dt>
-<code>(biquad<a name="index248"> <i>signal</i> <i>b0</i> <i>b1</i> <i>a0</i> <i>a1</i> <i>a2</i>)</code><dd>A fixed-parameter biquad filter. All filter coefficients are <code>FLONUM</code>s. See also <code>lowpass2</code>, <code>highpass2</code>, <code>bandpass2</code>, <code>notch2</code>, <code>allpass2</code>, <code>eq-lowshelf</code>, <code>eq-highshelf</code>, <code>eq-band</code>, <code>lowpass4</code>, <code>lowpass6</code>, <code>highpass4</code>, and <code>highpass8</code> in this section for convenient variations based on the same filter.<br><br>
-<dt>
-<code>(biquad-m<a name="index249"> <i>signal</i> <i>b0</i> <i>b1</i> <i>b2</i> <i>a0</i> <i>a1</i> <i>a2</i>)</code><dd>A fixed-parameter biquad filter with Matlab sign conventions for <i>a0</i>, <i>a1</i>, and <i>a2</i>. All filter coefficients are <code>FLONUM</code>s.<br><br>
-<dt>
-<code>(lowpass2<a name="index250"> <i>signal</i> <i>hz</i> [<i>q</i>])</code><dd>A fixed-parameter, second-order lowpass filter based on <code>snd-biquad</code>. The cutoff frequency is given by <i>hz</i> (a <code>FLONUM</code>) and an optional Q factor is given by <i>q</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(highpass2<a name="index251"> <i>signal</i> <i>hz</i> [<i>q</i>])</code><dd>A fixed-parameter, second-order highpass filter based on <code>snd-biquad</code>. The cutoff frequency is given by <i>hz</i> (a <code>FLONUM</code>) and an optional Q factor is given by <i>q</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(bandpass2<a name="index252"> <i>signal</i> <i>hz</i> [<i>q</i>])</code><dd>A fixed-parameter, second-order bandpass filter based on <code>snd-biquad</code>. The center frequency is given by <i>hz</i> (a <code>FLONUM</code>) and an optional Q factor is given by <i>q</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(notch2<a name="index253"> <i>signal</i> <i>hz</i> [<i>q</i>])</code><dd>A fixed-parameter, second-order notch filter based on <code>snd-biquad</code>. The center frequency is given by <i>hz</i> (a <code>FLONUM</code>) and an optional Q factor is given by <i>q</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(allpass2<a name="index254"> <i>signal</i> <i>hz</i> [<i>q</i>])</code><dd>A fixed-parameter, second-order allpass filter based on <code>snd-biquad</code>. The frequency is given by <i>hz</i> (a <code>FLONUM</code>) and an optional Q factor is given by <i>q</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(eq-lowshelf<a name="index255"><a name="index256"> <i>signal</i> <i>hz</i> <i>gain</i> [<i>slope</i>])</code><dd>A fixed-parameter, second-order bass shelving equalization (EQ) filter based on <code>snd-biquad</code>. The <i>hz</i> parameter (a <code>FLONUM</code>)is the halfway point in the transition, and <i>gain</i> (a <code>FLONUM</code>) is the bass boost (or cut) in dB. The optional <i>slope</i> (a <code>FLONUM</code>) is 1.0 by default, and response becomes peaky at values greater than 1.0.<br><br>
-<dt>
-<code>(eq-highshelf<a name="index257"><a name="index258"> <i>signal</i> <i>hz</i> <i>gain</i> [<i>slope</i>])</code><dd>A fixed-parameter, second-order treble shelving equalization (EQ) filter based on <code>snd-biquad</code>. The <i>hz</i> parameter (a <code>FLONUM</code>)is the halfway point in the transition, and <i>gain</i> (a <code>FLONUM</code>) is the treble boost (or cut) in dB. The optional <i>slope</i> (a <code>FLONUM</code>) is 1.0 by default, and response becomes peaky at values greater than 1.0.<br><br>
-<dt>
-<code>(eq-band<a name="index259"><a name="index260"> <i>signal</i> <i>hz</i> <i>gain</i> <i>width</i>)</code><dd>A fixed- or variable-parameter, second-order midrange equalization (EQ) filter based on <code>snd-biquad</code>, <code>snd-eqbandcv</code> and <code>snd-eqbandvvv</code>. The <i>hz</i> parameter (a <code>FLONUM</code>) is the center frequency, <i>gain</i> (a <code>FLONUM</code>) is the boost (or cut) in dB, and <i>width</i> (a <code>FLONUM</code>) is the half-gain width in octaves. Alternatively, <i>hz</i>, <i>gain</i>, and <i>width</i> may be <code>SOUND</code>s, but they must all have the same sample rate, e.g. they should all run at the control rate or at the sample rate.<br><br>
-<dt>
-<code>(lowpass4<a name="index261"> <i>signal</i> <i>hz</i>)</code><dd>A four-pole Butterworth lowpass filter. The cutoff frequency is <i>hz</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(lowpass6<a name="index262"> <i>signal</i> <i>hz</i>)</code><dd>A six-pole Butterworth lowpass filter. The cutoff frequency is <i>hz</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(lowpass8<a name="index263"> <i>signal</i> <i>hz</i>)</code><dd>An eight-pole Butterworth lowpass filter. The cutoff frequency is <i>hz</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(highpass4<a name="index264"> <i>signal</i> <i>hz</i>)</code><dd>A four-pole Butterworth highpass filter. The cutoff frequency is <i>hz</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(highpass6<a name="index265"> <i>signal</i> <i>hz</i>)</code><dd>A six-pole Butterworth highpass filter. The cutoff frequency is <i>hz</i> (a <code>FLONUM</code>).<br><br>
-<dt>
-<code>(highpass8<a name="index266"> <i>signal</i> <i>hz</i>)</code><dd>An eight-pole Butterworth highpass filter. The cutoff frequency is <i>hz</i> (a <code>FLONUM</code>).<br><br>
-<dt></dl>
-<a name = "50"><h5>More Behaviors</h5></a>
-<dl>
-<dt>
-
-<code>(clip<a name="index267"><a name="index268"><a name="index269"> <i>sound</i> <i>peak</i>)</code><dd>Hard limit <i>sound</i> 
-to the given <i>peak</i>, a positive number. The samples of <i>sound</i> are constrained between an upper value
-of <i>peak</i> and a lower value of <i>peak</i>. If <i>sound</i> is a number, <code>clip</code> will return <i>sound</i> limited by <i>peak</i>.  If <i>sound</i> is a multichannel sound, <code>clip</code> returns a multichannel sound where each channel is clipped.  The result has the type, sample rate, starting time, etc. of <i>sound</i>.<br><br>
-<dt>
-<code>(s-abs<a name="index270"><a name="index271"> <i>sound</i>)</code><dd>A generalized absolute value function. If <i>sound</i> is a SOUND, compute the absolute value of each sample. If <i>sound</i> is a number, just compute the absolute value. If <i>sound</i> is a multichannel sound, return a multichannel sound with <code>s-abs</code> applied to each element. The result has the type, sample rate, starting time, etc. of <i>sound</i>.<br><br>
-<dt>
-<code>(s-sqrt<a name="index272"><a name="index273"> <i>sound</i>)</code><dd>A generalized square root function. If <i>sound</i> is a SOUND, compute the square root of each sample. If <i>sound</i> is a number, just compute the square root. If <i>sound</i> is a multichannel sound, return a multichannel sound with <code>s-sqrt</code> applied to each element. The result has the type, sample rate, starting time, etc. of <i>sound</i>. In taking square roots, if an input sample is less than zero, the corresponding output sample is zero. This is done because the square root of a negative number is undefined.<br><br>
-<dt>
-<code>(s-exp<a name="index274"><a name="index275"> <i>sound</i>)</code><dd>A generalized exponential function.  If <i>sound</i> is a SOUND, compute <i>e</i>^(<i>x</i>) for each sample <i>x</i>.  If <i>sound</i> is a number <i>x</i>, just compute <i>e</i>^(<i>x</i>).  If <i>sound</i> is a multichannel sound, return a multichannel sound with <code>s-exp</code> applied to each element.  The result has the type, sample rate, starting time, etc. of <i>sound</i>.<br><br>
-<dt>
-<code>(s-log<a name="index276"><a name="index277"><a name="index278"> <i>sound</i>)</code><dd>A generalized natural log function.  If <i>sound</i> is a SOUND, compute <i>ln</i>(<i>x</i>) for each sample <i>x</i>.  If <i>sound</i> is a number <i>x</i>, just compute <i>ln</i>(<i>x</i>).  If <i>sound</i> is a multichannel sound, return a multichannel sound with <code>s-log</code> applied to each element.  The result has the type, sample rate, starting time, etc. of <i>sound</i>.  Note that the <i>ln</i> of 0 is undefined (some implementations return negative infinity), so use this function with care.<br><br>
-<dt>
-<code>(s-max<a name="index279"><a name="index280"> <i>sound1</i> <i>sound2</i>)</code><dd>Compute the maximum of two functions, <i>sound1</i> and <i>sound2</i>. This function also accepts numbers and multichannel sounds and returns the corresponding data type. The start time of the result is the maximum of the start times of <i>sound1</i> and <i>sound2</i>. The logical stop time and physical stop time of the result is the minimum of the logical stop and physical stop times respectively of <i>sound1</i> and <i>sound2</i>. Note, therefore, that the result value is zero except within the bounds of <i>both</i> input sounds.<br><br>
-<dt><code>(s-min<a name="index281"><a name="index282"> <i>sound1</i> <i>sound2</i>)</code><dd>Compute the minimum of two functions, <i>sound1</i> and <i>sound2</i>. This function also accepts numbers and multichannel sounds and returns the corresponding data type. The start time of the result is the maximum of the start times of <i>sound1</i> and <i>sound2</i>. The logical stop time and physical stop time of the result is the minimum of the logical stop and physical stop times respectively of <i>sound1</i> and <i>sound2</i>. Note, therefore, that the result value is zero except within the bounds of <i>both</i> input sounds.<br><br>
-<dt><code>(osc-note<a name="index283"> <i>pitch</i> [<i>duration</i> <i>env</i> <i>loud</i> 
-<i>table</i>])</code><dd>Same as <code>osc</code>, but <code>osc-note</code>
-multiplies the result by <i>env</i>.  The <i>env</i> may be a sound, 
-or a list supplying (<i>t1</i> <i>t2</i> 
-<i>t4</i> <i>l1</i> <i>l2</i> <i>l3</i>).  The result has a sample rate of <code>*sound-srate*</code>.<br><br>
-<dt>
-<code>(quantize<a name="index284"> <i>sound</i> <i>steps</i>)</code><dd>Quantizes <i>sound</i> as follows: <i>sound</i> is multiplied by <i>steps</i> and rounded to the nearest integer. The result is then divided by <i>steps</i>. For example, if <i>steps</i> is 127, then a signal that ranges from -1 to +1 will be quantized to 255 levels (127 less than zero, 127 greater than zero, and zero itself). This would match the quantization Nyquist performs when writing a signal to an 8-bit audio file. The <i>sound</i> may be multi-channel.<br><br>
-<dt><code>(ramp<a name="index285"> [<i>duration</i>])</code><dd>Returns a linear ramp from 0 to 1
-over <i>duration</i> (default is 1).  The function actually reaches 1 at
-<i>duration</i>, and therefore has one extra sample, making the total duration
-be <i>duration</i> + 1/<code>*control-srate*</code>.  See Figure <a href = "#50">6</a> for
-more detail.  Ramp is unaffected by the <code>sustain</code> transformation.  The
-effect of time warping is to warp the starting and ending times only.  The
-ramp itself is unwarped (linear).  The sample rate is <code>*control-srate*</code>.<br><br>
-<dt>
-<code>(rms<a name="index286"> <i>sound</i> [<i>rate</i> <i>window-size</i>])</code><dd>Computes the RMS of <i>sound</i> using a square window of size <i>window-size</i>. The result has a sample rate of <i>rate</i>. The default value of <i>rate</i> is 100 Hz, and the default window size is 1/rate seconds (converted to samples). The <i>rate</i> is a <code>FLONUM</code> and <i>window-size</i> is a <code>FIXNUM</code>.
-</dl>
-<p>
-<hr>
-<blockquote></blockquote>
-<img src="fig6.gif"><br><br>
-
-<p>
-<b>Figure 6: </b>Ramps generated by <code>pwl</code> and <code>ramp</code> functions.  The
-<code>pwl</code> version ramps toward the breakpoint (1, 1), but in order to ramp
-back to zero at breakpoint (1, 0), the function never reaches an amplitude
-of 1.  If used at the beginning of a <code>seq</code> construct, the next sound
-will begin at time 1.  The <code>ramp</code> version actually reaches breakpoint
-(1, 1); notice that it is one sample longer than the <code>pwl</code> version.  If
-used in a sequence, the next sound after <code>ramp</code> would start at time 1 +
-<i>P</i>, where <i>P</i> is the sample period.
-
-<hr>
-<p>
-<dl>
-<dt>
-
-<code>(recip<a name="index287"><a name="index288"><a name="index289"> <i>sound</i>)</code><dd>A generalized reciprocal function.  If <i>sound</i> is a SOUND, compute 1/<i>x</i> for each sample <i>x</i>.  If <i>sound</i> is a number <i>x</i>, just compute 1/<i>x</i>.  If <i>sound</i> is a multichannel sound, return a multichannel sound with <code>recip</code> applied to each element.  The result has the type, sample rate, starting time, etc. of <i>sound</i>.  Note that the reciprocal of 0 is undefined (some implementations return  infinity), so use this function with care on sounds.  Division of sounds is accomplished by multiplying by the reciprocal.  Again, be careful not to divide by zero.<br><br>
-<dt><code>(s-rest<a name="index290"><a name="index291"> [<i>duration</i>])</code><dd>Create silence (zero samples)
-for the given 
-<i>duration</i> at the sample rate <code>*sound-srate*</code>.  
-Default duration is 1.0 sec, and the sound is transformed in time according
-to <code>*warp*</code>.  <b><i>Note:</i></b> <code>rest</code> is a Lisp function that is equivalent to <code>cdr</code>.  Be careful to use <code>s-rest</code> when you need a sound!<br><br>
-<dt>
-<code>(noise<a name="index292"> [<i>duration</i>])</code><dd>Generate noise with the given 
-<i>duration</i>.  Duration (default is 1.0) 
-is transformed according to <code>*warp*</code>.  The
-sample rate is <code>*sound-srate*</code> and the amplitude is +/- <code>*loud*</code>.<br><br>
-<dt></dl><a name = "51"><h3>Transformations</h3></a><a name="index293">
-
-These functions change the environment that is seen by other high-level
-functions.  Note that these changes are usually relative to the
-current environment.  There are also ``absolute'' versions of each
-transformation function, with the exception of <code>seq</code>,
- <code>seqrep</code>, <code>sim</code>, and <code>simrep</code>.  The
-``absolute'' versions (starting or ending with ``abs'') do not look at the
-current environment, but rather set an environment variable to a specific value.
-In this way, sections of code can be insulated from external
-transformations.
-<p>
-<dl>
-<dt>
-<code>(abs-env<a name="index294"> <i>beh</i>)</code><dd>Compute <i>beh</i> in the default environment.  
-This is useful for computing waveform tables and signals that are 
-``outside'' of
-time.  For example, <code>(at 10.0 (abs-env (my-beh)))</code> is equivalent to
-<code>(abs-env (my-beh))</code> because <code>abs-env</code> forces the default environment.<br><br>
-<dt><code>(at<a name="index295"> <i>time</i> <i>beh</i>)</code><dd>Evaluate <i>beh</i> with
-<code>*warp*<a name="index296"></code> shifted by <i>time</i>.<br><br>
-<dt><code>(at-abs<a name="index297"> <i>time</i> <i>beh</i>)</code><dd>Evaluate <i>beh</i> with
-<code>*warp*<a name="index298"></code> shifted so that local time 0 maps to <i>time</i>.<br><br>
-<dt>
-<code>(continuous-control-warp<a name="index299"> <i>beh</i>)</code><dd>Applies the current warp environment to the signal returned by <i>beh</i>. The result has the default control sample rate <code>*control-srate*</code>. Linear interpolation is currently used. Implementation: <i>beh</i> is first evaluated without any shifting, stretching, or warping. The result is functionally composed with the inverse of the environment's warp function.<br><br>
-<dt>
-<code>(continuous-sound-warp<a name="index300"> <i>beh</i>)</code><dd>Applies the current warp environment to the signal returned by <i>beh</i>. The result has the default sound sample rate <code>*sound-srate*</code>. Linear interpolation is currently used. See <code>continuous-control-warp</code> for implementation notes.<br><br>
-<dt>
-<code>(control-srate-abs<a name="index301"> <i>srate</i> 
-<i>beh</i>)</code><dd>Evaluate <i>beh</i> with <code>*control-srate*<a name="index302"></code>
-set to sample rate <i>srate</i>.  <b><i>Note:</i></b> there is no ``relative'' version of 
-this function.<br><br>
-<dt><code>(extract<a name="index303"> <i>start</i> <i>stop</i> <i>beh</i>)</code><dd>Returns a sound 
-which is the portion of
-<i>beh</i> between <i>start</i> and <i>stop</i>.  Note that this is done 
-relative to the current <code>*warp*</code>.  The result is shifted
-to start according to <code>*warp*</code>, so normally the result will start without a delay of <i>start</i>.<br><br>
-<dt><code>(extract-abs<a name="index304"> <i>start</i> <i>stop</i> <i>beh</i>)</code><dd>Returns a sound which
-is the portion of
-<i>beh</i> between <i>start</i> and <i>stop</i>, independent of the 
-current <code>*warp*</code>.  The result is shifted
-to start according to <code>*warp*</code>.<br><br>
-<dt><code>(loud<a name="index305"> <i>volume</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with <code>*loud*</code>
-incremented by <i>volume</i>. (Recall that <code>*loud*</code> is in decibels, so increment is the proper operation.)<br><br>
-<dt><code>(loud-abs<a name="index306"> <i>volume</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with <code>*loud*</code>
-set to <i>volume</i>.<br><br>
-<dt>
-<code>(sound-srate-abs<a name="index307"> <i>srate</i> <i>beh</i>)</code><dd>Evaluate <i>beh</i> with <code>*sound-srate*<a name="index308"></code> set to sample rate <i>srate</i>.  <b><i>Note:</i></b> there is no ``relative'' version of this function.  <br><br>
-<dt><code>(stretch<a name="index309"> <i>factor</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with
-<code>*warp*</code> scaled by <i>factor</i>.  The effect is to ``stretch'' the result
-of <i>beh</i> (under the current environment) by <i>factor</i>.  See Chapter
-<a href = "part4.html#25">``Continuous Transformations and Time Warps''</a> for more information.<br><br>
-<dt><code>(stretch-abs<a name="index310"> <i>factor</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with <code>*warp*</code> set to a linear time transformation where each unit of logical time maps to <i>factor</i> units of real time.  The effect is to stretch the nominal behavior of <i>beh</i> (under the default global environment) by <i>factor</i>.  See Chapter <a href = "part4.html#25">``Continuous Transformations and Time Warps''</a> for more information.<br><br>
-<dt><code>(sustain<a name="index311"><a name="index312"><a name="index313"><a name="index314"> <i>factor</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with <code>*sustain*</code> scaled by <i>factor</i>. The effect is to ``stretch'' the result of <i>beh</i> (under the current environment) by <i>factor</i>; however, the logical stop times are not stretched. Therefore, the overall duration of a sequence is not changed, and sounds will tend to overlap if <code>*sustain*</code> is greater than one (legato) and be separated by silence if <code>*sustain*</code> is less than one.<br><br>
-<dt><code>(sustain-abs<a name="index315"> <i>factor</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with <code>*sustain*</code> set to <i>factor</i>. (See <code>sustain</code>, above.)<br><br>
-<dt><code>(transpose<a name="index316"> <i>amount</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with 
-<code>*transpose*</code> shifted by <i>amount</i>.  The effect is relative transposition by <i>amount</i> semitones.<br><br>
-<dt><code>(transpose-abs<a name="index317"> <i>amount</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with 
-<code>*transpose*</code> set to <i>amount</i>.  The effect is the transposition of the nominal pitches in <i>beh</i> (under the default global environment) by <i>amount</i>.<br><br>
-<dt><code>(warp<a name="index318"> <i>fn</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with <code>*warp*</code> modified by <i>fn</i>.  The idea is that <i>beh</i> and <i>fn</i> are written in the same time system, and <i>fn</i> warps that time system to local time.  The current environment already contains a mapping from local time to global (real) time.  The value of <code>*warp*</code> in effect when <i>beh</i> is evaluated is the functional composition of the initial <code>*warp*</code> with <i>fn</i>.<br><br>
-<dt><code>(warp-abs<a name="index319"> <i>fn</i> <i>beh</i>)</code><dd>Evaluates <i>beh</i> with <code>*warp*</code> set to <i>fn</i>.  In other words, the current <code>*warp*</code> is ignored and not composed with <i>fn</i> to form the new <code>*warp*</code>.<br><br>
-<dt><a name = "52"><h3>Combination and Time Structure</h3></a><a name="index320"><a name="index321">
-These behaviors combine component behaviors into structures, including
-sequences (melodies), simultaneous sounds (chords), and structures based
-on iteration.<br><br>
-<dt>
- <code>(seq<a name="index322"> <i>beh1</i> [<i>beh2</i> ...])</code><dd>Evaluates the first behavior
-<i>beh1</i> according to <code>*time*</code> and each successive behavior at the
-<code>logical-stop</code> time of the previous one.  The results are summed to form a
-sound whose <code>logical-stop</code> is
-the <code>logical-stop</code> of the last behavior in the sequence.  Each behavior
-can result in a multichannel sound, in which case, the logical stop time is
-considered to be the maximum logical stop time of any channel.  The number
-of channels in the result is the number of channels of the first behavior.
-If other behaviors return fewer channels, new channels are created containing
-constant zero signals until the required number of channels is obtained.  If
-other behaviors return a simple sound rather than multichannel sounds, the
-sound is automatically assigned to the first channel of a multichannel sound
-that is then filled out with zero signals.  If another behavior returns more
-channels than the first behavior, the error is reported and the computation
-is stopped.  Sample rates are converted up or down to match the sample rate of the first sound in a sequence.<br><br>
-<dt><code>(seqrep<a name="index323"> (<i>var</i> <i>limit</i>) <i>beh</i>)</code><dd>Iteratively 
-evaluates <i>beh</i> with the atom
-<i>var</i> set with values from 0 to <i>limit</i>-1, inclusive.  These sounds
-are then placed sequentially in time as if by <code>seq</code>.<br><br>
-<dt>
-<code>(sim<a name="index324"> [<i>beh1</i> <i>beh2</i> ...])</code><dd>Returns a sound which is the 
-sum of the given behaviors evaluated with current value of <code>*warp*</code>.
-If behaviors return multiple channel sounds, the corresponding channels are
-added.  If the number of channels does not match, the result has the
-maximum.  For example, if a two-channel sound [L, R] is added to a four-channel
-sound [C1, C2, C3, C4], the result is [L + C1, R + C2, C3, C4].  Arguments to <code>sim</code> may also be numbers.  If all arguments are numbers, <code>sim</code> is equivalent (although slower than) the <code>+</code> function.  If a number is added to a sound, <code>snd-offset</code> is used to add the number to each sample of the sound.  The result of adding a number to two or more sounds with different durations is not defined.  Use <code>const</code> to coerce a number to a sound of a specified duration.  An important limitation of <code>sim</code> is that it cannot handle hundreds of behaviors due to a stack size limitation in XLisp.  To compute hundreds of sounds (e.g. notes) at specified times, see <code>timed-seq</code>, below.
-See also <code>sum</code> below.<br><br>
-<dt><code>(simrep<a name="index325"> (<i>var</i> <i>limit</i>) <i>beh</i>)</code><dd>Iteratively 
-evaluates <i>beh</i> with the atom
-<i>var</i> set with values from 0 to <i>limit</i>-1, inclusive.  These sounds
-are then placed simultaneously in time as if by <code>sim</code>.<br><br>
-<dt><code>(set-logical-stop<a name="index326"> <i>beh</i> <i>time</i>)</code><dd>Returns a sound with <i>time</i> as 
-the logical stop time.<br><br>
-<dt><code>(sum<a name="index327"><a name="index328"> <i>a</i> [<i>b</i> <i>c</i> ...])</code><dd>Returns the sum of <i>a</i>, <i>b</i>, <i>c</i>, ..., allowing mixed addition of sounds, multichannel sounds and numbers.  Identical to <i>sim</i>.<br><br>
-<dt><code>(diff<a name="index329"><a name="index330"> <i>a</i> <i>b</i>)</code><dd>Returns the difference between <i>a</i> and <i>b</i>. This function is defined as <code>(sum a (prod -1 b))</code>.<br><br>
-<dt><code>(timed-seq<a name="index331"><a name="index332"><a name="index333"> <i>score</i>)</code><dd>Computes sounds from a note list or ``score.'' The <i>score</i> is of the form: <code>`((<i>time1</i> <i>stretch1</i> <i>beh1</i>) (<i>time2</i> <i>stretch2</i> <i>beh2</i>) ...)</code>, where <i>timeN</i> is the starting time, <i>stretchN</i> is the stretch factor, and <i>behN</i> is the behavior. Note that <i>score</i> is normally a <i>quoted list</i>! The times must be in increasing order, and each <i>behN</i> is evaluated using lisp's <code>eval</code>, so the <i>behN</i> behaviors cannot refer to local parameters or local variables. The advantage of this form over <code>seq</code> is that the behaviors are evaluated one-at-a-time which can take much less stack space and overall memory.<br><br>
-<dt></dl><a name = "53"><h3>Sound File Input and Output</h3></a>
-<a name="index334">
-<dl>
-<dt>
-
-<code>(play<a name="index335"> <i>sound</i>)</code><dd>Play the sound through the DAC.  
-The <code>play</code> function writes a file and plays it.  The details of this
-are system-dependent, but <code>play</code> is defined in the file
-<code>system.lsp</code>.  The variable <code>*default-sf-dir*</code><a name="index336"><a name="index337"><a name="index338">
-<a name="index339"> names a directory into which to save a sound file.<br><br>
-<dt>The default is to try to normalize sounds based on the results of the previous play command.  If you are making slight changes to functions and playing them, this feature will automatically choose a good normalization factor.  If you are intentionally playing very soft things in alternation with very loud things, or if you want precise control over output levels, you should turn this feature off by typing:
-<pre>
-(autonorm-off)<a name="index340">
-</pre>
-
-Reenable the automatic normalization feature by typing:
-<pre><a name="index341">
-(autonorm-on)
-</pre>
-<br><br>
-<dt>Under Win32 (and perhaps other systems in the near future), play is extended for real-time output.  The default is to send audio data to the DAC as it is computed in addition to saving samples in a file.  If computation is slower than real-time, output will be choppy, but since the samples end up in a file, you can type <code>(r)</code> to replay the stored sound. Real-time playback can be disabled by:
-<pre>
-(sound-off)<a name="index342">
-</pre>
-
-and reenabled by:
-<pre>
-(sound-on)<a name="index343">
-</pre>
-
-Disabling real-time playback has no effect on <code>(play-file)</code> or <code>(r)</code>.<br><br>
-<dt><code>(autonorm-on<a name="index344">)</code><dd>Enable automatic adjustment of a scale factor applied to sounds computed using the <code>play</code> command.<br><br>
-<dt><code>(autonorm-off<a name="index345">)</code><dd>Disable automatic adjustment of a scale factor applied to sounds computed using the <code>play</code> command.<br><br>
-<dt><code>(sound-on<a name="index346">)</code><dd>Enable real-time audio output when sound is computed by the the <code>play</code> command.<br><br>
-<dt><code>(sound-off<a name="index347">)</code><dd>Disable real-time audio output when sound is computed by the the <code>play</code> command.<br><br>
-<dt>
-<code>(s-save<a name="index348"><a name="index349"><a name="index350"><a name="index351"> <i>expression</i> <i>maxlen</i>
-<i>filename</i> [:format <i>format</i>] [:mode <i>mode</i>] [:bits <i>bits</i>] [:swap <i>flag</i>] [:play <i>play</i>])</code><dd>Evaluates the <i>expression</i>, which should result in a sound
-or an array of sounds, and writes the result to the given <i>filename</i>.  A
-<code>FLONUM</code> is returned giving the maximum absolute value of all samples
-written. (This is useful for normalizing sounds and detecting sample
-overflow.) If <i>play</i> is not <code>NIL</code>, the sound will be output through the computer's audio output system. (<i>:play</i> is not implemented on all systems; if it is implemented, and <i>filename</i> is <code>NIL</code>, then this will play the file without also writing a file.)
-If
-a multichannel sound (array) is written, the channels are up-sampled to the
-highest rate in any channel so that all channels have the same sample rate.
-The maximum number of samples written per channel is given by <i>maxlen</i>,
-which allows writing the initial part of a very long or infinite sound. A
-header is written according to <i>format</i>, samples are encoded according to
-<i>mode</i>, using <i>bits</i> bits/sample, and bytes are swapped if <i>swap</i> is not NIL.  Defaults for these are
-<code>*default-sf-format*</code>, <code>*default-sf-mode*</code>, and
-<code>*default-sf-bits*</code>. The default for <i>swap</i> is NIL.
-The <i>bits</i> parameter may be 8, 16, or 32.  The values for the <i>format</i> and <i>mode</i> options are described below:
-</dl>
-<b>Format</b>
-<dl>
-<dt>
-<code>snd-head-none</code><dd>No header.<br><br>
-<dt><code>snd-head-AIFF</code><dd>AIFF format header.<br><br>
-<dt><code>snd-head-IRCAM</code><dd>IRCAM format header.<br><br>
-<dt><code>snd-head-NeXT</code><dd>1024-byte NeXT/SUN format header followed by IRCAM
-header ala CMIX.  Note that the NeXT/SUN format has a header-length field,
-so it really is legal to have a large header, even though the normal minimal
-header is only 24 bytes.  The additional space leaves room for maximum
-amplitudes, which can be used for normalizing floating-point soundfiles, and
-for other data.  Nyquist follows the CMIX convention of placing an IRCAM
-format header immediately after the NeXT-style header.<br><br>
-<dt><code>snd-head-Wave</code><dd>Microsoft Wave format header.
-</dl>
-<p>
-<b>Mode</b>
-<dl>
-<dt>
-<code>snd-head-mode-adpcm</code><dd>ADPCM mode (not supported).<br><br>
-<dt><code>snd-head-mode-pcm</code><dd>signed binary PCM mode.<br><br>
-<dt><code>snd-head-mode-ulaw</code><dd>8-bit U-Law mode.<br><br>
-<dt><code>snd-head-mode-alaw</code><dd>8-bit A-Law mode (not supported).<br><br>
-<dt><code>snd-head-mode-float</code><dd>32-bit floating point mode.<br><br>
-<dt><code>snd-head-mode-upcm</code><dd>unsigned binary PCM mode.
-</dl>
-<p>
-The defaults for format, mode, and bits are as follows:
-<dl>
-<dt>
-NeXT and Sun machines:<dd><code>snd-head-NeXT</code>, <code>snd-head-mode-pcm</code>,
-<code>16</code><br><br>
-<dt>SGI and Macintosh machines:<dd><code>snd-head-AIFF</code>, <code>snd-head-mode-pcm</code>, <code>16</code><br><br>
-<dt></dl><dl>
-<dt>
-
-<code>(s-read<a name="index352"><a name="index353"> <i>filename</i> [:time-offset <i>offset</i>] [:srate
-<i>sr</i>] [:dur <i>dur</i>] [:nchans <i>chans</i>] [:format <i>format</i>] [:mode <i>mode</i>]  [:bits <i>n</i>] [:swap <i>flag</i>])</code><dd>Reads a sound from
-a file.  If a header is detected, the header is used to determine the format
-of the file, and header information overrides format information provided by
-keywords (except for <code>:time-offset</code> and <code>:dur</code>). 
-<pre>
-(s-read "mysound.snd" :srate 44100)
-</pre>
-
-specifies a sample rate of 44100 hz, but if the file has a header specifying 22050 hz, the resulting sample rate will be 22050.  The parameters are:
-<ul>
-<li>
- <code>:time-offset</code> - the amount of time (in seconds) to skip from
-the beginning of the file.  The default is 0.0.
-<li><code>:srate</code> - the sample rate of the samples in the file.  Default is
-<code>*default-sf-srate*</code> <a name="index354">, which is normally 44100.
-<li> <code>:dur</code> - the maximum duration in seconds to read.  Default is
-10000.
-<li> <code>:nchans</code> - the number of channels to read.  It is assumed that
-samples from each channel are interleaved.  Default is 1.
-<li> <code>:format</code> - the header format.  See <code>s-save</code> for details.
-Default is <code>*default-sf-format*</code>, although this parameter is currently
-ignored.
-<li> <code>:mode</code> - the sample representation, e.g. PCM or float.  See
-<code>s-save</code> for details.  Default is <code>*default-sf-format*</code>.
-<li> <code>:bits</code> - the number of bits per sample.  See <code>s-save</code> for
-details.  Default is <code>*default-sf-bits*</code>.
-<li> <code>:swap</code> - (T or NIL) swap byte order of each sample. Default is NIL.
-</ul>
-If there is an error, for example if <code>:time-offset</code> is greater than the length of the file, then <code>NIL</code> is returned rather than a sound. Information about the sound is also returned by <code>s-read</code> through <code>*rslt*</code> <a href = "foot.html#foot2">(Footnote 2)</a> . The list assigned to <code>*rslt*</code> is of the form: (<i>format</i> <i>channels</i> <i>mode</i> <i>bits</i> <i>samplerate</i> <i>duration</i> <i>flags</i> <i>byte-offset</i>), which are defined as follows:
-<ul>
-<li>
-<i>format</i> - the header format. See <code>s-save</code> for details.
-<li><i>channels</i> - the number of channels.
-<li><i>mode</i> - the sample representation, e.g. PCM or float. See <code>s-save</code> for details.
-<li><i>bits</i> - the number of bits per sample.
-<li><i>samplerate</i> - the sample rate, expressed as a FLONUM.
-<li><i>duration</i> - the duration of the sound, in seconds.
-<li><i>flags</i> - The values for <i>format</i>, <i>channels</i>, <i>mode</i>, <i>bits</i>, <i>samplerate</i>, and <i>duration</i> are initially just the values passed in as parameters or default values to <code>s-read</code>.  If a value is actually read from the sound file header, a flag is set.  The flags are: <code>snd-head-format</code>, <code>snd-head-channels</code>, <code>snd-head-mode</code>, <code>snd-head-bits</code>, <code>snd-head-srate</code>, and <code>snd-head-dur</code>.  For example,
-<pre>
-(let ((flags (caddr (cddddr  *rslt*))))
-  (not (zerop (logand flags snd-head-srate))))
-</pre>
-
-tells whether the sample rate was specified in the file. See also <code>sf-info</code> below.
-<li><i>byte-offset</i> - the byte offset into the file of the first sample
-to be read (this is used by the <code>s-overwrite</code> and <code>s-add-to</code>
-functions).
-</ul><br><br>
-<dt><code>(s-add-to<a name="index355"><a name="index356"><a name="index357"> <i>expression</i> <i>maxlen</i>
-<i>filename</i> [<i>offset</i></code>)]<dd>Evaluates the <i>expression</i>, which should result in a sound
-or an array of sounds, and adds the result to the given <i>filename</i>.  The
-sample rate(s) of <i>expression</i> must match those of the file.
-The maximum number of samples written per channel is given by <i>maxlen</i>,
-which allows writing the initial part of a very long or infinite sound. 
-If <i>offset</i> is specified, the new sound is added to the file beginning at
-an <i>offset</i> from the beginning (in seconds).  The file is extended if
-necessary to accommodate the new addition, but if <i>offset</i>
-falls outside of the original file, the file is not modified. (If necessary,
-use <code>s-add-to</code> to extend the file with zeros.)<br><br>
-<dt><code>(s-overwrite<a name="index358"><a name="index359"><a name="index360"> <i>expression</i> <i>maxlen</i> <i>filename</i> [<i>offset</i></code>)]<dd>Evaluates the <i>expression</i>, which should result in a sound
-or an array of sounds, and replaces samples in the given <i>filename</i>.  A <code>FLONUM</code> is returned, giving the maximum absolute value of all samples written. The
-sample rate(s) of <i>expression</i> must match those of the file.
-The maximum number of samples written per channel is given by <i>maxlen</i>,
-which allows writing the initial part of a very long or infinite sound. 
-If <i>offset</i> is specified, the new sound is written to the file beginning at
-an <i>offset</i> from the beginning (in seconds). The file is extended if
-necessary to accommodate the new insert, but if <i>offset</i> falls outside of
-the original file, the file is not modified. (If necessary, use
-<code>s-add-to</code> to extend the file with zeros.)<br><br>
-<dt><code>(sf-info<a name="index361"><a name="index362"> <i>filename</i>)</code><dd>Prints information about a sound file. The parameter <i>filename</i> is a string.  The file is assumed to be in *default-sf-dir* (see <code>soundfilename</code> below) unless the filename begins with ``.'' or ``/''. The source for this function is in the <code>runtime</code> and provides an example of how to determine sound file parameters. <br><br>
-<dt><code>(soundfilename<a name="index363"> <i>name</i>)</code><dd>Converts a string <i>name</i> to a soundfile name.  If <i>name</i> begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from <code>*default-sf-dir*</code> is prepended to <i>name</i>.  The <code>s-plot</code>, <code>s-read</code>, and <code>s-save</code> functions all use <code>soundfilename</code> translate filenames.<br><br>
-<dt><code>(s-plot<a name="index364"> <i>sound</i> <i>n</i>)</code><dd>Plots sound in a window.  The
-current implementations are minimal. For the RS6000/AIX implementation, <code>s-plot</code> simply writes time/value pairs in ascii to a file named <code>points.dat</code>.  Then, an <code>xterm</code> is created in Tektronix emulation mode, and the Unix <code>plot</code> program is used to plot the points.  The files used are:
-<dl>
-<dt>
-<code>*default-plot-file*</code><a name="index365"><dd>The file containing the data points, defaults to "points.dat".<br><br>
-<dt><code>*plotscript-file*</code><a name="index366"><dd>The file containing the script for the <code>xterm</code>, defaults to "sys/unix/rs6k/plotscript".
-</dl>
-The script for plotting is typically something like:
-<pre>
-graph &lt points.dat | plot -Ttek
-</pre>
-
-This runs the Unix graph program which reads the input, scales it, and adds axes and labels.  The output is piped to the plot program which converts the
-graphics data into Tektronix commands.  It's crude but works well even over
-a serial line.  <br><br>
-<dt>Under the Macintosh, plotting is performed using some built-in graphics commands. Select "Split Screen" on the Control menu to get a nice area for plotting.<br><br>
-<dt>Under Windows, using the NyqIDE program, plotting is built-in.<br><br>
-<dt>If you are interested in making a nicer plot program for any platform, please contact the author.<br><br>
-<dt><code>(s-print-tree<a name="index367"> <i>sound</i>)</code><dd>Prints an ascii
-representation of the internal data structures representing a sound.  This
-is useful for debugging<a name="index368"> Nyquist.  Identical to <code>snd-print-tree</code>.<br><br>
-<dt></dl><a name = "54"><h3>Miscellaneous Functions</h3></a>
-<dl>
-<dt>
-<code>(get-duration<a name="index369"> <i>dur</i>)</code><dd>Gets the actual duration of of something starting at a local time of 0 and ending at a local time of <i>dur</i> times the current sustain. For convenience,  <code>*rslt*</code> is set to the global time corresponding to local time zero.<br><br>
-<dt><code>(get-loud<a name="index370">)</code><dd>Gets the current value of the <code>*loud*</code> environment variable.  If <code>*loud*</code> is a signal, it is evaluated at local time 0 and a number (<code>FLONUM</code>) is returned.<br><br>
-<dt><code>(get-sustain<a name="index371">)</code><dd>Gets the current value of the <code>*sustain*</code> environment variable.  If <code>*sustain*</code> is a signal, it is evaluated at local time 0 and a number (<code>FLONUM</code>) is returned.<br><br>
-<dt><code>(get-transpose<a name="index372">)</code><dd>Gets the current value of the <code>*transpose*</code> environment variable.  If <code>*transpose*</code> is a signal, it is evaluated at local time 0 and a number (<code>FLONUM</code>) is returned.<br><br>
-<dt><code>(get-warp<a name="index373">)</code><dd>Gets a function corresponding to the current value of the <code>*warp*</code> environment variable.  For efficiency, <code>*warp*</code> is stored in three parts representing a shift, a scale factor, and a continuous warp function.  <code>Get-warp</code> is used to retrieve a signal that maps logical time to real time.  This signal combines the information of all three components of <code>*warp*</code> into a single signal.  If the continuous warp function component is not present (indicating that the time warp is a simple combination of <code>at</code> and <code>stretch</code> transformations), an error is raised.  This function is mainly for internal system use.  In the future, <code>get-warp</code> will probably be reimplemented to always return a signal and never raise an error.<br><br>
-<dt><code>(local-to-global<a name="index374"> <i>local-time</i>)</code><dd>Converts a score (local) time to a real (global) time according to the current environment.<br><br>
-<dt></dl>
-<a name = "55"><h3>Low-level Functions</h3></a>
-Nyquist includes many low-level functions that are used to implement the functions and behaviors described in previous sections. For completeness, these functions are described here.  Remember that
-these are low-level functions that are not intended for normal use.  Unless
-you are trying to understand the inner workings of Nyquist, you can skip this section.
-<p>
-<a name = "56"><h4>Creating Sounds</h4></a>
-The basic operations that create sounds are described here.  
-<p>
-<dl>
-<dt>
- <code>(snd-const<a name="index375"> <i>value</i> <i>t0</i> <i>srate</i>
-<i>duration</i>)</code><dd>Returns a sound with constant <i>value</i>, starting at <i>t0</i>
-with the given <i>duration</i>, at the sample rate <i>srate</i>.  You might want
-to use <code>pwl</code> (see Section <a href = "#48">``Piece-wise Approximations''</a>) instead.<br><br>
-<dt><code>(snd-read<a name="index376"> <i>filename</i> <i>offset</i> <i>t0</i> <i>format</i>
-<i>channels</i> <i>mode</i> <i>bits</i> <i>swap</i> <i>sr</i>
-<i>dur</i>)</code><dd>Loads a sound from a file with name <i>filename</i>.  Files are
-assumed to consist of a header followed by frames consisting of one sample
-from each channel.  The <i>format</i> specifies the type of header, but this
-information is currently ignored.  Nyquist looks for a number of header
-formats and automatically figures out which format to read.  If a header can
-be identified, the header is first read from the file.  Then, the file
-pointer is advanced by the indicated
-<i>offset</i> (in seconds).  If there is an unrecognized header, Nyquist will
-assume the file has no header.  If the header size is a multiple of the
-frame size (bytes/sample * number-of-channels), you can use <i>offset</i> to
-skip over the header.  To skip N bytes, use an <i>offset</i> of:
-<pre>
-(/ (float N) <i>sr</i> (/ <i>bits</i> 8) <i>channels</i>)
-</pre>
-
-If the header is not a multiple of the frame size, either write a header or
-contact the author (dannenberg@cs.cmu.edu) for assistance.  Nyquist will
-round <i>offset</i> to the nearest sample.  The resulting sound will start at
-time <i>t0</i>.  If a header is found, the file will be interpreted according
-to the header information.  If no header was found, <i>channels</i> tells how
-many channels there are, the samples are encoded according to <i>mode</i>, the
-sample length is <i>bits</i>, and <i>sr</i> is the sample rate.  The <i>swap</i> flag is 0 or 1, where 1 means to swap sample bytes. The duration to
-be read (in seconds) is given by <i>dur</i>.  If <i>dur</i> is longer than the
-data in the file, then a shorter duration will be returned.  If the file
-contains one channel, a sound is returned.  If the file contains 2 or more
-channels, an array of sounds is returned.  <b><i>Note:</i></b> you probably want to
-call <code>s-read</code> (see Section <a href = "#53">``Sound File Input and Output''</a>) instead of
-<code>snd-read</code>.  Also, see Section <a href = "#53">``Sound File Input and Output''</a> for information on the
-<i>mode</i> and <i>format</i> parameters.<br><br>
-<dt><code>(snd-save<a name="index377"> <i>expression</i> <i>maxlen</i>
-<i>filename</i> <i>format</i> <i>mode</i> <i>bits</i> <i>swap</i>)</code><dd>Evaluates the <i>expression</i>, which should result in a sound
-or an array of sounds, and writes the result to the given <i>filename</i>.  If
-a multichannel sound (array) is written, the channels are up-sampled to the
-highest rate in any channel so that all channels have the same sample rate.
-The maximum number of samples written per channel is given by <i>maxlen</i>,
-which allows writing the initial part of a very long or infinite sound. A
-header is written according to <i>format</i>, samples are encoded according to
-<i>mode</i>, using <i>bits</i> bits/sample, and swapping bytes if <i>swap</i> is 1 (otherwise it should be 0).  <b><i>Note:</i></b> you probably want to call
-<code>s-save</code> (see Section <a href = "#53">``Sound File Input and Output''</a>) instead.  The <i>format</i> and
-<i>mode</i> parameters are described in Section <a href = "#53">``Sound File Input and Output''</a>.<br><br>
-<dt><code>(snd-overwrite<a name="index378"> <i>expression</i> <i>maxlen</i> <i>filename</i> <i>byte-offset</i> <i>mode</i> <i>bits</i> <i>swap</i> <i>sr</i> <i>channels</i>)</code><dd>Evaluates the <i>expression</i>, which should result in a sound
-or an array of sounds, and replaces samples in the given <i>filename</i>.  The
-sample rate(s) of <i>expression</i> must match those of the file and the
-parameter <i>sr</i>. The file is not read to determine its format, so it is
-essential to specify the proper parameters: <i>byte-offset</i> is the offset in
-bytes of the first sound sample to be written, <i>mode</i> is the
-representation (see <code>snd-save</code>), <i>bits</i> is the number of bits per
-sample, <i>swap</i> is 0 or 1, where 1 means to swap sample bytes, <i>sr</i> is the sample rate, and <i>channels</i> is the number of
-channels. If these do not match the parameters for <i>filename</i>, it is
-likely that <i>filename</i> will be corrupted. Up to a maximum of <i>maxlen</i>
-samples will be written per channel. Use <code>s-add-to</code> (in Section <a href = "#53">``Sound File Input and Output''</a> or
-<code>s-overwrite</code> (in Section <a href = "#53">``Sound File Input and Output''</a> instead of this function.<br><br>
-<dt><code>(snd-coterm<a name="index379"><a name="index380"><a name="index381"> <i>s1</i> <i>s2</i>)</code><dd>Returns a copy of <i>s1</i>, except the start
-time is the maximum of the start times of <i>s1</i> and <i>s2</i>, and the
-termination time is the minimum of <i>s1</i> and <i>s2</i>. (After the termination
-time, the sound is zero as if <i>s1</i> is gated by <i>s2</i>.)  Some rationale
-follows: In order to implement <code>s-add-to</code>, we need to read from the
-target sound file, add the sounds to a new sound, and overwrite the result
-back into the file.  We only want to write as many samples into the file as
-there are samples in the new sound. However, if we are adding
-in samples read from
-the file, the result of a <code>snd-add</code> in Nyquist will have the maximum
-duration of either sound.  Therefore, we may read to the end of the file.
-What we need is a way to truncate the read, but we cannot easily do that,
-because we do not know in advance how long the new sound will be. The
-solution is to use <code>snd-coterm</code>, which will allow us to truncate the
-sound that is read from the file (<i>s1</i>) according to the duration of the
-new sound (<i>s2</i>).  When this truncated sound is added to the new sound,
-the result will have only the duration of the new sound, and this can be
-used to overwrite the file. This function is used in the implementation of
-<code>s-add-to</code>, which is defined in <code>runtime/fileio.lsp</code>.<br><br>
-<dt><code>(snd-from-array <i>...</i>)</code><dd>See <a href = "#42">``Accessing and Creating Sound''</a>.<br><br>
-<dt><code>(snd-white <i>t0</i> <i>sr</i> <i>d</i>)</code><dd>Generate white noise, starting at
-<i>t0</i>, with sample rate <i>sr</i>, and duration <i>d</i>.  You probably want to
-use <code>noise</code> (see Section <a href = "#50">``More Behaviors''</a>).<br><br>
-<dt> <code>(snd-zero<a name="index382"> <i>t0</i> <i>srate</i>)</code><dd>Creates a sound that is
-zero everywhere, starts at <i>t0</i>, and has sample rate <i>srate</i>.  The
-logical stop time is immediate, i.e. also at <i>t0</i>.  You probably want
-to use <code>pwl</code> (see Section <a href = "#48">``Piece-wise Approximations''</a>) instead.<br><br>
-<dt></dl><a name = "57"><h4>Signal Operations</h4></a>
-This next set of functions take sounds as arguments, operate on them, and
-return a sound.
-<p>
-<dl>
-<dt>
-<code>(snd-abs<a name="index383"><a name="index384"> <i>sound</i>)</code><dd>Computes a new 
-sound where each sample is the absolute value of the corresponding sample in
-<i>sound</i>. You should probably use <code>s-abs</code> instead. (See Section <a href = "#50">``More Behaviors''</a>.)<br><br>
-<dt><code>(snd-sqrt<a name="index385"><a name="index386"> <i>sound</i>)</code><dd>Computes a new 
-sound where each sample is the square root of the corresponding sample in
-<i>sound</i>. If a sample is negative, it is taken to be zero to avoid raising a floating point error. You should probably use <code>s-sqrt</code> instead. (See Section <a href = "#50">``More Behaviors''</a>.)<br><br>
-<dt> <code>(snd-add<a name="index387"> <i>sound1</i> <i>sound</i>)</code><dd>Adds two sounds.  The
-resulting start time is the minimum of the two parameter start times, the
-logical stop time is the maximum of the two parameter stop times, and the
-sample rate is the maximum of the two parameter sample rates.  Use
-<code>sim</code> or <code>sum</code> instead of <code>snd-add</code> (see Section <a href = "#52">``Combination and Time Structure''</a>).
-<code>(snd-offset<a name="index388"><a name="index389"><a name="index390"> <i>sound</i> <i>offset</i>)</code><dd>Add an offset to a sound. The resulting start time, logical stop time, stop time, and sample rate are those of <i>sound</i>. Use <code>sum</code> instead (see Section <a href = "#52">``Combination and Time Structure''</a>).<br><br>
-<dt><code>(snd-avg<a name="index391"><a name="index392"><a name="index393"><a name="index394"> <i>sound</i> <i>blocksize</i> <i>stepsize</i> <i>operation</i>)</code><dd>Computes the averages or peak values of blocks of samples. Each output sample is an average or peak of <i>blocksize</i> (a fixnum) adjacent samples from the input <i>sound</i>. After each average or peak is taken, the input is advanced by <i>stepsize</i>, a fixnum which may be greater or less than <i>blocksize</i>.  The output sample rate is the <i>sound</i> (input) sample rate divided by <i>stepsize</i>. This function is useful for computing low-sample-rate rms or peak amplitude signals for input to <code>snd-gate</code> or <code>snd-follow</code>.  To select the operation, <i>operation</i> should be one of <code>OP-AVERAGE</code> or <code>OP-PEAK</code>.  (These are global lisp variables; the actual <i>operation</i> parameter is an integer.) For RMS computation, see <code>rms</code> in Section <a href = "#50">``More Behaviors''</a>.<br><br>
-<dt><code>(snd-clip<a name="index395"><a name="index396"> <i>sound</i> <i>peak</i>)</code><dd>Hard limit <i>sound</i> 
-to the given <i>peak</i>, a positive number. The samples of <i>sound</i> are constrained between an upper value
-of <i>peak</i> and a lower value of <i>peak</i>. Use <code>clip</code> instead (see Section <a href = "#50">``More Behaviors''</a>).<br><br>
-<dt><code>(snd-compose<a name="index397"><a name="index398"><a name="index399"> <i>f</i> <i>g</i>)</code><dd>Compose two signals, i.e.
-compute <i>f</i>(<i>g</i>(<i>t</i>)), where <i>f</i> and <i>g</i> are sounds. This function
-is used primarily to implement time warping, but it can be used in other
-applications such as frequency modulation.  For each sample <i>x</i> in <i>g</i>,
-<i>snd-compose</i> looks up the value of <i>f</i>(<i>x</i>) using linear
-interpolation.  The resulting sample rate, start time, etc. are taken from
-<i>g</i>.  The sound <i>f</i> is used in effect as a lookup table, but it is
-assumed that <i>g</i> is non-decreasing, so that <i>f</i> is accessed in time
-order.  This allows samples of <i>f</i> to be computed and discarded
-incrementally.  If in fact <i>g</i> decreases, the current sample of <i>g</i>  is
-replaced by the previous one, forcing <i>g</i> into compliance with the
-non-decreasing restriction.  See also <code>sref</code>, <code>shape</code>, and
-<code>snd-resample</code>.  <br><br>
-<dt><code>(snd-tapv<a name="index400"><a name="index401"><a name="index402"><a name="index403"><a name="index404"> <i>sound</i> <i>offset</i> <i>vardelay</i> <i>maxdelay</i>)</code><dd>A variable delay: <i>sound</i> is delayed by the sum of <i>offset</i> (a FIXNUM or FLONUM) and <i>vardelay</i> (a SOUND).  The specified delay is adjusted to lie in the range of zero to <i>maxdelay</i> seconds to yield the actual delay, and the delay is implemented using linear interpolation. This function was designed specifically for use in a chorus effect: the <i>offset</i> is set to half of <i>maxdelay</i>, and the <i>vardelay</i> input is a slow sinusoid. The maximum delay is limited to <i>maxdelay</i>, which determines the length of a fixed-sized buffer.<br><br>
-<dt><code>(snd-copy<a name="index405"> <i>sound</i>)</code><dd>Makes a copy of <i>sound</i>.
-Since operators always make (logical) copies of their sound parameters, this
-function should never be needed.  This function is here for debugging<a name="index406">.<br><br>
-<dt><code>(snd-down<a name="index407"> <i>srate</i> <i>sound</i>)</code><dd>Linear interpolation
-of samples down to the given sample rate <i>srate</i>, which must be lower than
-the sample rate of <i>sound</i>.  Do not call this function.  Nyquist performs
-sample-rate conversion automatically as needed.  If you want to force a
-conversion, call <code>force-srate</code> (see Section <a href = "#46">``Sound Synthesis''</a>).<br><br>
-<dt><code>(snd-exp<a name="index408"> <i>sound</i>)</code><dd>Compute the exponential of each sample of <i>sound</i>. Use <code>s-exp</code> instead (see Section <a href = "#50">``More Behaviors''</a>).<br><br>
-<dt>
-<code>(snd-follow<a name="index409"><a name="index410"><a name="index411"><a name="index412"><a name="index413"> <i>sound</i> <i>floor</i> <i>risetime</i> <i>falltime</i> <i>lookahead</i>)</code><dd>An envelope follower intended as a component for compressor and limiter functions. The basic goal of this function is to generate a smooth signal that rides on the peaks of the input signal. The usual objective is to produce an amplitude envelope given a low-sample rate (control rate) signal representing local RMS measurements. The first argument is the input signal. The <i>floor</i> is the minimum output value. The <i>risetime</i> is the time (in seconds) it takes for the output to rise (exponentially) from <i>floor</i> to unity (1.0) and the <i>falltime</i> is the time it takes for the output to fall (exponentially) from unity to <i>floor</i>. The algorithm looks ahead for peaks and will begin to increase the output signal according to <i>risetime</i> in anticipation of a peak. The amount of anticipation (in seconds) is given by <i>lookahead</i>.  The algorithm is as follows: the output value is allowed to increase according to <i>risetime</i> or decrease according to <i>falltime</i>. If the next input sample is in this range, that sample is simply output as the next output sample.  If the next input sample is too large, the algorithm goes back in time as far as necessary to compute an envelope that rises according to <i>risetime</i> to meet the new value. The algorithm will only work backward as far as <i>lookahead</i>.  If that is not far enough, then there is a final forward pass computing a rising signal from the earliest output sample. In this case, the output signal will be at least momentarily less than the input signal and will continue to rise exponentially until it intersects the input signal. If the input signal falls faster than indicated by <i>falltime</i>, the output fall rate will be limited by <i>falltime</i>, and the fall in output will stop when the output reaches <i>floor</i>. This algorithm can make two passes througth the buffer on sharply rising inputs, so it is not particularly fast. With short buffers and low sample rates this should not matter. See <code>snd-avg</code> above for a function that can help to generate a low-sample-rate input for <code>snd-follow</code>. See <code>snd-chase</code> in Section <a href = "#58">``Filters''</a> for a related filter.<br><br>
-<dt><code>(snd-gate<a name="index414"><a name="index415"><a name="index416"> <i>sound</i> <i>lookahead</i> <i>risetime</i> <i>falltime</i> <i>floor</i> <i>threshold</i>)</code><dd>This function generates an exponential rise and decay intended for noise gate implementation. The decay starts when the signal drops below threshold and stays there for longer than lookahead. Decay continues until the value reaches floor, at which point the decay stops and the output value is held constant. Either during the decay or after the floor is reached, if the signal goes above threshold, then the output value will rise to unity (1.0) at the point the signal crosses the threshold. Again, look-ahead is used, so the rise actually starts before the signal crosses the threshold. The rise is a constant-rate exponential and set so that a rise from <i>floor</i> to unity occurs in <i>risetime</i>.  Similarly, the fall is a constant-rate exponential such that a fall from unity to <i>floor</i> takes <i>falltime</i>. <br><br>
-<dt><code>(snd-inverse<a name="index417"><a name="index418"> <i>signal</i> <i>start</i> <i>srate</i>)</code><dd>Compute the function inverse of <i>signal</i>, that is, compute <i>g</i>(<i>t</i>) such that <i>signal</i>(<i>g</i>(<i>t</i>)) = <i>t</i>.  This function assumes that <i>signal</i> is non-decreasing, it uses linear interpolation, the resulting sample rate is <i>srate</i>, and the result is shifted to have a starting time of <i>start</i>.  If <i>signal</i> decreases, the true inverse may be undefined, so we define <code>snd-inverse</code> operationally as follows: for each output time point <i>t</i>, scan ahead in <i>signal</i> until the value of signal exceeds <i>t</i>.  Interpolate to find an exact time point <i>x</i> from <i>signal</i> and output <i>x</i> at time <i>t</i>.  This function is intended for internal system use in implementing time warps.<br><br>
-<dt><code>(snd-log<a name="index419"> <i>sound</i>)</code><dd>Compute the natural logorithm of each sample of <i>sound</i>. Use <code>s-log</code> instead (see Section <a href = "#50">``More Behaviors''</a>).<br><br>
-<dt>
-<code>(peak<a name="index420"> <i>expression</i> <i>maxlen</i>)</code><dd>Compute the maximum amplitude of a sound.  The sound is created by evaluating <i>expression</i> (as in <code>s-save</code>).  Only the first <i>maxlen</i> samples are evaluated. The <i>expression</i> is automatically quoted (<code>peak</code> is a macro), so do not quote this parameter.  If <i>expression</i> is a variable, then the <i>global binding</i> of that variable will be used.  Also, since the variable retains a reference to the sound, the sound will be evaluated and left in memory.  See Section <a href = "part5.html#33">``Memory Space and Normalization''</a> on <a href = "part5.html#33">``Memory Space and Normalization''</a> for examples.<br><br>
-<dt>
-<code>(snd-max<a name="index421"><a name="index422"> <i>expression</i> <i>maxlen</i>)</code><dd>Compute the maximum amplitude of a sound.  The sound is created by evaluating <i>expression</i> (as in <code>snd-save</code>), which is therefore normally quoted by the caller.  At most <i>maxlen</i> samples are computed.  The result is the maximum of the absolute values of the samples.  <b><i>Notes:</i></b> It is recommended to use <code>peak</code> (see above) instead.  If you want to find the maximum of a sound bound to a local variable and it is acceptable to save the samples in memory, then this is probably the function to call.  Otherwise, use <code>peak</code>.<br><br>
-<dt><code>(snd-maxv<a name="index423"><a name="index424"> <i>sound1</i> <i>sound2</i>)</code><dd>Compute the maximum of <i>sound1</i> and <i>sound2</i> on a sample-by-sample basis. The resulting
-sound has its start time at the maximum of the input start times and a logical stop
-at the minimum logical stop of the inputs. The physical stop time is the minimum of 
-the physical stop times of the two sounds. <i>Note that this violates the ``normal'' 
-interpretation that sounds are zero outside their start and stop times. For
-example, even if</i> sound1 <i>extends beyond</i> sound2 <i>and is greater than zero,
-the result
-value in this extension will be zero because it will be after the physical stop time,
-whereas if we simply treated</i> sound2 <i>as zero in this region and took the maximum, we
-would get a non-zero result.</i> Use <code>s-max</code> instead (see Section <a href = "#50">``More Behaviors''</a>).<br><br>
-<dt><code>(snd-normalize<a name="index425"> <i>sound</i>)</code><dd>Internally, sounds
-are stored with a scale factor that applies to all samples of the sound.
-All operators that take sound arguments take this scale factor into account
-(although it is not always necessary to perform an actual multiply per
-sample), so you should never need to call this function.  This function
-multiplies each sample of a sound by its scale factor, returning a sound
-that represents the same signal, but whose scale factor is 1.0.  <br><br>
-<dt><code>(snd-prod<a name="index426"><a name="index427"><a name="index428"> <i>sound1</i> <i>sound2</i>)</code><dd>Computes the
-product of <i>sound1</i> and <i>sound2</i>.  The resulting sound has its start
-time at the maximum of the input start times and a logical stop at the minimum
-logical stop of the inputs.  Do not use this function.  Use <code>mult</code> or
-<code>prod</code> instead (see Section <a href = "#46">``Sound Synthesis''</a>).  Sample rate, start time, etc. are taken from <i>sound</i>.<br><br>
-<dt><code>(snd-pwl<a name="index429"><a name="index430"> <i>t0</i> <i>sr</i>
-<i>lis</i>)</code><dd>Computes a piece-wise linear function according to the breakpoints
-in <i>lis</i>.  The starting time is <i>t0</i>, and the sample rate is <i>sr</i>.
-The breakpoints are passed in an XLISP list (of type <code>LVAL</code>) where the
-list alternates sample numbers (<code>FIXNUM</code>s, computed in samples 
-from the beginning of the pwl function) and values (the value of the pwl
-function, given as a <code>FLONUM</code>).  There is an implicit starting
-point of (0, 0).  The list must contain an odd number of points, the omitted 
-last
-value being implicitly zero (0).  The list is assumed to be well-formed.  Do
-not call this function.  Use <code>pwl</code> instead (see Section <a href = "#48">``Piece-wise Approximations''</a>).<br><br>
-<dt><code>(snd-quantize<a name="index431"> <i>sound</i> <i>steps</i>)</code><dd>Quantizes a sound. See Section
-<a href = "#50">``More Behaviors''</a> for details.<br><br>
-<dt><code>(snd-recip<a name="index432"> <i>sound</i>)</code><dd>Compute the reciprocal of each sample of <i>sound</i>. Use <code>recip</code> instead (see Section <a href = "#50">``More Behaviors''</a>).<br><br>
-<dt><code>(snd-resample<a name="index433"><a name="index434"> <i>f</i>
-<i>rate</i>)</code><dd>Resample sound <i>f</i> using high-quality interpolation, yielding
-a new sound with the specified <i>rate</i>.
-The resulting start time, etc. are taken from
-<i>f</i>. Use <code>resample</code> instead.<br><br>
-<dt><code>(snd-resamplev<a name="index435"><a name="index436"><a name="index437"> <i>f</i> <i>rate</i> <i>g</i>)</code><dd>Compose two
-signals, i.e.  compute <i>f</i>(<i>g</i>(<i>t</i>)), where <i>f</i> and <i>g</i> are
-sounds. The result has sample rate given by <i>rate</i>.  At each time <i>t</i>
-(according to the <i>rate</i>), <i>g</i> is linearly interpolated to yield an
-increasing sequence of high-precision score-time values. <i>f</i> is then
-interpolated at each value to yield a result sample. If in fact <i>g</i>
-decreases, the current sample of <i>g</i>  is replaced by the previous one,
-forcing <i>g</i> into compliance with the non-decreasing restriction. Note that
-if <i>g</i> has a high sample rate, this may introduce unwanted jitter into
-sample times. See <code>sound-warp</code> for a detailed discussion. See
-<code>snd-compose</code> for a fast, low-quality alternative to this function.
-Normally, you should use <code>sound-warp</code> instead of this function.<br><br>
-<dt><code>(snd-scale<a name="index438"> <i>scale</i> <i>sound</i>)</code><dd>Scales the amplitude of <i>sound</i> by the factor <i>scale</i>.  Use <code>scale</code> instead (see Section
-<a href = "#46">``Sound Synthesis''</a>).<br><br>
-<dt><code>(snd-shape<a name="index439"> <i>signal</i> <i>table</i> <i>origin</i>)</code><dd>A waveshaping function.  This is the primitive upon which <code>shape</code> is based. The <code>snd-shape</code> function is like <code>shape</code> except that <i>signal</i> and <i>table</i> must be (single-channel) sounds.  Use <code>shape</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-sqrt<a name="index440"><a name="index441">
- <i>sound</i>)</code><dd>Computes a new sound where each sample is the square root 
-of the corresponding sample in <i>sound</i>.<br><br>
-<dt><code>(snd-up <i>srate</i> <i>sound</i>)</code><dd>Increases sample rate by linear
-interpolation.  The <i>sound</i> is the signal to be up-sampled, and <i>srate</i>
-is the output sample rate.  Do not call this function.  Nyquist performs
-sample-rate conversion automatically as needed.  If you want to force a
-conversion, call <code>force-srate</code> (see Section <a href = "#46">``Sound Synthesis''</a>).<br><br>
-<dt>
-<code>(snd-xform<a name="index442"> <i>sound</i> <i>sr</i> <i>time</i> <i>start</i>
-<i>stop</i> <i>scale</i>)</code><dd>Makes a copy of <i>sound</i> and then alters it in
-the following order:  (1) the start time (<code>snd-t0</code>) of the sound is shifted to 
-<i>time</i>, (1) the sound is stretched as a result of setting the sample rate
-to <i>sr</i> (the start time is unchanged by this), (3) the sound is clipped
- from <i>start</i> to <i>stop</i>, (4) if <i>start</i> is greater than <i>time</i>, the sound is shifted
-shifted by <i>time</i> - <i>start</i>, so that the start time is <i>time</i>, (5) the
-sound is scaled by <i>scale</i>.  An empty (zero) sound at <i>time</i> will be
-returned if all samples are clipped.  Normally, you should accomplish all
-this using transformations.  A transformation applied to a sound has no
-effect, so use <code>cue</code> to create a transformable sound (see Section
-<a href = "#45">``Using Previously Created Sounds''</a>).<br><br>
-<dt></dl><a name = "58"><h4>Filters</h4></a>
-These are also ``Signal Operators,'' the subject of the previous section, 
-but there are so many filter functions, they are
-documented in this special section.
-<p>
-Some filters allow time-varying filter parameters.  In these functions,
-filter coefficients are calculated at the sample rate of the filter
-parameter, and coefficients are not interpolated.
-<p>
-<dl>
-<dt><code>(snd-alpass<a name="index443"> <i>sound</i> <i>delay</i> <i>feedback</i>)</code><dd>An all-pass filter.  This produces a repeating echo effect without the resonances of <code>snd-delay</code>.  The <i>feedback</i> should be less than one to avoid exponential amplitude blowup.  Delay is rounded to the nearest sample.  You should use <code>alpass</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-alpasscv<a name="index444"> <i>sound</i> <i>delay</i>
-<i>feedback</i>)</code><dd>An all-pass filter with variable <i>feedback</i>.  
-This is just like <i>snd-alpass</i> except <i>feedback</i> is a sound.
-You should use <code>alpass</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-alpassvv<a name="index445"> <i>sound</i> <i>delay</i> <i>feedback</i> <i>maxdelay</i>)</code><dd>An all-pass filter with variable <i>feedback</i> and <i>delay</i>. This is just like <i>snd-alpass</i> except <i>feedback</i> and <i>delay</i> are sounds, and there is an additional <code>FLONUM</code> parameter, <i>maxdelay</i>, that gives an upper bound on the value of <i>delay</i>. <b><i>Note:</i></b> <i>delay</i> must remain between zero and <i>maxdelay</i>. If not, results are undefined, and Nyquist may crash. You should use <code>alpass</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-areson<a name="index446"> <i>sound</i> <i>hz</i> <i>bw</i>
-<i>normalization</i>)</code><dd>A notch filter modeled after the <code>areson</code>
-unit generator in Csound.  The <code>snd-areson</code> filter is an exact
-complement of <code>snd-reson</code> such that if both are applied to the
-same signal with the same parameters, the sum of the results yeilds
-the original signal.  Note that because of this complementary design,
-the power is not normalized as in <code>snd-reson</code>.  See <code>snd-reson</code>
-for details on <i>normalization</i>.  You should use <code>areson</code> instead (see
-Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-aresoncv<a name="index447"> <i>sound</i> <i>hz</i> <i>bw</i>
-<i>normalization</i>)</code><dd>This function is identical to <code>snd-areson</code> except
-the <i>bw</i> (bandwidth) parameter is a sound.  Filter coefficients are
-updated at the sample rate of <i>bw</i>.  The ``<code>cv</code>'' suffix stands for Constant,
-Variable, indicating that <i>hz</i> and <i>bw</i> are constant (a number) and
-variable (a sound), respectively.  This naming convention is used throughout.
-You should use <code>areson</code> instead (see
-Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-aresonvc<a name="index448"> <i>sound</i> <i>hz</i> <i>bw</i>
-<i>normalization</i>)</code><dd>This function is identical to <code>snd-areson</code> except
-the <i>hz</i> (center frequency) parameter is a sound.  Filter coefficients are
-updated at the sample rate of <i>hz</i>.  
-You should use <code>areson</code> instead (see
-Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-aresonvv<a name="index449"> <i>sound</i> <i>hz</i> <i>bw</i>
-<i>normalization</i>)</code><dd>This function is identical to <code>snd-areson</code> except
-both <i>hz</i> (center frequency) and <i>bw</i> (bandwidth) are sounds.  Filter
-coefficients are updated at the next sample of either <i>hz</i> or <i>bw</i>.
-You should use <code>areson</code> instead (see
-Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-atone<a name="index450"> <i>sound</i> <i>hz</i>)</code><dd>A high-pass filter 
-modeled after the <code>atone</code> unit generator in Csound.  The <code>snd-atone</code> filter is an exact
-complement of <code>snd-tone</code> such that if both are applied to the
-same signal with the same parameters, the sum of the results yeilds
-the original signal.  You should use <code>hp</code> instead (see
-Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-atonev<a name="index451"> <i>sound</i> <i>hz</i>)</code><dd>This is just like
-<code>snd-atone</code> except that the <i>hz</i> cutoff frequency is a sound.  Filter
-coefficients are updated at the sample rate of <i>hz</i>.  You should use
-<code>hp</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-biquad<a name="index452"> <i>sound</i> <i>b0</i> <i>b1</i> <i>b2</i> <i>a1</i> <i>a2</i> <i>z1init</i> <i>z2init</i>)</code><dd>A general second order IIR filter, where <i>a0</i> is assumed to be unity. For <i>a1</i> and <i>a2</i>, the sign convention is opposite to that of Matlab. All parameters except the input <i>sound</i> are of type <code>FLONUM</code>. You should probably use one of <code>lowpass2</code>, <code>highpass2</code>, <code>bandpass2</code>, <code>notch2</code>, <code>allpass2</code>, <code>eq-lowshelf</code>, <code>eq-highshelf</code>, <code>eq-band</code>, <code>lowpass4</code>, <code>lowpass6</code>, <code>lowpass8</code>, <code>highpass4</code>, <code>highpass6</code>, or <code>highpass8</code>, which are all based on <code>snd-biquad</code> and described in Section <a href = "#49">``Filter Behaviors''</a>. For completeness, you will also find <code>biquad</code> and <code>biquad-m</code> described in that section.<br><br>
-<dt>
-<code>(snd-chase<a name="index453"> <i>sound</i> <i>risetime</i> <i>falltime</i>)</code><dd>A slew rate limiter. The output ``chases'' the input at rates determined by <i>risetime</i> and <i>falltime</i>.  If the input changes too fast, the output will lag behind the input. This is a form of lowpass filter, but it was created to turn hard-switching square waves into smoother control signals that could be used for linear crossfades. If the input switches from 0 to 1, the output will linearly rise to 1 in <i>risetime</i> seconds. If the input switches from 1 to 0, the output will linearly fall to 0 in <i>falltime</i> seconds.  The generated slope is constant; the transition is linear; this is not an exponential rise or fall.  The <i>risetime</i> and <i>falltime</i> must be scalar constants; complain to the author if this is not adequate. The <code>snd-chase</code> function is safe for ordinary use. See <code>snd-follow</code> in Section <a href = "#57">``Signal Operations''</a> for a related function. <br><br>
-<dt><code>(snd-congen<a name="index454"> <i>gate</i> <i>risetime</i> <i>falltime</i>)</code><dd>A simple ``contour generator'' based 
-on analog synthesizers.  The <i>gate</i> is a sound that normally steps from 0.0 to 1.0 at the start of an envelop and goes from
-1.0 back to 0.0 at the beginning of the release. At each sample, the output converges to the input exponentially.  If <i>gate</i> is greater than the output, e.g. the attack, then the output converges half-way to the output in <i>risetime</i>.  If the <i>gate</i> is less than the output, the half-time is <i>falltime</i>.  The sample rate, starting time, logical-stop-time, and terminate time are taken from  <i>gate</i>. You should use <code>congen</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>.<br><br>
-<dt><code>(snd-convolve<a name="index455"> <i>sound</i> <i>response</i>)</code><dd>Convolves
-<i>sound</i> by <i>response</i> using a simple O(N x M) algorithm. The <i>sound</i>
-can be any length, but the <i>response</i> is computed and stored in a table. The required compuation time per sample and total space are proportional to the
-length of <i>response</i>. Use <code>convolve</code> instead (see Section
-<a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-delay<a name="index456"> <i>sound</i> <i>delay</i> <i>feedback</i>)</code><dd>Feedback
-delay.  The output, initially <i>sound</i>, is recursively delayed by <i>delay</i>, scaled by <i>feedback</i>, and added to itself, producing an repeating echo effect.  The <i>feedback</i> should be less than one to avoid exponential amplitude blowup.  Delay is rounded to the nearest sample.  You should use <code>feedback-delay</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>)<br><br>
-<dt><code>(snd-delaycv<a name="index457"> <i>sound</i> <i>delay</i>
-<i>feedback</i>)</code><dd>Feedback delay with variable <i>feedback</i>.  This is just like
-<i>snd-delay</i> except <i>feedback</i> is a sound.  You should use
-<code>feedback-delay</code> instead (see Section <a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-reson<a name="index458"> <i>sound</i> <i>hz</i> <i>bw</i> <i>normalization</i>)</code><dd>A
-second-order resonating (bandpass) filter with center frequency <i>hz</i> and
-bandwidth <i>bw</i>, modeled after the <code>reson</code> unit generator in Csound.  
-The <i>normalization</i> parameter must be an integer and (like in Csound)
-specifies a scaling factor.  A value of 1 specifies a peak amplitude
-response of 1.0; all frequencies other than <i>hz</i> are attenuated.  A
-value of 2 specifies the overall RMS value of the amplitude response
-is 1.0; thus filtered white noise would retain the same power.  A value of
-zero specifies no scaling.  The result sample rate, start time, etc. are takend from <i>sound</i>.
-You should use <code>reson</code> instead (see Section
-<a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-resoncv<a name="index459"> <i>sound</i> <i>hz</i> <i>bw</i>
-<i>normalization</i>)</code><dd>This function is identical to <code>snd-reson</code> except
-<i>bw</i> (bandwidth) is a sound.  Filter coefficients are updated at the
-sample rate of <i>bw</i>.  You should use <code>reson</code> instead (see Section
-<a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-resonvc<a name="index460"> <i>sound</i> <i>hz</i> <i>bw</i>
-<i>normalization</i>)</code><dd>This function is identical to <code>snd-reson</code> except
-<i>hz</i> (center frequency) is a sound.  Filter coefficients are updated at the
-sample rate of <i>hz</i>.  You should use <code>reson</code> instead (see Section
-<a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-resonvv<a name="index461"> <i>sound</i> <i>hz</i> <i>bw</i>
-<i>normalization</i>)</code><dd>This function is identical to <code>snd-reson</code> except
-botth <i>hz</i> (center frequency) and <i>bw</i> (bandwidth) are sounds.  Filter
-coefficients are updated at the next sample from either <i>hz</i> or <i>bw</i>.  You should use <code>reson</code> instead (see Section
-<a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-tone<a name="index462"><a name="index463"> <i>sound</i> <i>hz</i>)</code><dd>A
-first-order recursive low-pass filter, based on the <i>tone</i> unit generator
-of Csound.  The <i>hz</i> parameter is the cutoff frequency, the response
-curve's half-power point.  The result sample rate, start time, etc. are takend from <i>sound</i>.
-You should use <code>lp</code> instead (see Section
-<a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt><code>(snd-tonev<a name="index464"> <i>sound</i> <i>hz</i>)</code><dd>This function is
-identical to <code>snd-tone</code> except <i>hz</i> (cutoff frequency) is a sound.
-The filter coefficients are updated at the sample rate of <i>hz</i>.  You
-should use <code>lp</code> instead (see Section
-<a href = "#49">``Filter Behaviors''</a>).<br><br>
-<dt></dl><a name = "59"><h4>Table-Lookup Oscillator Functions</h4></a>
-These functions all use a sound to describe one period of a periodic
-waveform.  In the current implementation, the sound samples are copied to an
-array (the waveform table) when the function is called.  To make a
-table-lookup oscillator generate a specific pitch, we need to have several
-pieces  of information:
-<ul>
-<li>
-A waveform to put into the table.  This comes from the <i>sound</i> parameter.
-<li>The length (in samples) of the waveform.  This is obtained by reading
-samples (starting at the sound's start time, not necessarily at time zero)
-until the physical stop time of the sound.  (If you read the waveform from a
-file or generate it with functions like <code>sim</code> and <code>sine</code>, then the
-physical and logical stop times will be the same and will correspond to the
-duration you specified, rounded to the nearest sample.)  
-<li>The intrinsic sample rate of the waveform.  This sample rate is simply the
-sample rate property of <i>sound</i>.
-<li>The pitch of the waveform.  This is supplied by the <i>step</i> parameter and
-indicates the pitch (in steps) of <i>sound</i>.  You might expect that the
-pitch would be related to the period (length) of <i>sound</i>, but there is the
-interesting case that synthesis based on sampling often loops over multiple
-periods.  This means that the fundamental frequency of a generated tone may
-be some multiple of the looping rate.  In Nyquist, you always specify the
-perceived pitch of the looped <i>sound</i> if the sound is played at the
-<i>sound</i>'s own sample rate.
-<li>The desired pitch.  This is specified by the <i>hz</i> parameter
-in Hertz (cycles per second) in these low-level functions.  Note that this
-is not necessarily the ``loop'' rate at which the table is scanned.
-Instead, Nyquist figures what sample rate conversion would be necessary to
-``transpose'' from the <i>step</i> which specifies the original pitch of
-<i>sound</i> to <i>hz</i>, which gives the desired pitch.  The mixed use of steps
-and Hertz came about because it seemed that sample tables would be tagged
-with steps (``I sampled a middle-C''), whereas frequency deviation in the
-<code>fmosc</code> function is linear, thus calling for a specification in Hertz.
-<li>The desired sample rate.  This is given by the <i>sr</i> parameter in Hertz.
-</ul>
-<p>
-Other parameters common to all of these oscillator functions are:
-<ul>
-<li>
-<i>t0</i>, the starting time, and
-<li><i>phase</i>, the starting phase in degrees.  Note that if the <i>step</i>
-parameter indicates that the table holds more than one fundamental period, then a starting phase of 360 will be different than a starting phase of 0.
-</ul>
-<p>
-<dl>
-<dt>
- <code>(snd-amosc<a name="index465"> <i>sound</i> <i>step</i> <i>sr</i> <i>hz</i> <i>t0</i>
-<i>am</i> <i>phase</i>)</code><dd>An oscillator with amplitude modulation.  The sound
-<i>am</i> specifies the amplitude and the logical stop time.  The physical stop
-time is also that of <i>am</i>.  You should use <code>amosc</code> instead (see
-Section <a href = "#47">``Oscillators''</a>).<br><br>
-<dt><code>(snd-fmosc<a name="index466"> <i>s</i> <i>step</i> <i>sr</i> <i>hz</i> <i>t0</i> <i>fm</i>
-<i>phase</i>)</code><dd>A Frequency Modulation oscillator.  The sound <i>fm</i> specifies
-frequency deviation (in Hertz) from <i>hz</i>.  You should use <code>fmosc</code>
-instead (see Section <a href = "#47">``Oscillators''</a>).<br><br>
-<dt><code>(snd-buzz<a name="index467"> <i>n</i> <i>sr</i> <i>hz</i> <i>t0</i> <i>fm</i>)</code><dd>A
-buzz oscillator, which generates <i>n</i> harmonics of equal amplitude.
-The <i>fm</i> specifies
-frequency deviation (in Hertz) from <i>hz</i>.  You should use <code>buzz</code>
-instead (see Section <a href = "#47">``Oscillators''</a>).<br><br>
-<dt><code>(snd-pluck<a name="index468"> <i>sr</i> <i>hz</i> <i>t0</i> <i>d</i>
- <i>final-amp</i>)</code><dd>A Karplus-Strong plucked string oscillator with sample rate
-<i>sr</i>, fundamental frequency <i>hz</i>, starting time <i>t0</i>, duration <i>d</i>,
-initial amplitude approximately 1.0 (not exact because the string is
-initialized with random values) and final amplitude approximately 
-<i>final-amp</i>. You should use <code>pluck</code> instead (see Section
- <a href = "#47">``Oscillators''</a>).<br><br>
-<dt><code>(snd-osc<a name="index469"> <i>s</i> <i>step</i> <i>sr</i> <i>hz</i> <i>t0</i> <i>d</i> <i>phase</i>)</code><dd>A simple table lookup oscillator with fixed frequency.  The duration
-is <i>d</i> seconds.  You should use <code>osc</code> instead (see Section
-<a href = "#47">``Oscillators''</a>).<br><br>
-<dt><code>(snd-partial<a name="index470"> <i>sr</i> <i>hz</i> <i>t0</i> <i>env</i>)</code><dd>This is a
-special case of <code>snd-amosc</code> that generates a sinusoid starting at phase
-0.  The <i>env</i> parameter gives the envelope or any other amplitude
-modulation.  You should use <code>partial</code> instead (see Section
-<a href = "#47">``Oscillators''</a>).<br><br>
-<dt><code>(snd-sine<a name="index471"> <i>t0</i> <i>hz</i> <i>sr</i> <i>d</i>)</code><dd>This is a
-special case of <code>snd-osc</code> that always generates a sinusoid with initial
-phase of 0.  You should use <code>sine</code> instead (see Section <a href = "#47">``Oscillators''</a>).<br><br>
-<dt><code>(snd-siosc<a name="index472"> <i>tables</i> <i>sr</i> <i>hz</i> <i>t0</i>
-<i>fm</i>)</code><dd>A Spectral Interpolation Oscillator with frequency modulation. The
-<i>tables</i> is a list of sounds and sample counts as follows: (<i>table0</i>
-<i>count1</i> <i>table1</i> ... <i>countN</i> <i>tableN</i>). The initial waveform is given by <i>table0</i>, which is interpolated linearly to <i>table1</i> over the first
-<i>count1</i> samples. From <i>count1</i> to <i>count2</i> samples, the waveform is
-interpolated from <i>table1</i> to <i>table2</i>, and so on.  If more than
-<i>countN</i> samples are generated, <i>tableN</i> is used for the remainder of
-the sound. The duration and logical stop time  of the sound is taken from
-<i>fm</i>, which specified frequency modulation (deviation) in Hertz. You
-should use <code>siosc</code> instead (see Section <a href = "#47">``Oscillators''</a>).<br><br>
-<dt></dl><a name = "60"><h4>Sequence Support Functions</h4></a>
-The next two functions are used to implement Nyquist's <code>seq</code> construct.
-<p>
-<dl>
-<dt>
-<code>(snd-seq<a name="index473"> <i>sound</i> <i>closure</i>)</code><dd>This function returns
-<i>sound</i> until the logical stop time of <i>sound</i>.  Then, the XLISP 
-<i>closure</i>
-is evaluated, passing it the logical stop time of <i>sound</i> as a
-parameter.  The closure must return a sound, which is then added to
-<i>sound</i>.  (An add is used so that <i>sound</i> can continue past its logical
-stop if desired.)  Do not call this function.  See <code>seq</code> in Section
-<a href = "#52">``Combination and Time Structure''</a>.<br><br>
-<dt><code>(snd-multiseq<a name="index474"> <i>array</i> <i>closure</i>)</code><dd>This
-function is similar to <code>snd-seq</code> except the first parameter is a
-multichannel sound rather than a single sound.  A multichannel sound is
-simply an XLISP array of sounds.  An array of sounds is returned which is
-the sum of <i>array</i> and another array of sounds returned by <i>closure</i>.
-The <i>closure</i> is passed the logical stop time of the multichannel sound,
-which is the maximum logical stop time of any element of <i>array</i>.    Do
-not call this function.  See <code>seq</code> in Section <a href = "#52">``Combination and Time Structure''</a>.
-</dl>
-<p>
-<hr>
-<a href = "part5.html">Previous Section</a> | <a href = "part7.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+<a href = "part5.html">Previous Section</a> | <a href = "part7.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 </body></html>

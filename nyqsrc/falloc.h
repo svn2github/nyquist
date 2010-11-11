@@ -56,7 +56,7 @@
 #include "cque.h"
 #include "debug.h"
 
-#define DEBUG_MEM 1
+#define DEBUG_MEM 0
 #define DEBUG_MEM_INFO_SIZE (sizeof(long) + sizeof(char *))
 
 /* special free lists */
@@ -73,15 +73,31 @@ extern long table_memory;
 #define MAXLISTS 128
 extern CQUE *generic_free[MAXLISTS];
 
-/* memory pool */
+/* general memory pool */
 #define MAXPOOLSIZE 1000000
 extern char *poolp;
 extern char *poolend;
+
+/* sample block memory pool */
+#define MAXSPOOLSIZE (256 * round_size(sizeof(sample_block_node)))
+extern char *spoolp;
+extern char *spoolend;
+
 extern int npools;
 extern int sample_blocks_since_gc;
 
+#if !defined(TRACK_POOLS)
+#define TRACK_POOLS 1
+#endif
+
+#if defined(TRACK_POOLS) && TRACK_POOLS
+// extern CQUE *pools;
+void falloc_gc();
+#endif
+
 void falloc_init(void);
 void new_pool(void);
+void new_spool(void);
 sample_block_type find_sample_block(void);
 
 char *get_from_pool(size_t siz);
@@ -91,8 +107,16 @@ char *get_from_pool(size_t siz);
 /* check_pool -- returns true if enough bytes are available */
 #if DEBUG_MEM
 #define check_pool(size) (poolp + (size) + DEBUG_MEM_INFO_SIZE <= poolend)
+#define check_spool(size) (spoolp + (size) + DEBUG_MEM_INFO_SIZE <= spoolend)
+#define DBG_MEM_ALLOCATED(p, who) dbg_mem_allocated(p, who)
+#define DBG_MEM_FREED(p, who) dbg_mem_freed(p, who)
+#define DBG_MEM_RELEASED(p, who) dbg_mem_released(p, who)
 #else
 #define check_pool(size) (poolp + (size) <= poolend)
+#define check_spool(size) (spoolp + (size) <= spoolend)
+#define DBG_MEM_ALLOCATED(p, who)
+#define DBG_MEM_FREED(p, who)
+#define DBG_MEM_RELEASED(p, who)
 #endif
 
 #define BLOCKS_PER_GC 100
@@ -103,7 +127,7 @@ char *get_from_pool(size_t siz);
     else sp = find_sample_block(); \
     /* sample_block_test(sp, "falloc_sample_block"); */ \
     /* printf("[%x] ", sp); */ \
-    if (DEBUG_MEM) dbg_mem_allocated(sp, who); \
+    DBG_MEM_ALLOCATED(sp, who); \
     sp->refcnt = 1; \
     sample_block_used++; \
 }
@@ -111,15 +135,14 @@ char *get_from_pool(size_t siz);
 
 #define ffree_sample_block(sp, who) { \
     /* printf("freeing sample_block@%x\n", sp); */ \
-    if (DEBUG_MEM) dbg_mem_freed(sp, who); \
+    DBG_MEM_FREED(sp, who); \
     Qenter(sample_block_free, sp); \
     sample_block_used--; \
 }
 
-
 #define frelease_sample_block(sp, who) { \
     sp->refcnt--; \
-    if (DEBUG_MEM) dbg_mem_released(sp, who); \
+    DBG_MEM_RELEASED(sp, who); \
     if (sp->refcnt <= 0) { \
         ffree_sample_block(sp); \
     } \
@@ -138,12 +161,12 @@ char *get_from_pool(size_t siz);
     else \
         sp = (snd_list_type)get_from_pool(round_size(sizeof(snd_list_node)));\
     snd_list_used++; \
-    if (DEBUG_MEM) dbg_mem_allocated(sp, who); \
+    DBG_MEM_ALLOCATED(sp, who); \
 }
 
 
 #define ffree_snd_list(sp, who) { \
-    if (DEBUG_MEM) dbg_mem_freed(sp, who); \
+    DBG_MEM_FREED(sp, who); \
     Qenter(snd_list_free, sp); \
     snd_list_used--; \
 }
@@ -151,7 +174,7 @@ char *get_from_pool(size_t siz);
 
 #define frelease_snd_list(sp, who) { \
     sp->refcnt--; \
-    if (DEBUG_MEM) dbg_mem_released(sp, who); \
+    DBG_MEM_RELEASED(sp, who); \
     if (sp->refcnt <= 0) { \
         ffree_snd_list(sp, who); \
     } \
@@ -169,7 +192,7 @@ char *get_from_pool(size_t siz);
         sp = (sound_type) get_from_pool(round_size(sizeof(sound_node))); \
     } \
     sound_used++; \
-    if (DEBUG_MEM) dbg_mem_allocated(sp, who); \
+    DBG_MEM_ALLOCATED(sp, who); \
 }
 #else
 #define falloc_sound(sp) \
@@ -180,7 +203,7 @@ char *get_from_pool(size_t siz);
 /* note: usually you call sound_unref, not this macro */
 #define ffree_sound(sp, who) { \
 /*    sound_already_free_test(); */ \
-    if (DEBUG_MEM) dbg_mem_freed(sp, who); \
+    DBG_MEM_FREED(sp, who); \
     Qenter(sound_free, sp); \
     sound_used--; \
 }
@@ -208,7 +231,7 @@ char *get_from_pool(size_t siz);
     } else { \
         sp = (sptype *) get_from_pool(size); \
     } \
-    if (DEBUG_MEM) dbg_mem_allocated(sp, who); \
+    DBG_MEM_ALLOCATED(sp, who); \
 /*    printf("GENERIC ALLOC %x\n", sp);  */
 
 
@@ -220,7 +243,7 @@ char *get_from_pool(size_t siz);
  */
 #define ffree_generic(sp, nn, who) { \
     int sIzE = round_size(nn) >> 3; \
-    if (DEBUG_MEM) dbg_mem_freed(sp, who); \
+    DBG_MEM_FREED(sp, who); \
     /* printf("GENERIC FREE %x SIZE %d\n", sp, nnn); */ \
     if ((sIzE) >= MAXLISTS) { \
         free(sp); \

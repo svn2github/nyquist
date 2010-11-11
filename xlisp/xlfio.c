@@ -5,6 +5,7 @@
 
 /* CHANGE LOG
  * --------------------------------------------------------------------
+ * 30Sep06  rbd added xbigendianp
  * 28Apr03  dm  eliminate some compiler warnings
  */
 
@@ -652,6 +653,9 @@ LVAL xformat(void)
                 xlputc(stream,'~');
                 break;
             case '\n':
+			case '\r':
+				/* mac may read \r -- this should be ignored */
+				if (*fmt == '\r') *fmt++;  
                 while (*fmt && *fmt != '\n' && isspace(*fmt))
                     ++fmt;
                 break;
@@ -691,4 +695,40 @@ LOCAL LVAL getstroutput(LVAL stream)
     /* return the string */
     return (val);
 }
+
+
+LVAL xlistdir(void)
+{
+    char *path;
+    LVAL result = NULL;
+    LVAL *tail;
+    /* get the path */
+    path = (char *)getstring(xlgetfname());
+    /* try to start listing */
+    if (osdir_list_start(path)) {
+        char *filename;
+        xlsave1(result);
+        tail = &result;
+        while (filename = osdir_list_next()) {
+            *tail = cons(NIL, NIL);
+            rplaca(*tail, cvstring(filename));
+            tail = &cdr(*tail);
+        }
+        osdir_list_finish();
+        xlpop();
+    }
+    return result;
+}
+
+
+/* xbigendianp -- is this a big-endian machine? T or NIL */
+LVAL xbigendianp() 
+{
+#ifdef XL_BIG_ENDIAN
+    return s_true;
+#else
+    return NIL;
+#endif
+}
+
 

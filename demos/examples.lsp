@@ -64,8 +64,11 @@
 ;(format t "either set *default-sf-dir* or copy demo-snd.aiff~%")
 ;(format t "where Nyquist will find it.~%")
 
-(setf a-snd (s-read (strcat (current-path) 
-                            "demo-snd.aiff")))
+(display "examples.lsp" (current-path))
+         
+(if (not (boundp 'a-snd)) 
+    (setf a-snd (s-read (strcat (current-path) 
+                                "demo-snd.aiff"))))
 
 (defun ex8 ()
   (play a-snd))
@@ -156,10 +159,6 @@
               (transpose (control-warp (get-warp)
                                        (warp-abs nil (pitch-rise)))
                          (tone-seq)))))
-
-(if (not (boundp 'a-snd)) 
-    (setf a-snd 
-       (s-read "demo-snd.aiff")))
 
 (defun ex23 ()
   (play (force-srate *default-sound-srate* (stretch 3.0 (sound a-snd)))))

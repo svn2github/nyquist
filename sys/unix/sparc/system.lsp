@@ -13,7 +13,7 @@
     (setf *default-sf-dir* "/tmp"))
 
 (if (not (boundp '*default-sf-mode*))
-    (setf *default-sf-mode* snd-head-mode-pcm))
+    (setf *default-sf-mode* snd-mode-pcm))
 
 (if (not (boundp '*default-sf-bits*))
     (setf *default-sf-bits* 16))

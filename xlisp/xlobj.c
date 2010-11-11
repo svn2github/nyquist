@@ -225,6 +225,21 @@ LVAL obshow(void)
     return (self);
 }
 
+/* obisa - does an object inherit from class? */
+LVAL obisa(void)
+{
+    LVAL self, cl, obcl;
+    self = xlgaobject();
+    cl = xlgaobject();
+    xllastarg();
+    obcl = getclass(self);
+    while (obcl) {
+        if (obcl == cl) return s_true;
+        obcl = getivar(obcl, SUPERCLASS);
+    }
+    return NIL;
+}
+
 /* clnew - create a new object instance */
 LVAL clnew(void)
 {
@@ -426,6 +441,7 @@ LOCAL int listlength(LVAL list)
     return (len);
 }
 
+
 /* obsymbols - initialize symbols */
 void obsymbols(void)
 {
@@ -438,6 +454,7 @@ void obsymbols(void)
     object = getvalue(xlenter("OBJECT"));
     class  = getvalue(xlenter("CLASS"));
 }
+
 
 /* xloinit - object function initialization routine */
 void xloinit(void)
@@ -467,5 +484,6 @@ void xloinit(void)
     xladdmsg(object,":ISNEW",FT_OBISNEW);
     xladdmsg(object,":CLASS",FT_OBCLASS);
     xladdmsg(object,":SHOW",FT_OBSHOW);
+    xladdmsg(object,":ISA",FT_OBISA);
 }
 

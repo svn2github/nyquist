@@ -1,12 +1,11 @@
-How To Build Nyquist on Mac OS X
+ How To Build Nyquist on Mac OS X
 
 The project file is based on nyquist/Makefile.
-It expects to find the main nyquist directory at ..
+The project file is in nyquist/macosxproject/nyquist.xcodeproj
 
 To build Nyquist or NyquistIDE:
-Open Nyquist Project.pbproj in Project Builder
+Open nyquist.xcodeproj in Xcode
 Set the active target to "Nyquist" or "NyquistIDE"
 Click on "build active target"
 ny or NyquistIDE will be produced in MacOSXProject/build/
 
-The NyquistIDE.app executable will contain a copy of the ny executable, the runtime directory, and the lib directory.

@@ -8,7 +8,6 @@
 #include "falloc.h"
 #include "cext.h"
 #include "scale.h"
-#include "assert.h"
 
 void normalize_free();
 
@@ -40,30 +39,23 @@ void normalize_n_fetch(register normalize_susp_type susp, snd_list_type snd_list
     falloc_sample_block(out, "normalize_n_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
-    
-    assert(susp->susp.log_stop_cnt == UNKNOWN || susp->susp.log_stop_cnt >= 0);
 
     while (cnt < max_sample_block_len) { /* outer loop */
 	/* first compute how many samples to generate in inner loop: */
 	/* don't overflow the output sample block: */
 	togo = max_sample_block_len - cnt;
 
-	assert(togo >= 0);
 	/* don't run past the s1 input sample block: */
 	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	assert(togo >= 0);
 	togo = min(togo, susp->s1_cnt);
-	assert(togo >= 0);
 
 	/* don't run past terminate time */
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    assert(togo >= 0);
 	    if (togo == 0) break;
 	}
 
-	assert(togo >= 0);
 
 	/* don't run past logical stop time */
 	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
@@ -82,21 +74,19 @@ void normalize_n_fetch(register normalize_susp_type susp, snd_list_type snd_list
 		            * output block
 		            */
 			susp->logically_stopped = true;
-			} else {/* limit togo so we can start a new
+		} else /* limit togo so we can start a new
 		        * block at the LST
 		        */
-		        togo = to_stop;
-		        assert(togo >= 0);
-			}
+		    togo = to_stop;
 	    }
 	}
-	assert(togo >= 0);
+
 	n = togo;
 	scale_reg = susp->scale;
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        *out_ptr_reg++ = *s1_ptr_reg++ * scale_reg;
+*out_ptr_reg++ = *s1_ptr_reg++ * scale_reg;
 	} while (--n); /* inner loop */
 
 	/* using s1_ptr_reg is a bad idea on RS/6000: */
@@ -198,7 +188,6 @@ sound_type snd_make_normalize(sound_type s1)
     susp->susp.name = "normalize";
     susp->logically_stopped = false;
     susp->susp.log_stop_cnt = logical_stop_cnt_cvt(s1);
-    assert(susp->susp.log_stop_cnt == UNKNOWN || susp->susp.log_stop_cnt >= 0);
     susp->susp.current = 0;
     susp->s1 = s1;
     susp->s1_cnt = 0;

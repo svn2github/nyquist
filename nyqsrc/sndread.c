@@ -4,6 +4,7 @@
  *
  * 29Jun95  RBD  ULAW fixed problems with signed chars
  * 28Apr03  dm   explicitly declare sndread_file_open_count as int
+ * 24Jul08  RBD & Judy Hawkins -- replace snd with PortAudio and libsndfile
  */
 
 #include "switches.h"
@@ -26,9 +27,10 @@
 #ifndef mips
 #include "stdlib.h"
 #endif
-#include "snd.h"
+#include "sndfile.h"
 #include "xlisp.h"
 #include "sound.h"
+#include "sndfmt.h"
 #include "falloc.h"
 #include "sndread.h"
 #include "multiread.h"
@@ -44,19 +46,22 @@ void read__fetch(susp, snd_list)
   register read_susp_type susp;
   snd_list_type snd_list;
 {
-    int n;
+    long n; /* jlh Changed type to long, trying to make move_samples_... work */
     sample_block_type out;
     register sample_block_values_type out_ptr;
-    /* allow up to 4 bytes/sample: */
-    char input_buffer[max_sample_block_len * 4];
-    int in_count;
-    float peak;
+    /* allow up to 4 bytes/sample:  jlh -- does this need to be 8? */
+    /* FIX -- why 8? for doubles? Maybe it should be sizeof(sample). I think
+       this buffer was here to allow you to input any format and convert to
+       float. The assumption was no sample would be longer than 4 bytes and
+       after conversion, samples would be 4 byte floats. 
+    */
+    long in_count; /* jlh Trying to make move_samples_... work */
 
     falloc_sample_block(out, "read__fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
-    in_count = snd_read(&susp->snd, input_buffer, max_sample_block_len);
+    in_count = sf_readf_float(susp->sndfile, out_ptr, max_sample_block_len);
 
     n = in_count;
 
@@ -64,13 +69,6 @@ void read__fetch(susp, snd_list)
     if (n > (susp->cnt - susp->susp.current)) {
         n = susp->cnt - susp->susp.current;
     }
-
-    /* NOTE: this could be optimized for cvt_from_float_32 by reading
-     * raw bytes from the file directly into out_ptr, but 32-bit files
-     * do not seem important to optimize for.
-     */
-    (*susp->cvtfn)((void *) out_ptr, (void *) input_buffer, 
-             n, 1.0F, &peak);
 
     snd_list->block_len = n;
     susp->susp.current += n;
@@ -90,7 +88,7 @@ void read__fetch(susp, snd_list)
 
 void read_free(read_susp_type susp)
 {
-    (void) snd_close(&susp->snd);
+    sf_close(susp->sndfile);
     sndread_file_open_count--;
     ffree_generic(susp, sizeof(read_susp_node), "read_free");
 }
@@ -109,7 +107,7 @@ LVAL snd_make_read(
   long *channels,	/* number of channels */
   long *mode, 		/* sample format: PCM, ALAW, etc. */
   long *bits,		/* BPS: bits per sample */
-  long *swap,           /* swap bytes? */
+  long *swap,           /* swap bytes */
   double *srate,	/* srate: sample rate */
   double *dur,		/* duration (in seconds) to read */
   long *flags,		/* which parameters have been set */
@@ -118,94 +116,173 @@ LVAL snd_make_read(
     register read_susp_type susp;
     /* srate specified as input parameter */
     sample_type scale_factor = 1.0F;
-    long bytes_per_frame;
-    long bytes_of_data;
+    sf_count_t frames;
+    double actual_dur;
 
     falloc_generic(susp, read_susp_node, "snd_make_read");
+    memset(&(susp->sf_info), 0, sizeof(SF_INFO));
 
-    susp->snd.device = SND_DEVICE_FILE;
-    susp->snd.write_flag = SND_READ;
-    strcpy(susp->snd.u.file.filename, (char *) filename);
-    susp->snd.u.file.header = *format;
-    susp->snd.u.file.end_offset = 1000000000; /* 1 gig, in case open doesn't set it */
-    susp->snd.format.channels = *channels;
-    susp->snd.format.mode = *mode;
-    susp->snd.format.bits = *bits;
-    susp->snd.u.file.swap = *swap;
-    susp->snd.format.srate = *srate;
+    susp->sf_info.samplerate = ROUND(*srate);
+    susp->sf_info.channels = *channels;
 
-    if (SND_SUCCESS != snd_open(&susp->snd, flags)) {
+    switch (*mode) {
+    case SND_MODE_ADPCM:
+        susp->sf_info.format = SF_FORMAT_IMA_ADPCM;
+        break;
+    case SND_MODE_PCM:
+        if (*bits == 8) susp->sf_info.format = SF_FORMAT_PCM_S8;
+        else if (*bits == 16) susp->sf_info.format = SF_FORMAT_PCM_16;
+        else if (*bits == 24) susp->sf_info.format = SF_FORMAT_PCM_24;
+        else if (*bits == 32) susp->sf_info.format = SF_FORMAT_PCM_32;
+        else {
+            susp->sf_info.format = SF_FORMAT_PCM_16;
+            *bits = 16;
+        }
+        break;
+    case SND_MODE_ULAW:
+        susp->sf_info.format = SF_FORMAT_ULAW;
+        break;
+    case SND_MODE_ALAW:
+        susp->sf_info.format = SF_FORMAT_ALAW;
+        break;
+    case SND_MODE_FLOAT:
+        susp->sf_info.format = SF_FORMAT_FLOAT;
+        break;
+    case SND_MODE_UPCM:
+        susp->sf_info.format = SF_FORMAT_PCM_U8;
+        *bits = 8;
+        break;
+    }
+
+    if (*format == SND_HEAD_RAW) susp->sf_info.format |= SF_FORMAT_RAW;
+
+    if (*swap) {
+        /* set format to perform a byte swap (change from cpu endian-ness) */
+        /* write the code so it will only compile if one and only one 
+           ENDIAN setting is defined */
+#ifdef XL_LITTLE_ENDIAN
+        long format = SF_ENDIAN_BIG;
+#endif
+#ifdef XL_BIG_ENDIAN
+        long format = SF_ENDIAN_LITTLE;
+#endif
+        susp->sf_info.format |= format;
+    }
+
+    susp->sndfile = sf_open((const char *) filename, SFM_READ, 
+                            &(susp->sf_info));
+
+    if (!susp->sndfile) {
         char error[240];
         sprintf(error, "SND-READ: Cannot open file '%s'", filename);
         xlfail(error);
     }
-    if (susp->snd.format.channels < 1) {
-        snd_close(&susp->snd);
+    if (susp->sf_info.channels < 1) {
+        sf_close(susp->sndfile);
         xlfail("Must specify 1 or more channels");
     }
 
-    if (offset < 0.0) xlfail("Negative offset");
-    else if (offset > 0.0) {
-        if (snd_seek(&susp->snd, offset) != SND_SUCCESS) {
-            snd_close(&susp->snd);
-            return NIL;
-        }
+    /* report samplerate from file, but if user provided a double
+     * as sample rate, don't replace it with an integer.
+     */
+    if ((susp->sf_info.format & SF_FORMAT_TYPEMASK) != SF_FORMAT_RAW) {
+        *srate = susp->sf_info.samplerate;
     }
+    /* compute dur */
+    frames = sf_seek(susp->sndfile, 0, SEEK_END);
+    actual_dur = ((double) frames) / *srate;
+    if (offset < 0) offset = 0;
+    /* round offset to an integer frame count */
+    frames = (sf_count_t) (offset * *srate + 0.5);
+    offset = ((double) frames) / *srate;
+    actual_dur -= offset;
+    if (actual_dur < 0) {
+        sf_close(susp->sndfile);
+        xlfail("SND-READ: offset is beyond end of file");
+    }
+    if (actual_dur < *dur) *dur = actual_dur;
 
-    /* see if file is shorter than requested duration and adjust */
-    bytes_of_data = susp->snd.u.file.end_offset - susp->snd.u.file.byte_offset;
-    bytes_per_frame = snd_bytes_per_frame(&susp->snd);
-    if ((*flags & SND_HEAD_LEN) &&
-        (((long) (*dur * susp->snd.format.srate + 0.5)) * bytes_per_frame >
-         bytes_of_data)) {
-        *dur = (bytes_of_data / bytes_per_frame) / susp->snd.format.srate;
-    }
+    sf_seek(susp->sndfile, frames, SEEK_SET); /* return to read loc in file */
 
     /* initialize susp state */
-    susp->susp.sr = susp->snd.format.srate;
+    susp->susp.sr = *srate;
     susp->susp.t0 = t0;
-    susp->bytes_per_sample = (susp->snd.format.bits + 7) >> 3;
     susp->susp.mark = NULL;
-    susp->susp.print_tree = read_print_tree;
+    susp->susp.print_tree = read_print_tree; /*jlh empty function... */
     susp->susp.current = 0;
     susp->susp.log_stop_cnt = UNKNOWN;
-    susp->cnt = (long) ((*dur * susp->snd.format.srate) + 0.5);
-
-    /* convert_from functions */
-    if (susp->snd.format.bits == 8)
-        susp->cvtfn = cvt_from_8[susp->snd.format.mode];
-    else if (susp->snd.format.bits == 16)
-        susp->cvtfn = cvt_from_16[susp->snd.format.mode];
-    else if (susp->snd.format.bits == 32)
-        susp->cvtfn = cvt_from_32[susp->snd.format.mode];
-    else susp->cvtfn = cvt_from_unknown;
-
-    if (susp->cvtfn == cvt_from_unknown) {
-        snd_close(&susp->snd);
-        return NIL;
+    /* watch for overflow */
+    if (*dur * *srate + 0.5 > (unsigned long) 0xFFFFFFFF) {
+        susp->cnt = 0x7FFFFFFF;
+    } else {
+        susp->cnt = ROUND((*dur) * *srate);
     }
 
-    *format = susp->snd.u.file.header;
-    *channels = susp->snd.format.channels;
-    *mode = susp->snd.format.mode;
-    *bits = susp->snd.format.bits;
-    *swap = susp->snd.u.file.swap;
-    *srate = susp->snd.format.srate;
-    *byte_offset = susp->snd.u.file.byte_offset;
-
+    switch (susp->sf_info.format & SF_FORMAT_TYPEMASK) {
+    case SF_FORMAT_WAV: *format = SND_HEAD_WAVE; break;
+    case SF_FORMAT_AIFF: *format = SND_HEAD_AIFF; break;
+    case SF_FORMAT_AU: *format = SND_HEAD_NEXT; break;
+    case SF_FORMAT_RAW: *format = SND_HEAD_RAW; break;
+    case SF_FORMAT_PAF: *format = SND_HEAD_PAF; break;
+    case SF_FORMAT_SVX: *format = SND_HEAD_SVX; break;
+    case SF_FORMAT_NIST: *format = SND_HEAD_NIST; break;
+    case SF_FORMAT_VOC: *format = SND_HEAD_VOC; break;
+    case SF_FORMAT_W64: *format = SND_HEAD_W64; break;
+    case SF_FORMAT_MAT4: *format = SND_HEAD_MAT4; break;
+    case SF_FORMAT_MAT5: *format = SND_HEAD_MAT5; break;
+    case SF_FORMAT_PVF: *format = SND_HEAD_PVF; break;
+    case SF_FORMAT_XI: *format = SND_HEAD_XI; break;
+    case SF_FORMAT_HTK: *mode = SND_HEAD_HTK; break;
+    case SF_FORMAT_SDS: *mode = SND_HEAD_SDS; break;
+    case SF_FORMAT_AVR: *mode = SND_HEAD_AVR; break;
+    case SF_FORMAT_WAVEX: *format = SND_HEAD_WAVE; break;
+    case SF_FORMAT_SD2: *format = SND_HEAD_SD2; break;
+    case SF_FORMAT_FLAC: *format = SND_HEAD_FLAC; break;
+    case SF_FORMAT_CAF: *format = SND_HEAD_CAF; break;
+    default: *format = SND_HEAD_NONE; break;
+    }
+    *channels = susp->sf_info.channels;
+    switch (susp->sf_info.format & SF_FORMAT_SUBMASK) {
+    case SF_FORMAT_PCM_S8: *bits = 8; *mode = SND_MODE_PCM; break;
+    case SF_FORMAT_PCM_16: *bits = 16; *mode = SND_MODE_PCM; break;
+    case SF_FORMAT_PCM_24: *bits = 24; *mode = SND_MODE_PCM; break;
+    case SF_FORMAT_PCM_32: *bits = 32; *mode = SND_MODE_PCM; break;
+    case SF_FORMAT_PCM_U8: *bits = 8; *mode = SND_MODE_UPCM; break;
+    case SF_FORMAT_FLOAT: *bits = 32; *mode = SND_MODE_FLOAT; break;
+    case SF_FORMAT_DOUBLE: *bits = 64; *mode = SND_MODE_DOUBLE; break;
+    case SF_FORMAT_ULAW: *bits = 8; *mode = SND_MODE_ULAW; break;
+    case SF_FORMAT_ALAW: *bits = 8; *mode = SND_MODE_ALAW; break;
+    case SF_FORMAT_IMA_ADPCM: *bits = 16; *mode = SND_MODE_ADPCM; break;
+    case SF_FORMAT_MS_ADPCM: *bits = 16; *mode = SND_MODE_ADPCM; break;
+    case SF_FORMAT_GSM610: *bits = 16; *mode = SND_MODE_GSM610; break;
+    case SF_FORMAT_VOX_ADPCM: *bits = 16; *mode = SND_MODE_ADPCM; break;
+    case SF_FORMAT_G721_32: *bits = 16; *mode = SND_MODE_ADPCM; break;
+    case SF_FORMAT_G723_24: *bits = 16; *mode = SND_MODE_ADPCM; break;
+    case SF_FORMAT_G723_40: *bits = 16; *mode = SND_MODE_ADPCM; break;
+    case SF_FORMAT_DWVW_12: *bits = 12; *mode = SND_MODE_DWVW; break;
+    case SF_FORMAT_DWVW_16: *bits = 16; *mode = SND_MODE_DWVW; break;
+    case SF_FORMAT_DWVW_24: *bits = 24; *mode = SND_MODE_DWVW; break;
+    case SF_FORMAT_DWVW_N: *bits = 32; *mode = SND_MODE_DWVW; break;
+    case SF_FORMAT_DPCM_8: *bits = 8; *mode = SND_MODE_DPCM; break;
+    case SF_FORMAT_DPCM_16: *bits = 16; *mode = SND_MODE_DPCM; break;
+    default: *mode = SND_MODE_UNKNOWN; break;
+    }
     sndread_file_open_count++;
 #ifdef MACINTOSH
     if (sndread_file_open_count > 24) {
         nyquist_printf("Warning: more than 24 sound files are now open\n");
     }
 #endif
-    
-    if (susp->snd.format.channels == 1) {
+    /* report info back to caller */
+    if ((susp->sf_info.format & SF_FORMAT_TYPEMASK) != SF_FORMAT_RAW) {
+        *flags = SND_HEAD_CHANNELS | SND_HEAD_MODE | SND_HEAD_BITS |
+                 SND_HEAD_SRATE | SND_HEAD_LEN | SND_HEAD_TYPE;
+    }    
+    if (susp->sf_info.channels == 1) {
         susp->susp.fetch = read__fetch;
         susp->susp.free = read_free;
         susp->susp.name = "read";
-        return cvsound(sound_create((snd_susp_type)susp, t0, 
-                                    susp->snd.format.srate, 
+        return cvsound(sound_create((snd_susp_type)susp, t0, *srate, 
                                     scale_factor));
     } else {
         susp->susp.fetch = multiread_fetch;

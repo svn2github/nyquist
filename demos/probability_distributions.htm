@@ -1,0 +1,137 @@
+<html>
+<head>
+   <meta name="GENERATOR" content="Mozilla/4.75 [en] (Windows NT 5.0; U) [Netscape]">
+   <title>Probability Distributions</title>
+</head>
+<body>
+<h1>Probability Distribution Generators</h1>
+<h2>
+
+<p><b>Andreas Pfenning and Roger B. Dannenberg</b></p></h2>
+
+<p>This page describes some uses of probability distribution
+functions that are defined in <tt>lib/distributions.lsp</tt>, so
+be sure to <tt>(load "distributions")</tt> before trying these
+examples. See the manual for more details.
+
+<p>A probability distribution generator outputs a single
+number based the particular distribution and the input parameters. These
+functions were created to supplement the uniform random generator <tt>(real-random)</tt>.
+There are two types of distributions: continuous
+and discrete. For either distribution,
+looking at the diagrams will show you the likely range of outputs. In
+a continuous distribution, the likelihood of returning a value between
+two points on the x-axis is equal to the area under the curve between those
+two points. Every continuous distribution
+has the property that the total area under the curve = 1. In
+a discrete distribution, only integers >= 0 are allowed as output. Each
+one of these numbers has a probability of being returned which is equal
+to the height of the bar in the diagram. For
+the user's convenience, many distributions have optional bounds that come
+in useful for certain applications.
+
+<p><h3>Example 1 – Varying time with a continuous
+distribution generator</h3>
+
+<p>One of the most common distributions found in algorithmic
+composition is known as the Poisson process. This
+consists of a sequence of notes or events separated by an amount
+of time determined by an exponential distribution. The resulting
+sequence of events has the following property: every
+point in time is equally likely to be that start of a note. Another
+property is that, the probability of an event happening in the next
+unit of time is completely independent of how long it has been since
+the previous event. These distributions are naturally occuring when
+events happen randomly without any coordination. 
+
+<p>The following
+is just one example how to use the exponential distribution. The
+first input parameter, .25, spreads the distribution out so that higher
+values are more likely. The second
+input is optional and is an upper bound on the output. 
+
+<pre>(play (seqrep (i 20)
+        (pluck c4 (* 0.5 (exponential-dist .25 2.0)))))
+</pre>
+
+<p><h3>Example 2 – Varying pitch with a discrete distribution
+generator</h3>
+
+<p>Discrete distribution generators are useful for changing
+pitch (to integer values). Constraining the output to
+a whole number means that every pitch is going to be in the chromatic scale. In
+the case of the binomial distribution, both parameters together determine
+the mean. One way to get feel for
+how the different parameters affect the distribution is to print values
+as you generate them. Distribution
+parameters may require some tweaking to produce a desired affect. In
+some cases, altering the parameters can yield unexpected and interesting
+sounds.
+
+<pre>(defun try-binomial ()
+  (play (seqrep (i 20)
+          (pluck (+ (binomial-dist 6 .5) c4) 0.1))))
+</pre>
+
+
+<p><h3>Example 3 – Using granular synthesis with pitch
+distribution</h3>
+
+<p>In granular synthesis, interesting sounds can be made
+by having a pitch vary according to some distribution other than
+the simple uniform distribution. In <tt>lib/dist-test.lsp</tt>,
+there is a a granular synthesis function that can take in any distribution
+(within the bounds of granular synthesis) and vary the pitch of the tone
+based on that distribution. To do
+this, you pass in a parameterless function as a parameter. Since most
+distribution functions take parameters, it is necessary to create
+a <i>continuation</i> as shown below using a <tt>lambda</tt> expression.
+
+<pre>(defun make-gamma (nu high)
+  (lambda () (gamma-dist nu high)))
+</pre>
+
+<p>Here, <tt>make-gamma</tt> takes two parameters and returns a 
+<i>function</i> with no parameters. This no-parameter function 
+remembers the values of <tt>nu</tt> and <tt>high</tt> and 
+will call <tt>gamma-dist</tt> with these. For example, try
+<pre>(apply (make-gamma 2 5.0) nil)</pre>
+(The <tt>apply</tt> function applies a function to a list of 
+arguments; in this case the list is nil, so there are no arguments.)
+This example just makes the function and uses it once, so there's
+not much point, but in the granular synthesis example, the 
+function will be called many times. Unlike passing a number as
+a parameter, passing a function means that the granular synthesis
+function can call the function for every grain, resulting in a 
+new value for each grain. (Be sure to load <tt>dist-test.lsp</tt>
+before running this example.)
+
+<pre>(defun try-pitch-dist ()
+  (play (stretch 4 
+          (simrep (i 4)
+            (pitch-dist-granulate "demos/demo-snd.aiff" 0.04 0.0 0.02 0.001
+                                  (make-gamma 2 5.0) 0 0)))))
+</pre>
+
+<p><h3>Example 4 – Using granular synthesis with grain
+length distribution</h3>
+
+<p>The length of grains can also be made to vary by a
+distribution passed in as a continuation. Here
+is an example. 
+<pre>
+(defun make-gauss (xmu sigma low high)
+  (lambda ()(gaussian-dist xmu sigma low high)))
+
+(defun try-len-dist ()
+  (play (stretch 4
+          (simrep (i 2)
+	    (len-dist-granulate "demos/demo-snd.aiff"
+	      (make-gauss 0.0 1.0 0.1 .5) 0.02 0.001 2.0 0 0)))))
+</pre>
+
+<h3>A Challenge</h3>
+Can you come up with a set of examples that clearly illustrates different distributions through sound? (I would love to add more examples here. -RBD)
+
+</body>
+</html>

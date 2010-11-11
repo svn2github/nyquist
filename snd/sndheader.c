@@ -1,21 +1,58 @@
-/* snd.c -- low-level sound I/O
- *
- * Roger Dannenberg
- * 21 Jun 1997
- *
- * based on sndheader.c:
- *
- * Jim Zelenka, CMU/ITC, 9 Jun 1992 (rewritten from my old sources)
- * Roger Dannenberg, CMU, Mar 1993 (extensive changes and additions)
- *
- * and on sndread.c & sndwrite.c:
- *
- * Roger Dannenberg
- */
+/* sndheader.c -- nice new empty */
 
-/* CHANGE LOG
- * --------------------------------------------------------------------
- * 28Apr03  dm  changes for portability and fix compiler warnings
+/* functions to write or delete
+
+references from nyqsrc/sndread.c/snd_make_read()
+
+snd_seek()
+snd_bytes_per_frame()
+cvt_from_8
+cvt_from_16
+cvt_from_24
+cvt_from_32
+cvt_from_unknown
+
+
+references from nyqsrc/sndwritepa.c/find_cvt_to_fn
+
+cvt_from_8
+cvt_from_16
+cvt_from_24
+cvt_from_32
+cvt_from_unknown
+
+snd/audiooss.o: In function `audio_poll':
+snd_bytes_per_frame()
+
+snd/snd.o: In function `file_close':
+write_sndheader_finish()
+
+snd/snd.o: In function `snd_read':
+snd_bytes_per_frame()
+
+snd/snd.o: In function `snd_write':
+snd_bytes_per_frame()
+
+snd/snd.o:
+snd_open_file()  in the file_dictionary snd_fns_node.
+
+
+*/
+
+
+/* sndheader.c -- low-level sound I/O 
+ *
+ *
+ * Judy Hawkins
+ * Feb 2008
+ *
+ * Rewritten to use libsndfile 1.0.17.
+ *
+ * Based on sndheader.c from Nyquist 3.01, which had
+ * a long history courtesy of Jim Zelenka, CMU/ITC, 9 Jun 1992
+ * and Roger Dannenberg, CMU, Mar 1993
+ *
+ *
  */
 
 /* Standard includes */
@@ -23,1084 +60,555 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "snd.h"
-#include "sndfileio.h"
-#include "sndheader.h"
-#include "ieeecvt.h"
-#include "sndhead.h"
-/* for HUGE_VAL: */
-#include "math.h"
+#include "snd.h" /* probably going to modify this one */
 
-/* #define TRACE 1 */
+/* jlh leaving a whole bunch of includes out; as needed I'll put them
+   back in. */
 
 #ifdef LINUX
 #  ifdef WIN32
 #    error LINUX and WIN32 both?
 #  endif
-// #  include "sys/file.h"
-// #  include <sys/stat.h>
-#  include <netinet/in.h>
-#else
-#ifndef WIN32
-#  include <unistd.h>
-// #  include <stat.h>
-// #  include <fcntl.h>
-#else
-// #  include <sys/stat.h>
-// #  include "io.h"
-// #  include "fcntl.h"
-#  ifdef WINNT
-#    include <winsock.h>
-#  else
-#    include <winsock2.h>
-#  endif
 #endif
 
-#endif
+/* jlh leaving out a bunch of Macintosh specific stuff on the theory
+   that libsndfile does all that now. */
+
+/* jlh leaving out some AIFF marker and instrument structure
+   definitions on the theory that if anyone is using them I'll figure
+   out how to use libsndfile to access them, and write structures as
+   needed to support libsndfile. */
+
+/* jlh leaving out convert functions; libsndfile handles all that. */
+
+/* jlh leaving out a bunch of little bitty file and data handling
+   support functions; libsndfile... */
+
+/* Local buffer for constructing useful messages */
+#define STRBUFF_LEN 1024
+static char strBuffer [STRBUFF_LEN] ;
 
 
-#ifndef min
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#endif
-
-
-#define PERMISSION 0644 /* -rw-r--r-- */
-
-/* these macros are for byte ordering -- 
- * doesn't the mac have std macros for this? 
+/* =====
+ * lifted verbatim from sndheader.c v301
  */
-
-/* u_long PASCAL FAR ntohl(u_long netlong); */
-
-#ifdef MACINTOSH
-#define ntohs(x) (x)
-#define ntohl(x) (x)
-#define htons(x) (x)
-#define htonl(x) (x)
-#endif
-
-/* AIFF file Marker declaration */
-typedef struct {
-    short id;
-    long position;
-} marker_node, *marker_type;
-
-/*  instrument definitions */
-typedef short marker_id;
-typedef struct {
-    short   play_mode;
-    marker_id  begin_loop;
-    marker_id  end_loop;
-} aiff_loop_node, *aiff_loop_type;
-
-
-typedef struct {
-    char        base_note;
-    char        detune;
-    char        low_note;
-    char        high_note;
-    char        low_velocity;
-    char        high_velocity;
-    short       gain;
-    aiff_loop_node      sustain_loop;
-    aiff_loop_node      release_loop;
-} inst_node;
-
-
-long snd_read_header(snd_type snd, long *flags);
-void snd_write_header(snd_type snd, long *flags);
-
-double read_ieee_extended(snd_type snd);
-void write_ieee_extended(int file, double x);
-void ConvertToIeeeExtended(double num, char *bytes);
-
-/*
- * reset the file to read from the beginning
- */
-
-void resetfile(int file)
-{
-    snd_file_lseek(file, 0, SND_SEEK_SET);
-}
-
-
-/*
- * reads a an item of type T from F into L, if unsuccessful,
- * resets file to beginning and returns
- */
-#define readitem(F,L,T) { \
-    int r; \
-    r = snd_file_read(F, (char *) L,sizeof(T)); \
-    if (r != sizeof(T)) { resetfile(file); return *(L); } \
-    *read_in += sizeof(T); \
-}
-
-
-char readchar(int file, long *read_in)
-{
-    char c = 0;
-    readitem(file, &c, char);
-    return c;
-}
-
-
-long readlong(int file, long *read_in)
-{
-    long l = 0;
-    readitem(file, &l, long);
-    return ntohl(l);
-}
-
-
-short readshort(int file, long *read_in)
-{ 
-    short s = 0;
-    readitem(file, &s, short);
-    return ntohs(s);
-}
-
-
-long revlong(long l)
-{
-    return (((l >> 0) & 0xFF) << 24) |
-        (((l >> 8) & 0xFF) << 16) |
-        (((l >> 16) & 0xFF) << 8) |
-        (((l >> 24) & 0xFF) << 0);
-}
-
-
-long readrevlong(int file, long *read_in)
-{
-    return revlong(readlong(file, read_in));
-}
-
-
-short revshort(short s)
-{
-    return ((s & 0xFF) << 8) | ((s >> 8) & 0xFF);
-}
-
-
-short readrevshort(int file, long *read_in)
-{
-    return revshort(readshort(file, read_in));
-}
-
-
-float readfloat(int file, long *read_in)
-{
-    float f = 0.0F;
-    readitem(file, &f, float);
-    return f;
-}
-
-unsigned char readuchar(int file, long *read_in)
-{
-    unsigned char c = 0;
-    readitem(file, &c, unsigned char);
-    return c;
-}
-
-
-/*
- * write a an item of type T to F from L (no error handling yet)
- */
-#define writeitem(F,L,T) snd_file_write(F, (char *) L, sizeof(T));
-
-
-void writelong(int file, long l)
-{
-    l = htonl(l);
-    writeitem(file, &l, long);
-}
-
-void writeshort(int file, short s)
-{
-    s = htons(s);
-    writeitem(file, &s, short);
-}
-
-void writerevlong(int file, long l)
-{
-    writelong(file, revlong(l));
-}
-
-
-void writerevshort(int file, short s)
-{
-    writeshort(file, revshort(s));
-}
-
-
-void writefloat(int file, float f)
-{
-    writeitem(file, &f, float);
-}
-
-
-void writeuchar(int file, unsigned char c)
-{
-    writeitem(file, &c, unsigned char);
-}
-
-
-static int fail(snd_type snd, char *str)
-{
-    resetfile(snd->u.file.file);
-    snd->u.file.header = SND_HEAD_NONE;
-    snd_fail(str);
-    return !SND_SUCCESS;
-}
-
-
 void snd_open_fail(snd_type snd)
 {
     /* char msg[250]; */
+
     snd->device = SND_DEVICE_NONE;
     snd->dictionary = &snd_none_dictionary;
+
     /* It's not fatal if the file does not exist...
     sprintf(msg, "snd_open: could not open file %s\n",
         snd->u.file.filename);
     snd_fail(msg); */
+
     return;
 }
 
+/*=====================
+** Convert libsndfile's minor format to nyquist's SND_MODE specifier.
+*/
 
-int head_to_byteorder[] = { 0, 1, 1, 1, 0 };
-
-/* set_swap -- set the swap flag in snd */
-/**/
-void set_swap(snd_type snd)
+int get_ny_mode (SF_INFO *sfinfo)
 {
-    int n = head_to_byteorder[snd->u.file.header];
-    if (snd->u.file.header == SND_HEAD_NONE) {
-        /* go with whatever caller specified */
-    } else if (htonl(0x12345678) == 0x12345678)
-        snd->u.file.swap = !n;
-    else snd->u.file.swap = n;
-}
+  
+  int mode;
+  mode = 0;
 
-int snd_open_file(snd_type snd, long *flags)
-{
-    int file, rslt;
-    if (snd->write_flag == SND_READ) {
-        snd->u.file.loop_info = FALSE;
-        file = snd_file_open(snd->u.file.filename, SND_RDONLY);
-        snd->u.file.file = file;
-        if (file == SND_FILE_FAILURE) {
-            snd_open_fail(snd);
-            return file;
-        }
-        rslt = snd_read_header(snd, flags);
-        set_swap(snd);
-        return rslt;
-    } else if (snd->write_flag == SND_WRITE) {
-        if (snd->u.file.header < 0 || snd->u.file.header >= SND_NUM_HEADS) {
-            snd_fail("snd_open: invalid header value");
-            return !SND_SUCCESS;
-        }
-        file = snd_file_creat(snd->u.file.filename);
-        snd->u.file.file = file;
-        if (file == SND_FILE_FAILURE) {
-            snd_open_fail(snd);
-            return file;
-        }
-        /* special case: in WAV files, 8-bit PCM is stored as UPCM */
-        if (snd->u.file.header == SND_HEAD_WAVE &&
-            snd->format.mode == SND_MODE_PCM &&
-            snd->format.bits == 8) {
-            snd->format.mode = SND_MODE_UPCM;
-        }
-        snd_write_header(snd, flags);
-    } else if (snd->write_flag == SND_OVERWRITE) {
-        file = snd_file_open(snd->u.file.filename, SND_RDWR);
-        snd->u.file.file = file;
-        if (file < 0) {
-            snd_open_fail(snd);
-            return file;
-        }
-        snd_file_lseek(file, snd->u.file.byte_offset, SND_SEEK_SET);
-        snd->u.file.current_offset = snd->u.file.byte_offset;
-        /* special case: in WAV files, 8-bit PCM is stored as UPCM */
-        if (snd->u.file.header == SND_HEAD_WAVE &&
-            snd->format.mode == SND_MODE_PCM &&
-            snd->format.bits == 8) {
-            snd->format.mode = SND_MODE_UPCM;
-        }
-    }
-    set_swap(snd);
-    return SND_SUCCESS;
-}
+  switch (sfinfo->format & SF_FORMAT_SUBMASK )
+    {
+    case SF_FORMAT_IMA_ADPCM:
+    case SF_FORMAT_MS_ADPCM:
+    case SF_FORMAT_VOX_ADPCM:
+    case SF_FORMAT_G721_32:
+    case SF_FORMAT_G723_24:
+    case SF_FORMAT_G723_40:
+      mode = SND_MODE_ADPCM;
+      break;
 
+    case SF_FORMAT_RAW:
+    case SF_FORMAT_PCM_S8:
+    case SF_FORMAT_PCM_16:
+    case SF_FORMAT_PCM_24:
+    case SF_FORMAT_PCM_32:
+      
+    case SF_FORMAT_DPCM_8:     /* jlh or are these two the UPCM, see below? */
+    case SF_FORMAT_DPCM_16:
 
-int snd_seek(snd_type snd, double when)
-{
-    long offset_in_bytes = ((long) (when * snd->format.srate + 0.5)) *
-        snd_bytes_per_frame(snd);
-    long new_offset = snd->u.file.byte_offset + offset_in_bytes;
-    
-    if (new_offset > snd->u.file.end_offset) return !SND_SUCCESS;
-    if (new_offset < snd->u.file.byte_offset) return !SND_SUCCESS;
-    snd->u.file.current_offset = new_offset;
-    if (snd_file_lseek(snd->u.file.file, new_offset, SND_SEEK_SET) == -1L)
-        return !SND_SUCCESS;
-    return SND_SUCCESS;
-}
+      mode = SND_MODE_PCM;
+      break;
 
-void readloop(aiff_loop_type loop, int file, long *read_in)
-{
-    loop->play_mode = readshort(file, read_in);
-    loop->begin_loop = readshort(file, read_in);
-    loop->end_loop = readshort(file, read_in);
-}
+    case SF_FORMAT_ULAW:
+      mode = SND_MODE_ULAW;
+      break;
 
+    case SF_FORMAT_ALAW:
+      mode = SND_MODE_ALAW;
+      break;
 
-/* convert_loop_data -- from AIFF loop structure to snd loop structure */
-/**/
-void convert_loop_data(loop_type loop, aiff_loop_type aiffloop, 
-                       marker_type markers, int nmarkers)
-{
-    int i;
-    
-    loop->mode = aiffloop->play_mode;
-    
-    loop->begin = loop->end = -1; /* initialize to illegal value */
-    for (i = 0; i < nmarkers; i++) {
-        if (aiffloop->begin_loop == markers[i].id) {
-            loop->begin = markers[i].position;
-        }
-        if (aiffloop->end_loop == markers[i].id) {
-            loop->end = markers[i].position;
-        }
-    }
-}
+    case SF_FORMAT_FLOAT:	
+      mode = SND_MODE_FLOAT;
+      break;
 
+      /* jlh libsndfile doesn't do UPCM? or is that the same as DPCM,
+	 see above? And what about the special case in the
+	 sndheader.c-orig, about how 8 bit PCM WAV files are actually
+	 UPCM? JLH */
 
-static double StepToHz(double step) 
-{
-    return exp(step * 0.0577622650466621 + 2.1011784386926213);
-}
+    case SF_FORMAT_PCM_U8:      /* jlh looks more like UPCM than anything else */
+      mode = SND_MODE_UPCM;
+      break;
 
-
-#define AIFF_SND_MAGIC (*((long *) "FORM"))
-#define WAVE_SND_MAGIC (*((long *) "RIFF"))
-
-long snd_read_header(snd_type snd, long *flags)
-{
-    long read_in = 0;
-    long magic, bytemode, len;
-    short type=IRCAM_SND_COMMENT, size=0, encoding;
-    unsigned char buf[SIZEOF_IRCAM_HEADER];
-    
-    snd->u.file.loop_info = FALSE;
-    len = snd_file_len(snd->u.file.file);  /* get length of file */
-    magic = readlong(snd->u.file.file, &read_in);
-    magic = htonl(magic);   /* undo what readlong did */
-    if (magic == IRCAM_SND_MAGIC) {
-        snd->u.file.header = SND_HEAD_IRCAM;
-        snd->format.srate = (double) readfloat(snd->u.file.file, &read_in);
-        snd->format.channels = readlong(snd->u.file.file, &read_in);
-        bytemode = readlong(snd->u.file.file, &read_in);
-        (*flags) |= SND_HEAD_SRATE | SND_HEAD_CHANNELS;
-        /* now SF_ULAW, SF_SHORT, SF_FLOAT,AE_CHAR, AE_ALAW, AE_ULAW, AE_SHORT, AE_LONG, AE_FLOAT or other */
-        while (type != IRCAM_SND_END && type != IRCAM_SND_AUDIOENCODE) {
-            type = readshort(snd->u.file.file, &read_in);
-            size = readshort(snd->u.file.file, &read_in);
-            if (size > 2 * sizeof(short)) {
-                int rc;
-                /* make sure we don't overflow buffer */
-                if (size < SIZEOF_IRCAM_HEADER) {
-                    rc = snd_file_read(snd->u.file.file, (char *) buf, (size - 2 * sizeof(short)));
-                } else {
-                    rc = 0; /* force error */
-                }
-                if (rc != (size - 2 * (int) sizeof(short))) {
-                    return fail(snd, "bad IRCAM header");
-                }
-                read_in += size - 2 * sizeof(short);
-            }
-        }
-        if (type == IRCAM_SND_AUDIOENCODE) {
-            /* printf("Got IRCAM sound format\n"); */
-            encoding = *((short *)(buf));
-            (*flags) |= SND_HEAD_MODE | SND_HEAD_BITS;
-            switch (encoding) {
-              case IRCAM_SND_CHAR:
-                snd->format.mode = SND_MODE_PCM;
-                snd->format.bits = 8;
-                break;
-              case IRCAM_SND_ALAW:
-                snd->format.mode = SND_MODE_ALAW;
-                snd->format.bits = 8;
-                break;
-              case IRCAM_SND_ULAW:
-                snd->format.mode = SND_MODE_ULAW;
-                snd->format.bits = 8;
-                break;
-              case IRCAM_SND_SHORT:
-                snd->format.mode = SND_MODE_PCM;
-                snd->format.bits = 16;
-                break;
-              case IRCAM_SND_LONG:
-                snd->format.mode = SND_MODE_PCM;
-                snd->format.bits = 32;
-                break;
-              case IRCAM_SND_FLOAT:
-                snd->format.mode = SND_MODE_FLOAT;
-                snd->format.bits = 32;
-                break;
-              default:
-                (*flags) &= ~(SND_HEAD_MODE | SND_HEAD_BITS);
-                break;
-            }
-        } else {
-            snd->format.bits = bytemode << 3;
-            (*flags) |= SND_HEAD_BITS;
-            switch (bytemode) {
-              case sizeof(char):
-                (*flags) |= SND_HEAD_MODE;
-                snd->format.mode = SND_MODE_ULAW;
-                break;
-              case sizeof(short):
-                snd->format.mode = SND_MODE_PCM;
-                break;
-              case sizeof(float):
-                snd->format.mode = SND_MODE_FLOAT;
-                break;
-              default:
-                snd->format.mode = SND_MODE_PCM;
-                break;
-            }
-        }
-        
-        /* seek to end of header */
-        snd_file_lseek(snd->u.file.file, SIZEOF_IRCAM_HEADER, SND_SEEK_SET);
-        snd->u.file.byte_offset = SIZEOF_IRCAM_HEADER;
-        snd->u.file.current_offset = snd->u.file.byte_offset;
-        
-    } else if (magic == NEXT_SND_MAGIC) {
-        long hdr_size, trash, rate;
-        snd->u.file.header = SND_HEAD_NEXT;
-        hdr_size = readlong(snd->u.file.file, &read_in);        /* dataLocation */
-        trash = readlong(snd->u.file.file, &read_in);   /* dataSize */
-        bytemode = readlong(snd->u.file.file, &read_in);        /* dataFormat */
-        rate = readlong(snd->u.file.file, &read_in);            /* samplingRate */
-        snd->format.channels = readlong(snd->u.file.file, &read_in);    /* channelCount */
-        
-        snd->format.srate = (double) rate;
-        (*flags) = SND_HEAD_SRATE | SND_HEAD_CHANNELS;
-        switch (bytemode) {
-          case NEXT_SND_FORMAT_ULAW_8:
-            snd->format.bits = 8;
-            snd->format.mode = SND_MODE_ULAW;
-            (*flags) |= SND_HEAD_BITS | SND_HEAD_MODE;
-            break;
-          case NEXT_SND_FORMAT_LINEAR_8:
-            snd->format.bits = 8;
-            snd->format.mode = SND_MODE_PCM;
-            (*flags) |= SND_HEAD_BITS | SND_HEAD_MODE;
-            break;
-          case NEXT_SND_FORMAT_LINEAR_16:
-            snd->format.bits = 16;
-            snd->format.mode = SND_MODE_PCM;
-            (*flags) |= SND_HEAD_BITS | SND_HEAD_MODE;
-            break;
-          case NEXT_SND_FORMAT_LINEAR_24:
-            snd->format.bits = 24;
-            snd->format.mode = SND_MODE_PCM;
-            (*flags) |= SND_HEAD_BITS | SND_HEAD_MODE;
-            break;
-          case NEXT_SND_FORMAT_LINEAR_32:
-            snd->format.bits = 32;
-            snd->format.mode = SND_MODE_PCM;
-            (*flags) |= SND_HEAD_BITS |SND_HEAD_MODE;
-            break;
-          case NEXT_SND_FORMAT_FLOAT:
-            snd->format.bits = sizeof(float) * 8;
-            snd->format.mode = SND_MODE_FLOAT;
-            (*flags) |= SND_HEAD_BITS | SND_HEAD_MODE;
-            break;
-          case NEXT_SND_FORMAT_DOUBLE:
-            snd->format.bits = sizeof(double) * 8;
-            snd->format.mode = SND_MODE_FLOAT;
-            (*flags) |= SND_HEAD_BITS | SND_HEAD_MODE;
-            break;
-          case NEXT_SND_FORMAT_INDIRECT:
-            break;
-          case NEXT_SND_FORMAT_DSP_DATA_8:
-            snd->format.bits = 8;
-            (*flags) |= SND_HEAD_BITS;
-            break;
-          case NEXT_SND_FORMAT_DSP_DATA_16:
-            snd->format.bits = 16;
-            (*flags) |= SND_HEAD_BITS;
-            break;
-          case NEXT_SND_FORMAT_DSP_DATA_24:
-            snd->format.bits = 24;
-            (*flags) |= SND_HEAD_BITS;
-            break;
-          case NEXT_SND_FORMAT_DSP_DATA_32:
-            snd->format.bits = 32;
-            (*flags) |= SND_HEAD_BITS;
-            break;
-          case NEXT_SND_FORMAT_MULAW_SQUELCH:
-            snd->format.mode = SND_MODE_ULAW;
-            (*flags) |= SND_HEAD_MODE;
-            break;
-          default:
-            break;
-        }
-        /* position file past header */
-        if (read_in < hdr_size) {
-            snd_file_lseek(snd->u.file.file, hdr_size, SND_SEEK_SET);
-            read_in = hdr_size;
-        }
-        snd->u.file.byte_offset = read_in;
-    } else if (magic == AIFF_SND_MAGIC) {
-        unsigned long totalsize;
-        unsigned long ssnd_start = 0;
-        char buf[4];
-        long blocksize=0;
-        long offset=0;
-        long chunksize;
-        long ssnd_chunksize=0;
-        inst_node inst;
-        short nmarkers=0;
-        marker_type markers = NULL;
-        int inst_read = FALSE;
-        
-        snd->u.file.header = SND_HEAD_AIFF;
-        totalsize = (unsigned long) readlong(snd->u.file.file, &read_in);
-        if (snd_file_read(snd->u.file.file, buf, 4) != 4 || strncmp(buf, "AIFF", 4) != 0) {
-            snd->u.file.header = SND_HEAD_NONE;
-            (*flags) = 0;
-            resetfile(snd->u.file.file);
-            read_in = 0;
-        } else {
-#ifdef TRACE
-            printf("snd_read: 'AIFF', totalsize %d, at %d\n",
-                   totalsize, snd_file_lseek(snd->u.file.file, (off_t) 0, SND_SEEK_CUR) - 8);
+    default: 
+#ifdef DEBUG_LSF
+      printf(" at the default case in get_ny_mode -- check mask...\n");
 #endif
-            /* Skip everything but the COMM, MARK, INST, and SSND chunks,  */
+      mode = SND_MODE_UNKNOWN;
+      break;
+    }
 
-            while (1) {
-                if (snd_file_read(snd->u.file.file, buf, 4) != 4) {
-                    if (ssnd_start != 0) break; /* found SSND chunk */
-                    return fail(snd, "Missing SSND chunk in AIFF file\n");
-                }
-#ifdef TRACE
-                printf("snd_read: '%c%c%c%c' at %d (0%o)\n", 
-                       buf[0], buf[1], buf[2], buf[3],
-                       snd_file_lseek(snd->u.file.file, (off_t) 0, SND_SEEK_CUR) - 8,
-                       snd_file_lseek(snd->u.file.file, (off_t) 0, SND_SEEK_CUR) - 8);
+  return mode;
+}
+
+/*==============
+ * Convert the libsndfile extension to what nyquist needs.
+ */
+
+int get_ny_head ( SF_INFO *sfinfo )
+{
+
+  int head;
+  head = 0;
+  /* this would already have been put in by snd_open_fail if the file
+     open failed: SND_HEAD_NONE */
+
+  switch (sfinfo->format & SF_FORMAT_TYPEMASK)
+    {
+    case SF_FORMAT_AIFF:
+      head = SND_HEAD_AIFF;
+      break;
+ 
+    case SF_FORMAT_IRCAM:
+      head = SND_HEAD_IRCAM;
+      break;
+
+    case SF_FORMAT_AU:
+      head = SND_HEAD_NEXT;
+      break;
+
+    case SF_FORMAT_WAV:
+      head = SND_HEAD_WAVE;
+      break;
+
+    default:
+      head = SND_HEAD_NONE;
+      break;
+    }
+
+  return head;
+}
+
+
+int get_ny_bits(SF_INFO *sfinfo)
+{
+
+  int bits;
+  bits = 0;
+
+  /* does libsdnfile give me any help with this? making a lot of
+     guesses I'll have to verify later... jlh*/
+
+  switch (sfinfo->format & SF_FORMAT_SUBMASK )
+    {
+      /* 8 bit */
+    case SF_FORMAT_PCM_S8:
+    case SF_FORMAT_DPCM_8:
+    case SF_FORMAT_PCM_U8:
+    case SF_FORMAT_RAW:
+      bits = 8;
+      break;
+
+      /* 16 bit */
+    case SF_FORMAT_IMA_ADPCM:
+    case SF_FORMAT_MS_ADPCM:
+    case SF_FORMAT_VOX_ADPCM:
+    case SF_FORMAT_PCM_16:
+    case SF_FORMAT_DPCM_16:
+      bits = 16;
+      break;
+
+      /* 24 bit */
+    case SF_FORMAT_G723_24:
+    case SF_FORMAT_PCM_24:
+      bits = 24;
+      break;
+
+      /* 32 bit */
+    case SF_FORMAT_G721_32:
+    case SF_FORMAT_PCM_32:
+      bits = 32;
+      break;
+
+      /* 40 bit */
+    case SF_FORMAT_G723_40:
+      bits = 40;
+      break;
+
+      /* wild guess at 4 bytes = 32 bits */
+    case SF_FORMAT_ULAW:
+    case SF_FORMAT_ALAW:
+    case SF_FORMAT_FLOAT:	
+      bits = 32;
+      break;
+
+
+
+    default: 
+#ifdef DEBUG_LSF
+      printf(" at the default case in get_ny_bits -- check mask...\n");
 #endif
-                if (strncmp(buf, "COMM", 4) == 0) {
-                    /* COMM chunk */
-                    long chunksize;
-                    long frames;
-                    chunksize = readlong(snd->u.file.file, &read_in);
-                    if (chunksize != 18) {
-                        return fail(snd, "AIFF COMM chunk has bad size\n");
-                    }
-                    snd->format.channels = (long) readshort(snd->u.file.file, &read_in);
-                    frames = readlong(snd->u.file.file, &read_in);
-                    snd->format.bits = readshort(snd->u.file.file, &read_in);
-                    snd->format.mode = SND_MODE_PCM;
-                    snd->format.srate = read_ieee_extended(snd);
-                    snd->u.file.end_offset = frames * snd_bytes_per_frame(snd) +
-                        read_in;
-                    (*flags) = SND_HEAD_MODE | SND_HEAD_BITS | SND_HEAD_SRATE |
-                        SND_HEAD_CHANNELS | SND_HEAD_LEN;
-                } else if (strncmp(buf, "SSND", 4) == 0) {
-                    /* SSND chunk */
-                    ssnd_chunksize = readlong(snd->u.file.file, &read_in);
-                    offset = readlong(snd->u.file.file, &read_in);
-                    blocksize = readlong(snd->u.file.file, &read_in);
-                    /* remember the file offset, there may be more chunks */
-                    ssnd_start = snd_file_lseek(snd->u.file.file, 0, SND_SEEK_CUR);
-                    chunksize = ssnd_chunksize;
-                    if (chunksize & 1) chunksize++;  /* round up to even number */
-                    /* subtract 8, size of offset and blocksize: */
-                    snd_file_lseek(snd->u.file.file, chunksize - 8, SND_SEEK_CUR);
-                    read_in += chunksize - 8;
-                } else if (strncmp(buf, "MARK", 4) == 0) {
-                    int i;
-
-                    /*long chunksize = */
-                    readlong(snd->u.file.file, &read_in);
-                    
-                    nmarkers = readshort(snd->u.file.file, &read_in);
-                    markers = (marker_type) snd_alloc(nmarkers * sizeof(marker_node));
-                    for (i = 0; i < nmarkers; i++) {
-                        unsigned char label[256];
-                        int len;
-                        markers[i].id = readshort(snd->u.file.file, &read_in);
-                        markers[i].position = readlong(snd->u.file.file, &read_in);
-                        if (snd_file_read(snd->u.file.file, (char *) label, 1L) != 1) 
-                            return fail(snd, "problem reading AIFF file\n");
-                        len = label[0] | 1;
-                        if (snd_file_read(snd->u.file.file, (char *) label, (long) len) != len)
-                            return fail(snd, "problam reading AIFF file\n");
-                    }
-                } else if (strncmp(buf, "INST", 4) == 0) {
-                    chunksize = readlong(snd->u.file.file, &read_in);
-                    inst.base_note = readchar(snd->u.file.file, &read_in);
-                    inst.detune = readchar(snd->u.file.file, &read_in);
-                    inst.low_note = readchar(snd->u.file.file, &read_in);
-                    inst.high_note = readchar(snd->u.file.file, &read_in);
-                    inst.low_velocity = readchar(snd->u.file.file, &read_in);
-                    inst.high_velocity = readchar(snd->u.file.file, &read_in);
-                    inst.gain = readshort(snd->u.file.file, &read_in);
-                    readloop(&inst.sustain_loop, snd->u.file.file, &read_in);
-                    readloop(&inst.release_loop, snd->u.file.file, &read_in);
-                    
-                    /* compute some properties from inst structure:
-                     * (marker chunk may not be read in yet, so do that later
-                     */
-                    
-                    /* snd should have a StepToHz function, but it doesn't */
-                    snd->u.file.native_hz = StepToHz(inst.base_note + 
-                                                     inst.detune/100.0);
-                    /* the constant is to convert from db */
-                    snd->u.file.gain = (float) exp(((double) inst.gain) * 0.11512925);
-                    snd->u.file.low_hz = StepToHz(inst.low_note);
-                    snd->u.file.high_hz = StepToHz(inst.high_note);
-                    snd->u.file.low_velocity = inst.low_velocity;
-                    snd->u.file.high_velocity = inst.high_velocity;
-                    inst_read = TRUE;
-                } else {
-                    long chunksize = readlong(snd->u.file.file, &read_in);
-                    if (chunksize & 1) chunksize ++;  /* round up to even number */
-                    read_in += chunksize;
-                    /* skip the chunk */
-                    snd_file_lseek(snd->u.file.file, chunksize, SND_SEEK_CUR);
-                }
-            }
-
-            snd_file_lseek(snd->u.file.file, ssnd_start, SND_SEEK_SET);
-            /* now we're positioned back at SSND chunk samples */
-            if (blocksize != 0) {
-                return fail(snd, "AIFF header specifies nonzero blocksize.");
-            }
-            if (markers && inst_read) {
-                convert_loop_data(&snd->u.file.sustain_loop, &inst.sustain_loop, 
-                                  markers, nmarkers);
-                convert_loop_data(&snd->u.file.release_loop, &inst.release_loop, 
-                                  markers, nmarkers);
-                if (snd->u.file.native_hz <= 0.0) {
-                    return fail(snd, "Bad base pitch + detune in AIFF file");
-                }
-                if (snd->u.file.sustain_loop.mode < 0 ||
-                    snd->u.file.sustain_loop.mode > 3) {
-                    return fail(snd, "Bad sustain loop mode in AIFF file");
-                }
-                if (snd->u.file.sustain_loop.mode && 
-                    (snd->u.file.sustain_loop.begin < 0 ||
-                     snd->u.file.sustain_loop.end <= 
-                     snd->u.file.sustain_loop.begin)) {
-                    return fail(snd, "Bad sustain loop in AIFF file");
-                }
-                if (snd->u.file.release_loop.mode < 0 ||
-                    snd->u.file.release_loop.mode > 3) {
-                    return fail(snd, "Bad release loop mode in AIFF file");
-                }
-                if (snd->u.file.release_loop.mode && 
-                    (snd->u.file.release_loop.begin < 0 ||
-                     snd->u.file.release_loop.end <= 
-                     snd->u.file.release_loop.begin)) {
-                    return fail(snd, "Bad release loop in AIFF file");
-                }
-                snd->u.file.loop_info = TRUE;
-            } 
-            if (markers) snd_free(markers);
-            /* byte_offset is where the file pointer ends up after SND_SEEK_CUR */
-            snd->u.file.byte_offset = snd_file_lseek(snd->u.file.file, offset, SND_SEEK_CUR);
-            snd->u.file.current_offset = snd->u.file.byte_offset;
-            snd->u.file.end_offset = snd->u.file.byte_offset + ssnd_chunksize - 8;
-        }
-    } else if (magic == WAVE_SND_MAGIC) {
-        long size;
-        char buf[4];
-        short format;
-        
-        snd->u.file.header = SND_HEAD_WAVE;
-        /* RIFF WAVE uses little-endian format -- be careful! */
-        size = readrevlong(snd->u.file.file, &read_in);
-        if (snd_file_read(snd->u.file.file, buf,  4) != 4 || strncmp(buf, "WAVE", 4) != 0) {
-            return fail(snd, 
-                        "RIFF file does not specify 'WAVE' as type\n");
-        }
-        
-        /* Skip to the next "fmt " or end of file */
-        while (1) {
-            long siz;
-            if (snd_file_read(snd->u.file.file, buf, 4) != 4) {
-                return fail(snd, "WAVE file missing fmt spec");
-            }
-            if (strncmp("fmt ", buf, 4) == 0) break;
-            siz = readrevlong(snd->u.file.file, &read_in);
-            while (siz > 0) {
-                snd_file_read(snd->u.file.file, buf, 1);
-                siz--;
-            }
-        }
-        size = readrevlong(snd->u.file.file, &read_in);
-        format = readrevshort(snd->u.file.file, &read_in);
-        switch (format) {
-          case WAVE_FORMAT_UNKNOWN:
-            return fail(snd, "file in Microsoft Official Unknown format");
-          case WAVE_FORMAT_PCM:
-            break;    
-          case WAVE_FORMAT_ADPCM:
-            return fail(snd, "file in ADPCM format");
-          case WAVE_FORMAT_ALAW:
-            return fail(snd, "file in ALAW format");
-          case WAVE_FORMAT_MULAW:
-            return fail(snd, "file in ULAW format");
-          case WAVE_FORMAT_OKI_ADPCM:
-            return fail(snd, "file in OKI ADPCM format");
-          case WAVE_FORMAT_DIGISTD:
-            return fail(snd, "file in Digistd format");
-          case WAVE_FORMAT_DIGIFIX:
-            return fail(snd, "file in Digifix format");
-          case IBM_FORMAT_MULAW:
-            return fail(snd, "file in IBM U-law format");
-          case IBM_FORMAT_ALAW:
-            return fail(snd, "file in IBM A-law format");
-          case IBM_FORMAT_ADPCM:
-            return fail(snd, "file in IBM ADPCM format");
-          default:
-            return fail(snd, "file in unknown format");
-        }       
-        snd->format.channels = readrevshort(snd->u.file.file, &read_in);
-        snd->format.srate = (double) readrevlong(snd->u.file.file, &read_in);
-        readrevlong(snd->u.file.file, &read_in);  /* Average bytes/second */
-        readrevshort(snd->u.file.file, &read_in); /* Block align */
-        snd->format.bits = readrevshort(snd->u.file.file, &read_in);
-        snd->format.mode = SND_MODE_PCM;
-        if (snd->format.bits == 8) snd->format.mode = SND_MODE_UPCM;    /* unsigned */
-        *flags = SND_HEAD_MODE | SND_HEAD_BITS | SND_HEAD_SRATE |
-            SND_HEAD_CHANNELS | SND_HEAD_LEN;
-        /* size is size of "fmt " section; we've read 16 bytes, so
-         * advance file pointer over any remaining bytes
-         */
-        snd->u.file.byte_offset = 
-            snd_file_lseek(snd->u.file.file, size - 16, SND_SEEK_CUR);
-        /* skip over any other forms until you find "data" */
-        while (1) {
-            long n = snd_file_read(snd->u.file.file, buf, 4);
-            if (n != 4) {
-                return fail(snd, "missing data portion");
-            }
-            if (strncmp("data", buf, 4) == 0) break;
-            n = readrevlong(snd->u.file.file, &read_in);    /* length of form */
-            snd->u.file.byte_offset = 
-                snd_file_lseek(snd->u.file.file, n, SND_SEEK_CUR);
-        }
-        snd->u.file.byte_offset += 8; /* "data" and length use 8 bytes */
-        snd->u.file.current_offset = snd->u.file.byte_offset;
-        snd->u.file.end_offset = snd->u.file.byte_offset + 
-            readrevlong(snd->u.file.file, &read_in);
-    } else {
-        snd->u.file.header = SND_HEAD_NONE;
-        (*flags) = 0;
-        resetfile(snd->u.file.file);
-        read_in = 0;
+      bits = 8;
+      break;
     }
-    
-    /* If not already determined from file header, assume remainder of file
-       is sound data */
-    if (!(*flags & SND_HEAD_LEN)) {
-        snd->u.file.end_offset = snd->u.file.byte_offset = read_in;
-        snd->u.file.current_offset = snd->u.file.byte_offset;
-        snd->u.file.end_offset = len;
-        *flags |= SND_HEAD_LEN;
-    }
-    return SND_SUCCESS;
+  return bits;
 }
 
 
-/* write_zeros -- add zeros to end of file */
-/**/
-void write_zeros(int fout, long n)
-{
-    long zero = 0;
-    while (n > 0) {
-        /* don't put min() in the arg list of write on an RS6K */
-        /* there seems to be a compiler bug */
-        long len = min(n, sizeof(long));
-        snd_file_write(fout, (char *) &zero, len);
-        n -= sizeof(long);
-    }
-}
-
-
-/* write_ircam_start -- write an IRCAM header at current file position */
-/*
- * length is the total length of the header to be written; this is normally
- * SIZEOF_IRCAM_HEADER, but in the case of the hybrid CMIX headers, length
- * will be shorter to accommodate the NeXT header prefix
+/*==================
+ * Fill in the SF_INFO structure for opening a file for write or read/write.
+ *
+ * I am attempting to make this do double duty for SND_WRITE and
+ * SND_OVERWRITE. Wish me luck.
  */
-void write_ircam_start(snd_type snd, long length)
+
+int make_sfinfo(snd_type snd)
 {
-    short encoding=0;
-    
-    writelong(snd->u.file.file, IRCAM_SND_MAGIC);
-    writefloat(snd->u.file.file, (float) snd->format.srate);
-    writelong(snd->u.file.file, snd->format.channels);
-    writelong(snd->u.file.file, snd->format.bits >> 3);
-    /* now write the "CODE" section */
-    writeshort(snd->u.file.file, IRCAM_SND_AUDIOENCODE);
-    writeshort(snd->u.file.file, 3 * sizeof(short));    /* size of this record */
-    if (snd->format.bits == 8) {
-        encoding = IRCAM_SND_CHAR;
-        if (snd->format.mode == SND_MODE_ULAW) encoding = IRCAM_SND_ULAW;
-        if (snd->format.mode == SND_MODE_ALAW) {
-            snd_warn("ALAW not implemented, writing 8-bit PCM\n");
-        }
-    } else if (snd->format.bits == 16) {
-        encoding = IRCAM_SND_SHORT;
-    } else if (snd->format.bits == 32) {
-        encoding = IRCAM_SND_FLOAT;
-        if (snd->format.mode == SND_MODE_PCM) encoding = IRCAM_SND_LONG;
+  int format;
+  int subformat;
+
+  subformat = format = 0;
+
+  /* Translate nyquist/snd header, mode and bits into libsndfile values. */
+
+  switch(snd->u.file.header)
+    {
+    case SND_HEAD_AIFF:
+      format = SF_FORMAT_AIFF;
+      break;
+ 
+    case SND_HEAD_IRCAM:
+      format = SF_FORMAT_IRCAM;
+      break;
+
+    case SND_HEAD_NEXT:
+      format = SF_FORMAT_AU;
+      break;
+
+    case SND_HEAD_WAVE:
+      format = SF_FORMAT_WAV;
+      break;
+
+    default:
+      format = SF_FORMAT_WAV;
+      break;
     }
-    writeshort(snd->u.file.file, encoding);
-    
-    /* end the "CODE" section */
-    writeshort(snd->u.file.file, IRCAM_SND_END);
-    writeshort(snd->u.file.file, 2 * sizeof(short));
-    
-    /* write filler */
-    length -= ( 16 /* head */ + 6 /* AudioEncode */ + 4 /* End */ );
-    
-    write_zeros(snd->u.file.file, length);
-}
 
+  switch(snd->format.mode)
+    {
+    case SND_MODE_ADPCM:
+      subformat = SF_FORMAT_IMA_ADPCM;
+      break;
 
-/* write_next_start -- write a NeXT header */
-/*
- * Note: uses length for Length field, but does not fill with zeros.
- * Instead, this routine writes only the NeXT 24 byte header.
+    case SND_MODE_PCM:
+      switch(snd->format.bits)
+	{
+	case 8:
+	  subformat = SF_FORMAT_PCM_S8;
+	  break;
+
+	case 16:
+	  subformat = SF_FORMAT_PCM_16;
+	  break;
+
+	case 24:
+	  subformat = SF_FORMAT_PCM_24;
+	  break;
+
+	case 32:
+	  subformat = SF_FORMAT_PCM_32;
+	  break;
+
+	default:
+	  subformat = SF_FORMAT_PCM_16;
+	  break;
+	}
+      break;
+
+    case SND_MODE_ULAW:
+      subformat = SF_FORMAT_ULAW;
+      break;
+
+    case SND_MODE_ALAW:
+      subformat = SF_FORMAT_ALAW;
+      break;
+
+    case SND_MODE_FLOAT:
+      subformat = SF_FORMAT_FLOAT;
+      break;
+
+    case SND_MODE_UPCM:
+      subformat = SF_FORMAT_PCM_U8;
+      break;
+
+    default:
+
+      /* I think for simplicity in this here not very limited first
+	 cut, I'll go for a default of WAV, 16 bit PCM. I could get a
+	 lot more complicated, but that can happen later. jlh.*/
+
+      format = SF_FORMAT_WAV;
+      subformat = SF_FORMAT_PCM_16;
+      break;
+    }
+
+  snd->u.file.sfinfo.format = format | subformat;
+
+  if (snd->format.srate > 0) 
+    snd->u.file.sfinfo.samplerate = snd->format.srate;
+  else
+    snd->u.file.sfinfo.samplerate = 41000;
+
+  if (snd->format.channels > 0)
+    snd->u.file.sfinfo.channels = snd->format.channels;
+  else
+    snd->u.file.sfinfo.channels = 1;
+  
+
+  snd->u.file.sfinfo.frames = 0;
+
+  return sf_format_check(&snd->u.file.sfinfo);
+
+ }
+
+/*==============================================================
+ * The beating heart of this libsndfile project.
+ *
+ *  Code from the original sndheader.c, v301, is mostly gone; I tried
+ *  to keep error handling the same.
+ *
+ *  Bits and pieces from libsndfile examples/
  */
-void write_next_start(snd_type snd, long length)
+
+int snd_open_file ( snd_type snd, long *flags)
 {
-    short encoding=0;
-    
-    writelong(snd->u.file.file, NEXT_SND_MAGIC);
-    /* header size matches cmix's bsd format */
-    writelong(snd->u.file.file, length);
-    writelong(snd->u.file.file, 0); /* data size, 0 -> unspecified */
-    if (snd->format.bits == 8) {
-        encoding = NEXT_SND_FORMAT_LINEAR_8;
-        if (snd->format.mode == SND_MODE_ULAW)
-            encoding = NEXT_SND_FORMAT_ULAW_8;
-        if (snd->format.mode == SND_MODE_ALAW) {
-            snd_warn("ALAW not implemented, writing 8-bit PCM\n");
-        }
-    } else if (snd->format.bits == 16) {
-        encoding = NEXT_SND_FORMAT_LINEAR_16;
-    } else if (snd->format.bits == 32) {
-        encoding = NEXT_SND_FORMAT_FLOAT;
-        if (snd->format.mode == SND_MODE_PCM)
-            encoding = NEXT_SND_FORMAT_LINEAR_32;
+
+
+  SNDFILE *sffile;
+
+  (*flags) = 0; /* No file has successfully opened; at the end, when
+		   all checks have passed, flags will get set to
+		   values that say the file open worked and fields
+		   have valid values. */
+  if (snd->write_flag == SND_READ)
+    {
+      snd->u.file.loop_info = FALSE;
+
+      /* jlh -- somewhere previous to here I have to make sure format
+	 is 0, except if this is a RAW file, in which case I have to
+	 set samplerate, channels and format fields. */
+
+      snd->u.file.sfinfo.format = 0;
+      /* if raw... */
+
+      if ((sffile = sf_open (snd->u.file.filename, SFM_READ, &snd->u.file.sfinfo)) == NULL)
+	{
+	  printf ("Error : Not able to open input file %s.\n", 
+		  snd->u.file.filename) ;
+	  fflush (stdout) ;
+	  memset (strBuffer, 0, sizeof (strBuffer)) ;
+	  sf_command (sffile, SFC_GET_LOG_INFO, strBuffer, STRBUFF_LEN) ;
+	  puts (strBuffer) ;
+	  puts (sf_strerror (NULL)) ;
+	  snd_open_fail(snd);
+	  return SND_FILE_FAILURE;
+	}
+
+      /* snd_read_header OUTTA DA WINDOW!!! (sound of splintering code
+	 fragments) jlh */
+
+      /* jlh -- instead, I have put sfinfo into snd. Now I will make
+	 sure it is a good happy little structure. */
+
+      if ((sf_format_check(&snd->u.file.sfinfo)) != TRUE)
+	{
+	  printf ("Error : sfinfo not ok on file open: %s.\n", 
+		  snd->u.file.filename) ;
+	  fflush (stdout) ;
+	  memset (strBuffer, 0, sizeof (strBuffer)) ;
+	  sf_command (sffile, SFC_GET_LOG_INFO, strBuffer, STRBUFF_LEN) ;
+	  puts (strBuffer) ;
+	  puts (sf_strerror (NULL)) ;
+	  snd_open_fail(snd);
+	  return SND_FILE_FAILURE;
+	}
+
+      /* YEAH.  cooking with hydrogen. */
+
+      /* Fill out the nyquist format structure. */
+      snd->format.mode = get_ny_mode(&snd->u.file.sfinfo);
+      snd->format.channels = snd->u.file.sfinfo.channels;
+      snd->format.srate = snd->u.file.sfinfo.samplerate;
+      snd->format.bits = get_ny_bits(&snd->u.file.sfinfo);
+
+      /* nyquist header value, used in lisp code (I believe. jlh )*/
+      snd->u.file.header = get_ny_head(&snd->u.file.sfinfo);
+      
+    } /*  if (snd->write_flag == SND_READ) */
+
+  else if (snd->write_flag == SND_WRITE)
+    {
+      if (snd->u.file.header < 0 || snd->u.file.header >= SND_NUM_HEADS)
+	{
+	  sprintf(strBuffer, 
+		  "snd_open_file: can't write file %s: invalid snd header value\n", 
+		  snd->u.file.filename);
+	  snd_fail (strBuffer);
+	  snd_open_fail(snd);
+	  return !SND_SUCCESS;
+	}
+      
+      /* Writing a new file: clear the libsndfile structures for action */
+      memset (&snd->u.file.sfinfo, 0, sizeof(snd->u.file.sfinfo));
+      snd->u.file.sffile = NULL;
+
+      if ( make_sfinfo(snd) == SF_FALSE )
+	{
+	  sprintf(strBuffer,
+		  "snd_open_file: Header information invalid for writing %s\n",
+		  snd->u.file.filename);
+	  snd_fail (strBuffer);
+	  snd_open_fail(snd);
+	  return !SND_SUCCESS;
+	}
+
+      /* Headers and info structures all filled out; now create the
+	 file */
+
+      if ((sffile = sf_open (snd->u.file.filename, 
+			     SFM_WRITE, 
+			     &snd->u.file.sfinfo)) == NULL)
+	{
+	  sprintf(strBuffer,
+		  "snd_open_file: failed to open \"%s\" for write;\nLIBSNDFILE error: %s\n",
+		  snd->u.file.filename,
+		  sf_strerror(sffile));
+	  snd_fail (strBuffer);
+	  snd_open_fail(snd);
+	  return !SND_SUCCESS;
+	}
+
+      snd->u.file.file = 0; /* Ok, this is going to make for noise,
+			       but I do want to know when .file is
+			       being accessed so I can fix it. jlh */
+      snd->u.file.sffile = sffile; /* prob redundant... but I may
+				      get rid of file.file. jlh */
+
+      /* JLH gee... is this all I need to do? that was easy. */
+
+    } /* if snd->write_flag == SND_WRITE */
+
+  else if (snd->write_flag == SND_OVERWRITE)
+    {
+      
+      if (snd->u.file.header < 0 || snd->u.file.header >= SND_NUM_HEADS)
+	{
+	  sprintf(strBuffer, 
+		  "snd_open_file: can't write file %s: invalid snd header value\n", 
+		  snd->u.file.filename);
+	  snd_fail (strBuffer);
+	  snd_open_fail(snd);
+	  return !SND_SUCCESS;
+	}
+      
+      /* If sfinfo is valid, keep it; if not, make a new one. */
+      if (sf_format_check(&snd->u.file.sfinfo) == SF_FALSE)
+	{
+	  memset (&snd->u.file.sfinfo, 0, sizeof(snd->u.file.sfinfo));
+	  snd->u.file.sffile = NULL;
+	  
+	  if ( make_sfinfo(snd) == SF_FALSE )
+	    {
+	      sprintf(strBuffer,
+		      "snd_open_file: Header information invalid for writing %s\n",
+		      snd->u.file.filename);
+	      snd_fail (strBuffer);
+	      snd_open_fail(snd);
+	      return !SND_SUCCESS;
+	    }
+	}
+
+      /* Headers and info structures all filled out; now create the
+	 file */
+
+      if ((sffile = sf_open (snd->u.file.filename, 
+			     SFM_RDWR, 
+			     &snd->u.file.sfinfo)) == NULL)
+	{
+	  sprintf(strBuffer,
+		  "snd_open_file: failed to open \"%s\" for read/write;\nLIBSNDFILE error: %s\n",
+		  snd->u.file.filename,
+		  sf_strerror(sffile));
+	  snd_fail (strBuffer);
+	  snd_open_fail(snd);
+	  return !SND_SUCCESS;
+	}
+
+      /* Don't need to find the beginning of the data, libsndfile
+	 handles that. */
     }
-    writelong(snd->u.file.file, encoding);
-    writelong(snd->u.file.file, (long) (snd->format.srate + 0.5));
-    writelong(snd->u.file.file, snd->format.channels);
+  /* JLH I'm not doing anything with swap, I'm assuming libsndfile
+     handles all that. */
+
+  snd->u.file.file = 0; /* jlh and fix problems as they occur */
+  snd->u.file.sffile = sffile; /* prob redundant... but I may
+				  get rid of file.file. jlh */
+
+  /* jlh The file must have opened successfully; make flags reflect that,
+     using old nyquist/snd values; lots of things use these??? */
+  (*flags) = SND_HEAD_SRATE | SND_HEAD_CHANNELS | SND_HEAD_BITS | SND_HEAD_MODE | SND_HEAD_LEN;
+
+  return SND_SUCCESS;
 }
 
+/*==================
+ * used once, in sndread.c
+ *
+ */
+/* FIX -- need to test this. I think offset is in seconds, so this
+   function is not going to be compatible with previous one. */
+ int snd_seek(snd_type snd, double offset)
+ {
+   sf_count_t frames;
+   sf_count_t tsk;
+   int whence;
 
-/* snd_write_header -- write header, position file for sample data */
-/**/
-void snd_write_header(snd_type snd, long *flags)
-{
-    long nframes = 0x7f000000;
-    long bytes_per_frame = snd_bytes_per_frame(snd);
-    
-    /* end_offset will keep track of how much data written so far */
-    snd->u.file.end_offset = 0;
-    
-    switch (snd->u.file.header) {
-      case SND_HEAD_NONE:
-        break;
-      case SND_HEAD_AIFF: {
-        int hsize =
-            12 /* bytes at beginning */ + 
-            8 /*COMM hdr*/ + 18 /*COMM chunk*/ +
-            8 /*SSND hdr*/ + 8 /*SSND chunk*/;
-        if (snd->format.bits != 8 && snd->format.bits != 16) {
-            char msg[64];
-            sprintf(msg, "Warning: using 16 bits per sample instead of %d\n",
-                    (int)snd->format.bits);
-            snd_warn(msg);
-            snd->format.bits = 16;
-            bytes_per_frame = snd_bytes_per_frame(snd);
-        }
-        snd_file_write(snd->u.file.file, "FORM", 4); /* IFF header */
-        /* (bogus) file size: */
-        writelong(snd->u.file.file, 
-                  hsize + nframes * bytes_per_frame);
-        snd_file_write(snd->u.file.file, "AIFF", 4); /* File type */
-        
-        /* COMM chunk -- describes encoding (and #frames) */
-        snd_file_write(snd->u.file.file, "COMM", 4);
-        writelong(snd->u.file.file, 18); /* COMM chunk size */
-        writeshort(snd->u.file.file, (short) snd->format.channels); /* nchannels */
-        writelong(snd->u.file.file, nframes); /* number of frames */
-        writeshort(snd->u.file.file, (short) snd->format.bits); /* sample width, in bits */
-        write_ieee_extended(snd->u.file.file, snd->format.srate);
-        /* SSND chunk -- describes data */
-        snd_file_write(snd->u.file.file, "SSND", 4);
-        writelong(snd->u.file.file, 
-                  8 + nframes * bytes_per_frame); /* chunk size */
-        writelong(snd->u.file.file, 0); /* offset */
-        writelong(snd->u.file.file, 0); /* block size */
-        snd->u.file.byte_offset = hsize;
-        /*      printf("snd_write_header AIFF, byte_offset = %ld\n",
-                snd_lseek(snd->u.file.file, (off_t) 0, SND_SEEK_CUR)); */
-        break; }
-      case SND_HEAD_IRCAM: 
-        write_ircam_start(snd, SIZEOF_IRCAM_HEADER);
-        snd->u.file.byte_offset = SIZEOF_IRCAM_HEADER;
-        break;
-      case SND_HEAD_NEXT:
-        /* for compatibility with CMIX, we will always write an IRCAM
-         * header after the NeXT header, and use 1024 bytes of header.
-         */
-        write_next_start(snd, SIZEOF_IRCAM_HEADER);
-        write_ircam_start(snd, SIZEOF_IRCAM_HEADER - 24);
-        snd->u.file.byte_offset = SIZEOF_IRCAM_HEADER;
-        break;
-      case SND_HEAD_WAVE:
-        snd_file_write(snd->u.file.file, "RIFF", 4);
-        writerevlong(snd->u.file.file, 12+18+8 + nframes * bytes_per_frame);
-        snd_file_write(snd->u.file.file, "WAVE", 4);
-        snd_file_write(snd->u.file.file, "fmt ", 4);
-        writerevlong(snd->u.file.file, 18L);
-        switch (snd->format.mode) /* Format type */
-        {
-            case SND_MODE_ADPCM:
-                writerevshort(snd->u.file.file, 2);
-                break;
-            case SND_MODE_PCM:
-            case SND_MODE_UPCM:
-                writerevshort(snd->u.file.file, 1);
-                break;
-            case SND_MODE_ULAW:
-                writerevshort(snd->u.file.file, 7);
-                break;
-            case SND_MODE_ALAW:
-                writerevshort(snd->u.file.file, 6);
-                break;
-            case SND_MODE_UNKNOWN:
-            case SND_MODE_FLOAT:
-            default:
-                writerevshort(snd->u.file.file, 0);
-                break;
-        }
-        writerevshort(snd->u.file.file, (short) snd->format.channels); /* Number of channels */
-        writerevlong(snd->u.file.file, (long) (snd->format.srate + 0.5)); /* Samples per second */
-        writerevlong(snd->u.file.file,  (((long) snd->format.srate) * bytes_per_frame)); /* Bytes per second*/
-        writerevshort(snd->u.file.file, (short) bytes_per_frame); /* Block alignment */
-        writerevshort(snd->u.file.file, (short) snd->format.bits); /* Bits per sample */
-        writerevshort(snd->u.file.file, (short) 0); /* Size of needed extra data */
-        snd_file_write(snd->u.file.file, "data", 4);
-        writerevlong(snd->u.file.file, (long) (nframes * bytes_per_frame));
-        snd->u.file.byte_offset = 46;
-        break;
-      default:
-        break;
-    }
-    snd->u.file.end_offset = snd->u.file.byte_offset;
-}
+   frames = offset;  /* Once again, the question of what units offset
+			is in.... I'm going to assume frames until
+			proven wrong. jlh */
 
+   whence = (int)snd->u.file.current_offset; /* jlh and what if.... */
 
-void write_sndheader_finish(snd_type snd)
-{
-    long n;
-    switch (snd->u.file.header) {
-      case SND_HEAD_NONE:
-        break;
-      case SND_HEAD_AIFF: {
-        int hsize =
-            8 /*COMM hdr*/ + 18 /*COMM chunk*/ +
-            8 /*SSND hdr*/ + 12 /*SSND chunk*/;
-        int datasize = snd->u.file.end_offset - hsize - 8;
-        
-        /* get the current position = file size */
-        n = snd_file_lseek(snd->u.file.file, 0, SND_SEEK_CUR);
-        if (n != snd->u.file.end_offset) {
-            char str[80];
-            sprintf(str,
-                    "Actual file size %ld does not match predicted size %ld\n",
-                    n, snd->u.file.end_offset);
-            fail(snd, str);
-        }
-        /* write filesize in the header */
-        snd_file_lseek(snd->u.file.file, 4, SND_SEEK_SET);
-        writelong(snd->u.file.file, n - 8 /* 'FORM'+size do not count */);
-        
-        /* write number of frames in COMM chunk */
-        snd_file_lseek(snd->u.file.file, (4 /* 'AIFF' */ + 4 /* 'COMM' */ + 
-                                         4 /* size */ + 2 /* channels */), 
-              SND_SEEK_CUR);
-        writelong(snd->u.file.file, 
-                  (n - (hsize + 8)) / snd_bytes_per_frame(snd));
-        
-        /* write size in SSND chunk */
-        snd_file_lseek(snd->u.file.file, (2 /* snd->format.bits */ + 
-                                         10 /* sr */ + 4 /* 'SSND' */), 
-              SND_SEEK_CUR);
-        writelong(snd->u.file.file, 8 + datasize); /* chunk size */
-        break; }
-      case SND_HEAD_IRCAM:
-        break;
-      case SND_HEAD_NEXT:
-        break;
-      case SND_HEAD_WAVE:
-        /* get the current position = file size */
-        n = snd_file_lseek(snd->u.file.file, 0, SND_SEEK_CUR);
-        /* back to the top */
-        snd_file_lseek(snd->u.file.file, 4, SND_SEEK_SET);
-        writerevlong(snd->u.file.file, n - 8);  /* file size - ['RIFF', len] */
-        snd_file_lseek(snd->u.file.file, 42, SND_SEEK_SET);
-        writerevlong(snd->u.file.file, n - 46); /* data size */
-        break;
-      default:
-        break;
-    }
-}
+   tsk = sf_seek( snd->u.file.sffile, frames, whence);
 
-
-double read_ieee_extended(snd_type snd)
-{
-    unsigned char buf[10];
-    if (snd_file_read(snd->u.file.file, (char *) buf, 10L) != 10)
-        fail(snd, "EOF while reading IEEE extended number");
-    return ConvertFromIeeeExtended(buf);
-}
-
-void write_ieee_extended(int file, double x)
-{
-    char buf[10];
-    ConvertToIeeeExtended(x, buf);
-    /*
-      report("converted %g to %o %o %o %o %o %o %o %o %o %o",
-      x,
-      buf[0], buf[1], buf[2], buf[3], buf[4],
-      buf[5], buf[6], buf[7], buf[8], buf[9]);
-      */
-    snd_file_write(file, buf, 10);
-}
-
-
-
-
-char *mode_string[] = { "ADPCM", "PCM", "ULAW", "ALAW", "Float", "UPCM", "Unknown" };
-
-char *mode_to_string(long mode)
-{
-    if (mode < 0 || mode >= SND_NUM_MODES) return "InvalidData";
-    else return mode_string[mode];
-}
-
+   if (tsk < 0)
+     {
+       return !SND_SUCCESS;
+     }
+   else
+     {
+       snd->u.file.current_offset = (long)tsk;
+     }
+   return SND_SUCCESS; 
+ }

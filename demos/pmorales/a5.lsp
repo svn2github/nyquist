@@ -3,7 +3,8 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
 
 (defun whiny (dur frq)
   (let ((lfo-f (step-to-hz frq)))
@@ -15,4 +16,5 @@
                           dur (* lfo-f -15.0 (/ 16.0))
                           ))))) 
 
- (ss (whiny 10 a5))
+(defun whiny-demo () (ss (whiny 10 a5)))
+

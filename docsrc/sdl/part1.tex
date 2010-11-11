@@ -1,0 +1,606 @@
+% Manual de SDL
+% part1.tex
+% pmorales. Junio, 2007
+
+
+\section{Introduction}
+
+Usually, Computer Music compositions are formally specified by means
+of programming language algorithms. Owing to the fact that {\it Nyquist} is
+actually an extension of Lisp, this language can be used for both
+sound synthesis and algorithmic composition.
+
+In addition, Nyquist can be also employed for rendering music that is
+described as a note sequence, for instance, a score in traditional
+music notation. However, in this case, every note parameter has to be
+specified which makes difficult to compose music confortably.
+
+The {\it Score Description Library} (SDL) is aimed at facilitating the
+translation from traditional score notation to {\it Nyquist} source
+code and also allowing a fine control over the performance and synthesis
+parameters.
+
+\section{Description}
+\subsection{\textit{SDL} score example}
+
+A SDL score is a quoted list in which the notes along with the pitch, duration attributes and other arguments related to timing and
+synthesis parameters, are specified.
+
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm]
+; Begin of BWV 1069
+
+(setf *my-sdl-score*
+  '((TF 1)
+  (INIT-INSTR "i1" sinte) (INSTRUMENT "i1") (PWL-POINT :mm 100) (ATTR :idur 0.1)
+  2 (:c4 1)  :d4 (:e4 2) :c4 :g4 :e4 :a4 (:g4 1) :f4 (:g4 4)
+  (:a4 1) :c5 :f4 :a4 :g4 :f4 :e4 :g4 :f4 :a4 :d4 :f4 :e4 :d4 :c4 :d4 :e4 :f4 (:g4 2)
+  :a3 :c4 :d4 :f4
+  :g3 :b3 :c4 :e4 (:f3 1) :e4 :d4 :c4 :g3 :d4 :c4 :b3 (ATTR :idur 1) (LABEL :t1)
+  (:c4 4))) 
+\end{Verbatim}
+
+\begin{itemize}
+\item \texttt{TF} stands for \textit{Time Factor}. All the durations will
+  be multiplied by this factor (default value is 1).
+\item \texttt{INIT-INSTR} declares an instrument to be used in
+  synthesis. The first argument \textit{``i1''} is the instrument name in
+  the SDL score. The second one is the {\it Nyquist} function name
+  which defines the instrument. This function must be defined independently from
+   the score by means of an expression \mbox{\texttt{(defun sinte
+      \ldots)}}
+
+
+
+\item \texttt{INSTRUMENT} causes that all the notes from now on are
+  synthesized by the instrument \textit{``i1''} until a new instrument
+  is specified.
+
+\item \texttt{PWL-POINT} defines a piece wise linear function in order
+  to set the time-variable parameters. For instance, \texttt{:mm} takes
+  a value of \texttt{100} when the instruction is called.
+
+
+\item \texttt{ATTR} sets the value of a constant parameter. The
+  parameter value is not changed until a new \texttt{ATTR} instruction
+  is reached. For example, the \texttt{:idur} parameter takes a
+  value of {\it 0.1} in every note until a new value is specified by a
+  new \texttt{ATTR}.
+
+
+\item \texttt{2} defines a 2 beat rest. Two different time types can
+  be considered: a {\it score time} measured in beat and a {\it physical
+    time} measured in second. A quarter has a duration of 4 beats.
+  The physical time is computed according to the score time, {\it tempo} and Time Factor {\tt TF}.
+
+\item \texttt{(:c4 1)} represents a note given by a C4 pitch and a 1
+  beat duration.(i.e, a sixteenth). Only pitch and duration are
+  specified. Pitch can be specified by using an alternative syntax.
+  Duration can be any {\it Lisp } expression. The rest of attributes the
+  needed for synthesis are provided by \texttt{ATTR} y
+  \texttt{PWL-POINT} instructions.
+
+
+\item \texttt{:d4} is a D4 pitch note and inherited duration of 1
+  beat. Rests do not alter the default duration. Changes in duration 
+  are explicitly set by a note attribute.
+
+\item \texttt{LABEL} sets a time label aimed at synchronizing score
+  sections. {\tt LABEL} is related to the score time. Coincidence among
+  {\tt LABEL} references depends on the score {\it tempi} map.
+  Therefore, the user is responsible for controlling this issue. 
+
+\end{itemize}                  
+
+\subsection{\textit{SDL} score processing}
+ A  \textit{SDL} score is processed by using the \texttt{sdl->score} function. For example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+  commandchars=+\[\]]
+(load ``sdl'')
+(sdl->score *my-sdl-score*)
+
+=> ((0.3 0.15 (SINTE :PITCH 60 :MM 100 :IDUR 0.1))
+    (0.45 0.15 (SINTE :PITCH 62 :MM 100 :IDUR 0.1))
+    (0.6 0.3 (SINTE :PITCH 64 :MM 100 :IDUR 0.1)) 
+    (0.9 0.3 (SINTE :PITCH 60 :MM 100 :IDUR 0.1)) 
+    (1.2 0.3 (SINTE :PITCH 67 :MM 100 :IDUR 0.1))
+    +ldots
+)
+\end{Verbatim} 
+
+
+As can be noticed, an {\it Xmusic} score is obtained as a result.
+
+Every {\it Xmusic} score event has three elements. The first one indicates the note starting time. The second one is the stretching factor and the third one is a call to the synthesis function. For instance, the first event:
+
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm]
+(0.3 0.15 (SINTE :PITCH 60 :MM 100 :IDUR 0.1))
+\end{Verbatim}
+starts at {\tt 0.3} seconds; the stretching factor is {\tt 0.15} and the synthesis function call is \texttt{(sinte :pitch 60 :idur 0.1)}.\par
+
+
+\texttt{:mm}  argument is not a synthesis parameter but a control for {\it tempo}. Thus, {\tt sinte} implementation must not include any argument with this name.
+
+
+The strecthing factor multiplies the note duration by the stretching value. For instance, for a sytnthesis function call returning a 1 second note and a stretching factor equals to {\tt 0.15} the overall note duration would be {\tt 0.15}.
+
+One of the most remarkable features of Nyquist is the
+\textit{Behavioral Abstraction} which constitutes a framework for
+addressing context-dependent transformations that includes stretching.
+
+Every synthesis function has a default behavior that properly works in
+most of the situations. Nevertheless, this default behavior may not
+be appropriated in some cases. Therefore, for instance, the amplitude
+envelope attack of a sound may be changed by different strecthing factor
+values which can be unsuitable for a harpsichord-like sound.
+
+To fix this problem, the synthesis function can be defined so that the
+attack time is constant and independent form the stretching factor
+\footnote{Extensive knowledge of Behavioral Abstraction is required to
+  perform this task}.
+
+Alternatively, all the stretching factors can be set to \texttt{1} and
+a specific parameter can be used to indicate the specific duration of
+any event. \texttt{:idur} parameter is used for this purpose. This
+way, sound duration can be higher or lower allowing for several
+articulation modes from {\it legato} to {\it stacatto}. The time-control
+parameters can not be called \texttt{:dur} since this name is a {\it
+  Xmusic} reserved keyword.
+
+
+
+
+\texttt{sdl:normalize-score-duration} is used to set the stretching
+factors to 1 as is shown in the following example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+
+(sdl:normalize-score-duration (sdl->score *my-sdl-score*))
+
+=> ((0.3 1 (SINTE :PITCH 60 :MM 100 :IDUR 0.1))
+    (0.45 1 (SINTE :PITCH 62 :MM 100 :IDUR 0.1))
+    (0.6 1 (SINTE :PITCH 64 :MM 100 :IDUR 0.1))
+    (0.9 1 (SINTE :PITCH 60 :MM 100 :IDUR 0.1))
+    (1.2 1 (SINTE :PITCH 67 :MM 100 :IDUR 0.1))
+    +ldots
+   )
+\end{Verbatim}
+  
+\subsection{\textit{SDL} score rendering}
+Once a \textit{SDL} score has been translated to \textit{Xmusic}
+format, a {\it Nyquist} {\it behavior} can be obtained by using the \texttt{timed-seq} function \footnote{It is also possible to use the \texttt{score-play} function in order to directly render the score}
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm]
+(play (timed-seq (sdl:normalize-score-duration (sdl->score *my-sdl-score*))))
+\end{Verbatim}
+
+
+\subsection{Synchronization}
+
+When dealing with complex scores it is suitable to split them into
+smaller parts. Temporal references must be
+established in order to synchronize all the parts involved. These
+temporal reference can be set by using a \texttt{LABEL}
+instruction. \texttt{sdl->timelabels} function is used to obtain the
+temporal references list. This data is registered as a property list
+of a symbol created on-the-fly. For example:
+
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(setf *my-time-labels* (sdl->timelabels *my-sdl-score*))
+(print (symbol-plist *my-time-labels*))
+
+=> (:T1 64) 
+\end{Verbatim}
+
+\texttt{AT-LABEL} instruction allow us to match the temporal label which has been
+previously specified by \texttt{LABEL} and another time value from a
+different score. The temporal references list must be sent, as an
+argument, to the \texttt{sdl->score} function as can be seen in the following example:
+
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm]
+(setf *my-time-labels* (sdl->timelabels *my-sdl-score*))
+
+(setf *voz-2* 
+  '((TF 1) 
+  (INIT-INSTR "i1" sinte) (INSTRUMENT "i1") (PWL-POINT :mm 100) (ATTR :idur 0.1)
+  (AT-LABEL :t1)
+  2 (:g4 1) :a4 (:b4 2) :g4))
+
+(sdl->score *voz-2* *my-time-labels*)
+
+=> ((9.9 0.15 (SINTE :PITCH 67 :MM 100 :IDUR 0.1))
+    (10.05 0.15 (SINTE :PITCH 69 :MM 100 :IDUR 0.1))
+    (10.2 0.3 (SINTE :PITCH 71 :MM 100 :IDUR 0.1))
+    (10.5 0.3 (SINTE :PITCH 67 :MM 100 :IDUR 0.1)))
+\end{Verbatim}
+
+\subsubsection*{Warnings}
+
+Users should notice that time labels are actually score times (measured in beats), whereas in \textit{Xmusic} scores the time is specified in seconds, which in turn are mapped from the score time, the \texttt{TF} parameter and the \textit{tempi} map. For that reason, time labels always coincide in score time, but they have to use the same \texttt{TF} parameter and \textit{tempi} map to achieve a coincidence in physical time.
+
+\section{Reference guide}
+% Incluir ejemplos en los apartados que interese
+\subsection{Overall \textit{SDL} score structure}
+A \textit{SDL} score is a quoted list containing notes, rests or other elements related to synthesis and performance.
+The following elements have to be present in any \textit{SDL} score:
+
+\begin{itemize}
+  \item One instrument initialization \texttt{INIT-INSTR}.
+  \item One instrument assignment \texttt{INSTRUMENT}.
+  \item One tempo specification \texttt{:mm}, by means of either \texttt{PWL-POINT} or  \texttt{ATTR}.
+  \item One note, at least.
+\end{itemize}
+Examples:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm]
+(setf *minimal-sco-1* '((INIT-INSTR "i1" xx) (INSTRUMENT "i1") (PWL-POINT :mm 100)
+                        (:c4 2)))
+(setf *minimal-sco-2* '((INIT-INSTR "i2" yy) (INSTRUMENT "i2") (ATTR :mm 100) :c4))
+\end{Verbatim}
+Function \texttt{sdl->score} returns an error if the score does not have this basic data.
+
+\subsection{Pitch specification}
+Pitches can be given by using:
+
+\begin{itemize}
+  \item A number. The standard MIDI pitch scale has been adopted here (60 = C4). No tempered pitches are allowed when using floating point numbers (FLONUM).
+  \item The standard \textit{Nyquist} symbols. Example: \texttt{cs4} = C4 sharp = 61.
+  \item The standard \textit{lambda~Music} symbols\footnote{A library for music composition developed by Pedro Morales in \textit{Common Lisp}} Pitches are represented by symbols starting with a colon. Sharps and flats are notated by \texttt{\#} and \texttt{b}. Examples: \texttt{:c4 :C4 :c\#4 :C\#4 :cb4 :Cb4}
+    \item Quoted symbols.  Examples: \texttt{'c4 'cs4 'c\#4 'cb4}
+      \item Strings. Examples: \texttt{``c4'' ``cs4'' ``c\#4'' ``cb4''} 
+\end{itemize}
+Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm]
+(setf *pitches* (list 60 60.0 c4 'c4 C4 'C4 cs4 df4 :c4 :c#4 :cb4 :df4
+                      "c4" "cs4" "cb4" "c#4"))
+(mapcar #'sdl:pitch-lex *pitches*)
+
+=> (60 60 60 60 60 60 61 61 60 61 59 62 60 61 59 61)
+\end{Verbatim}
+
+\subsection{Durations}\label{duraciones}
+Durations are measured in beats. A quarter worth 4~beats; a half, 8~beats, and so on. Fractional durations are allowed.\par
+Durations can be given by:
+\begin{itemize}
+  \item A number.
+  \item A \textit{Lisp} expression. Example: \texttt{(/ 4.0 3.0)} represents a third of a quarter, that is, an eighth triplet.
+\end{itemize}
+
+
+\subsubsection*{Physical time and score time}
+Physical time (measured in seconds) is computed after score time (measured in beats), the \textit{time factor}, \texttt{TF} and the \textit{tempi} map (given by the parameter \texttt{:mm}).
+
+\subsubsection*{Global Time Factor}
+It is given by the score instruction \texttt{TF}.  Example: \texttt{(TF 2.0)} multiplies by 2.0 all the durations in the score, whereas \texttt{(TF 0.5)} does it by 0.5. \par
+This instruction must appear only once in the score. Its default value is 1.0.
+\subsubsection*{\textit{Tempi}}
+\textit{Tempi} values are given by the parameter \texttt{:mm} whose value is set by means of the instructions \texttt{ATTR} or \texttt{PWL-POINT}.
+\subsection{Notes}
+There are two alternatives for specifying notes: 
+\begin{itemize}
+ \item By using a two-element list (pitch and duration). Example: \texttt{(:c4 4)} is a quarter \texttt{C4}.
+ \item By the pitch only. Duration is taken from the last note.
+\end{itemize}
+The default duration can be changed by means of the \texttt{DUR} instruction.
+
+\subsection{Rests}
+Can be noted by:
+\begin{itemize}
+  \item A number representing the amount of beats.
+    \item \texttt{DELTA} or \texttt{PAU} instructions\footnote{Both instructions are equivalent.}, indicating the duration by a number or by a \textit{Lisp} expression.
+\end{itemize}
+Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(setf *sco3*
+  '((TF 1.0)                     ; Overall Time Factor
+    (INIT-INSTR ``i1'' xx)       ; Preamble.  instr. init.
+    (INSTRUMENT ``i1'')          ; instr. assign.
+    (ATTR :mm 60)                ; metronome MM=60. 1 quarter = 1 sec.
+    (:c4 4)                      ; c4 quarter
+    4                            ; quarter rest
+    :d4                          ; d4. duration = quarter (inherited)
+    (PAU 8)                      ; half rest
+    (:e4 (/ 4.0 3.0))            ; e4. eighth triplet
+    :e4                          ;
+    :e4                          ;
+    (DELTA (* 2 4))              ; half rest
+    (:f4 (* 2 1.5))              ; f4 duration = 3 = dotted eighth 
+    (DUR 4)                      ; current duration = 4 (quarter)
+    :g4                          ; g4 duration = quarter
+    (DUR (/ 4.0 3.0))            ; current duration = triplet eighth
+    :a4 :a4 :a4                  ; a4 triplets
+))
+\end{Verbatim}
+
+\subsection{Chords}
+Polyphonic music can be achieved in \textit{SDL} by gathering several scores. Nevertheless, \textit{SDL} predefined instructions can be more appropriated in simple cases. \par
+\texttt{CH} produces simultaneous notes, having the current duration. Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(setf *sco4*
+  '((TF 1.0)                     ; Overall Time Factor
+    (INIT-INSTR ``i1'' xx)       ; preamble. init. instr.
+    (INSTRUMENT ``i1'')          ; assign. instr.
+    (ATTR :mm 60)                ; metronome MM=60. 1 quarter = 1 sec.
+    (:c4 4)                      ; c4 quarter
+    4                            ; quarter rest
+    (DUR 8)                      ; current duration = 8 = half
+    (CH :c4 :e4 :g4)             ; three-note chord. duration = half
+                                 ; 
+\end{Verbatim} 
+\texttt{CH1} produces one note without increasing the time. Time increments can be indicated by the  \texttt{DELTA} instruction. This way independent duration chords can be built for each note. Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(setf *sco5*
+  '((TF 1.0)                     ; Overall Time Factor
+    (INIT-INSTR ``i1'' xx)       ; preamble. Init. instr.
+    (INSTRUMENT ``i1'')          ; assign. instr.
+    (ATTR :mm 60)                ; metronome MM=60. 1 quarter = 1 sec.
+    (:c4 4)                      ; c4 quarter
+    4                            ; quarter rest
+    (CH1 :c4 4)                  ; CHORD BEGINNING. c4 quarter
+    (CH1 :e4 8)                  ; e4 half. SIMULTANEOUS BEGINNING  c4
+    (:g4 4)                      ; g4 quarter. SIMULTANEOUS BEGINNING. c4, e4
+    (:c5 4)                      ; c5 quarter. Starts when g4 ends
+                                 ;           e4 keeps playing because of the half
+                                 ;           duration
+    (CH1 :c4 8)                  ; Arpeggiated chord BEGINNING
+    (DELTA 0.2)                  ; time increases 0.2 beats
+    (CH1 :e4 (- 8 0.2))          ; e4 starts 0.2 beats after c4
+                                 ;    ends at the same time
+    (DELTA 0.2)                  ; time increases 0.2 beats
+    (CH1 :g4 (- 8 0.2 0.2))      ; g4. another arpeggio note
+    (:c5 (- 8 0.2 0.2 0.2))      ; c5 final arpeggio note
+    (:g3 4)                      ; g3 quarter after arpeggio
+))                               ;   (total arpeggio duration = 8)   
+\end{Verbatim}
+
+ \subsection{Instruments}
+In every score notes must be tied to a synthesis instrument. \texttt{INIT-INSTR} is the instruction used for mapping the score instrument name to a \textit{Nyquist} function that implements the instrument itself.\par
+The \texttt{INSTRUMENT} instruction assigns the instrument name to the notes. The current instrument can be set by a new \texttt{INSTRUMENT} instruction. Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(setf *sco6*
+  '((TF 1.0)                        
+    (INIT-INSTR ``i1'' flute)    ; assign i1 instrument score name
+                                 ; to the +textbf[flute] function
+    (INSTRUMENT ``i1'')          ; current instr. = i1
+    (ATTR :mm 60)                   
+    (:c4 4)                      ; rendered by +textbf[flute]
+    4                               
+    (INIT-INSTR ``i2'' clarinet) ; assign i2 instrument score name
+                                 ; to the +textbf[clarinet] function
+    :d4                          ; rendered by +textbf[flute]
+    (INSTRUMENT ``i2)            ; current instr. = i2
+    :e4                          ; rendered by +textbf[clarinet]
+))
+\end{Verbatim}
+
+\subsection{Attributes}
+In \textit{SDL} scores, parameters for synthesis functions in \textit{Nyquist} are defined by \texttt{ATTR} and \texttt{PWL-POINT} instructions.\par
+\begin{itemize}
+  \item \texttt{ATTR} has two arguments. The first one is the parameter name (starting with a colon). The second one is used just to set the parameter value. The current parameter value can be changed by another \texttt{ATTR} instruction.
+  \item \texttt{PWL-POINT} behaves like the \texttt{ATTR} instruction. The only difference is that a linear interpolation is performed between two consecutive \texttt{PWL-POINT} instructions. 
+\end{itemize} 
+It is not allowed to define the same attribute value by using both \texttt{ATTR} and \texttt{PWL-POINT} instructions.
+
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(setf *sco7*
+  '((TF 1.0)                        
+    (INIT-INSTR ``i1'' flute)    ; maps i1 to +textbf[flute]
+    (INSTRUMENT ``i1'')          ; current instr. i1 (flute)
+    (:c4 4)                      ; mm = 100; rel = 4; decay = 3.2 
+    (ATTR :decay 3.2)            ;
+    (:d4 4)                      ; mm = 100; rel = 4; decay = 5.1
+    (ATTR :decay 5.1)         
+    (:e4 4)                      ; mm = 100; rel = 4; decay = 5.1
+    (PWL-POINT :rel 4.0)         
+    (PWL-POINT :mm 100)
+    (:f4 4)                      ; mm = 100; rel = 4; decay = 5.1
+    (:g4 4)                      ; mm = 100; rel = 5; decay = 5.1
+    (:a4 4)                      ; mm = 100; rel = 6; decay = 5.1
+    (PWL-POINT :rel 7.0)
+    (:b4 4)                      ; mm = 100; rel = 7; decay = 5.1
+    (:c5 4)                      ; mm = 100; rel = 7; decay = 5.1
+    (:d5 4)                      ; mm = 100; rel = 7; decay = 5.1
+    (PWL-POINT :rel 7.0)
+    (:e5 4)                      ; mm = 100; rel = 7; decay = 5.1
+))
+\end{Verbatim}
+
+
+\subsection{Tempi}
+\texttt{ATTR} can be used in case of sharp tempo changes, whereas \texttt{PWL-POINT} performs gradual tempo changes. Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(setf *sco-8* 
+  '((TF 1) 
+    (INIT-INSTR "i1" flute) (INSTRUMENT "i1")
+    (:c4 4)
+    (PWL-POINT :mm 60)
+    :d4 :e4 :f4 :g4
+    (PWL-POINT :mm 60)
+    :e5 :d5 :c5 :b4 :c5
+    (PWL-POINT :mm 30)))
+
+(score-print (sdl->score *voz-8*))
+
+=> ((0 1 (FLUTE :PITCH 60 :MM 60))
+    (1 1 (FLUTE :PITCH 62 :MM 60))
+    (2 1 (FLUTE :PITCH 64 :MM 60))
+    (3 1 (FLUTE :PITCH 65 :MM 60))
+    (4 1 (FLUTE :PITCH 67 :MM 60))
+    (5 1 (FLUTE :PITCH 76 :MM 60))
+    (6 1.11111 (FLUTE :PITCH 74 :MM 54)) ; ritardando
+    (7.11111 1.25 (FLUTE :PITCH 72 :MM 48))
+    (8.36111 1.42857 (FLUTE :PITCH 71 :MM 42))
+    (9.78968 1.66667 (FLUTE :PITCH 72 :MM 36))
+)
+\end{Verbatim}
+\subsection{Macros}
+A basic macro implementation is available in \textit{SDL} which allows for a specification of repetitive structures such as tremeloes, etc. The \texttt{MAC} instruction is used for this purpose. The first argument is the name of a \textit{Lisp} function and the rest ones represents the arguments for this function. Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+;  +textit[Nyquist] function that repeats an event n times 
+
+(defun sdl-repeat (n quoted-event)
+  (let (result)
+    (dotimes (i n (apply #'append result))
+      (push quoted-event result))))
+
+; macro +textit[sdl-repeat] called from a score
+; the sequence :f4 :g4 is repeated 4 times
+
+(setf *score*
+   '((TF 1.0)
+     (INIT-INSTR "i1" flute2)(INSTRUMENT "i1")(ATTR :mm 60)
+     (:e4 4) (MAC sdl-repeat 4 (:f4 :g4))))
+
+(sdl->score *score*))
+
+=> ((0 1 (FLUTE2 :PITCH 64 :MM 60))
+    (1 1 (FLUTE2 :PITCH 65 :MM 60)) ; f4     repite 4 veces f4 g4
+    (2 1 (FLUTE2 :PITCH 67 :MM 60)) ; g4
+    (3 1 (FLUTE2 :PITCH 65 :MM 60)) ; f4 
+    (4 1 (FLUTE2 :PITCH 67 :MM 60)) ; g4
+    (5 1 (FLUTE2 :PITCH 65 :MM 60)) ; f4
+    (6 1 (FLUTE2 :PITCH 67 :MM 60)) ; g4
+    (7 1 (FLUTE2 :PITCH 65 :MM 60)) ; f4
+    (8 1 (FLUTE2 :PITCH 67 :MM 60)) ; g4
+)
+\end{Verbatim}
+Macros can be also used to control the parameter values through a \textit{Lisp} function instead of specifying them note by note. Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+; pitches controlled by logistic equation
+
+(setf *logistica* 0.3)
+(setf *k* 3.97)
+
+(defun logistica ()
+  (setf *logistica* (* *k* (- 1.0 *logistica*) *logistica*)))
+
+(defun call-logistica (n dur pitch-min pitch-interval)
+  (let (result)
+     (dotimes (i n (reverse result))
+       (push (list (+ pitch-min (round (* (logistica) pitch-interval))) dur)
+	     result))))
+
+(setf *score2*
+   '((TF 1.0)
+     (INIT-INSTR "i1" flute2)(INSTRUMENT "i1")(ATTR :mm 60)
+     (:e4 4) (MAC call-logistica 5 4 30 15)))
+
+(score-print (sdl->score *score2*))
+
+=> ((0 1 (FLUTE2 :PITCH 64 :MM 60))
+    (1 1 (FLUTE2 :PITCH 43 :MM 60))
+    (2 1 (FLUTE2 :PITCH 38 :MM 60))
+    (3 1 (FLUTE2 :PITCH 45 :MM 60))
+    (4 1 (FLUTE2 :PITCH 31 :MM 60))
+    (5 1 (FLUTE2 :PITCH 34 :MM 60))
+)
+\end{Verbatim}
+
+\subsection{\textit{SDL} Functions}
+\texttt{FUN} instruction allows for defining score events through \textit{Lisp} functions. \par
+\textbf{Warning:} The inclusion of attribute \texttt{:mm} is mandatory if the event to be generated  is a note. Example:
+\begin{Verbatim}[frame=single,fontsize=\small,numbers=left,numbersep=2mm,
+                 commandchars=+\[\]]
+(load "xm") 
+
+(setf *my-durations* (make-heap (list 4 6 8)))
+
+(defun heap-durations (inicio pitch)
+  (let ((dur (next *my-durations*)))
+    (list inicio  dur (list 'sinte-fun :pitch pitch :mm 60  :idur dur))))
+
+(setf *score3*
+   '((TF 1.0)
+     (INIT-INSTR "i1" flute2)(INSTRUMENT "i1")(ATTR :mm 60)
+     (:e4 4)
+     (FUN #'heap-durations 1 :c4)
+     (FUN #'heap-durations 2 :d4)
+     (FUN #'heap-durations 3 :e4)
+     (FUN #'heap-durations 4 :c4)
+     (FUN #'heap-durations 7 :d4)))
+
+(sdl->score *score3*)
+
+=> ((0 1 (FLUTE2 :PITCH 64 :MM 60))
+    (0.25 1.5 (SINTE-FUN :PITCH :C4 :MM 60 :IDUR 6))
+    (0.5 1 (SINTE-FUN :PITCH :D4 :MM 60 :IDUR 4))
+    (0.75 2 (SINTE-FUN :PITCH :E4 :MM 60 :IDUR 8))
+    (1 1.5 (SINTE-FUN :PITCH :C4 :MM 60 :IDUR 6))
+    (1.75 1 (SINTE-FUN :PITCH :D4 :MM 60 :IDUR 4))
+)
+\end{Verbatim}
+
+\section{Reference summary}
+\subsection{\textit{SDL} format for score instructions}
+
+\noindent\texttt{(TF args: time-factor)} \par
+Overall Time Factor. All the durations in the score are multiplied by this factor.\\
+
+\noindent\texttt{(TIME-IN-SECONDS)}\par
+No arguments needed. Durations are measured in seconds when tempo is set to~60.\\
+
+\noindent\texttt{(DUR lisp-expr)}\par
+Sets the value of the current duration. Any \textit{Lisp} expression can be used as argument.\\ 
+
+\noindent\texttt{(DELTA lisp-expr)}\par
+ Increases the time value.\\
+
+\noindent\texttt{(PAU lisp-expr)}\par
+ The same as \texttt{DELTA}.\\
+
+\noindent\texttt{(INIT-INSTR string function-name)}\par
+Initializes an instrument. It maps the score name instrument \texttt{string} to the synthesis function \texttt{function-name}.\\
+
+\noindent\texttt{(INSTRUMENT string)}\par
+ Sets the current instrument to \texttt{string}. The notes following this instruction are rendered by the instrument \texttt{string} until a new instrument is set.\\
+
+\noindent\texttt{(ATTR :symbol lisp-expr)} \par
+Sets \texttt{:symbol} value to \texttt{lisp-expr}. The first argument must start with a colon. The value for this attribute is kept until a new \texttt{ATTR} instruction is reached.\\ 
+
+\noindent\texttt{(PWL-POINT :symbol lisp-expr)}\par
+ Behaves like \texttt{ATTR}. The only difference is that a linear interpolation is performed between two consecutive \texttt{PWL-POINT} instructions.\\
+
+\noindent\texttt{(CH \&rest pitches)} \par
+Produces a chord containing the pitches given by its argument and the current duration.\\
+
+\noindent\texttt{(CH1 pitch duration)} \par
+Produces a note whose pitch and duration are given by the arguments. Time is not increased, so that the next event starts at the same time.\\ 
+
+\noindent\texttt{(FUN \#'function-name \&rest args)} \par
+Calls the function \texttt{function-name} sending the arguments in the \texttt{args} list. The returning value must be an event to be added to an Xmusic score. This event has to be processed by the \textit{Nyquist} function \texttt{timed-seq}. Hence, the event must follow the format \texttt{(start-time stretching-factor synthesis-function-call)}\\
+ 
+\noindent\texttt{(MAC macro-name \&rest args)} \par
+Calls the function \texttt{macro-name} sending the arguments in the \texttt{args} list. The returning value must be \textit{SDL} code which replaces the call to the macro. \\
+
+\noindent\texttt{number}\par
+ This is actually a rest of \texttt{number} beat duration.\\
+
+\noindent\texttt{symbol}\par
+A note whose pitch is given by \texttt{symbol} and with the current duration.\\ 
+
+\noindent\texttt{(pitch dur)} \par
+Note specified by pitch and dur arguments.  
+
+\subsection{\textit{SDL} library functions}
+\noindent\texttt{(sdl->score score-data \&optional time-marks)}\par
+Produces an \textit{Xmusic} score consisting of a  \mbox{\texttt{(onset-time stretch-factor synthesis-function)}} format event list.\par
+\noindent\texttt{score-data} is a \textit{SDL} score. \texttt{time-marks} is a symbol whose property list contains the time labels to be referenced from \texttt{score-data}.\\
+
+\noindent\texttt{(sdl->timelabels score-data \&optional time-marks)}\par
+Returns a symbol whose property-list contains the time labels in \texttt{time-marks} added to \texttt{score-data} time labels. Sinchronicity can be ensured by using time labels.
+
+\noindent\texttt{(sdl:normalize-score-duration score)}\par
+\texttt{score} is an \textit{Xmusic} score. This function sets all the event stretching factors to 1.0. This is intended for making synthesis parameters independent from notes duration.
+
+\section{\textit{lambda~Music} compatibility}
+\textit{lambda Music} is a library developed in Common~Lisp and intended for MIDI rendering. Many scores from \textit{lambda~Music} can be converted to \textit{SDL} by introducing just minor changes.   
+
+\section{Final remarks}
+This library is just an attempt to facilitate the music transcription from traditional notation to synthesis in \textit{Nyquist}. Currently it is under development and therefore  some features have to be improved. For instance, the inconsistency between physical and score time. In addition, an extended implementation of the macros should be considered.
+

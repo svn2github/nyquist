@@ -18,14 +18,17 @@
     order Lagrange interpolators can typically
     improve (minimize) this attenuation characteristic.
 
-    by Perry R. Cook and Gary P. Scavone, 1995 - 2002.
+    by Perry R. Cook and Gary P. Scavone, 1995 - 2005.
 */
 /***************************************************/
 
-#if !defined(__DELAYL_H)
-#define __DELAYL_H
+#ifndef STK_DELAYL_H
+#define STK_DELAYL_H
 
 #include "Delay.h"
+
+namespace Nyq
+{
 
 class DelayL : public Delay
 {
@@ -35,8 +38,12 @@ public:
   DelayL();
 
   //! Overloaded constructor which specifies the current and maximum delay-line lengths.
-  
-  DelayL(MY_FLOAT theDelay, long maxDelay);
+  /*!
+    An StkError will be thrown if the delay parameter is less than
+    zero, the maximum delay parameter is less than one, or the delay
+    parameter is greater than the maxDelay value.
+   */  
+  DelayL(StkFloat delay, unsigned long maxDelay);
 
   //! Class destructor.
   ~DelayL();
@@ -45,25 +52,27 @@ public:
   /*!
     The valid range for \e theDelay is from 0 to the maximum delay-line length.
   */
-  void setDelay(MY_FLOAT theDelay);
+  void setDelay(StkFloat delay);
 
   //! Return the current delay-line length.
-  MY_FLOAT getDelay(void) const;
+  StkFloat getDelay(void) const;
 
   //! Return the value which will be output by the next call to tick().
   /*!
     This method is valid only for delay settings greater than zero!
    */
-  MY_FLOAT nextOut(void);
+  StkFloat nextOut(void);
 
-  //! Input one sample to the delay-line and return one output.
-  MY_FLOAT tick(MY_FLOAT sample);
+ protected:
 
- protected:  
-  MY_FLOAT alpha;
-  MY_FLOAT omAlpha;
-  MY_FLOAT nextOutput;
-  bool doNextOut;
+  StkFloat computeSample( StkFloat input );
+
+  StkFloat alpha_;
+  StkFloat omAlpha_;
+  StkFloat nextOutput_;
+  bool doNextOut_;
 };
+
+} // namespace Nyq
 
 #endif

@@ -19,7 +19,7 @@ extern LVAL fnodes;
 extern struct xtype_desc_struct desc_table[NTYPES];
 
 /* local variables */
-static OFFTYPE off,foff,doff;
+static OFFTYPE off,foff;
 static FILE *fp;
 
 /* forward declarations */
@@ -148,7 +148,7 @@ int xlirestore(char *fname)
         fname = fullname;
     }
 
-    /* open the file */
+   /* open the file */
     if ((fp = osbopen(fname,"r")) == NULL)
         return (FALSE);
 
@@ -285,7 +285,7 @@ LOCAL void freeimage(void)
                     free((void *) getstring(p));
                 break;
             case STREAM:
-                if ((fp = getfile(p)) && (fp != stdin && fp != stdout && fp != stderr))
+                if ((fp = getfile(p)) && (fp != stdin && fp != stdout && fp != STDERR))
                     osclose(getfile(p));
                 break;
             }
@@ -397,6 +397,10 @@ LOCAL OFFTYPE cvoptr(LVAL p)
 
     /* pointer not within any segment */
     xlerror("bad pointer found during image save",p);
+    /* this point will never be reached because xlerror() does a
+       longjmp(). The return is added to avoid false positive 
+       error messages from static analyzers and compilers */
+    return ((OFFTYPE)NIL);
 }
 
 #endif

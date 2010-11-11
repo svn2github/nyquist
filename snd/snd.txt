@@ -177,25 +177,23 @@ Returns SND_SUCCESS iff successful.
 
 long snd_read(snd_type snd, void *buffer, long length);
 
-Read up to length bytes into buffer. 
+Read up to length frames into buffer. 
 
-Returns the number of bytes actually read.
+Returns the number of frames actually read.
 
 int snd_write(snd_type snd, void *buffer, long length);
 
-Writes length bytes from buffer to file or device.  
+Writes length frames from buffer to file or device.  
 
-Returns number of bytes actually written.
+Returns number of frames actually written.
 
-long snd_convert(snd_type snd1, void *buffer1, long length1,
-        snd_type snd2, void *buffer2, long length2);
+long snd_convert(snd_type snd1, void *buffer1, 
+        snd_type snd2, void *buffer2, long length);
 
 To read from a source and write to a sink, you may have to convert formats.
 This routine provides simple format conversions according to what is
-specified in snd1 and snd2.  The maximum length of buffer2 is passed in
-length2 and the actual number of bytes written to buffer2 is returned from
-the call.  It is an error if buffer2 is too short for the full conversion of
-buffer1.
+specified in snd1 and snd2.  The number of frames to convert is given
+by length. Data in buffer2 are converted and written to bufffer1. 
 
 long snd_poll(snd_type snd);
 

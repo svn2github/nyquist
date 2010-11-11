@@ -662,7 +662,6 @@ void eqbandvvv_toss_fetch(susp, snd_list)
   register eqbandvvv_susp_type susp;
   snd_list_type snd_list;
 {
-    long final_count = susp->susp.toss_cnt;
     time_type final_time = susp->susp.t0;
     long n;
 

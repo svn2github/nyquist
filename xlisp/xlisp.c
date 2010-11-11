@@ -53,6 +53,44 @@ extern FILE *tfp;
 /* external routines */
 extern FILE *osaopen();
 
+#ifdef USE_RANDOM
+
+/* use a fast (but not particularly good) random number generator */
+
+long randomseed = 1L;
+
+long random() {
+// note that this takes a seed and returns a big number,
+// whereas I think XLisp's RANDOM is defined differently
+    long k1;
+
+    /* algorithm taken from Dr. Dobbs Journal, November 1985, page 91 */
+    k1 = randomseed / 127773L;
+    if ((randomseed = 16807L * (randomseed - k1 * 127773L) - k1 * 2836L) < 0L)
+      randomseed += 2147483647L;
+
+    /* return a random number between 0 and MAXFIX */
+    return randomseed;
+}
+#endif
+
+/* xlrand - return next random number in sequence */
+long xlrand (long range) {
+#ifdef USE_RAND
+    return rand() % range;
+#endif
+#ifdef USE_RANDOM
+    return random() % range;
+#endif
+}
+
+/* xlrealrand - return random number in [0, 1] */
+double xlrealrand() {
+    /* always use the random generator from the C library,
+       (do not use random() even if USE_RANDOM is defined */
+    return (double) rand() / RAND_MAX;
+}
+
 /* xlisp_main_init - the main initialization routine */
 void xlisp_main_init(int argc, char *argv[])
 {
@@ -109,8 +147,9 @@ void xlisp_main_init(int argc, char *argv[])
     }
 
     /* load "init.lsp" */
-    if (setjmp(cntxt.c_jmpbuf) == 0)
+	if (setjmp(cntxt.c_jmpbuf) == 0) {
         xlload("init.lsp",TRUE,FALSE);
+	}
 
     /* load any files mentioned on the command line */
     if (setjmp(cntxt.c_jmpbuf) == 0)

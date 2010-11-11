@@ -99,7 +99,7 @@
 ;;
 (defun sf-granulate (filename grain-dur grain-dev ioi ioi-dev pitch-dev 
                      &optional (file-start 0) (file-end 0))
-  (let (orig n env actual-grain-dur step-size
+  (let (orig n step-size
         (avg-ioi (+ ioi (/ ioi-dev 2.0)))
         (file-dur (sf-dur filename))
         (dur (get-duration 1)))
@@ -113,26 +113,31 @@
     (setf file-dur (- file-dur file-start file-end))
     (setf step-size (/ file-dur n))
     ;(display "sf-granulate" step-size file-dur n)
-    (stretch-abs 1.0 (let ()
-      (seqrep (i n) (let ()
-        (setf actual-grain-dur (real-random grain-dur (+ grain-dur grain-dev)))
-        (setf env (stretch actual-grain-dur (one-minus-cosine)))
-        (force-srate *sound-srate*
-          (stretch (real-random 1.0 pitch-dev)
-            (sound2
-             (set-logical-stop
-              (mult (cue env)
-                    (s-read filename 
-                            :time-offset (+ file-start (* step-size i))
-                            :dur actual-grain-dur))
-              (real-random ioi (+ ioi ioi-dev))))))))))))
+    (stretch-abs 1.0
+     (set-logical-stop
+      (seqrep (i n)
+        (let* ((actual-grain-dur
+               (real-random grain-dur (+ grain-dur grain-dev)))
+              (env (stretch actual-grain-dur (one-minus-cosine)))
+              (pitch-ratio (real-random 1.0 pitch-dev)))
+        ;(display "gran" (local-to-global 0) i pitch-ratio)
+        (set-logical-stop
+          (force-srate *sound-srate*
+            (stretch pitch-ratio
+              (sound2
+                (mult (cue env)
+                      (s-read filename 
+                              :time-offset (+ file-start (* step-size i))
+                              :dur actual-grain-dur)))))
+          (real-random ioi (+ ioi ioi-dev)))))
+      dur))))
 
 ;;============================================================================
 ;; Here is a sample application of sf-granulate.
 ;; Notice that I am using simrep to mix four copies of sf-granulate output.
 ;; Since there are random timings involved, the layers are not identical.
 ;;
-(setf *granfile* "samples.wav")
+(setf *granfile* "../demos/demo-snd.aiff")
 
 (defun gran-test ()
   (play (stretch 4

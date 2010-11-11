@@ -62,7 +62,7 @@ LINK32=link.exe
 # PROP Intermediate_Dir ".\WinDebug"
 # PROP Ignore_Export_Lib 0
 # ADD BASE CPP /nologo /W3 /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /FR /YX /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".\xlisp" /I ".\snd" /I ".\nyqsrc" /I ".\tran" /I ".\cmt" /I ".\nyqstk" /I ".\nyqstk\include" /I ".\sys\win\msvc" /I ".\fft" /I ".\portaudio\pa_common" /D "_DEBUG" /D "STK_NYQUIST" /D "__LITTLE_ENDIAN__" /D "WIN32" /D "_CONSOLE" /D "CMTSTUFF" /D "PA_NO_ASIO" /D "PA_NO_DS" /YX /FD /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".\xlisp" /I ".\snd" /I ".\nyqsrc" /I ".\tran" /I ".\cmt" /I ".\nyqstk" /I ".\nyqstk\include" /I ".\sys\win\msvc" /I ".\fft" /I ".\portaudio\pa_common" /D "STK_NYQUIST" /D "__LITTLE_ENDIAN__" /D "_CONSOLE" /D "CMTSTUFF" /D "PA_NO_ASIO" /D "PA_NO_DS" /D "WIN32" /D "_DEBUG" /YX /FD /c
 # SUBTRACT CPP /Fr
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -453,10 +453,6 @@ SOURCE=.\tran\resonvc.c
 # Begin Source File
 
 SOURCE=.\tran\resonvv.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\pa\pablio\ringbuffer.c
 # End Source File
 # Begin Source File
 

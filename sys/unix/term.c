@@ -10,7 +10,7 @@
 
 
 #include <termios.h>
-#ifndef macintosh
+#ifndef __APPLE__
 #include <asm/ioctls.h>
 #endif
 #include <sys/ioctl.h>
@@ -114,12 +114,24 @@ int term_testchar()
         return -2;
     switch(read(0, &c, 1)) {
       case 1:
-    return c;
+        return c;
       case 0:
-    return EOF;
+        return EOF;
       default:
-    ERROR("IOgetchar-read");
+        ERROR("IOgetchar-read");
     }
 }
 
+
+/* term_getchar -- get a character (block if necessary) */
+/**/
+int term_getchar()
+{
+    char c;
+	int rslt;
+	while ((rslt = read(0, &c, 1)) == 0) {
+	    read(0, &c, 1);
+	}
+	return (rslt == 1 ? c : EOF);
+}
 

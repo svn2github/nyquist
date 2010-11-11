@@ -356,6 +356,7 @@ cvtfn_type find_cvt_to_fn(snd_type snd, char *buf)
     /* find the conversion function */
     if (snd->format.bits == 8) cvtfn = cvt_to_8[snd->format.mode];
     else if (snd->format.bits == 16) cvtfn = cvt_to_16[snd->format.mode];
+    else if (snd->format.bits == 24) cvtfn = cvt_to_24[snd->format.mode];
     else if (snd->format.bits == 32) cvtfn = cvt_to_32[snd->format.mode];
     else cvtfn = cvt_to_unknown;
 

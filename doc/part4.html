@@ -1,279 +1,429 @@
-<html><head><title>Continuous Transformations and Time Warps</title></head>
+<html><head><title>Behavioral Abstraction</title></head>
 <body bgcolor="ffffff">
-<a name = "25"><h2>Continuous Transformations and Time Warps</h2></a>
+<a href = "part3.html">Previous Section</a> | <a href = "part5.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
+<hr>
+<a name = "29"><h2>Behavioral Abstraction</h2></a><a name="index120">
 
-Nyquist transformations were discussed in the previous chapter, but all of
-the examples used scalar values.  For example, we saw the <code>loud</code>
-transformation used to change loudness by a fixed amount.  What if we want
-to specify a crescendo, where the loudness changes gradually over time?
+In Nyquist, all functions are subject to
+transformations<a name="index121">.  You can think of transformations as
+additional parameters to every function, and functions are free to use these
+additional parameters in any way.  The set of transformation parameters is
+captured in what is referred to as the <i>transformation
+environment<a name="index122"></i>.  (Note that the term
+<i>environment</i> is heavily overloaded in computer science.  This is yet
+another usage of the term.)
 <p>
-It turns out that all transformations can accept signals as well as numbers,
-so transformations can be continuous over time.  This raises some
-interesting questions about how to interpret continuous transformations.
-Should a loudness transformation apply to the internal details of a note or
-only affect the initial loudness?  It might seem unnatural for a decaying 
-piano note to perform a crescendo.  On the other hand, a sustained
-trumpet sound should probably crescendo continuously.  In the case of time
-warping (tempo changes), it might be best for a drum roll to maintain a
-steady rate, a trill may or may not change rates with tempo, and a run of
-sixteenth notes will surely change its rate.
+Behavioral abstraction is the ability of functions to adapt their behavior
+to the transformation environment.  This environment may contain certain
+abstract notions, such as loudness, stretching a sound in time, etc.  These
+notions will mean different things to different functions.  For example, an
+oscillator should produce more periods of oscillation in order to stretch
+its output.  An envelope, on the other hand, might only change the
+duration of the sustain portion of the envelope in order to stretch.
+Stretching a sample could mean resampling it to change its duration by the
+appropriate amount.
 <p>
-These issues are complex, and Nyquist cannot hope to automatically do the
-right thing in all cases.  However, the concept of behavioral abstraction
-provides an elegant solution.  Since transformations merely modify the
-environment, behaviors are not forced to implement any particular style of
-transformation.  Nyquist is designed so that the default transformation is
-usually the right one, but it is always possible to override the default
-transformation to achieve a particular effect.
+Thus, transformations in Nyquist are not simply operations on signals.  For
+example, if I want to stretch a note, it does not make sense to compute the
+note first and then stretch the signal.  Doing so would cause a drop in the
+pitch.  Instead, a transformation modifies the <i>transformation
+environment</i> in which the note is computed.  Think of transformations as
+making requests to functions.  It is up to the function to carry out the
+request.  Since the function is always in complete control, it is possible
+to perform transformations with "intelligence;" that is, the function can
+perform an appropriate transformation, such as maintaining the desired pitch
+and stretching only the "sustain" portion
+of an envelope to obtain a longer note.
 <p>
-<a name = "26"><h3>Simple Transformations</h3></a>
-The ``simple'' transformations affect some parameter, but have no effect on time itself.  The simple transformations that support continuously changing parameters are: <code>sustain</code>, <code>loud</code>, and <code>transpose</code>.
+<a name = "30"><h3>The Environment</h3></a><a name="index123">
+
+The transformation environment consists of a set of special variables.
+These variables should not be read directly and should <i>never</i> be set
+directly by the programmer.  Instead, there are functions to read them, and
+they are automatically set and restored by
+transformation operators, which will be described below.
 <p>
-As a first example, Let us use <code>transpose</code> to create a chromatic scale.
-First define a sequence of tones at a steady pitch:
-<code>
-(defun tone-seq ()
-  (seqrep (i 16)
-          (stretch 0.25 (osc-note c4))))	
-</code>
-Now define a linearly increasing ramp to serve as a transposition function:
-<code>
-(defun pitch-rise () (stretch 4.0 (scale 16 (ramp))))
-</code>
-This ramp has a duration of 4 seconds, and over that interval it rises from
-0 to 16 (corresponding to the 16 semitones we want to transpose). Now,
-<code>pitch-rise</code> is used to transpose <code>tone-seq</code>:
-<code>
-(defun chromatic-scale ()
-  (transpose (pitch-rise) (tone-seq)))
-</code>
+The transformation environment consists of the following elements.  Although
+each element has a "standard interpretation," the designer of an
+instrument or the composer of a complex behavior is free to interpret the
+environment in any way.  For example, a change in <code>*loud*</code> may change
+timbre more than amplitude, and <code>*transpose*</code> may be ignored by
+percussion instruments:
 <p>
-Similar transformations can be constructed to change the sustain or ``duty
-factor'' of notes and their loudness.  The following expression plays the
-previously constructed chromatic scale with increasing note durations.  The
-rhythm is unchanged, but the note length changes from staccato to legato:
-<code>
-(sustain (stretch 4 (sum 0.2 (ramp)))
-	 (chromatic-scale))
-</code>
-The resulting sustain function will ramp from 0.2 to 1.2.  A sustain of 1.2
-denotes a 20 percent overlap between notes.  The <code>sum</code> has a stretch
-factor of 4, so it will extend over the 4 second duration of
-<code>chromatic-scale</code>.
-<p>
-What do these transformations mean?  How did the system know to produce a
-pitch rise rather than a continuous glissando?  This all relates to the idea
-of behavioral abstraction.  It is possible to design sounds that <i>do</i>
-glissando under the transpose transform, and you can even make sounds that
-<i>ignore</i> transpose altogether.  As explained in Chapter 
-<a href = "part3.html#16">``Behavioral Abstraction''</a>, the transformations modify the
-environment, and behaviors can reference the environment to determine what
-signals to generate.  All built-in functions, such as <code>osc</code>, have a
-default behavior.
-<p>
-The default behavior for sound primitives under <code>transpose</code>, 
-<code>sustain</code>, and <code>loud</code> transformations is
-to sample the environment at the beginning of the
-note.  Transposition is not quantized to semitones or any other scale,
-but in our example, we arranged for the transposition to work out to integer
-numbers of semitones, so we got a chromatic scale.
-<p>
-Transposition only applies to the oscillator and sampling primitives
-<code>osc</code>, <code>partial</code>, <code>sampler</code>, <code>sine</code>, <code>fmosc</code>,
-and <code>amosc</code>.  Sustain applies to <code>osc</code>, <code>env</code>, and
-<code>pwl</code>. (Note that <code>amosc</code> and <code>fmosc</code> get their durations
-from the modulation signal, so they may indirectly depend upon the sustain.)
-Loud applies to <code>osc</code>, <code>sampler</code>, <code>cue</code>, <code>sound</code>,
-<code>fmosc</code>, and <code>amosc</code>. (But not <code>pwl</code> or <code>env</code>.)
-<p>
-<a name = "27"><h3>Time Warps</h3></a>
-The most interesting transformations have to do with transforming time
-itself.  The <code>warp</code> transformation provides a mapping function from
-logical (score) time to real time.  The slope of this function tells us how
-many units of real time are covered by one unit of score time.  This is
-proportional to 1/tempo.  A higher slope corresponds to a slower tempo.
-<p>
-To demonstrate <code>warp</code>, we will define a time warp function using
-<code>pwl</code>:
+<dl>
+<dt>
+ <code>*warp*<a name="index124"></code><dd>Time transformation, including time shift,
+time stretch, and continuous time warp.  The value of <code>*warp*</code> is
+interpreted as a function from logical (local score) time to physical
+(global real) time.  Do not access <code>*warp*</code> directly.  Instead, use
+<code>local-to-global(<i>t</i>)</code> to
+ convert from a logical (local) time to real (global) time.  Most often,
+you will call <code>local-to-global(0)</code>.  Several transformation operators
+operate on <code>*warp*</code>, including <i>at</i> (<code>@</code>), <i>stretch</i> (<code>~</code>),
+and <code>warp</code>.<br><br>
+<dt> <code>*loud*<a name="index125"></code><dd>Loudness, expressed in decibels.  The default
+(nominal) loudness is 0.0 dB (no change).  Do not access <code>*loud*</code>
+directly.  Instead, use <code>get-loud()</code> to get the current value of
+<code>*loud*</code> and either <code>loud</code> or <code>loud-abs</code> to modify it.<br><br>
+<dt> <code>*transpose*<a name="index126"></code><dd>Pitch transposition, 
+expressed in
+semitones.  (Default: 0.0).  Do not access <code>*transpose*</code> directly.
+Instead, use <code>get-transpose()</code> to get the current value of
+<code>*transpose*</code> and either <code>transpose</code> or <code>transpose-abs</code> to
+modify it.<br><br>
+<dt> <code>*sustain*<a name="index127"></code><dd>The "sustain,"
+"articulation," "duty factor," or amount by which to 
+separate or overlap sequential notes.  For
+example, staccato might be expressed with a <code>*sustain*</code> of 0.5, while very
+legato playing might be expressed with a <code>*sustain*</code> of 1.2.
+Specifically, <code>*sustain*</code> stretches the duration of notes (sustain)
+without affecting the inter-onset time (the rhythm).  Do not access
+<code>*sustain*</code> directly.  Instead, use <code>get-sustain()</code> to get the
+current value of <code>*sustain*</code> and either <code>sustain</code> or
+<code>sustain-abs</code> to modify it.<br><br>
+<dt> <code>*start*<a name="index128"></code><dd>Start 
+time of a clipping region.  <i>Note:</i>
+unlike the previous elements of the environment, <code>*start*</code> has a
+precise interpretation: no sound should be generated before <code>*start*</code>.
+This is implemented in all the low-level sound functions, so it can
+generally be ignored.  You can read <code>*start*</code> directly, but use
+<code>extract</code> or <code>extract-abs</code> to modify it.  <b><i>Note 2:</i></b> Due
+to some internal confusion between the specified starting time and 
+the actual starting time of a signal after clipping, <code>*start*</code> 
+is not fully implemented.<br><br>
+<dt> <code>*stop*<a name="index129"></code><dd>Stop time of clipping 
+region.  By analogy to
+<code>*start*</code>, no sound should be generated after this time.
+<code>*start*</code> and
+<code>*stop*</code> allow a composer to preview a small section of a work 
+without computing it from beginning to end.  You can read <code>*stop*</code> 
+directly, but use <code>extract</code> or <code>extract-abs</code> to modify it. 
+ <b><i>Note:</i></b> Due to some internal confusion between the specified 
+starting time and the actual starting time of a signal after 
+clipping, <code>*stop*</code> is not fully implemented.<br><br>
+<dt><code>*control-srate*<a name="index130"></code><dd>Sample 
+rate of control signals.  This environment
+element provides the default sample rate for control signals.  There is no
+formal distinction between a control signal and an audio signal.  
+You can read <code>*control-srate*</code> directly, but 
+use <code>control-srate</code> or <code>control-srate-abs</code> to modify it.<br><br>
+<dt> <code>*sound-srate*<a name="index131"></code><dd>Sample 
+rate of musical sounds.  This environment element provides the 
+default sample rate for musical sounds.  You can 
+read <code>*sound-srate*</code> directly, but use <code>sound-srate</code> 
+or <code>sound-srate-abs</code> to modify it.<br><br>
+<dt></dl><a name = "31"><h3>Sequential Behavior</h3></a><a name="index132">
+Previous examples have shown the use of <code>seq</code>, the sequential behavior
+operator.  We can now explain <code>seq</code> in terms of transformations.
+Consider the simple expression:
 <pre>
-(defun warper ()
-  (pwl .25 .4 .75 .6 1.0 1.0 2.0 2.0 2.0))
+play seq(my-note(c4, q), my-note(d4, i))
 </pre>
 
-This function has an initial slope of .4/.25 = 1.6.  It may be easier to
-think in reciprocal terms: the initial tempo is .25/.4 = .625.  Between 0.25
-and 0.75, the tempo is .5/.2 = 2.5, and from 0.75 to 1.0, the tempo is again
-.625.  It is important for warp functions to completely span the interval of
-interest (in our case it will be 0 to 1), and it is safest to extend a bit
-beyond the interval, so we extend the function on to 2.0 with a
-tempo of 1.0.  Next, we stretch and scale the <code>warper</code> function to
-cover 4 seconds of score time and 4 seconds of real time:
+The idea is to create the first note at time 0, and to start the next
+note when the first one finishes.  This is all accomplished by manipulating
+the environment.  In particular, <code>*warp*</code> is modified so that what is
+locally time 0 for the second note is transformed, or warped, to the logical
+stop time of the first note.
+<p>
+One way to understand this in detail is to imagine how it
+might be executed: first, <code>*warp*</code> is set to an initial value that has no
+effect on time, and <code>my-note(c4, q)</code> is evaluated.  A sound is returned and
+saved.  The sound has an ending time, which in this case will be <code>1.0</code>
+because the duration <code>q</code> is <code>1.0</code>.  This ending time, <code>1.0</code>,
+is used to construct a new <code>*warp*</code> that has the effect of shifting
+time by 1.0.  The second note is evaluated, and will start
+at time 1.  The sound that is
+returned is now added to the first sound to form a composite sound, whose
+duration will be <code>2.0</code>.  <code>*warp*</code> is restored to its initial value.
+<p>
+Notice that the semantics of <code>seq</code> can be expressed in terms of
+transformations.  To generalize, the operational rule for <code>seq</code> is:
+evaluate the first behavior according to the current <code>*warp*</code>.
+Evaluate each successive behavior with <code>*warp*</code> modified to shift the
+new note's starting time to the ending time of the previous behavior.
+Restore <code>*warp*</code> to its original value and return a sound which is the
+sum of the results.  
+<p>
+In the Nyquist implementation, audio samples are only computed when they are
+needed, and the second part of the <code>seq</code> is not evaluated until the
+ending time (called the logical stop time) of the first part.  It is still
+the case that when the second part is evaluated, it will see <code>*warp*</code>
+bound to the ending time of the first part.  
+<p>
+A language detail: Even though Nyquist defers evaluation of the second part of the <code>seq</code>, the expression can reference variables according to ordinary 
+Lisp/SAL scope rules.  This is because the <code>seq</code> captures the expression in a closure, which retains all of the variable bindings.
+<p>
+<a name = "32"><h3>Simultaneous Behavior</h3></a><a name="index133">
+Another operator is <code>sim</code>, which invokes multiple behaviors at the same
+time.  For example,
 <pre>
-(defun warp4 () (stretch 4 (scale 4 (warper))))
+play 0.5 * sim(my-note(c4, q), my-note(d4, i))
+</pre>
+
+will play both notes starting at the same time.
+<p>
+The operational rule for <code>sim</code> is: evaluate each behavior at the
+current <code>*warp*</code> and return the sum of the results. (In SAL, the
+<code>sim</code> function applied to sounds is equivalent to adding them
+with the infix <code>+</code> operator. The following section
+illustrates two concepts: first, a <i>sound</i> is not a
+<i>behavior</i>, and second, the <code>sim</code> operator and and the <code>at</code> 
+transformation can be used to place sounds in time.
+<p>
+<a name = "33"><h3>Sounds vs. Behaviors</h3></a><a name="index134">
+The following example loads a sound from a file in the current directory and stores it in <code>a-snd</code>:
+<pre>
+<i>; load a sound
+;</i>
+set a-snd = s-read(strcat(current-path(), "demo-snd.aiff"))
+<p>
+<i>; play it
+;</i>
+play a-snd
 </pre>
 
 <p>
-<hr>
-<blockquote></blockquote>
-<img src="fig2.gif"><br><br>
-
-<p>
-<b>Figure 2: </b>The result of <code>(warp4)</code>, intended to map 4 seconds of
-score time into 4 seconds of real time.  The function extends beyond 4
-seconds (the dashed lines) to make sure the function is well-defined at
-location (4, 4).  Nyquist sounds are ordinarily open on the right.
-
-<hr>
-<p>
-Figure <a href = "#27">2</a> shows a plot of this warp function.  Now, we can
-warp the tempo of the <code>tone-seq</code> defined above using <code>warp4</code>:
+One
+might then be tempted to write the following:
 <pre>
-(play (warp (warp4) (tone-seq)))
+play seq(a-snd, a-snd)  <i>;WRONG!</i>
 </pre>
 
-Figure <a href = "#27">3</a> shows the result graphically.  Notice that the
-durations of the tones are warped as well as their onsets.  Envelopes are 
-not shown in detail in the figure.  Because of the way <code>env</code> is
-defined, the tones will have constant attack and decay times, and the
-sustain will be adjusted to fit the available time.
+Why is this wrong? Recall
+that <code>seq</code> works by modifying <code>*warp*</code>, not by operating on
+sounds.  So, <code>seq</code> will proceed by evaluating <code>a-snd</code> with
+different values of <code>*warp*</code>.  However, the result of evaluating
+<code>a-snd</code> (a variable) is always the same sound, regardless of the
+environment; in this case, the second <code>a-snd</code> <i>should</i> start at time
+<code>0.0</code>, just like the first. In this case, after the first sound ends,
+ Nyquist is unable to "back up" to time zero, so in fact, this <i>will</i> 
+play two sounds in sequence, but that is a result of an implementation 
+detail rather than correct program execution. In fact, a future version of
+Nyquist might (correctly) stop and report an error when it detects that the
+second sound in the sequence has a real start time that is before the 
+requested one.
 <p>
-<hr>
-<blockquote></blockquote>
-<img src="fig3.gif"><br><br>
-
-<p>
-<b>Figure 3: </b>When <code>(warp4)</code> is applied to <code>(tone-seq-2)</code>, the note onsets and durations are warped.
-
-<hr>
-<p>
-<a name = "28"><h3>Abstract Time Warps</h3></a>
-We have seen a number of examples where the default behavior did the
-``right thing,'' making the code straightforward.  This is not always the
-case.  Suppose we want to warp the note onsets but not the durations.  We
-will first look at an incorrect solution and discuss the error.  Then we
-will look at a slightly more complex (but correct) solution.  
-<p>
-The default behavior for most Nyquist built-in functions is to sample the
-time warp function at the nominal starting and ending score times of the
-primitive.  For many built-in functions, including <code>osc</code>, the starting
-logical time is 0 and the ending logical time is 1, so the time warp
-function is evaluated at these points to yield real starting and stopping
-times, say 15.23 and 16.79.  The difference (e.g. 1.56) becomes the signal
-duration, and there is no internal time warping.  The <code>pwl</code> function
-behaves a little differently.  Here, each breakpoint is warped individually,
-but the resulting function is linear between the breakpoints.
-<p>
-A consequence of the default behavior is that notes stretch when the tempo
-slows down.  Returning to our example, recall that we want to warp only the
-note onset times and not the duration.  One would think that the following
-would work:
+How then do we obtain a sequence of two sounds properly?  
+What we really need here is a
+behavior that transforms a given sound according to the current
+transformation environment.  That job is performed by <code>cue</code>.  For
+example, the following will behave as expected, producing a sequence of two
+sounds:
 <pre>
-(defun tone-seq-2 ()
-  (seqrep (i 16)
-	  (stretch-abs 0.25 (osc-note c4))))
-<p>
-(play (warp (warp4) (tone-seq-2)))
+play seq(cue(a-snd), cue(a-snd))
 </pre>
 
-Here, we have redefined <code>tone-seq</code>, renaming it to <code>tone-seq-2</code>
-and changing the <code>stretch</code> to <code>stretch-abs</code>.  The
-<code>stretch-abs</code> should override the warp function and produce a fixed
-duration.
+This example is correct because the second expression will shift the sound
+ stored in <code>a-snd</code> to start at the end time of the first expression.
 <p>
-If you play the example, you will hear steady
-sixteenths and no tempo changes.  What is wrong?  In a sense, the ``fix''
-works too well.  Recall that sequences (including <code>seqrep</code>) determine
-the starting time of the next note from the logical stop time of the
-previous sound in the sequence.  When we forced the stretch to 0.25, we also
-forced the logical stop time to 0.25 real seconds from the beginning, so
-every note starts 0.25 seconds after the previous one, resulting in a
-constant tempo.
+The lesson here is very important: <b><i>sounds are not behaviors!</i></b>  Behaviors
+are computations that generate sounds according to the transformation
+environment.  Once a sound has been generated, it can be stored, copied,
+added to other sounds, and used in many other operations, but sounds are
+<i>not</i> subject to transformations.  To transform a sound, use <code>cue</code>,
+<code>sound</code>, or <code>control</code>.  The differences between these operations
+are discussed later.  For now, here is a "cue sheet" style score that
+plays 4 copies of <code>a-snd</code>:
 <p>
-Now let us design a proper solution.  The trick is to use <code>stretch-abs</code>
-as before to control the duration, but to restore the logical stop time to a
-value that results in the proper inter-onset time interval:
 <pre>
-(defun tone-seq-3 ()
-  (seqrep (i 16)
-	  (set-logical-stop
-             (stretch-abs 0.25 (osc-note c4))
-             0.25)))
-<p>
-(play (warp (warp4) (tone-seq-3)))
+<i>; use sim and at to place sounds in time
+;</i>
+play sim(cue(a-snd) @ 0.0,
+         cue(a-snd) @ 0.7,
+         cue(a-snd) @ 1.0,
+         cue(a-snd) @ 1.2)
 </pre>
 
-Notice the addition of <code>set-logical-stop</code> enclosing the
-<code>stretch-abs</code> expression to set the logical stop time.  A possible
-point of confusion here is that the logical stop time is set to 0.25, the
-same number given to <code>stretch-abs</code>!  How does setting the logical stop
-time to 0.25 result in a tempo change?  When used within a <code>warp</code>
-transformation, the second argument to <code>set-logical-stop</code> refers to
-<i>score</i> time rather than <i>real</i> time.  Therefore, the score duration of
-0.25 is warped into real time, producing tempo changes according to the
-enviroment.  Figure <a href = "#28">4</a> illustrates the result graphically.
 <p>
-<hr>
-<blockquote></blockquote> 
-<img src="fig4.gif"><br><br>
-
-<p>
-<b>Figure 4: </b>When <code>(warp4)</code> is applied
-to <code>(tone-seq-3)</code>, the note onsets are warped, but not the duration,
-which remains a constant 0.25 seconds.  In the fast middle section, this
-causes notes to overlap.  Nyquist will sum (mix) them.
-
-<hr>
-<p>
-<a name = "29"><h3>Nested Transformations</h3></a>
-Transformations can be nested.  In particular, a simple transformation such
-as transpose can be nested within a time warp transformation.  Suppose we
-want to warp our chromatic scale example with the <code>warp4</code> time warp
-function.  As in the previous section, we will show an erroneous simple
-solution followed by a correct one.
-<p>
-The simplest approach to a nested transformation is to simply combine them
-and hope for the best:
+<a name = "34"><h3>The At Transformation</h3></a><a name="index135">
+The second concept introduced by the previous example is the <code>@</code>
+operation, which shifts the <code>*warp*</code> component of the environment.  For
+example,
 <pre>
-(play (warp (warp4)
-            (transpose (pitch-rise) (tone-seq))))
+cue(a-snd) @ 0.7
 </pre>
 
-This example will not work the way you might expect.  Here is why: the warp
-transformation applies to the <code>(pitch-rise)</code> expression, which is
-implemented using the <code>ramp</code> function.  The default
-behavior of <code>ramp</code> is to interpolate linearly (in real time) between two points.
-Thus, the ``warped'' <code>ramp</code> function will not truly reflect the internal
-details of the intended time warp.  What we need is a way to properly
-compose the warp and ramp functions.  This will lead to a correct solution.
+can be explained operationally as follows: modify <code>*warp*</code> by shifting
+it by <code>0.7</code> and evaluate <code>cue(a-snd)</code>.  Return the resulting sound
+after restoring <code>*warp*</code> to its original value.  Notice how <code>@</code>
+is used inside a <code>sim</code> construct to locate copies of <code>a-snd</code> in
+time.  This is the standard way to represent a note-list or a cue-sheet in
+Nyquist.
 <p>
-Here is the modified code to properly warp a transposed sequence.  Note that
-the original sequence is used without modification.  The only complication
-is producing a properly warped transposition function:
+This also explains why sounds need to be <code>cue</code>'d in order to be shifted
+in time or arranged in sequence.  If this were not the case, then <code>sim</code>
+would take all of its parameters (a set of sounds) and line them up to start
+at the same time.  But <code>cue(a-snd) @ 0.7</code> is just a sound, so
+<code>sim</code> would "undo" the effect of <code>@</code>, making all of the sounds
+in the previous example start simultaneously, in spite of the <code>@</code>!
+Since <code>sim</code> respects the intrinsic starting times of sounds, a special
+operation, <code>cue</code>, is needed to create a new sound with a new starting
+time.
+<p>
+<a name = "35"><h3>The Stretch Transformation</h3></a><a name="index136">
+In addition to At (denoted in SAL by the <code>@</code> operator, the Stretch
+transformation is very important. It appeared in the introduction, and
+it is denoted in SAL by the <code>~</code> operator (or in LISP by the <code>stretch</code>
+special form). Stretch also operates on the <code>*warp*</code> component of
+the environment. For example,
 <pre>
-(play (warp (warp4)
-            (transpose 
-                (control-warp (get-warp)
-                              (warp-abs nil (pitch-rise)))
-                (tone-seq))))
+osc(c4) ~ 3
 </pre>
 
-To properly warp the <code>pitch-rise</code> transposition function, we use
-<code>control-warp</code>, which applies a warp function to a function of score time,
-yielding a function of real time.  We need to pass the warp desired function
-to <code>control-warp</code>, so we fetch it  from the environment ith
-<code>(get-warp)</code>.  Finally, since the warping is done here, we want to
-shield the <code>pitch-rise</code> expression from further warping, so we enclose
-it in <code>(warp-abs nil ...)</code>.
+does the following: modify <code>*warp*</code>, scaling the degree of 
+"stretch" by 3, and evaluate <code>osc(c4)</code>. The <code>osc</code> behavior
+uses the stretch factor to determime the duration, so it will return
+a sound that is 3 seconds long. Restore <code>*warp*</code> to its original
+value. Like At, Stretch only affects behaviors. <code>a-snd ~ 10</code> is
+equivalent to <code>a-snd</code> because <code>a-snd</code> is a sound, not a
+behavior. Behaviors are functions that compute sounds according to
+the environment and return a sound.
 <p>
- <i>An aside:</i> This last example illustrates a difficulty in the design of
-Nyquist.  To support behavioral abstraction universally, we must rely upon
-behaviors to ``do the right thing.''  In this case, we would like the
-<code>ramp</code> function to warp continuously according to the environment.  But
-this is inefficient and unnecessary in many other cases where <code>ramp</code>
-and especially <code>pwl</code> are used.  (<code>pwl</code> warps its breakpoints, but still interpolates linearly between them.)  Also, if the default behavior of
-primitives is to warp in a continuous manner, this makes it difficult to
-build custom abstract behaviors.  The final vote is not in.
+<a name = "36"><h3>Nested Transformations</h3></a><a name="index137">
+Transformations can be combined using nested expressions.  For example,
+<pre>
+sim(cue(a-snd),
+    loud(6.0, cue(a-snd) @ 3))
+</pre>
+
+scales the amplitude as well as shifts the second entrance of <code>a-snd</code>.
+<p>
+Why use <code>loud</code> instead of simply multiplying <code>a-snd</code> by some
+scale factor? Using <code>loud</code> gives
+the behavior the chance to implement the abstract
+property <i>loudness</i> in an appropriate way, e.g. by including timbral 
+changes. In this case, the behavior is <code>cue</code>, which implements
+<i>loudness</i> by simple amplitude scaling, so the result is equivalent
+to multiplication by <code>db-to-linear(6.0</code>).
+<p>
+Transformations can also be applied to groups of behaviors:
+<pre>
+loud(6.0, sim(cue(a-snd) @ 0.0,
+              cue(a-snd) @ 0.7))
+</pre>
+
+<p>
+<a name = "37"><h3>Defining Behaviors</h3></a><a name="index138">
+Groups of behaviors can be named using <code>define</code> (we already saw this
+in the definitions of <code>my-note</code> and <code>env-note</code>).  Here is another example
+of a behavior definition and its use.  The definition has one parameter:
+<pre>
+define function snds(dly)
+  return sim(cue(a-snd) @ 0.0,
+             cue(a-snd) @ 0.7,
+             cue(a-snd) @ 1.0,
+             cue(a-snd) @ (1.2 + dly))
+<p>
+play snds(0.1)
+play loud(0.25, snds(0.3) ~ 0.9)
+</pre>
+
+In the last line, <code>snds</code> is transformed: the transformations will apply
+to the <code>cue</code> behaviors within <code>snds</code>.  The <code>loud</code>
+transformation will scale the sounds by <code>0.25</code>, and the <i>stretch</i>
+(<code>~</code>) will
+apply to the shift (<code>@</code>) amounts <code>0.0</code>, <code>0.7</code>, <code>1.0</code>,
+and <code>1.2 + dly</code>.  The sounds themselves (copies of <code>a-snd</code>) will
+not be stretched because <code>cue</code> never stretches sounds.
+<p>
+Section <a href = "part8.html#97">"Transformations"</a> describes the full set of transformations.
+<p>
+<a name = "38"><h3>Overriding Default Transformations</h3></a>
+In Nyquist, behaviors are <i>the</i> important abstraction mechanism.
+A behavior represents a class of related functions or sounds. For example,
+a behavior can represent a musical note. When a note is stretched, it 
+usually means that the tone sustains for more oscillations, but if the
+"note" is a drum roll, the note sustains by more repetitions of the
+component drum strokes. The concept of sustain is so fundamental that
+we do not really think of different note durations as being different
+instances of an abstract behavior, but in a music programming language,
+we need a way to model these abtract behaviors. As the tone and drum
+roll examples show, there is no one right way to "stretch," so the
+language must allow users to define exactly what it means to stretch.
+By extension, the Nyquist programmer can define how all of the 
+transformations affect different behaviors.
+<p>
+To make programming easier, almost all Nyquist sounds are constructed
+from primitive behaviors that obey the environment in obvious ways:
+Stretch transformations make things longer and At transformations shift
+things in time. But sometimes you have to override the default behaviors.
+Maybe the attack phase of an envelope should not stretch when the note
+is stretched, or maybe when you stretch a trill, you should get more
+notes rather than a slower trill.
+<p>
+To override default behaviors, you almost always follow the same 
+programming pattern: first, capture the environment in a local variable;
+then, use one of the absolute transformations to "turn off" the
+environment's effect and compute the sound as desired. The following
+example creates a very simple envelope with a fixed rise time to
+illustrate the technique.
+<pre>
+define function two-phase-env(rise-time)
+  begin
+    with dur = get-duration(1)
+    return pwl(rise-time, 1, dur) ~~ 1.0
+  end
+</pre>
+
+To "capture the environment in a local variable," a <code>with</code>
+construct is used to create the local variable <code>dur</code> and set
+it to the value of <code>get-duration(1)</code>, which answers the question:
+"If I apply use the environment to stretch something whose nominal
+duration is 1, what is the resulting duration?" (Since time transformations
+can involve continuous time deformations, this question is not as 
+simple as it may sound, so please use the provided function rather
+than peeking inside the <code>*warp*</code> structure and trying to do it
+yourself.) Next, we "turn off" stretching using the <code>stretch-abs</code>
+form, which in SAL is denoted by the <code>~~</code> operator. 
+Finally, we are ready to compute the envelope using <code>pwl</code>. Here,
+we use absolute durations. The first breakpoint is at <code>rise-time</code>,
+so the attack time is given by the <code>rise-time</code> parameter. The 
+<code>pwl</code> decays back to zero at time <code>dur</code>, so the overall
+duration matches the duration expected from the environment encountered
+by this instance of <code>two-phase-env</code>. Note, however, that since
+the <code>pwl</code> is evaluated in a different environment established
+by <code>~~</code>, it is not stretched (or perhaps more accurately, it is
+stretched by 1.0). This is good because it means <code>rise-time</code> will
+not be stretched, but we must be careful to extend the envelope to 
+<code>dur</code> so that it has the expected duration.
+<p>
+<a name = "39"><h3>Sample Rates</h3></a>
+<a name="index139">
+The global environment contains <code>*sound-srate*</code> and
+<code>*control-srate*</code>, which determine the sample rates of sounds and
+control signals.  These can be overridden at any point by the
+transformations <code>sound-srate-abs</code> and <code>control-srate-abs</code>; for
+example,
+<pre>
+sound-srate-abs(44100.0, osc(c4)
+</pre>
+
+will compute a tone using a 44.1Khz sample rate even if the default rate
+is set to something different.
+<p>
+<a name="index140">
+As with other components of the environment, you should <i>never</i> change
+<code>*sound-srate*</code> or <code>*control-srate*</code> directly.
+  The global environment is determined by two additional
+variables: <code>*default-sound-srate*</code> and <code>*default-control-srate*</code>.
+You can add lines like the following to your <code>init.lsp</code> file to change
+the default global environment:
+<pre>
+(setf *default-sound-srate* 44100.0)
+(setf *default-control-srate* 1102.5)
+</pre>
+
+You can also do this using preferences in jNyqIDE. 
+If you have already started Nyquist and want to change the defaults, the
+preferences or the following functions can be used:
+<pre>
+exec set-control-srate(1102.5)<a name="index141">
+exec set-sound-srate(22050.0)<a name="index142">
+</pre>
+
+These modify the default values and reinitialize the Nyquist environment.
 <p>
 <hr>
-<a href = "part3.html">Previous Section</a> | <a href = "part5.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+<a href = "part3.html">Previous Section</a> | <a href = "part5.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 </body></html>

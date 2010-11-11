@@ -1,12 +1,222 @@
+Nyquist should exit on (EXIT) without waiting for a return -- test on windows. Works on Mac.
 
+indentation is wrong after:
+(let ((var value) -- FIXED, but check
+(let (foo -- FIXED
+
+typing (top<return> should not insert the return (when autoparens is on and 
+parens are balanced) -- FIXED
+
+====
+
+check if this is still so: s-plot differs betweein Linux and Windows
+
+======
+Results from ICM2006 class:
+
+integrate asung's ide code - DONE
+integrate and improve prahava's browser - COULD USE MORE WORK
+write up plight's drum machine for demo section
+      look into open source drum machine software --
+       maybe share file format?
+integrate dfontain's upic code -- IN C, NEEDS WORK
+integrate sliders from kmsun_bgoodric:
+      Needs: more compact slider layout, 
+             editable range values, 
+	     support for continuous control, 
+	     elimination of the text echoing in the console window
+streamline find/replace
+execute selected code
+select expression when you double-click paren
+cyearly's envelope editor
+      plan for integration with score editor
+dmakuck's graphic EQ editor and interface
+      need to design strategy for saving data/code
+integrate jgrafton's GUS reader
+turn tgovani bird songs into demo
+
+Here's how envelopes should work:
+	When the user opens a .pwl file, the envelope editor reads it.
+	Using the envelope editor, envelopes are edited, loaded into nyquist,
+		and saved.
+	The user can also open the file as text (from within the env editor).
+	IDE should prevent both from being open at same time.
+
+=====
+
+Debian command line script to invoke nyquist omits parameters
+
+=====
+
+Typo: space after pluck in manual.
+
+
+There are some minor bugs that I have found:
+
+
+1. The function snd-lpanal is not recognized by Nyquist.
+
+   I have fixed that in my own compiled version of Nyquist by means of MSVC 6.0 adding "by hand" some code.
+
+
+3. There is a mistake in the name of gaussian distribution: the name in the manual is gauss-dist while the name in the source code is gaussian-dist.
+
+ 
+
+ 
+
+If I found any problem more I will comunicate it to you.
+
+ 
+
+Finally, sorry for my very basic english. I can not express the nuances as I would do in spanish.
+
+ 
+
+ 
+
+  Best regards,
+
+  
+
+     Pedro J. Morales.
+
+   
+
+ 
+
+ 
+
+ 
+
+This is the code that I have added to include snd-lpanal.
+
+ 
+
+ 
+
+ 
+
+/// SOURCE CODE FOR sndfnint.c
+
+ 
+
+ 
+
+ 
+
+#include "lpanal.h"
+
+ 
+
+/* xlc_snd_lpanal -- interface to C routine snd_lpanal */
+
+/**/
+
+LVAL xlc_snd_lpanal(void)
+
+{
+
+            LVAL arg1 = xlgetarg();
+
+    long arg2 = getfixnum(xlgafixnum());
+
+            LVAL result;
+
+ 
+
+            xllastarg();
+
+            result = snd_lpanal(arg1,arg2);
+
+            return (result);
+
+}
+
+ 
+
+/// SOURCE CODE FOR  sndfintptrs.h
+
+ 
+
+ 
+
+  { "SND-LPANAL", S, xlc_snd_lpanal},
+
+ 
+
+    
+
+/// SOURCE CODE FOR sndfintdefs.h
+
+ 
+
+extern LVAL xlc_snd_lpanal(void);  
+
+ 
+
+ 
+================================
+
+Check echoenabled in documentation -- maybe the preceding @index command is messing up the indentation.
+
+===========================
+
+Roger 
+
+I found a minor bug in full-name-p in system.lps   The function does not
+test for the UNIX file separator /   This causes s-save to only work
+with filenames relative to *sf-default-dir* 
+
+--Steve
+
+=====================
+
+test  (SCORE-BEGIN) and (SCORE-END) 
+implement score manipulation routines in xm.lsp (see manual)
+document, implement workspaces
+
+
+======
+
+big test of markov analysis for xm.lsp
+    for order 1 and order 2
+
+========
+
+(dotimes (i 10) (print (next (make-copier (make-cycle '(a b c)) :repeat 2) t)))
+prints nil period after 2 repeats
+
+==========
+See cmsip hierarchy.lsp -- fix sustain
+It appears that sustain is not correctly implemented
+Check every use of get-duration, document get-duration
+correctly after fixing the code.
+
+=========
+
+SourceForge credits on web site
+Create SourceForge project web page
+Put releases on SourceForge
+Create Nyquist mailing list on Sourceforge
+
+==========
+
+Integrate new debian changes. -DONE
+
+==========
+
+macosxproject/nyquistproject.pbproj/project.pbxproj is not on cvs -DONE
+
+===========
 
 detect newline problems, e.g. a stray ^M at end of file seems to cause read error, but
-the char does not show up in most editors including jnyqide.
+the char does not show up in most editors including jnyqide. -- tested under Win32, but not Linux
 
 
 =================
 Documentation for Adagio should go somewhere. It's mentioned in the nyquist 
-manual, but there's no reference or URL for CMT.
+manual, but there's no reference or URL for CMT. -DONE
 
 =================
 
@@ -55,11 +265,8 @@ I'm a semi-retired EE not experienced in Lisp or C
 
 Regards
 Rob Wilkinson.
-=======================================================================================
+================================================================
 
-missing end-of-line causes crash? - not on windows, try others
-
-======================================================
 
 
 fix, test seqmidi to take note, ctrl, prgm, etc.

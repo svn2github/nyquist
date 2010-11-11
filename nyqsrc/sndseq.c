@@ -343,6 +343,7 @@ sound_type snd_sndseq(s1, closure)
   sound_type s1;
   LVAL closure;
 {
-    sound_type s1_copy = sound_copy(s1);
+    sound_type s1_copy;
+    s1_copy = sound_copy(s1);
     return snd_make_sndseq(s1_copy, closure);
 }

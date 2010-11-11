@@ -133,6 +133,7 @@ extern struct condition a_cond, a_in_cond;
 
 #ifdef UNIX
 #include <sys/param.h>
+#include <sys/resource.h>
 #include "cmtio.h"
 #ifdef _IBMR2
 #define NBBY 8
@@ -264,12 +265,12 @@ void gflush(void)
     FlushOutput();
 #else
     fflush(stdout);    /* make sure any prompts or errors have been output */
-    fflush(stderr);
+    fflush(STDERR);
 #endif /* NYQUIST */
 #endif /* MACINTOSH */
 #ifdef UNIX
     fflush(stdout);    /* make sure any prompts or errors have been output */
-    fflush(stderr);
+    fflush(STDERR);
 #endif
 }
 
@@ -921,16 +922,16 @@ public void gprintf(where, format, args)
         printf("%s", temp1);
         break;
       case ERROR:
-        fprintf(stderr, "%s", temp1);
+        fprintf(STDERR, "%s", temp1);
         break;
       case GDEBUG:
-        fprintf(stderr, "DEBUG %s", temp1);
+        fprintf(STDERR, "DEBUG %s", temp1);
         break;
       case FATAL:
-        fprintf(stderr, "FATAL %s", temp1);
+        fprintf(STDERR, "FATAL %s", temp1);
         break;
       default:
-        fprintf(stderr, "UNKNOWN %s", temp1);
+        fprintf(STDERR, "UNKNOWN %s", temp1);
         break;
     }
 #endif /* AMIGA */
@@ -1205,6 +1206,7 @@ public int wait_ascii()
 #endif /* !UNIX_MACH */
 #endif
     char c;
+    struct rlimit file_limit;
 
     if (abort_flag == ABORT_LEVEL) return ABORT_CHAR;
     if (abort_flag == BREAK_LEVEL) return BREAK_CHAR;
@@ -1233,7 +1235,8 @@ public int wait_ascii()
         FD_ZERO(&readfds);
         FD_SET(IOinputfd, &readfds);
         gflush();
-        select(NOFILE+1, &readfds, 0, 0, NULL);
+        getrlimit(RLIMIT_NOFILE, &file_limit);
+        select(file_limit.rlim_max+1, &readfds, 0, 0, NULL);
 #endif /* !UNIX_MACH */
 #endif /* ifdef UNIX */
     }

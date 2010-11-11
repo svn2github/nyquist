@@ -48,7 +48,6 @@ float f0_estimate(float *samples, int n, int m, float threshold, float *results,
     int middle = n / 2;
     int i, j; // loop counters
     // how many different lags do we compute?
-    int iterations = middle + 1 - m;
     float left_energy = 0;
     float right_energy = 0;
     // for each window, we keep the energy so we can compute the next one 

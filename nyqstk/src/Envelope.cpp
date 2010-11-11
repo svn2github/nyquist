@@ -9,106 +9,117 @@
     \e keyOff messages, ramping to 1.0 on
     keyOn and to 0.0 on keyOff.
 
-    by Perry R. Cook and Gary P. Scavone, 1995 - 2002.
+    by Perry R. Cook and Gary P. Scavone, 1995 - 2005.
 */
 /***************************************************/
 
 #include "Envelope.h"
-#include <stdio.h>
 
-Envelope :: Envelope(void) : Stk()
+using namespace Nyq;
+
+Envelope :: Envelope(void) : Generator()
 {    
-  target = (MY_FLOAT) 0.0;
-  value = (MY_FLOAT) 0.0;
-  rate = (MY_FLOAT) 0.001;
-  state = 0;
+  target_ = 0.0;
+  value_ = 0.0;
+  rate_ = 0.001;
+  state_ = 0;
+}
+
+Envelope :: Envelope ( const Envelope& e )
+{
+  target_ = 0.0;
+  value_ = 0.0;
+  rate_ = 0.001;
+  state_ = 0;
 }
 
 Envelope :: ~Envelope(void)
-{    
+{
+}
+
+Envelope& Envelope :: operator= ( const Envelope& e )
+{
+  if ( this != &e ) {
+    target_ = e.target_;
+    value_ = e.value_;
+    rate_ = e.rate_;
+    state_ = e.state_;
+  }
+
+  return *this;
 }
 
 void Envelope :: keyOn(void)
 {
-  target = (MY_FLOAT) 1.0;
-  if (value != target) state = 1;
+  target_ = 1.0;
+  if (value_ != target_) state_ = 1;
 }
 
 void Envelope :: keyOff(void)
 {
-  target = (MY_FLOAT) 0.0;
-  if (value != target) state = 1;
+  target_ = 0.0;
+  if (value_ != target_) state_ = 1;
 }
 
-void Envelope :: setRate(MY_FLOAT aRate)
+void Envelope :: setRate(StkFloat rate)
 {
-  if (aRate < 0.0) {
-    printf("Envelope: negative rates not allowed ... correcting!\n");
-    rate = -aRate;
+  if (rate < 0.0) {
+    errorString_ << "Envelope::setRate: negative rates not allowed ... correcting!";
+    handleError( StkError::WARNING );
+    rate_ = -rate;
   }
   else
-    rate = aRate;
+    rate_ = rate;
 }
 
-void Envelope :: setTime(MY_FLOAT aTime)
+void Envelope :: setTime(StkFloat time)
 {
-  if (aTime < 0.0) {
-    printf("Envelope: negative times not allowed ... correcting!\n");
-    rate = 1.0 / (-aTime * Stk::sampleRate());
+  if (time < 0.0) {
+    errorString_ << "Envelope::setTime: negative times not allowed ... correcting!";
+    handleError( StkError::WARNING );
+    rate_ = 1.0 / (-time * Stk::sampleRate());
   }
   else
-    rate = 1.0 / (aTime * Stk::sampleRate());
+    rate_ = 1.0 / (time * Stk::sampleRate());
 }
 
-void Envelope :: setTarget(MY_FLOAT aTarget)
+void Envelope :: setTarget(StkFloat target)
 {
-  target = aTarget;
-  if (value != target) state = 1;
+  target_ = target;
+  if (value_ != target_) state_ = 1;
 }
 
-void Envelope :: setValue(MY_FLOAT aValue)
+void Envelope :: setValue(StkFloat value)
 {
-  state = 0;
-  target = aValue;
-  value = aValue;
+  state_ = 0;
+  target_ = value;
+  value_ = value;
 }
 
 int Envelope :: getState(void) const
 {
-  return state;
+  return state_;
 }
 
-MY_FLOAT Envelope :: tick(void)
+StkFloat Envelope :: computeSample(void )
 {
-  if (state) {
-    if (target > value) {
-      value += rate;
-      if (value >= target) {
-        value = target;
-        state = 0;
+  if (state_) {
+    if (target_ > value_) {
+      value_ += rate_;
+      if (value_ >= target_) {
+        value_ = target_;
+        state_ = 0;
       }
     }
     else {
-      value -= rate;
-      if (value <= target) {
-        value = target;
-        state = 0;
+      value_ -= rate_;
+      if (value_ <= target_) {
+        value_ = target_;
+        state_ = 0;
       }
     }
   }
-  return value;
+
+  lastOutput_ = value_;
+  return value_;
 }
-
-MY_FLOAT *Envelope :: tick(MY_FLOAT *vector, unsigned int vectorSize)
-{
-  for (unsigned int i=0; i<vectorSize; i++)
-    vector[i] = tick();
-
-  return vector;
-}
-
-MY_FLOAT Envelope :: lastOut(void) const
-{
-  return value;
-}
-

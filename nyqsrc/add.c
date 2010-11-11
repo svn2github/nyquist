@@ -126,10 +126,13 @@ A	if (susp->terminate_bits & 2) {
          * if a sound has terminated)
          */
 A	nyquist_printf(
- "add[%p,%p] (s1_s2_nn) %p: logically_stopped %d, logical_stop_cnt %d\n",
+ "add[%p,%p] (s1_s2_nn) %p: logically_stopped %d, logical_stop_cnt %d, s1 logical_stop_cnt %ld, s2 logical_stop_cnt %ld \n",
                susp->s1, susp->s2, susp, susp->logically_stopped, 
-               (int)susp->susp.log_stop_cnt);
-        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+               (int) susp->susp.log_stop_cnt,
+               susp->s1->logical_stop_cnt,
+               susp->s2->logical_stop_cnt);
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN &&
+            (susp->logical_stop_bits == 3)) {
             int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
 A	    nyquist_printf("add[%p,%p]: to_stop = %d\n", susp->s1, susp->s2, to_stop);
             /* logical stops have to be indicated on block boundaries */
@@ -137,8 +140,8 @@ A	    nyquist_printf("add[%p,%p]: to_stop = %d\n", susp->s1, susp->s2, to_stop);
                 if (to_stop == 0) {
                     if (cnt) {
                         togo = 0;
-                        break;
-                    } else /* indicate logical stop immediately */
+                        break; /* block is non-empty, log-stop on next block */
+                    } else /* to_stop is 0, indicate logical stop immediately */
                         susp->logically_stopped = true;
                 } else {
                     /* logical stop will take place on the following block,
@@ -202,7 +205,8 @@ A   nyquist_printf("add[%p,%p] (s1_s2_nn) %p ending outer loop, cnt %d\n",
 A   nyquist_printf("add[%p,%p] (s1_s2_nn) %p->logically_stopped already true\n",
            susp->s1, susp->s2, susp);
         snd_list->logically_stopped = true;
-    } else if (susp->susp.log_stop_cnt == susp->susp.current) {
+    } else if (susp->susp.log_stop_cnt == susp->susp.current &&
+               susp->logical_stop_bits == 3) {
 A   nyquist_printf("add[%p,%p] (s1_s2_nn) %p->logically_stopped set to true\n",
            susp->s1, susp->s2, susp);
         susp->logically_stopped = true;
@@ -334,7 +338,8 @@ D	nyquist_printf("add_s_nn_fetch: special return, susp %p\n", susp);
     }
  */
     /* don't run past logical stop time */
-    if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+    if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN &&
+        susp->logical_stop_bits == 3) {
         int to_stop = susp->susp.log_stop_cnt - susp->susp.current;
         if (to_stop < togo) {
             if (to_stop == 0) {
@@ -476,7 +481,8 @@ D        nyquist_printf("add_s_nn_fetch: go to terminal state.  susp->s2 %p, \
     if (susp->logically_stopped) {
 D        stdputstr("add_s_nn_fetch: snd_list->logically_stopped\n");
         snd_list->logically_stopped = true;
-    } else if (susp->susp.log_stop_cnt == susp->susp.current) {
+    } else if (susp->susp.log_stop_cnt == susp->susp.current &&
+               susp->logical_stop_bits == 3) {
 D        stdputstr("add_s_nn_fetch: susp->logically_stopped\n");
         susp->logically_stopped = true;
     }
@@ -513,6 +519,7 @@ D   nyquist_printf("add_s2_nn_fetch(susp %p, snd_list %p)\n",
 
     /* don't run past the s2 input sample block: */
     togo = susp->s2_cnt;
+    assert(togo > 0);
 
     /* don't run past terminate time of this signal */
     /* if (susp->s2_ptr == zero_block->samples) { -sep21 RBD*/
@@ -554,8 +561,29 @@ D	nyquist_printf("add_s_nn_fetch: special return, susp %p\n", susp);
     }
  */
     /* don't run past logical stop time */
-    if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+    if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN &&
+        /* check if we've seen the logical stop from s2. If so then
+           log_stop_cnt is max of s1 and s2 stop times */
+        (susp->logical_stop_bits & 2)) {
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.log_stop_cnt %d\n",
+                       susp->susp.log_stop_cnt);
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.current %d\n", 
+                       susp->susp.current);
         int to_stop = susp->susp.log_stop_cnt - susp->susp.current;
+        // to_stop can be less than zero if we've been adding in sounds with
+        // t0 less than the time when the sound is added. E.g. if the user
+        // wants a sequence of two sounds that start at 0, the second sound
+        // will be spliced onto the first because we don't look at it until
+        // the first finishes -- we cannot go back in time and start adding
+        // from time 0. This creates a mismatch between the sample count and
+        // the logical time, so we could actually set a logical stop time that
+        // is back in history, and therefore before susp.current, resulting
+        // in a negative to_stop. The problem is really with trying to 
+        // sequence two sounds rather than two behaviors, and a warning has
+        // already been issued, so we'll just try not to crash here. It's too
+        // late to compute the correct answer, which would respect t0 of both
+        // sounds.
+        if (to_stop < 0) to_stop = 0;
         if (to_stop < togo) {
             if (to_stop == 0) {
                 susp->logically_stopped = true;
@@ -571,6 +599,7 @@ D	nyquist_printf("add_s2_nn_fetch: to_stop %d togo %d\n", to_stop, togo);
             susp->s1->sr);
         if (s1_start < susp->susp.current + togo)
             togo = MIN(togo, s1_start - susp->susp.current);
+            assert(togo > 0);
     }
 
     /*
@@ -655,6 +684,7 @@ B       nyquist_printf("add[%p,%p] (s2_nn) %p new block %p\n",
         n = togo;
         if (n == 0)
             stdputstr("zero block length error in add_s2_nn_fetch\n");
+        assert(n > 0);
 B       nyquist_printf(
         "add[%p,%p] (s2_nn) %p starting copy loop, togo %d\n",
                susp->s2, susp->s1, susp, togo);
@@ -699,7 +729,8 @@ D        nyquist_printf("add_s_nn_fetch: go to terminal state.  susp->s1 %p, \
     if (susp->logically_stopped) {
 D        stdputstr("add_s_nn_fetch: snd_list->logically_stopped\n");
         snd_list->logically_stopped = true;
-    } else if (susp->susp.log_stop_cnt == susp->susp.current) {
+    } else if (susp->susp.log_stop_cnt == susp->susp.current &&
+               (susp->logical_stop_bits & 2)) {
 D        stdputstr("add_s_nn_fetch: susp->logically_stopped\n");
         susp->logically_stopped = true;
     }
@@ -724,7 +755,7 @@ void add_zero_fill_nn_fetch(susp, snd_list)
 #endif
     togo = max_sample_block_len;
 
-    if (0) fprintf(stderr, "add_zero_fill_nn_fetch, susp.current %d\n",
+    if (0) fprintf(STDERR, "add_zero_fill_nn_fetch, susp.current %d\n",
                    (int)susp->susp.current);
     /* don't run past start time ... */
     if (susp->s1) {

@@ -1881,7 +1881,9 @@ void seq_read(seq, fp)
         if (abort_flag == BREAK_LEVEL) abort_flag = 0;
     }
 
-    fclose(fp);
+    /* fclose(fp); -- don't close the file; if you do, Nyquist's garbage
+       collector will close Nyquist's copy, and closing the file twice
+       in Linux will crash Nyquist */
 
     gprintf(TRANS, "\nLoaded Adagio file with %ld note(s), %ld ctrl(s).\n\n",
             seq_notecount(the_score), seq_ctrlcount(the_score));

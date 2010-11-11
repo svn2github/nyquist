@@ -5,15 +5,17 @@
     This class provides a common interface for
     all STK instruments.
 
-    by Perry R. Cook and Gary P. Scavone, 1995 - 2002.
+    by Perry R. Cook and Gary P. Scavone, 1995 - 2005.
 */
 /***************************************************/
 
-#if !defined(__INSTRMNT_H)
-#define __INSTRMNT_H
+#ifndef STK_INSTRMNT_H
+#define STK_INSTRMNT_H
 
 #include "Stk.h"
-#include <iostream.h>
+
+namespace Nyq
+{
 
 class Instrmnt : public Stk
 {
@@ -25,29 +27,49 @@ class Instrmnt : public Stk
   virtual ~Instrmnt();
 
   //! Start a note with the given frequency and amplitude.
-  virtual void noteOn(MY_FLOAT frequency, MY_FLOAT amplitude) = 0;
+  virtual void noteOn(StkFloat frequency, StkFloat amplitude) = 0;
 
   //! Stop a note with the given amplitude (speed of decay).
-  virtual void noteOff(MY_FLOAT amplitude) = 0;
+  virtual void noteOff(StkFloat amplitude) = 0;
 
   //! Set instrument parameters for a particular frequency.
-  virtual void setFrequency(MY_FLOAT frequency);
+  virtual void setFrequency(StkFloat frequency);
 
   //! Return the last output value.
-  MY_FLOAT lastOut() const;
+  StkFloat lastOut() const;
 
-  //! Compute one output sample.
-  virtual MY_FLOAT tick() = 0;
+  //! Return the last left output value.
+  StkFloat lastOutLeft() const;
 
-  //! Computer \e vectorSize outputs and return them in \e vector.
-  virtual MY_FLOAT *tick(MY_FLOAT *vector, unsigned int vectorSize);
-  
+  //! Return the last right output value.
+  StkFloat lastOutRight() const;
+
+  //! Compute one sample and output.
+  StkFloat tick( void );
+
+  //! Fill a channel of the StkFrames object with computed outputs.
+  /*!
+    The \c channel argument should be zero or greater (the first
+    channel is specified by 0).  An StkError will be thrown if the \c
+    channel argument is equal to or greater than the number of
+    channels in the StkFrames object.
+  */
+  StkFrames& tick( StkFrames& frames, unsigned int channel = 0 );
+
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  virtual void controlChange(int number, MY_FLOAT value);
+  virtual void controlChange(int number, StkFloat value);
 
-  protected:
-    MY_FLOAT lastOutput;
+ protected:
+
+  // This abstract function must be implemented in all subclasses.
+  // It is used to get around a C++ problem with overloaded virtual
+  // functions.
+  virtual StkFloat computeSample( void ) = 0;
+
+  StkFloat lastOutput_;
 
 };
+
+} // namespace Nyq
 
 #endif

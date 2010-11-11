@@ -156,6 +156,49 @@
             (funcall seqrep%closure (local-to-global 0))))))
 
 
+(defmacro trigger (input beh)
+  `(let ((nyq%environment (nyq:the-environment)))
+     (snd-trigger ,input #'(lambda (t0) (with%environment nyq%environment
+					        (at-abs t0 ,beh))))))
+
+;; EVENT-EXPRESSION -- the sound of the event
+;;
+(setfn event-expression caddr)
+
+
+;; EVENT-HAS-ATTR -- test if event has attribute
+;;
+(defun event-has-attr (note attr)
+  (expr-has-attr (event-expression note)))
+
+
+;; EXPR-SET-ATTR -- new expression with attribute = value
+;;
+(defun expr-set-attr (expr attr value)
+  (cons (car expr) (list-set-attr-value (cdr expr) attr value)))
+
+(defun list-set-attr-value (lis attr value)
+  (cond ((null lis) (list attr value))
+	((eq (car lis) attr)
+	 (cons attr (cons value (cddr lis))))
+	(t
+	 (cons (car lis)
+	   (cons (cadr lis) 
+		 (list-set-attr-value (cddr lis) attr value))))))
+
+
+;; EXPAND-AND-EVAL-EXPR -- evaluate a note, chord, or rest for timed-seq
+;;
+(defun expand-and-eval-expr (expr)
+  (let ((pitch (member :pitch expr)))
+    (cond ((and pitch (cdr pitch) (listp (cadr pitch)))
+	   (setf pitch (cadr pitch))
+	   (simrep (i (length pitch))
+	     (eval (expr-set-attr expr :pitch (nth i pitch)))))
+	  (t
+	   (eval expr)))))
+
+
 ;; (timed-seq '((time1 stretch1 expr1) (time2 stretch2 expr2) ...))
 ;; a timed-seq takes a list of events as shown above
 ;; it sums the behaviors, similar to 
@@ -176,6 +219,13 @@
              (error (format nil "Negative stretch factor in TIMED-SEQ: ~A" event)))
             (t
              (setf start-time (car event)))))
+    ;; remove rests (a rest has a :pitch attribute of nil)
+    (setf score (score-select score #'(lambda (tim dur evt)
+                                       (expr-get-attr evt :pitch t))))
+    (cond ((and score (car score) 
+		(eq (car (event-expression (car score))) 'score-begin-end))
+	   (setf score (cdr score)))) ; skip score-begin-end data
+    ; (score-print score) ;; debugging
     (cond ((null score) (s-rest 0))
           (t
            (at (caar score)
@@ -185,14 +235,18 @@
                           (prog1
                             (set-logical-stop
                               (stretch (cadar score)
-                                (setf event (eval (caddar score))))
+                                (setf event (expand-and-eval-expr
+					     (caddar score))))
                               (- (caadr score) (caar score)))
-                            ;(display "timed-seq" (caddar score) (local-to-global 0)
+                            ;(display "timed-seq" (caddar score) 
+                            ;                     (local-to-global 0)
                             ;                     (snd-t0 event)
-                            ;                     (- (caadr score) (caar score)))
+                            ;                     (- (caadr score) 
+                            ;                        (caar score)))
                             (setf score (cdr score)))))
                          (t
-                          (stretch (cadar score) (eval (caddar score)))))))))))
+                          (stretch (cadar score) (expand-and-eval-expr
+						  (caddar score)))))))))))
 
 
 

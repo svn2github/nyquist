@@ -20,7 +20,7 @@ extern LVAL
     xbisubr(void),xbifsubr(void),
     rmhash(void),rmquote(void),rmdquote(void),rmbquote(void),rmcomma(void),
     clnew(void),clisnew(void),clanswer(void),
-    obisnew(void),obclass(void),obshow(void),
+    obisnew(void),obclass(void),obshow(void),obisa(void),
     rmlpar(void),rmrpar(void),rmsemi(void),
     xeval(void),xapply(void),xfuncall(void),xquote(void),xfunction(void),xbquote(void),
     xlambda(void),xset(void),xsetq(void),xsetf(void),xdefun(void),xdefmacro(void),
@@ -55,14 +55,14 @@ extern LVAL
     xfix(void),xfloat(void),
     xgcd(void),xadd(void),xsub(void),xmul(void),xdiv(void),xrem(void),xmin(void),xmax(void),xabs(void),
     xadd1(void),xsub1(void),xlogand(void),xlogior(void),xlogxor(void),xlognot(void),
-    xsin(void),xcos(void),xtan(void),xexpt(void),xexp(void),xsqrt(void),xrand(void),
+    xsin(void),xcos(void),xtan(void),xatan(void),xexpt(void),xexp(void),xsqrt(void),xrand(void), xrealrand(void),
     xlss(void),xleq(void),xequ(void),xneq(void),xgeq(void),xgtr(void),
     xstrcat(void),xsubseq(void),xstring(void),xchar(void),
     xread(void),xprint(void),xprin1(void),xprinc(void),xterpri(void),
     xflatsize(void),xflatc(void),
     xopen(void),xbopen(void),xclose(void),xrdchar(void),xpkchar(void),xwrchar(void),xreadline(void),
     xrdint(void),xwrint(void),xrdfloat(void),xwrfloat(void),
-    xload(void),xtranscript(void),
+    xget_env(void), xload(void),xtranscript(void),
     xtype(void),xquit(void),xexit(void),xpeek(void),xpoke(void),xaddrs(void),
     xvector(void),xblock(void),xrtnfrom(void),xtagbody(void),
     xpsetq(void),xflet(void),xlabels(void),xmacrolet(void),xunwindprotect(void),xpp(void),
@@ -83,7 +83,11 @@ extern LVAL
     xgetlambda(void),xmacroexpand(void),x1macroexpand(void),
     xinfo(void),					//Added by Ning Hu	Apr.2001
     xsetdir(void),					//Added by Ning Hu	May.2001
-    xtrace(void),xuntrace(void),xprofile(void),xstrsearch(void), xsetupconsole(void);
+    xbigendianp(void),
+    xtrace(void),xuntrace(void),xprofile(void),xstrsearch(void), xsetupconsole(void),
+    xechoenabled(void),xslider_read(void),
+    xget_user(void), // added by RBD, Jul 2007
+    xfind_in_xlisp_path(void); // added by RBD, Jan 2008
 #endif
 
 /* functions specific to xldmem.c */
@@ -102,6 +106,12 @@ LVAL xsave(void),xrestore(void);
 
 /* forward declarations */
 LOCAL LVAL xnotimp(void);
+
+/* debugging functions */
+#ifdef DEBUG_INPUT
+LVAL xstartrecordio(void);
+LVAL xstoprecordio(void);
+#endif
 
 /* the function table */
 FUNDEF funtab[] = {
@@ -125,7 +135,7 @@ FUNDEF funtab[] = {
 {	NULL,				S, obisnew		}, /*  13 */
 {	NULL,				S, obclass		}, /*  14 */
 {	NULL,				S, obshow		}, /*  15 */
-{	NULL,				S, xnotimp		}, /*  16 */
+{	NULL,				S, obisa		}, /*  16 */
 {	NULL,				S, xnotimp		}, /*  17 */
 {	NULL,				S, xnotimp		}, /*  18 */
 {	NULL,				S, xnotimp		}, /*  19 */
@@ -348,10 +358,15 @@ FUNDEF funtab[] = {
 
 {	"TYPE-OF",			S, xtype		}, /* 194 */
 {	"EXIT",				S, xexit		}, /* 195 */
+#ifdef PEEK_AND_POKE
 {	"PEEK",				S, xpeek		}, /* 196 */
 {	"POKE",				S, xpoke		}, /* 197 */
 {	"ADDRESS-OF",			S, xaddrs		}, /* 198 */
-
+#else
+{	NULL,				S, xnotimp		}, /* 196 */
+{	NULL,				S, xnotimp		}, /* 197 */
+{	NULL,				S, xnotimp		}, /* 198 */
+#endif
     /* new functions and special forms */
 {	"VECTOR",			S, xvector  		}, /* 199 */
 {	"BLOCK",			F, xblock		}, /* 200 */
@@ -431,8 +446,8 @@ FUNDEF funtab[] = {
 {	"DIGIT-CHAR",			S, xdigitchar		}, /* 274 */
 {	"CHAR-CODE",			S, xcharcode		}, /* 275 */
 {	"CODE-CHAR",			S, xcodechar		}, /* 276 */
-{	"ENDP",				S, xendp		}, /* 277 */
-{	"REMOVE-IF",			S, xremif		}, /* 278 */
+{	"ENDP",  			S, xendp		}, /* 277 */
+{	"REMOVE-IF",			S, xremif	    	}, /* 278 */
 {	"REMOVE-IF-NOT",		S, xremifnot		}, /* 279 */
 {	"DELETE-IF",			S, xdelif		}, /* 280 */
 {	"DELETE-IF-NOT",		S, xdelifnot		}, /* 281 */
@@ -442,24 +457,36 @@ FUNDEF funtab[] = {
 
 
     /* extra table entries */
-{	"PROFILE",			S, xprofile		}, /* 285 */
+{	"PROFILE",   			S, xprofile		}, /* 285 */
 {	"STRING-SEARCH",		S, xstrsearch		}, /* 286 */
-{	"QUIT",				S, xquit		}, /* 287 */
+{	"QUIT",		    		S, xquit		}, /* 287 */
 {	"OPEN-BINARY",			S, xbopen		}, /* 288 */
 {	"SETUP-CONSOLE",		S, xsetupconsole	}, /* 289 */
 {       "READ-INT",                     S, xrdint               }, /* 290 */
 {	"READ-FLOAT",			S, xrdfloat		}, /* 291 */
 {	"WRITE-INT",			S, xwrint		}, /* 292 */
 {	"WRITE-FLOAT",			S, xwrfloat		}, /* 293 */
-{	"INFO",				S, xinfo		}, /* 294 */ /* Ning Hu, Apr 2001 */
-{	NULL,				S, xnotimp		}, /* 295 */
+{	"INFO",			    	S, xinfo		}, /* 294 */ /* Ning Hu, Apr 2001 */
+{	"RRANDOM",  		        S, xrealrand	        }, /* 295 */
+#ifdef DEBUG_INPUT
+{	"START-RECORD-IO",  	        S, xstartrecordio       }, /* 296 */
+{	"STOP-RECORD-IO",   	        S, xstoprecordio	}, /* 297 */
+#else
 {	NULL,				S, xnotimp		}, /* 296 */
 {	NULL,				S, xnotimp		}, /* 297 */
-{	NULL,				S, xnotimp		}, /* 298 */
-{	NULL,				S, xnotimp		}, /* 299 */
-#ifndef MACINTOSH
-{	"SETDIR",			S, xsetdir		}, /* 300 */		//Added by Ning Hu May.2001
 #endif
+{	"ATAN",				S, xatan		}, /* 298 */
+{	"BIGENDIANP",		        S, xbigendianp	        }, /* 299 */
+{	"SETDIR",                       S, xsetdir		}, /* 300 */    //Added by Ning Hu May.2001
+{       "LISTDIR",                      S, xlistdir             }, /* 301 */   // Added by RBD, Mar 2005
+{       "ECHOENABLED",                  S, xechoenabled         }, /* 302 */   // Added by RBD, Dec 2005
+{       "GET-SLIDER-VALUE",             S, xslider_read         }, /* 303 */
+{       "OSC-ENABLE",                   S, xosc_enable          }, /* 304 */
+{       "GET-TEMP-PATH",                S, xget_temp_path       }, /* 305 */
+{       "GET-USER",                     S, xget_user            }, /* 306 */
+{       "FIND-IN-XLISP-PATH",           S, xfind_in_xlisp_path  }, /* 307 */
+{       "GET-ENV",                      S, xget_env             }, /* 308 */
+
 #ifdef MACINTOSH
 #include "macptrs.h"
 #endif

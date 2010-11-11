@@ -210,11 +210,11 @@ void tapv_si_fetch(register tapv_susp_type susp, snd_list_type snd_list)
     if (!susp->started) {
 	susp->started = true;
 	susp_check_term_samples(vardelay, vardelay_ptr, vardelay_cnt);
-	susp->vardelay_x1_sample = susp_fetch_sample(vardelay, vardelay_ptr, vardelay_cnt);
+	susp->vardelay_x1_sample = (susp->vardelay_cnt--, *(susp->vardelay_ptr));
     }
 
     susp_check_term_samples(vardelay, vardelay_ptr, vardelay_cnt);
-    vardelay_x2_sample = susp_current_sample(vardelay, vardelay_ptr);
+    vardelay_x2_sample = *(susp->vardelay_ptr);
 
     while (cnt < max_sample_block_len) { /* outer loop */
 	/* first compute how many samples to generate in inner loop: */
@@ -370,7 +370,7 @@ void tapv_sr_fetch(register tapv_susp_type susp, snd_list_type snd_list)
     }
 
     susp_check_term_samples(vardelay, vardelay_ptr, vardelay_cnt);
-    vardelay_x2_sample = susp_current_sample(vardelay, vardelay_ptr);
+    vardelay_x2_sample = *(susp->vardelay_ptr);
 
     while (cnt < max_sample_block_len) { /* outer loop */
 	/* first compute how many samples to generate in inner loop: */
@@ -389,7 +389,7 @@ void tapv_sr_fetch(register tapv_susp_type susp, snd_list_type snd_list)
 	    susp_took(vardelay_cnt, 1);
 	    susp->vardelay_pHaSe -= 1.0;
 	    susp_check_term_samples(vardelay, vardelay_ptr, vardelay_cnt);
-	    vardelay_x2_sample = susp_current_sample(vardelay, vardelay_ptr);
+	    vardelay_x2_sample = *(susp->vardelay_ptr);
 	    /* vardelay_n gets number of samples before phase exceeds 1.0: */
 	    susp->vardelay_n = (long) ((1.0 - susp->vardelay_pHaSe) *
 					susp->output_per_vardelay);

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sndfile.h>
 
 #include "snd.h"
 #include "sndfileio.h"
@@ -20,7 +21,9 @@ extern "C" {
 #endif
 
 // snd_fail moved to sndfaillinux.c -RBD
-
+/* jlh I don't think snd_file_open is used ANYWHERE. It's not getting
+   put into any of the dictionaries. In fact, I don't think any of
+   these are getting used anywhere... */
 int snd_file_open(char *fname, int mode)
 {
     int file;
@@ -53,22 +56,29 @@ long snd_file_len(int file)
     return len;
 }
 
-
-long snd_file_read(int fp, char *data, long len)
+  /* This IS getting used, being called from the file_dictionary
+     function file_read. */
+long snd_file_read(SNDFILE *fp, float *data, long len)
 {
+  /* Original code 
     return read(fp, data, len);
+  */
+  return sf_readf_float(fp, data, len);
 }
 
 
-long snd_file_write(int fp, char *data, long len)
+long snd_file_write(SNDFILE *fp, float *data, long len)
 {
+  /* Original code;
     return write(fp, data, len);
+  */
+  return sf_writef_float(fp, data, len);
 }
 
 
-int snd_file_close(int fp)
+long snd_file_close(SNDFILE *fp)
 {
-    return close(fp);
+    return sf_close(fp);
 }
 
 

@@ -56,7 +56,13 @@ void convolve_s_fetch(register convolve_susp_type susp, snd_list_type snd_list)
 {
     int cnt = 0; /* how many samples computed */
     int togo;
-    int n;
+    int n, i;
+	int round;
+	int ready = 0;
+	float* Utb1;
+	short* BRLow;
+	long M;
+
     sample_block_type out;
     register sample_block_values_type out_ptr;
 
@@ -69,6 +75,11 @@ void convolve_s_fetch(register convolve_susp_type susp, snd_list_type snd_list)
     register sample_type * x_buffer_current_reg;
     register sample_type x_snd_scale_reg = susp->x_snd->scale;
     register sample_block_values_type x_snd_ptr_reg;
+	
+	sample_type* Yk;
+	sample_type* y_output_buffer;
+	sample_type* x_input_buffer;
+	
     falloc_sample_block(out, "convolve_s_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
@@ -155,28 +166,46 @@ void convolve_s_fetch(register convolve_susp_type susp, snd_list_type snd_list)
 	    x_buffer_current_reg = susp->x_buffer_current;
 	    x_snd_ptr_reg = susp->x_snd_ptr;
 	    out_ptr_reg = out_ptr;
+
+		//buffer's length is twice the h_len because convolution yields 2N-1
+		y_output_buffer[2 * (int)h_len_reg];
+		x_input_buffer[2 * (int)h_len_reg];
+		memset(y_output_buffer, (sample_type)0.0f, 2 * h_len_reg * sizeof(sample_type));
+		memset(x_input_buffer, (sample_type)0.0f, 2 * h_len_reg * sizeof(sample_type));
+
+		M = log(h_len_reg) / log(2);
+		round = (int)M;
+		if((long)round != M)
+			round++;
+
+		fftCosInit(round, Utb1);
+		fftBRInit(round, BRLow);
+		
+		ffts1(h_buf_reg, round, 1.0, Utb1, BRLow);
 	    if (n) do { /* the inner sample computation loop */
-            long i; double sum;
-            /* see if we've reached end of x_buffer */
-            if ((x_buffer_pointer_reg + x_buf_len_reg) <= (x_buffer_current_reg + h_len_reg)) {
-                /* shift x_buffer from current back to base */
-                for (i = 1; i < h_len_reg; i++) {
-                    x_buffer_pointer_reg[i-1] = x_buffer_current_reg[i];
-                }    
-                /* this will be incremented back to x_buffer_pointer_reg below */
-                x_buffer_current_reg = x_buffer_pointer_reg - 1;
-            }
+			if(ready <= 0){
+				//shift output buffer
+				for(i = 0; i < x_buf_len_reg; i++){
+					y_output_buffer[i] = y_output_buffer[i+h_len_reg];
+					y_output_buffer[i+h_len_reg] = 0.0f;
+				}
 
-            x_buffer_current_reg++;
-
-            x_buffer_current_reg[h_len_reg - 1] = (x_snd_scale_reg * *x_snd_ptr_reg++);
-
-            sum = 0.0;
-            for (i = 0; i < h_len_reg; i++) {
-                sum += x_buffer_current_reg[i] * h_buf_reg[i];
-            }
-
-            *out_ptr_reg++ = (sample_type) sum;
+				ffts1(x_input_buffer, round, 1L, Utb1, BRLow);
+				//multiply
+				for(i = 0; i < 2 * h_len_reg; i++)
+					Yk[i] = x_input_buffer[i] * h_buf_reg[i];
+				
+				iffts1(Yk, round, 1.0, Utb1, BRLow);
+				//overlap add
+				for(i = 0; i < 2 * h_len_reg; i++)
+					y_output_buffer[i] += Yk[i];
+				
+				ready = h_len_reg;
+			}
+			//ready describes the reciprocal of location in the input/output buffer
+			x_input_buffer[h_len_reg - ready] = x_snd_scale_reg * *x_snd_ptr_reg++;
+			*out_ptr_reg++ = y_output_buffer[h_len_reg - ready];
+			ready--;
 	    } while (--n); /* inner loop */
 
 	    susp->x_buffer_pointer = x_buffer_pointer_reg;
@@ -208,7 +237,6 @@ void convolve_toss_fetch(susp, snd_list)
   register convolve_susp_type susp;
   snd_list_type snd_list;
 {
-    long final_count = susp->susp.toss_cnt;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -254,7 +282,6 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     register convolve_susp_type susp;
     rate_type sr = x_snd->sr;
     time_type t0 = x_snd->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, convolve_susp_node, "snd_make_convolve");

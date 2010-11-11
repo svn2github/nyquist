@@ -9,19 +9,17 @@
 (if (not (boundp '*setup-console*)) (setf *setup-console* t))
 (if *setup-console* (setup-console))
 
-(setf ny:bigendianp nil)
-
 (if (not (boundp '*default-sf-format*))
     (setf *default-sf-format* snd-head-Wave))
 
 (if (not (boundp '*default-sound-file*))
-    (setf *default-sound-file* "temp.wav"))
+    (compute-default-sound-file))
 
 (if (not (boundp '*default-sf-dir*))
     (setf *default-sf-dir* ""))
 
 (if (not (boundp '*default-sf-mode*))
-    (setf *default-sf-mode* snd-head-mode-pcm))
+    (setf *default-sf-mode* snd-mode-pcm))
 
 (if (not (boundp '*default-sf-bits*))
     (setf *default-sf-bits* 16))
@@ -53,10 +51,25 @@
 ;
 (defun full-name-p (filename)
   (or (eq (char filename 0) #\\)
+      (eq (char filename 0) #\/)
       (eq (char filename 0) #\.)
       (and (> (length filename) 2)
-         (both-case-p (char filename 0))
-       (equal (char filename 1) #\:))))
+           (both-case-p (char filename 0))
+           (equal (char filename 1) #\:))))
+
+; RELATIVE-PATH-P -- test if filename or path is a relative path
+;
+; note that properly converting a Windows path from relative to
+;  absolute is complicated by paths like: E:MYFILE.LSP
+;  Nyquist assumes that if there is a drive letter, the path is
+;  absolute, e.g. E:\TMP\MYFILE.LSP and if there is no drive,
+;  the path is relative, e.g. you cannot have \TMP\MYFILE.LSP
+;
+(defun relative-path-p (filename)
+  (or (< (length filename) 2)
+      (not (both-case-p (char filename 0)))
+      (not (equal (char filename 1) #\:))))
+
 
 (setf *file-separator* #\\)
 

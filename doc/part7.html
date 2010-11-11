@@ -1,28 +1,673 @@
-<html><head><title>Nyquist Globals</title></head>
+<html><head><title>SAL</title></head>
 <body bgcolor="ffffff">
-<a name = "61"><h2>Nyquist Globals</h2></a>
-<a name="index475">
-There are many global variables in Nyquist. A convention in Lisp is to place asterisks (*) around global variables, e.g. <code>*table*</code>. This is only a convention, and the asterisks are just like any other letter as far as variable names are concerned. Here are some globals users should know about:
+<a href = "part6.html">Previous Section</a> | <a href = "part8.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
+<hr>
+<a name = "53"><h2>SAL</h2></a>
+
+Nyquist supports two languages: XLISP and SAL. In some sense, XLISP and SAL
+are the same language, but with differing syntax. This chapter describes SAL: how it works, SAL syntax and semantics, and the relationship between SAL and XLISP, and differences between Nyquist SAL and Common Music SAL.
 <p>
+Nyquist SAL is based on Rick Taube's SAL language, which is
+part of Common Music. SAL offers the power
+of Lisp but features a simple, Algol-like syntax. SAL is implemented
+in Lisp: Lisp code translates SAL into a Lisp program and uses the
+underlying Lisp engine to evaluate the program. Aside from the translation
+time, which is quite fast, SAL programs execute at about the same speed as
+the corresponding Lisp program. (Nyquist SAL programs run just
+ slightly slower than XLISP
+because of some runtime debugging support automatically added to
+user programs by the SAL compiler.)
+<p>
+From the user's perspective, these implementation details are hidden. You 
+can enter SAL mode from XLISP by typing <code>(SAL)</code> to the XLISP prompt.
+The SAL input prompt (<code>SAL&gt; </code>) will be displayed. From that point on,
+you simply type SAL commands, and they will be executed. By setting a 
+preference in the jNyqIDE program, SAL mode will be entered automatically.
+<p>
+It is possible to encounter errors that will take you from the SAL interpreter
+to an XLISP prompt. In general, the way to get back to SAL is by typing 
+<code>(top)</code> to get back to the top level XLISP interpreter and reset the
+Nyquist environment. Then type <code>(sal)</code> to restart the SAL interpreter.
+<p>
+<a name = "54"><h3>SAL Syntax and Semantics</h3></a>
+<a name="index169">
+ The most unusual feature of SAL syntax is that identifiers
+are Lisp-like, including names such as "play-file" and even "*warp*."
+In SAL, most operators must be separated from identifiers by white space.
+For example, <code>play-file</code> is one identifier, but <code>play - file</code>
+is an expression for "play minus file," where <code>play</code> and <code>file</code> are
+two separate identifiers. Fortunately, no spaces are needed around commas
+and parentheses.
+<p>
+In SAL, whitespace (any sequence of space, newline, or tab characters)
+is sometimes necessary to separate lexical tokens, but
+otherwise, spaces and indentation are ignored. To make SAL readable,
+it is <i>strongly</i> advised that you indent SAL programs as in the examples
+here. The jNyqIDE program is purposely insistent about SAL indentation,
+so if you use it to edit SAL programs, your indentation should be 
+both beautiful and consistent.
+<p>
+As in Lisp (but very unlike C or Java), comments <a name="index170">
+are indicated by
+semicolons. Any text from an unquoted semicolon to the end of the 
+line is ignored.
+<p>
+<pre>
+<i>; this is a comment</i>
+<i>; comments are ignored by the compiler</i>
+print "Hello World" <i>; this is a SAL statement</i>
+</pre>
+
+<p>
+As in Lisp, identifiers are translated to upper-case, making SAL 
+case-insensitive<a name="index171">. For example, the function name <code>autonorm</code> can
+be typed in lower case or as <code>AUTONORM</code>, <code>AutoNorm</code>, or even 
+<code>AuToNoRm</code>. All forms denote the same function. The recommended
+approach is to write programs in all lower case.
+<p>
+SAL is organized around statements, most of which
+contain expressions. We will begin with expressions and then look at
+statements.
+<p>
+<a name = "55"><h4>Expressions</h4></a>
+<a name="index172"><a name="index173">
+<a name = "56"><h5>Simple Expressions</h5></a>
+As in XLISP, simple expressions include:
+<ul>
+<li>
+integers (FIXNUM's), such as <code>1215</code>, 
+<li>floats (FLONUM's) such as <code>12.15</code>, 
+<li>strings (STRING's) such as <code>"Magna Carta"</code>, and
+<li>symbols (SYMBOL's) such as <code>magna-carta</code>. A symbol with a leading colon 
+(<code>:</code>) evaluates to itself as in Lisp. Otherwise, a symbol denotes either
+a local variable, a formal parameter, or a global variable. As in Lisp, 
+variables do not have data types or type declarations. The type of a 
+variable is determined at runtime by its value.
+</ul>
+<p>
+Additional simple expressions in SAL are:
+<ul>
+<li>
+lists such as <code>{c 60 e 64}</code>. Note that there are no commas to separate list elements, and symbols in lists are not evaluated as variables but stand for themselves. Lists may contain numbers, booleans, symbols, strings, and other lists.
+<li>Booleans: SAL interprets <code>#t</code><a name="index174"> as true and <code>#f</code><a name="index175">
+as false. (As far
+as the SAL compiler is concerned, <code>t</code> and <code>nil</code> are just variables.
+Since these are the Lisp versions of true and false, they are interchangeable
+with <code>#t</code> and <code>#f</code>, respectively.)
+</ul>
+A curious property of Lisp and Sal is that <i>false</i> and the empty list are 
+the same value. Since SAL is based on Lisp, <code>#f</code> and <code>{}</code> (the empty
+list)<a name="index176"> are equal.
+<p>
+<a name = "57"><h5>Operators</h5></a>
+Expressions can be formed with unary and binary operators using infix notation. The operators are:
+<ul>
+<li>
+<a name="index177"><code>+</code> - addition, including sounds
+<li><a name="index178"><code>-</code> - subtraction, including sounds
+<li><a name="index179"><code>*</code> - multiplication, including sounds
+<li><a name="index180"><code>/</code> - division (due to divide-by-zero problems, does not operate on sounds)
+<li><a name="index181"><code>%</code> - modulus (remainder after division)
+<li><a name="index182"><code>^</code> - exponentiation
+<li><a name="index183"><code>=</code> - equal (using Lisp <code>eql</code>)
+<li><a name="index184"><code>!=</code> - not equal
+<li><a name="index185"><code>&gt;</code> - greater than
+<li><a name="index186"><code>&lt;</code> - less than
+<li><a name="index187"><code>&gt;=</code> - greater than or equal
+<li><a name="index188"><code>&lt;=</code> - less than or equal
+<li><a name="index189"><code>~=</code> - general equality (using Lisp <code>equal</code>)
+<li><a name="index190"><code>&amp;</code> - logical and
+<li><a name="index191"><code>|</code> - logical or
+<li><a name="index192"><code>!</code> - logical not (unary)
+<li><a name="index193"><a name="index194"><a name="index195"><code>@</code> - time shift
+<li><a name="index196"><a name="index197"><a name="index198"><code>@@</code> - time shift to absolute time
+<li><a name="index199"><a name="index200"><code>~</code> - time stretch
+<li><a name="index201"><a name="index202"><code>~~</code> - time stretch to absolute stretch factor
+</ul>
+Again, remember that operators <i>must</i> be delimited from their operands using
+spaces or parentheses. Operator precedence is based on the following levels of 
+precedence:
+<pre>
+@ @@ ~ ~~
+^
+/ * 
+% - +
+~= &lt;= &gt;= &gt; ~= =
+!
+&amp;
+|
+</pre>
+
+<p>
+<a name = "58"><h5>Function Calls</h5></a>
+<a name="index203">
+A function call is a function name followed by zero or more comma-delimited
+argument expressions
+enclosed within parentheses:
+<pre>
+list()
+piano-note(2.0, c4 + interval, 100)
+</pre>
+
+Some functions use named parameters,
+in which case the name of the argument with a colon precedes the argument
+expression.
+<pre>
+s-save(my-snd(), ny:all, "tmp.wav", play: #t, bits: 16)
+</pre>
+
+<p>
+<a name = "59"><h5>Array Notation</h5></a>
+<a name="index204">
+An array reference is a variable identifier followed by an index expression
+in square brackets, e.g.:
+<pre>
+x[23] + y[i]
+</pre>
+
+<p>
+<a name = "60"><h5>Conditional Values</h5></a>
+<a name="index205">
+<a name="index206">
+The special operator <code>#?</code> evaluates the first argument expression. 
+If the result is <i>true</i>, the second expression is evaluated and
+its value is returned. If <i>false</i>, the third expression is evaluated
+and returned (or <i>false</i> is returned if there is no third expression):
+<pre>
+#?(random(2) = 0, unison, major-third)
+#?(pitch &gt;= c4, pitch - c4) ; returns false if pitch &lt; c4
+</pre>
+
+<p>
+<a name = "61"><h4>SAL Statements</h4></a>
+<a name="index207">
+SAL compiles and evaluates <i>statements</i> one at a time. You can type
+statements at the SAL prompt or load a file containing SAL statements.
+SAL statements are described below. The syntax is indicated at the
+beginning of each statement type description: <code>this font</code> indicates
+literal terms such as keywords, <i>the italic font</i> indicates a 
+place-holder for some other statement or expression. Bracket [like this]
+indicate optional (zero or one) syntax elements, while braces with a plus
+{like this}+ indicate one or more occurrences of a syntax element. Braces
+with a star {like this}* indicate zero or more occurrences of a syntax element: { <i>non-terminal</i> }* is equivalent to [ {<i>non-terminal</i>}+ ].
+<p>
+<a name = "62"><h5>begin and end</h5></a>
+<a name="index208"><a name="index209">
+<code>begin</code> [<i>with-stmt</i>] {<i>statement</i>}+ <code>end</code>
+<p>
+A <code>begin</code>-<code>end</code> statement 
+consists of a sequence of statements surrounded by
+the <code>begin</code> and <code>end</code> keywords. This form is often used for function
+definitions and after <code>then</code> or <code>else</code> where the syntax demands a
+single statement but you want to perform more than one action. Variables may be
+declared using an optional <code>with</code> statement immediately after <code>begin</code>.
+For example:
+<pre>
+begin
+  with db = 12.0,
+       linear = db-to-linear(db)
+  print db, "dB represents a factor of", linear
+  set scale-factor = linear
+end  
+</pre>
+
+<p>
+<a name = "63"><h5>chdir</h5></a>
+<a name="index210">
+<code>chdir</code> <i>expression</i>
+<p>
+The <code>chdir</code> statement changes the working directory. This statement
+is provided for compatibility with Common Music SAL, but it really
+should be avoided if you use jNyqIDE. The <i>expression</i> following the
+<code>chdir</code> keyword should evaluate to a string that is a directory
+path name. Note that literal strings themselves are valid expressions.
+<pre>
+chdir "/Users/rbd/tmp"
+</pre>
+
+<p>
+<a name = "64"><h5>define variable</h5></a>
+<a name="index211"><a name="index212">
+[<code>define</code>] <code>variable</code> <i>name</i> [= <i>expression</i>] {, <i>name</i> [= <i>expression</i>]}*
+<p>
+Global variables can be declared and initialized. A list of variable names,
+each with an optional initialization follows the <code>define variable</code> 
+keywords. (Since <code>variable</code> is a keyword, <code>define</code> is redundant
+and optional in Nyquist SAL, but required in Common Music SAL.)
+If the initialization part is omitted, the variable is initialized
+to false. Global variables do not really need to be declared: just using the
+name implicitly creates the corresponding variable. However, it is an error
+to use a global variable that has not been initialized;
+<code>define variable</code> is a good way to introduce a variable (or constant)
+with an initial value into your program.
+<p>
+<pre>
+define variable transposition = 2,
+                print-debugging-info, <i>; initially false</i>
+                output-file-name = "salmon.wav"
+</pre>
+
+<p>
+<a name = "65"><h5>define function</h5></a>
+<a name="index213"><a name="index214">
+[<code>define</code>] <code>function</code> <i>name</i> <code>(</code> [<i>parameter</i>], {, <i>parameter</i>}* <code>)</code> <i>statement</i>
+<p>
+Before a function be called from an expression (as described above), it must
+be defined. A function definition gives the function <i>name</i>, a list of
+<i>parameters</i>, and a <i>statement</i>. When a function is called, the actual
+parameter expressions are evaluated from left to right and the formal parameters
+of the function definition are set to these values. Then, <i>statement</i> is 
+evaluated. 
+<p>
+The formal parameters may be positional parameters that are matched with
+actual parameters by position from left to right. Syntactically, these are
+symbols and these symbols
+are essentially local variables that exist only until <i>statement</i> completes 
+or a <code>return</code> statement causes the function evaluation to end. As in Lisp,
+parameters are passed by value, so assigning a new value to a formal parameter
+has no effect on the actual value. However, lists and arrays are not copied,
+so internal changes to a list or array produce observable side effects.
+<p>
+Alternatively, formal parameters may be keyword parameters. Here the <i>parameter</i>
+is actually a pair: a keyword parameter, which is a symbol followed by a colon,
+and a default value, given by any expression. Within the body of the function,
+the keyword parameter is named by a symbol whose name matches the keyword
+parameter except there is no final colon.
+<pre>
+define function foo(x: 1, y: bar(2, 3))
+    display "foo", x, y
+<p>
+exec foo(x: 6, y: 7)
+</pre>
+
+In this example, <code>x</code> is bound to the value 6 and <code>y</code> is bound to
+the value 7, so the example prints "<code>foo : X = 6, Y = 7</code>". Note that
+while the keyword parameters are <code>x:</code> and <code>y:</code>, the corresponding
+variable names in the function body are <code>x</code> and <code>y</code>, respectively.
+<p>
+The <i>parameters</i> are meaningful only within the lexical (static) scope of
+<i>statement</i>. They are not accessible from within other
+functions even if they are called by this function.
+<p>
+Use a <code>begin</code>-<code>end</code> statement if the body of the function should
+contain more than one statement or you need to define local variables. Use 
+a <code>return</code> statement to return a value from the function. If <i>statement</i>
+completes without a <code>return</code>, the value false is returned.
+<p>
+<a name = "66"><h5>display</h5></a>
+<a name="index215">
+<code>display</code> <i>string</i> {, <i>expression</i>}*
+<p>
+The <code>display</code> statement is handy for debugging. At present, it is only
+implemented in Nyquist SAL. When executed, <code>display</code> prints the <i>string</i>
+followed by a colon and then, for each <i>expression</i>, the expression and its
+value are printed, after the last expression, a newline is printed. For example,
+<pre>
+display "In function foo", bar, baz
+</pre>
+
+prints
+<pre>
+In function foo : bar = 23, baz = 5.3
+</pre>
+
+SAL may print the expressions using Lisp syntax, e.g. if the expression is
+"bar + baz," do not be surprised if the output is "<code>(sum bar baz) = 28.3</code>."
+<p>
+<a name = "67"><h5>exec</h5></a>
+<a name="index216">
+<code>exec</code> <i>expression</i>
+<p>
+Unlike most other programming languages, you cannot simply type an expression as
+a statement. If you want to evaluate an expression, e.g. call a function, 
+you must use an <code>exec</code> statement. The statement simply evaluates 
+the <i>expression</i>. For example,
+<pre>
+exec set-sound-srate(22050.0) <i>; change default sample rate</i>
+</pre>
+
+<p>
+<a name = "68"><h5>if</h5></a>
+<a name="index217">
+<code>if</code> <i>test-expr</i> <code>then</code> <i>true-stmt</i> [<code>else</code> <i>false-stmt</i>]
+<p>
+An <code>if</code> statement evaluates the expression <i>test-expr</i>. If it is true,
+it evaluates the statement <i>true-stmt</i>. If false, the statement
+<i>false-stmt</i> is evaluated. Use a <code>begin</code>-<code>end</code> statement
+to evaluate more than one statement in then <code>then</code> or <code>else</code>
+parts.
+<p>
+<pre>
+if x &lt; 0 then x = -x <i>; x gets its absoute value</i>
+<p>
+if x &gt; upper-bound then
+  begin
+    print "x too big, setting to", upper-bound
+    x = upper-bound
+  end
+else
+  if x &lt; lower-bound then
+    begin
+      print "x too small, setting to", lower-bound
+      x = lower-bound
+    end
+</pre>
+
+Notice in this example that the <code>else</code> part is another <code>if</code>
+statement. An <code>if</code> may also be the <code>then</code> part of another
+<code>if</code>, so there could be two possible <code>if</code>'s with which to
+associate an <code>else</code>. An <code>else</code> clause always associates
+with the closest previous <code>if</code> that does not already have an
+<code>else</code> clause.
+<p>
+<a name = "69"><h5>when</h5></a>
+<code>when</code> <i>test</i> <i>statement</i>
+<p>
+The <code>when</code> statement is similar to <code>if</code>, but there is no <code>else</code> clause.
+<p>
+<pre>
+when *debug-flag* print "you are here"
+</pre>
+
+<p>
+<a name = "70"><h5>unless</h5></a>
+<code>unless</code> <i>test</i> <i>statement</i>
+<p>
+The <code>unless</code> statement is similar to <code>when</code> (and <code>if</code>) but the
+<i>statement</i> is executed when the <i>test</i> expression is <i>false</i>.
+<p>
+<pre>
+unless count = 0 set average = sum / count
+</pre>
+
+<p>
+<a name = "71"><h5>load</h5></a>
+<a name="index218">
+<code>load</code> <i>expression</i>
+<p>
+The <code>load</code> command loads a file named by <i>expression</i>, which must
+evauate to a string path name for the file. To load a file, SAL interprets
+each statement in the file, stopping when the end of the file or an error
+is encountered. If the file ends in <code>.lsp</code>, the file is assumed to 
+contain Lisp expressions, which are evaluated by the XLISP interpreter.
+In general, SAL files should end with the extension <code>.sal</code>.
+<p>
+<a name = "72"><h5>loop</h5></a>
+<a name="index219">
+<code>loop</code> [<i>with-stmt</i>] {<i>stepping</i>}* {<i>stopping</i>* <i>action</i>+ [<i>finally</i>] <code>end</code>
+<p>
+The <code>loop</code> statement is by far the most complex statement in SAL, but
+it offers great flexibility for just about any kind of iteration. The basic
+function of a loop is to repeatedly evaluate a sequence of <i>action</i>'s which 
+are statements. Before the loop begins, local variables may be declared in 
+<i>with-stmt</i>, a <code>with</code> statement. 
+<p>
+The <i>stepping</i> clauses do several
+things. They introduce and initialize additional local variables similar
+to the <i>with-stmt</i>.
+However, these local variables are updated to new values after the <i>action</i>'s.
+In addition, some <i>stepping</i> clauses have associated stopping conditions, 
+which are tested on each iteration <i>before</i> evaluating the <i>action</i>'s.
+<p>
+There are also <i>stopping</i> clauses that provide additional tests to
+stop the iteration. These are also evaluated and tested
+on each iteration before evaluating the <i>action</i>'s.
+<p>
+When some <i>stepping</i> or <i>stopping</i> condition causes the iteration to stop,
+the <i>finally</i> clause is evaluated (if present). Local variables and their
+values can still be accessed in the <i>finally</i> clause. After the <i>finally</i>
+clause, the <code>loop</code> statement completes.
+<p>
+The <i>stepping</i> clauses are the following:
 <dl>
 <dt>
-<code>*table*</code><dd>Default table used by <code>osc</code> and other oscillators.<br><br>
-<dt><code>*A4-Hertz*</code><dd>Frequency of A4 in Hertz.. Note: you must call <code>(set-pitch-names)</code> to recompute pitches after changing <code>*A4-Hertz*</code>.<br><br>
-<dt><code>*breakenable*</code><dd>Controls whether XLisp enters a break loop when an error is encountered.<br><br>
-<dt><code>*control-srate*</code><dd>Part of the environment, establishes the control sample rate. See Section <a href = "part3.html#17">``The Environment''</a> for details.<br><br>
-<dt><code>*default-sf-bits*</code><dd>The default bits-per-sample for sound files. Typically 16.<br><br>
-<dt><code>*default-sf-dir*</code><dd>The default sound file directory.  Unless you give a full path for a file, audio files are assumed to be in this directory.<br><br>
-<dt><code>*default-sf-format*</code><dd>The default sound file format. When you write a file, this will be the default format: AIFF for Mac and most Unix systems, NeXT for NeXT systems, and WAV for Win32.<br><br>
-<dt><code>*default-sf-srate*</code><dd>The default sample rate for sound files. Typically  44100.0, but often set to 22050.0 for speed in non-critical tasks.<br><br>
-<dt><code>*default-control-srate*</code><dd>Default value for <code>*control-srate*</code>. This value is restored when you execute <code>(top)</code> to pop out of a debugging session. Change it by calling <code>(set-control-srate <i>value</i>)</code>.<br><br>
-<dt><code>*default-sound-srate*</code><dd>Default value for <code>*sound-srate*</code>. This value is restored when you execute <code>(top)</code> to pop out of a debugging session. Change it by calling <code>(set-sound-srate <i>value</i>)</code>.<br><br>
-<dt><code>*file-separator*</code><dd>The character that separates directories in a path, e.g. ``<code>/</code>'' for Unix, ``<code>:</code>'' for Mac, and ``<code>\</code>'' for Win32. This is normally set in <code>system.lsp</code>.<br><br>
-<dt><code>*rslt*</code><dd>When a function returns more than one value, <code>*rslt*</code> is set to a list of the ``extra'' values. This provides a make-shift version of the <code>multiple-value-return</code> facility in Common Lisp.<br><br>
-<dt><code>*sound-srate*</code><dd>Part of the environment, establishes the audio sample rate. See Section <a href = "part3.html#17">``The Environment''</a> for details.<br><br>
-<dt><code>*soundenable*</code><dd>Controls whether writes to a sound file will also be played as audio.  Set this variable by calling <code>(sound-on)</code> or <code>(sound-off)</code>.<br><br>
-<dt><code>*tracenable*</code><dd>Controls whether XLisp prints a backtrace when an error is encountered.<br><br>
-<dt><code>Environment variables</code><dd>See <a href = "part3.html#17">``The Environment''</a> for definitions of variables used in the environment for behaviors. In general, you should never set or access these variables directly.<br><br>
-<dt><code>Various constants</code><dd>See <a href = "part2.html#15">``Predefined Constants''</a> for definitions of predefined constants for loudness, duration, and pitch.<br><br>
-<dt></dl><hr>
-<a href = "part6.html">Previous Section</a> | <a href = "part8.html">Next Section</a> | <a href = "home.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "home.html">Title Page</a>
+<code>repeat</code> <i>expression</i><dd>Sets the number of iterations to the value of <i>expression</i>, which should be an integer (FIXNUM).<br><br>
+<dt><code>for</code> <i>var</i> = <i>expression</i> [ <code>then</code> <i>expr2</i> ]<dd>Introduces a new local
+variable named <i>var</i> and initializes it to <i>expression</i>. Before each subsequent
+iteration, <i>var</i> is set to the value of <i>expr2</i>. If the <code>then</code> part is
+omitted, <i>expression</i> is re-evaluated and assigned to <i>var</i>
+on each subsequent iteration. Note that this differs from a <i>with-stmt</i> where
+expressions are evaluated and variables are only assigned their values once.<br><br>
+<dt><code>for</code> <i>var</i> <code>in</code> <i>expression</i><dd>Evaluates <i>expression</i> to 
+obtain a list and creates a new local variable initialized to the first element
+of the list. After each iteration, <i>var</i> is assigned the next element of the
+list. Iteration stops when <i>var</i> has assumed all values from the list. If the
+list is initially empty, the loop <i>action</i>'s are not evaluated (there are zero
+iterations).<br><br>
+<dt><code>for</code> <i>var</i> [<code>from</code> <i>from-expr</i>] [[<code>to</code> | <code>below</code> | <code>downto</code> | <code>above</code>] <i>to-expr</i>] [<code>by</code> <i>step-expr</i>]<dd>Introduces a new local variable named <i>var</i> and intialized
+to the value of the expression <i>from-expr</i> (with a default value of 0). After
+each iteration of the loop, <i>var</i> is incremented by the value 
+of <i>step-expr</i> (with a default value of 1). 
+The iteration ends when <i>var</i> is greater than 
+the value of <i>to-expr</i> if there is a <code>to</code> clause, 
+greater than or equal to the value of <i>to-expr</i> 
+if there is a <code>below</code> clause, 
+less than the value of <i>to-expr</i> if there is a <code>downto</code> clause, 
+or less than or equal to the value of <i>to-expr</i> if there is a <code>above</code>
+clause. (In the cases of <i>downto</i> and <i>above</i>, the default increment value
+is -1. If there
+is no <code>to</code>, <code>below</code>, <code>downto</code>, <code>above</code>, or <code>below</code> clause, no interation stop test is created for this
+stepping clause.
+</dl>
+<p>
+The <i>stopping</i> clauses are the following:
+<dl>
+<dt>
+<code>while</code> <i>expression</i><dd>The iterations are stopped when <i>expression</i> evaluates to <i>false</i>. Anything not false is considered to mean true.<br><br>
+<dt><code>until</code> <i>expression</i><dd>The iterations are stopped when <i>expression</i> evaluates to <i>true</i>.
+</dl>
+<p>
+The <i>finally</i> clause is defined as follows:
+<a name="index220">
+<dl>
+<dt>
+<code>finally</code> <i>statement</i><dd>The <i>statement</i> is evaluated when one of the 
+<i>stepping</i> or <i>stopping</i> clauses ends the loop. As always, <i>statement</i> may
+be a <code>begin</code>-<code>end</code> statement. If an <i>action</i> evaluates a <code>return</code>
+statement, the <code>finally</code> statement is not executed.
+</dl>
+<p>
+<a name="index221">Loops often fall into common patterns, such as iteratiing a fixed number of
+times, performing an operation on some range of integers, collecting results
+in a list, and linearly searching for a solution. These forms are illustrated
+in the examples below.
+<p>
+<pre>
+<i>; iterate 10 times</i>
+loop
+  repeat 10
+  print random(100)
+end
+<p>
+<i>; print even numbers from 10 to 20
+; note that 20 is printed. On the next iteration,
+;   i = 22, so i &gt;= 22, so the loop exits.</i>
+loop
+  for i from 10 to 22 by 2
+  print i
+end
+<p>
+<i>; collect even numbers in a list</i>
+loop
+  with lis
+  for i = 0 to 10 by 2
+  set lis @= i <i>; push integers on front of list,</i>
+               <i>; which is much faster than append,</i>
+               <i>; but list is built in reverse</i>
+  finally result = reverse(lis)
+end
+<i>; now, the variable result has a list of evens</i>
+<p>
+<i>; find the first even number in a list</i>
+result = #f <i>; #f means "false"</i>
+loop
+  for elem in lis
+  until evenp(elem)
+  finally result = elem
+end
+<i>; result has first even value in lis (or it is #f)</i>
+</pre>
+
+<p>
+<a name = "73"><h5>print</h5></a>
+<a name="index222">
+<code>print</code> <i>expr</i> {, <i>expr</i>}*
+<p>
+The <code>print</code> statement prints a newline, then evaluates 
+expressions and prints their values. A blank space is printed
+after each value.
+<p>
+<pre>
+print "The value of x is", x
+</pre>
+
+<p>
+<a name = "74"><h5>return</h5></a>
+<a name="index223">
+<code>return</code> <i>expression</i>
+<p>
+The <code>return</code> statement can only be used inside a function. It evaluates
+<i>expression</i> and then the function returns the value of the expression
+to its caller.
+<p>
+<a name = "75"><h5>set</h5></a>
+<a name="index224">
+<code>set</code> <i>var</i> <i>op</i> <i>expression</i> {, <i>var</i> <i>op</i> <i>expression</i>}*
+<p>
+The <code>set</code> statement changes the value of a variable <i>var</i> according
+to the operator <i>op</i> and the value of the <i>expression</i>. The operators are:
+<dl>
+<dt>
+<code>=</code><dd>The value of <i>expression</i> is assigned to <i>var</i>.<br><br>
+<dt><a name="index225"><code>+=</code><dd>The value of <i>expression</i> is added to <i>var</i>.<br><br>
+<dt><a name="index226"><code>*=</code><dd>The value of <i>var</i> is multiplied by the value of the expression.<br><br>
+<dt><a name="index227"><code>&amp;=</code><dd>The value of <i>expression</i> is inserted as the last element of
+the list referenced by <i>var</i>. If <i>var</i> is the empty list (denoted by <code>#f</code>),
+then <i>var</i> is assigned a newly constructed list of one element, the value
+of <i>expression</i>.<br><br>
+<dt><a name="index228"><code>^=</code><dd>The value of <i>expression</i>, a list, is appended to the list referenced
+by <i>var</i>. If <i>var</i> is the empty list (denoted by <code>#f</code>), then <i>var</i>
+is assigned the (list) value of <i>expression</i>.<br><br>
+<dt><a name="index229"><code>@=</code><dd>Pushes the value of <i>expression</i> onto the front of the list
+referenced by <i>var</i>. If <i>var</i> is empty (denoted by <code>#f</code>), then <i>var</i> 
+is assigned a newly constructed list of one element, the value of <i>expression</i>.<br><br>
+<dt><a name="index230"><code>&lt;=</code><dd>Sets the new value of <i>var</i> to the minimum of the old value 
+of <i>var</i> and the value of <i>expression</i>.<br><br>
+<dt><a name="index231"><code>&gt;=</code><dd>Sets the new value of <i>var</i> to the maximum of the old value 
+of <i>var</i> and the value of <i>expression</i>.
+</dl>
+<p>
+<pre>
+<i>; example from Rick Taube's SAL description</i>
+loop
+  with a, b = 0, c = 1, d = {}, e = {}, f = -1, g = 0
+  for i below 5
+  set a = i, b += 1, c *= 2, d &amp;= i, e @= i, f &lt;= i, g &gt;= i
+  finally display "results", a, b, c, d, e, f, g
+end
+</pre>
+
+<p>
+<a name = "76"><h5>with</h5></a>
+<a name="index232">
+<code>with</code> <i>var</i> [= <i>expression</i>] {, <i>var</i> [= <i>expression</i>]}*
+<p>
+The <code>with</code> statement declares and initializes local variables. It 
+can appear only after <code>begin</code> or <code>loop</code>. If the <i>expression</i> is
+omitted, the initial value is <i>false</i>. The variables are visible only 
+inside the <code>begin</code>-<code>end</code> or <code>loop</code> statement where the 
+<code>with</code> statement appears. Even in <code>loop</code>'s the variables 
+are intialized only when the loop is entered, not on each iteration.
+<p>
+<a name = "77"><h5>exit</h5></a>
+<a name="index233">
+<code>exit</code> [<code>nyquist</code>]
+<p>
+The <code>exit</code> statement is unique to Nyquist SAL. It returns from SAL 
+mode to the XLISP interpreter. (Return to SAL mode by typing "<code>(sal)</code>").
+If <code>nyquist</code> is included in the statement, then the entire Nyquist
+process will exit.
+<p>
+<a name = "78"><h3>Interoperability of SAL and XLISP</h3></a>
+<a name="index234"><a name="index235">
+
+When SAL evaluatas command or loads files, it translates SAL into XLISP.
+You can think of SAL as a program that translates everything you write
+into XLISP and entering it for you. Thus, when you define a SAL function,
+the function actually exists as an XLISP function (created using
+Lisp's <code>defun</code> special form). When you set or evaluate global variables
+in SAL, these are exactly the same Lisp global variables. Thus, XLISP
+functions can call SAL functions and vice-versa. At run time, 
+everything is Lisp.
+<p>
+<a name = "79"><h4>Function Calls</h4></a>
+In general, there is a very simple translation from SAL to Lisp syntax
+and back. A function call is SAL, for example, 
+<pre>
+osc(g4, 2.0)
+</pre>
+
+is translated to Lisp by moving the open parenthesis in front of the
+function name and removing the commas:
+<pre>
+(osc g4 2.0)
+</pre>
+
+Similarly, if you want to translate a Lisp function call to SAL, just
+reverse the translation.
+<p>
+<a name = "80"><h4>Symbols and Functions</h4></a>
+SAL translates keywords with trailing colons (such as <code>foo:</code>)
+into Lisp keywords with leading colons (such as <code>:foo</code>), but
+SAL keywords are not treated as expressions as they are in Lisp.
+You cannot write <code>open("myfile.txt", direction: output:)</code>
+because SAL expects an expression after direction. A special form
+<code>keyword</code> is defined to generate a Lisp keyword as an 
+expression. The argument is the keyword <i>without</i> a colon, e.g.
+<code>open("myfile.txt", direction: keyword(output))</code>. Alternatively, 
+you can write the Lisp-style keyword with the leading colon, e.g.
+<code>open("myfile.txt", direction: :output)</code>.
+<p>
+In Nyquist SAL, the hash character (#), can be used as a prefix to a 
+Lisp function name. For example, the following command is not legal
+because <code>print</code> is a SAL command name, not a legal function name:
+<code>set v = append(print(a), print(b))</code>. (Here the intent is to print
+arguments to append). However, you can use the hash character to access
+the Lisp <code>print</code> function: <code>set v = append(#print(a), #print(b))</code>.
+<p>
+<a name = "81"><h4>Playing Tricks On the SAL Compiler</h4></a>
+In many cases, the close coupling between SAL and XLISP gives SAL
+unexpected expressive power. A good example is <code>seqrep</code>. This
+is a special looping construct in Nyquist, implemented as a macro in
+XLISP. In Lisp, you would write something like:
+<pre>
+(seqrep (i 10) (pluck c4))
+</pre>
+
+One might expect SAL would have to define a special <code>seqrep</code>
+statement to express this, but since statements do not return values,
+this approach would be problematic. The solution (which is already
+fully implemented in Nyquist) is to define a
+new macro <code>sal-seqrep</code> that is equivalent to <code>seqrep</code> 
+except that it is called as follows:
+<pre>
+(sal-seqrep i 10 (pluck c4))
+</pre>
+
+The SAL compiler automatically translates the identifier <code>seqrep</code> to 
+ <code>sal-seqrep</code>. Now, in SAL, you can just write
+<pre>
+seqrep(i, 10, pluck(c4))
+</pre>
+
+which is translated in a pretty much semantics-unaware fashion to
+<pre>
+(sal-seqrep i 10 (pluck c4))
+</pre>
+
+and viola!, we have Nyquist control constructs in SAL even though SAL
+is completely unaware that <code>seqrep</code> is actually a special form.
+<p>
+<hr>
+<a href = "part6.html">Previous Section</a> | <a href = "part8.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 </body></html>

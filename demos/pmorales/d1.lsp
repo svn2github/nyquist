@@ -5,7 +5,9 @@
 
 ; NYQUIST code for simple Karplus-Strong algorithm
 
-(load "pjmg.lsp")
+(setf *pmorales-path* (current-path))
+(load (strcat *pmorales-path* "pjmg.lsp"))
+
 
 (setf ks-class
  (send class :new '(cnt total-cnt z-1output output delay-line len total-len)))

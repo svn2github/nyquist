@@ -20,7 +20,7 @@ typedef struct clip_susp_struct {
     long s_cnt;
     sample_block_values_type s_ptr;
 
-    double lev;
+    sample_type level;
 } clip_susp_node, *clip_susp_type;
 
 
@@ -34,7 +34,7 @@ void clip_n_fetch(register clip_susp_type susp, snd_list_type snd_list)
 
     register sample_block_values_type out_ptr_reg;
 
-    register double lev_reg;
+    register sample_type level_reg;
     register sample_block_values_type s_ptr_reg;
     falloc_sample_block(out, "clip_n_fetch");
     out_ptr = out->samples;
@@ -82,14 +82,14 @@ void clip_n_fetch(register clip_susp_type susp, snd_list_type snd_list)
 	}
 
 	n = togo;
-	lev_reg = susp->lev;
+	level_reg = susp->level;
 	s_ptr_reg = susp->s_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double x = *s_ptr_reg++; *out_ptr_reg++ = (sample_type) (x > lev_reg ? lev_reg : (x < -lev_reg ? -lev_reg : x));
+double x = *s_ptr_reg++; *out_ptr_reg++ = (sample_type) (x > level_reg ? level_reg : (x < -level_reg ? -level_reg : x));
 	} while (--n); /* inner loop */
 
-	susp->lev = lev_reg;
+	susp->level = level_reg;
 	/* using s_ptr_reg is a bad idea on RS/6000: */
 	susp->s_ptr += togo;
 	out_ptr += togo;
@@ -111,6 +111,96 @@ double x = *s_ptr_reg++; *out_ptr_reg++ = (sample_type) (x > lev_reg ? lev_reg :
 	susp->logically_stopped = true;
     }
 } /* clip_n_fetch */
+
+
+void clip_s_fetch(register clip_susp_type susp, snd_list_type snd_list)
+{
+    int cnt = 0; /* how many samples computed */
+    int togo;
+    int n;
+    sample_block_type out;
+    register sample_block_values_type out_ptr;
+
+    register sample_block_values_type out_ptr_reg;
+
+    register sample_type level_reg;
+    register sample_type s_scale_reg = susp->s->scale;
+    register sample_block_values_type s_ptr_reg;
+    falloc_sample_block(out, "clip_s_fetch");
+    out_ptr = out->samples;
+    snd_list->block = out;
+
+    while (cnt < max_sample_block_len) { /* outer loop */
+	/* first compute how many samples to generate in inner loop: */
+	/* don't overflow the output sample block: */
+	togo = max_sample_block_len - cnt;
+
+	/* don't run past the s input sample block: */
+	susp_check_term_log_samples(s, s_ptr, s_cnt);
+	togo = min(togo, susp->s_cnt);
+
+	/* don't run past terminate time */
+	if (susp->terminate_cnt != UNKNOWN &&
+	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo == 0) break;
+	}
+
+
+	/* don't run past logical stop time */
+	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+	    /* break if to_stop == 0 (we're at the logical stop)
+	     * AND cnt > 0 (we're not at the beginning of the
+	     * output block).
+	     */
+	    if (to_stop < togo) {
+		if (to_stop == 0) {
+		    if (cnt) {
+			togo = 0;
+			break;
+		    } else /* keep togo as is: since cnt == 0, we
+		            * can set the logical stop flag on this
+		            * output block
+		            */
+			susp->logically_stopped = true;
+		} else /* limit togo so we can start a new
+		        * block at the LST
+		        */
+		    togo = to_stop;
+	    }
+	}
+
+	n = togo;
+	level_reg = susp->level;
+	s_ptr_reg = susp->s_ptr;
+	out_ptr_reg = out_ptr;
+	if (n) do { /* the inner sample computation loop */
+double x = (s_scale_reg * *s_ptr_reg++); *out_ptr_reg++ = (sample_type) (x > level_reg ? level_reg : (x < -level_reg ? -level_reg : x));
+	} while (--n); /* inner loop */
+
+	susp->level = level_reg;
+	/* using s_ptr_reg is a bad idea on RS/6000: */
+	susp->s_ptr += togo;
+	out_ptr += togo;
+	susp_took(s_cnt, togo);
+	cnt += togo;
+    } /* outer loop */
+
+    /* test for termination */
+    if (togo == 0 && cnt == 0) {
+	snd_list_terminate(snd_list);
+    } else {
+	snd_list->block_len = cnt;
+	susp->susp.current += cnt;
+    }
+    /* test for logical stop */
+    if (susp->logically_stopped) {
+	snd_list->logically_stopped = true;
+    } else if (susp->susp.log_stop_cnt == susp->susp.current) {
+	susp->logically_stopped = true;
+    }
+} /* clip_s_fetch */
 
 
 void clip_toss_fetch(susp, snd_list)
@@ -165,16 +255,17 @@ sound_type snd_make_clip(sound_type s, double level)
     int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
-    /* combine scale factors of linear inputs (S) */
-    scale_factor *= s->scale;
-    s->scale = 1.0F;
-
-    /* try to push scale_factor back to a low sr input */
-    if (s->sr < sr) { s->scale = scale_factor; scale_factor = 1.0F; }
-
     falloc_generic(susp, clip_susp_node, "snd_make_clip");
-    susp->lev = level * s->scale;
-    susp->susp.fetch = clip_n_fetch;
+    susp->level = (sample_type) level;
+
+    /* select a susp fn based on sample rates */
+    interp_desc = (interp_desc << 2) + interp_style(s, sr);
+    switch (interp_desc) {
+      case INTERP_n: susp->susp.fetch = clip_n_fetch; break;
+      case INTERP_s: susp->susp.fetch = clip_s_fetch; break;
+      default: snd_badsr(); break;
+    }
+
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < s->t0) sound_prepend_zeros(s, t0);

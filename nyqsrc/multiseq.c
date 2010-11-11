@@ -25,6 +25,12 @@
 extern snd_list_type snd_list_to_watch;
 #endif
 
+/* #define GC_DEBUG */
+#ifdef GC_DEBUG
+extern sound_type sound_to_watch;
+#endif
+
+
 #define D if(0)
 
 /* Design:

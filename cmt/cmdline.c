@@ -50,7 +50,7 @@
  *
  * After calling cl_syntax, main() should call
  *   cl_init(argv, argc)
- * cl_init will report an error (to stderr) if it finds any illegal
+ * cl_init will report an error (to STDERR) if it finds any illegal
  * switch or option names in argv, and help will be printed if "?"
  * is found in argv.  If cl_init returns false, then the user has been
  * given an error message or help, and main should probably exit.
@@ -460,6 +460,7 @@ private void indirect_command(filename, oldarg0)
             strcpy(argv[i], arg);
             i++;
         }
+        fclose(argfile);
     }
 }
 

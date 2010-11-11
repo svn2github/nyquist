@@ -12,10 +12,11 @@
 #ifndef mips
 #include "stdlib.h"
 #endif
-#include "snd.h"
+#include "sndfmt.h"
 #include "xlisp.h"
 #include "sound.h"
 #include "falloc.h"
+#include "sndfile.h"
 #include "sndread.h"
 #include "multiread.h"
 
@@ -23,8 +24,10 @@
  * e.g. 8 allows 2 channels
  * If frames are bigger, then multiple reads will be issued.
  */
-#define max_bytes_per_frame 8
+#define max_bytes_per_frame (sizeof(float) * 2)
 #define input_buffer_max (max_sample_block_len * max_bytes_per_frame)
+#define input_buffer_samps (max_sample_block_len * 2)
+
 
 /* multiread_fetch - read samples into multiple channels.  */
 /*
@@ -49,15 +52,14 @@ void multiread_fetch(susp, snd_list)
     int frames_read = 0; /* total frames read in this call to fetch */
     int n;
     sample_block_type out;
-    char input_buffer[input_buffer_max];
-    float *float_ptr;
-    int buff_frame_size;
+    // char input_buffer[input_buffer_max];
+    float input_buffer[input_buffer_samps];
     int file_frame_size;
 
     /* when we are called, the caller (SND_get_first) will insert a new
      * snd_list node.  We need to do this here for all other channels.
      */
-    for (j = 0; j < susp->snd.format.channels; j++) {
+    for (j = 0; j < susp->sf_info.channels; j++) {
 
 /*        nyquist_printf("multiread_fetch: chan[%d] = ", j);
         print_snd_list_type(susp->chan[j]);
@@ -131,33 +133,22 @@ void multiread_fetch(susp, snd_list)
         }
     }
 
-    file_frame_size = susp->snd.format.channels * susp->bytes_per_sample;
-    buff_frame_size = susp->snd.format.channels * sizeof(float);
+    file_frame_size = susp->sf_info.channels;
+
     /* now fill sample blocks with frames from the file 
        until eof or end of blocks */
     while (true) {
 
         /* compute how many frames to read to fill sample blocks */
         long frame_count = max_sample_block_len - frames_read;
-        long byte_count;    /* how many bytes to read */
         long actual;         /* how many frames actually read */
-        float peak;
 
         /* make sure frames will fit in buffer */
-        /* assume buff_frame_size >= file_frame_size, i.e. the limiting
-           factor will be the number of floats we can fit in the buffer */
-        if (frame_count * buff_frame_size > input_buffer_max) {
-            frame_count = input_buffer_max / buff_frame_size;
+        if (frame_count * file_frame_size > input_buffer_samps) {
+            frame_count = input_buffer_samps / file_frame_size;
         }
 
-        byte_count = frame_count * file_frame_size;
-
-        /* put samples at end of buffer so we can 
-           overwrite buffer with converted samples */
-        actual = snd_read(&susp->snd,  
-                          input_buffer + input_buffer_max - byte_count, 
-                          frame_count);
-
+        actual = sf_readf_float(susp->sndfile, input_buffer, frame_count);
         n = actual;  
 
         /* don't read too many */
@@ -165,16 +156,11 @@ void multiread_fetch(susp, snd_list)
             n = susp->cnt - susp->susp.current;
         }
 
-        /* we want n frames, convert data to floats */
-        (*susp->cvtfn)((void *) input_buffer, 
-                       (void *) (input_buffer + input_buffer_max - byte_count), 
-                       n * susp->snd.format.channels, 1.0F, &peak);
-
         /* process one channel at a time, multiple passes through input */
-        for (j = 0; j < susp->snd.format.channels; j++) {
+        for (j = 0; j < susp->sf_info.channels; j++) {
             register sample_block_values_type out_ptr;
             /* offset by channel number: */
-            float_ptr = ((float *) input_buffer) + j;
+            float *float_ptr = input_buffer + j;
 
             /* ignore nonexistent channels */
             if (!susp->chan[j]) continue;
@@ -185,10 +171,14 @@ void multiread_fetch(susp, snd_list)
             /* copy samples */
             for (i = 0; i < n; i++) {
                 *out_ptr++ = *float_ptr;
-                float_ptr += susp->snd.format.channels;
+                float_ptr += susp->sf_info.channels;
             }
             susp->chan[j]->block_len = frames_read + n;
         }
+
+	/* jlh BECAUSE, at this point, all the code cares about is
+	   that n frames have been read and the samples put into their
+	   appropriate snd_node buffers. */
 
         frames_read += n;
         susp->susp.current += n;
@@ -219,7 +209,7 @@ void multiread_fetch(susp, snd_list)
              * convert snd_list's to pointer to zero block.  This loop
              * will free the susp via snd_list_unref().
              */
-            for (j = 0; j < susp->snd.format.channels; j++) {
+            for (j = 0; j < susp->sf_info.channels; j++) {
                 if (susp->chan[j]) {
                     snd_list_type the_snd_list = susp->chan[j];
                     /* this is done so that multiread_free works right: */
@@ -235,7 +225,7 @@ void multiread_fetch(susp, snd_list)
              * reached end of file
              * last iteration will close file and free susp:
              */
-            for (j = 0; j < susp->snd.format.channels; j++) {
+            for (j = 0; j < susp->sf_info.channels; j++) {
                 snd_list_type the_snd_list = susp->chan[j];
                 /* nyquist_printf("reached susp->cnt, terminating chan %d\n", j); */
                 if (the_snd_list) {
@@ -253,7 +243,7 @@ void multiread_fetch(susp, snd_list)
             return;
         } else if (frames_read >= max_sample_block_len) {
             /* move pointer to next list node */
-            for (j = 0; j < susp->snd.format.channels; j++) {
+            for (j = 0; j < susp->sf_info.channels; j++) {
                 if (susp->chan[j]) susp->chan[j] = susp->chan[j]->u.next;
             }
             return;
@@ -267,7 +257,7 @@ void multiread_free(read_susp_type susp)
     int j;
     boolean active = false;
 /*    stdputstr("multiread_free: "); */
-    for (j = 0; j < susp->snd.format.channels; j++) {
+    for (j = 0; j < susp->sf_info.channels; j++) {
         if (susp->chan[j]) {
             if (susp->chan[j]->refcnt) active = true;
             else {
@@ -291,11 +281,11 @@ LVAL multiread_create(susp)
 
     xlsave1(result);
 
-    result = newvector(susp->snd.format.channels);      /* create array for sounds */
-    falloc_generic_n(susp->chan, snd_list_type, susp->snd.format.channels, 
+    result = newvector(susp->sf_info.channels);      /* create array for sounds */
+    falloc_generic_n(susp->chan, snd_list_type, susp->sf_info.channels, 
                      "multiread_create");
     /* create sounds to return */
-    for (j = 0; j < susp->snd.format.channels; j++) {
+    for (j = 0; j < susp->sf_info.channels; j++) {
         sound_type snd = sound_create((snd_susp_type)susp, 
                                       susp->susp.t0, susp->susp.sr, 1.0);
         LVAL snd_lval = cvsound(snd);

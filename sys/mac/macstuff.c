@@ -40,27 +40,6 @@ void osinit (char *banner) {
     for (i = 0; version[i] != '\0'; i++) macputc (version[i]);
 }
 
-/* osrand - return next random number in sequence */
-long osrand (long rseed) {
-#ifdef OLDBUTINTERESTING
-// note that this takes a seed and returns a big number,
-// whereas I think XLisp's RANDOM is defined differently
-    long k1;
-
-    /* make sure we don't get stuck at zero */
-    if (rseed == 0L) rseed = 1L;
-
-    /* algorithm taken from Dr. Dobbs Journal, November 1985, page 91 */
-    k1 = rseed / 127773L;
-    if ((rseed = 16807L * (rseed - k1 * 127773L) - k1 * 2836L) < 0L)
-    rseed += 2147483647L;
-
-    /* return a random number between 0 and MAXFIX */
-    return rseed;
-#endif
-    return rand() % rseed;	// rseed is a misnomer
-}
-
 FILE *osaopen (char *name, char *mode) {
     return fopen (name, mode);
 }

@@ -49,12 +49,14 @@
             (compute-update-rule update-rule
              (aref prev (- array-len 2)) (aref prev (- array-len 1))
              (aref prev 0)))
-      ; then loop through everything else
+
+      ; then loop through everything else
       ; want to cycle from 1 to array-len-2
       (dotimes (j (- array-len 2))
         (setf (aref current (+ j 1)) 
               (compute-update-rule update-rule 
-               (aref prev j) (aref prev (+ j 1)) (aref prev (+ j 2)))))
+               (aref prev j) (aref prev (+ j 1)) (aref prev (+ j 2))))
+)
       ; set prev to current
       (setf tmp prev)
       (setf prev current)
@@ -64,7 +66,8 @@
     ;; the score is now in reverse order, so fix it
     (setf score (reverse score)) 
     ;; now we have a score, render it to sound and return it:
-    (timed-seq score)))
+    (timed-seq score))
+)
 
 (defun cell-aut-major-scale ()
   ;; for testing, this creates an 8-note scale
@@ -76,5 +79,5 @@
     (reverse scale)))
 
 (defun cell-aut-demo ()
+  (require-from 'piano-note-2 "pianosyn.lsp")
   (play (scale 0.5 (cell-aut (cell-aut-major-scale) 0.2 30 80))))
-

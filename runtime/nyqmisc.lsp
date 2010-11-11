@@ -1,7 +1,7 @@
 ;; nyqmisc.lsp -- misc functions for nyquist
 
-(setf *snd-display-max-samples* 10000)
-(setf *snd-display-print-samples* 100)
+(init-global *snd-display-max-samples* 10000)
+(init-global *snd-display-print-samples* 100)
 
 
 ; (snd-display sound) -- describe a sound

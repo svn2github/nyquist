@@ -1,7 +1,7 @@
 (RECIP-ALG
   (NAME "recip")
   (ARGUMENTS ("sound_type" "s1"))
-  (STATE ("double" "scale" "s1->scale"))
+  (STATE ("double" "scale" "(1.0 / s1->scale)"))
   (INTERNAL-SCALING s1)
   (CONSTANT "scale")
   (START (MIN s1))
