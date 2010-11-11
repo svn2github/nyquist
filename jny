@@ -1,2 +1,3 @@
 $sh
-java -cp . jnyqide/Main
+java -jar jnyqide/jNyqIDE.jar
+
