@@ -350,6 +350,8 @@ bin:
 
 liblo/Makefile:
 \tcd liblo; ./configure --enable-static --disable-shared
+\t# sometimes, residual files cause problems
+\tcd liblo; make clean
 
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 \tcd liblo; make
@@ -366,6 +368,8 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 
 portaudio/Makefile:
 \tcd portaudio; ./configure
+\t# sometimes, residual files cause problems
+\tcd portaudio; make clean
 
 $(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
 \tcd portaudio; make
