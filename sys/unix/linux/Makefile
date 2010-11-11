@@ -43,7 +43,7 @@ jnyqide/jNyqIDE.jar: $(JAVASRC)
 	if [ -r jnyqide/SpecialMacHandler.java ] ; then \
 	mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden ;\
 	fi 
-	javac jnyqide/*.java 
+	cd jnyqide; javac *.java 
 	mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java 
 	rm -rf jnyqide/jNyqIDE.jar 
 	jar -cfm jnyqide/jNyqIDE.jar jnyqide/manifest.txt jnyqide/*.class 
