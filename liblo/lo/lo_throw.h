@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: lo_throw.h,v 1.2 2009/02/24 17:13:09 rbd Exp $
+ *  $Id$
  */
 
 #ifndef LO_THROW_H

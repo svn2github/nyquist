@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: testlo.c,v 1.1 2009/02/24 17:17:01 rbd Exp $
+ *  $Id$
  */
 
 /*
@@ -23,8 +23,13 @@
 #include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#else
+#include <unistd.h>
+#endif
 
 #include "lo_types_internal.h"
 #include "lo_internal.h"
@@ -442,7 +447,9 @@ int main()
     lo_send(a, "/", "i", 242);
     lo_send(a, "/pattern/", "i", 243);
 
+#ifndef _MSC_VER  /* MS compiler refuses to compile this case */
     lo_send(a, "/bar", "ff", 0.12345678f, 1.0/0.0);
+#endif
     lo_send(a, "/lotsofformats", "fisbmhtdSccTFNI", 0.12345678f, 123, "123",
 	    btest, midi_data, 0x0123456789abcdefULL, tt, 0.9999, "sym",
 	    'X', 'Y');
@@ -456,6 +463,11 @@ int main()
     TEST(test_varargs(a, "/lotsofformats", "fisbmhtdSccTFNI", 0.12345678f, 123,
                       "123", btest, midi_data, 0x0123456789abcdefULL, tt,
                       0.9999, "sym", 'X', 'Y', LO_ARGS_END) == 0);
+
+#ifdef __GNUC__
+    // Note: Lack of support for variable-argument macros in non-GCC compilers
+    //       does not allow us to test for these conditions.
+
     // too many args
     TEST(test_varargs(a, "/lotsofformats", "f", 0.12345678f, 123,
                       "123", btest, midi_data, 0x0123456789abcdefULL, tt,
@@ -464,6 +476,7 @@ int main()
     TEST(test_varargs(a, "/lotsofformats", "fisbmhtdSccTFNI", 0.12345678f, 123,
                       "123", btest, midi_data, 0x0123456789abcdefULL, tt, 0.5,
                       LO_ARGS_END) != 0);
+#endif
 
     // test lo_message_add
     m1 = lo_message_new();
@@ -498,7 +511,10 @@ int main()
     TEST(subtest_reply_count == 22);
     printf("\n");
 
-    b = lo_bundle_new((lo_timetag){10,0xFFFFFFFC});
+    {
+        lo_timetag t = {10,0xFFFFFFFC};
+        b = lo_bundle_new(t);
+    }
     m1 = lo_message_new();
     lo_message_add_string(m1, "abcdefghijklmnopqrstuvwxyz");
     lo_message_add_string(m1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
@@ -508,7 +524,10 @@ int main()
     /* This should be safe for multiple copies of the same message. */
     lo_bundle_free_messages(b);
 
-    b = lo_bundle_new((lo_timetag){1,2});
+    {
+        lo_timetag t = {1,2};
+        b = lo_bundle_new(t);
+    }
     m1 = lo_message_new();
     lo_message_add_int32(m1, 23);
     lo_message_add_string(m1, "23");
@@ -531,7 +550,10 @@ int main()
     /* Test freeing out-of-order copies of messages in a bundle. */
     lo_bundle_free_messages(b);
 
-    b = lo_bundle_new((lo_timetag){10,0xFFFFFFFE});
+    {
+        lo_timetag t = {10,0xFFFFFFFE};
+        b = lo_bundle_new(t);
+    }
     m1 = lo_message_new();
     lo_message_add_string(m1, "abcdefghijklmnopqrstuvwxyz");
     lo_message_add_string(m1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
@@ -938,8 +960,12 @@ void replace_char(char *str, size_t size, const char find, const char replace)
 
 void test_deserialise()
 {
-    const char *types = NULL;
+    char *buf, *buf2, *tmp;
+    const char *types = NULL, *path;
     lo_arg **argv = NULL;
+    size_t len, size;
+    char data[256];
+    int result = 0;
 
     lo_blob btest = lo_blob_new(sizeof(testdata), testdata);
     uint8_t midi_data[4] = {0xff, 0xf7, 0xAA, 0x00};
@@ -992,17 +1018,17 @@ void test_deserialise()
     TEST('I' == types[14] && NULL == argv[14]);
 
     // serialise it
-    size_t len = lo_message_length(msg, "/foo");
+    len = lo_message_length(msg, "/foo");
     printf("serialise message_length=%d\n", (int)len);
-    char *buf = calloc(len, sizeof(char));
-    size_t size = 0;
-    char *tmp = lo_message_serialise(msg, "/foo", buf, &size);
+    buf = calloc(len, sizeof(char));
+    size = 0;
+    tmp = lo_message_serialise(msg, "/foo", buf, &size);
     TEST(tmp == buf && size == len && 92 == len);
     lo_message_free(msg);
 
     // deserialise it
     printf("deserialise\n");
-    const char *path = lo_get_path(buf, len);
+    path = lo_get_path(buf, len);
     TEST(NULL != path && !strcmp(path, "/foo"));
     msg = lo_message_deserialise(buf, size, NULL);
     TEST(NULL != msg);
@@ -1036,7 +1062,7 @@ void test_deserialise()
     // serialise it again, compare
     len = lo_message_length(msg, "/foo");
     printf("serialise message_length=%d\n", (int)len);
-    char *buf2 = calloc(len, sizeof(char));
+    buf2 = calloc(len, sizeof(char));
     size = 0;
     tmp = lo_message_serialise(msg, "/foo", buf2, &size);
     TEST(tmp == buf2 && size == len && 92 == len);
@@ -1048,9 +1074,6 @@ void test_deserialise()
     free(buf2);
 
     // deserialise failure tests with invalid message data
-
-    char data[256];
-    int result = 0;
 
     msg = lo_message_deserialise(data, 0, &result); // 0 size
     TEST(NULL == msg && LO_ESIZE == result);
@@ -1117,6 +1140,14 @@ void test_validation(lo_address a)
     int eok = error_okay;
     int sock = a->socket;
 
+    /* This code won't work with MSVC because the lo_client_sockets data structure
+     * is not explicitly made available to external programs.  We could expose it
+     * in debug mode, perhaps, but let's just skip this test for now.  (Can be tested
+     * on Windows using MingW.) */
+#ifdef _MSC_VER
+    return;
+#else
+
     printf("validation\n");
 
     if (sock == -1)
@@ -1137,6 +1168,7 @@ void test_validation(lo_address a)
     Sleep(10);
 #endif
     error_okay = eok;
+#endif
 }
 
 void test_multicast(lo_server_thread st)

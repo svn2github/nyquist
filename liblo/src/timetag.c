@@ -11,14 +11,18 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: timetag.c,v 1.1 2009/02/24 17:17:01 rbd Exp $
+ *  $Id$
  */
-
-#include <sys/time.h>
-#include <time.h>
 
 #include "lo_types_internal.h"
 #include "lo/lo.h"
+
+#ifdef _MSC_VER
+lo_timetag lo_get_tt_immediate() { lo_timetag tt = {0U,1U}; return tt; }
+#else
+#include <sys/time.h>
+#endif
+#include <time.h>
 
 #define JAN_1970 0x83aa7e80      /* 2208988800 1970 - 1900 in seconds */
 
@@ -36,8 +40,9 @@ void lo_timetag_now(lo_timetag *t)
         1601 and 1900 are 9435484800 seconds apart.
     */
     FILETIME ftime;
+    double dtime;
     GetSystemTimeAsFileTime(&ftime);
-    double dtime = 
+    dtime = 
         ((ftime.dwHighDateTime*4294967296.e-7)-9435484800.)+
         (ftime.dwLowDateTime*1.e-7);
 

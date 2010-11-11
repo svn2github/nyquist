@@ -281,7 +281,9 @@ bin:
 	mkdir bin
 
 liblo/Makefile:
-	cd liblo; ./configure --enable-static --disable-shared
+	cd liblo; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+	# sometimes, residual files cause problems
+	cd liblo; make clean
 
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 	cd liblo; make
@@ -298,6 +300,8 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 
 portaudio/Makefile:
 	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32
+	# sometimes, residual files cause problems
+	cd portaudio; make clean
 
 $(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
 	cd portaudio; make

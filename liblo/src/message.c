@@ -11,13 +11,14 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: message.c,v 1.1 2009/02/24 17:17:01 rbd Exp $
+ *  $Id$
  */
 
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -47,9 +48,20 @@ static char lo_string_types[] = {
     '\0'
 };
 
-static void lo_message_add_typechar(lo_message m, char t);
+static int lo_message_add_typechar(lo_message m, char t);
 static void *lo_message_add_data(lo_message m, size_t s);
 void lo_arg_pp_internal(lo_type type, void *data, int bigendian);
+
+// Used for calculating new sizes when expanding message data buffers.
+// Note that log(x)/0.69315 = log2(x): this simply finds the next
+// highest power of 2.
+#if 1
+#define lo_pow2_over(a,b) \
+    a = ((b > a) ? (a << ((int)((log(((double)b/(double)a))/0.69315)+1))) : a);
+#else
+#define lo_pow2_over(a,b) \
+    while (b > a) {a *= 2;}
+#endif
 
 lo_message lo_message_new()
 {
@@ -124,11 +136,13 @@ int lo_message_add_varargs_internal(lo_message msg, const char *types,
 
 	case LO_STRING:
 	    s = va_arg(ap, char *);
+#ifdef __GNUC__
 	    if (s == (char *)LO_MARKER_A) {
 		fprintf(stderr, "liblo error: lo_send or lo_message_add called with "
 			"invalid string pointer for arg %d, probably arg mismatch\n"
 		        "at %s:%d, exiting.\n", count, file, line);
 	    }
+#endif
 	    lo_message_add_string(msg, s);
 	    break;
 
@@ -154,6 +168,7 @@ int lo_message_add_varargs_internal(lo_message msg, const char *types,
 
 	case LO_SYMBOL:
 	    s = va_arg(ap, char *);
+#ifdef __GNUC__
 	    if (s == (char *)LO_MARKER_A) {
 		fprintf(stderr, "liblo error: lo_send or lo_message_add called with "
 			"invalid symbol pointer for arg %d, probably arg mismatch\n"
@@ -161,6 +176,7 @@ int lo_message_add_varargs_internal(lo_message msg, const char *types,
         va_end(ap);
         return -2;
 	    }
+#endif
 	    lo_message_add_symbol(msg, s);
 	    break;
 
@@ -197,6 +213,7 @@ int lo_message_add_varargs_internal(lo_message msg, const char *types,
 	    break;
 	}
     }
+#ifdef __GNUC__
     i = va_arg(ap, uint32_t);
     if (i != LO_MARKER_A) {
 	ret = -2; // bad format/args
@@ -211,6 +228,7 @@ int lo_message_add_varargs_internal(lo_message msg, const char *types,
 	fprintf(stderr, "liblo error: lo_send, lo_message_add, or lo_message_add_varargs called with "
 			"mismatching types and data at\n%s:%d, exiting.\n", file, line);
     }
+#endif
     va_end(ap);
 
 	return ret;
@@ -219,11 +237,20 @@ int lo_message_add_varargs_internal(lo_message msg, const char *types,
 /* Don't call lo_message_add_internal directly, use lo_message_add,
  * a macro wrapping this function with appropriate values for file and line */
 
+#ifdef __GNUC__
 int lo_message_add_internal(lo_message msg, const char *file, const int line,
                             const char *types, ...)
+#else
+int lo_message_add(lo_message msg, const char *types, ...)
+#endif
 {
     va_list ap;
     int ret = 0;
+
+#ifndef __GNUC__
+    const char *file = "";
+    const int line = 0;
+#endif
 
     va_start(ap, types);
     ret = lo_message_add_varargs_internal(msg, types, ap, file, line);
@@ -231,135 +258,168 @@ int lo_message_add_internal(lo_message msg, const char *file, const int line,
 	return ret;
 }
 	
-void lo_message_add_int32(lo_message m, int32_t a)
+int lo_message_add_int32(lo_message m, int32_t a)
 {
     lo_pcast32 b;
     int32_t *nptr = lo_message_add_data(m, sizeof(a));
+    if (!nptr) return -1;
     b.i = a;
 
-    lo_message_add_typechar(m, LO_INT32);
+    if (lo_message_add_typechar(m, LO_INT32))
+        return -1;
     *nptr = b.nl;
+    return 0;
 }
     
-void lo_message_add_float(lo_message m, float a)
+int lo_message_add_float(lo_message m, float a)
 {
     lo_pcast32 b;
     int32_t *nptr = lo_message_add_data(m, sizeof(a));
+    if (!nptr) return -1;
     b.f = a;
 
-    lo_message_add_typechar(m, LO_FLOAT);
+    if (lo_message_add_typechar(m, LO_FLOAT))
+        return -1;
     *nptr = b.nl;
+    return 0;
 }
 
-void lo_message_add_string(lo_message m, const char *a)
+int lo_message_add_string(lo_message m, const char *a)
 {
     const int size = lo_strsize(a);
     char *nptr = lo_message_add_data(m, size);
+    if (!nptr) return -1;
 
-    lo_message_add_typechar(m, LO_STRING);
+    if (lo_message_add_typechar(m, LO_STRING))
+        return -1;
     strncpy(nptr, a, size);
+    return 0;
 }
 
-void lo_message_add_blob(lo_message m, lo_blob a)
+int lo_message_add_blob(lo_message m, lo_blob a)
 {
     const uint32_t size = lo_blobsize(a);
     const uint32_t dsize = lo_blob_datasize(a);
     char *nptr = lo_message_add_data(m, size);
+    if (!nptr) return -1;
 
-    lo_message_add_typechar(m, LO_BLOB);
+    if (lo_message_add_typechar(m, LO_BLOB))
+        return -1;
     memset(nptr + size - 4, 0, 4);
 
     memcpy(nptr, &dsize, sizeof(dsize));
     memcpy(nptr + sizeof(int32_t), lo_blob_dataptr(a), lo_blob_datasize(a));
+    return 0;
 }
 
-void lo_message_add_int64(lo_message m, int64_t a)
+int lo_message_add_int64(lo_message m, int64_t a)
 {
     lo_pcast64 b;
     uint64_t *nptr = lo_message_add_data(m, sizeof(a));
+    if (!nptr) return -1;
     b.i = a;
 
-    lo_message_add_typechar(m, LO_INT64);
+    if (lo_message_add_typechar(m, LO_INT64))
+        return -1;
     *nptr = b.nl;
+    return 0;
 }
 
-void lo_message_add_timetag(lo_message m, lo_timetag a)
+int lo_message_add_timetag(lo_message m, lo_timetag a)
 {
     lo_pcast64 b;
     uint64_t *nptr = lo_message_add_data(m, sizeof(a));
+    if (!nptr) return -1;
     b.tt = a;
 
-    lo_message_add_typechar(m, LO_TIMETAG);
+    if (lo_message_add_typechar(m, LO_TIMETAG))
+        return -1;
     *nptr = b.nl;
+    return 0;
 }
 
-void lo_message_add_double(lo_message m, double a)
+int lo_message_add_double(lo_message m, double a)
 {
     lo_pcast64 b;
     uint64_t *nptr = lo_message_add_data(m, sizeof(a));
+    if (!nptr) return -1;
     b.f = a;
 
-    lo_message_add_typechar(m, LO_DOUBLE);
+    if (lo_message_add_typechar(m, LO_DOUBLE))
+        return -1;
     *nptr = b.nl;
+    return 0;
 }
 
-void lo_message_add_symbol(lo_message m, const char *a)
+int lo_message_add_symbol(lo_message m, const char *a)
 {
     const int size = lo_strsize(a);
     char *nptr = lo_message_add_data(m, size);
+    if (!nptr) return -1;
 
-    lo_message_add_typechar(m, LO_SYMBOL);
+    if (lo_message_add_typechar(m, LO_SYMBOL))
+        return -1;
     strncpy(nptr, a, size);
+    return 0;
 }
 
-void lo_message_add_char(lo_message m, char a)
+int lo_message_add_char(lo_message m, char a)
 {
     lo_pcast32 b;
     int32_t *nptr = lo_message_add_data(m, sizeof(int32_t));
+    if (!nptr) return -1;
 
     b.c = a;
 
-    lo_message_add_typechar(m, LO_CHAR);
+    if (lo_message_add_typechar(m, LO_CHAR))
+        return -1;
     *nptr = b.nl;
+    return 0;
 }
 
-void lo_message_add_midi(lo_message m, uint8_t a[4])
+int lo_message_add_midi(lo_message m, uint8_t a[4])
 {
     char *nptr = lo_message_add_data(m, 4);
+    if (!nptr) return -1;
 
-    lo_message_add_typechar(m, LO_MIDI);
+    if (lo_message_add_typechar(m, LO_MIDI))
+        return -1;
 
     memcpy(nptr, a, sizeof(a));
+    return 0;
 }
 
-void lo_message_add_true(lo_message m)
+int lo_message_add_true(lo_message m)
 {
-    lo_message_add_typechar(m, LO_TRUE);
+    return lo_message_add_typechar(m, LO_TRUE);
 }
 
-void lo_message_add_false(lo_message m)
+int lo_message_add_false(lo_message m)
 {
-    lo_message_add_typechar(m, LO_FALSE);
+    return lo_message_add_typechar(m, LO_FALSE);
 }
 
-void lo_message_add_nil(lo_message m)
+int lo_message_add_nil(lo_message m)
 {
-    lo_message_add_typechar(m, LO_NIL);
+    return lo_message_add_typechar(m, LO_NIL);
 }
 
-void lo_message_add_infinitum(lo_message m)
+int lo_message_add_infinitum(lo_message m)
 {
-    lo_message_add_typechar(m, LO_INFINITUM);
+    return lo_message_add_typechar(m, LO_INFINITUM);
 }
 
-static void lo_message_add_typechar(lo_message m, char t)
+static int lo_message_add_typechar(lo_message m, char t)
 {
     if (m->typelen + 1 >= m->typesize) {
-	m->typesize *= 2;
-	if (!m->typesize) {
-	    m->typesize = LO_DEF_TYPE_SIZE;
-	}
-	m->types = realloc(m->types, m->typesize);
+        int new_typesize = m->typesize * 2;
+        char *new_types = 0;
+        if (!new_typesize)
+            new_typesize = LO_DEF_TYPE_SIZE;
+        new_types = realloc(m->types, new_typesize);
+        if (!new_types) return -1;
+        m->types = new_types;
+        m->typesize = new_typesize;
     }
     m->types[m->typelen] = t;
     m->typelen++;
@@ -368,28 +428,34 @@ static void lo_message_add_typechar(lo_message m, char t)
         free(m->argv);
         m->argv = NULL;
     }
+    return 0;
 }
 
 static void *lo_message_add_data(lo_message m, size_t s)
 {
     uint32_t old_dlen = m->datalen;
+    int new_datasize = m->datasize;
+    int new_datalen = m->datalen + s;
+    void *new_data = 0;
 
-    m->datalen += s;
-	
-	if (!m->datasize)
-	    m->datasize = LO_DEF_DATA_SIZE;
+	if (!new_datasize)
+	    new_datasize = LO_DEF_DATA_SIZE;
 
-    while (m->datalen > m->datasize)
-		m->datasize *= 2;
+    lo_pow2_over(new_datasize, new_datalen);
+	new_data = realloc(m->data, new_datasize);
+    if (!new_data)
+        return 0;
 
-	m->data = realloc(m->data, m->datasize);
+    m->datalen = new_datalen;
+    m->datasize = new_datasize;
+    m->data = new_data;
 
     if (m->argv) {
         free(m->argv);
         m->argv = NULL;
     }
 
-    return m->data + old_dlen;
+    return (void*)((char*)m->data + old_dlen);
 }
 
 int lo_strsize(const char *s)
@@ -470,12 +536,13 @@ ssize_t lo_validate_string(void *data, ssize_t size)
 ssize_t lo_validate_blob(void *data, ssize_t size)
 {
     ssize_t i, end, len;
+    uint32_t dsize;
     char *pos = (char *)data;
 
     if (size < 0) {
         return -LO_ESIZE;      // invalid size
     }
-    uint32_t dsize = lo_otoh32(*(uint32_t*)data);
+    dsize = lo_otoh32(*(uint32_t*)data);
     if (dsize > LO_MAX_MSG_SIZE) { // avoid int overflow in next step
         return -LO_ESIZE;
     }
@@ -659,13 +726,18 @@ int lo_message_get_argc(lo_message m)
 
 lo_arg **lo_message_get_argv(lo_message m)
 {
+    int i, argc;
+    char *types, *ptr;
+    lo_arg **argv;
+
     if (NULL != m->argv) { return m->argv; }
 
-    int i = 0, argc = m->typelen - 1;
-    char *types = m->types + 1;
-    char *ptr = m->data;
+    i = 0;
+    argc = m->typelen - 1;
+    types = m->types + 1;
+    ptr = m->data;
 
-    lo_arg **argv = calloc(argc, sizeof(lo_arg *));
+    argv = calloc(argc, sizeof(lo_arg *));
     for (i = 0; i < argc; ++i) {
         size_t len = lo_arg_size(types[i], ptr);
         argv[i] = len ? (lo_arg*)ptr : NULL;
@@ -683,6 +755,8 @@ char *lo_message_get_types(lo_message m)
 void *lo_message_serialise(lo_message m, const char *path, void *to,
 			   size_t *size)
 {
+    int i, argc;
+    char *types, *ptr;
     size_t s = lo_message_length(m, path);
 
     if (size) {
@@ -692,16 +766,17 @@ void *lo_message_serialise(lo_message m, const char *path, void *to,
     if (!to) {
 	to = calloc(1, s);
     }
-    memset(to + lo_strsize(path) - 4, 0, 4); // ensure zero-padding
+    memset((char*)to + lo_strsize(path) - 4, 0, 4); // ensure zero-padding
     strcpy(to, path);
-    memset(to + lo_strsize(path) + lo_strsize(m->types) - 4, 0, 4);
-    strcpy(to + lo_strsize(path), m->types);
+    memset((char*)to + lo_strsize(path) + lo_strsize(m->types) - 4, 0, 4);
+    strcpy((char*)to + lo_strsize(path), m->types);
 
-    char *types = m->types + 1;
-    char *ptr = to + lo_strsize(path) + lo_strsize(m->types);
+    types = m->types + 1;
+    ptr = (char*)to + lo_strsize(path) + lo_strsize(m->types);
     memcpy(ptr, m->data, m->datalen);
 
-    int i = 0, argc = m->typelen - 1;
+    i = 0;
+    argc = m->typelen - 1;
     for (i = 0; i < argc; ++i) {
         size_t len = lo_arg_size(types[i], ptr);
         lo_arg_network_endian(types[i], ptr);
@@ -715,7 +790,7 @@ lo_message lo_message_deserialise(void *data, size_t size, int *result)
 {
     lo_message msg = NULL;
     char *types = NULL, *ptr = NULL;
-    int i = 0, argc = 0, remain = size, res = 0;
+    int i = 0, argc = 0, remain = size, res = 0, len;
 
     if (remain <= 0) { res = LO_ESIZE; goto fail; }
 
@@ -733,7 +808,7 @@ lo_message lo_message_deserialise(void *data, size_t size, int *result)
     msg->ts = LO_TT_IMMEDIATE;
 
     // path
-    int len = lo_validate_string(data, remain);
+    len = lo_validate_string(data, remain);
     if (len < 0) {
         res = LO_EINVALIDPATH; // invalid path string
         goto fail;
@@ -745,7 +820,7 @@ lo_message lo_message_deserialise(void *data, size_t size, int *result)
         res = LO_ENOTYPE; // no type tag string
         goto fail;
     }
-    types = data + len;
+    types = (char*)data + len;
     len = lo_validate_string(types, remain);
     if (len < 0) {
         res = LO_EINVALIDTYPE; // invalid type tag string
@@ -805,7 +880,7 @@ fail:
 void lo_message_pp(lo_message m)
 {
     void *d = m->data;
-    void *end = m->data + m->datalen;
+    void *end = (char*)m->data + m->datalen;
     int i;
 
     printf("%s ", m->types);
@@ -815,12 +890,12 @@ void lo_message_pp(lo_message m)
 	}
 
 	lo_arg_pp_internal(m->types[i], d, 1);
-	d += lo_arg_size(m->types[i], d);
+	d = (char*)d + lo_arg_size(m->types[i], d);
     }
     putchar('\n');
     if (d != end) {
 	fprintf(stderr, "liblo warning: type and data do not match (off by %d) in message %p\n",
-		abs(d - end), m);
+            abs((char*)d - (char*)end), m);
     }
 }
 

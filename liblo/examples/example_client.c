@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: example_client.c,v 1.1 2009/02/24 17:13:09 rbd Exp $
+ *  $Id$
  */
 
 #include <stdio.h>

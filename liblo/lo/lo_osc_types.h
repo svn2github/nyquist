@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: lo_osc_types.h,v 1.3 2009/02/24 17:13:09 rbd Exp $
+ *  $Id$
  */
 
 #ifndef LO_OSC_TYPES_H
@@ -22,7 +22,15 @@
  * constants.
  */
 
+#ifdef _MSC_VER
+#define int32_t __int32
+#define int64_t __int64
+#define uint32_t unsigned __int32
+#define uint64_t unsigned __int64
+#define uint8_t unsigned __int8
+#else
 #include <stdint.h>
+#endif
 
 /**
  * \addtogroup liblo
@@ -44,7 +52,7 @@ typedef struct {
  * \brief An enumeration of the OSC types liblo can send and receive.
  *
  * The value of the enumeration is the typechar used to tag messages and to
- * specify arguemnts with lo_send().
+ * specify arguments with lo_send().
  */
 typedef enum {
 /* basic OSC types */
@@ -120,7 +128,13 @@ typedef union {
 } lo_arg;
 
 /** \brief A timetag constant representing "now". */
+/* Note: No struct literals in MSVC */
+#ifdef _MSC_VER
+lo_timetag lo_get_tt_immediate();
+#define LO_TT_IMMEDIATE lo_get_tt_immediate()
+#else
 #define LO_TT_IMMEDIATE ((lo_timetag){0U,1U})
+#endif
 
 /** @} */
 

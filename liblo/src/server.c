@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: server.c,v 1.1 2009/02/24 17:17:01 rbd Exp $
+ *  $Id$
  */
 
 #ifdef HAVE_CONFIG_H
@@ -19,12 +19,18 @@
 #endif
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <float.h>
 #include <sys/types.h>
+
+#ifdef _MSC_VER
+#define _WINSOCKAPI_
+#define snprintf _snprintf
+#else
+#include <unistd.h>
+#endif
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -74,6 +80,7 @@ static lo_server lo_server_new_with_proto_internal(const char *group,
                                                    lo_err_handler err_h);
 static int lo_server_add_socket(lo_server s, int socket);
 static void lo_server_del_socket(lo_server s, int index, int socket);
+static int lo_server_join_multicast_group(lo_server s, const char *group);
 
 #ifdef WIN32
 #ifndef gai_strerror
@@ -108,11 +115,12 @@ static int stateWSock = -1;
 
 int initWSock()
 {
+    WORD reqversion;
+    WSADATA wsaData;
     if(stateWSock >= 0) return stateWSock;
     /* TODO - which version of Winsock do we actually need? */
 
-    WORD reqversion = MAKEWORD( 2, 2 );
-    WSADATA wsaData;
+    reqversion = MAKEWORD( 2, 2 );
     if(WSAStartup(reqversion,&wsaData) != 0) {
         /* Couldn't initialize Winsock */
         stateWSock = 0;
@@ -285,42 +293,14 @@ lo_server lo_server_new_with_proto_internal(const char *group,
 	    lo_server_free(s);
 	    return NULL;
 	}
-    
-    /* Join multicast group if specified. */
-    /* This must be done before bind().   */
-    if (group != NULL) {
-        struct ip_mreq mreq;
-        unsigned int yes = 1;
-        memset(&mreq, 0, sizeof(mreq));
-#ifdef HAVE_INET_ATON
-        if (inet_aton(group, &mreq.imr_multiaddr)==0) {
-            int err = geterror();
-            lo_throw(s, err, strerror(err), "inet_aton()");
-            lo_server_free(s);
-            return NULL;
-        }
-#else
-	mreq.imr_multiaddr.s_addr = inet_addr(group);
-	if (mreq.imr_multiaddr.s_addr == INADDR_ANY
-	    || mreq.imr_multiaddr.s_addr == INADDR_NONE)
-	{
-            int err = geterror();
-            lo_throw(s, err, strerror(err), "inet_addr()");
-            lo_server_free(s);
-            return NULL;
-	}
-#endif
-        mreq.imr_interface.s_addr=htonl(INADDR_ANY);
 
-        setsockopt(s->sockets[0].fd,IPPROTO_IP,IP_ADD_MEMBERSHIP,
-                   &mreq,sizeof(mreq));
-        setsockopt(s->sockets[0].fd,SOL_SOCKET,SO_REUSEADDR,
-                   &yes,sizeof(yes));
-#ifdef SO_REUSEPORT
-        setsockopt(s->sockets[0].fd,SOL_SOCKET,SO_REUSEPORT,
-                   &yes,sizeof(yes));
+    /* Join multicast group if specified. */
+    /* This must be done before bind() on POSIX, but after bind() Windows. */
+#ifndef WIN32
+    if (group != NULL)
+        if (lo_server_join_multicast_group(s, group))
+            return NULL;
 #endif
-    }
 
 	if ((ret = bind(s->sockets[0].fd, used->ai_addr, used->ai_addrlen)) < 0) {
         int err = geterror();
@@ -336,6 +316,13 @@ lo_server lo_server_new_with_proto_internal(const char *group,
 	    return NULL;
 	}
     } while (!used && tries++ < 16);
+
+    /* Join multicast group if specified (see above). */
+#ifdef WIN32
+    if (group != NULL)
+        if (lo_server_join_multicast_group(s, group))
+            return NULL;
+#endif
 
     if (proto == LO_TCP) {
         listen(s->sockets[0].fd, 8);
@@ -405,6 +392,63 @@ lo_server lo_server_new_with_proto_internal(const char *group,
     }
 
     return s;
+}
+
+int lo_server_join_multicast_group(lo_server s, const char *group)
+{
+    struct ip_mreq mreq;
+    unsigned int yes = 1;
+    memset(&mreq, 0, sizeof(mreq));
+#ifdef HAVE_INET_ATON
+    if (inet_aton(group, &mreq.imr_multiaddr)==0) {
+        int err = geterror();
+        lo_throw(s, err, strerror(err), "inet_aton()");
+        lo_server_free(s);
+        return err;
+    }
+#else
+    mreq.imr_multiaddr.s_addr = inet_addr(group);
+    if (mreq.imr_multiaddr.s_addr == INADDR_ANY
+        || mreq.imr_multiaddr.s_addr == INADDR_NONE)
+    {
+        int err = geterror();
+        lo_throw(s, err, strerror(err), "inet_addr()");
+        lo_server_free(s);
+        return err;
+    }
+#endif
+    mreq.imr_interface.s_addr=htonl(INADDR_ANY);
+
+    if (setsockopt(s->sockets[0].fd,IPPROTO_IP,IP_ADD_MEMBERSHIP,
+            &mreq,sizeof(mreq)) < 0)
+    {
+        int err = geterror();
+        lo_throw(s, err, strerror(err), "setsockopt(IP_ADD_MEMBERSHIP)");
+        lo_server_free(s);
+        return err;
+    }
+
+    if (setsockopt(s->sockets[0].fd,SOL_SOCKET,SO_REUSEADDR,
+            &yes,sizeof(yes)) < 0)
+    {
+        int err = geterror();
+        lo_throw(s, err, strerror(err), "setsockopt(SO_REUSEADDR)");
+        lo_server_free(s);
+        return err;
+    }
+
+#ifdef SO_REUSEPORT
+    if (setsockopt(s->sockets[0].fd,SOL_SOCKET,SO_REUSEPORT,
+            &yes,sizeof(yes)) < 0)
+    {
+        int err = geterror();
+        lo_throw(s, err, strerror(err), "setsockopt(SO_REUSEPORT)");
+        lo_server_free(s);
+        return err;
+    }
+#endif
+
+    return 0;
 }
 
 void lo_server_free(lo_server s)
@@ -487,7 +531,7 @@ void *lo_server_recv_raw_stream(lo_server s, size_t *size)
     socklen_t addr_len = sizeof(addr);
     char buffer[LO_MAX_MSG_SIZE];
     int32_t read_size;
-    int ret, i;
+    int ret=0, i;
     void *data = NULL;
     int sock = -1;
     int repeat = 1;
@@ -810,23 +854,26 @@ void lo_server_del_socket(lo_server s, int index, int socket)
 int lo_server_dispatch_data(lo_server s, void *data, size_t size)
 {
     int result = 0;
+    char *path = data;
     ssize_t len = lo_validate_string(data, size);
     if (len < 0) {
         lo_throw(s, -len, "Invalid message path", NULL);
         return len;
     }
-    char *path = data;
 
     if (!strcmp(data, "#bundle")) {
+        char *pos;
+        int remain;
+        uint32_t elem_len;
+        lo_timetag ts, now;
+
         ssize_t bundle_result = lo_validate_bundle(data, size);
         if (bundle_result < 0) {
             lo_throw(s, -bundle_result, "Invalid bundle", NULL);
             return bundle_result;
         }
-        char *pos = (char *)data + len;
-        int remain = size - len;
-        uint32_t elem_len;
-        lo_timetag ts, now;
+        pos = (char *)data + len;
+        remain = size - len;
 
         lo_timetag_now(&now);
         ts.sec = lo_otoh32(*((uint32_t *)pos));
@@ -836,10 +883,11 @@ int lo_server_dispatch_data(lo_server s, void *data, size_t size)
         remain -= 8;
 
         while (remain >= 4) {
+            lo_message msg;
             elem_len = lo_otoh32(*((uint32_t *)pos));
             pos += 4;
             remain -= 4;
-            lo_message msg = lo_message_deserialise(pos, elem_len, &result);
+            msg = lo_message_deserialise(pos, elem_len, &result);
             if (!msg) {
                 lo_throw(s, result, "Invalid bundle element received", path);
                 return -result;
@@ -1137,9 +1185,11 @@ static int dispatch_queued(lo_server s)
     disp_time = head->ts;
 
     do {
+        char *path;
+        lo_message msg;
 	tailhead = head->next;
-        char *path = ((queued_msg_list *)s->queued)->path;
-        lo_message msg = ((queued_msg_list *)s->queued)->msg;
+        path = ((queued_msg_list *)s->queued)->path;
+        msg = ((queued_msg_list *)s->queued)->msg;
 	dispatch_method(s, path, msg);
         free(path);
         lo_message_free(msg);
@@ -1266,7 +1316,7 @@ int lo_server_get_protocol(lo_server s)
 
 char *lo_server_get_url(lo_server s)
 {
-    int ret;
+    int ret=0;
     char *buf;
 
     if (!s) {
@@ -1276,7 +1326,9 @@ char *lo_server_get_url(lo_server s)
     if (s->protocol == LO_UDP || s->protocol == LO_TCP) {
 	char *proto = s->protocol == LO_UDP ? "udp" : "tcp";
 
+#ifndef _MSC_VER
 	ret = snprintf(NULL, 0, "osc.%s://%s:%d/", proto, s->hostname, s->port);
+#endif
 	if (ret <= 0) {
 	    /* this libc is not C99 compliant, guess a size */
 	    ret = 1023;

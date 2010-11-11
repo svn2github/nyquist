@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: lo_macros.h,v 1.4 2009/02/27 00:15:50 rbd Exp $
+ *  $Id$
  */
 
 #ifndef LO_MACROS_H
@@ -40,36 +40,15 @@ extern "C" {
 #define LO_MARKER_B 0xf00baa23
 #define LO_ARGS_END LO_MARKER_A, LO_MARKER_B
 
-#ifdef _WIN32
-#define lo_message_add(msg, types, ...)                         \
-    lo_message_add_internal(msg, __FILE__, __LINE__, types,  \
-                            __VA_ARGS__, \
-                            LO_MARKER_A, LO_MARKER_B)
-#else
+#define lo_message_add_varargs(msg, types, list) \
+    lo_message_add_varargs_internal(msg, types, list, __FILE__, __LINE__)
+
+#ifdef __GNUC__
+
 #define lo_message_add(msg, types...)                         \
     lo_message_add_internal(msg, __FILE__, __LINE__, types,   \
                             LO_MARKER_A, LO_MARKER_B)
-#endif
 
-#define lo_message_add_varargs(msg, types, list) \
-        lo_message_add_varargs_internal(msg, types, list, __FILE__, __LINE__)
-
-
-#ifdef _WIN32
-#define lo_send(targ, path, types, ...) \
-        lo_send_internal(targ, __FILE__, __LINE__, path, types, \
-			 __VA_ARGS__, LO_MARKER_A, LO_MARKER_B)
-
-#define lo_send_timestamped(targ, ts, path, types, ...) \
-        lo_send_timestamped_internal(targ, __FILE__, __LINE__, ts, path, \
-		       	             types, __VA_ARGS__, \
-                                     LO_MARKER_A, LO_MARKER_B)
-
-#define lo_send_from(targ, from, ts, path, types, ...) \
-        lo_send_from_internal(targ, from, __FILE__, __LINE__, ts, path, \
-                              types, __VA_ARGS__, \
-		       	      LO_MARKER_A, LO_MARKER_B)
-#else
 #define lo_send(targ, path, types...) \
         lo_send_internal(targ, __FILE__, __LINE__, path, types, \
 			 LO_MARKER_A, LO_MARKER_B)
@@ -81,6 +60,17 @@ extern "C" {
 #define lo_send_from(targ, from, ts, path, types...) \
         lo_send_from_internal(targ, from, __FILE__, __LINE__, ts, path, \
 		       	             types, LO_MARKER_A, LO_MARKER_B)
+
+#else
+
+/* In non-GCC compilers, there is no support for variable-argument
+ * macros, so provide "internal" vararg functions directly instead. */
+
+int lo_message_add(lo_message msg, const char *types, ...);
+int lo_send(lo_address targ, const char *path, const char *types, ...);
+int lo_send_timestamped(lo_address targ, lo_timetag ts, const char *path, const char *types, ...);
+int lo_send_from(lo_address targ, lo_server from, lo_timetag ts, const char *path, const char *types, ...);
+
 #endif
 
 #ifdef __cplusplus

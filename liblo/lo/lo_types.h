@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: lo_types.h,v 1.4 2009/02/27 00:15:50 rbd Exp $
+ *  $Id$
  */
 
 #ifndef LO_TYPES_H
@@ -32,9 +32,7 @@ extern "C" {
 #include <netdb.h>
 #endif
 
-#ifndef _WIN32
 #include <pthread.h>
-#endif
 
 #include "lo/lo_osc_types.h"
 

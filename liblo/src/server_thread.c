@@ -11,10 +11,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: server_thread.c,v 1.1 2009/02/24 17:17:01 rbd Exp $
+ *  $Id$
  */
 
-#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,6 +24,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
+#include <unistd.h>
 #include <netdb.h>
 #include <sys/socket.h>
 #endif
@@ -99,7 +99,7 @@ void lo_server_thread_del_method(lo_server_thread st, const char *path,
     lo_server_del_method(st->s, path, typespec);
 }
 
-void lo_server_thread_start(lo_server_thread st)
+int lo_server_thread_start(lo_server_thread st)
 {
     int result;
 	
@@ -110,13 +110,16 @@ void lo_server_thread_start(lo_server_thread st)
 	// Create the server thread
 	result = pthread_create(&(st->thread), NULL, (void *)&thread_func, st);
 	if (result) {
-	    fprintf(stderr, "Failed to create thread: pthread_create() returned %s\n", strerror(result));
+        fprintf(stderr, "Failed to create thread: pthread_create(), %s",
+                strerror(result));
+        return -result;
 	}
 	
     }
+    return 0;
 }
 
-void lo_server_thread_stop(lo_server_thread st)
+int lo_server_thread_stop(lo_server_thread st)
 {
     int result;
 
@@ -128,9 +131,13 @@ void lo_server_thread_stop(lo_server_thread st)
 	// and then releases the thread's resources
 	result = pthread_join( st->thread, NULL );
 	if (result) {
-	    fprintf(stderr, "Failed to stop thread: pthread_join() returned %s\n", strerror(result));
+        fprintf(stderr, "Failed to stop thread: pthread_join(), %s",
+                strerror(result));
+        return -result;
 	}
     }
+
+    return 0;
 }
 
 int lo_server_thread_get_port(lo_server_thread st)

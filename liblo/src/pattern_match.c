@@ -56,10 +56,7 @@
  *  a[a-z]c     aac abc acc ...
  *  a[-a-z]c    a-c aac abc ...
  *
- * $Log: pattern_match.c,v $
- * Revision 1.1  2009/02/24 17:17:01  rbd
- * Last commit omitted some new source files I meant to add.
- *
+ * $Log$
  * Revision 1.1  2004/11/19 23:00:57  theno23
  * Added lo_send_timestamped
  *

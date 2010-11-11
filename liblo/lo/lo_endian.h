@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: lo_endian.h,v 1.5 2010/11/02 21:18:29 rbd Exp $
+ *  $Id$
  */
 
 #ifndef LO_ENDIAN_H

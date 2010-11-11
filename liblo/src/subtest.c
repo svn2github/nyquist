@@ -11,13 +11,15 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: subtest.c,v 1.1 2009/02/24 17:17:01 rbd Exp $
+ *  $Id$
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 #include "lo/lo.h"
 

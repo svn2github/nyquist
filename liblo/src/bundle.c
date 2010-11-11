@@ -11,7 +11,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
- *  $Id: bundle.c,v 1.1 2009/02/24 17:17:01 rbd Exp $
+ *  $Id$
  */
 
 #include <stdlib.h>
@@ -34,22 +34,24 @@ lo_bundle lo_bundle_new(lo_timetag tt)
     return b;
 }
 
-void lo_bundle_add_message(lo_bundle b, const char *path, lo_message m)
+int lo_bundle_add_message(lo_bundle b, const char *path, lo_message m)
 {
-    if (!m) {
-	return;
-    }
+    if (!m)
+    	return 0;
 
     if (b->len >= b->size) {
 	b->size *= 2;
 	b->msgs = realloc(b->msgs, b->size * sizeof(lo_message));
 	b->paths = realloc(b->paths, b->size * sizeof(char *));
+    if (!b->msgs || !b->paths)
+        return -1;
     }
 
     b->msgs[b->len] = m;
     b->paths[b->len] = (char *)path;
 
     (b->len)++;
+    return 0;
 }
 
 size_t lo_bundle_length(lo_bundle b)
@@ -113,7 +115,7 @@ void *lo_bundle_serialise(lo_bundle b, void *to, size_t *size)
 	    return NULL;
 	}
     }
-    if (pos != to + s) {
+    if (pos != (char*)to + s) {
 	fprintf(stderr, "liblo: data integrity error\n");
 
 	return NULL;
