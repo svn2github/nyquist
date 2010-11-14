@@ -1419,7 +1419,7 @@
 	    ((eq op '/=) (setq expr `(/ ,vref ,expr)))
 	    ((eq op '&=) (setq expr `(nconc ,vref (list ,expr))))
 	    ((eq op '@=) (setq expr `(cons ,expr ,vref)))
-            ((eq op '^=) (setq expr `(nconc ,vref (copy-list ,expr))))
+            ((eq op '^=) (setq expr `(nconc ,vref (append ,expr nil))))
 	    ((eq op '<=) (setq expr `(min ,vref ,expr)))
 	    ((eq op '>=) (setq expr `(max ,vref ,expr)))
 	    (t (errexit (format nil "unknown assigment operator ~A" op))))

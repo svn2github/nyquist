@@ -2754,9 +2754,10 @@ end
 @index(print statement, sal)
 @code(print) @i(expr) {, @i(expr)}*
 
-The @code(print) statement prints a newline, then evaluates 
-expressions and prints their values. A blank space is printed
-after each value.
+The @code(print) statement prints the values separated by
+spaces and followed by a newline. [Note that in the original
+SAL, the newline is printed @i(before) the values, not after.]
+
 
 @begin(example)
 print "The value of x is", x

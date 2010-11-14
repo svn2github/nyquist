@@ -224,9 +224,14 @@
   (apply #'format t string args))
 
 
+;; sal-print has been modified from the original SAL to print items separated
+;; by spaces (no final trailing space) and followed by a newline.
 (defun sal-print (&rest args)
+  (do ((items args (cdr items)))
+       ((null items))
+     ;; add space unless we are at the last element
+     (funcall *sal-printer* (car items) :add-space (cdr items)))
   (terpri)
-  (mapc *sal-printer* args)
   (values))
 
 (defmacro keyword (sym)

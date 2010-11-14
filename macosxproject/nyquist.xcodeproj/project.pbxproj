@@ -107,7 +107,7 @@
 		3D1472D00A799E9B00F00E71 /* InstrumentCharacteristics.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D1472CF0A799E9B00F00E71 /* InstrumentCharacteristics.java */; };
 		3D1472D30A799ECC00F00E71 /* SpringUtilities.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D1472D20A799ECC00F00E71 /* SpringUtilities.java */; };
 		3D16EA020A866123006DADB6 /* ReplaceDialog.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D16EA010A866123006DADB6 /* ReplaceDialog.java */; };
-		3D177689125CB411007B2152 /* jNyqIDE.jar in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D177688125CB40C007B2152 /* jNyqIDE.jar */; };
+		3D177689125CB411007B2152 /* jnyqide.jar in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D177688125CB40C007B2152 /* jnyqide.jar */; };
 		3D177699125CB593007B2152 /* closeFile.gif in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D35A7C505690E180002CE69 /* closeFile.gif */; };
 		3D17769A125CB593007B2152 /* help.gif in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D35A7C605690E180002CE69 /* help.gif */; };
 		3D17769B125CB593007B2152 /* openFile.gif in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D35A7CE05690E180002CE69 /* openFile.gif */; };
@@ -351,17 +351,6 @@
 		3D5CD8BA0B5BC75E00DF426B /* path.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9867E5050921720002CE69 /* path.c */; };
 		3D5CD8BB0B5BC75E00DF426B /* convolve.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07DC0779F4800002CE69 /* convolve.c */; };
 		3D5CD8BC0B5BC75E00DF426B /* delaycc.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07E00779F4DC0002CE69 /* delaycc.c */; };
-		3D5CD8BD0B5BC75E00DF426B /* pa_mac_hostapis.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07E40779F61B0002CE69 /* pa_mac_hostapis.c */; };
-		3D5CD8BE0B5BC75E00DF426B /* pa_allocation.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07E70779F6820002CE69 /* pa_allocation.c */; };
-		3D5CD8BF0B5BC75E00DF426B /* pa_converters.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07E90779F6820002CE69 /* pa_converters.c */; };
-		3D5CD8C00B5BC75E00DF426B /* pa_cpuload.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07EB0779F6820002CE69 /* pa_cpuload.c */; };
-		3D5CD8C10B5BC75E00DF426B /* pa_dither.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07ED0779F6820002CE69 /* pa_dither.c */; };
-		3D5CD8C20B5BC75E00DF426B /* pa_front.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07F00779F6820002CE69 /* pa_front.c */; };
-		3D5CD8C30B5BC75E00DF426B /* pa_process.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07F20779F6820002CE69 /* pa_process.c */; };
-		3D5CD8C40B5BC75E00DF426B /* pa_skeleton.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07F40779F6820002CE69 /* pa_skeleton.c */; };
-		3D5CD8C50B5BC75E00DF426B /* pa_stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07F50779F6820002CE69 /* pa_stream.c */; };
-		3D5CD8C60B5BC75E00DF426B /* pa_trace.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E07F70779F6820002CE69 /* pa_trace.c */; };
-		3D5CD8C70B5BC75E00DF426B /* pa_mac_core.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E080F0779F6A20002CE69 /* pa_mac_core.c */; };
 		3D5CD8C80B5BC75E00DF426B /* instr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E08300779F78B0002CE69 /* instr.cpp */; };
 		3D5CD8C90B5BC75E00DF426B /* Clarinet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E08340779F7A30002CE69 /* Clarinet.cpp */; };
 		3D5CD8CA0B5BC75E00DF426B /* Delay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E08360779F7B80002CE69 /* Delay.cpp */; };
@@ -387,8 +376,6 @@
 		3D5CD8DF0B5BC75E00DF426B /* instrsaxfreq.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E088A0789D9230002CE69 /* instrsaxfreq.c */; };
 		3D5CD8E00B5BC75E00DF426B /* instrclarfreq.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E088E0789D9430002CE69 /* instrclarfreq.c */; };
 		3D5CD8E10B5BC75E00DF426B /* instrsax.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E08920789D9680002CE69 /* instrsax.c */; };
-		3D5CD8E20B5BC75E00DF426B /* pa_unix_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E08960789D9E30002CE69 /* pa_unix_util.c */; };
-		3D5CD8E30B5BC75E00DF426B /* ringofframes.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D6032F10790A48F007A3CA5 /* ringofframes.c */; };
 		3D5CD8E40B5BC75E00DF426B /* sliders.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D81ED240A76B1290053113C /* sliders.c */; };
 		3D5CD8EE0B5BC75E00DF426B /* trigger.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB7FB20B30690F00A51A49 /* trigger.c */; };
 		3D5CD9050B5BC78900DF426B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA446C00789FF350002CE69 /* AudioToolbox.framework */; };
@@ -452,6 +439,24 @@
 		3DA120FD0D313E1B00948714 /* stkchorus.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA120FC0D313E1B00948714 /* stkchorus.c */; };
 		3DA120FF0D313E5500948714 /* instrmandolin.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA120FE0D313E5500948714 /* instrmandolin.c */; };
 		3DA121020D313E7C00948714 /* instrmodalbar.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA121000D313E7C00948714 /* instrmodalbar.c */; };
+		3DBB0A6A1290422300024DD7 /* pa_allocation.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A691290422300024DD7 /* pa_allocation.c */; };
+		3DBB0A82129042A500024DD7 /* pa_converters.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A6C129042A500024DD7 /* pa_converters.c */; };
+		3DBB0A83129042A500024DD7 /* pa_cpuload.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A6E129042A500024DD7 /* pa_cpuload.c */; };
+		3DBB0A84129042A500024DD7 /* pa_debugprint.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A70129042A500024DD7 /* pa_debugprint.c */; };
+		3DBB0A85129042A500024DD7 /* pa_dither.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A72129042A500024DD7 /* pa_dither.c */; };
+		3DBB0A86129042A500024DD7 /* pa_front.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A75129042A500024DD7 /* pa_front.c */; };
+		3DBB0A87129042A500024DD7 /* pa_process.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A77129042A500024DD7 /* pa_process.c */; };
+		3DBB0A89129042A500024DD7 /* pa_skeleton.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A7B129042A500024DD7 /* pa_skeleton.c */; };
+		3DBB0A8A129042A500024DD7 /* pa_stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A7C129042A500024DD7 /* pa_stream.c */; };
+		3DBB0A8B129042A500024DD7 /* pa_trace.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A7E129042A500024DD7 /* pa_trace.c */; };
+		3DBB0A8E1290437E00024DD7 /* pa_mac_hostapis.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A8D1290437E00024DD7 /* pa_mac_hostapis.c */; };
+		3DBB0A90129043A900024DD7 /* pa_mac_core.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A8F129043A900024DD7 /* pa_mac_core.c */; };
+		3DBB0A9C129048D400024DD7 /* pa_mac_core_blocking.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A99129048D400024DD7 /* pa_mac_core_blocking.c */; };
+		3DBB0A9F129048F700024DD7 /* pa_mac_core_utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A9D129048F700024DD7 /* pa_mac_core_utilities.c */; };
+		3DBB0AAB12904B5E00024DD7 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBB0AAA12904B5E00024DD7 /* CoreServices.framework */; };
+		3DBB0AB012904BBB00024DD7 /* pa_unix_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0AAE12904BBB00024DD7 /* pa_unix_util.c */; };
+		3DBB0AB512904C0800024DD7 /* pa_ringbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0AB312904C0800024DD7 /* pa_ringbuffer.c */; };
+		3DBB0ABA12904C2600024DD7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBB0AA412904AEB00024DD7 /* AudioUnit.framework */; };
 		3DBF98A30D4196E300B4588F /* MiniBrowser.java in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF98A20D4196E300B4588F /* MiniBrowser.java */; };
 		3DC916F60D4036DC00DD66C0 /* fmfb.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DC916F40D4036DC00DD66C0 /* fmfb.c */; };
 		3DC916F90D4036F000DD66C0 /* fmfbv.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DC916F70D4036F000DD66C0 /* fmfbv.c */; };
@@ -511,6 +516,13 @@
 			remoteGlobalIDString = 3D7327A5125BF5D8009AAF15;
 			remoteInfo = CompileJava;
 		};
+		3DBB0A5512903B0200024DD7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D5CD82C0B5BC73700DF426B /* ny */;
+			remoteInfo = ny;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -531,7 +543,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
-				3D177689125CB411007B2152 /* jNyqIDE.jar in Copy Java Resources */,
+				3D177689125CB411007B2152 /* jnyqide.jar in Copy Java Resources */,
 				3D7327FC125BFCCE009AAF15 /* ny in Copy Java Resources */,
 				3D177699125CB593007B2152 /* closeFile.gif in Copy Java Resources */,
 				3D17769A125CB593007B2152 /* help.gif in Copy Java Resources */,
@@ -575,7 +587,7 @@
 		3D1472CF0A799E9B00F00E71 /* InstrumentCharacteristics.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = InstrumentCharacteristics.java; sourceTree = "<group>"; };
 		3D1472D20A799ECC00F00E71 /* SpringUtilities.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = SpringUtilities.java; sourceTree = "<group>"; };
 		3D16EA010A866123006DADB6 /* ReplaceDialog.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = ReplaceDialog.java; sourceTree = "<group>"; };
-		3D177688125CB40C007B2152 /* jNyqIDE.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = jNyqIDE.jar; path = ../jnyqide/jNyqIDE.jar; sourceTree = SOURCE_ROOT; };
+		3D177688125CB40C007B2152 /* jnyqide.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = jnyqide.jar; path = ../jnyqide/jnyqide.jar; sourceTree = SOURCE_ROOT; };
 		3D32213F0F53D42D00F074EF /* address.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = address.c; sourceTree = "<group>"; };
 		3D3221400F53D42D00F074EF /* blob.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blob.c; sourceTree = "<group>"; };
 		3D3221410F53D42D00F074EF /* bundle.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = bundle.c; sourceTree = "<group>"; };
@@ -695,8 +707,6 @@
 		3D48B86D0F599EE90073A251 /* matlib.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = matlib.c; path = ffts/src/matlib.c; sourceTree = "<group>"; };
 		3D587FD80B67A053002E40F9 /* SpecialMacHandler.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = SpecialMacHandler.java; sourceTree = "<group>"; };
 		3D5CD82D0B5BC73700DF426B /* ny */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ny; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D6032F10790A48F007A3CA5 /* ringofframes.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = ringofframes.c; path = portaudio/pa_mac_core/ringofframes.c; sourceTree = "<group>"; };
-		3D6032F20790A48F007A3CA5 /* ringofframes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ringofframes.h; path = portaudio/pa_mac_core/ringofframes.h; sourceTree = "<group>"; };
 		3D6032F50790A600007A3CA5 /* FindDialog.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = FindDialog.java; sourceTree = "<group>"; };
 		3D6032F80790A618007A3CA5 /* NotFoundDialog.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = NotFoundDialog.java; sourceTree = "<group>"; };
 		3D6032FA0790A62C007A3CA5 /* PreferencesDialog.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = PreferencesDialog.java; sourceTree = "<group>"; };
@@ -731,28 +741,6 @@
 		3D9E07DD0779F4800002CE69 /* convolve.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = convolve.h; sourceTree = "<group>"; };
 		3D9E07E00779F4DC0002CE69 /* delaycc.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = delaycc.c; sourceTree = "<group>"; };
 		3D9E07E10779F4DC0002CE69 /* delaycc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = delaycc.h; sourceTree = "<group>"; };
-		3D9E07E40779F61B0002CE69 /* pa_mac_hostapis.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_mac_hostapis.c; path = portaudio/pa_mac/pa_mac_hostapis.c; sourceTree = "<group>"; };
-		3D9E07E70779F6820002CE69 /* pa_allocation.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_allocation.c; path = portaudio/pa_common/pa_allocation.c; sourceTree = "<group>"; };
-		3D9E07E80779F6820002CE69 /* pa_allocation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_allocation.h; path = portaudio/pa_common/pa_allocation.h; sourceTree = "<group>"; };
-		3D9E07E90779F6820002CE69 /* pa_converters.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_converters.c; path = portaudio/pa_common/pa_converters.c; sourceTree = "<group>"; };
-		3D9E07EA0779F6820002CE69 /* pa_converters.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_converters.h; path = portaudio/pa_common/pa_converters.h; sourceTree = "<group>"; };
-		3D9E07EB0779F6820002CE69 /* pa_cpuload.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_cpuload.c; path = portaudio/pa_common/pa_cpuload.c; sourceTree = "<group>"; };
-		3D9E07EC0779F6820002CE69 /* pa_cpuload.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_cpuload.h; path = portaudio/pa_common/pa_cpuload.h; sourceTree = "<group>"; };
-		3D9E07ED0779F6820002CE69 /* pa_dither.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_dither.c; path = portaudio/pa_common/pa_dither.c; sourceTree = "<group>"; };
-		3D9E07EE0779F6820002CE69 /* pa_dither.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_dither.h; path = portaudio/pa_common/pa_dither.h; sourceTree = "<group>"; };
-		3D9E07EF0779F6820002CE69 /* pa_endianness.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_endianness.h; path = portaudio/pa_common/pa_endianness.h; sourceTree = "<group>"; };
-		3D9E07F00779F6820002CE69 /* pa_front.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_front.c; path = portaudio/pa_common/pa_front.c; sourceTree = "<group>"; };
-		3D9E07F10779F6820002CE69 /* pa_hostapi.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_hostapi.h; path = portaudio/pa_common/pa_hostapi.h; sourceTree = "<group>"; };
-		3D9E07F20779F6820002CE69 /* pa_process.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_process.c; path = portaudio/pa_common/pa_process.c; sourceTree = "<group>"; };
-		3D9E07F30779F6820002CE69 /* pa_process.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_process.h; path = portaudio/pa_common/pa_process.h; sourceTree = "<group>"; };
-		3D9E07F40779F6820002CE69 /* pa_skeleton.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_skeleton.c; path = portaudio/pa_common/pa_skeleton.c; sourceTree = "<group>"; };
-		3D9E07F50779F6820002CE69 /* pa_stream.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_stream.c; path = portaudio/pa_common/pa_stream.c; sourceTree = "<group>"; };
-		3D9E07F60779F6820002CE69 /* pa_stream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_stream.h; path = portaudio/pa_common/pa_stream.h; sourceTree = "<group>"; };
-		3D9E07F70779F6820002CE69 /* pa_trace.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_trace.c; path = portaudio/pa_common/pa_trace.c; sourceTree = "<group>"; };
-		3D9E07F80779F6820002CE69 /* pa_trace.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_trace.h; path = portaudio/pa_common/pa_trace.h; sourceTree = "<group>"; };
-		3D9E07F90779F6820002CE69 /* pa_util.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pa_util.h; path = portaudio/pa_common/pa_util.h; sourceTree = "<group>"; };
-		3D9E07FA0779F6820002CE69 /* portaudio.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = portaudio.h; path = portaudio/pa_common/portaudio.h; sourceTree = "<group>"; };
-		3D9E080F0779F6A20002CE69 /* pa_mac_core.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_mac_core.c; path = portaudio/pa_mac_core/pa_mac_core.c; sourceTree = "<group>"; };
 		3D9E08120779F7370002CE69 /* Clarinet.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Clarinet.h; path = nyqstk/include/Clarinet.h; sourceTree = "<group>"; };
 		3D9E08140779F74C0002CE69 /* globals.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = globals.h; path = nyqstk/globals.h; sourceTree = "<group>"; };
 		3D9E08160779F7680002CE69 /* Delay.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Delay.h; path = nyqstk/include/Delay.h; sourceTree = "<group>"; };
@@ -805,7 +793,6 @@
 		3D9E088F0789D9430002CE69 /* instrclarfreq.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = instrclarfreq.h; path = ../tran/instrclarfreq.h; sourceTree = "<group>"; };
 		3D9E08920789D9680002CE69 /* instrsax.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = instrsax.c; path = ../tran/instrsax.c; sourceTree = "<group>"; };
 		3D9E08930789D9680002CE69 /* instrsax.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = instrsax.h; path = ../tran/instrsax.h; sourceTree = "<group>"; };
-		3D9E08960789D9E30002CE69 /* pa_unix_util.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pa_unix_util.c; path = ../portaudio/pa_unix/pa_unix_util.c; sourceTree = "<group>"; };
 		3DA119350D2DE1BF00948714 /* DelayA.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = DelayA.cpp; path = nyqstk/src/DelayA.cpp; sourceTree = "<group>"; };
 		3DA119360D2DE1BF00948714 /* Effect.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Effect.cpp; path = nyqstk/src/Effect.cpp; sourceTree = "<group>"; };
 		3DA119370D2DE1BF00948714 /* FileRead.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = FileRead.cpp; path = nyqstk/src/FileRead.cpp; sourceTree = "<group>"; };
@@ -863,6 +850,42 @@
 		3DA446C20789FF430002CE69 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		3DAB7F290B2E172300A51A49 /* ser-to-osc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ser-to-osc"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DAB7FB20B30690F00A51A49 /* trigger.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = trigger.c; sourceTree = "<group>"; };
+		3DBB0A691290422300024DD7 /* pa_allocation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_allocation.c; path = portaudio/src/common/pa_allocation.c; sourceTree = "<group>"; };
+		3DBB0A6B129042A500024DD7 /* pa_allocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_allocation.h; path = portaudio/src/common/pa_allocation.h; sourceTree = "<group>"; };
+		3DBB0A6C129042A500024DD7 /* pa_converters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_converters.c; path = portaudio/src/common/pa_converters.c; sourceTree = "<group>"; };
+		3DBB0A6D129042A500024DD7 /* pa_converters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_converters.h; path = portaudio/src/common/pa_converters.h; sourceTree = "<group>"; };
+		3DBB0A6E129042A500024DD7 /* pa_cpuload.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_cpuload.c; path = portaudio/src/common/pa_cpuload.c; sourceTree = "<group>"; };
+		3DBB0A6F129042A500024DD7 /* pa_cpuload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_cpuload.h; path = portaudio/src/common/pa_cpuload.h; sourceTree = "<group>"; };
+		3DBB0A70129042A500024DD7 /* pa_debugprint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_debugprint.c; path = portaudio/src/common/pa_debugprint.c; sourceTree = "<group>"; };
+		3DBB0A71129042A500024DD7 /* pa_debugprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_debugprint.h; path = portaudio/src/common/pa_debugprint.h; sourceTree = "<group>"; };
+		3DBB0A72129042A500024DD7 /* pa_dither.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_dither.c; path = portaudio/src/common/pa_dither.c; sourceTree = "<group>"; };
+		3DBB0A73129042A500024DD7 /* pa_dither.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_dither.h; path = portaudio/src/common/pa_dither.h; sourceTree = "<group>"; };
+		3DBB0A74129042A500024DD7 /* pa_endianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_endianness.h; path = portaudio/src/common/pa_endianness.h; sourceTree = "<group>"; };
+		3DBB0A75129042A500024DD7 /* pa_front.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_front.c; path = portaudio/src/common/pa_front.c; sourceTree = "<group>"; };
+		3DBB0A76129042A500024DD7 /* pa_hostapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_hostapi.h; path = portaudio/src/common/pa_hostapi.h; sourceTree = "<group>"; };
+		3DBB0A77129042A500024DD7 /* pa_process.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_process.c; path = portaudio/src/common/pa_process.c; sourceTree = "<group>"; };
+		3DBB0A78129042A500024DD7 /* pa_process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_process.h; path = portaudio/src/common/pa_process.h; sourceTree = "<group>"; };
+		3DBB0A7B129042A500024DD7 /* pa_skeleton.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_skeleton.c; path = portaudio/src/common/pa_skeleton.c; sourceTree = "<group>"; };
+		3DBB0A7C129042A500024DD7 /* pa_stream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_stream.c; path = portaudio/src/common/pa_stream.c; sourceTree = "<group>"; };
+		3DBB0A7D129042A500024DD7 /* pa_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_stream.h; path = portaudio/src/common/pa_stream.h; sourceTree = "<group>"; };
+		3DBB0A7E129042A500024DD7 /* pa_trace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_trace.c; path = portaudio/src/common/pa_trace.c; sourceTree = "<group>"; };
+		3DBB0A7F129042A500024DD7 /* pa_trace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_trace.h; path = portaudio/src/common/pa_trace.h; sourceTree = "<group>"; };
+		3DBB0A80129042A500024DD7 /* pa_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_types.h; path = portaudio/src/common/pa_types.h; sourceTree = "<group>"; };
+		3DBB0A81129042A500024DD7 /* pa_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_util.h; path = portaudio/src/common/pa_util.h; sourceTree = "<group>"; };
+		3DBB0A8C1290433500024DD7 /* portaudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = portaudio.h; path = portaudio/include/portaudio.h; sourceTree = "<group>"; };
+		3DBB0A8D1290437E00024DD7 /* pa_mac_hostapis.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_mac_hostapis.c; path = portaudio/src/os/mac_osx/pa_mac_hostapis.c; sourceTree = "<group>"; };
+		3DBB0A8F129043A900024DD7 /* pa_mac_core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_mac_core.c; path = portaudio/src/hostapi/coreaudio/pa_mac_core.c; sourceTree = "<group>"; };
+		3DBB0A99129048D400024DD7 /* pa_mac_core_blocking.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_mac_core_blocking.c; path = portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.c; sourceTree = "<group>"; };
+		3DBB0A9A129048D400024DD7 /* pa_mac_core_blocking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_mac_core_blocking.h; path = portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.h; sourceTree = "<group>"; };
+		3DBB0A9B129048D400024DD7 /* pa_mac_core_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_mac_core_internal.h; path = portaudio/src/hostapi/coreaudio/pa_mac_core_internal.h; sourceTree = "<group>"; };
+		3DBB0A9D129048F700024DD7 /* pa_mac_core_utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_mac_core_utilities.c; path = portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.c; sourceTree = "<group>"; };
+		3DBB0A9E129048F700024DD7 /* pa_mac_core_utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_mac_core_utilities.h; path = portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.h; sourceTree = "<group>"; };
+		3DBB0AA412904AEB00024DD7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		3DBB0AAA12904B5E00024DD7 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		3DBB0AAE12904BBB00024DD7 /* pa_unix_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_unix_util.c; path = portaudio/src/os/unix/pa_unix_util.c; sourceTree = "<group>"; };
+		3DBB0AAF12904BBB00024DD7 /* pa_unix_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_unix_util.h; path = portaudio/src/os/unix/pa_unix_util.h; sourceTree = "<group>"; };
+		3DBB0AB312904C0800024DD7 /* pa_ringbuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_ringbuffer.c; path = portaudio/src/common/pa_ringbuffer.c; sourceTree = "<group>"; };
+		3DBB0AB412904C0800024DD7 /* pa_ringbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pa_ringbuffer.h; path = portaudio/src/common/pa_ringbuffer.h; sourceTree = "<group>"; };
 		3DBF98A20D4196E300B4588F /* MiniBrowser.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = MiniBrowser.java; sourceTree = "<group>"; };
 		3DC916F40D4036DC00DD66C0 /* fmfb.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = fmfb.c; sourceTree = "<group>"; };
 		3DC916F50D4036DC00DD66C0 /* fmfb.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fmfb.h; sourceTree = "<group>"; };
@@ -1209,6 +1232,8 @@
 				3D3533B30F0BDDE40059CD05 /* liblibsndfile.a in Frameworks */,
 				3D5CD9050B5BC78900DF426B /* AudioToolbox.framework in Frameworks */,
 				3D5CD9060B5BC78900DF426B /* CoreAudio.framework in Frameworks */,
+				3DBB0AAB12904B5E00024DD7 /* CoreServices.framework in Frameworks */,
+				3DBB0ABA12904C2600024DD7 /* AudioUnit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1252,6 +1277,8 @@
 				3DA446C00789FF350002CE69 /* AudioToolbox.framework */,
 				3DA446C20789FF430002CE69 /* CoreAudio.framework */,
 				3D7327B2125BF624009AAF15 /* NyquistIDE-Info.plist */,
+				3DBB0AA412904AEB00024DD7 /* AudioUnit.framework */,
+				3DBB0AAA12904B5E00024DD7 /* CoreServices.framework */,
 			);
 			name = MacOSXProject;
 			sourceTree = "<group>";
@@ -1286,7 +1313,7 @@
 				F5C6A9B803A10C0501029006 /* NyquistIDE.app */,
 				3DF21F2704FD4FDC0002CE69 /* intgen */,
 				3D0817550AD01DB10051B745 /* osc-test-client */,
-				3D177688125CB40C007B2152 /* jNyqIDE.jar */,
+				3D177688125CB40C007B2152 /* jnyqide.jar */,
 				3DAB7F290B2E172300A51A49 /* ser-to-osc */,
 				3D5CD82D0B5BC73700DF426B /* ny */,
 				3D3533820F0BD6CA0059CD05 /* liblibsndfile.a */,
@@ -1504,30 +1531,40 @@
 		3D9E07E60779F63A0002CE69 /* portaudio */ = {
 			isa = PBXGroup;
 			children = (
-				3D9E07E70779F6820002CE69 /* pa_allocation.c */,
-				3D9E07E80779F6820002CE69 /* pa_allocation.h */,
-				3D9E07E90779F6820002CE69 /* pa_converters.c */,
-				3D9E07EA0779F6820002CE69 /* pa_converters.h */,
-				3D9E07EB0779F6820002CE69 /* pa_cpuload.c */,
-				3D9E07EC0779F6820002CE69 /* pa_cpuload.h */,
-				3D9E07ED0779F6820002CE69 /* pa_dither.c */,
-				3D9E07EE0779F6820002CE69 /* pa_dither.h */,
-				3D9E07EF0779F6820002CE69 /* pa_endianness.h */,
-				3D9E07F00779F6820002CE69 /* pa_front.c */,
-				3D9E07F10779F6820002CE69 /* pa_hostapi.h */,
-				3D9E07F20779F6820002CE69 /* pa_process.c */,
-				3D9E07F30779F6820002CE69 /* pa_process.h */,
-				3D9E07F40779F6820002CE69 /* pa_skeleton.c */,
-				3D9E07F50779F6820002CE69 /* pa_stream.c */,
-				3D9E07F60779F6820002CE69 /* pa_stream.h */,
-				3D9E07F70779F6820002CE69 /* pa_trace.c */,
-				3D9E07F80779F6820002CE69 /* pa_trace.h */,
-				3D9E07F90779F6820002CE69 /* pa_util.h */,
-				3D9E07FA0779F6820002CE69 /* portaudio.h */,
-				3D9E080F0779F6A20002CE69 /* pa_mac_core.c */,
-				3D9E07E40779F61B0002CE69 /* pa_mac_hostapis.c */,
-				3D6032F10790A48F007A3CA5 /* ringofframes.c */,
-				3D6032F20790A48F007A3CA5 /* ringofframes.h */,
+				3DBB0AB312904C0800024DD7 /* pa_ringbuffer.c */,
+				3DBB0AB412904C0800024DD7 /* pa_ringbuffer.h */,
+				3DBB0AAE12904BBB00024DD7 /* pa_unix_util.c */,
+				3DBB0AAF12904BBB00024DD7 /* pa_unix_util.h */,
+				3DBB0A9D129048F700024DD7 /* pa_mac_core_utilities.c */,
+				3DBB0A9E129048F700024DD7 /* pa_mac_core_utilities.h */,
+				3DBB0A99129048D400024DD7 /* pa_mac_core_blocking.c */,
+				3DBB0A9A129048D400024DD7 /* pa_mac_core_blocking.h */,
+				3DBB0A9B129048D400024DD7 /* pa_mac_core_internal.h */,
+				3DBB0A8F129043A900024DD7 /* pa_mac_core.c */,
+				3DBB0A8D1290437E00024DD7 /* pa_mac_hostapis.c */,
+				3DBB0A8C1290433500024DD7 /* portaudio.h */,
+				3DBB0A6B129042A500024DD7 /* pa_allocation.h */,
+				3DBB0A6C129042A500024DD7 /* pa_converters.c */,
+				3DBB0A6D129042A500024DD7 /* pa_converters.h */,
+				3DBB0A6E129042A500024DD7 /* pa_cpuload.c */,
+				3DBB0A6F129042A500024DD7 /* pa_cpuload.h */,
+				3DBB0A70129042A500024DD7 /* pa_debugprint.c */,
+				3DBB0A71129042A500024DD7 /* pa_debugprint.h */,
+				3DBB0A72129042A500024DD7 /* pa_dither.c */,
+				3DBB0A73129042A500024DD7 /* pa_dither.h */,
+				3DBB0A74129042A500024DD7 /* pa_endianness.h */,
+				3DBB0A75129042A500024DD7 /* pa_front.c */,
+				3DBB0A76129042A500024DD7 /* pa_hostapi.h */,
+				3DBB0A77129042A500024DD7 /* pa_process.c */,
+				3DBB0A78129042A500024DD7 /* pa_process.h */,
+				3DBB0A7B129042A500024DD7 /* pa_skeleton.c */,
+				3DBB0A7C129042A500024DD7 /* pa_stream.c */,
+				3DBB0A7D129042A500024DD7 /* pa_stream.h */,
+				3DBB0A7E129042A500024DD7 /* pa_trace.c */,
+				3DBB0A7F129042A500024DD7 /* pa_trace.h */,
+				3DBB0A80129042A500024DD7 /* pa_types.h */,
+				3DBB0A81129042A500024DD7 /* pa_util.h */,
+				3DBB0A691290422300024DD7 /* pa_allocation.c */,
 			);
 			name = portaudio;
 			sourceTree = "<group>";
@@ -2044,7 +2081,6 @@
 				3D9E088F0789D9430002CE69 /* instrclarfreq.h */,
 				3D9E08920789D9680002CE69 /* instrsax.c */,
 				3D9E08930789D9680002CE69 /* instrsax.h */,
-				3D9E08960789D9E30002CE69 /* pa_unix_util.c */,
 				F5FF60E7039D87B001029006 /* sound.h */,
 				F5FF60E8039D87B001029006 /* stats.c */,
 				F5FF60E9039D87B001029006 /* stdefs.h */,
@@ -2177,6 +2213,7 @@
 			);
 			dependencies = (
 				3D7327DC125BF99D009AAF15 /* PBXTargetDependency */,
+				3DBB0A5612903B0200024DD7 /* PBXTargetDependency */,
 			);
 			name = NyquistIDE;
 			productName = "JNyqIDE-Application";
@@ -2314,11 +2351,11 @@
 				"$(SRCROOT)/../jnyqide/browser.java",
 			);
 			outputPaths = (
-				"$(SRCROOT)/jnyqide/jNyqIDE.jar",
+				"$(SRCROOT)/jnyqide/jnyqide.jar",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# shell script goes here\ncd ..\necho \"compiling java sources\"\njavac jnyqide/*.java\nif [ -f jnyqide/jNyqIDE.jar ]\nthen\n  echo \"removing jnyqide/jNyqIDE.jar\"\n  rm -f jnyqide/jNyqIDE.jar\nelse\n  echo \"jnyqide/jNyqIDE.jar does not exist\"\nfi\necho \"(re)creating jar file\"\njar -cfm jnyqide/jNyqIDE.jar jnyqide/manifest.txt jnyqide/*.class\necho \"end of script\"\nexit 0\n";
+			shellScript = "# shell script goes here\ncd ..\necho \"compiling java sources\"\njavac jnyqide/*.java\nif [ -f jnyqide/jnyqide.jar ]\nthen\n  echo \"removing jnyqide/jnyqide.jar\"\n  rm -f jnyqide/jnyqide.jar\nelse\n  echo \"jnyqide/jnyqide.jar does not exist\"\nfi\necho \"(re)creating jar file\"\njar -cfm jnyqide/jnyqide.jar jnyqide/manifest.txt jnyqide/*.class\necho \"end of script\"\nexit 0\n";
 			showEnvVarsInLog = 0;
 		};
 		3D88F08A0B5DD813003700F9 /* ShellScript */ = {
@@ -2565,17 +2602,7 @@
 				3D5CD8BA0B5BC75E00DF426B /* path.c in Sources */,
 				3D5CD8BB0B5BC75E00DF426B /* convolve.c in Sources */,
 				3D5CD8BC0B5BC75E00DF426B /* delaycc.c in Sources */,
-				3D5CD8BD0B5BC75E00DF426B /* pa_mac_hostapis.c in Sources */,
-				3D5CD8BE0B5BC75E00DF426B /* pa_allocation.c in Sources */,
-				3D5CD8BF0B5BC75E00DF426B /* pa_converters.c in Sources */,
-				3D5CD8C00B5BC75E00DF426B /* pa_cpuload.c in Sources */,
-				3D5CD8C10B5BC75E00DF426B /* pa_dither.c in Sources */,
-				3D5CD8C20B5BC75E00DF426B /* pa_front.c in Sources */,
-				3D5CD8C30B5BC75E00DF426B /* pa_process.c in Sources */,
-				3D5CD8C40B5BC75E00DF426B /* pa_skeleton.c in Sources */,
-				3D5CD8C50B5BC75E00DF426B /* pa_stream.c in Sources */,
-				3D5CD8C60B5BC75E00DF426B /* pa_trace.c in Sources */,
-				3D5CD8C70B5BC75E00DF426B /* pa_mac_core.c in Sources */,
+				3DBB0A6A1290422300024DD7 /* pa_allocation.c in Sources */,
 				3D5CD8C80B5BC75E00DF426B /* instr.cpp in Sources */,
 				3D5CD8C90B5BC75E00DF426B /* Clarinet.cpp in Sources */,
 				3D5CD8CA0B5BC75E00DF426B /* Delay.cpp in Sources */,
@@ -2601,8 +2628,6 @@
 				3D5CD8DF0B5BC75E00DF426B /* instrsaxfreq.c in Sources */,
 				3D5CD8E00B5BC75E00DF426B /* instrclarfreq.c in Sources */,
 				3D5CD8E10B5BC75E00DF426B /* instrsax.c in Sources */,
-				3D5CD8E20B5BC75E00DF426B /* pa_unix_util.c in Sources */,
-				3D5CD8E30B5BC75E00DF426B /* ringofframes.c in Sources */,
 				3D5CD8E40B5BC75E00DF426B /* sliders.c in Sources */,
 				3D5CD8EE0B5BC75E00DF426B /* trigger.c in Sources */,
 				3DA1194A0D2DE1BF00948714 /* DelayA.cpp in Sources */,
@@ -2661,6 +2686,21 @@
 				3D48B86E0F599EE90073A251 /* matlib.c in Sources */,
 				3DE80D670F7EA825003761D2 /* pvshell.c in Sources */,
 				3DE80D690F7EA840003761D2 /* phasevocoder.c in Sources */,
+				3DBB0A82129042A500024DD7 /* pa_converters.c in Sources */,
+				3DBB0A83129042A500024DD7 /* pa_cpuload.c in Sources */,
+				3DBB0A84129042A500024DD7 /* pa_debugprint.c in Sources */,
+				3DBB0A85129042A500024DD7 /* pa_dither.c in Sources */,
+				3DBB0A86129042A500024DD7 /* pa_front.c in Sources */,
+				3DBB0A87129042A500024DD7 /* pa_process.c in Sources */,
+				3DBB0A89129042A500024DD7 /* pa_skeleton.c in Sources */,
+				3DBB0A8A129042A500024DD7 /* pa_stream.c in Sources */,
+				3DBB0A8B129042A500024DD7 /* pa_trace.c in Sources */,
+				3DBB0A8E1290437E00024DD7 /* pa_mac_hostapis.c in Sources */,
+				3DBB0A90129043A900024DD7 /* pa_mac_core.c in Sources */,
+				3DBB0A9C129048D400024DD7 /* pa_mac_core_blocking.c in Sources */,
+				3DBB0A9F129048F700024DD7 /* pa_mac_core_utilities.c in Sources */,
+				3DBB0AB012904BBB00024DD7 /* pa_unix_util.c in Sources */,
+				3DBB0AB512904C0800024DD7 /* pa_ringbuffer.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2750,6 +2790,11 @@
 			isa = PBXTargetDependency;
 			target = 3D7327A5125BF5D8009AAF15 /* CompileJava */;
 			targetProxy = 3D7327DB125BF99D009AAF15 /* PBXContainerItemProxy */;
+		};
+		3DBB0A5612903B0200024DD7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D5CD82C0B5BC73700DF426B /* ny */;
+			targetProxy = 3DBB0A5512903B0200024DD7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2946,7 +2991,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = ny;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../pa/pa_common ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -2978,7 +3023,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = ny;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../pa/pa_common ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -3008,7 +3053,7 @@
 				OTHER_LDFLAGS = "-lsndfile";
 				PREBINDING = NO;
 				PRODUCT_NAME = ny;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../pa/pa_common ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
 			name = Default;

@@ -60,7 +60,7 @@
     (cond ((not retain) nil) ;; no data retained to examine
           ((< count 1) nil) ;; no data to compute from
           (t
-           (setf data (sort data '<))
+           (setf data (bigsort data '<))
            (cond ((oddp count)
                   (nth (/ count 2) data))
                  (t
