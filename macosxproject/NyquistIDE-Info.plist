@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>NyquistIDE</string>
 	<key>CFBundleIconFile</key>
-	<string>GenericApp.icns</string>
+	<string>Nyquist.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>edu.cmu.cs.nyquist</string>
 	<key>CFBundleInfoDictionaryVersion</key>

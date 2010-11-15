@@ -520,7 +520,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3D5CD82C0B5BC73700DF426B /* ny */;
+			remoteGlobalIDString = 3D5CD82C0B5BC73700DF426B;
 			remoteInfo = ny;
 		};
 /* End PBXContainerItemProxy section */
@@ -2830,6 +2830,7 @@
 				INSTALL_PATH = "$(HOME)/bin";
 				PREBINDING = NO;
 				PRODUCT_NAME = "osc-test-client";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = YES;
 			};
@@ -2845,6 +2846,7 @@
 				INSTALL_PATH = "$(HOME)/bin";
 				PREBINDING = NO;
 				PRODUCT_NAME = "osc-test-client";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = NO;
 			};
@@ -2858,6 +2860,7 @@
 				INSTALL_PATH = "$(HOME)/bin";
 				PREBINDING = NO;
 				PRODUCT_NAME = "osc-test-client";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = NO;
 			};
@@ -2879,6 +2882,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = liblo;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../liblo/src ../liblo/osx";
 				ZERO_LINK = YES;
 			};
@@ -2898,6 +2902,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = liblo;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../liblo/src ../liblo/osx";
 				ZERO_LINK = NO;
 			};
@@ -2915,6 +2920,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = liblo;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../liblo/src ../liblo/osx";
 				ZERO_LINK = YES;
 			};
@@ -2933,6 +2939,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = libsndfile;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -2948,6 +2955,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = libsndfile;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -2961,6 +2969,7 @@
 				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = libsndfile;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = YES;
 			};
 			name = Default;
@@ -2991,6 +3000,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = ny;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
@@ -3023,6 +3033,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = ny;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = NO;
 			};
@@ -3053,6 +3064,7 @@
 				OTHER_LDFLAGS = "-lsndfile";
 				PREBINDING = NO;
 				PRODUCT_NAME = ny;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
@@ -3107,6 +3119,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = NyquistIDE;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Development;
 		};
@@ -3130,6 +3143,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = NyquistIDE;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -3152,6 +3166,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = NyquistIDE;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Default;
 		};
@@ -3167,6 +3182,7 @@
 				INSTALL_PATH = "$(HOME)/bin";
 				PREBINDING = NO;
 				PRODUCT_NAME = "ser-to-osc";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = YES;
 			};
@@ -3182,6 +3198,7 @@
 				INSTALL_PATH = "$(HOME)/bin";
 				PREBINDING = NO;
 				PRODUCT_NAME = "ser-to-osc";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = NO;
 			};
@@ -3195,6 +3212,7 @@
 				INSTALL_PATH = "$(HOME)/bin";
 				PREBINDING = NO;
 				PRODUCT_NAME = "ser-to-osc";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = YES;
 			};
