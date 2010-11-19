@@ -982,12 +982,13 @@ LVAL xdotimes(void)
     argv = xlargv;
     argc = xlargc;
 
+    /* establish a new execution context */
+    xlbegin(&cntxt,CF_RETURN,NIL);
+
     /* initialize the local environment */
     xlenv = xlframe(xlenv);
     xlbind(sym,NIL);
 
-    /* establish a new execution context */
-    xlbegin(&cntxt,CF_RETURN,NIL);
     if (setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else {

@@ -55,6 +55,10 @@
               (send self :get-mean) (send self :get-stddev))
     ))
 
+
+(send statistics-class :answer :get-data '() '(data))
+                                               
+
 (send statistics-class :answer :get-median '() '(
   (let (i)
     (cond ((not retain) nil) ;; no data retained to examine
@@ -152,8 +156,10 @@
     (setf counts nil)
     (setf thresholds array)))
 
-(send histogram-class :answer :make-hist '() '(
-    (let* ((data (send stats :get-data)))
+
+(send histogram-class :answer :make-hist '(&key (verbose t)) '(
+    (let* ((data (send stats :get-data))
+           (counter 0) (data-position 0))
       (if (null thresholds)
           (send self :configure-bins))
       (cond ((null counts)
@@ -161,13 +167,20 @@
              (dotimes (i (length counts))
                       (setf (aref counts i) 0))))
       (dolist (x data)
+        (cond ((and verbose (> counter 1000))
+               (format t "make-hist ~A% done\n"
+                         (/ data-position (float (send stats :get-count))))
+               (setf counter 0)))
         ; increment the right bin -- allows different bin sizes but
         ; could use a binary search for the right bin
         (dotimes (i (length counts))
+          (incf counter)
           (cond ((and (< x (aref thresholds (1+ i)))
                       (>= x (aref thresholds i)))
                  (incf (aref counts i))
-                 (return))))) )))
+                 (return))))
+        (incf data-position)) )))
+
 
 (send histogram-class :answer :print-hist '() '(
     (if (null counts) (send self :make-hist))

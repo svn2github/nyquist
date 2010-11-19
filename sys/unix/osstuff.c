@@ -603,6 +603,7 @@ void oscheck(void)
 {
     int ch;
     int k, v, n;
+    static int count = 0;
 		
 #if OSC
     if (nosc_enabled) nosc_poll();
@@ -614,35 +615,49 @@ void oscheck(void)
         xflush(); xltoplevel(); return;
     } 
 
-    if ((ch = xcheck()))
-    switch (ch) {
-      case BREAK_CHAR:	/* control-b */
-        /* printf("BREAK_CHAR\n"); */
-        xflush(); xlbreak("BREAK",s_unbound); break; 
-      case '\024':      /* control-t */
-        /* printf("control-t\n"); */
-        xinfo(); break;
-      case '\025':      /* control-u */
-        /* printf("control-u\n"); */
-        xcleanup();
-      case '\016': {    /* begin hidden message */
-        /* printf("hidden msg\n"); */
-        hidden_msg();
-        break;
-      }
-      case '\001':  /* control-a -- mark audio time */
-        mark_audio_time(); break;
-      default:
-        /* printf("Got %d\n", ch); */
-        #ifndef READ_LINE
-		 /* printf("+%c+", ch); */
-        typeahead[typeahead_tail++] = ch;
-        typeahead_tail &= (typeahead_max - 1);
-        if (typeahead_tail == typeahead_head) {
-            oserror("Input buffer overflow\n");
+    if ((ch = xcheck())) {
+        switch (ch) {
+          case BREAK_CHAR:	/* control-b */
+            /* printf("BREAK_CHAR\n"); */
+            xflush(); xlbreak("BREAK",s_unbound); break; 
+          case '\024':      /* control-t */
+            /* printf("control-t\n"); */
+            xinfo(); break;
+          case '\025':      /* control-u */
+            /* printf("control-u\n"); */
+            xcleanup();
+          case '\016': {    /* begin hidden message */
+            /* printf("hidden msg\n"); */
+            hidden_msg();
+            break;
+          }
+          case '\001':  /* control-a -- mark audio time */
+            mark_audio_time(); break;
+          case -1: /* EOF - lost connection, so die */
+            xlisp_wrapup();
+            break;
+          case -2: /* no character was ready */
+            break;
+          default:
+            /* printf("Got %d\n", ch); */
+#ifndef READ_LINE
+            /* printf("+%c+", ch); */
+            typeahead[typeahead_tail++] = ch;
+            typeahead_tail &= (typeahead_max - 1);
+            if (typeahead_tail == typeahead_head) {
+                oserror("Input buffer overflow\n");
+            }
+#endif
+            break;
         }
-        #endif
-        break;
+    }
+
+    count++;
+    // when compute-bound, count is incremented by 10000 in about 15s, so
+    // that's about 700 Hz. We want to flush any output at about 2Hz, so 
+    // we'll pick 400 as a round number.
+    if (count % 400 == 0) {
+        fflush(stdout);
     }
 }
 
@@ -768,7 +783,6 @@ void osdir_list_finish()
 LOCAL int xcheck()
 {
     int ch = term_testchar();
-    if (ch == -2) return 0;
     return ch;
 }
 

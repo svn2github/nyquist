@@ -110,8 +110,7 @@ int term_testchar()
 
     if (ioctl(0, FIONREAD, &n) < 0)
         ERROR("IOgetchar");
-    if (n <= 0)
-        return -2;
+    if (n == 0) return -2;
     switch(read(0, &c, 1)) {
       case 1:
         return c;
@@ -128,10 +127,7 @@ int term_testchar()
 int term_getchar()
 {
     char c;
-	int rslt;
-	while ((rslt = read(0, &c, 1)) == 0) {
-	    read(0, &c, 1);
-	}
-	return (rslt == 1 ? c : EOF);
+    int rslt = read(0, &c, 1);
+    return (rslt == 1 ? c : EOF);
 }
 
