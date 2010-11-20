@@ -30,11 +30,46 @@
 (defmacro init-global (symb expr)
   `(if (boundp ',symb) ,symb (setf ,symb ,expr)))
 
-; enable or disable breaks
-(defun bkon () (setq *breakenable* T))
-(defun bkoff () (setq *breakenable* NIL))
+; controlling breaks and tracebacks:
+; XLISP and SAL behave differently, so there are four(!) flags:
+; *sal-traceback* -- print SAL traceback on error in SAL mode
+;                    Typically you want this on always.
+; *sal-break* -- allow break (to XLISP prompt) on error when in SAL mode
+;                (overrides *sal-traceback*) Typically, you do not want
+;                this unless you need to see exactly where an error happened
+;                or the bug is in XLISP source code called from SAL.
+; *xlisp-break* -- allow break on error when in XLISP mode
+;                  Typically, you want this on.
+; *xlisp-traceback* -- print XLISP traceback on error in XLISP mode
+;                      Typically, you do not want this because the full
+;                      stack can be long and tedious.
 
-(bkon)
+(setf *sal-mode* nil)
+
+(setf *sal-traceback* t
+      *sal-break* nil
+      *xlisp-break* t
+      *xlisp-traceback* nil)
+
+(defun sal-tracenable (flag) (setf *sal-traceback* flag))
+(defun sal-breakenable (flag)
+  (setf *sal-break* flag)
+  (if *sal-mode* (setf *breakenable* flag)))
+(defun xlisp-breakenable (flag)
+  (setf *xlisp-break* flag)
+  (if (not *sal-mode*) (setf *breakenable* flag)))
+(defun xlisp-tracenable (flag)
+  (setf *xlisp-traceback* flag)
+  (if flag (setf *xlisp-break* t))
+  (cond ((not *sal-mode*)
+         (if flag (setf *breakenable* t))
+         (setf *tracenable* flag))))
+
+
+; enable or disable breaks
+(defun bkon () (xlisp-breakenable t))
+(defun bkoff () (xlisp-breakenable nil))
+
 
 ;; (grindef 'name) - pretty print a function
 ;;

@@ -462,8 +462,8 @@
 
 ;; read-eval-print loop for sal commands
 (defun sal ()
-  (progv '(*breakenable* *tracenable* *sal-exit*)
-         (list *sal-xlispbreak* *sal-xlispbreak* nil)
+  (progv '(*breakenable* *tracenable* *sal-exit* *sal-mode*)
+         (list *sal-break* nil nil t)
     (let (input line)
       (setf *sal-call-stack* nil)
       (read-line) ; read the newline after the one the user 
@@ -483,9 +483,14 @@
             (setf input (subseq input 1)))
         (sal-compile input t nil "<console>")
         (sal-trace-exit))
-      (princ "Returning to Lisp ...\n")
-      t ; return value
-      )))
+      (princ "Returning to Lisp ...\n")))
+  ;; in case *xlisp-break* or *xlisp-traceback* was set from SAL, impose
+  ;; them here
+  (cond ((not *sal-mode*) 
+         (setf *breakenable* *xlisp-break*)
+         (setf *tracenable* *xlisp-traceback*)))
+  t)
+
 
 
 (defun sal-error-output (stack)

@@ -91,9 +91,12 @@ public class MainFrame extends JFrame {
     public static final boolean prefParenAutoInsertDefault = false;
     public static final boolean prefEnableSoundDefault = true;
     public static final boolean prefAutoNormDefault = true;
+
     public static final boolean prefSalTraceBackDefault = true;
+    public static final boolean prefSalBreakDefault = false;
+    public static final boolean prefXlispBreakDefault = true;
     public static final boolean prefXlispTraceBackDefault = false;
-    public static final boolean prefXlispDebugForSalDefault = false;
+
     public static final boolean prefPrintGCDefault = false;
     public static final boolean prefFullSearchDefault = true;
     public static final boolean prefInternalBrowserDefault = false;
@@ -108,8 +111,9 @@ public class MainFrame extends JFrame {
     public static boolean prefEnableSound = prefEnableSoundDefault;
     public static boolean prefAutoNorm = prefAutoNormDefault;
     public static boolean prefSalTraceBack = prefSalTraceBackDefault;
+    public static boolean prefSalBreak = prefSalBreakDefault;
+    public static boolean prefXlispBreak = prefXlispBreakDefault;
     public static boolean prefXlispTraceBack = prefXlispTraceBackDefault;
-    public static boolean prefXlispDebugForSal = prefXlispDebugForSalDefault;
     public static boolean prefPrintGC = prefPrintGCDefault;
     public static boolean prefFullSearch = prefFullSearchDefault;
     public static boolean prefInternalBrowser = prefInternalBrowserDefault;
@@ -218,9 +222,15 @@ public class MainFrame extends JFrame {
     }
     
     
-    protected void setBoolean(String var, boolean val) {
-        setVariable(var, (val ? "t" : "nil"));
+    String tOrNil(boolean val) {
+        return (val ? "t" : "nil");
     }
+
+
+    protected void setBoolean(String var, boolean val) {
+        setVariable(var, tOrNil(val));
+    }
+
     
     // invoke a function call in Nyquist with 0 or 1 parameters
     // (pass "" for 0 parameters)
@@ -317,10 +327,12 @@ public class MainFrame extends JFrame {
         prefEnableSound = prefs.getBoolean("sound-enable", prefEnableSound);
         prefAutoNorm = prefs.getBoolean("auto-norm", prefAutoNorm);
         prefSalTraceBack = prefs.getBoolean("sal-traceback", prefSalTraceBack);
-        prefXlispTraceBack = prefs.getBoolean("trace-enable", 
+        prefSalBreak = prefs.getBoolean("sal-break", prefSalBreak);
+        prefXlispBreak = prefs.getBoolean("xlisp-break", prefXlispBreak);
+        prefXlispTraceBack = prefs.getBoolean("xlisp-traceback", 
                                                prefXlispTraceBack);
-        prefXlispDebugForSal = prefs.getBoolean("sal-xlispbreak", 
-                                                prefXlispDebugForSal);
+        // if XlispTracBack, then we need to set XlispBreak:
+        prefXlispBreak = prefXlispBreak || prefXlispTraceBack;
         prefPrintGC = prefs.getBoolean("print-gc", prefPrintGC);
         prefFullSearch = prefs.getBoolean("completion-list-full-search", 
                                           prefFullSearch);
@@ -610,12 +622,10 @@ public class MainFrame extends JFrame {
         setBoolean("*sal-compiler-debug*", prefSalShowLisp);
         callFunction(prefEnableSound ? "sound-on" : "sound-off", "");
         callFunction(prefAutoNorm ? "autonorm-on" : "autonorm-off", "");
-        setBoolean("*sal-traceback*", prefSalTraceBack);
-        // note that to turn on stack trace, you need both *breakenable*
-        // and *tracenable*
-        setBoolean("*breakenable*", prefXlispTraceBack);
-        setBoolean("*tracenable*", prefXlispTraceBack);
-        setBoolean("*sal-xlispbreak*", prefXlispDebugForSal);
+        callFunction("sal-tracenable", tOrNil(prefSalTraceBack));
+        callFunction("sal-breakenable", tOrNil(prefSalBreak));
+        callFunction("xlisp-breakenable", tOrNil(prefXlispBreak));
+        callFunction("xlisp-tracenable", tOrNil(prefXlispTraceBack));
         setBoolean("*gc-flag*", prefPrintGC);
         callFunction("set-sound-srate", prefAudioRate);
         callFunction("set-control-srate", prefControlRate);
@@ -695,8 +705,9 @@ public class MainFrame extends JFrame {
             prefs.putBoolean("sound-enable", prefEnableSound);
             prefs.putBoolean("auto-norm", prefAutoNorm);
             prefs.putBoolean("sal-traceback", prefSalTraceBack);
-            prefs.putBoolean("trace-enable", prefXlispTraceBack);
-            prefs.putBoolean("sal-xlispbreak", prefXlispDebugForSal);
+            prefs.putBoolean("sal-break", prefSalBreak);
+            prefs.putBoolean("xlisp-break", prefXlispBreak);
+            prefs.putBoolean("xlisp-traceback", prefXlispTraceBack);
             prefs.putBoolean("print-gc", prefPrintGC);
             prefs.putBoolean("completion-list-full-search", prefFullSearch);
             prefs.putBoolean("internal-browser", prefInternalBrowser);
@@ -904,6 +915,7 @@ public class MainFrame extends JFrame {
             }
         );
     }
+
     public void doFileSave(ActionEvent e) {
         if (jDesktop.getSelectedFrame() instanceof NyquistFile) {
             NyquistFile file = (NyquistFile)jDesktop.getSelectedFrame();

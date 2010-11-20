@@ -42,7 +42,7 @@
 (send statistics-class :answer :get-variance '() '(
   (if (> count 1)
       (/ (- sum-sqr
-            (/ (* sum sum) count))
+            (/ (* sum sum) (float count)))
          (1- count))
       nil)))
 
@@ -150,7 +150,8 @@
            (step (/ (- (send stats :get-max) (send stats :get-min)) nbins)))
       (setf thresholds (make-array (1+ nbins)))
       (dotimes (i (1+ nbins))
-        (setf (aref thresholds i) (+ minthreshold (* i step)))))))
+        (setf (aref thresholds i) (+ minthreshold (* i step)))))
+      thresholds))
 
 (send histogram-class :answer :set-thresholds '(array) '(
     (setf counts nil)
@@ -167,7 +168,7 @@
              (dotimes (i (length counts))
                       (setf (aref counts i) 0))))
       (dolist (x data)
-        (cond ((and verbose (> counter 1000))
+        (cond ((and verbose (> counter 100000))
                (format t "make-hist ~A% done\n"
                          (/ data-position (float (send stats :get-count))))
                (setf counter 0)))

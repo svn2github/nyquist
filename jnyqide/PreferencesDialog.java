@@ -31,8 +31,9 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private JCheckBox enableSound; // "Enable sound output in PLAY command"
     private JCheckBox autoNorm; // "AutoNorm"
     private JCheckBox salTraceBack; // "Print SAL traceback on SAL error"
+    private JCheckBox salBreak; // "Enable XLISP break on SAL error"
+    private JCheckBox xlispBreak; // "Enable XLISP break on XLISP error"
     private JCheckBox xlispTraceBack; // "Print XLISP traceback on XLISP error"
-    private JCheckBox xlispDebugForSal; // "Enable XLISP break on SAL error"
     private JCheckBox printGC; // "Print info about garbage collection"
     private JCheckBox fullSearch;
                       // "Use full search for code completion"
@@ -73,64 +74,40 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                 mainFrame.prefStartInSalMode = startInSalMode.isSelected();
 
                 boolean enable = salShowLisp.isSelected();
-                if (enable != mainFrame.prefSalShowLisp) {
-                    mainFrame.setBoolean("*sal-compiler-debug*", enable);
-                    mainFrame.prefSalShowLisp = enable;
-                }
+                mainFrame.setBoolean("*sal-compiler-debug*", enable);
+                mainFrame.prefSalShowLisp = enable;
                 
                 mainFrame.prefParenAutoInsert = parenAutoInsert.isSelected();
 
                 enable = enableSound.isSelected();
-		if (enable != mainFrame.prefEnableSound) {
-                    mainFrame.callFunction(
-                            enable ? "sound-off" : "sound-on", "");
-                    mainFrame.prefEnableSound = enable;
-                }
+                mainFrame.callFunction(
+                        enable ? "sound-off" : "sound-on", "");
                 
                 enable = autoNorm.isSelected();
-		if (enable != mainFrame.prefAutoNorm) {
-                    mainFrame.callFunction(
-                            enable ? "autonorm-on" : "autonorm-off", "");
-                    mainFrame.prefAutoNorm = enable;
-                }
+                mainFrame.callFunction(
+                        enable ? "autonorm-on" : "autonorm-off", "");
+                mainFrame.prefAutoNorm = enable;
 
                 enable = salTraceBack.isSelected();
-                if (enable != mainFrame.prefSalTraceBack) {
-                    mainFrame.setBoolean("*sal-traceback*", enable);
-                    mainFrame.prefSalTraceBack = enable;
-                }
+                mainFrame.callFunction("sal-tracenable",
+                                       mainFrame.tOrNil(enable));
+                mainFrame.prefSalTraceBack = enable;
                 
+                enable = salBreak.isSelected();
+                mainFrame.callFunction("sal-breakenable",
+                                       mainFrame.tOrNil(enable));
+                mainFrame.prefSalBreak = enable;
+
+                enable = (xlispBreak.isSelected() || xlispTraceBack.isSelected());
+                mainFrame.callFunction("xlisp-breakenable", 
+                                       mainFrame.tOrNil(enable));
+                mainFrame.prefXlispBreak = enable;
+
                 enable = xlispTraceBack.isSelected();
-                if (enable != mainFrame.prefXlispTraceBack) {
-                    // note that if we are in sal mode, this will set some
-                    // dynamically scoped variables that exist while sal is
-                    // running, so we get the effect of xlispDebugForSal
-                    // (which is wrong), and when we pop back to XLISP, we'll
-                    // restore the old *breakenable* and *tracenable*
-                    // (which is also wrong because they might not agree with
-                    // the preferences). Since the XLISP values are shadowed
-                    // by SAL's values, there's no easy way to set these
-                    // properly except possible to exit to XLISP, set them,
-                    // and then re-enter SAL mode. Maybe that should be done,
-                    // but if SAL were running, it might do some damage.
-                    mainFrame.setBoolean("*breakenable*", enable);
-                    mainFrame.setBoolean("*tracenable*", enable);
-                    mainFrame.prefXlispTraceBack = enable;
-                }
-                
-                enable = xlispDebugForSal.isSelected();
-                if (enable != mainFrame.prefXlispDebugForSal) {
-                    mainFrame.setBoolean("*sal-xlispbreak*", enable);
-                    // *sal-xlispbreak* takes effect when entering sal mode
-                    // if we're already in sal mode, we need to turn on
-                    // *breakenable* and *tracenable*
-                    if (mainFrame.jScrollPane.isSal) {
-                        mainFrame.setBoolean("*breakenable*", enable);
-                        mainFrame.setBoolean("*tracenable*", enable);
-                    }
-                    mainFrame.prefXlispDebugForSal = enable;
-                }
-                
+                mainFrame.callFunction("xlisp-tracenable",
+                                       mainFrame.tOrNil(enable));
+                mainFrame.prefXlispTraceBack = enable;
+
                 enable = printGC.isSelected();
                 if (enable != mainFrame.prefPrintGC) {
                     mainFrame.setBoolean("*gc-flag*", enable);
@@ -247,12 +224,15 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         // Enable SAL Stack Traceback on Error
         salTraceBack = makeCheckBox("Print SAL traceback on SAL error",
                                     mainFrame.prefSalTraceBack);
-        // printTraceBack
+        // break into XLISP debugger on SAL error
+        salBreak = makeCheckBox("Enable XLISP break on SAL error",
+                                 mainFrame.prefSalBreak);
+        // Enable XLISP Break when XLISP encounters error
+        xlispBreak = makeCheckBox("Enable XLISP break on XLISP error",
+                                  mainFrame.prefXlispBreak);
+        // print XLISP TraceBack on XLISP error
         xlispTraceBack = makeCheckBox("Print XLISP traceback on XLISP error",
                                        mainFrame.prefXlispTraceBack);
-        // break into XLISP debugger on SAL error
-        xlispDebugForSal = makeCheckBox("Enable XLISP break on SAL error",
-                                 mainFrame.prefXlispDebugForSal);
         // printGC
         printGC = makeCheckBox("Print info about garbage collection",
                                mainFrame.prefPrintGC);
@@ -388,14 +368,14 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         } else if (evt.getSource() == defaultPrefs) {
             startInSalMode.setSelected(mainFrame.prefStartInSalModeDefault);
             salShowLisp.setSelected(mainFrame.prefSalShowLispDefault);
-            salTraceBack.setSelected(mainFrame.prefSalTraceBackDefault);
             parenAutoInsert.setSelected(
                     mainFrame.prefParenAutoInsertDefault);
             enableSound.setSelected(mainFrame.prefEnableSoundDefault);
             autoNorm.setSelected(mainFrame.prefAutoNormDefault);
             salTraceBack.setSelected(mainFrame.prefSalTraceBackDefault);
+            salBreak.setSelected(mainFrame.prefSalBreakDefault);
+            xlispBreak.setSelected(mainFrame.prefXlispBreakDefault);
             xlispTraceBack.setSelected(mainFrame.prefXlispTraceBackDefault);
-            xlispDebugForSal.setSelected(mainFrame.prefXlispDebugForSalDefault);
             printGC.setSelected(mainFrame.prefPrintGCDefault);
             fullSearch.setSelected(mainFrame.prefFullSearchDefault);
             internalBrowser.setSelected(mainFrame.prefInternalBrowserDefault);
