@@ -20,93 +20,8 @@
 		};
 /* End PBXAggregateTarget section */
 
-/* Begin PBXApplicationTarget section */
-		F5C6A9B703A10C0501029006 /* jNyqIDE-old */ = {
-			isa = PBXApplicationTarget;
-			buildConfigurationList = 3DEBDFCA095B177A001BCCB6 /* Build configuration list for PBXApplicationTarget "jNyqIDE-old" */;
-			buildPhases = (
-				F5C6A9B303A10C0501029006 /* Sources */,
-				F5C6A9B403A10C0501029006 /* Resources */,
-				F5C6A9B503A10C0501029006 /* JavaArchive */,
-				F5C6A9B603A10C0501029006 /* Frameworks */,
-				F5DA146003A112BF01029006 /* CopyFiles */,
-				3D88F08A0B5DD813003700F9 /* ShellScript */,
-			);
-			dependencies = (
-				3D5CD95F0B5BDC6900DF426B /* PBXTargetDependency */,
-				3D5CD9610B5BDC6D00DF426B /* PBXTargetDependency */,
-				3D5CD9630B5BDC7100DF426B /* PBXTargetDependency */,
-			);
-			name = "jNyqIDE-old";
-			productInstallPath = Applications;
-			productName = NyquistIDE;
-			productReference = F5C6A9B803A10C0501029006 /* NyquistIDE.app */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string>Nyquist</string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>3.01</string>
-	<key>Java</key>
-	<dict>
-		<key>ClassPath</key>
-		<array>
-			<string>$JAVAROOT/NyquistIDE.jar</string>
-		</array>
-		<key>JVMVersion</key>
-		<string>1.5</string>
-		<key>MainClass</key>
-		<string>jnyqide.Main</string>
-		<key>Properties</key>
-		<dict>
-			<key>apple.awt.textantialiasing</key>
-			<string>on</string>
-			<key>com.apple.macos.useScreenMenuBar</key>
-			<string>true</string>
-		</dict>
-		<key>VMOptions</key>
-		<string>-verbose</string>
-		<key>WorkingDirectory</key>
-		<string>$APP_PACKAGE/Contents/Resources/Java</string>
-	</dict>
-	<key>NSJavaNeeded</key>
-	<string>YES</string>
-	<key>NSJavaPath</key>
-	<array>
-		<string>NyquistIDE.jar</string>
-	</array>
-	<key>NSJavaRoot</key>
-	<string>Contents/Resources/Java</string>
-</dict>
-</plist>
-";
-		};
-/* End PBXApplicationTarget section */
-
 /* Begin PBXBuildFile section */
 		3D0817D40AD02A210051B745 /* test-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D0817BA0AD0219B0051B745 /* test-client.c */; };
-		3D1472CE0A799E8500F00E71 /* browser.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D1472CD0A799E8500F00E71 /* browser.java */; };
-		3D1472D00A799E9B00F00E71 /* InstrumentCharacteristics.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D1472CF0A799E9B00F00E71 /* InstrumentCharacteristics.java */; };
-		3D1472D30A799ECC00F00E71 /* SpringUtilities.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D1472D20A799ECC00F00E71 /* SpringUtilities.java */; };
-		3D16EA020A866123006DADB6 /* ReplaceDialog.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D16EA010A866123006DADB6 /* ReplaceDialog.java */; };
 		3D177689125CB411007B2152 /* jnyqide.jar in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D177688125CB40C007B2152 /* jnyqide.jar */; };
 		3D177699125CB593007B2152 /* closeFile.gif in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D35A7C505690E180002CE69 /* closeFile.gif */; };
 		3D17769A125CB593007B2152 /* help.gif in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D35A7C605690E180002CE69 /* help.gif */; };
@@ -202,26 +117,9 @@
 		3D3534530F0BE6190059CD05 /* short_term.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D3534500F0BE6190059CD05 /* short_term.c */; };
 		3D3534540F0BE6190059CD05 /* table.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D3534510F0BE6190059CD05 /* table.c */; };
 		3D3534580F0BE6420059CD05 /* add.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D3534560F0BE6420059CD05 /* add.c */; };
-		3D35A7D405690E180002CE69 /* closeFile.gif in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D35A7C505690E180002CE69 /* closeFile.gif */; };
-		3D35A7D505690E180002CE69 /* help.gif in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D35A7C605690E180002CE69 /* help.gif */; };
-		3D35A7D605690E180002CE69 /* LispFileFilter.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7C705690E180002CE69 /* LispFileFilter.java */; };
-		3D35A7D705690E180002CE69 /* Main.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7C805690E180002CE69 /* Main.java */; };
-		3D35A7D905690E180002CE69 /* MainFrame_AboutBox.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7CA05690E180002CE69 /* MainFrame_AboutBox.java */; };
-		3D35A7DA05690E180002CE69 /* NyqPlot.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7CB05690E180002CE69 /* NyqPlot.java */; };
-		3D35A7DB05690E180002CE69 /* NyquistFile.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7CC05690E180002CE69 /* NyquistFile.java */; };
-		3D35A7DC05690E180002CE69 /* NyquistThread.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7CD05690E180002CE69 /* NyquistThread.java */; };
-		3D35A7DD05690E180002CE69 /* openFile.gif in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D35A7CE05690E180002CE69 /* openFile.gif */; };
-		3D35A7DE05690E180002CE69 /* Pair.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7CF05690E180002CE69 /* Pair.java */; };
-		3D35A7DF05690E180002CE69 /* PlotFrame.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7D005690E180002CE69 /* PlotFrame.java */; };
-		3D35A7E005690E180002CE69 /* PlotMouseAdapter.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7D105690E180002CE69 /* PlotMouseAdapter.java */; };
-		3D36DDED0796E1AB0002CE69 /* runtime in CopyFiles */ = {isa = PBXBuildFile; fileRef = F510BCDA039F84FE01029006 /* runtime */; };
-		3D36DDF40796E6170002CE69 /* system.lsp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D36DDF20796E60F0002CE69 /* system.lsp */; };
-		3D3DAE7B0D423E76000713EB /* Nyquist.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3D1472C70A799DFF00F00E71 /* Nyquist.icns */; };
 		3D48B84C0F5993750073A251 /* fftlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D48B84B0F5993750073A251 /* fftlib.c */; };
 		3D48B8500F5993A60073A251 /* fftext.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D48B84F0F5993A60073A251 /* fftext.c */; };
 		3D48B86E0F599EE90073A251 /* matlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D48B86D0F599EE90073A251 /* matlib.c */; };
-		3D587FD90B67A053002E40F9 /* SpecialMacHandler.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D587FD80B67A053002E40F9 /* SpecialMacHandler.java */; };
-		3D587FF10B67A1CC002E40F9 /* MainFrame.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D35A7C905690E180002CE69 /* MainFrame.java */; };
 		3D5CD8340B5BC75E00DF426B /* osstuff.c in Sources */ = {isa = PBXBuildFile; fileRef = F543EFBF0375CD9901029006 /* osstuff.c */; };
 		3D5CD8350B5BC75E00DF426B /* extern.c in Sources */ = {isa = PBXBuildFile; fileRef = F5FF5F49039D84B901029006 /* extern.c */; };
 		3D5CD8360B5BC75E00DF426B /* xldmem.c in Sources */ = {isa = PBXBuildFile; fileRef = F5FF5F50039D84B901029006 /* xldmem.c */; };
@@ -380,24 +278,8 @@
 		3D5CD8EE0B5BC75E00DF426B /* trigger.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB7FB20B30690F00A51A49 /* trigger.c */; };
 		3D5CD9050B5BC78900DF426B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA446C00789FF350002CE69 /* AudioToolbox.framework */; };
 		3D5CD9060B5BC78900DF426B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA446C20789FF430002CE69 /* CoreAudio.framework */; };
-		3D5CD9500B5BDB7800DF426B /* osc-test-client in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D0817550AD01DB10051B745 /* osc-test-client */; };
-		3D5CD9510B5BDB7B00DF426B /* ser-to-osc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DAB7F290B2E172300A51A49 /* ser-to-osc */; };
-		3D5CD9520B5BDB7D00DF426B /* ny in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D5CD82D0B5BC73700DF426B /* ny */; };
-		3D6032F60790A600007A3CA5 /* FindDialog.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D6032F50790A600007A3CA5 /* FindDialog.java */; };
-		3D6032F90790A618007A3CA5 /* NotFoundDialog.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D6032F80790A618007A3CA5 /* NotFoundDialog.java */; };
-		3D6032FB0790A62C007A3CA5 /* PreferencesDialog.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D6032FA0790A62C007A3CA5 /* PreferencesDialog.java */; };
-		3D647D2A0AC9E7B800E699B7 /* EnvelopeFrame.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D647D290AC9E7B800E699B7 /* EnvelopeFrame.java */; };
-		3D6D6B530D14CD8C00B20822 /* CodePane.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D6D6B520D14CD8C00B20822 /* CodePane.java */; };
-		3D6D6C210D178B7E00B20822 /* SalWordList.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D6D6C200D178B7E00B20822 /* SalWordList.java */; };
 		3D7327DF125BFB31009AAF15 /* JavaApplicationStub in Copy Executable */ = {isa = PBXBuildFile; fileRef = 3D7327DE125BFB19009AAF15 /* JavaApplicationStub */; };
 		3D7327FC125BFCCE009AAF15 /* ny in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D5CD82D0B5BC73700DF426B /* ny */; };
-		3D7A6FC40A7A6AB500098CAB /* demos in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D7A6F830A7A6AB500098CAB /* demos */; };
-		3D7A6FCB0A7A851B00098CAB /* Trie.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D7A6FC90A7A851B00098CAB /* Trie.java */; };
-		3D7A6FCC0A7A851B00098CAB /* WordList.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D7A6FCA0A7A851B00098CAB /* WordList.java */; };
-		3D7A6FD30A7A863B00098CAB /* NyquistWords.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D7A6FD10A7A85F900098CAB /* NyquistWords.txt */; };
-		3D7E28BE0B3E3E540078F9A3 /* Piano_Roll.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E28BD0B3E3E540078F9A3 /* Piano_Roll.java */; };
-		3D7E29010B3EC8F90078F9A3 /* Jslide.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E29000B3EC8F90078F9A3 /* Jslide.java */; };
-		3D91FF8C0B97CB3300565C3F /* BareBonesBrowserLaunch.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D91FF8B0B97CB3300565C3F /* BareBonesBrowserLaunch.java */; };
 		3DA1194A0D2DE1BF00948714 /* DelayA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119350D2DE1BF00948714 /* DelayA.cpp */; };
 		3DA1194B0D2DE1BF00948714 /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119360D2DE1BF00948714 /* Effect.cpp */; };
 		3DA1194C0D2DE1BF00948714 /* FileRead.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119370D2DE1BF00948714 /* FileRead.cpp */; };
@@ -439,6 +321,8 @@
 		3DA120FD0D313E1B00948714 /* stkchorus.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA120FC0D313E1B00948714 /* stkchorus.c */; };
 		3DA120FF0D313E5500948714 /* instrmandolin.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA120FE0D313E5500948714 /* instrmandolin.c */; };
 		3DA121020D313E7C00948714 /* instrmodalbar.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA121000D313E7C00948714 /* instrmodalbar.c */; };
+		3DA7D7CC12B93C74008E62B1 /* cmdline.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DF21F3404FD526A0002CE69 /* cmdline.c */; };
+		3DA7D7CD12B93C8A008E62B1 /* intgen.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DF21F4004FD526A0002CE69 /* intgen.c */; };
 		3DBB0A6A1290422300024DD7 /* pa_allocation.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A691290422300024DD7 /* pa_allocation.c */; };
 		3DBB0A82129042A500024DD7 /* pa_converters.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A6C129042A500024DD7 /* pa_converters.c */; };
 		3DBB0A83129042A500024DD7 /* pa_cpuload.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0A6E129042A500024DD7 /* pa_cpuload.c */; };
@@ -457,20 +341,10 @@
 		3DBB0AB012904BBB00024DD7 /* pa_unix_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0AAE12904BBB00024DD7 /* pa_unix_util.c */; };
 		3DBB0AB512904C0800024DD7 /* pa_ringbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB0AB312904C0800024DD7 /* pa_ringbuffer.c */; };
 		3DBB0ABA12904C2600024DD7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBB0AA412904AEB00024DD7 /* AudioUnit.framework */; };
-		3DBF98A30D4196E300B4588F /* MiniBrowser.java in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF98A20D4196E300B4588F /* MiniBrowser.java */; };
 		3DC916F60D4036DC00DD66C0 /* fmfb.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DC916F40D4036DC00DD66C0 /* fmfb.c */; };
 		3DC916F90D4036F000DD66C0 /* fmfbv.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DC916F70D4036F000DD66C0 /* fmfbv.c */; };
-		3DE0D0690B319B30003EAC5F /* PopupListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0D0680B319B30003EAC5F /* PopupListener.java */; };
 		3DE80D670F7EA825003761D2 /* pvshell.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DE80D660F7EA825003761D2 /* pvshell.c */; };
 		3DE80D690F7EA840003761D2 /* phasevocoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DE80D680F7EA840003761D2 /* phasevocoder.c */; };
-		3DF21F5104FD526A0002CE69 /* args.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF21F3204FD526A0002CE69 /* args.h */; };
-		3DF21F5204FD526A0002CE69 /* cext.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF21F3304FD526A0002CE69 /* cext.h */; };
-		3DF21F5304FD526A0002CE69 /* cmdline.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DF21F3404FD526A0002CE69 /* cmdline.c */; };
-		3DF21F5404FD526A0002CE69 /* cmdline.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF21F3504FD526A0002CE69 /* cmdline.h */; };
-		3DF21F6104FD52BC0002CE69 /* intgen.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DF21F4004FD526A0002CE69 /* intgen.c */; };
-		3DFA3F740D1F03B0003CFE6B /* SalFileFilter.java in Sources */ = {isa = PBXBuildFile; fileRef = 3DFA3F730D1F03B0003CFE6B /* SalFileFilter.java */; };
-		3DFA3FC00D1F8139003CFE6B /* TextColor.java in Sources */ = {isa = PBXBuildFile; fileRef = 3DFA3FBF0D1F8139003CFE6B /* TextColor.java */; };
-		F5C6A9CA03A10C6401029006 /* lib in CopyFiles */ = {isa = PBXBuildFile; fileRef = F510BCA7039F84FD01029006 /* lib */; settings = {JAVA_ARCHIVE_SUBDIR = ..; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -487,27 +361,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 3D3533810F0BD6CA0059CD05;
 			remoteInfo = libsndfile;
-		};
-		3D5CD95E0B5BDC6900DF426B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3D0817540AD01DB10051B745;
-			remoteInfo = "osc-test-client";
-		};
-		3D5CD9600B5BDC6D00DF426B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3DAB7F280B2E172300A51A49;
-			remoteInfo = "ser-to-osc";
-		};
-		3D5CD9620B5BDC7100DF426B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3D5CD82C0B5BC73700DF426B;
-			remoteInfo = ny;
 		};
 		3D7327DB125BF99D009AAF15 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -555,26 +408,6 @@
 				3D1776A0125CB593007B2152 /* system.lsp in Copy Java Resources */,
 			);
 			name = "Copy Java Resources";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5DA146003A112BF01029006 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 15;
-			files = (
-				3D5CD9520B5BDB7D00DF426B /* ny in CopyFiles */,
-				3D5CD9500B5BDB7800DF426B /* osc-test-client in CopyFiles */,
-				3D5CD9510B5BDB7B00DF426B /* ser-to-osc in CopyFiles */,
-				3D35A7D405690E180002CE69 /* closeFile.gif in CopyFiles */,
-				3D35A7D505690E180002CE69 /* help.gif in CopyFiles */,
-				3D35A7DD05690E180002CE69 /* openFile.gif in CopyFiles */,
-				3D7A6FD30A7A863B00098CAB /* NyquistWords.txt in CopyFiles */,
-				3D36DDED0796E1AB0002CE69 /* runtime in CopyFiles */,
-				F5C6A9CA03A10C6401029006 /* lib in CopyFiles */,
-				3D7A6FC40A7A6AB500098CAB /* demos in CopyFiles */,
-				3D36DDF40796E6170002CE69 /* system.lsp in CopyFiles */,
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -848,6 +681,9 @@
 		3DA121010D313E7C00948714 /* instrmodalbar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = instrmodalbar.h; sourceTree = "<group>"; };
 		3DA446C00789FF350002CE69 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		3DA446C20789FF430002CE69 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
+		3DA7D7C412B93C08008E62B1 /* intgen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = intgen; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DA7D7D212B93D20008E62B1 /* switches.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = switches.h; path = ../sys/mac/switches.h; sourceTree = SOURCE_ROOT; };
+		3DA7D7DD12B9406B008E62B1 /* switches.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = switches.h; path = ../sys/unix/switches.h; sourceTree = SOURCE_ROOT; };
 		3DAB7F290B2E172300A51A49 /* ser-to-osc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ser-to-osc"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DAB7FB20B30690F00A51A49 /* trigger.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = trigger.c; sourceTree = "<group>"; };
 		3DBB0A691290422300024DD7 /* pa_allocation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pa_allocation.c; path = portaudio/src/common/pa_allocation.c; sourceTree = "<group>"; };
@@ -894,7 +730,6 @@
 		3DE0D0680B319B30003EAC5F /* PopupListener.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = PopupListener.java; sourceTree = "<group>"; };
 		3DE80D660F7EA825003761D2 /* pvshell.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pvshell.c; path = ../nyqsrc/pvshell.c; sourceTree = SOURCE_ROOT; };
 		3DE80D680F7EA840003761D2 /* phasevocoder.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = phasevocoder.c; path = ../nyqsrc/phasevocoder.c; sourceTree = SOURCE_ROOT; };
-		3DF21F2704FD4FDC0002CE69 /* intgen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = intgen; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DF21F3204FD526A0002CE69 /* args.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = args.h; sourceTree = "<group>"; };
 		3DF21F3304FD526A0002CE69 /* cext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = cext.h; sourceTree = "<group>"; };
 		3DF21F3404FD526A0002CE69 /* cmdline.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = cmdline.c; sourceTree = "<group>"; };
@@ -997,7 +832,6 @@
 		F543EF630375CD7101029006 /* sndsystemmac.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sndsystemmac.h; sourceTree = "<group>"; };
 		F543EF660375CD7101029006 /* sndwrite.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sndwrite.h; sourceTree = "<group>"; };
 		F543EFBF0375CD9901029006 /* osstuff.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = osstuff.c; sourceTree = "<group>"; };
-		F5C6A9B803A10C0501029006 /* NyquistIDE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = NyquistIDE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5DA143903A1108C01029006 /* README */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		F5FF5F49039D84B901029006 /* extern.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = extern.c; sourceTree = "<group>"; };
 		F5FF5F4A039D84B901029006 /* extern.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = extern.h; sourceTree = "<group>"; };
@@ -1237,25 +1071,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DA7D7C212B93C08008E62B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DAB7F270B2E172300A51A49 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				3D3223990F54561400F074EF /* libliblo.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3DF21F2404FD4FDC0002CE69 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5C6A9B603A10C0501029006 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1265,6 +1092,8 @@
 		08FB7794FE84155DC02AAC07 /* MacOSXProject */ = {
 			isa = PBXGroup;
 			children = (
+				3DA7D7DD12B9406B008E62B1 /* switches.h */,
+				3DA7D7D212B93D20008E62B1 /* switches.h */,
 				3D7327DE125BFB19009AAF15 /* JavaApplicationStub */,
 				3DE80D680F7EA840003761D2 /* phasevocoder.c */,
 				3DE80D660F7EA825003761D2 /* pvshell.c */,
@@ -1310,8 +1139,6 @@
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F5C6A9B803A10C0501029006 /* NyquistIDE.app */,
-				3DF21F2704FD4FDC0002CE69 /* intgen */,
 				3D0817550AD01DB10051B745 /* osc-test-client */,
 				3D177688125CB40C007B2152 /* jnyqide.jar */,
 				3DAB7F290B2E172300A51A49 /* ser-to-osc */,
@@ -1319,6 +1146,7 @@
 				3D3533820F0BD6CA0059CD05 /* liblibsndfile.a */,
 				3D3221700F53D4C300F074EF /* libliblo.a */,
 				3D7327B0125BF624009AAF15 /* NyquistIDE.app */,
+				3DA7D7C412B93C08008E62B1 /* intgen */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2109,27 +1937,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3DF21F2204FD4FDC0002CE69 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3DF21F5104FD526A0002CE69 /* args.h in Headers */,
-				3DF21F5204FD526A0002CE69 /* cext.h in Headers */,
-				3DF21F5404FD526A0002CE69 /* cmdline.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
-
-/* Begin PBXJavaArchiveBuildPhase section */
-		F5C6A9B503A10C0501029006 /* JavaArchive */ = {
-			isa = PBXJavaArchiveBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXJavaArchiveBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		3D0817540AD01DB10051B745 /* osc-test-client */ = {
@@ -2220,6 +2028,22 @@
 			productReference = 3D7327B0125BF624009AAF15 /* NyquistIDE.app */;
 			productType = "com.apple.product-type.application";
 		};
+		3DA7D7C312B93C08008E62B1 /* intgen */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DA7D7CB12B93C3F008E62B1 /* Build configuration list for PBXNativeTarget "intgen" */;
+			buildPhases = (
+				3DA7D7C112B93C08008E62B1 /* Sources */,
+				3DA7D7C212B93C08008E62B1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = intgen;
+			productName = intgen;
+			productReference = 3DA7D7C412B93C08008E62B1 /* intgen */;
+			productType = "com.apple.product-type.tool";
+		};
 		3DAB7F280B2E172300A51A49 /* ser-to-osc */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3DAB7F2C0B2E175500A51A49 /* Build configuration list for PBXNativeTarget "ser-to-osc" */;
@@ -2256,8 +2080,6 @@
 			projectDirPath = "";
 			projectRoot = ..;
 			targets = (
-				F5C6A9B703A10C0501029006 /* jNyqIDE-old */,
-				3DF21F2604FD4FDC0002CE69 /* InterfaceGenerator */,
 				3D0817540AD01DB10051B745 /* osc-test-client */,
 				3DAB7F280B2E172300A51A49 /* ser-to-osc */,
 				3D5CD82C0B5BC73700DF426B /* ny */,
@@ -2265,6 +2087,7 @@
 				3D32216F0F53D4C300F074EF /* liblo */,
 				3D7327A5125BF5D8009AAF15 /* CompileJava */,
 				3D7327AF125BF624009AAF15 /* NyquistIDE */,
+				3DA7D7C312B93C08008E62B1 /* intgen */,
 			);
 		};
 /* End PBXProject section */
@@ -2278,25 +2101,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F5C6A9B403A10C0501029006 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3D3DAE7B0D423E76000713EB /* Nyquist.icns in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXRezBuildPhase section */
-		3DF21F2504FD4FDC0002CE69 /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		3D1776D7125D4681007B2152 /* Rename Executable */ = {
@@ -2357,20 +2162,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# shell script goes here\ncd ..\necho \"compiling java sources\"\njavac jnyqide/*.java\nif [ -f jnyqide/jnyqide.jar ]\nthen\n  echo \"removing jnyqide/jnyqide.jar\"\n  rm -f jnyqide/jnyqide.jar\nelse\n  echo \"jnyqide/jnyqide.jar does not exist\"\nfi\necho \"(re)creating jar file\"\njar -cfm jnyqide/jnyqide.jar jnyqide/manifest.txt jnyqide/*.class\necho \"end of script\"\nexit 0\n";
 			showEnvVarsInLog = 0;
-		};
-		3D88F08A0B5DD813003700F9 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			comments = "This removes what might be an extra copy of system.lsp from runtime. The \"true\" version is in sys/unix and is copied to runtime/.., where it is loaded by Nyquist. We don't want an extra copy in runtime because someone might get confused and think that it is the copy loaded by Nyquist.";
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "rm -f ../runtime/system.lsp\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2704,57 +2495,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DA7D7C112B93C08008E62B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DA7D7CC12B93C74008E62B1 /* cmdline.c in Sources */,
+				3DA7D7CD12B93C8A008E62B1 /* intgen.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DAB7F260B2E172300A51A49 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				3D3223A30F54582900F074EF /* ser-to-osc.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3DF21F2304FD4FDC0002CE69 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3DF21F5304FD526A0002CE69 /* cmdline.c in Sources */,
-				3DF21F6104FD52BC0002CE69 /* intgen.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5C6A9B303A10C0501029006 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3D35A7D605690E180002CE69 /* LispFileFilter.java in Sources */,
-				3D35A7D705690E180002CE69 /* Main.java in Sources */,
-				3D587FF10B67A1CC002E40F9 /* MainFrame.java in Sources */,
-				3D35A7D905690E180002CE69 /* MainFrame_AboutBox.java in Sources */,
-				3D35A7DA05690E180002CE69 /* NyqPlot.java in Sources */,
-				3D35A7DB05690E180002CE69 /* NyquistFile.java in Sources */,
-				3D35A7DC05690E180002CE69 /* NyquistThread.java in Sources */,
-				3D35A7DE05690E180002CE69 /* Pair.java in Sources */,
-				3D35A7DF05690E180002CE69 /* PlotFrame.java in Sources */,
-				3D35A7E005690E180002CE69 /* PlotMouseAdapter.java in Sources */,
-				3D6032F60790A600007A3CA5 /* FindDialog.java in Sources */,
-				3D6032F90790A618007A3CA5 /* NotFoundDialog.java in Sources */,
-				3D6032FB0790A62C007A3CA5 /* PreferencesDialog.java in Sources */,
-				3D1472CE0A799E8500F00E71 /* browser.java in Sources */,
-				3D1472D00A799E9B00F00E71 /* InstrumentCharacteristics.java in Sources */,
-				3D1472D30A799ECC00F00E71 /* SpringUtilities.java in Sources */,
-				3D7A6FCB0A7A851B00098CAB /* Trie.java in Sources */,
-				3D7A6FCC0A7A851B00098CAB /* WordList.java in Sources */,
-				3D16EA020A866123006DADB6 /* ReplaceDialog.java in Sources */,
-				3D647D2A0AC9E7B800E699B7 /* EnvelopeFrame.java in Sources */,
-				3DE0D0690B319B30003EAC5F /* PopupListener.java in Sources */,
-				3D7E28BE0B3E3E540078F9A3 /* Piano_Roll.java in Sources */,
-				3D7E29010B3EC8F90078F9A3 /* Jslide.java in Sources */,
-				3D587FD90B67A053002E40F9 /* SpecialMacHandler.java in Sources */,
-				3D91FF8C0B97CB3300565C3F /* BareBonesBrowserLaunch.java in Sources */,
-				3D6D6B530D14CD8C00B20822 /* CodePane.java in Sources */,
-				3D6D6C210D178B7E00B20822 /* SalWordList.java in Sources */,
-				3DFA3F740D1F03B0003CFE6B /* SalFileFilter.java in Sources */,
-				3DFA3FC00D1F8139003CFE6B /* TextColor.java in Sources */,
-				3DBF98A30D4196E300B4588F /* MiniBrowser.java in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2771,21 +2525,6 @@
 			target = 3D3533810F0BD6CA0059CD05 /* libsndfile */;
 			targetProxy = 3D3533A40F0BD8A80059CD05 /* PBXContainerItemProxy */;
 		};
-		3D5CD95F0B5BDC6900DF426B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3D0817540AD01DB10051B745 /* osc-test-client */;
-			targetProxy = 3D5CD95E0B5BDC6900DF426B /* PBXContainerItemProxy */;
-		};
-		3D5CD9610B5BDC6D00DF426B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3DAB7F280B2E172300A51A49 /* ser-to-osc */;
-			targetProxy = 3D5CD9600B5BDC6D00DF426B /* PBXContainerItemProxy */;
-		};
-		3D5CD9630B5BDC7100DF426B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3D5CD82C0B5BC73700DF426B /* ny */;
-			targetProxy = 3D5CD9620B5BDC7100DF426B /* PBXContainerItemProxy */;
-		};
 		3D7327DC125BF99D009AAF15 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3D7327A5125BF5D8009AAF15 /* CompileJava */;
@@ -2797,25 +2536,6 @@
 			targetProxy = 3DBB0A5512903B0200024DD7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXToolTarget section */
-		3DF21F2604FD4FDC0002CE69 /* InterfaceGenerator */ = {
-			isa = PBXToolTarget;
-			buildConfigurationList = 3DEBDFCE095B177A001BCCB6 /* Build configuration list for PBXToolTarget "InterfaceGenerator" */;
-			buildPhases = (
-				3DF21F2204FD4FDC0002CE69 /* Headers */,
-				3DF21F2304FD4FDC0002CE69 /* Sources */,
-				3DF21F2404FD4FDC0002CE69 /* Frameworks */,
-				3DF21F2504FD4FDC0002CE69 /* Rez */,
-			);
-			dependencies = (
-			);
-			name = InterfaceGenerator;
-			productInstallPath = /usr/local/bin;
-			productName = InterfaceGenerator;
-			productReference = 3DF21F2704FD4FDC0002CE69 /* intgen */;
-		};
-/* End PBXToolTarget section */
 
 /* Begin XCBuildConfiguration section */
 		3D08175C0AD01DD00051B745 /* Development */ = {
@@ -2929,6 +2649,7 @@
 		3D3533870F0BD6E00059CD05 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = i386;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -3009,10 +2730,7 @@
 		3D5CD8310B5BC75600DF426B /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = i386;
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -3102,6 +2820,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = i386;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -3170,6 +2889,48 @@
 			};
 			name = Default;
 		};
+		3DA7D7C612B93C08008E62B1 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = intgen;
+			};
+			name = Development;
+		};
+		3DA7D7C712B93C08008E62B1 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = intgen;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3DA7D7C812B93C08008E62B1 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = intgen;
+			};
+			name = Default;
+		};
 		3DAB7F2D0B2E175500A51A49 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3218,157 +2979,6 @@
 			};
 			name = Default;
 		};
-		3DEBDFCB095B177A001BCCB6 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = "";
-				INSTALL_PATH = Applications;
-				JAVA_CLASS_SEARCH_PATHS = ../jnyqide;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_SOURCE_VERSION = 1.5;
-				JAVA_COMPILER_TARGET_VM_VERSION = 1.5;
-				JAVA_ONLY = YES;
-				JAVA_SOURCE_SUBDIR = .;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = NyquistIDE;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		3DEBDFCC095B177A001BCCB6 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				DSTROOT = /Users/rbd/tmp;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				HEADER_SEARCH_PATHS = "";
-				INSTALL_PATH = Applications;
-				JAVA_CLASS_SEARCH_PATHS = ../jnyqide;
-				JAVA_COMPILER = /System/Library/Frameworks/JavaVM.framework/Versions/1.5/Commands/javac;
-				JAVA_COMPILER_SOURCE_VERSION = 1.5;
-				JAVA_COMPILER_TARGET_VM_VERSION = 1.5;
-				JAVA_ONLY = YES;
-				JAVA_SOURCE_SUBDIR = .;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = NyquistIDE;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = app;
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		3DEBDFCD095B177A001BCCB6 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				HEADER_SEARCH_PATHS = "";
-				INSTALL_PATH = Applications;
-				JAVA_CLASS_SEARCH_PATHS = ../jnyqide;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_ONLY = YES;
-				JAVA_SOURCE_SUBDIR = .;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = NyquistIDE;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = app;
-			};
-			name = Default;
-		};
-		3DEBDFCF095B177A001BCCB6 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = ../sys/unix;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = intgen;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		3DEBDFD0095B177A001BCCB6 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				DSTROOT = /Users/rbd/tmp;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				HEADER_SEARCH_PATHS = ../sys/unix;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = intgen;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		3DEBDFD1095B177A001BCCB6 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				HEADER_SEARCH_PATHS = ../sys/unix;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = intgen;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Default;
-		};
 		3DEBDFD3095B177A001BCCB6 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3384,12 +2994,9 @@
 		3DEBDFD4095B177A001BCCB6 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = i386;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Deployment;
 		};
@@ -3468,32 +3075,22 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
+		3DA7D7CB12B93C3F008E62B1 /* Build configuration list for PBXNativeTarget "intgen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DA7D7C612B93C08008E62B1 /* Development */,
+				3DA7D7C712B93C08008E62B1 /* Deployment */,
+				3DA7D7C812B93C08008E62B1 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
 		3DAB7F2C0B2E175500A51A49 /* Build configuration list for PBXNativeTarget "ser-to-osc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3DAB7F2D0B2E175500A51A49 /* Development */,
 				3DAB7F2E0B2E175500A51A49 /* Deployment */,
 				3DAB7F2F0B2E175500A51A49 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		3DEBDFCA095B177A001BCCB6 /* Build configuration list for PBXApplicationTarget "jNyqIDE-old" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3DEBDFCB095B177A001BCCB6 /* Development */,
-				3DEBDFCC095B177A001BCCB6 /* Deployment */,
-				3DEBDFCD095B177A001BCCB6 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		3DEBDFCE095B177A001BCCB6 /* Build configuration list for PBXToolTarget "InterfaceGenerator" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3DEBDFCF095B177A001BCCB6 /* Development */,
-				3DEBDFD0095B177A001BCCB6 /* Deployment */,
-				3DEBDFD1095B177A001BCCB6 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
