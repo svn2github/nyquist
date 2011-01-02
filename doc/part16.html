@@ -1,7 +1,7 @@
 <a href = "part15.html">Previous Section</a> | <a href = "part17.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
 <html><head><title>Appendix 1: Extending Nyquist</title></head>
-<a name = "188"><h2>Appendix 1: Extending Nyquist</h2></a>
+<a name = "182"><h2>Appendix 1: Extending Nyquist</h2></a>
 
 <b><i>WARNING:</i></b>
 Nyquist sound functions look almost like a human wrote them; they even have
@@ -10,7 +10,7 @@ Nyquist functions are written by a special translator.  If you try to write
 a new function by hand, you will probably not succeed, and even if you do,
 you will waste a great deal of time.  (End of Warning.)
 <p>
-<a name = "189"><h3>Translating Descriptions to C Code</h3></a>The translator code used to extend Nyquist resides in the <code>trnsrc</code>
+<a name = "183"><h3>Translating Descriptions to C Code</h3></a>The translator code used to extend Nyquist resides in the <code>trnsrc</code>
 directory.  This directory also contains a special <code>init.lsp</code>, so if
 you start XLisp or Nyquist in this directory, it will automatically read
 <code>init.lsp</code>, which in turn will load the translator code (which resides
@@ -32,14 +32,14 @@ Nyquist or Xlisp before you recompile!
 <p>
 <b><i>Note:</i></b> On the Macintosh, just run Nyquist out of the <code>runtime</code> directory and then use the <code>Load</code> menu command to load <code>init.lsp</code> from the <code>trnsrc</code> directory.  This will load the translation code and change Nyquist's current directory to <code>trnsrc</code> so that commands like <code>(translate "prod")</code> will work.
 <p>
-<a name = "190"><h3>Rebuilding Nyquist</h3></a>After generating <code>prod.c</code> and 
+<a name = "184"><h3>Rebuilding Nyquist</h3></a>After generating <code>prod.c</code> and 
 <code>prod.h</code>, you need to recompile Nyquist.  For Unix systems, you will
 want to generate a new Makefile.  Modify <code>transfiles.lsp</code> in your main
 Nyquist directory, run Xlisp or Nyquist and load <code>makefile.lsp</code>.
 Follow the instructions to set your machine type, etc., and 
 execute <code>(makesrc)</code> and <code>(makefile)</code>.
 <p>
-<a name = "191"><h3>Accessing the New Function</h3></a>The new Lisp function will generally be named with a <code>snd-</code> prefix,
+<a name = "185"><h3>Accessing the New Function</h3></a>The new Lisp function will generally be named with a <code>snd-</code> prefix,
 e.g. <code>snd-prod</code>.  You can test this by running Nyquist.  Debugging is
 usually a combination of calling the code from within the interpreter,
 reading the generated code when things go wrong, and using a C debugger to
@@ -60,7 +60,7 @@ functions for <code>nyquist.lsp</code>, and examples or test programs
 to <code>rbd@cs.cmu.edu</code>.  I will either put them in the next release or
 make them available at a public ftp site.
 <p>
-<a name = "192"><h3>Why Translation?</h3></a>
+<a name = "186"><h3>Why Translation?</h3></a>
 Many of the Nyquist signal processing operations are similar in form, but
 they differ in details. This code is complicated by many factors: Nyquist
 uses lazy evaluation, so the operator must check to see that input samples
@@ -83,7 +83,7 @@ are commutative (they can be exchanged with one another). The main part of
 the <code>.alg</code> file is the inner loop which is the heart of the signal
 processing code.
 <p>
-<a name = "193"><h3>Writing a .alg File</h3></a>
+<a name = "187"><h3>Writing a .alg File</h3></a>
 To give you some idea how functions are specified, here is the
 specification for <code>snd-prod</code>, which generates over 250 lines of C code:
 <pre>
@@ -128,7 +128,7 @@ find where the code is generated.  (The code generator files are listed in
 some cases it is fairly straightforward to determine what attribute in the
 <code>.alg</code> file is responsible for the erroneous output.
 <p>
-<a name = "194"><h3>Attributes</h3></a>
+<a name = "188"><h3>Attributes</h3></a>
 Here are the attributes used for code generation. Attributes and values may
 be specified in any order.
 <dl>
@@ -343,7 +343,7 @@ cases.  The prime example is <code>prod.alg</code>.<br><br>
 argument type checking at initialization time. See <code>downproto.alg</code> for
 an example where a check is made to guarantee that the output sample rate is
 not greater than the input sample rate.  Otherwise an error is raised.<br><br>
-<dt></dl><a name = "195"><h3>Generated Names</h3></a>
+<dt></dl><a name = "189"><h3>Generated Names</h3></a>
 The resulting <code>.c</code> file defines a number of procedures. The procedures
 that do actual sample computation are named something like
 <i>name</i>_<i>interp-spec</i>_FETCH, where <i>name</i> is the NAME
@@ -375,7 +375,7 @@ Notice that the underscore in C is converted to a dash in XLisp.  Also,
 XLisp converts identifiers to upper case when they are read, so normally,
 you would type <code>snd</code>-<i>name</i> to call the function.
 <p>
-<a name = "196"><h3>Scalar Arguments</h3></a>
+<a name = "190"><h3>Scalar Arguments</h3></a>
 If you want the option of passing either a number (scalar) or a signal as
 one of the arguments, you have two choices, neither of which is automated.
 Choice 1 is to coerce the constant into a signal from within XLisp.  The

@@ -1,0 +1,55 @@
+README.txt -- information on Nyquist for Mac OS X 
+
+Installation
+------------
+The simplest way to install and run Nyquist is to get the pre-compiled
+NyquistIDE application, which includes executables, documentation, and
+libraries all in one package.
+
+You will probably run Nyquist using the NyquistIDE application, but
+you can also run nyquist from the command line. The executable is
+located in
+
+    NyquistIDE.app/Contents/Resources/Java/ny
+
+To run from the command line, you will need to set the XLISPPATH
+environment variable using this command line (if you use the C shell,
+e.g. csh):
+
+    setenv XLISPPATH `pwd`/runtime:`pwd`/lib
+
+If you use the bash shell, use:
+
+    export XLISPPATH=`pwd`/runtime:`pwd`/lib
+
+Note that this sets XLISPPATH in the environment of the current
+command line shell. If you exit the shell or switch to another shell,
+the XLISPPATH variable will not be set. Your shell reads an
+initialization file when it starts. You can add the XLISPPATH
+initialization command to this file if you want the variable to be set
+automatically in every instance of your command line shell.
+
+On the topic of the XLISPPATH, note that this variable is set by
+NyquistIDE when running with that application, overriding any other
+value. You can extend the search path by creating the file xlisppath
+in the same directory as the nyquist executable ny. The xlisppath file
+should have colon-separated paths on a single line of text.
+
+You can also build Nyquist from sources, as described below.
+
+
+How To Build Nyquist on Mac OS X
+--------------------------------
+You need to install Xcode, Apple's free software development system
+for OS X.
+
+The project file is in nyquist/macosxproject/nyquist.xcodeproj
+
+To build Nyquist or NyquistIDE:
+ - Open nyquist.xcodeproj in Xcode
+ - Set the active target to "Nyquist" or "NyquistIDE"
+ - Click on "build active target"
+ - ny or NyquistIDE will be produced in MacOSXProject/build/
+
+
+

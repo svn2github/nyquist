@@ -23,7 +23,7 @@ Let me know if you have problems with
 any of these machines.
 <p>
 To use Nyquist, you should have a basic knowledge of Lisp.  An excellent text
-by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#207">"XLISP: An Object-oriented Lisp"</a> is
+by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#201">"XLISP: An Object-oriented Lisp"</a> is
 the reference manual for XLISP, of which Nyquist is a superset. Starting with
 Version 3, Nyquist supports a variant of SAL, which is also available in 
 Common Music. Since there are some differences, one should generally call this
@@ -35,199 +35,52 @@ Basic, etc.
 
 <a name = "3"><h3>Installation</h3></a>
 <a name="index5"><a name="index6"><a name="index7">
-Nyquist is a C program intended to run under various operating systems including Unix, MacOS, and Windows.
-<a name = "4"><h4>Unix Installation</h4></a>
-For Unix systems, Nyquist is distributed as a compressed tar file named <code>nyqsrc3<i>nn</i>.zip</code>,
-where <i>nn</i> is the version number (e.g. v3.01 was 
-in <code>nyqsrc301.zip</code>).  To
-install Nyquist, copy <code>nyqsrc3<i>nn</i>.zip</code> to the 
-directory on your machine where you would like to install Nyquist, and type:
-<pre>
-gunzip nyqsrc3<i>nn</i>.zip
-cd nyquist
-ln -s sys/unix/linux/Makefile Makefile
-setenv XLISPPATH `pwd`/runtime:`pwd`/lib
-make
-</pre>
-
-The first line creates a <code>nyquist</code> directory and some subdirectories. The
-second line (cd) changes directories to the new nyquist directory. The third line makes a link from the top-level directory to the Makefile for your
-system. In place of <code>linux</code> in <code>sys/unix/linux/Makefile</code>, you should
-substitute your system type. Current systems are <code>next</code>, <code>pmax</code>,
-<code>rs6k</code>, <code>sgi</code>, <code>linux</code>, and <code>sparc</code>.  The <code>setenv</code> 
-command tells Nyquist where to search for lisp files to be loaded when a file
-is not found in the current directory. The <code>runtime</code> directory should
-always be on your <code>XLISPPATH</code> when you run Nyquist, so you may want to
-set <code>XLISPPATH</code> in your shell startup file, e.g.  <code>.cshrc</code>.
-Assuming the make completes successfully, you can run Nyquist as follows:
-<pre>
-./ny
-</pre>
-
-When you get the prompt, you may begin typing expressions such as
-the ones in the following "Examples" section.
+Nyquist is a C++ program intended to run under various operating systems 
+including Unix, Mac OS X, and Windows. Nyquist is based on Lisp, but it 
+includes its own Lisp interpreter (a modified version of XLISP), so you 
+do not need to install some other Lisp to run Nyquist.  Other 
+Lisp systems are not compatible with Nyquist.
 <p>
-One you establish that Nyquist (ny) is working from the command line, you should
-try using jNyqIDE, the Java-based Nyquist development environment. First,
-make <code>jny</code> executable (do this only once when you install Nyquist):
-<pre>
-chmod +x jny
-</pre>
-
-Then try running jNyqIDE by typing:
-<pre>
-./jny
-</pre>
-
-If the jNyqIDE window does not appear, make sure you have Java installed (if not,
-you probably already encountered errors when you ran <code>make</code>). You can also try recompiling the Java files:
-<pre>
-cd jnyqide
-javac *.java
-cd ..
-</pre>
-
+Most Nyquist users run Nyquist under the Nyquist IDE, which is written in Java 
+and depends on the Java runtime system. Most systems already have Java, but if
+you do not, you will need to install it. When you install the Nyquist IDE,
+you will automatically get Nyquist and a set of runtime libraries.
 <p>
-<b><i>Note:</i></b> With Linux and the Macintosh OS X,
- jNyqIDE defines the environment passed to Nyquist. If you
-set <code>XLISPPATH</code><a name="index8"><a name="index9"> as shown above, it 
-will be passed along to Nyquist under jNyqIDE. If not,
-a default XLISPPATH will have the <code>lib</code> and <code>runtime</code> directories only.
-This does not apply to Windows because even though the environment is there, 
-the Windows version of Nyquist reads the <code>XLISPPATH</code> from the Registry.
-<p>
-You can also specify the search path by creating the 
-file <code>nyquist/xlisppath</code>, which should have colon-separated paths
-on a single line of text. This file will override the environment
-variable <code>XLISPPATH</code>.
-<p>
-It is good to have <code>USER</code> in the environment with your user ID. This string
-is used to construct some file names. jNyqIDE will look for it in the environment.
-You can also specify your user ID using the file <code>nyquist/user</code>, but
-if you have a shared installation of Nyquist, this will not be very useful.
-<p>
-<b><i>Note:</i></b> Nyquist looks for the file <code>init.lsp</code> in the current
-directory.  If you look in the <code>init.lsp</code> in <code>runtime</code>, you
-will notice two things.  First, <code>init.lsp</code> loads <code>nyquist.lsp</code>
-from the Nyquist directory, and second, <code>init.lsp</code> loads <code>system.lsp</code>
-which in turn defines the macro
-<code>play</code>.  You may have to modify <code>system.lsp</code> to invoke
-the right programs on your machine.
-<p>
-<a name = "5"><h4>Win32 Installation</h4></a>
-The Win32 version of Nyquist is packaged as a compiled (runtime) system in an
- executable installer. A source version is also available (the same source
-download is for Win32, Mac OS X, and Linux). The source version is
-intended for developers who
-want to recompile Nyquist. 
-The contents of the source archive are extracted to the <code>C:\nyquist</code> 
-directory,
-but you can put it anywhere you like. You can then open the workspace file,
-nyquist.sln, using Microsoft
-Visual C++. You can build and run the command line version of Nyquist
-from within Visual C++. There is a batch file, <code>comp-ide.bat</code>, for 
-bulding the Nyquist IDE. This requires the Java SDK from Sun Microsystems.
-<p>
-The runtime version contain everything you need to run Nyquist, including the executable,
-examples, and documentation, packaged as an executable installer program.
-After executing the installer, just find Nyquist in your Start menu to run it. 
-You may begin typing expressions such as the ones in the following "Examples" section.
-<p>
-
-<b><i>Optional:</i></b><a name="index10"><a name="index11"><a name="index12"> Nyquist needs to know where to find the standard runtime files. The location of runtime files must be stored in the Registry.
-The installers create a registry entry, but if
-you move Nyquist or deal with different versions, you can edit the Registry manually as follows:
+There are generally two ways to install Nyquist:
 <ul>
 <li>
-Run the Registry editor. Under Windows NT, run <code>C:\WINNT\system32\regedt32.exe</code>. Under Windows95, run <code>C:\WINDOWS\regedit.exe</code>.
-<li>Find and highlight the <code>SOFTWARE</code> key under <code>HKEY_LOCAL_MACHINE</code>.
-<li>Choose <code>Add key ...</code> from the <code>Edit</code> menu, type <code>CMU</code>, and click the <code>OK</code> button.
-<li>Highlight the new <code>CMU</code> key.
-<li>Choose <code>Add key ...</code> from the <code>Edit</code> menu, type <code>Nyquist</code>, and click the <code>OK</code> button.  (Note that <code>CMU</code> and <code>Nyquist</code> are case sensitive.)
-<li>Highlight the new <code>Nyquist</code> key.
-<li>Choose <code>Add value ...</code> from the <code>Edit</code> menu, type <code>XLISPPATH</code>, and click the <code>OK</code> button.  (Under WinXP the menu item is <code>Edit:New:String Value</code>, after which you need to select the new string name that appears in the right panel, select <code>Edit:Rename</code>, and type <code>XLISPPATH</code>.)
-<li>In the String Edit box (select the <code>Edit:Modify</code> menu item in WinXP),
-type a list of paths you want Nyquist to search for lisp files. For example, if you installed Nyquist as <code>C:\nyquist</code>, then type:
-<pre>
-C:\nyquist\runtime,C:\nyquist\lib
-</pre>
-
-The paths should be separated by a comma or semicolon and no space. The <code>runtime</code> path is essential, and the <code>lib</code> path may become essential in a future release. You can also add paths to personal libraries of Lisp and Nyquist code.
-<li>Click the <code>OK</code> button of the string box and exit from the Registry Editor application.
+Get a pre-compiled version of the Nyquist IDE for Windows or Mac OS X. The 
+Windows version comes packaged in an installer that installs and 
+configures the Nyquist IDE. The Mac OS X version 
+unpacks to a complete OS X application.
+<li>Compile from sources. There is one set of sources for Mac, Windows, and Unix.
+Instructions for building applications from the sources are provided in
+the files <code>sys/win/README.txt</code>, <code>sys/mac/README.txt</code>, and 
+<code>sys/unix/README.txt</code>.
 </ul>
 <p>
-<a name = "6"><h5>What if Nyquist functions are undefined?</h5></a>
-If you do not have administrative privileges for your machine, the installer may fail to set up the Registry entry that Nyquist uses to find initialization files. In this case, Nyquist will run a lisp interpreter, but many Nyquist functions will not be defined. If you can log in as administrator, do it and reinstall Nyquist. If you do not have permission, you can still run Nyquist as follows:
-<p>
-Create a file named <code>init.lsp</code> in the same directory as Nyquist.exe (the default location is <code>C:\Program Files\Nyquist</code>, but you may have installed it in some other location.) Put the following text in <code>init.lsp</code>:
+You can download source code and precompiled versions from the Nyquist project
+on SourceForge (<code>http://sourceforge.net/projects/nyquist</code>). The latest 
+source code can be obtained via Subversion (svn) using the following:
 <pre>
-<code>
-(setf *search-path* "C:/Program Files/Nyquist/runtime,C:/Program Files/Nyquist/lib")
-(load "C:/Program Files/Nyquist/runtime/init.lsp")
-</code>
+svn co https://nyquist.svn.sourceforge.net/svnroot/nyquist/trunk nyquist
 </pre>
 
-<b><i>Note:</i></b> in the three places where you see <code>C:/Program Files/Nyquist</code>, insert the full path where Nyquist is actually installed. Use forward slashes (<code>/</code>) rather than back slashes (<code>\</code>) to separate directories. For example, if Nyquist is installed at <code>D:\rbd\nyquist</code>, then <code>init.lsp</code> should contain:
-<pre>
-<code>
-(setf *search-path* "D:/rbd/nyquist/runtime,D:/rbd/nyquist/lib")
-(load "d:/rbd/nyquist/runtime/init.lsp")
-</code>
-</pre>
-
-The variable <code>*search-path*</code>, if defined, is used in place of the registry to determine search paths for files.
+or by checking out nyquist using a graphical interface svn client such as 
+TortoiseSVN for Windows.
 <p>
-<a name = "7"><h5>SystemRoot</h5></a>
-<a name="index13">
-(Ignore this paragraph if you are not planning to use Open Sound Control under Windows.)
-If Nyquist prints an error message and quits when you enable Open Sound Control (using <code>osc-enable</code>), check to see if you have an environment variable <code>SystemRoot</code>, e.g. type <code>set</code> to a command prompt and look for the value of <code>SystemRoot</code>. The normal value is <code>C:\windows</code>. If the value is something else, you should put the environment entry, for example:
-<pre>
-SystemRoot="D:\windows"
-</pre>
-
-into a file named <code>systemroot</code> (no extension). Put this file in your <code>nyquist</code> directory. When you run <code>jNyqIDE</code>, it will look for this file and pass the contents as an environment variable to Nyquist. The Nyquist process needs this to open a UDP socket, which is needed for Open Sound Control.
+<a name = "4"><h3>Using NyquistIDE</h3></a><a name="index8"><a name="index9"><a name="index10">
+The program named NyquistIDE is an "integrated development environment" for Nyquist. When you run NyquistIDE, it starts the Nyquist program and displays all Nyquist output in a window. NyquistIDE helps you by providing a Lisp and SAL editor, hints for command completion and function parameters, some graphical interfaces for editing envelopes and graphical equalizers, and a panel of buttons for common operations. A more complete description of NyquistIDE is in Chapter <a href = "part3.html#16">"The NyquistIDE Program"</a>.
 <p>
-<a name = "8"><h5>The "java is not recognized" Error</h5></a>
-Sometimes, Nyquist will run directly from the installer, but then it will not start from the Windows Start menu. You can try running the 
- <code>nyquist/jnyqide.bat</code> program from a Windows shell. If that fails, and you see an error similar to "java is not recognized as in internal or external command error", the problem may be that paths are not set up properly to allow the Windows shell to find java. Right click on "My Computer" on the Windows
-desktop and select "Properties." Under the "Advanced" tap, press the "Environment Variables" button, and look for PATH under "System Variables." Make sure the Java bin directory is on the path. If it is not, you will have to find your installation of Java and add the appropriate directory to the PATH variable, e.g. "C:\Program Files\Java\jdk1.6.0\bin."
+For now, all you really need to know is that you can enter Nyquist commands by typing into the upper left window. When you type return, the expression you typed is sent to Nyquist, and the results appear in the window below. You can edit files by clicking on the New File or Open File buttons. After editing some text, you can load the text into Nyquist by clicking the Load button. NyquistIDE always saves the file first; then it tells Nyquist to load the file. You will be prompted for a file name the first time you load a new file.
 <p>
-<a name = "9"><h4>MacOS X Installation</h4></a>
-The OS X version of Nyquist is very similar to the Linux version, but it
-is developed using Xcode, Apple's programming environment. With a little
-work, you can use the Linux installation instructions to compile Nyquist,
-but it might be simpler to just open the Xcode project that is included
-in the Nyquist sources. 
-<p>
-You can also download a pre-compiled version of Nyquist for the Mac. 
-Just download <code>nyqosx2xx.tgz</code> to the desktop and open it to 
-extract the folder &lt;tt&gt;nyqosx2xx&lt;/tt&gt;. (Again, "2xx" refers to the current
-version number, e.g. v2.31 would be named with "231".) Open the folder
-to find a Mac Application named jNyqIDE and a directory named 
-&lt;tt&gt;nyquist/doc&lt;/tt&gt;. Documentation is in the &lt;tt&gt;nyquist/doc&lt;/tt&gt; directory.
-<p>
-The file &lt;tt&gt;jNyqIDE.app/Contents/Resources/Java/ny&lt;/tt&gt; 
-is the command line executable (if you should need it). To run from the
-command line, you will need to set the XLISPPATH environment variable as 
-with Linux. On the topic of the <code>XLISPPATH</code>, note that this variable is
-set by jNyqIDE when running with that application, overriding any other
-value. You can extend the search path by creating the file <code>xlisppath</code> 
-in the same directory as the nyquist executable <code>ny</code>. The 
-<code>xlisppath</code> file should have colon-separated paths
-on a single line of text.
-<p>
-<a name = "10"><h3>Using jNyqIDE</h3></a>
-The program named jNyqIDE is an "integrated development environment" for Nyquist. When you run jNyqIDE, it starts the Nyquist program and displays all Nyquist output in a window. jNyqIDE helps you by providing a Lisp and SAL editor, hints for command completion and function parameters, some graphical interfaces for editing envelopes and graphical equalizers, and a panel of buttons for common operations. A more complete description of jNyqIDE is in Chapter <a href = "part3.html#22">"The jNyqIDE Program"</a>.
-<p>
-For now, all you really need to know is that you can enter Nyquist commands by typing into the upper left window. When you type return, the expression you typed is sent to Nyquist, and the results appear in the window below. You can edit files by clicking on the New File or Open File buttons. After editing some text, you can load the text into Nyquist by clicking the Load button. jNyqIDE always saves the file first; then it tells Nyquist to load the file. You will be prompted for a file name the first time you load a new file.
-<p>
-<a name = "11"><h3>Using SAL</h3></a>
+<a name = "5"><h3>Using SAL</h3></a>
 SAL mode means that Nyquist reads and evaluates SAL commands rather than Lisp. The SAL mode prompt is "<code>SAL&gt; </code>" while the Lisp mode prompt is "<code>&gt; </code>".
 When Nyquist starts it normally enters SAL mode automatically, but certain errors may exit SAL mode. You can reenter SAL mode by typing the Lisp expression <code>(sal)</code>.
 <p>
-In SAL mode, you type commands in the SAL programming language. Nyquist reads the commands, compiles them into Lisp, and evaluates the commands. Commands can be entered manually by typing into the upper left text box in jNyqIDE.
+In SAL mode, you type commands in the SAL programming language. Nyquist reads the commands, compiles them into Lisp, and evaluates the commands. Commands can be entered manually by typing into the upper left text box in NyquistIDE.
 <p>
-<a name = "12"><h3>Helpful Hints</h3></a>
+<a name = "6"><h3>Helpful Hints</h3></a>
 Under Win95 and Win98, the console sometimes locks up. Activating another window and then reactivating the Nyquist window should unlock the output. 
 (We suggest you use JNyqIDE, the interactive development environment rather than a console window.)
 <p>
@@ -248,7 +101,7 @@ to (re)load the file.
 <p>
 The Emacs editor is free GNU software and will help you balance parentheses if you use Lisp mode. In fact, you can run nyquist (without the IDE) as a subprocess to Emacs. A helful discussion is at //http://www.audacity-forum.de/download/edgar/nyquist/nyquist-doc/examples/emacs/main.html. If you use Emacs, there is also a SAL mode (the file is <code>sal-mode.el</code>) included with the Common Music distribution, which you can find on the Web at <code>sourceforge.net</code>.
 <p>
-The jNyqIDE also runs Nyquist as a subprocess and has
+The NyquistIDE also runs Nyquist as a subprocess and has
 built-in Lisp and SAL editors. If your editor does not help you balance parentheses, you may find yourself counting parens and searching for unbalanced 
 expressions. If you are confused or desperate, try the <code>:print t</code>
 option o fthe <code>load</code> command. By looking at the expressions printed,
@@ -257,20 +110,20 @@ Alternatively, type <code>(file-sexprs)</code> and type the lisp file name at
 the prompt. This function will read and print 
 expressions from the file, reporting an error when an extra paren or end-of-file is reached unexpectedly. 
 <p>
-<a name = "13"><h3>Using Lisp</h3></a>
+<a name = "7"><h3>Using Lisp</h3></a>
 Lisp mode means that Nyquist reads and evaluates Nyquist expressions in 
 Lisp syntax. Since Nyquist is build on a Lisp interpreter, this is the
 "native" or machine language of Nyquist, and certain errors and functions 
 may break out of the SAL interpreter, leaving you with a prompt for a Lisp
 expression. Alternatively, you can exit SAL simply by typing <code>exit</code> to
 get a Lisp prompt (<code>&gt; </code>). Commands can be entered manually by typing
- into the upper left text box in jNyqIDE.
+ into the upper left text box in NyquistIDE.
 <p>
-<a name = "14"><h3>Examples</h3></a>
+<a name = "8"><h3>Examples</h3></a>
 We will begin with some simple Nyquist programs. Throughout the manual,
 we will assume SAL mode and give examples in SAL, but it should be
 emphasized that all of these examples can be performed using Lisp
-syntax. See Section <a href = "part7.html#78">"Interoperability of SAL and XLISP"</a> on the relationship between
+syntax. See Section <a href = "part7.html#72">"Interoperability of SAL and XLISP"</a> on the relationship between
 SAL and Lisp.
 <p>
 Detailed explanations of the functions used in these examples will be
@@ -280,7 +133,7 @@ details will come later.  Most of these examples can be found in the
 file <code>nyquist/demos/examples.sal</code>. Corresponding Lisp syntax
 examples are in the file <code>nyquist/demos/examples.lsp</code>.
 <p>
-Our first example makes and plays a sound:<a name="index14"><a name="index15">
+Our first example makes and plays a sound:<a name="index11"><a name="index12">
 <pre>
 <i>;; Making a sound.</i>
 play osc(60) ; generate a loud sine wave
@@ -301,7 +154,7 @@ This <code>(r)</code> function is a general way to "replay" the last thing writt
 <p>
 Note: when Nyquist plays a sound, it scales the signal by 2^(15)-1 and (by default) converts to a 16-bit integer format. A signal like  <code>(osc 60)</code>, which ranges from +1 to -1, will play as a full-scale 16-bit audio signal. 
 <p>
-<a name = "15"><h4>Waveforms</h4></a>
+<a name = "9"><h4>Waveforms</h4></a>
 
 Our next example will be presented in several steps.  The goal is to create a
 sound using a
@@ -311,10 +164,10 @@ harmonic and add harmonics to form a wavetable.  An oscillator
 will be used to compute the harmonics.
 <p>
 The function
-<code>mkwave<a name="index16"></code> calls upon
-<code>build-harmonic<a name="index17"></code> to generate a total of four
+<code>mkwave<a name="index13"></code> calls upon
+<code>build-harmonic<a name="index14"></code> to generate a total of four
 harmonics with amplitudes 0.5, 0.25, 0.125, and 0.0625.  
-These are scaled and added (using <code>+<a name="index18"></code>) to
+These are scaled and added (using <code>+<a name="index15"></code>) to
 create a waveform which is bound temporarily to <code>*table*</code>.  
 <p>
 A complete Nyquist waveform is a list consisting of a sound, a pitch,
@@ -352,13 +205,13 @@ if ! fboundp(quote(*mkwave*)) then
 </pre>
 
 <p>
-<a name = "16"><h4>Wavetables</h4></a><a name="index19"><a name="index20"><a name="index21"><a name="index22">
+<a name = "10"><h4>Wavetables</h4></a><a name="index16"><a name="index17"><a name="index18"><a name="index19">
 When Nyquist starts, several waveforms are created and stored in global variables for convenience. They are: <code>*sine-table*</code>, <code>*saw-table*</code>, and <code>*tri-table*</code>, implementing sinusoid, sawtooth, and triangle waves, respectively. The variable <code>*table*</code> is initialized to <code>*sine-table*</code>, and it is <code>*table*</code> that forms the default wave table for many Nyquist oscillator behaviors. If you want a proper, band-limited waveform, you should construct it yourself, but if you do not understand this sentence and/or you do not mind a bit of aliasing, give <code>*saw-table*</code> and <code>*tri-table*</code> a try.
 <p>
 Note that in Lisp and SAL, global variables often start and end with asterisks (*). These are not special syntax, they just happen to be legal characters for names, and their use is purely a convention.
 <p>
-<a name = "17"><h4>Sequences</h4></a><a name="index23">
-Finally, we define <code>my-note<a name="index24"></code> to use the waveform, and play several notes
+<a name = "11"><h4>Sequences</h4></a><a name="index20">
+Finally, we define <code>my-note<a name="index21"></code> to use the waveform, and play several notes
 in a simple score. Note that the function <code>my-note</code> has only one command
 (a <code>return</code> command), so it is not necessary to use <code>begin</code> and 
 <code>end</code>. These are only necessary when the function body consists of a
@@ -380,23 +233,23 @@ The <code>seq</code> function is used to invoke a sequence of behaviors.  Each
 note is started at the time the previous note finishes.  The parameters to
 <code>my-note</code> are predefined in Nyquist: <code>c4</code> is middle C, <code>i</code> (for
 eIghth note) is 0.5, and <code>q</code> (for Quarter note) is 1.0.  See Section
-<a href = "#20">"Predefined Constants"</a> for a complete description.  The result is the sum of
+<a href = "#14">"Predefined Constants"</a> for a complete description.  The result is the sum of
 all the computed sounds.
 <p>
 Sequences can also be constructed using the <code>at</code> transformation to 
 specify time offsets. See 
-<code>sequence_example.htm</code><a name="index25"><a name="index26">
+<code>sequence_example.htm</code><a name="index22"><a name="index23">
 <code>demos, sequence</code> for more examples and explanation.
 <p>
-<a name = "18"><h4>Envelopes</h4></a><a name="index27">
+<a name = "12"><h4>Envelopes</h4></a><a name="index24">
 The next example will illustrate the use of envelopes.  In Nyquist,
 envelopes are just ordinary sounds (although they normally have a low sample
-rate).  An envelope<a name="index28"> is applied to another sound by
-multiplication using the <code>mult<a name="index29"></code> function.  The code shows
-the definition of <code>env-note<a name="index30"></code>, defined in terms of the
+rate).  An envelope<a name="index25"> is applied to another sound by
+multiplication using the <code>mult<a name="index26"></code> function.  The code shows
+the definition of <code>env-note<a name="index27"></code>, defined in terms of the
 <code>note</code> function in the previous example.  In <code>env-note</code>, a 4-phase
-envelope is generated using the <code>env<a name="index31"></code> function, which is
-illustrated in Figure <a href = "#18">1</a>.
+envelope is generated using the <code>env<a name="index28"></code> function, which is
+illustrated in Figure <a href = "#12">1</a>.
 <p>
 <hr>
 <blockquote></blockquote>
@@ -424,12 +277,12 @@ play env-note(c4)
 
 While this example shows a smooth envelope multiplied by an audio signal,
 you can also multiply audio signals to achieve
-what is often called <i>ring modulation</i><a name="index32">. See
+what is often called <i>ring modulation</i><a name="index29">. See
 the code and description in 
-<code>demos/scratch_tutorial.htm</code><a name="index33"> for an
+<code>demos/scratch_tutorial.htm</code><a name="index30"> for an
 interesting use of ring modulation to create "scratch" sounds.
 <p>
-In the next example, The <i>stretch</i> operator (<code>~</code>)<a name="index34"> 
+In the next example, The <i>stretch</i> operator (<code>~</code>)<a name="index31"> 
 is used to modify durations:
 <pre>
 <i>; now use stretch to play different durations
@@ -443,11 +296,11 @@ play seq(seq(env-note(c4), env-note(d4)) ~ 0.25,
 In addition to <i>stretch</i>, there are a number of transformations supported
  by Nyquist,
 and transformations of abstract behaviors is perhaps <i>the</i> fundamental
-idea behind Nyquist.  Chapter <a href = "part4.html#29">"Behavioral Abstraction"</a> is devoted to
+idea behind Nyquist.  Chapter <a href = "part4.html#23">"Behavioral Abstraction"</a> is devoted to
 explaining this concept, and further elaboration can be found elsewhere
  <a href = "http://www.cs.cmu.edu/~rbd/bib-arctic.html#icmcfugue">(Dannenberg and Frayley 1989)</a>.
 <p>
-<a name = "19"><h4>Piece-wise Linear Functions</h4></a>
+<a name = "13"><h4>Piece-wise Linear Functions</h4></a>
 It is often convenient to construct signals in Nyquist using a list of
 (time, value) breakpoints which are linearly interpolated to form a smooth
 signal.  Envelopes created by <code>env</code> are a special case of the more
@@ -497,7 +350,7 @@ ramp(10) <i>; ramp from 0 to 10 with duration 1 + one sample period
 </pre>
 
 <p>
-<a name = "20"><h3>Predefined Constants</h3></a>
+<a name = "14"><h3>Predefined Constants</h3></a>
 
 For convenience and readability, Nyquist pre-defines some constants, mostly
 based on the notation of the Adagio score language, as follows:
@@ -506,47 +359,47 @@ based on the notation of the Adagio score language, as follows:
 <b>Dynamics</b>
 Note: these dynamics values are subject to change.
 <blockquote>
-<tt>lppp<a name="index35"></tt> = -12.0 (dB)<br>
+<tt>lppp<a name="index32"></tt> = -12.0 (dB)<br>
 
-<tt>lpp<a name="index36"></tt> = -9.0<br>
+<tt>lpp<a name="index33"></tt> = -9.0<br>
 
-<tt>lp<a name="index37"></tt> = -6.0<br>
+<tt>lp<a name="index34"></tt> = -6.0<br>
 
-<tt>lmp<a name="index38"></tt> = -3.0<br>
+<tt>lmp<a name="index35"></tt> = -3.0<br>
 
-<tt>lmf<a name="index39"></tt> = 3.0<br>
+<tt>lmf<a name="index36"></tt> = 3.0<br>
 
-<tt>lf<a name="index40"></tt> = 6.0<br>
+<tt>lf<a name="index37"></tt> = 6.0<br>
 
-<tt>lff<a name="index41"></tt> = 9.0<br>
+<tt>lff<a name="index38"></tt> = 9.0<br>
 
-<tt>lfff<a name="index42"></tt> = 12.0<br>
+<tt>lfff<a name="index39"></tt> = 12.0<br>
 
-<tt>dB0<a name="index43"></tt> = 1.00<br>
+<tt>dB0<a name="index40"></tt> = 1.00<br>
 
-<tt>dB1<a name="index44"></tt> = 1.122<br>
+<tt>dB1<a name="index41"></tt> = 1.122<br>
 
-<tt>dB10<a name="index45"></tt> = 3.1623<br>
+<tt>dB10<a name="index42"></tt> = 3.1623<br>
 
 </blockquote>
-<li><b>Durations<a name="index46"></b>
+<li><b>Durations<a name="index43"></b>
 <blockquote>
-<tt>s<a name="index47"></tt> = Sixteenth<a name="index48"> = 0.25<br>
+<tt>s<a name="index44"></tt> = Sixteenth<a name="index45"> = 0.25<br>
 
-<tt>i<a name="index49"></tt> = eIghth<a name="index50"> = 0.5<br>
+<tt>i<a name="index46"></tt> = eIghth<a name="index47"> = 0.5<br>
 
-<tt>q<a name="index51"></tt> = Quarter<a name="index52"> = 1.0<br>
+<tt>q<a name="index48"></tt> = Quarter<a name="index49"> = 1.0<br>
 
-<tt>h<a name="index53"></tt> = Half<a name="index54"> = 2.0<br>
+<tt>h<a name="index50"></tt> = Half<a name="index51"> = 2.0<br>
 
-<tt>w<a name="index55"></tt> = Whole<a name="index56"> = 4.0<br>
+<tt>w<a name="index52"></tt> = Whole<a name="index53"> = 4.0<br>
 
-<tt>sd<a name="index57">, id<a name="index58">, qd<a name="index59">, hd<a name="index60">, wd<a name="index61"></tt> = dotted durations<a name="index62">.<br>
+<tt>sd<a name="index54">, id<a name="index55">, qd<a name="index56">, hd<a name="index57">, wd<a name="index58"></tt> = dotted durations<a name="index59">.<br>
 
-<tt>st<a name="index63">, it<a name="index64">, qt<a name="index65">, ht<a name="index66">, wt<a name="index67"></tt> = triplet<a name="index68"> durations.<br>
+<tt>st<a name="index60">, it<a name="index61">, qt<a name="index62">, ht<a name="index63">, wt<a name="index64"></tt> = triplet<a name="index65"> durations.<br>
 
 </blockquote>
-<li><b>Pitches<a name="index69"></b> 
+<li><b>Pitches<a name="index66"></b> 
 Pitches are based on an A4 of 440Hz.  To achieve a different tuning,
 set <code>*A4-Hertz*</code> to the desired frequency for A4, and call
 <code>(set-pitch-names)</code>.  This will recompute the names listed below with a
@@ -598,35 +451,35 @@ different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
 </blockquote>
 <li><b>Miscellaneous</b>
 <blockquote>
-<code>ny:all</code><a name="index70"> = "all the samples" (i.e. a big number) = 1000000000<br>
+<code>ny:all</code><a name="index67"> = "all the samples" (i.e. a big number) = 1000000000<br>
 
 </blockquote>
 </ul>
 <p>
-<a name = "21"><h3>More Examples</h3></a>
+<a name = "15"><h3>More Examples</h3></a>
 More examples can be found in the directory <code>demos</code>, part of the standard
 Nyquist release. In this directory, you will find the following and more:
 <ul>
 <li>
-Gong sounds by additive synthesis<a name="index71">
-(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code><a name="index72"><a name="index73">
+Gong sounds by additive synthesis<a name="index68">
+(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code><a name="index69"><a name="index70">
 <li>Risset's spectral analysis of a chord
-(<code>demos/pmorales/b2.lsp</code>)<a name="index74"><a name="index75">
+(<code>demos/pmorales/b2.lsp</code>)<a name="index71"><a name="index72">
 <li>Bell sounds 
-(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index76"><a name="index77">
+(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index73"><a name="index74">
 <li>Drum sounds by Risset
-(<code>demos/pmorales/b8.lsp</code><a name="index78"><a name="index79">
-<li>Shepard tones (<code>demos/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index80"><a name="index81">
+(<code>demos/pmorales/b8.lsp</code><a name="index75"><a name="index76">
+<li>Shepard tones (<code>demos/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index77"><a name="index78">
 <li>Random signals (<code>demos/pmorales/c1.lsp</code>)
 <li>Buzz with formant filters 
-(<code>demos/pmorales/buzz.lsp</code><a name="index82"><a name="index83">
+(<code>demos/pmorales/buzz.lsp</code><a name="index79"><a name="index80">
 <li>Computing samples directly in Lisp (using Karplus-Strong and physical modelling
 as examples)
-(<code>demos/pmorales/d1.lsp</code><a name="index84"><a name="index85"><a name="index86"><a name="index87"><a name="index88"><a name="index89">
-<li>FM Synthesis examples, including bell<a name="index90">, wood drum<a name="index91">,
-brass sounds<a name="index92">, tuba sound <a name="index93"> (<code>demos/mateos/tuba.lsp</code> and clarinet sounds<a name="index94"> (<code>demos/pmorales/e2.lsp</code><a name="index95">
-<li>Rhythmic patterns (<code>demos/rhythm_tutorial.htm</code><a name="index96">
-<li>Drum Samples and Drum Machine (<code>demos/plight/drum.lsp</code><a name="index97"><a name="index98"><a name="index99">.
+(<code>demos/pmorales/d1.lsp</code><a name="index81"><a name="index82"><a name="index83"><a name="index84"><a name="index85"><a name="index86">
+<li>FM Synthesis examples, including bell<a name="index87">, wood drum<a name="index88">,
+brass sounds<a name="index89">, tuba sound <a name="index90"> (<code>demos/mateos/tuba.lsp</code> and clarinet sounds<a name="index91"> (<code>demos/pmorales/e2.lsp</code><a name="index92">
+<li>Rhythmic patterns (<code>demos/rhythm_tutorial.htm</code><a name="index93">
+<li>Drum Samples and Drum Machine (<code>demos/plight/drum.lsp</code><a name="index94"><a name="index95"><a name="index96">.
 </ul>
 <p>
 <hr>

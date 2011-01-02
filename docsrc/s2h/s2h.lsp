@@ -146,6 +146,11 @@ loop
   (translate)
   (format *outf* "</blockquote>"))
 
+(defun write-normal ()
+  (format *outf* "<span style=\"font-style:normal\">")
+  (translate)
+  (format *outf* "</span>"))
+
 (defun write-t ()
   (let (paren)
     (format *outf* "<tt>")
@@ -964,13 +969,15 @@ loop
 		  (format t "unmatched end: ~A~%" tok)
 		  (break)))
 	   (go ret))
+          ((eq tok 'altdef)
+           (translate))
 	  ((characterp tok)
            ;; output completion hints file
 	   (cond (*codef* (codef-char tok)))
 	   (output-char tok))
 	  ((eq tok 'label)
 	   (write-label))
-	  ((member tok '(code smallcode))
+	  ((member tok '(code smallcode xlcode))
 	   (write-code))
           ((eq tok 'codef)
            (write-codef))
@@ -981,6 +988,8 @@ loop
 	   (write-indexsecondary))
           ((eq tok 'indexdef) ;; this is obsolete now
            (write-index t))
+          ((eq tok 'r)
+           (write-normal))
 	  ((eq tok 'i)
 	   (write-style "i"))
 	  ((eq tok 'b)
@@ -1130,6 +1139,8 @@ ret
 (format t "      [t]) ; optional flag generates html with frames\n")
 
 (defun g (sourcedir source destdir dest &optional frame-flag)
+  (setf *codef-capture* "")
+  (setf *codef-list* nil)
   (setf *figure-number* 1)
   (setf *index-number* 1)
   (setf *appendix-number* 1)
@@ -1448,9 +1459,6 @@ ret
     result
     ))
 
-(setf *codef-capture* "")
-(setf *codef-list* nil)
-
 (defun codef-char (c)
   (if (member c '(#\Newline #\Tab)) (setf c #\Space))
   (setf *codef-capture* (strcat *codef-capture* (string c))))
@@ -1458,6 +1466,11 @@ ret
 (defun codef-complete ()
 ;  (write-char #\) *codef-file*)
    (let (index)
+     ;; remove [lisp] and [sal] and everything after it
+     (if (setf index (string-search "[lisp]" *codef-capture*))
+         (setf *codef-capture* (subseq *codef-capture* 0 index)))
+     (if (setf index (string-search "[sal]" *codef-capture*))
+         (setf *codef-capture* (subseq *codef-capture* 0 index)))
      ;; trim extra blanks
      (while (setf index (string-search "  " *codef-capture*))
        (setf *codef-capture* (strcat (subseq *codef-capture* 0 index)
@@ -1473,13 +1486,19 @@ ret
 	  	   (not (eq (char *codef-capture* (1- index)) #\Space)))
 	      (setf *codef-capture* 
 		    (strcat (subseq *codef-capture* 0 index) " "
-			    (subseq *codef-capture* index)))))))
+			    (subseq *codef-capture* index))))))
+     ;; trim blanks after open bracket/comma and before close paren
+     (while (setf index (string-search "[, " *codef-capture*))
+       (setf index (+ 2 index))
+       (setf *codef-capture* (strcat (subseq *codef-capture* 0 index)
+                                     (subseq *codef-capture* (1+ index)))))
+     (while (setf index (string-search " )" *codef-capture*))
+       (setf *codef-capture* (strcat (subseq *codef-capture* 0 index)
+                                     (subseq *codef-capture* (1+ index)))))
+     )
+    
    ;; trim blanks
    (setf *codef-capture* (string-trim " " *codef-capture*))
-   ;; trim leading open paren
-   (if (and (> (length *codef-capture*) 0)
-	    (eq (char *codef-capture* 0) #\())
-       (setf *codef-capture* (subseq *codef-capture* 1)))
    ;; translate &key to example format
    (cond ((or (string-search "&key" *codef-capture*)
 	      (string-search "&optional" *codef-capture*))
@@ -1489,6 +1508,10 @@ ret
        (push (string-downcase
               (convert-sal-to-lisp *codef-capture*))
              *codef-list*))
+   ;; trim leading open paren
+   (if (and (> (length *codef-capture*) 0)
+	    (eq (char *codef-capture* 0) #\())
+       (setf *codef-capture* (subseq *codef-capture* 1)))
 
    (setf *codef-capture* ""))
 
@@ -1497,7 +1520,9 @@ ret
   ;(format *codef-file* "sal-to-lisp |~A|~%" codef)
   ;; some of these strings are already lisp. The SAL strings have an
   ;; open paren after the function call
-  (cond ((string-search "(" codef)
+  (cond ((eq (char codef 0) #\()
+         (setf codef (subseq codef 1)))
+        ((string-search "(" codef)
          (setf codef (do-convert-sal-to-lisp codef))))
   codef)
 

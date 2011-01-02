@@ -13,7 +13,7 @@
 @define(detail=text, size 9, spacing 1.2, indent 0)
 @define(code, FaceCode T, size 11)
 @comment{codef is used to define a lisp function or variable -- 
-   a processor uses this to extract completion hint info for NyquistIDE.}
+   a processor uses this to extract completion hint info for jNyqIDE.}
 @define(codef, FaceCode T, size 11)
 @comment{pragma(define) is used to mark a term's point of definition --
    I tried to define(defn=index), but that didn't work in Scribe,
@@ -27,7 +27,6 @@
 @define(fdescription = text, leftmargin +0.5in, indent -0.5in, spread 1)
 @define(pdescription = text, leftmargin +0.5in, indent -0.5in, spread 0)
 @define(fgroup = text, indent -0.5in, spread 0)
-@define(altdef = text, leftmargin +0.0in, indent -0.5in)
 @textform(html = [])
 @textform(htmltitle = [])
 @textform(pragma = [])
@@ -104,7 +103,7 @@ reimplementation of Fugue by Roger Dannenberg with help from Joe Newcomer
 and Cliff Mercer. Ning Hu ported Zheng (Geoffrey) Hua and Jim Beauchamp's
 piano synthesizer to Nyquist and also built NyqIDE, the Nyquist Integrated
 Development Environment for Windows. Dave Mowatt contributed the original
-version of NyquistIDE, the cross-platform interactive development environment.
+version of jNyqIDE, the cross-platform interactive development environment.
 Dominic Mazzoni made a special version of Nyquist that runs 
 within the Audacity audio editor, giving Nyquist a new interface and 
 introducing Nyquist to many new users.
@@ -129,7 +128,7 @@ an alternative to Lisp syntax. SAL was designed by Rick Taube, and the
 SAL implementation in Nyquist is based on Taube's original implementation
 as part of his Common Music system.
 
-The current NyquistIDE includes contributions from many. Chris Yealy and 
+The current jNyqIDE includes contributions from many. Chris Yealy and 
 Derek D'Souza implemented early versions of the envelope editor. Daren
 Makuck and Michael Rivera wrote the original equalizer editor.
 Priyanka Raghavan implemented the sound browser.
@@ -184,40 +183,7 @@ Basic, etc.
 @label(install-sec)
 @section(Installation)
 @index(installation)@index(configure nyquist)@index(setup nyquist)
-Nyquist is a C++ program intended to run under various operating systems 
-including Unix, Mac OS X, and Windows. Nyquist is based on Lisp, but it 
-includes its own Lisp interpreter (a modified version of XLISP), so you 
-do not need to install some other Lisp to run Nyquist.  Other 
-Lisp systems are not compatible with Nyquist.
-
-Most Nyquist users run Nyquist under the Nyquist IDE, which is written in Java 
-and depends on the Java runtime system. Most systems already have Java, but if
-you do not, you will need to install it. When you install the Nyquist IDE,
-you will automatically get Nyquist and a set of runtime libraries.
-
-There are generally two ways to install Nyquist:
-@begin(itemize)
-Get a pre-compiled version of the Nyquist IDE for Windows or Mac OS X. The 
-Windows version comes packaged in an installer that installs and 
-configures the Nyquist IDE. The Mac OS X version 
-unpacks to a complete OS X application.
-
-Compile from sources. There is one set of sources for Mac, Windows, and Unix.
-Instructions for building applications from the sources are provided in
-the files @code(sys/win/README.txt), @code(sys/mac/README.txt), and 
-@code(sys/unix/README.txt).
-@end(itemize)
-
-You can download source code and precompiled versions from the Nyquist project
-on SourceForge (@code(http://sourceforge.net/projects/nyquist)). The latest 
-source code can be obtained via Subversion (svn) using the following:
-@begin(example)
-svn co https://nyquist.svn.sourceforge.net/svnroot/nyquist/trunk nyquist
-@end(example)
-or by checking out nyquist using a graphical interface svn client such as 
-TortoiseSVN for Windows.
-
-@begin(comment)
+Nyquist is a C program intended to run under various operating systems including Unix, MacOS, and Windows.
 @subsection(Unix Installation)
 For Unix systems, Nyquist is distributed as a compressed tar file named @code(nyqsrc3@i(nn).zip),
 where @i(nn) is the version number (e.g. v3.01 was 
@@ -248,16 +214,16 @@ When you get the prompt, you may begin typing expressions such as
 the ones in the following ``Examples'' section.
 
 One you establish that Nyquist (ny) is working from the command line, you should
-try using NyquistIDE, the Java-based Nyquist development environment. First,
+try using jNyqIDE, the Java-based Nyquist development environment. First,
 make @code(jny) executable (do this only once when you install Nyquist):
 @begin(example)
 chmod +x jny
 @end(example)
-Then try running NyquistIDE by typing:
+Then try running jNyqIDE by typing:
 @begin(example)
 ./jny
 @end(example)
-If the NyquistIDE window does not appear, make sure you have Java installed (if not,
+If the jNyqIDE window does not appear, make sure you have Java installed (if not,
 you probably already encountered errors when you ran @code(make)). You can also try recompiling the Java files:
 @begin(example)
 cd jnyqide
@@ -266,9 +232,9 @@ cd ..
 @end(example)
 
 @p(Note:) With Linux and the Macintosh OS X,
- NyquistIDE defines the environment passed to Nyquist. If you
+ jNyqIDE defines the environment passed to Nyquist. If you
 set @code(XLISPPATH)@index(XLISPPATH)@index(search path) as shown above, it 
-will be passed along to Nyquist under NyquistIDE. If not,
+will be passed along to Nyquist under jNyqIDE. If not,
 a default XLISPPATH will have the @code(lib) and @code(runtime) directories only.
 This does not apply to Windows because even though the environment is there, 
 the Windows version of Nyquist reads the @code(XLISPPATH) from the Registry.
@@ -279,7 +245,7 @@ on a single line of text. This file will override the environment
 variable @code(XLISPPATH).
 
 It is good to have @code(USER) in the environment with your user ID. This string
-is used to construct some file names. NyquistIDE will look for it in the environment.
+is used to construct some file names. jNyqIDE will look for it in the environment.
 You can also specify your user ID using the file @code(nyquist/user), but
 if you have a shared installation of Nyquist, this will not be very useful.
 
@@ -310,6 +276,30 @@ examples, and documentation, packaged as an executable installer program.
 After executing the installer, just find Nyquist in your Start menu to run it. 
 You may begin typing expressions such as the ones in the following ``Examples'' section.
 
+@begin(comment) THIS STUFF IS OUT OF DATE
+The Win32 version of Nyquist is packaged as n three versions: the source version
+and two runtime versions. The source version is a superset of the runtime
+version intended for developers who
+want to recompile Nyquist. The source version exists as a @code(.zip) file,
+so you need a utility like WinZip to unpack them.  The
+URL @code(http://www.winzip.com/) has information on this product.  Typically,
+the contents of the zip file are extracted to the @code(C:\nyquist) directory,
+but you can put it anywhere you like. You can then open the workspace file,
+nyquist.sln, using Microsoft
+Visual C++. You can build and run the command line and the NyqWin versions of Nyquist
+from within Visual C++.
+
+The runtime versions contain everything you need to run Nyquist, including the executable,
+examples, and documentation. Each runtime version is packaged as an executable installer program.
+I recommend @code(setupnyqiderun2xx.exe) (``2xx'' refers to the current version
+number), a graphical interface written in 
+Java that runs nyquist.exe as
+a separate process. This IDE has a simple lisp editor built in. Alternatively,
+you can install @code(setupnyqwinrun2xx.exe), a different graphical
+interface written in C++. Just copy the installer you want
+to your system and run it. Then find Nyquist in your Start menu to run it. 
+You may begin typing expressions such as the ones in the following ``Examples'' section.
+@end(comment)
 @p(Optional:)@index(Registry)@index(xlisppath)@index(search path) Nyquist needs to know where to find the standard runtime files. The location of runtime files must be stored in the Registry.
 The installers create a registry entry, but if
 you move Nyquist or deal with different versions, you can edit the Registry manually as follows:
@@ -364,7 +354,7 @@ If Nyquist prints an error message and quits when you enable Open Sound Control 
 @begin(example)
 SystemRoot="D:\windows"
 @end(example)
-into a file named @code(systemroot) (no extension). Put this file in your @code(nyquist) directory. When you run @code(NyquistIDE), it will look for this file and pass the contents as an environment variable to Nyquist. The Nyquist process needs this to open a UDP socket, which is needed for Open Sound Control.
+into a file named @code(systemroot) (no extension). Put this file in your @code(nyquist) directory. When you run @code(jNyqIDE), it will look for this file and pass the contents as an environment variable to Nyquist. The Nyquist process needs this to open a UDP socket, which is needed for Open Sound Control.
 
 @paragraph(The "java is not recognized" Error)
 Sometimes, Nyquist will run directly from the installer, but then it will not start from the Windows Start menu. You can try running the 
@@ -382,30 +372,29 @@ You can also download a pre-compiled version of Nyquist for the Mac.
 Just download @code(nyqosx2xx.tgz) to the desktop and open it to 
 extract the folder <tt>nyqosx2xx</tt>. (Again, "2xx" refers to the current
 version number, e.g. v2.31 would be named with "231".) Open the folder
-to find a Mac Application named NyquistIDE and a directory named 
+to find a Mac Application named jNyqIDE and a directory named 
 <tt>nyquist/doc</tt>. Documentation is in the <tt>nyquist/doc</tt> directory.
 
-The file @code(NyquistIDE.app/Contents/Resources/Java/ny) 
+The file <tt>jNyqIDE.app/Contents/Resources/Java/ny</tt> 
 is the command line executable (if you should need it). To run from the
 command line, you will need to set the XLISPPATH environment variable as 
 with Linux. On the topic of the @code(XLISPPATH), note that this variable is
-set by NyquistIDE when running with that application, overriding any other
+set by jNyqIDE when running with that application, overriding any other
 value. You can extend the search path by creating the file @code(xlisppath) 
 in the same directory as the nyquist executable @code(ny). The 
 @code(xlisppath) file should have colon-separated paths
 on a single line of text.
-@end(comment)
 
-@section(Using NyquistIDE)@index(NyquistIDE)@index(IDE)@index(Integrated Development Environment)
-The program named NyquistIDE is an ``integrated development environment'' for Nyquist. When you run NyquistIDE, it starts the Nyquist program and displays all Nyquist output in a window. NyquistIDE helps you by providing a Lisp and SAL editor, hints for command completion and function parameters, some graphical interfaces for editing envelopes and graphical equalizers, and a panel of buttons for common operations. A more complete description of NyquistIDE is in Chapter @ref(jnyqide-chapter).
+@section(Using jNyqIDE)@index(jNyqIDE)@index(IDE)@index(Integrated Development Environment)
+The program named jNyqIDE is an ``integrated development environment'' for Nyquist. When you run jNyqIDE, it starts the Nyquist program and displays all Nyquist output in a window. jNyqIDE helps you by providing a Lisp and SAL editor, hints for command completion and function parameters, some graphical interfaces for editing envelopes and graphical equalizers, and a panel of buttons for common operations. A more complete description of jNyqIDE is in Chapter @ref(jnyqide-chapter).
 
-For now, all you really need to know is that you can enter Nyquist commands by typing into the upper left window. When you type return, the expression you typed is sent to Nyquist, and the results appear in the window below. You can edit files by clicking on the New File or Open File buttons. After editing some text, you can load the text into Nyquist by clicking the Load button. NyquistIDE always saves the file first; then it tells Nyquist to load the file. You will be prompted for a file name the first time you load a new file.
+For now, all you really need to know is that you can enter Nyquist commands by typing into the upper left window. When you type return, the expression you typed is sent to Nyquist, and the results appear in the window below. You can edit files by clicking on the New File or Open File buttons. After editing some text, you can load the text into Nyquist by clicking the Load button. jNyqIDE always saves the file first; then it tells Nyquist to load the file. You will be prompted for a file name the first time you load a new file.
 
 @section(Using SAL)
 SAL mode means that Nyquist reads and evaluates SAL commands rather than Lisp. The SAL mode prompt is "@code(SAL> )" while the Lisp mode prompt is "@code(> )".
 When Nyquist starts it normally enters SAL mode automatically, but certain errors may exit SAL mode. You can reenter SAL mode by typing the Lisp expression @code[(sal)].
 
-In SAL mode, you type commands in the SAL programming language. Nyquist reads the commands, compiles them into Lisp, and evaluates the commands. Commands can be entered manually by typing into the upper left text box in NyquistIDE.
+In SAL mode, you type commands in the SAL programming language. Nyquist reads the commands, compiles them into Lisp, and evaluates the commands. Commands can be entered manually by typing into the upper left text box in jNyqIDE.
 
 @section(Helpful Hints)
 Under Win95 and Win98, the console sometimes locks up. Activating another window and then reactivating the Nyquist window should unlock the output. 
@@ -426,10 +415,10 @@ to (re)load the file.
 
 The Emacs editor is free GNU software and will help you balance parentheses if you use Lisp mode. In fact, you can run nyquist (without the IDE) as a subprocess to Emacs. A helful discussion is at //http://www.audacity-forum.de/download/edgar/nyquist/nyquist-doc/examples/emacs/main.html. If you use Emacs, there is also a SAL mode (the file is @code(sal-mode.el)) included with the Common Music distribution, which you can find on the Web at @code(sourceforge.net).
 
-The NyquistIDE also runs Nyquist as a subprocess and has
+The jNyqIDE also runs Nyquist as a subprocess and has
 built-in Lisp and SAL editors. If your editor does not help you balance parentheses, you may find yourself counting parens and searching for unbalanced 
 expressions. If you are confused or desperate, try the @code(:print t)
-option of the @code(load) command. By looking at the expressions printed,
+option o fthe @code(load) command. By looking at the expressions printed,
 you should be able to tell where the last unbalanced expression starts.
 Alternatively, type @code[(file-sexprs)] and type the lisp file name at
 the prompt. This function will read and print 
@@ -442,7 +431,7 @@ Lisp syntax. Since Nyquist is build on a Lisp interpreter, this is the
 may break out of the SAL interpreter, leaving you with a prompt for a Lisp
 expression. Alternatively, you can exit SAL simply by typing @code(exit) to
 get a Lisp prompt (@code(> )). Commands can be entered manually by typing
- into the upper left text box in NyquistIDE.
+ into the upper left text box in jNyqIDE.
 
 @section(Examples)
 We will begin with some simple Nyquist programs. Throughout the manual,
@@ -793,18 +782,18 @@ Rhythmic patterns (@code(demos/rhythm_tutorial.htm)@index(demos, rhythmic patter
 Drum Samples and Drum Machine (@code(demos/plight/drum.lsp)@index(demos, drum machine)@index(drum samples)@index(drum machine).
 @end(itemize)
 
-@chapter(The NyquistIDE Program)
+@chapter(The jNyqIDE Program)
 @label(jnyqide-chapter)
-The NyquistIDE program combines many helpful functions and interfaces to help you get the most out of Nyquist. NyquistIDE is implemented in Java, and you will need the Java runtime system or development system installed on your computer to use NyquistIDE. The best way to learn about NyquistIDE is to just use it. This chapter introduces some of the less obvious features. If you are confused by something and you do not find the information you need here, please contact the author.
+The jNyqIDE program combines many helpful functions and interfaces to help you get the most out of Nyquist. jNyqIDE is implemented in Java, and you will need the Java runtime system or development system installed on your computer to use jNyqIDE. The best way to learn about jNyqIDE is to just use it. This chapter introduces some of the less obvious features. If you are confused by something and you do not find the information you need here, please contact the author.
 
-@section(NyquistIDE Overview)
-The NyquistIDE runs the command-line version of Nyquist as a subtask, so everything that works in Nyquist should work when using the NyquistIDE and vice-versa. Input to Nyquist is usually entered in the top left window of the NyquistIDE. When you type return, if the expression or statement appears to be complete, the expression you typed is sent to Nyquist. Output from Nyquist appears in a window below. You cannot type into or edit the output window text.
+@section(jNyqIDE Overview)
+The jNyqIDE runs the command-line version of Nyquist as a subtask, so everything that works in Nyquist should work when using the jNyqIDE and vice-versa. Input to Nyquist is usually entered in the top left window of the jNyqIDE. When you type return, if the expression or statement appears to be complete, the expression you typed is sent to Nyquist. Output from Nyquist appears in a window below. You cannot type into or edit the output window text.
 
-The normal way to use the NyquistIDE is to create or open one or more files. You edit these files and then click the Load button. To load a file, NyquistIDE saves the file, sets the current directory of Nyquist to that of the file, then issues a @code(load) command to Nyquist. In this case and several others, you may notice that NyquistIDE sends expressions to Nyquist automatically for evaluation. You can always see the commands and their results in the output window.
+The normal way to use the jNyqIDE is to create or open one or more files. You edit these files and then click the Load button. To load a file, jNyqIDE saves the file, sets the current directory of Nyquist to that of the file, then issues a @code(load) command to Nyquist. In this case and several others, you may notice that jNyqIDE sends expressions to Nyquist automatically for evaluation. You can always see the commands and their results in the output window.
 
-Notice that when you load a selected file window, NyquistIDE uses @code(setdir) to change Nyquist's current directory. This helps to keep the two programs in sync. Normally, you should keep all the files of a project in the same directory and avoid manually changing Nyquist's current directory (i.e. avoid calling @code(setdir) in your code).
+Notice that when you load a selected file window, jNyqIDE uses @code(setdir) to change Nyquist's current directory. This helps to keep the two programs in sync. Normally, you should keep all the files of a project in the same directory and avoid manually changing Nyquist's current directory (i.e. avoid calling @code(setdir) in your code).
 
-Arranging windows in the NyquistIDE can be time-consuming, and depending on the
+Arranging windows in the jNyqIDE can be time-consuming, and depending on the
 operating system, it is possible for a window to get into a position where you
 cannot drag it to a new position. The Window:Tile menu command can be used
 to automatically lay out windows in a rational way. There is a preference 
@@ -873,8 +862,8 @@ audio stream. (See Section @ref(play-sec) for more detail.)
 @end(itemize)
 
 @section(Command Completion)
-To help with programming, NyquistIDE maintains a command-completion window.
-As you type the first letters of function names, NyquistIDE lists matching
+To help with programming, jNyqIDE maintains a command-completion window.
+As you type the first letters of function names, jNyqIDE lists matching
 functions and their parameters in the Completion List window. If you click
 on an entry in this window, the displayed expression will replace the 
 incompletely typed function name. A preference allows you to match initial
@@ -882,11 +871,11 @@ letters or any substring of the complete function name. This is controlled
 by the ``Use full search for code completion'' preference.
 
 In addition, if you right click (or under Mac OS X, hold down the Alt/Option
-key and click) on an entry, NyquistIDE will display documentation for the function.
+key and click) on an entry, jNyqIDE will display documentation for the function.
 Documentation can come from a local copy or from the online copy (determined
 by the ``Use online manual instead of local copy'' preference). Documentation 
-can be displayed within the NyquistIDE window or in an external browser (determined
-by the ``Use window in NyquistIDE for help browser'' preference.) Currently, the
+can be displayed within the jNyqIDE window or in an external browser (determined
+by the ``Use window in jNyqIDE for help browser'' preference.) Currently, the
 external browser option does not seem to locate documentation properly, but 
 this should be fixed in the future.
 
@@ -894,7 +883,7 @@ this should be fixed in the future.
 @label(browser)
 @index(browser, jnyqide)@index(sound browser, jnyqide)
 If you click on the Browse button or use the Window:Browse menu command, 
-NyquistIDE will display a browser window that is pre-loaded with a number of
+jNyqIDE will display a browser window that is pre-loaded with a number of
  Nyquist commands to create sounds. You can adjust parameters, audition
 the sounds, and capture the expression that creates the sound. In many 
 cases, the expression checks to see if necessary functions are defined,
@@ -938,7 +927,7 @@ data of all kinds (see Section @ref(workspaces-sec)). The normal way to
 work with workspaces is to (1) load the workspace, i.e.
  @code[load "workspace"], as soon as you start Nyquist; (2) invoke
 the envelope editor to change values in the workspace; and (3) save the
-workspace at any time, especially before you exit NyquistIDE. If you follow
+workspace at any time, especially before you exit jNyqIDE. If you follow
 these steps, envelopes will be preserved from session to session, and 
 the entire collection of envelopes will appear in the editor. Be 
 sure to make backups of your @code(workspace.lsp) file along with your
@@ -1381,7 +1370,7 @@ the default global environment:
 (setf *default-sound-srate* 44100.0)
 (setf *default-control-srate* 1102.5)
 @end(example)
-You can also do this using preferences in NyquistIDE. 
+You can also do this using preferences in jNyqIDE. 
 If you have already started Nyquist and want to change the defaults, the
 preferences or the following functions can be used:
 @begin(example)
@@ -2270,7 +2259,7 @@ From the user's perspective, these implementation details are hidden. You
 can enter SAL mode from XLISP by typing @code[(SAL)] to the XLISP prompt.
 The SAL input prompt (@code(SAL> )) will be displayed. From that point on,
 you simply type SAL commands, and they will be executed. By setting a 
-preference in the NyquistIDE program, SAL mode will be entered automatically.
+preference in the jNyqIDE program, SAL mode will be entered automatically.
 
 It is possible to encounter errors that will take you from the SAL interpreter
 to an XLISP prompt. In general, the way to get back to SAL is by typing 
@@ -2291,7 +2280,7 @@ In SAL, whitespace (any sequence of space, newline, or tab characters)
 is sometimes necessary to separate lexical tokens, but
 otherwise, spaces and indentation are ignored. To make SAL readable,
 it is @i(strongly) advised that you indent SAL programs as in the examples
-here. The NyquistIDE program is purposely insistent about SAL indentation,
+here. The jNyqIDE program is purposely insistent about SAL indentation,
 so if you use it to edit SAL programs, your indentation should be 
 both beautiful and consistent.
 
@@ -2479,7 +2468,7 @@ end
 
 The @code(chdir) statement changes the working directory. This statement
 is provided for compatibility with Common Music SAL, but it really
-should be avoided if you use NyquistIDE. The @i(expression) following the
+should be avoided if you use jNyqIDE. The @i(expression) following the
 @code(chdir) keyword should evaluate to a string that is a directory
 path name. Note that literal strings themselves are valid expressions.
 @begin(example)
@@ -3013,8 +3002,7 @@ a sound and functions that construct sounds from samples.
 
 @begin(fndefs)
 @codef[sref(@pragma(defn)@index(sref)@indexSecondary(primary="sound", 
-secondary="accessing point")@i(sound), @i(time))] @c{[sal]}@*
-@altdef{@code[(sref @i(sound) @i(time))] @c{[lisp]}}@\Accesses @i(sound) at 
+secondary="accessing point")@i(sound), @i(time))]@\Accesses @i(sound) at 
 the point @i(time), which is a local time. If @i(time) does not 
 correspond to a sample time, then the nearest samples are linearly 
 interpolated to form the result.  To access a particular sample, either 
@@ -3041,20 +3029,17 @@ Here is why @code(sref) interprets its time argument as a local time:
 @end(example)
 If you were to use @code(snd-sref), which treats time as global, instead of @code(sref), which treats time as local, then the first example above would return the same answer (0.5), but the second example would return 0.  Why? Because the @code[(ramp 1)] behavior would be shifted to start at time 2.0, but the resulting sound would be evaluated at global time 0.5.  By definition, sounds have a value of zero before their start time.
 
-@codef[sref-inverse(@pragma(defn)@index(sref-inverse)@i(sound), @i(value))] @c{[sal]}@*
-@altdef{@code[(sref-inverse @i(sound) @i(value))] @c{[lisp]}}@\Search @i(sound) for the first point at which it achieves @i(value) and return the corresponding (linearly interpolated) time.  If no inverse exists, an error is raised.  This function is used by Nyquist in the implementation of time warping.
+@codef[sref-inverse(@pragma(defn)@index(sref-inverse)@i(sound), @i(value))]@\Search @i(sound) for the first point at which it achieves @i(value) and return the corresponding (linearly interpolated) time.  If no inverse exists, an error is raised.  This function is used by Nyquist in the implementation of time warping.
 
 @label(snd-from-array-sec)
 @codef[snd-from-array(@IndexSecondary(primary="sound",
  secondary = "creating from array")@pragma(defn)@index(snd-from-array)@i(t0), @i(sr),
-@i(array))] @c{[sal]}@*
-@altdef{@code[(snd-from-array @i(t0) @i(sr) @i(array))] @c{[lisp]}}@\Converts a lisp array of @code(FLONUM)s into a sound with starting
+@i(array))]@\Converts a lisp array of @code(FLONUM)s into a sound with starting
 time @i(t0) and sample rate @i(sr).  Safe for ordinary use.  Be aware that
 arrays of floating-point samples use 14 bytes per sample, and an additional
 4 bytes per sample are allocated by this function to create a sound type.
 
-@codef[snd-fromarraystream(@pragma(defn)@index(snd-fromarraystream)@i(t0), @i(sr), @i(object))] @c{[sal]}@*
-@altdef{@code[(snd-fromarraystream @i(t0) @i(sr) @i(object))] @c{[lisp]}}@\Creates a sound for which samples come from
+@codef[snd-fromarraystream(@pragma(defn)@index(snd-fromarraystream)@i(t0), @i(sr), @i(object))]@\Creates a sound for which samples come from
 @i(object). The starting time is @i(t0) (a @code(FLONUM)), and the sample rate is
 @i(sr). The @i(object) is an XLISP object (see Section @ref(objects-sec) for
 information on objects.) A sound is returned.  When the sound needs samples,
@@ -3066,8 +3051,7 @@ There is no provision for @i(object) to specify the
 logical stop time of the sound, so the logical stop time is the termination
 time. 
 
-@codef[snd-fromobject(@pragma(defn)@index(snd-fromobject)@index(sound from Lisp data)@i(t0), @i(sr), @i(object))] @c{[sal]}@*
-@altdef{@code[(snd-fromobject @i(t0) @i(sr) @i(object))] @c{[lisp]}}@\Creates a sound for which samples come from
+@codef[snd-fromobject(@pragma(defn)@index(snd-fromobject)@index(sound from Lisp data)@i(t0), @i(sr), @i(object))]@\Creates a sound for which samples come from
 @i(object). The starting time is @i(t0) (a @code(FLONUM)), and the sample rate is
 @i(sr). The @i(object) is an XLISP object (see Section @ref(objects-sec) for
 information on objects. A sound is returned.  When the sound needs samples,
@@ -3077,20 +3061,17 @@ must return a @code(FLONUM).  There is no provision for @i(object) to specify th
 logical stop time of the sound, so the logical stop time is the termination
 time.
 
-@codef[snd-extent(@pragma(defn)@index(snd-extent)@i(sound), @i(maxsamples))] @c{[sal]}@*
-@altdef{@code[(snd-extent @i(sound) @i(maxsamples))] @c{[lisp]}}@\Returns a list of two numbers: the starting time of @i(sound) and the terminate time of @i(sound).  Finding the terminate time requires that samples be computed.  Like most Nyquist functions, this is non-destructive, so memory will be allocated to preserve the sound samples.  If the sound is very long or infinite, this may exhaust all memory, so the @i(maxsamples) parameter specifies a limit on how many samples to compute.  If this limit is reached, the terminate time will be (incorrectly) based on the sound having @i(maxsamples) samples.  This function is safe for ordinary use.
+@codef[snd-extent(@pragma(defn)@index(snd-extent)@i(sound), @i(maxsamples))]@\Returns a list of two numbers: the starting time of @i(sound) and the terminate time of @i(sound).  Finding the terminate time requires that samples be computed.  Like most Nyquist functions, this is non-destructive, so memory will be allocated to preserve the sound samples.  If the sound is very long or infinite, this may exhaust all memory, so the @i(maxsamples) parameter specifies a limit on how many samples to compute.  If this limit is reached, the terminate time will be (incorrectly) based on the sound having @i(maxsamples) samples.  This function is safe for ordinary use.
 
 @codef[snd-fetch(@index(access samples)@index(samples,
-reading)@pragma(defn)@index(snd-fetch)@index(read samples)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-fetch @i(sound))] @c{[lisp]}}@\Reads samples
+reading)@pragma(defn)@index(snd-fetch)@index(read samples)@i(sound))]@\Reads samples
 sequentially from @i(sound). This returns a @code(FLONUM) after each call, or
 @code(NIL) when @i(sound) terminates. @p(Note:) @code(snd-fetch) modifies
 @i(sound); it is strongly recommended to copy @i(sound) using
 @code(snd-copy) and access only the copy with @code(snd-fetch).
 
 @codef[snd-fetch-array(@pragma(defn)@index(snd-fetch-array)@i(sound), @i(len),
-@i(step))] @c{[sal]}@*
-@altdef{@code[(snd-fetch-array @i(sound) @i(len) @i(step))] @c{[lisp]}}@\Reads sequential arrays of samples from @i(sound), returning
+@i(step))]@\Reads sequential arrays of samples from @i(sound), returning
 either an array of @code(FLONUM)s or @code(NIL) when the sound terminates. The
 @i(len) parameter, a @code(FIXNUM), indicates how many samples should be returned
 in the result array.  After the array is returned, @i(sound) is modified by
@@ -3106,21 +3087,18 @@ calls may not specify a greater @i(len) than the first. @p(Note:)
 @i(sound); it is strongly recommended to copy @i(sound) using
 @code(snd-copy) and access only the copy with @code(snd-fetch-array).
 
-@codef[snd-flatten(@pragma(defn)@index(snd-flatten)@i(sound), @i(maxlen))] @c{[sal]}@*
-@altdef{@code[(snd-flatten @i(sound) @i(maxlen))] @c{[lisp]}}@\This function is identical 
+@codef[snd-flatten(@pragma(defn)@index(snd-flatten)@i(sound), @i(maxlen))]@\This function is identical 
 to @code(snd-length). You would use this function to force samples to be computed in memory. Normally, this is not a good thing to do, but here is one appropriate use: In the case of sounds intended for wavetables, the unevaluated 
 sound may be larger than the evaluated (and typically short) one. 
 Calling @code(snd-flatten) will compute the samples and allow the unit generators to be freed in the next garbage collection. @p(Note:) If a sound is computed from many instances of table-lookup oscillators, calling @code(snd-flatten) will free the oscillators and their tables. Calling @code[(stats)] will print how many total bytes have been allocated to tables.
 
- @codef[snd-length(@pragma(defn)@index(snd-length)@i(sound), @i(maxlen))] @c{[sal]}@*
-@altdef{@code[(snd-length @i(sound) @i(maxlen))] @c{[lisp]}}@\Counts the
+ @codef[snd-length(@pragma(defn)@index(snd-length)@i(sound), @i(maxlen))]@\Counts the
 number of samples in @i(sound) up to the physical stop time.  If the sound
 has more than @i(maxlen) samples, @i(maxlen) is returned.  Calling this
 function will cause all samples of the sound to be computed and saved in
 memory (about 4 bytes per sample).  Otherwise, this function is safe for ordinary use.
 
- @codef[snd-maxsamp(@pragma(defn)@index(snd-maxsamp)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-maxsamp @i(sound))] @c{[lisp]}}@\Computes the maximum of
+ @codef[snd-maxsamp(@pragma(defn)@index(snd-maxsamp)@i(sound))]@\Computes the maximum of
 the absolute value of the samples in @i(sound).  Calling this function will
 cause samples to be computed and saved in memory.  (This function should
 have a @i(maxlen) parameter to allow self-defense against sounds that would
@@ -3128,8 +3106,7 @@ exhaust available memory.)  Otherwise, this function is safe for ordinary use.
 This function will probably be removed in a future version.  See @code(peak), a replacement (@pragma(startref) page @pageref(peak-sec)).
 
 
- @codef[snd-play(@pragma(defn)@index(snd-play)@i(expression))] @c{[sal]}@*
-@altdef{@code[(snd-play @i(expression))] @c{[lisp]}}@\Evaluates @i(expression)
+ @codef[snd-play(@pragma(defn)@index(snd-play)@i(expression))]@\Evaluates @i(expression)
 to obtain a sound or array of sounds, computes all of the samples (without
 retaining them in memory), and returns. Originally, this was a placeholder
 for a facility to play samples directly to an audio output device, but
@@ -3141,14 +3118,12 @@ useful in determining how much time is spent calculating samples.  See
  @code(play) (Section @ref(play-sec)) to play a sound.  This function is
 safe for ordinary use.
 
-@codef[snd-print-tree(@pragma(defn)@index(snd-print-tree)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-print-tree @i(sound))] @c{[lisp]}}@\Prints an ascii
+@codef[snd-print-tree(@pragma(defn)@index(snd-print-tree)@i(sound))]@\Prints an ascii
 representation of the internal data structures representing a sound.  This
 is useful for debugging Nyquist.  This function is
 safe for ordinary use.
 
- @codef[snd-samples(@index(samples)@pragma(defn)@index(snd-samples)@index(array from sound)@index(convert sound to array)@i(sound), @i(limit))] @c{[sal]}@*
-@altdef{@code[(snd-samples @i(sound) @i(limit))] @c{[lisp]}}@\Converts the
+ @codef[snd-samples(@index(samples)@pragma(defn)@index(snd-samples)@index(array from sound)@index(convert sound to array)@i(sound), @i(limit))]@\Converts the
 samples into a lisp array.  The data is taken directly from the samples,
 ignoring shifts.  For example, if the sound starts at 3.0 seconds, the first
 sample will refer to time 3.0, not time 0.0.  A maximum of @i(limit) samples
@@ -3156,30 +3131,25 @@ is returned.  This function is safe for ordinary use, but like
 @code(snd-from-array), it requires a total of slightly over 18 bytes per
 sample.
 
- @codef[snd-srate(@pragma(defn)@index(snd-srate)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-srate @i(sound))] @c{[lisp]}}@\Returns the sample rate of
+ @codef[snd-srate(@pragma(defn)@index(snd-srate)@i(sound))]@\Returns the sample rate of
 the sound. Safe for ordinary use.
 
 @begin(comment)
- @codef[snd-show(@pragma(defn)@index(snd-show)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-show @i(sound))] @c{[lisp]}}@\Print the entire (internal)
+ @codef[snd-show(@pragma(defn)@index(snd-show)@i(sound))]@\Print the entire (internal)
 structure of the sound for debugging.  Safe for ordinary use.
 @end(comment)
 
-@codef[snd-time(@pragma(defn)@index(snd-time)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-time @i(sound))] @c{[lisp]}}@\Returns the start time of the
+@codef[snd-time(@pragma(defn)@index(snd-time)@i(sound))]@\Returns the start time of the
 sound.  This will probably go away in a future version, so use @code(snd-t0)
 instead.
 
-@codef[snd-t0(@pragma(defn)@index(snd-t0)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-t0 @i(sound))] @c{[lisp]}}@\Returns the time of the
+@codef[snd-t0(@pragma(defn)@index(snd-t0)@i(sound))]@\Returns the time of the
 first sample of the sound.  Note that Nyquist operators such as add always
 copy the sound and are allowed to shift the copy up to one half sample
 period in either direction to align the samples of two operands.  Safe for
 ordinary use.
 
-@codef[snd-print(@pragma(defn)@index(snd-print)@i(expression), @i(maxlen))] @c{[sal]}@*
-@altdef{@code[(snd-print @i(expression) @i(maxlen))] @c{[lisp]}}@\Evaluates
+@codef[snd-print(@pragma(defn)@index(snd-print)@i(expression), @i(maxlen))]@\Evaluates
 @i(expression) to yield a sound or an array of sounds, then prints up to
 @i(maxlen) samples to the screen (stdout).  This is similar to
 @code(snd-save), but samples appear in text on the screen instead of in
@@ -3187,31 +3157,24 @@ binary in a file.  This function is intended for debugging@index(debugging).
 Safe for ordinary use.
 
  @codef[snd-set-logical-stop(@pragma(defn)@index(snd-set-logical-stop)@i(sound),
-@i(time))] @c{[sal]}@*
-@altdef{@code[(snd-set-logical-stop @i(sound) @i(time))] @c{[lisp]}}@\Returns a sound which is 
+@i(time))]@\Returns a sound which is 
 @i(sound), except that the logical stop of the sound occurs at @i(time).
  @p(Note:) do not call this function.  When defining a behavior, use
 @code(set-logical-stop) or @code(set-logical-stop-abs) instead.
 
-@codef[snd-sref(@pragma(defn)@index(snd-sref)@i(sound), @i(time))] @c{[sal]}@*
-@altdef{@code[(snd-sref @i(sound) @i(time))] @c{[lisp]}}@\Evaluates @i(sound) 
+@codef[snd-sref(@pragma(defn)@index(snd-sref)@i(sound), @i(time))]@\Evaluates @i(sound) 
 at the global time given by @i(time).  Safe for ordinary use, but normally, you should
 call @code(sref) instead.
 
- @codef[snd-stop-time(@pragma(defn)@index(snd-stop-time)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-stop-time @i(sound))] @c{[lisp]}}@\Returns the stop time of @i(sound).
+ @codef[snd-stop-time(@pragma(defn)@index(snd-stop-time)@i(sound))]@\Returns the stop time of @i(sound).
 Sounds can be ``clipped'' or truncated at a particular time.  This function
 returns that time or MAX-STOP-TIME if he programmer has not specified a stop
 time for the sound.  Safe for ordinary use.
 
-@codef[soundp(@pragma(defn)@index(soundp)@i(sound))] @c{[sal]}@*
-@altdef{@code[(soundp @i(sound))] @c{[lisp]}}@\Returns true iff @i(sound) is a
+@codef[soundp(@pragma(defn)@index(soundp)@i(sound))]@\Returns true iff @i(sound) is a
 SOUND.  Safe for ordinary use.
 
-@codef[stats(@pragma(defn)@index(stats)@index(memory 
-usage)@index(table memory))] @c{[sal]}@*
-@altdef{@code[(stats)] @c{[lisp]}}@\Prints the memory usage status.  
-See also the 
+@codef[stats(@pragma(defn)@index(stats)@index(memory usage)@index(table memory))]@\Prints the memory usage status.  See also the 
 XLISP @code(mem) function.  Safe for ordinary use. This is the only way to find out how much memory is being used by table-lookup oscillator instances.
 
 @end(fndefs)
@@ -3220,11 +3183,9 @@ XLISP @code(mem) function.  Safe for ordinary use. This is the only way to find 
 These are all safe and recommended for ordinary use.
 
 @begin(fndefs)
-@codef[db-to-linear(@pragma(defn)@index(db-to-linear)@i(x))] @c{[sal]}@*
-@altdef{@code[(db-to-linear @i(x))] @c{[lisp]}}@\Returns the conversion of @i(x) from decibels to linear.  0dB is converted to 1.  20dB represents a linear factor of 10. If @i(x) is a sound, each sample is converted and a sound is returned.  If @i(x) is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  @p(Note:) With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Sample rates, start times, etc. are taken from @i(x).
+@codef[db-to-linear(@pragma(defn)@index(db-to-linear)@i(x))]@\Returns the conversion of @i(x) from decibels to linear.  0dB is converted to 1.  20dB represents a linear factor of 10. If @i(x) is a sound, each sample is converted and a sound is returned.  If @i(x) is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  @p(Note:) With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Sample rates, start times, etc. are taken from @i(x).
 
-@codef[follow(@pragma(defn)@index(follow)@index(envelope follower)@index(compressor)@index(limiter)@i(sound), @i(floor), @i(risetime), @i(falltime), @i(lookahead))] @c{[sal]}@*
-@altdef{@code[(follow @i(sound) @i(floor) @i(risetime) @i(falltime) @i(lookahead))] @c{[lisp]}}@\An envelope follower intended as a commponent for compressor and limiter functions. The basic goal of this function is to generate a smooth signal 
+@codef[follow(@pragma(defn)@index(follow)@index(envelope follower)@index(compressor)@index(limiter)@i(sound), @i(floor), @i(risetime), @i(falltime), @i(lookahead))]@\An envelope follower intended as a commponent for compressor and limiter functions. The basic goal of this function is to generate a smooth signal 
 that rides on the peaks of the input signal. The usual objective is to 
 produce an amplitude envelope given a low-sample rate (control rate) 
 signal representing local RMS measurements. The first argument is the 
@@ -3257,8 +3218,7 @@ See @code(snd-chase) in Section @ref(snd-chase-sec) for a related filter.
 @label(gate-sec)
 @codef[gate(@pragma(defn)@index(gate)@index(noise-gate)@i(sound), 
 @i(lookahead), @i(risetime), @i(falltime), @i(floor), 
-@i(threshold))] @c{[sal]}@*
-@altdef{@code[(gate @i(sound) @i(lookahead) @i(risetime) @i(falltime) @i(floor) @i(threshold))] @c{[lisp]}}@\Generate an exponential rise and decay intended 
+@i(threshold))]@\Generate an exponential rise and decay intended 
 for noise gate implementation. The decay starts when the signal drops 
 below @i(threshold) and stays there for longer than @i(lookahead) (a 
 @code(FLONUM) in seconds). (The signal begins to drop when the signal 
@@ -3273,70 +3233,35 @@ constant-rate exponential and set so that a rise from @i(floor) to unity
 occurs in @i(risetime). Similary, the fall is a constant-rate exponential 
 such that a fall from unity to @i(floor) takes @i(falltime).
 
-@codef[hz-to-step(@pragma(defn)@index(hz-to-step)@i(freq))] @c{[sal]}@*
-@altdef{@code[(hz-to-step @i(freq))] @c{[lisp]}}@\Returns a step number for @i(freq) (in hz), which can be either a number of a @code(SOUND). The result has the same type as the argument. See also @code(step-to-hz) (below).
+@codef[hz-to-step(@pragma(defn)@index(hz-to-step)@i(freq))]@\Returns a step number for @i(freq) (in hz), which can be either a number of a @code(SOUND). The result has the same type as the argument. See also @code(step-to-hz) (below).
 
-@codef[linear-to-db(@pragma(defn)@index(linear-to-db)@i(x))] @c{[sal]}@*
-@altdef{@code[(linear-to-db @i(x))] @c{[lisp]}}@\Returns the conversion of @i(x) from linear to decibels.  1 is converted to 0.  0 is converted to -INF (a special IEEE floating point value.)  A factor of 10 represents a 20dB change.  If @i(x) is a sound,  each sample is converted and a sound is returned.  If @i(x) is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  @p(Note:) With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Start times, sample rates, etc. are taken from @i(x).
+@codef[linear-to-db(@pragma(defn)@index(linear-to-db)@i(x))]@\Returns the conversion of @i(x) from linear to decibels.  1 is converted to 0.  0 is converted to -INF (a special IEEE floating point value.)  A factor of 10 represents a 20dB change.  If @i(x) is a sound,  each sample is converted and a sound is returned.  If @i(x) is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  @p(Note:) With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Start times, sample rates, etc. are taken from @i(x).
 
-@codef[log(@index(log function)@pragma(defn)@index(log)@i(x))] @c{[sal]}@*
-@altdef{@code[(log @i(x))] @c{[lisp]}}@\Calculates the natural log of @i(x) (a @code(FLONUM)). (See @code(s-log) for a version that operates on signals.)
+@codef[log(@index(log function)@pragma(defn)@index(log)@i(x))]@\Calculates the natural log of @i(x) (a @code(FLONUM)). (See @code(s-log) for a version that operates on signals.)
 
-@codef[set-control-srate(@pragma(defn)@index(set-control-srate)@index(sampling rate)@i(rate))] @c{[sal]}@*
-@altdef{@code[(set-control-srate @i(rate))] @c{[lisp]}}@\Sets the default sampling rate for control signals to @i(rate) by setting @code(*default-control-srate*) and reinitializing the environment.  Do not call this within any synthesis function (see the @code(control-srate-abs) transformation, Section @ref(control-srate-abs-sec)).
+@codef[set-control-srate(@pragma(defn)@index(set-control-srate)@index(sampling rate)@i(rate))]@\Sets the default sampling rate for control signals to @i(rate) by setting @code(*default-control-srate*) and reinitializing the environment.  Do not call this within any synthesis function (see the @code(control-srate-abs) transformation, Section @ref(control-srate-abs-sec)).
 
-@codef[set-sound-srate(@pragma(defn)@index(set-sound-srate)@index(sampling rate)@i(rate))] @c{[sal]}@*
-@altdef{@code[(set-sound-srate @i(rate))] @c{[lisp]}}@\Sets the default sampling rate for audio signals to @i(rate) by setting @code(*default-sound-srate*) and reinitializing the environment.  Do not call this within any synthesis function (see the @code(sound-srate-abs) transformation, Section @ref(sound-srate-abs-sec)).
+@codef[set-sound-srate(@pragma(defn)@index(set-sound-srate)@index(sampling rate)@i(rate))]@\Sets the default sampling rate for audio signals to @i(rate) by setting @code(*default-sound-srate*) and reinitializing the environment.  Do not call this within any synthesis function (see the @code(sound-srate-abs) transformation, Section @ref(sound-srate-abs-sec)).
 
-@codef[set-pitch-names(@pragma(defn)@index(set-pitch-names))] @c{[sal]}@*
-@altdef{@code[(set-pitch-names)] @c{[lis]}}@\Initializes pitch 
-variables (@code(c0), @code(cs0), @code(df0), @code(d0), ... @code(b0), 
- @code(c1), ... @code(b7)).  A440 (the default tuning) is represented by
- the step 69.0, so the variable @code(a4) (fourth octave A) is set to 69.0.  
-You can change the tuning by 
-setting @code(*A4-Hertz*)@index(tuning)@index(A440)@index(*A4-Hertz*) to a 
-value (in Hertz) and calling @code(set-pitch-names) to reinitialize the pitch 
-variables.  Note that this will result in non-integer step values.  It does not
-alter the mapping from step values to frequency.  There is no built-in 
-provision for stretched scales or non-equal temperament, although users 
-can write or compute any desired fractional step values.
+@codef[set-pitch-names(@pragma(defn)@index(set-pitch-names))]@\Initializes pitch variables (@code(c0), @code(cs0), @code(df0), @code(d0), ... @code(b0), @code(c1), ... @code(b7)).  A440 (the default tuning) is represented by the step 69.0, so the variable @code(a4) (fourth octave A) is set to 69.0.  You can change the tuning by setting @code(*A4-Hertz*)@index(tuning)@index(A440)@index(*A4-Hertz*) to a value (in Hertz) and calling @code(set-pitch-names) to reinitialize the pitch variables.  Note that this will result in non-integer step values.  It does not alter the mapping from step values to frequency.  There is no built-in provision for stretched scales or non-equal temperament, although users can write or compute any desired fractional step values.
 
- @codef[step-to-hz(@pragma(defn)@index(step-to-hz)@i(pitch))] @c{[sal]}@*
-@altdef{@code[(step-to-hz @i(pitch))] @c{[lisp]}}@\Returns a frequency in hz
+ @codef[step-to-hz(@pragma(defn)@index(step-to-hz)@i(pitch))]@\Returns a frequency in hz
 for @i(pitch), a step number or a @code(SOUND) type representing a time-varying step number. The result is a @code(FLONUM) if @i(pitch) is a number, and a @code(SOUND) if @i(pitch) is a @code(SOUND). See also @code(hz-to-step) (above).
 
 
-@codef{get-duration(@pragma(defn)@index(get-duration)@i(dur))} @c{[sal]}@*
-@altdef{@code[(get-duration @i(dur))] @c{[lisp]}}@\Gets the actual duration of of something starting at a local time of 0 and ending at a local time of @i(dur) times the current sustain. For convenience,  @code(*rslt*) is set to the global time corresponding to local time zero.
+@codef{get-duration(@pragma(defn)@index(get-duration)@i(dur))}@\Gets the actual duration of of something starting at a local time of 0 and ending at a local time of @i(dur) times the current sustain. For convenience,  @code(*rslt*) is set to the global time corresponding to local time zero.
 
-@codef{get-loud(@pragma(defn)@index(get-loud))} @c{[sal]}@*
-@altdef{@code[(get-loud)] @c{[lisp]}}@\Gets the current value of the @code(*loud*) environment variable.  If @code(*loud*) is a signal, it is evaluated at local time 0 and a number (@code(FLONUM)) is returned.
+@codef{get-loud(@pragma(defn)@index(get-loud))}@\Gets the current value of the @code(*loud*) environment variable.  If @code(*loud*) is a signal, it is evaluated at local time 0 and a number (@code(FLONUM)) is returned.
 
-@codef{get-sustain(@pragma(defn)@index(get-sustain))} @c{[sal]}@*
-@altdef{@code[(get-sustain)] @c{[lisp]}}@\Gets the current value of the @code(*sustain*) environment variable.  If @code(*sustain*) is a signal, it is evaluated at local time 0 and a number (@code(FLONUM)) is returned.
+@codef{get-sustain(@pragma(defn)@index(get-sustain))}@\Gets the current value of the @code(*sustain*) environment variable.  If @code(*sustain*) is a signal, it is evaluated at local time 0 and a number (@code(FLONUM)) is returned.
 
-@codef{get-transpose(@pragma(defn)@index(get-transpose))} @c{[sal]}@*
-@altdef{@code[(get-transpose)] @c{[lisp]}}@\Gets the current value of the @code(*transpose*) environment variable.  If @code(*transpose*) is a signal, it is evaluated at local time 0 and a number (@code(FLONUM)) is returned.
+@codef{get-transpose(@pragma(defn)@index(get-transpose))}@\Gets the current value of the @code(*transpose*) environment variable.  If @code(*transpose*) is a signal, it is evaluated at local time 0 and a number (@code(FLONUM)) is returned.
 
-@codef{get-warp(@pragma(defn)@index(get-warp))} @c{[sal]}@*
-@altdef{@code[(get-warp)] @c{[lisp]}}@\Gets a function corresponding to 
-the current value of the @code(*warp*) environment variable.  For 
-efficiency, @code(*warp*) is stored in three parts representing a shift,
- a scale factor, and a continuous warp function.  @code(Get-warp) is used
- to retrieve a signal that maps logical time to real time.  This signal 
-combines the information of all three components of @code(*warp*) into 
-a single signal.  If the continuous warp function component is not present
- (indicating that the time warp is a simple combination of @code(at)
- and @code(stretch) transformations), an error is raised.  This 
-function is mainly for internal system use.  In the future,
- @code(get-warp) will probably be reimplemented to always return
- a signal and never raise an error.
+@codef{get-warp(@pragma(defn)@index(get-warp))}@\Gets a function corresponding to the current value of the @code(*warp*) environment variable.  For efficiency, @code(*warp*) is stored in three parts representing a shift, a scale factor, and a continuous warp function.  @code(Get-warp) is used to retrieve a signal that maps logical time to real time.  This signal combines the information of all three components of @code(*warp*) into a single signal.  If the continuous warp function component is not present (indicating that the time warp is a simple combination of @code(at) and @code(stretch) transformations), an error is raised.  This function is mainly for internal system use.  In the future, @code(get-warp) will probably be reimplemented to always return a signal and never raise an error.
 
-@CODEF{LOCAL-to-global(@pragma(defn)@index(local-to-global)@i(local-time))} @c{[sal]}@*
-@altdef{@code[(local-to-global @i(local-time))] @c{[lisp]}}@\Converts a score (local) time to a real (global) time according to the current environment.
+@codef{local-to-global(@pragma(defn)@index(local-to-global)@i(local-time))}@\Converts a score (local) time to a real (global) time according to the current environment.
 
-@codef{osc-enable(@pragma(defn)@index(osc-enable)@index(osc)@index(open sound control)@i(flag))} @c{[sal]}@*
-@altdef{@code[(osc-enable @i(flag))] @c{[lisp]}}@\Enable or disable Open Sound Control. 
+@codef{osc-enable(@pragma(defn)@index(osc-enable)@index(osc)@index(open sound control)@i(flag))}@\Enable or disable Open Sound Control. 
 (See Appendix @ref(osc-app).)
 Enabling creates a socket and a service that listens for UDP 
 packets on port 7770. Currently, only two messages are accepted 
@@ -3367,8 +3292,7 @@ unlimited and unprotected access to OSC clients. For now,
 it is unlikely that an attacker could do more than 
 manipulate slider values.
 
-@codef{snd-set-latency(@index(latency)@pragma(defn)@index(snd-set-latency)@i(latency))} @c{[sal]}@*
-@altdef{@code[(snd-set-latency @i(latency))] @c{[lisp]}}@\Set the latency requested when Nyquist plays sound to
+@codef{snd-set-latency(@index(latency)@pragma(defn)@index(snd-set-latency)@i(latency))}@\Set the latency requested when Nyquist plays sound to
  @i(latency), a @code(FLONUM). The previous value is returned. The default is 0.3 seconds. To avoid glitches, the latency should be 
 greater than the time required for garbage collection and message printing and any other system activity external to Nyquist.
 @end(fndefs)
@@ -3383,20 +3307,16 @@ environment.  These are useful when writing code to make
 a high-level function from a low-level function, or when cuing sounds
 which were previously created:
 @begin(fndefs)
-@codef[cue(@pragma(defn)@index(cue)@i(sound))] @c{[sal]}@*
-@altdef{@code[(cue @i(sound))] @c{[lisp]}}@\Applies @code(*loud*), the starting time from @code(*warp*), @code(*start*),
+@codef[cue(@pragma(defn)@index(cue)@i(sound))]@\Applies @code(*loud*), the starting time from @code(*warp*), @code(*start*),
  and @code(*stop*) to @i(sound).
 
-@codef[cue-file(@pragma(defn)@index(cue-file)@i(filename))] @c{[sal]}@*
-@altdef{@code[(cue-file @i(filename))] @c{[lisp]}}@\Same as @code(cue), except
+@codef[cue-file(@pragma(defn)@index(cue-file)@i(filename))]@\Same as @code(cue), except
 the sound comes from the named file, samples from which are coerced to the current default @code(*sound-srate*) sample rate.
 
-@codef[sound(@pragma(defn)@index(sound)@i(sound))] @c{[sal]}@*
-@altdef{@code[(sound @i(sound))] @c{[lisp]}}@\Applies @code(*loud*), @code(*warp*), 
+@codef[sound(@pragma(defn)@index(sound)@i(sound))]@\Applies @code(*loud*), @code(*warp*), 
 @code(*start*), and @code(*stop*) to @i(sound).
 
-@codef[control(@pragma(defn)@index(control)@i(sound))] @c{[sal]}@*
-@altdef{@code[(control @i(sound))] @c{[lisp]}}@\This function is identical to
+@codef[control(@pragma(defn)@index(control)@i(sound))]@\This function is identical to
 @code(sound), but by convention is used when @i(sound) is a control signal
 rather than an audio signal.
 @end(fndefs)
@@ -3407,12 +3327,10 @@ These functions provide musically interesting creation behaviors that
 react to their environment; these are the ``unit generators'' of Nyquist:
 
 @begin(fndefs)
-@codef{const(@pragma(defn)@index(const)@index(constant function)@i(value) [, @i(duration)])} @c{[sal]}@*
-@altdef{@code{(const @i(value) [@i(duration)])} @c{[lisp]}}@\Creates a constant function at the @code(*control-srate*).  Every sample has the given @i(value), and the default @i(duration) is 1.0.  See also @code(s-rest), which is equivalent to calling @code(const) with zero, and note that you can pass scalar constants (numbers) to @code(sim), @code(sum), and @code(mult) where they are handled more efficiently than constant functions.
+@codef{const(@pragma(defn)@index(const)@index(constant function)@i(value)[ ,@i(duration)])}@\Creates a constant function at the @code(*control-srate*).  Every sample has the given @i(value), and the default @i(duration) is 1.0.  See also @code(s-rest), which is equivalent to calling @code(const) with zero, and note that you can pass scalar constants (numbers) to @code(sim), @code(sum), and @code(mult) where they are handled more efficiently than constant functions.
 
 @codef{env(@pragma(defn)@index(env)@i(t@-[1]), @i(t@-[2]), @i(t@-[4]), @i(l@-[1]), @i(l@-[2]), @i(l@-[3]), 
-[@i(dur)])} @c{[sal]}@*
-@altdef{@code[(env @i(t@-[1]) @i(t@-[2]) @i(t@-[4]) @i(l@-[1]) @i(l@-[2]) @i(l@-[3]) @i(dur))] @c{[lisp]}}@\Creates a 4-phase envelope.
+[@i(dur)])}@\Creates a 4-phase envelope.
 @i(t@-[@i(i)]) is the duration of phase @i(i), and @i(l@-[@i(i)]) 
 is the final level of phase @i(i).  @i(t@-[3]) is implied by the duration
 @i(dur), and @i(l@-[4]) is @code(0.0).  If @i(dur) is not supplied, then
@@ -3427,20 +3345,17 @@ The effect of time warping is to warp the starting time and ending time.
 The intermediate breakpoints are then computed as described above.
 
 
-@codef{exp-dec(@pragma(defn)@index(exp-dec)@index(exponential envelope)@i(hold), @i(halfdec), @i(length))} @c{[sal]}@*
-@altdef{@code[(exp-dec @i(hold) @i(halfdec) @i(length))] @c{[lisp]}}@\This convenient envelope shape is a special case of @code(pwev) (see Section @ref(pwev-sec)). The envelope starts at 1 and is constant for @i(hold) seconds. It then decays with a half life of @i(halfdec) seconds until @i(length). (The total duration is @i(length).) In other words, the amplitude falls by half each @i(halfdec) seconds. When stretched, this envelope scales linearly, which means the hold time increases and the half decay time increases.
+@codef{exp-dec(@pragma(defn)@index(exp-dec)@index(exponential envelope)@i(hold), @i(halfdec), @i(length))}@\This convenient envelope shape is a special case of @code(pwev) (see Section @ref(pwev-sec)). The envelope starts at 1 and is constant for @i(hold) seconds. It then decays with a half life of @i(halfdec) seconds until @i(length). (The total duration is @i(length).) In other words, the amplitude falls by half each @i(halfdec) seconds. When stretched, this envelope scales linearly, which means the hold time increases and the half decay time increases.
 
 
 @label(force-srate-sec)
-@codef{force-srate(@pragma(defn)@index(force-srate)@index(sample rate, forcing)@index(resampling)@i(srate), @i(sound))} @c{[sal]}@*
-@altdef{@code[(force-srate @i(srate) @i(sound))] @c{[lisp]}}@\Returns a sound which is up- or
+@codef{force-srate(@pragma(defn)@index(force-srate)@index(sample rate, forcing)@index(resampling)@i(srate), @i(sound))}@\Returns a sound which is up- or
 down-sampled to @i(srate).  Interpolation is linear, and no prefiltering is
 applied in the down-sample case, so aliasing may occur. See also
 @code(resample).
 
 
-@codef{lfo(@pragma(defn)@index(lfo)@index(low-frequency oscillator)@i(freq) [, @i(duration), @i(table), @i(phase)])} @c{[sal]}@*
-@altdef{@code[(lfo @i(freq) @i(duration) @i(table) @i(phase))] @c{[lisp]}}@\Just
+@codef{lfo(@pragma(defn)@index(lfo)@index(low-frequency oscillator)@i(freq)[ ,@i(duration), @i(table), @i(phase)])}@\Just
 like @code(osc) (below)
 except this computes at the @code(*control-srate*) and frequency
 is specified in Hz.  Phase is specified in degrees.
@@ -3448,25 +3363,21 @@ is specified in Hz.  Phase is specified in degrees.
 applied.  The effect of time warping is to warp the starting and ending
 times.  The signal itself will have a constant unwarped frequency.
 
-@codef{fmlfo(@pragma(defn)@index(fmlfo)@i(freq) [, @i(table), @i(phase)])} @c{[sal]}@*
-@altdef{@code{(fmlfo @i(freq) [@i(table) @i(phase)])} @c{[lisp]}}@\A low-frequency oscillator
+@codef{fmlfo(@pragma(defn)@index(fmlfo)@i(freq)[ ,@i(table), @i(phase)])}@\A low-frequency oscillator
 that computes at the @code(*control-srate*) using a sound to specify a time-varying 
 frequency in Hz. Phase is a @code(FLONUM) in degrees. The duration of the result is determined by @i(freq).
 
-@codef{maketable(@pragma(defn)@index(maketable)@label(maketable)@i(sound))} @c{[sal]}@*
-@altdef{@code[(maketable @i(sound))] @c{[lisp]}}@\Assumes that
+@codef{maketable(@pragma(defn)@index(maketable)@label(maketable)@i(sound))}@\Assumes that
 the samples in @i(sound) constitute one period of a wavetable, and returns a wavetable
 suitable for use as the @i(table) argument to the @code(osc) function (see
 below).  Currently, tables are limited to 1,000,000 samples.  This limit is the compile-time constant @code(max_table_len) set in @code(sound.h).
 
-@codef{build-harmonic(@pragma(defn)@index(build-harmonic)@index(harmonic)@i(n), @i(table-size))} @c{[sal]}@*
-@altdef{@code[(build-harmonic @i(n) @i(table-size))] @c{[lisp]}}@\Intended for
+@codef{build-harmonic(@pragma(defn)@index(build-harmonic)@index(harmonic)@i(n), @i(table-size))}@\Intended for
 constructing wavetables@index(wavetables)@index(waveforms), this function returns a sound of length @i(table-size)
 samples containing @i(n) periods of a sinusoid.  These can be scaled and
 summed to form a waveform with the desired harmonic content.  See @pragma(startref) page @pageref(build-harmonic-example) for an example.
 
-@codef{control-warp(@pragma(defn)@index(control-warp)@i(warp-fn), @i(signal),   [@i(wrate)])} @c{[sal]}@*
-@altdef{@code[(control-warp @i(warp-fn) @i(signal) @i(wrate))] @c{[lisp]}}@\Applies a
+@codef{control-warp(@pragma(defn)@index(control-warp)@i(warp-fn), @i(signal),   [@i(wrate)])}@\Applies a
 warp function @i(warp-fn) to @i(signal) using function composition.  If @i(wrate) is omitted, linear
 interpolation is used.  @i(warp-fn) is a mapping from score (logical) time
 to real time, and @i(signal) is a function from score time to real values.
@@ -3475,39 +3386,30 @@ The result is a function from real time to real values at a sample rate of
 @i(wrate) and high-quality warping.
 
 @label(mult-sec)
-@codef{mult(@pragma(defn)@index(mult)@i(beh@-[1]), @i(beh@-[2]), @r(...))} @c{[sal]}@*
-@altdef{@code[(mult @i(beh@-[1]) @i(beh@-[2] @r(...)))] @c{[lisp]}}@\Returns the product of
+@codef{mult(@pragma(defn)@index(mult)@i(beh@-[1]), @i(beh@-[2]), ...)}@\Returns the product of
 behaviors.  The arguments may also be numbers, in which case simple multiplication is performed.  If a number and sound are mixed, the @code(scale) function is used to scale the sound by the number. When sounds are multiplied, the resulting sample rate is the maximum sample rate of the factors.
 
-@codef{prod(@pragma(defn)@index(prod)@i(beh@-[1]), @i(beh@-[2]), @r(...))} @c{[sal]}@*
-@altdef{@code[(prod @i(beh@-[1]) @i(beh@-[2]) @r(...))] @c{[lisp]}}@\Same as @code(mult).
+@codef{prod(@pragma(defn)@index(prod)@i(beh@-[1]), @i(beh@-[2]), ...)}@\Same as @code(mult).
 
 @label(pan-sec)
-@codef{pan(@pragma(defn)@index(pan)@index(stereo panning)@i(sound), @i(where))} @c{[sal]}@*
-@altdef{@code[(pan @i(sound) @i(where))] @c{[lisp]}}@\Pans @i(sound) (a behavior) according  to @i(where) (another behavior or a number). @i(Sound) must be monophonic. @i(Where) may be a monophonic sound (e.g. @code[(ramp)] or simply a number (e.g. @code(0.5)). In either case, @i(where) should range from 0 to 1, where 0 means pan completely left, and 1 means pan completely right. For intermediate values, the sound to each channel is scaled linearly. Presently, @code(pan) does not check its arguments carefully.
+@codef{pan(@pragma(defn)@index(pan)@index(stereo panning)@i(sound), @i(where))}@\Pans @i(sound) (a behavior) according  to @i(where) (another behavior or a number). @i(Sound) must be monophonic. @i(Where) may be a monophonic sound (e.g. @code[(ramp)] or simply a number (e.g. @code(0.5)). In either case, @i(where) should range from 0 to 1, where 0 means pan completely left, and 1 means pan completely right. For intermediate values, the sound to each channel is scaled linearly. Presently, @code(pan) does not check its arguments carefully.
 
-@codef{prod(@pragma(defn)@index(prod)@i(beh@-[1]), @i(beh@-[2]), @r(...))} @c{[sal]}@*
-@altdef{@code[(prod @i(beh@-[1]) @i(beh@-[2]) @r(...))] @c{[lisp]}}@\Same as @code(mult).
+@codef{prod(@pragma(defn)@index(prod)@i(beh@-[1]), @i(beh@-[2]), ...)}@\Same as @code(mult).
 
 @label(resample-sec)
-@codef{resample(@pragma(defn)@index(resample)@i(sound), @i(srate))} @c{[sal]}@*
-@altdef{@code[(resample @i(sound) @i(srate))] @c{[lisp]}}@\Similar to @code(force-srate), except
+@codef{resample(@pragma(defn)@index(resample)@i(sound), @i(srate))}@\Similar to @code(force-srate), except
 high-quality interpolation is used to prefilter and reconstruct the signal
 at the new sample rate. Also, the result is scaled by 0.95 to reduce problems with
 clipping. (See also @code(sound-warp).)
 
 @label(scale-sec)
-@codef{scale(@pragma(defn)@index(scale)@i(scale), @i(sound))} @c{[sal]}@*
-@altdef{@code[(scale @i(scale) @i(sound))] @c{[lisp]}}@\Scales the amplitude of @i(sound) by the factor @i(scale).  Identical function to @code(snd-scale), except that it handles multichannel sounds.  Sample rates, start times, etc. are taken from @i(sound).
+@codef{scale(@pragma(defn)@index(scale)@i(scale), @i(sound))}@\Scales the amplitude of @i(sound) by the factor @i(scale).  Identical function to @code(snd-scale), except that it handles multichannel sounds.  Sample rates, start times, etc. are taken from @i(sound).
 
-@codef{scale-db(@pragma(defn)@index(scale-db)@i(db), @i(sound))} @c{[sal]}@*
-@altdef{@code[(scale-db @i(db) @i(sound))] @c{[lisp]}}@\Scales the amplitude of @i(sound) by the factor @i(db), expressed in decibels.  Sample rates, start times, etc. are taken from @i(sound).
+@codef{scale-db(@pragma(defn)@index(scale-db)@i(db), @i(sound))}@\Scales the amplitude of @i(sound) by the factor @i(db), expressed in decibels.  Sample rates, start times, etc. are taken from @i(sound).
 
-@codef[scale-srate(@pragma(defn)@index(scale-srate)@i(sound), @i(scale))] @c{[sal]}@*
-@altdef{@code[(scale-srate @i(sound) @i(scale))] @c{[lisp]}}@\Scales the sample rate of @i(sound) by @i(scale) factor.  This has the effect of linearly shrinking or stretching time (the sound is not upsampled or downsampled).  This is a special case of @code(snd-xform) (see Section @ref(snd-xform-sec)).
+@codef[scale-srate(@pragma(defn)@index(scale-srate)@i(sound), @i(scale))]@\Scales the sample rate of @i(sound) by @i(scale) factor.  This has the effect of linearly shrinking or stretching time (the sound is not upsampled or downsampled).  This is a special case of @code(snd-xform) (see Section @ref(snd-xform-sec)).
 
-@codef[shift-time(@pragma(defn)@index(shift-time)@i(sound), @i(shift))] @c{[sal]}@*
-@altdef{@code[(shift-time @i(sound) @i(shift))] @c{[lisp]}}@\Shift @i(sound)
+@codef[shift-time(@pragma(defn)@index(shift-time)@i(sound), @i(shift))]@\Shift @i(sound)
 by @i(shift) seconds.  If the sound is 
 @pragma(startscribe)
 @math[f(t)], then the result is
@@ -3531,8 +3433,7 @@ according to its @i(shift) argument.)
 @end(figure)
 
 @begin(fndefs)
-@codef{sound-warp(@pragma(defn)@index(sound-warp)@i(warp-fn), @i(signal) [, @i(wrate)])} @c{[sal]}@*
-@altdef{@code{(sound-warp @i(warp-fn) @i(signal) [@i(wrate)])} @c{[lisp]}}@\Applies a
+@codef{sound-warp(@pragma(defn)@index(sound-warp)@i(warp-fn), @i(signal)[ ,@i(wrate)])}@\Applies a
 warp function @i(warp-fn) to @i(signal) using function composition.  If the optional parameter @i(wrate) is omitted or NIL, linear
 interpolation is used.  Otherwise, high-quality sample interpolation is used, and the
 result is scaled by 0.95 to reduce problems with clipping (interpolated samples can
@@ -3579,18 +3480,15 @@ advance information about the warp function, the inverse warp function
 sample rate must be provided as a parameter.  When in doubt, just try
 something and let your ears be the judge.
 
-@codef[integrate(@pragma(defn)@index(integrate)@index(smooth)@i(signal))] @c{[sal]}@*
-@altdef{@code[(integrate @i(signal))] @c{[lisp]}}@\Computes the integral of @i(signal). The start time, sample rate, etc. are taken from @i(signal).
+@codef[integrate(@pragma(defn)@index(integrate)@index(smooth)@i(signal))]@\Computes the integral of @i(signal). The start time, sample rate, etc. are taken from @i(signal).
 
-@codef[slope(@pragma(defn)@index(slope)@index(derivative)@index(first derivative)@i(signal))] @c{[sal]}@*
-@altdef{@code[(slope @i(signal))] @c{[lisp]}}@\Computes the first derivative (slope) of @i(signal).  The start time, sample rate, etc. are taken from @i(signal).
+@codef[slope(@pragma(defn)@index(slope)@index(derivative)@index(first derivative)@i(signal))]@\Computes the first derivative (slope) of @i(signal).  The start time, sample rate, etc. are taken from @i(signal).
 @end(fndefs)
 
 @paragraph(Oscillators)
 @label(osc-sec)
 @begin(fndefs)
-@codef{osc(@pragma(defn)@index(osc)@i(pitch) [, @i(duration), @i(table), @i(phase)])} @c{[sal]}@*
-@altdef{@code{(osc @i(pitch) [@i(duration) @i(table) @i(phase)])} @c{[lisp]}}@\Returns 
+@codef{osc(@pragma(defn)@index(osc)@i(pitch)[, @i(duration), @i(table), @i(phase)])}@\Returns 
 a sound which
 is the @i(table) oscillated at @i(pitch) for the given @i(duration),
 starting with the @i(phase) (in degrees).  
@@ -3615,37 +3513,30 @@ will handle both cases.
 @p(Note 3:) When @code(osc) is called, memory is allocated for the table, and samples are copied from the sound (the first element of the list which is the @i(table) parameter) to the memory.  Every instance of @code(osc) has a private copy of the table, so the total storage can become large in some cases, for example in granular synthesis with many instances of @code(osc). In some cases, it may make sense to use @code(snd-flatten) (see Section @ref(flatten-sec)) to cause the sound to be fully realized, after which the @code(osc) and its table memory can be reclaimed by garbage collection. The @code(partial) function (see below) does not need a private table and does not use much space.
 
 @label(partial-sec)
-@codef{partial(@pragma(defn)@index(partial)@i(pitch), @i(env))} @c{[sal]}@*
-@altdef{@code[(partial @i(pitch) @i(env))] @c{[lisp]}}@\Returns a sinusoid at
+@codef{partial(@pragma(defn)@index(partial)@i(pitch), @i(env))}@\Returns a sinusoid at
 the indicated pitch; the sound is multiplied by @i(env).  The start time and
 duration are taken from @i(env), which is of course subject to
 transformations.  The sample rate is @code(*sound-srate*).  The @code(partial)
 function is faster than @code(osc).
 
 @label(sine-sec)
-@codef{sine(@pragma(defn)@index(sine)@i(pitch) [, @i(duration)])} @c{[sal]}@*
-@altdef{@code{(sine @i(pitch) [@i(duration)])} @c{[lisp]}}@\Returns a sinusoid at
+@codef{sine(@pragma(defn)@index(sine)@i(pitch)[ ,@i(duration)])}@\Returns a sinusoid at
 the indicated pitch.  The sample rate is @code(*sound-srate*).  
 This function is like @code(osc) with
 respect to transformations.  The @code(sine) function is faster than
 @code(osc).
 
-@codef{hzosc(@pragma(defn)@index(hzosc)@i(hz) [, @i(table), @i(phase)])} @c{[sal]}@*
-@altdef{@code{(hzosc @i(hz) [@i(table) @i(phase)])} @c{[lisp]}}@\Returns a sound which is the @i(table) oscillated at @i(hz) starting at @i(phase) degrees. The default @i(table) is @code(*table*) and the default @i(phase) is @i(0.0). The default duration is @code(1.0), but this is stretched as in @code(osc) (see above). The @i(hz) parameter may be a @code(SOUND), in which case the duration of the result is the duration of @i(hz). The sample rate is @code(*sound-srate*).
+@codef{hzosc(@pragma(defn)@index(hzosc)@i(hz)[ ,@i(table), @i(phase)])}@\Returns a sound which is the @i(table) oscillated at @i(hz) starting at @i(phase) degrees. The default @i(table) is @code(*table*) and the default @i(phase) is @i(0.0). The default duration is @code(1.0), but this is stretched as in @code(osc) (see above). The @i(hz) parameter may be a @code(SOUND), in which case the duration of the result is the duration of @i(hz). The sample rate is @code(*sound-srate*).
 
-@codef{osc-saw(@pragma(defn)@index(osc-saw)@index(sawtooth oscillator)@i(hz))} @c{[sal]}@*
-@altdef{@code[(osc-saw @i(hz))] @c{[lisp]}}@\Returns a sawtooth waveshape at the indicated frequency (in Hertz). The sample rate is @code(*sound-srate*). The @i(hz) parameter may be a sound as in @i(hzosc) (see above).
+@codef{osc-saw(@pragma(defn)@index(osc-saw)@index(sawtooth oscillator)@i(hz))}@\Returns a sawtooth waveshape at the indicated frequency (in Hertz). The sample rate is @code(*sound-srate*). The @i(hz) parameter may be a sound as in @i(hzosc) (see above).
 
-@codef{osc-tri(@pragma(defn)@index(osc-tri)@index(triangle oscillator)@i(hz))} @c{[sal]}@*
-@altdef{@code[(osc-tri @i(hz))] @c{[lisp]}}@\Returns a triangle waveshape at the indicated frequency (in Hertz). The sample rate is @code(*sound-srate*). The @i(hz) parameter may be a sound as in @i(hzosc) (see above).
+@codef{osc-tri(@pragma(defn)@index(osc-tri)@index(triangle oscillator)@i(hz))}@\Returns a triangle waveshape at the indicated frequency (in Hertz). The sample rate is @code(*sound-srate*). The @i(hz) parameter may be a sound as in @i(hzosc) (see above).
 
-@codef{osc-pulse(@pragma(defn)@index(osc-pulse)@index(square oscillator)@index(pulse oscillator)@index(pulse-width modulation)@i(hz), @i(bias) [, @i(compare-shape)])} @c{[sal]}@*
-@altdef{@code{(osc-pulse @i(hz) @i(bias) [@i(compare-shape)])} @c{[lisp]}}@\Returns a square pulse with variable width at the indicated frequency (in Hertz). The @i(bias) parameter controls the pulse width and should be between @code(-1) and @code(+1), giving a pulse width from 0% (always at @code(-1)) to 100% (always at @code(+1)). When bias is zero, a square wave is generated. Bias may be a @code(SOUND) to create varying pulse width. If bias changes rapidly, strange effects may occur. The optional @i(compare-shape) defaults to a hard step at zero, but other shapes may be used to achieve non-square pulses. The @code(osc-pulse) behavior is written in terms of other behaviors and defined in the file @code(nyquist.lsp) using just a few lines of code. Read the code for the complete story.
+@codef{osc-pulse(@pragma(defn)@index(osc-pulse)@index(square oscillator)@index(pulse oscillator)@index(pulse-width modulation)@i(hz), @i(bias)[ ,@i(compare-shape)])}@\Returns a square pulse with variable width at the indicated frequency (in Hertz). The @i(bias) parameter controls the pulse width and should be between @code(-1) and @code(+1), giving a pulse width from 0% (always at @code(-1)) to 100% (always at @code(+1)). When bias is zero, a square wave is generated. Bias may be a @code(SOUND) to create varying pulse width. If bias changes rapidly, strange effects may occur. The optional @i(compare-shape) defaults to a hard step at zero, but other shapes may be used to achieve non-square pulses. The @code(osc-pulse) behavior is written in terms of other behaviors and defined in the file @code(nyquist.lsp) using just a few lines of code. Read the code for the complete story.
 
 @label(amosc-sec)
-@codef{amosc(@pragma(defn)@index(amosc)@i(pitch), @i(modulation) [, @i(table),
-@i(phase)])} @c{[sal]}@*
-@altdef{@code{(amosc @i(pitch) @i(modulation) [@i(table) @i(phase)])} @c{[lisp]}}@\Returns a
+@codef{amosc(@pragma(defn)@index(amosc)@i(pitch), @i(modulation)[ ,@i(table),
+@i(phase)])}@\Returns a
 sound which is @i(table) oscillated at @i(pitch).  The output
 is multiplied by @i(modulation)
 for the duration of the sound @i(modulation).  
@@ -3654,9 +3545,8 @@ for the duration of the sound @i(modulation).
 within @i(osc-table).  The sample rate is @code(*sound-srate*).  
 
 @label(fmosc-sec)
-@codef{fmosc(@pragma(defn)@index(fmosc)@i(pitch), @i(modulation) [, @i(table),
-@i(phase)])} @c{[sal]}@*
-@altdef{@code{(fmosc @i(pitch) @i(modulation) [@i(table) @i(phase)])} @c{[lisp]}}@\Returns a
+@codef{fmosc(@pragma(defn)@index(fmosc)@i(pitch), @i(modulation)[, @i(table),
+@i(phase)])}@\Returns a
 sound which is @i(table) oscillated at @i(pitch) plus @i(modulation)
 for the duration of the sound @i(modulation).  
 @i(osc-table) defaults to
@@ -3668,8 +3558,7 @@ frequency deviation in @i(sound).  Negative frequencies are correctly
 handled.  The sample rate is @code(*sound-srate*).  
 
 @label(fmfb-sec)
-@codef{fmfb(@pragma(defn)@index(fmfb)@index(Feedback FM Oscillator)@i(pitch), @i(index) [, @i(dur)])} @c{[sal]}@*
-@altdef{@code{(fmfb @i(pitch) @i(index) [@i(dur)])} @c{[lisp]}}@\Returns
+@codef{fmfb(@pragma(defn)@index(fmfb)@index(Feedback FM Oscillator)@i(pitch), @i(index)[ ,@i(dur)])}@\Returns
 a sound generated by feedback FM synthesis. The @i(pitch) parameter
 (given in the usual half-step units) 
 controls the fundamental frequency. The @i(index) is the amount of
@@ -3681,8 +3570,7 @@ A sinusoid table is used.
 If @i(index) is below 1.1, this generates a sawtooth-like waveform.
 
 @label(buzz-sec)
-@codef{buzz(@pragma(defn)@index(buzz)@i(n), @i(pitch), @i(modulation))} @c{[sal]}@*
-@altdef{@code[(buzz @i(n) @i(pitch) @i(modulation))] @c{[lisp]}}@\Returns a
+@codef{buzz(@pragma(defn)@index(buzz)@i(n), @i(pitch), @i(modulation))}@\Returns a
 sound with @i(n) harmonics of equal amplitude and a total amplitude
 of 1.0, using a well-known function of two cosines. If @i(n) (an integer)
 is less than 1, it is set to 1. Aliasing will occur if @i(n) is too large.
@@ -3693,8 +3581,8 @@ Negative frequencies are correctly handled.
 The sample rate is @code(*sound-srate*).
 
 @label(pluck-sec)
-@codef{pluck(@pragma(defn)@index(pluck)@index(Karplus-Strong)@index(string synthesis)@index(plucked string)@i(pitch) [, @i(duration), @i(final-amplitude)])} @c{[sal]}@*
-@altdef{@code{(pluck @i(pitch) [@i(duration) @i(final-amplitude)])} @c{[lisp]}}@\Returns a sound at the 
+@codef{pluck(@pragma(defn)@index(pluck)@index(Karplus-Strong)@index(string synthesis)
+@index(plucked string)@i(pitch)[ ,@i(duration)] [, @i(final-amplitude)])}@\Returns a sound at the 
 given @i(pitch) created using a modified Karplus-Strong plucked string
 algorithm. The tone decays from an amplitude of about 1.0 to about
 @i(final-amplitude) in @i(duration) seconds. The default values are to
@@ -3702,8 +3590,7 @@ decay to 0.001 (-60dB) in 1 second. The sample rate is @code(*sound-srate*).
 
 @label(siosc-sec)
 @codef{siosc(@pragma(defn)@index(siosc)@index(spectral interpolation)@i(pitch),
-@i(modulation), @i(tables))} @c{[sal]}@*
-@altdef{@code[(siosc @i(pitch) @i(modulation) @i(tables))] @c{[lisp]}}@\Returns a sound constructed by
+@i(modulation), @i(tables))}@\Returns a sound constructed by
 interpolating through a succession of periodic waveforms. The frequency is
 given (in half steps) by @i(pitch) to which a @i(modulation) signal (in hz)
 is added, exactly as in @code(fmosc). The @i(tables) specify a list of
@@ -3722,9 +3609,8 @@ without further interpolation.
 
 
 @label(sampler-sec)
-@codef{sampler(@pragma(defn)@index(sampler)@i(pitch), @i(modulation)
- [, @i(sample), @i(npoints)])} @c{[sal]}@*
-@altdef{@code{(sampler @i(pitch) @i(modulation) [@i(sample) @i(npoints)])} @c{[lisp]}}@\Returns a sound constructed by reading a sample from 
+@codef{sampler(@pragma(defn)@index(sampler)@i(pitch), @i(modulation)[ ,@i(sample), 
+@i(npoints)])}@\Returns a sound constructed by reading a sample from 
 beginning to end and then splicing on copies of the same sound from 
 a loop point to the end.  
 The @i(pitch) and @i(modulation) parameters are used as in @code(fmosc)
@@ -3818,8 +3704,7 @@ All of these functions are implemented in terms of @code(pwl) (see @code(nyquist
 
 @begin(fndefs)
 @label(pwl-sec)
-@codef{pwl(@pragma(defn)@index(pwl)@i(t@-[1]), @i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @r(...) @i(t@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwl @i(t@-[1]) @i(l@-[1]) @i(t@-[2]) @i(l@-[2]) @r(...) @i(t@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwl(@pragma(defn)@index(pwl)@i(t@-[1]), @i(l@-[1]), @i(t@-[2]), @i(l@-[2]), ... @i(t@-[n]))}@\Creates
 a piece-wise linear envelope with breakpoints at (0, 0), (@i(t@-[1]),
 @i(l@-[1])), (@i(t@-[2]), @i(l@-[2])), ... (@i(t@-[n]), 0).  The breakpoint
 times are scaled linearly by the value of @code(*sustain*) (if
@@ -3838,80 +3723,63 @@ try to apply the ``principle of least surprise'' to the design.  Note that
 the times are relative to 0; they are not durations of each envelope
 segment.
 
-@codef{pwl-list(@pragma(defn)@index(pwl-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwl-list @i(breakpoints))] @c{[lisp]}}@\If you have a list of
+@codef{pwl-list(@pragma(defn)@index(pwl-list)@i(breakpoints))}@\If you have a list of
 breakpoints, you can use @code(apply) to apply the @code(pwl) function to
 the breakpoints, but if the list is very long (hundreds or thousands of
 points), you might get a stack overflow because XLISP has a fixed-size
 argument stack.  Instead, call @code(pwl-list), passing one argument, the
 list of breakpoints.
 
-@codef{pwlv(@pragma(defn)@index(pwlv)@i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @i(t@-[3]), @i(t@-[3]), ... @i(t@-[n]), @i(l@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwlv @i(l@-[1]) @i(t@-[2]) @i(l@-[2]) @i(t@-[3]) @i(t@-[3]) @r(...) @i(t@-[n]) @i(l@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwlv(@pragma(defn)@index(pwlv)@i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @i(t@-[3]), @i(t@-[3]), ... @i(t@-[n]), @i(l@-[n]))}@\Creates
 a piece-wise linear envelope with breakpoints at (0, l@-[1]), (@i(t@-[2]), @i(l@-[2])), etc., ending with (@i(t@-[n], @i(l@-[n])).  Otherwise, the behavior is like that of @code(pwl).
 
-@codef{pwlv-list(@pragma(defn)@index(pwlv-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwlv-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwlv) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
+@codef{pwlv-list(@pragma(defn)@index(pwlv-list)@i(breakpoints))}@\A version of @code(pwlv) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
 
-@codef{pwlr(@pragma(defn)@index(pwlr)@i(i@-[1]), @i(l@-[1]), @i(i@-[2]), @i(l@-[2]), ... @i(i@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwlr @i(i@-[1]) @i(l@-[1]) @i(i@-[2]) @i(l@-[2]) @r(...) @i(i@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwlr(@pragma(defn)@index(pwlr)@i(i@-[1]), @i(l@-[1]), @i(i@-[2]), @i(l@-[2]), ... @i(i@-[n]))}@\Creates
 a piece-wise linear envelope with breakpoints at (0, 0), (@i(t@-[1]),
 @i(l@-[1])), (@i(t@-[2]), @i(l@-[2])), ... (@i(t@-[n]), 0), where @i(t@-[j]) is the sum of @i(i@-[1]) through @i(i@-[j]).  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of @code(pwl).
 
-@codef{pwlr-list(@pragma(defn)@index(pwlr-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwlr-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwlr) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
+@codef{pwlr-list(@pragma(defn)@index(pwlr-list)@i(breakpoints))}@\A version of @code(pwlr) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
 
-@codef{pwlvr(@pragma(defn)@index(pwlvr)@i(l@-[1]), @i(i@-[2]), @i(l@-[2]), @i(i@-[3]), @i(i@-[3]), ... @i(i@-[n]), @i(l@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwlvr @i(l@-[1]) @i(i@-[2]) @i(l@-[2]) @i(i@-[3]) @i(i@-[3]) @r(...) @i(i@-[n]) @i(l@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwlvr(@pragma(defn)@index(pwlvr)@i(l@-[1]), @i(i@-[2]), @i(l@-[2]), @i(i@-[3]), @i(i@-[3]), ... @i(i@-[n]), @i(l@-[n]))}@\Creates
 a piece-wise linear envelope with breakpoints at (0, l@-[1]), (@i(t@-[2]), @i(l@-[2])), etc., ending with (@i(t@-[n], @i(l@-[n])), where @i(t@-[j]) is the sum of @i(i@-[2]) through @i(i@-[j]).  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of @code(pwlv).
 
-@codef{pwlvr-list(@pragma(defn)@index(pwlvr-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwlvr-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwlvr) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
+@codef{pwlvr-list(@pragma(defn)@index(pwlvr-list)@i(breakpoints))}@\A version of @code(pwlvr) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
 
-@codef{pwe(@pragma(defn)@index(pwe)@i(t@-[1]), @i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @r(...) @i(t@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwe @i(t@-[1]) @i(l@-[1]) @i(t@-[2]) @i(l@-[2]) @r(...) @i(t@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwe(@pragma(defn)@index(pwe)@i(t@-[1]), @i(l@-[1]), @i(t@-[2]), @i(l@-[2]), ... 
+@i(t@-[n]))}@\Creates
 a piece-wise exponential envelope with breakpoints at (0, 1), (@i(t@-[1]),
 @i(l@-[1])), (@i(t@-[2]), @i(l@-[2])), ... (@i(t@-[n]), 1).  Exponential segments means that the ratio of values from sample to sample is constant within the segment.  (The current implementation actually takes the log of each value, computes a piece-wise exponential from the points using @code(pwl), then exponentiates each resulting sample.  A faster implementation is certainly possible!)  Breakpoint values (@i(l@-[j])) must be greater than zero.  Otherwise, this function is similar to @code(pwl), including stretch by @code(*sustain*), mapping according to @code(*warp*), sample rate based on @code(*control-srate*), and "breakpoint munging" (see @code(pwl) described above).  @i(Default initial and final values are of dubious value with exponentials.  See @code(pwev) below for the function you are probably looking for.)
 
-@codef{pwe-list(@pragma(defn)@index(pwe-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwe-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwe) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
+@codef{pwe-list(@pragma(defn)@index(pwe-list)@i(breakpoints))}@\A version of @code(pwe) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
 
 @label(pwev-sec)
-@codef{pwev(@pragma(defn)@index(pwev)@i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @i(t@-[3]), @i(t@-[3]), @r(...) @i(t@-[n]), @i(l@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwev @i(l@-[1]) @i(t@-[2]) @i(l@-[2]) @i(t@-[3]) @i(t@-[3]) @r(...) @i(t@-[n]) @i(l@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwev(@pragma(defn)@index(pwev)@i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @i(t@-[3]), @i(t@-[3]), ... @i(t@-[n]), @i(l@-[n]))}@\Creates
 a piece-wise exponential envelope with breakpoints at (0, l@-[1]), (@i(t@-[2]), @i(l@-[2])), etc., ending with (@i(t@-[n], @i(l@-[n])).  Otherwise, the behavior is like that of @code(pwe).  
 
-@codef{pwev-list(@pragma(defn)@index(pwev-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwev-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwev) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
+@codef{pwev-list(@pragma(defn)@index(pwev-list)@i(breakpoints))}@\A version of @code(pwev) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
 
-@codef{pwer(@pragma(defn)@index(pwer)@i(i@-[1]), @i(l@-[1]), @i(i@-[2]), @i(l@-[2]), @r(...) @i(i@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwer @i(i@-[1]) @i(l@-[1]) @i(i@-[2]) @i(l@-[2]) @r(...) @i(i@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwer(@pragma(defn)@index(pwer)@i(i@-[1]), @i(l@-[1]), @i(i@-[2]), @i(l@-[2]), ... @i(i@-[n]))}@\Creates
 a piece-wise exponential envelope with breakpoints at (0, 1), (@i(t@-[1]),
 @i(l@-[1])), (@i(t@-[2]), @i(l@-[2])), ... (@i(t@-[n]), 1), where @i(t@-[j]) is the sum of @i(i@-[1]) through @i(i@-[j]).  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of @code(pwe).  Consider using @code(pwerv) instead of this one.
 
-@codef{pwer-list(@pragma(defn)@index(pwer-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwer-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwer) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
+@codef{pwer-list(@pragma(defn)@index(pwer-list)@i(breakpoints))}@\A version of @code(pwer) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
 
-@codef{pwevr(@index(GEN05)@pragma(defn)@index(pwevr)@i(l@-[1]), @i(i@-[2]), @i(l@-[2]), @i(i@-[3]), @i(i@-[3]), @r(...) @i(i@-[n]), @i(l@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwevr @i(l@-[1]) @i(i@-[2]) @i(l@-[2]) @i(i@-[3]) @i(i@-[3]) @r(...) @i(i@-[n]) @i(l@-[n]))] @c{[lisp]}}@\Creates
+@codef{pwevr(@index(GEN05)@pragma(defn)@index(pwevr)@i(l@-[1]), @i(i@-[2]), @i(l@-[2]), @i(i@-[3]), @i(i@-[3]), ... @i(i@-[n]), @i(l@-[n]))}@\Creates
 a piece-wise exponential envelope with breakpoints at (0, l@-[1]), (@i(t@-[2]), @i(l@-[2])), etc., ending with (@i(t@-[n], @i(l@-[n])), where @i(t@-[j]) is the sum of @i(i@-[2]) through @i(i@-[j]).  In other words, the breakpoint times are specified in terms of intervals rather than cummulative time.   Otherwise, the behavior is like that of @code(pwev).  Note that this is similar to the csound GEN05 generator.  Which is uglier, @i(GEN05) or @i(pwevr)?
 
-@codef{pwevr-list(@pragma(defn)@index(pwevr-list)@i(breakpoints))} @c{[sal]}@*
-@altdef{@code[(pwevr-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwevr) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
+@codef{pwevr-list(@pragma(defn)@index(pwevr-list)@i(breakpoints))}@\A version of @code(pwevr) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
 @end(fndefs)
 @paragraph(Filter Behaviors)
 @begin(fndefs)
 @label(alpass-sec)
-@codef{alpass(@index(all pass filter)@index(alpass filter)@pragma(defn)@index(alpass)@i(sound), @i(decay), @i(hz) [, @i(minhz)])} @c{[sal]}@*
-@altdef{@code{(alpass @i(sound) @i(decay) @i(hz) [@i(minhz)])} @c{[lisp]}}@\Applies an all-pass filter to @i(sound).  This all-pass filter creates a delay effect without the resonances of a comb filter. The decay time of the filter is given by @i(decay).  The @i(hz) parameter must be a number or sound greater than zero.  It is used to compute delay, which is then rounded to the nearest integer number of samples (so the frequency is not always exact.  Higher sampling rates yield better delay resolution.)  The @i(decay) may be a sound or a number.  In either case, it must also be positive.  (Implementation note: an exponentiation is needed to convert @i(decay) into the @i(feedback) parameter, and exponentiation is typically more time-consuming than the filter operation itself.  To get high performance, provide @i(decay) at a low sample rate.)  The resulting sound will have the start time, sample rate, etc. of @i(sound). If @i(hz) is of type @code(SOUND), the delay may be time-varying. Linear interpolation is then used for fractional sample delay, but it should be noted that linear interpolation implies a low-pass transfer function. Thus, this filter may behave differently with a constant @code(SOUND) than it does with a @code(FLONUM) value for @i(hz). In addition, if @i(hz) is of type @code(SOUND), then @i(minhz) is required. The @i(hz) parameter will be clipped to be greater than @i(minhz), placing an upper bound on the delay buffer length.
+@codef{alpass(@index(all pass filter)@index(alpass filter)@pragma(defn)@index(alpass)@i(sound), @i(decay), @i(hz)[ ,@i(minhz)])}@\Applies an all-pass filter to @i(sound).  This all-pass filter creates a delay effect without the resonances of a comb filter. The decay time of the filter is given by @i(decay).  The @i(hz) parameter must be a number or sound greater than zero.  It is used to compute delay, which is then rounded to the nearest integer number of samples (so the frequency is not always exact.  Higher sampling rates yield better delay resolution.)  The @i(decay) may be a sound or a number.  In either case, it must also be positive.  (Implementation note: an exponentiation is needed to convert @i(decay) into the @i(feedback) parameter, and exponentiation is typically more time-consuming than the filter operation itself.  To get high performance, provide @i(decay) at a low sample rate.)  The resulting sound will have the start time, sample rate, etc. of @i(sound). If @i(hz) is of type @code(SOUND), the delay may be time-varying. Linear interpolation is then used for fractional sample delay, but it should be noted that linear interpolation implies a low-pass transfer function. Thus, this filter may behave differently with a constant @code(SOUND) than it does with a @code(FLONUM) value for @i(hz). In addition, if @i(hz) is of type @code(SOUND), then @i(minhz) is required. The @i(hz) parameter will be clipped to be greater than @i(minhz), placing an upper bound on the delay buffer length.
 
 @label(comb-sec)
-@codef{comb(@pragma(defn)@index(comb)@index(comb filter)@i(sound), @i(decay), @i(hz))} @c{[sal]}@*
-@altdef{@code[(comb @i(sound) @i(decay) @i(hz))] @c{[lisp]}}@\Applies a comb filter to @i(sound).  A comb filter emphasizes (resonates at) frequencies that are multiples of a @i(hz). The decay time of the resonance is given by @i(decay).  This is a variation on @code(feedback-delay) (see below).  The @i(hz) parameter must be a number greater than zero.  It is used to compute delay, which is then rounded to the nearest integer number of samples (so the frequency is not always exact.  Higher sampling rates yield better delay resolution.)  The @i(decay) may be a sound or a number.  In either case, it must also be positive.  (Implementation note: an exponentiation is needed to convert @i(decay) into the @i(feedback) parameter for @code(feedback-delay), and exponentiation is typically more time-consuming than the filter operation itself.  To get high performance, provide @i(decay) at a low sample rate.)  The resulting sound will have the start time, sample rate, etc. of @i(sound).
+@codef{comb(@pragma(defn)@index(comb)@index(comb filter)@i(sound), @i(decay), @i(hz))}@\Applies a comb filter to @i(sound).  A comb filter emphasizes (resonates at) frequencies that are multiples of a @i(hz). The decay time of the resonance is given by @i(decay).  This is a variation on @code(feedback-delay) (see below).  The @i(hz) parameter must be a number greater than zero.  It is used to compute delay, which is then rounded to the nearest integer number of samples (so the frequency is not always exact.  Higher sampling rates yield better delay resolution.)  The @i(decay) may be a sound or a number.  In either case, it must also be positive.  (Implementation note: an exponentiation is needed to convert @i(decay) into the @i(feedback) parameter for @code(feedback-delay), and exponentiation is typically more time-consuming than the filter operation itself.  To get high performance, provide @i(decay) at a low sample rate.)  The resulting sound will have the start time, sample rate, etc. of @i(sound).
 
 @label(congen-sec)
-@codef{congen(@pragma(defn)@index(congen)@index(contour generator)@index(envelope generator)@i(gate), @i(risetime), @i(falltime))} @c{[sal]}@*
-@altdef{@code[(congen @i(gate) @i(risetime) @i(falltime))] @c{[lisp]}}@\Implements an analog synthesizer-style contour generator. The input @i(gate) normally goes from 0.0 to 1.0 to create an attack and from 1.0 to 0.0 to start a release.  During the attack (output is increasing), the output converges half-way to @i(gate) in @i(risetime) (a @code(FLONUM)) seconds. During the decay, the half-time is @i(falltime) seconds. The sample rate, start time, logical stop, and terminate time all come from @i(gate). If you want a nice decay, be sure that the @i(gate) goes to zero and stays there for awhile before @i(gate) terminates, because @code(congen) (and all Nyquist sounds) go immediately to zero at termination time.  For example, you can use @code(pwl) to build a pulse followed by some zero time:
+@codef{congen(@pragma(defn)@index(congen)@index(contour generator)@index(envelope generator)@i(gate), @i(risetime), @i(falltime))}@\Implements an analog synthesizer-style contour generator. The input @i(gate) normally goes from 0.0 to 1.0 to create an attack and from 1.0 to 0.0 to start a release.  During the attack (output is increasing), the output converges half-way to @i(gate) in @i(risetime) (a @code(FLONUM)) seconds. During the decay, the half-time is @i(falltime) seconds. The sample rate, start time, logical stop, and terminate time all come from @i(gate). If you want a nice decay, be sure that the @i(gate) goes to zero and stays there for awhile before @i(gate) terminates, because @code(congen) (and all Nyquist sounds) go immediately to zero at termination time.  For example, you can use @code(pwl) to build a pulse followed by some zero time:
 @begin(example)
 (pwl 0 1 duty 1 duty 0 1)
 @end(example)
@@ -3923,41 +3791,34 @@ will have a duration of 1.0 because that is the termination time of the @code(pw
 
 @label(convolve-sec)
 @codef{convolve(@pragma(defn)@index(convolve)@index(convolution)@index(FIR filter)@i(sound),
-@i(response))} @c{[sal]}@*
-@altdef{@code[(convolve @i(sound) @i(response))] @c{[lisp]}}@\Convolves two signals. The first can be any length, but the
+@i(response))}@\Convolves two signals. The first can be any length, but the
 computation time per sample and the total space required are proportional to
 the length of @i(response).
 
 @label(feedback-delay-sec)
-@codef{feedback-delay(@pragma(defn)@index(feedback-delay)@index(delay)@index(echo)@i(sound), @i(delay), @i(feedback))} @c{[sal]}@*
-@altdef{@code[(feedback-delay @i(sound) @i(delay) @i(feedback))] @c{[lisp]}}@\Applies feedback delay to @i(sound).  The @i(delay) must be a number (in seconds).  It is rounded to the nearest sample to determine the length of the delay.  The sample rate is the maximum from @i(sound) and @i(feedback) (if feedback is also a sound).  The amound of @i(feedback) should be less than one to avoid an exponential increase in amplitude.  The start time and stop time, and logical stop time are taken from @i(sound).  Since output is truncated at the stop time of @i(sound), you may want to append some silence to @i(sound) to give the filter time to decay.
+@codef{feedback-delay(@pragma(defn)@index(feedback-delay)@index(delay)@index(echo)@i(sound), @i(delay), @i(feedback))}@\Applies feedback delay to @i(sound).  The @i(delay) must be a number (in seconds).  It is rounded to the nearest sample to determine the length of the delay.  The sample rate is the maximum from @i(sound) and @i(feedback) (if feedback is also a sound).  The amound of @i(feedback) should be less than one to avoid an exponential increase in amplitude.  The start time and stop time, and logical stop time are taken from @i(sound).  Since output is truncated at the stop time of @i(sound), you may want to append some silence to @i(sound) to give the filter time to decay.
 
 @label(lp-sec)
-@codef{lp(@pragma(defn)@index(lp)@index(low-pass filter)@i(sound), @i(cutoff))} @c{[sal]}@*
-@altdef{@code[(lp @i(sound) @i(cutoff))] @c{[lisp]}}@\Filters @i(sound)
+@codef{lp(@pragma(defn)@index(lp)@index(low-pass filter)@i(sound), @i(cutoff))}@\Filters @i(sound)
 using a first-order Butterworth low-pass filter.  @i(Cutoff) may be a float
 or a signal (for time-varying filtering) and expresses hertz.  Filter
 coefficients (requiring trig functions) are recomputed at the sample rate of
 @i(cutoff).  The resulting sample rate, start time, etc. are taken from @i(sound).
 
-@codef{tone(@pragma(defn)@index(tone)@i(sound), @i(cutoff))} @c{[sal]}@*
-@altdef{@code[(tone @i(sound) @i(cutoff))] @c{[lisp]}}@\No longer defined; use @code(lp) instead, or define it by adding @code[(setfn tone lp)] to your program.
+@codef{tone(@pragma(defn)@index(tone)@i(sound), @i(cutoff))}@\No longer defined; use @code(lp) instead, or define it by adding @code[(setfn tone lp)] to your program.
 
 
 @label(hp-sec)
-@codef{hp(@pragma(defn)@index(hp)@index(high-pass filter)@i(sound), @i(cutoff))} @c{[sal]}@*
-@altdef{@code[(hp @i(sound) @i(cutoff))] @c{[lisp]}}@\Filters @i(sound)
+@codef{hp(@pragma(defn)@index(hp)@index(high-pass filter)@i(sound), @i(cutoff))}@\Filters @i(sound)
 using a first-order Butterworth high-pass filter.  @i(Cutoff) may be a
 float or a signal (for time-varying filtering) and expresses hertz.  Filter
 coefficients (requiring trig functions) are recomputed at the sample rate of
 @i(cutoff).  This filter is an exact complement of @code(lp).
 
-@codef{atone(@pragma(defn)@index(atone)@i(sound), @i(cutoff))} @c{[sal]}@*
-@altdef{@code[(atone @i(sound) @i(cutoff))] @c{[lisp]}}@\No longer defined; use @code(hp) instead, or define it by adding @code[(setfn atone hp)] to your program.
+@codef{atone(@pragma(defn)@index(atone)@i(sound), @i(cutoff))}@\No longer defined; use @code(hp) instead, or define it by adding @code[(setfn atone hp)] to your program.
 
 @label(reson-sec)
-@codef{reson(@pragma(defn)@index(reson)@index(bandpass filter)@i(sound), @i(center), @i(bandwidth), @i(n))} @c{[sal]}@*
-@altdef{@code[(reson @i(sound) @i(center) @i(bandwidth) @i(n))] @c{[lisp]}}@\Apply
+@codef{reson(@pragma(defn)@index(reson)@index(bandpass filter)@i(sound), @i(center), @i(bandwidth), @i(n))}@\Apply
 a resonating filter to @i(sound) with center frequency @i(center) (in hertz),
 which may be a float or a signal.  @i(Bandwidth) is the filter bandwidth (in
 hertz), which may also be a signal.  Filter coefficients (requiring trig
@@ -3974,15 +3835,13 @@ See @code(demos/voice_synthesis.htm)@index(voice synthesis)@index(demos, voice s
 for sample code and documentation.
 
 @label(areson-sec)
-@codef{areson(@pragma(defn)@index(areson)@index(notch filter)@i(sound), @i(center), @i(bandwidth), @i(n))} @c{[sal]}@*
-@altdef{@code[(areson @i(sound) @i(center) @i(bandwidth) @i(n))] @c{[lisp]}}@\The @code(areson) filter is an exact
+@codef{areson(@pragma(defn)@index(areson)@index(notch filter)@i(sound), @i(center), @i(bandwidth), @i(n))}@\The @code(areson) filter is an exact
 complement of @code(reson) such that if both are applied to the
 same signal with the same parameters, the sum of the results yeilds
 the original signal.
 
 @label(shape-sec)
-@codef{shape(@pragma(defn)@index(shape)@index(waveshaping)@index(table)@i(signal), @i(table), @i(origin))} @c{[sal]}@*
-@altdef{@code[(shape @i(signal) @i(table) @i(origin))] @c{[lisp]}}@\A waveshaping function.  Use @i(table) as a function; apply the function to each sample of @i(signal) to yield a new sound.  @i(Signal) should range from -1 to +1.  Anything beyond these bounds is clipped.  @i(Table) is also a sound, but it is converted into a lookup table (similar to table-lookup oscillators).  The @i(origin) is a @code(FLONUM) and gives the time which should be considered the origin of @i(table).  (This is important because @i(table) cannot have values at negative times, but @i(signal) will often have negative values.  The @i(origin) gives an offset so that you can produce suitable tables.)  The output at time @i(t) is:
+@codef{shape(@pragma(defn)@index(shape)@index(waveshaping)@index(table)@i(signal), @i(table), @i(origin))}@\A waveshaping function.  Use @i(table) as a function; apply the function to each sample of @i(signal) to yield a new sound.  @i(Signal) should range from -1 to +1.  Anything beyond these bounds is clipped.  @i(Table) is also a sound, but it is converted into a lookup table (similar to table-lookup oscillators).  The @i(origin) is a @code(FLONUM) and gives the time which should be considered the origin of @i(table).  (This is important because @i(table) cannot have values at negative times, but @i(signal) will often have negative values.  The @i(origin) gives an offset so that you can produce suitable tables.)  The output at time @i(t) is:
 @begin(display)
 @i(table)(@i(origin) + clip(@i(signal)(@i(t)))
 @end(display)
@@ -3996,73 +3855,56 @@ function is also used to map frequency to amplitude to achieve a spectral envelo
 Shepard tones in @code(demos/shepard.lsp).@index(Shepard tones)@index(demos, Shepard tones)
 
 @label(biquad-sec)
-@codef{biquad(@pragma(defn)@index(biquad)@i(signal), @i(b0), @i(b1), @i(b2), @i(a0), @i(a1), @i(a2))} @c{[sal]}@*
-@altdef{@code[(biquad @i(signal) @i(b0) @i(b1) @i(b2) @i(a0) @i(a1) @i(a2))] @c{[lisp]}}@\A fixed-parameter biquad filter. All filter coefficients are @code(FLONUM)s. See also @code(lowpass2), @code(highpass2), @code(bandpass2), @code(notch2), @code(allpass2), @code(eq-lowshelf), @code(eq-highshelf), @code(eq-band), @code(lowpass4), @code(lowpass6), @code(highpass4), and @code(highpass8) in this section for convenient variations based on the same filter. The equations for the filter are: z@-[n] = s@-[n] + a1 * z@-[n-1] + a2 * z@-[n-2], and y@-[n] = z@-[n] * b0 + z@-[n-1] * b1 + z@-[n-2] * b2.
+@codef{biquad(@pragma(defn)@index(biquad)@i(signal), @i(b0), @i(b1), @i(b2), @i(a0), @i(a1), @i(a2))}@\A fixed-parameter biquad filter. All filter coefficients are @code(FLONUM)s. See also @code(lowpass2), @code(highpass2), @code(bandpass2), @code(notch2), @code(allpass2), @code(eq-lowshelf), @code(eq-highshelf), @code(eq-band), @code(lowpass4), @code(lowpass6), @code(highpass4), and @code(highpass8) in this section for convenient variations based on the same filter. The equations for the filter are: z@-[n] = s@-[n] + a1 * z@-[n-1] + a2 * z@-[n-2], and y@-[n] = z@-[n] * b0 + z@-[n-1] * b1 + z@-[n-2] * b2.
 
 @label(biquad-m-sec)
-@codef{biquad-m(@pragma(defn)@index(biquad-m)@i(signal), @i(b0), @i(b1), @i(b2), @i(a0), @i(a1), @i(a2))} @c{[sal]}@*
-@altdef{@code[(biquad-m @i(signal) @i(b0) @i(b1) @i(b2) @i(a0) @i(a1) @i(a2))] @c{[lisp]}}@\A fixed-parameter biquad filter with Matlab sign conventions for @i(a0), @i(a1), and @i(a2). All filter coefficients are @code(FLONUM)s.
+@codef{biquad-m(@pragma(defn)@index(biquad-m)@i(signal), @i(b0), @i(b1), @i(b2), @i(a0), @i(a1), @i(a2))}@\A fixed-parameter biquad filter with Matlab sign conventions for @i(a0), @i(a1), and @i(a2). All filter coefficients are @code(FLONUM)s.
 
 @label(lowpass2-sec)
-@codef{lowpass2(@pragma(defn)@index(lowpass2)@i(signal), @i(hz) [, @i(q)])} @c{[sal]}@*
-@altdef{@code{(lowpass2 @i(signal) @i(hz) [@i(q)])} @c{[lisp]}}@\A fixed-parameter, second-order lowpass filter based on @code(snd-biquad). The cutoff frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
+@codef{lowpass2(@pragma(defn)@index(lowpass2)@i(signal), @i(hz)[ ,@i(q)])}@\A fixed-parameter, second-order lowpass filter based on @code(snd-biquad). The cutoff frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
 
 @label(highpass2-sec)
-@codef{highpass2(@pragma(defn)@index(highpass2)@i(signal), @i(hz) [, @i(q)])} @c{[sal]}@*
-@altdef{@code{(highpass2 @i(signal) @i(hz) [@i(q)])} @c{[lisp]}}@\A fixed-parameter, second-order highpass filter based on @code(snd-biquad). The cutoff frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
+@codef{highpass2(@pragma(defn)@index(highpass2)@i(signal), @i(hz)[ ,@i(q)])}@\A fixed-parameter, second-order highpass filter based on @code(snd-biquad). The cutoff frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
 
 @label(bandpass2-sec)
-@codef{bandpass2(@pragma(defn)@index(bandpass2)@i(signal), @i(hz) [, @i(q)])} @c{[sal]}@*
-@altdef{@code{(bandpass2 @i(signal) @i(hz) [@i(q)])} @c{[lisp]}}@\A fixed-parameter, second-order bandpass filter based on @code(snd-biquad). The center frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
+@codef{bandpass2(@pragma(defn)@index(bandpass2)@i(signal), @i(hz)[ ,@i(q)])}@\A fixed-parameter, second-order bandpass filter based on @code(snd-biquad). The center frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
 
 @label(notch2-sec)
-@codef{notch2(@pragma(defn)@index(notch2)@i(signal), @i(hz) [, @i(q)])} @c{[sal]}@*
-@altdef{@code{(notch2 @i(signal) @i(hz) [@i(q)])} @c{[lisp]}}@\A fixed-parameter, second-order notch filter based on @code(snd-biquad). The center frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
+@codef{notch2(@pragma(defn)@index(notch2)@i(signal), @i(hz)[ ,@i(q)])}@\A fixed-parameter, second-order notch filter based on @code(snd-biquad). The center frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
 
 @label(allpass2-sec)
-@codef{allpass2(@pragma(defn)@index(allpass2)@i(signal), @i(hz) [, @i(q)])} @c{[sal]}@*
-@altdef{@code{(allpass2 @i(signal) @i(hz) [@i(q)])} @c{[lisp]}}@\A fixed-parameter, second-order allpass filter based on @code(snd-biquad). The frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
+@codef{allpass2(@pragma(defn)@index(allpass2)@i(signal), @i(hz)[ ,@i(q)])}@\A fixed-parameter, second-order allpass filter based on @code(snd-biquad). The frequency is given by @i(hz) (a @code(FLONUM)) and an optional Q factor is given by @i(q) (a @code(FLONUM)).
 
 @label(eq-lowshelf-sec)
-@codef{eq-lowshelf(@pragma(defn)@index(eq-lowshelf)@index(equalization)@i(signal), @i(hz), @i(gain) [, @i(slope)])} @c{[sal]}@*
-@altdef{@code{(eq-lowshelf @i(signal) @i(hz) @i(gain) [@i(slope)])} @c{[lisp]}}@\A fixed-parameter, second-order bass shelving equalization (EQ) filter based on @code(snd-biquad). The @i(hz) parameter (a @code(FLONUM))is the halfway point in the transition, and @i(gain) (a @code(FLONUM)) is the bass boost (or cut) in dB. The optional @i(slope) (a @code(FLONUM)) is 1.0 by default, and response becomes peaky at values greater than 1.0.
+@codef{eq-lowshelf(@pragma(defn)@index(eq-lowshelf)@index(equalization)@i(signal), @i(hz), @i(gain)[ ,@i(slope)])}@\A fixed-parameter, second-order bass shelving equalization (EQ) filter based on @code(snd-biquad). The @i(hz) parameter (a @code(FLONUM))is the halfway point in the transition, and @i(gain) (a @code(FLONUM)) is the bass boost (or cut) in dB. The optional @i(slope) (a @code(FLONUM)) is 1.0 by default, and response becomes peaky at values greater than 1.0.
 
 @label(eq-highshelf-sec)
-@codef{eq-highshelf(@pragma(defn)@index(eq-highshelf)@index(equalization)@i(signal), @i(hz), @i(gain) [, @i(slope)])} @c{[sal]}@*
-@altdef{@code{(eq-highshelf @i(signal) @i(hz) @i(gain) [@i(slope)])} @c{[lisp]}}@\A fixed-parameter, second-order treble shelving equalization (EQ) filter based on @code(snd-biquad). The @i(hz) parameter (a @code(FLONUM))is the halfway point in the transition, and @i(gain) (a @code(FLONUM)) is the treble boost (or cut) in dB. The optional @i(slope) (a @code(FLONUM)) is 1.0 by default, and response becomes peaky at values greater than 1.0.
+@codef{eq-highshelf(@pragma(defn)@index(eq-highshelf)@index(equalization)@i(signal), @i(hz), @i(gain)[ ,@i(slope)])}@\A fixed-parameter, second-order treble shelving equalization (EQ) filter based on @code(snd-biquad). The @i(hz) parameter (a @code(FLONUM))is the halfway point in the transition, and @i(gain) (a @code(FLONUM)) is the treble boost (or cut) in dB. The optional @i(slope) (a @code(FLONUM)) is 1.0 by default, and response becomes peaky at values greater than 1.0.
 
 @label(eq-band-sec)
-@codef{eq-band(@pragma(defn)@index(eq-band)@index(equalization)@i(signal), @i(hz), @i(gain), @i(width))} @c{[sal]}@*
-@altdef{@code[(eq-band @i(signal) @i(hz) @i(gain) @i(width))] @c{[lisp]}}@\A fixed- or variable-parameter, second-order midrange equalization (EQ) filter based on @code(snd-biquad), @code(snd-eqbandcv) and @code(snd-eqbandvvv). The @i(hz) parameter (a @code(FLONUM)) is the center frequency, @i(gain) (a @code(FLONUM)) is the boost (or cut) in dB, and @i(width) (a @code(FLONUM)) is the half-gain width in octaves. Alternatively, @i(hz), @i(gain), and @i(width) may be @code(SOUND)s, but they must all have the same sample rate, e.g. they should all run at the control rate or at the sample rate.
+@codef{eq-band(@pragma(defn)@index(eq-band)@index(equalization)@i(signal), @i(hz), @i(gain), @i(width))}@\A fixed- or variable-parameter, second-order midrange equalization (EQ) filter based on @code(snd-biquad), @code(snd-eqbandcv) and @code(snd-eqbandvvv). The @i(hz) parameter (a @code(FLONUM)) is the center frequency, @i(gain) (a @code(FLONUM)) is the boost (or cut) in dB, and @i(width) (a @code(FLONUM)) is the half-gain width in octaves. Alternatively, @i(hz), @i(gain), and @i(width) may be @code(SOUND)s, but they must all have the same sample rate, e.g. they should all run at the control rate or at the sample rate.
 
 @label(lowpass4-sec)
-@codef{lowpass4(@pragma(defn)@index(lowpass4)@i(signal), @i(hz))} @c{[sal]}@*
-@altdef{@code[(lowpass4 @i(signal) @i(hz))] @c{[lisp]}}@\A four-pole Butterworth lowpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
+@codef{lowpass4(@pragma(defn)@index(lowpass4)@i(signal), @i(hz))}@\A four-pole Butterworth lowpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
 
 @label(lowpass6-sec)
-@codef{lowpass6(@pragma(defn)@index(lowpass6)@i(signal), @i(hz))} @c{[sal]}@*
-@altdef{@code[(lowpass6 @i(signal) @i(hz))] @c{[lisp]}}@\A six-pole Butterworth lowpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
+@codef{lowpass6(@pragma(defn)@index(lowpass6)@i(signal), @i(hz))}@\A six-pole Butterworth lowpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
 
 @label(lowpass8-sec)
-@codef{lowpass8(@pragma(defn)@index(lowpass8)@i(signal), @i(hz))} @c{[sal]}@*
-@altdef{@code[(lowpass8 @i(signal) @i(hz))] @c{[lisp]}}@\An eight-pole Butterworth lowpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
+@codef{lowpass8(@pragma(defn)@index(lowpass8)@i(signal), @i(hz))}@\An eight-pole Butterworth lowpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
 
 @label(highpass4-sec)
-@codef{highpass4(@pragma(defn)@index(highpass4)@i(signal), @i(hz))} @c{[sal]}@*
-@altdef{@code[(highpass4 @i(signal) @i(hz))] @c{[lisp]}}@\A four-pole Butterworth highpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
+@codef{highpass4(@pragma(defn)@index(highpass4)@i(signal), @i(hz))}@\A four-pole Butterworth highpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
 
 @label(highpass6-sec)
-@codef{highpass6(@pragma(defn)@index(highpass6)@i(signal), @i(hz))} @c{[sal]}@*
-@altdef{@code[(highpass6 @i(signal) @i(hz))] @c{[lisp]}}@\A six-pole Butterworth highpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
+@codef{highpass6(@pragma(defn)@index(highpass6)@i(signal), @i(hz))}@\A six-pole Butterworth highpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
 
 @label(highpass8-sec)
-@codef{highpass8(@pragma(defn)@index(highpass8)@i(signal), @i(hz))} @c{[sal]}@*
-@altdef{@code[(highpass8 @i(signal) @i(hz))] @c{[lisp]}}@\An eight-pole Butterworth highpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
+@codef{highpass8(@pragma(defn)@index(highpass8)@i(signal), @i(hz))}@\An eight-pole Butterworth highpass filter. The cutoff frequency is @i(hz) (a @code(FLONUM)).
 
 @label(tapv-sec)
 @codef{tapv(@pragma(defn)@index(tapv)@index(variable delay)@index(tapped delay)@i(sound), @i(offset), 
-@i(vardelay), @i(maxdelay))} @c{[sal]}@*
-@altdef{@code[(tapv @i(sound) @i(offset) @i(vardelay) @i(maxdelay))] @c{[lisp]}}@\A delay line with a variable position tap. 
+@i(vardelay), @i(maxdelay))}@\A delay line with a variable position tap. 
 Identical to @code(snd-tapv). See it for details (@ref(snd-tapv-sec)).
 
 @end(fndefs)
@@ -4071,16 +3913,13 @@ Identical to @code(snd-tapv). See it for details (@ref(snd-tapv-sec)).
 @begin(fndefs)
 @label(stkrev-sec)
 @codef{nrev(@pragma(defn)@index(nrev)@index(reverb)@index(effect, 
-reverberation)@index(STK nreverb)@i(sound), @i(decay), @i(mix))} @c{[sal]}@*
-@altdef{@code[(nrev @i(sound) @i(decay) @i(mix))] @c{[lisp]}}
+reverberation)@index(STK nreverb)@i(sound), @i(decay), @i(mix))}
 
 @codef{jcrev(@pragma(defn)@index(jcrev)@index(reverb)@index(effect,
- reverberation)@index(STK jcreverb)@i(sound), @i(decay), @i(mix))} @c{[sal]}@*
-@altdef{@code[(jcrev @i(sound) @i(decay) @i(mix))] @c{[lisp]}}
+ reverberation)@index(STK jcreverb)@i(sound), @i(decay), @i(mix))}
 
 @codef{prcrev(@pragma(defn)@index(prcrev)@index(reverb)@index(effect,
- reverberation)@index(STK prcreverb)@i(sound), @i(decay), @i(mix))} @c{[sal]}@*
-@altdef{@code[(prcrev @i(sound) @i(decay) @i(mix))] @c{[lisp]}}
+ reverberation)@index(STK prcreverb)@i(sound), @i(decay), @i(mix))}
 These reverbs (@code(nrev), @code(jcrev), and @code(prcrev)) are implemented 
 in STK (running within Nyquist). @code(nrev) derives from Common Music's 
 NRev,  which consists of 6 comb filters followed by 3 allpass filters, a
@@ -4098,8 +3937,7 @@ in seconds, and @i(mix) sets the mixture of input sound reverb sound,
 where 0.0 means input only (dry) and 1.0 means reverb only (wet).
 
 @label(stkchorus-sec)
-@codef{stkchorus(@pragma(defn)@index(stkchorus)@index(chorus)@index(effect, chorus)@index(STK chorus)@i(sound), @i(depth), @i(freq), @i(mix) [, @i(delay)])} @c{[sal]}@*
-@altdef{@code{(stkchorus @i(sound) @i(depth) @i(freq) @i(mix) [@i(delay)])} @c{[lisp]}}@\Chorus 
+@codef{stkchorus(@pragma(defn)@index(stkchorus)@index(chorus)@index(effect, chorus)@index(STK chorus)@i(sound), @i(depth), @i(freq), @i(mix)[ ,@i(delay)])}@\Chorus 
 implemented in STK. The input @i(sound) can be single or multi-channel.
 The @code(FLONUM) parameters @i(depth) and @i(freq) set 
 the modulation 
@@ -4110,8 +3948,7 @@ and 1.0 means chorused sound only (wet). The parameter @i(delay) is a
  @code(FIXNUM) representing the median desired delay length in samples. 
 
 @label(stkpitshift-sec)
-@codef{pitshift(@pragma(defn)@index(pitshift)@index(pitch shift)@index(effect, pitch shift)@index(STK pitch shift)@i(sound), @i(shift), @i(mix))} @c{[sal]}@*
-@altdef{@code[(pitshift @i(sound) @i(shift) @i(mix))] @c{[lisp]}}@\A pitch
+@codef{pitshift(@pragma(defn)@index(pitshift)@index(pitch shift)@index(effect, pitch shift)@index(STK pitch shift)@i(sound), @i(shift), @i(mix))}@\A pitch
  shifter implemented in STK. The input @i(sound), a single-channel
  or multi-channel @code(SOUND) is pitch-shifted by @i(shift), 
 a @code(FLONUM) ratio. A value of 1.0 means no shift.  The parameter @i(mix)
@@ -4123,16 +3960,14 @@ and a value of 1.0 means shifted sound only (wet).
 @paragraph(Physical Models)
 @begin(fndefs)
 @label(clarinet-sec)
-@codef{clarinet(@pragma(defn)@index(clarinet)@index(stk clarinet)@i(step), @i(breath-env))} @c{[sal]}@*
-@altdef{@code[(clarinet @i(step) @i(breath-env))] @c{[lisp]}}@\A 
+@codef{clarinet(@pragma(defn)@index(clarinet)@index(stk clarinet)@i(step), @i(breath-env))}@\A 
 physical model of a clarinet from STK. The @i(step) parameter is a @code(FLONUM) 
 that controls the tube length, and the @i(breath-env) (a @code(SOUND)) 
 controls the air pressure
 and also determines the length of the resulting sound. The @i(breath-env) signal
 should range from zero to one.
 
-@codef{clarinet-freq(@index(clarinet)@pragma(defn)@index(clarinet-freq)@index(stk clarinet)@i(step), @i(breath-env), @i(freq-env))} @c{[sal]}@*
-@altdef{@code[(clarinet-freq @i(step) @i(breath-env) @i(freq-env))] @c{[lisp]}}@\A variation of @code(clarinet)
+@codef{clarinet-freq(@index(clarinet)@pragma(defn)@index(clarinet-freq)@index(stk clarinet)@i(step), @i(breath-env), @i(freq-env))}@\A variation of @code(clarinet)
 that includes a variable frequency control, @i(freq-env), which specifies
 frequency deviation in Hz. The duration of the resulting sound is the minimum
 duration of @i(breath-env) and @i(freq-env). These parameters may be of type
@@ -4140,8 +3975,7 @@ duration of @i(breath-env) and @i(freq-env). These parameters may be of type
 with a nominal duration arbitrarily set to 30.
 
 @codef{clarinet-all(@index(clarinet)@pragma(defn)@index(clarinet-all)@index(stk clarinet)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq), @i(vibrato-gain), 
-@i(reed-stiffness), @i(noise))} @c{[sal]}@*
-@altdef{@code[(clarinet-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @i(reed-stiffness) @i(noise))] @c{[lisp]}}@\A variation of @code(clarinet-freq)
+@i(reed-stiffness), @i(noise))}@\A variation of @code(clarinet-freq)
 that includes controls @i(vibrato-freq) (a @code(FLONUM) for vibrato frequency in Hertz), 
 @i(vibrato-gain) (a @code(FLONUM) for the amount of amplitude vibrato),
 @i(reed-stiffness) (a @code(FLONUM) or @code(SOUND) controlling reed stiffness in the clarinet
@@ -4159,15 +3993,13 @@ The duration of the resulting sound is the minimum duration of
 duration of 30.
 
 @label(sax-sec)
-@codef{sax(@pragma(defn)@index(sax)@index(stk sax)@i(step), @i(breath-env))} @c{[sal]}@*
-@altdef{@code[(sax @i(step) @i(breath-env))] @c{[lisp]}}@\A 
+@codef{sax(@pragma(defn)@index(sax)@index(stk sax)@i(step), @i(breath-env))}@\A 
 physical model of a sax from STK. The @i(step) parameter is a @code(FLONUM) 
 that controls the tube length, and the @i(breath-env) controls the air pressure
 and also determines the length of the resulting sound. The @i(breath-env) signal
 should range from zero to one.
 
-@codef{sax-freq(@pragma(defn)@index(sax)@index(sax-freq)@index(stk sax)@i(step), @i(breath-env), @i(freq-env))} @c{[sal]}@*
-@altdef{@code[(sax-freq @i(step) @i(breath-env) @i(freq-env))] @c{[lisp]}}@\A variation of @code(sax)
+@codef{sax-freq(@pragma(defn)@index(sax)@index(sax-freq)@index(stk sax)@i(step), @i(breath-env), @i(freq-env))}@\A variation of @code(sax)
 that includes a variable frequency control, @i(freq-env), which specifies
 frequency deviation in Hz. The duration of the resulting sound is the minimum
 duration of @i(breath-env) and @i(freq-env). These parameters may be of type
@@ -4175,8 +4007,7 @@ duration of @i(breath-env) and @i(freq-env). These parameters may be of type
 with a nominal duration arbitrarily set to 30.
 
 @codef{sax-all(@pragma(defn)@index(sax)@index(sax-all)@index(stk sax)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq), @i(vibrato-gain), 
-@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset))} @c{[sal]}@*
-@altdef{@code[(sax-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @i(reed-stiffness) @i(noise) @i(blow-pos) @i(reed-table-offset))] @c{[lisp]}}@\A variation of
+@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset))}@\A variation of
  @code(sax-freq)
 that includes controls @i(vibrato-freq) (a @code(FLONUM) for vibrato frequency in Hertz), 
 @i(vibrato-gain) (a @code(FLONUM) for the amount of amplitude vibrato),
@@ -4198,16 +4029,14 @@ The duration of the resulting sound is the minimum duration of
 duration of 30.
 
 @label(flute-sec)
-@codef{flute(@pragma(defn)@index(flute)@index(STK flute)@i(step), @i(breath-env))} @c{[sal]}@*
-@altdef{@code[(flute @i(step) @i(breath-env))] @c{[lisp]}}@\A physical model of a flute from STK. 
+@codef{flute(@pragma(defn)@index(flute)@index(STK flute)@i(step), @i(breath-env))}@\A physical model of a flute from STK. 
 The @i(step) parameter is a @code(FLONUM) that controls the tube 
 length, and the @i(breath-env)
 controls the air pressure and also determines the starting time and
 length of the resulting sound. The @i(breath-env) signal should
  range from zero to one.
 
-@codef{flute-freq(@pragma(defn)@index(flute-freq)@index(STK flute)@i(step), @i(breath-env), @i(freq-env))} @c{[sal]}@*
-@altdef{@code[(flute-freq @i(step) @i(breath-env) @i(freq-env))] @c{[lisp]}}@\A variation of @code(flute)
+@codef{flute-freq(@pragma(defn)@index(flute-freq)@index(STK flute)@i(step), @i(breath-env), @i(freq-env))}@\A variation of @code(flute)
  that includes a variable frequency control, @i(freq-env), which
  specifies frequency deviation in Hz. The duration of the 
 resulting sound is the minimum duration of @i(breath-env) and 
@@ -4216,8 +4045,7 @@ resulting sound is the minimum duration of @i(breath-env) and
 nominal duration arbitrary set to 30.
 
 @codef{flute-all(@pragma(defn)@index(flute-all)@index(STK flute)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq),
- @i(vibrato-gain), @i(jet-delay), @i(noise))} @c{[sal]}@*
-@altdef{@code[(flute-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @i(jet-delay) @i(noise))] @c{[lisp]}}@\A variation of 
+ @i(vibrato-gain), @i(jet-delay), @i(noise))}@\A variation of 
 @code(clarinet-freq) that includes controls @i(vibrato-freq) (a 
 @code(FLONUM) for vibrato frequency in Hz), @i(vibrato-gain) (a
  @code(FLONUM) for the amount of amplitude vibrato), @i(jet-delay)
@@ -4239,16 +4067,14 @@ resulting sound is the minimum duration of @i(breath-env), @i(freq-env),
  to sounds with a nominal duration of 30. 
   
 @label(bowed-sec)
-@codef{bowed(@pragma(defn)@index(bowed)@index(STK bowed string)@i(step), @i(bowpress-env))} @c{[sal]}@*
-@altdef{@code[(bowed @i(step) @i(bowpress-env))] @c{[lisp]}}@\A physical model of a bowed string
+@codef{bowed(@pragma(defn)@index(bowed)@index(STK bowed string)@i(step), @i(bowpress-env))}@\A physical model of a bowed string
  instrument from STK. The @i(step) parameter is a @code(FLONUM)
  that controls the string length,
  and the @i(bowpress-env) controls the bow pressure and also 
 determines the duration of the resulting sound. The @i(bowpress-env)
  signal should range from zero to one.
 
-@codef{bowed-freq(@pragma(defn)@index(bowed-freq)@index(STK bowed-freq)@i(step), @i(bowpress-env), @i(freq-env))} @c{[sal]}@*
-@altdef{@code[(bowed-freq @i(step) @i(bowpress-env) @i(freq-env))] @c{[lisp]}}@\A variation of @code(bowed)
+@codef{bowed-freq(@pragma(defn)@index(bowed-freq)@index(STK bowed-freq)@i(step), @i(bowpress-env), @i(freq-env))}@\A variation of @code(bowed)
  that includes a variable frequency control, @i(freq-env), which
  specifies frequency deviation in Hz. The duration of the resulting
  sound is the minimum duration of @i(bowpress-env) and @i(freq-env). 
@@ -4257,8 +4083,7 @@ These parameters may be of type @code(FLONUM) or @code(SOUND).
  with a nominal duration arbitrarily set to 30s.
 
 @label(mandolin-sec)
-@codef{mandolin(@pragma(defn)@index(mandolin)@index(STK mandolon)@i(step), @i(dur), &optional @i(detune))} @c{[sal]}@*
-@altdef{@code[(mandolin @i(step) @i(dur) @i(detune))] @c{[lisp]}}@\A physical model of a
+@codef{mandolin(@pragma(defn)@index(mandolin)@index(STK mandolon)@i(step), @i(dur), &optional @i(detune))}@\A physical model of a
  plucked double-string instrument from STK. The @i(step) parameter
  is a @code(FLONUM) wich specifies the desired pitch, @i(dur)
  means the duration of the resulting sound and detune is a 
@@ -4269,17 +4094,13 @@ Note: @i(body-size) (see @code(snd-mandolin) does not seem to
  by @code(mandolin).
 
 @label(bandedwg-sec)
-@codef{wg-uniform-bar(@pragma(defn)@index(wg-uniform-bar)@index(STK uniform bar)@i(step), @i(bowpress-env))} @c{[sal]}@*
-@altdef{@code[(wg-uniform-bar @i(step) @i(bowpress-env))] @c{[lisp]}}
+@codef{wg-uniform-bar(@pragma(defn)@index(wg-uniform-bar)@index(STK uniform bar)@i(step), @i(bowpress-env))}
 
-@codef{wg-tuned-bar(@pragma(defn)@index(wg-tuned-bar)@index(STK tuned bar)@i(step), @i(bowpress-env))} @c{[sal]}@*
-@altdef{@code[(wg-tuned-bar @i(step) @i(bowpress-env))] @c{[lisp]}}
+@codef{wg-tuned-bar(@pragma(defn)@index(wg-tuned-bar)@index(STK tuned bar)@i(step), @i(bowpress-env))}
 
-@codef{wg-glass-harm(@pragma(defn)@index(wg-glass-harm)@index(STK glass harmonica)@i(step), @i(bowpress-env))} @c{[sal]}@*
-@altdef{@code[(wg-glass-harm @i(step) @i(bowpress-env))] @c{[lisp]}}
+@codef{wg-glass-harm(@pragma(defn)@index(wg-glass-harm)@index(STK glass harmonica)@i(step), @i(bowpress-env))}
 
-@codef{wg-tibetan-bowl(@pragma(defn)@index(wg-tibetan-bowl)@index(STK tibetan bowl)@i(step), @i(bowpress-env))} @c{[sal]}@*
-@altdef{@code[(wg-tibetan-bowl @i(step) @i(bowpress-env))] @c{[lisp]}}@\These 
+@codef{wg-tibetan-bowl(@pragma(defn)@index(wg-tibetan-bowl)@index(STK tibetan bowl)@i(step), @i(bowpress-env))}@\These 
 sounds are presets for a Banded Wave Guide Percussion instrument implemented in STK.
 The parameter @i(step) is a @code(FLONUM)
  that controls the resultant pitch, and @i(bowpress-env) is a @code(SOUND) ranging 
@@ -4289,8 +4110,7 @@ from zero to one that controls a parameter of the model. In addition,
 quality of the resulting sound).
 
 @label(modalbar-sec)
-@codef{modalbar(@pragma(defn)@index(modalbar)@index(STK modal bar)@i(preset), @i(step), @i(dur))} @c{[sal]}@*
-@altdef{@code[(modalbar @i(preset) @i(step) @i(dur))] @c{[lisp]}}@\A physical model of a struck bar
+@codef{modalbar(@pragma(defn)@index(modalbar)@index(STK modal bar)@i(preset), @i(step), @i(dur))}@\A physical model of a struck bar
  instrument implemented in STK. The parameter @i(preset) is one of the
 symbols
 @code(MARIMBA), @code(VIBRAPHONE), @code(AGOGO), @code(WOOD1), 
@@ -4301,8 +4121,7 @@ The parameter @i(step) is a @code(FLONUM) that
 sets the pitch (in steps), and @i(dur) is the duration in seconds.
 
 @label(sitar-sec)
-@codef{sitar(@pragma(defn)@index(sitar)@index(STK sitar)@i(step), @i(dur))} @c{[sal]}@*
-@altdef{@code[(sitar @i(step) @i(dur))] @c{[lisp]}}@\A sitar physical model implemented in STK. 
+@codef{sitar(@pragma(defn)@index(sitar)@index(STK sitar)@i(step), @i(dur))}@\A sitar physical model implemented in STK. 
 The parameter @i(step) is a @code(FLONUM) that sets the pitch,
  and @i(dur) is the duration.
 @end(fndefs)
@@ -4310,48 +4129,37 @@ The parameter @i(step) is a @code(FLONUM) that sets the pitch,
 @paragraph(More Behaviors)
 @begin(fndefs)
 @label(clip-sec)
-@codef{clip(@pragma(defn)@index(clip)@index(limit)@i(sound), @i(peak))} @c{[sal]}@*
-@altdef{@code[(clip @i(sound) @i(peak))] @c{[lisp]}}@\Hard limit @i(sound) 
+@codef{clip(@pragma(defn)@index(clip)@index(limit)@i(sound), @i(peak))}@\Hard limit @i(sound) 
 to the given @i(peak), a positive number. The samples of @i(sound) are constrained between an upper value
 of @i(peak) and a lower value of @subtract()@i(peak). If @i(sound) is a number, @code(clip) will return @i(sound) limited by @i(peak).  If @i(sound) is a multichannel sound, @code(clip) returns a multichannel sound where each channel is clipped.  The result has the type, sample rate, starting time, etc. of @i(sound).
 
 @label(s-abs-sec)
-@codef{s-abs(@pragma(defn)@index(s-abs)@index(absolute value)@i(sound))} @c{[sal]}@*
-@altdef{@code[(s-abs @i(sound))] @c{[lisp]}}@\A generalized absolute value function. If @i(sound) is a @code(SOUND), compute the absolute value of each sample. If @i(sound) is a number, just compute the absolute value. If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-abs) applied to each element. The result has the type, sample rate, starting time, etc. of @i(sound).
+@codef{s-abs(@pragma(defn)@index(s-abs)@index(absolute value)@i(sound))}@\A generalized absolute value function. If @i(sound) is a @code(SOUND), compute the absolute value of each sample. If @i(sound) is a number, just compute the absolute value. If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-abs) applied to each element. The result has the type, sample rate, starting time, etc. of @i(sound).
 
 @label(s-sqrt-sec)
-@codef{s-sqrt(@pragma(defn)@index(s-sqrt)@index(square root)@i(sound))} @c{[sal]}@*
-@altdef{@code[(s-sqrt @i(sound))] @c{[lisp]}}@\A generalized square root function. If @i(sound) is a @code(SOUND), compute the square root of each sample. If @i(sound) is a number, just compute the square root. If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-sqrt) applied to each element. The result has the type, sample rate, starting time, etc. of @i(sound). In taking square roots, if an input sample is less than zero, the corresponding output sample is zero. This is done because the square root of a negative number is undefined.
+@codef{s-sqrt(@pragma(defn)@index(s-sqrt)@index(square root)@i(sound))}@\A generalized square root function. If @i(sound) is a @code(SOUND), compute the square root of each sample. If @i(sound) is a number, just compute the square root. If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-sqrt) applied to each element. The result has the type, sample rate, starting time, etc. of @i(sound). In taking square roots, if an input sample is less than zero, the corresponding output sample is zero. This is done because the square root of a negative number is undefined.
 
 @label(s-exp-sec)
-@codef{s-exp(@pragma(defn)@index(s-exp)@index(exponential)@i(sound))} @c{[sal]}@*
-@altdef{@code[(s-exp @i(sound))] @c{[lisp]}}@\A generalized exponential function.  If @i(sound) is a @code(SOUND), compute @i(e)@+(@i(x)) for each sample @i(x).  If @i(sound) is a number @i(x), just compute @i(e)@+(@i(x)).  If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-exp) applied to each element.  The result has the type, sample rate, starting time, etc. of @i(sound).
+@codef{s-exp(@pragma(defn)@index(s-exp)@index(exponential)@i(sound))}@\A generalized exponential function.  If @i(sound) is a @code(SOUND), compute @i(e)@+(@i(x)) for each sample @i(x).  If @i(sound) is a number @i(x), just compute @i(e)@+(@i(x)).  If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-exp) applied to each element.  The result has the type, sample rate, starting time, etc. of @i(sound).
 
 @label(s-log-sec)
-@codef{s-log(@pragma(defn)@index(s-log)@index(logorithm)@index(natural log)@i(sound))} @c{[sal]}@*
-@altdef{@code[(s-log @i(sound))] @c{[lisp]}}@\A generalized natural log function.  If @i(sound) is a @code(SOUND), compute @i(ln)(@i(x)) for each sample @i(x).  If @i(sound) is a number @i(x), just compute @i(ln)(@i(x)).  If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-log) applied to each element.  The result has the type, sample rate, starting time, etc. of @i(sound).  Note that the @i(ln) of 0 is undefined (some implementations return negative infinity), so use this function with care.
+@codef{s-log(@pragma(defn)@index(s-log)@index(logorithm)@index(natural log)@i(sound))}@\A generalized natural log function.  If @i(sound) is a @code(SOUND), compute @i(ln)(@i(x)) for each sample @i(x).  If @i(sound) is a number @i(x), just compute @i(ln)(@i(x)).  If @i(sound) is a multichannel sound, return a multichannel sound with @code(s-log) applied to each element.  The result has the type, sample rate, starting time, etc. of @i(sound).  Note that the @i(ln) of 0 is undefined (some implementations return negative infinity), so use this function with care.
 
 @label(s-max-sec)
-@codef{s-max(@pragma(defn)@index(s-max)@index(maximum)@i(sound1), @i(sound2))} @c{[sal]}@*
-@altdef{@code[(s-max @i(sound1) @i(sound2))] @c{[lisp]}}@\Compute the maximum of two functions, @i(sound1) and @i(sound2). This function also accepts numbers and multichannel sounds and returns the corresponding data type. The start time of the result is the maximum of the start times of @i(sound1) and @i(sound2). The logical stop time and physical stop time of the result is the minimum of the logical stop and physical stop times respectively of @i(sound1) and @i(sound2). Note, therefore, that the result value is zero except within the bounds of @i(both) input sounds.
+@codef{s-max(@pragma(defn)@index(s-max)@index(maximum)@i(sound1), @i(sound2))}@\Compute the maximum of two functions, @i(sound1) and @i(sound2). This function also accepts numbers and multichannel sounds and returns the corresponding data type. The start time of the result is the maximum of the start times of @i(sound1) and @i(sound2). The logical stop time and physical stop time of the result is the minimum of the logical stop and physical stop times respectively of @i(sound1) and @i(sound2). Note, therefore, that the result value is zero except within the bounds of @i(both) input sounds.
 
-@codef{s-min(@pragma(defn)@index(s-min)@index(minimum)@i(sound1), @i(sound2))} @c{[sal]}@*
-@altdef{@code[(s-min @i(sound1) @i(sound2))] @c{[lisp]}}@\Compute the minimum of two functions, @i(sound1) and @i(sound2). This function also accepts numbers and multichannel sounds and returns the corresponding data type. The start time of the result is the maximum of the start times of @i(sound1) and @i(sound2). The logical stop time and physical stop time of the result is the minimum of the logical stop and physical stop times respectively of @i(sound1) and @i(sound2). Note, therefore, that the result value is zero except within the bounds of @i(both) input sounds.
+@codef{s-min(@pragma(defn)@index(s-min)@index(minimum)@i(sound1), @i(sound2))}@\Compute the minimum of two functions, @i(sound1) and @i(sound2). This function also accepts numbers and multichannel sounds and returns the corresponding data type. The start time of the result is the maximum of the start times of @i(sound1) and @i(sound2). The logical stop time and physical stop time of the result is the minimum of the logical stop and physical stop times respectively of @i(sound1) and @i(sound2). Note, therefore, that the result value is zero except within the bounds of @i(both) input sounds.
 
-@codef{osc-note(@pragma(defn)@index(osc-note)@i(pitch) [, @i(duration), @i(env), @i(loud), 
-@i(table)])} @c{[sal]}@*
-@altdef{@code{(osc-note @i(pitch) [@i(duration) @i(env) @i(loud) @i(table)])} @c{[lisp]}}@\Same as @code(osc), but @code(osc-note)
+@codef{osc-note(@pragma(defn)@index(osc-note)@i(pitch)[ ,@i(duration), @i(env), @i(loud), 
+@i(table)])}@\Same as @code(osc), but @code(osc-note)
 multiplies the result by @i(env).  The @i(env) may be a sound, 
 or a list supplying (@i(t@-[1]) @i(t@-[2]) 
 @i(t@-[4]) @i(l@-[1]) @i(l@-[2]) @i(l@-[3])).  The result has a sample rate of @code(*sound-srate*).
 
 @label(quantize-sec)
-@codef{quantize(@pragma(defn)@index(quantize)@i(sound), @i(steps))} @c{[sal]}@*
-@altdef{@code[(quantize @i(sound) @i(steps))] @c{[lisp]}}@\Quantizes @i(sound) as follows: @i(sound) is multiplied by @i(steps) and rounded to the nearest integer. The result is then divided by @i(steps). For example, if @i(steps) is 127, then a signal that ranges from -1 to +1 will be quantized to 255 levels (127 less than zero, 127 greater than zero, and zero itself). This would match the quantization Nyquist performs when writing a signal to an 8-bit audio file. The @i(sound) may be multi-channel.
+@codef{quantize(@pragma(defn)@index(quantize)@i(sound), @i(steps))}@\Quantizes @i(sound) as follows: @i(sound) is multiplied by @i(steps) and rounded to the nearest integer. The result is then divided by @i(steps). For example, if @i(steps) is 127, then a signal that ranges from -1 to +1 will be quantized to 255 levels (127 less than zero, 127 greater than zero, and zero itself). This would match the quantization Nyquist performs when writing a signal to an 8-bit audio file. The @i(sound) may be multi-channel.
 
-@codef{ramp(@pragma(defn)@index(ramp)[@i(duration)])} @c{[sal]}@*
-@altdef{@code{(ramp [@i(duration)])} @c{[lisp]}}@\Returns a
-linear ramp from 0 to 1
+@codef{ramp(@pragma(defn)@index(ramp) [@i(duration)])}@\Returns a linear ramp from 0 to 1
 over @i(duration) (default is 1).  The function actually reaches 1 at
 @i(duration), and therefore has one extra sample, making the total duration
 be @i(duration) + 1/@code(*Control-srate*).  See Figure @ref(ramp-fig) for
@@ -4360,8 +4168,7 @@ effect of time warping is to warp the starting and ending times only.  The
 ramp itself is unwarped (linear).  The sample rate is @code(*control-srate*).
 
 @label(rms-sec)
-@codef{rms(@pragma(defn)@index(rms)@i(sound) [, @i(rate), @i(window-size)])} @c{[sal]}@*
-@altdef{@code{(rms @i(sound) [@i(rate) @i(window-size)])} @c{[lisp]}}@\Computes the RMS of @i(sound) using a square window of size @i(window-size). The result has a sample rate of @i(rate). The default value of @i(rate) is 100 Hz, and the default window size is 1/rate seconds (converted to samples). The @i(rate) is a @code(FLONUM) and @i(window-size) is a @code(FIXNUM).
+@codef{rms(@pragma(defn)@index(rms)@i(sound)[ ,@i(rate), @i(window-size)])}@\Computes the RMS of @i(sound) using a square window of size @i(window-size). The result has a sample rate of @i(rate). The default value of @i(rate) is 100 Hz, and the default window size is 1/rate seconds (converted to samples). The @i(rate) is a @code(FLONUM) and @i(window-size) is a @code(FIXNUM).
 @end(fndefs)
 
 @begin(figure)
@@ -4381,20 +4188,17 @@ used in a sequence, the next sound after @code(ramp) would start at time 1 +
 
 @begin(fndefs)
 @label(recip-sec)
-@codef{recip(@pragma(defn)@index(recip)@index(reciprocal)@index(division)@i(sound))} @c{[sal]}@*
-@altdef{@code[(recip @i(sound))] @c{[lisp]}}@\A generalized reciprocal function.  
+@codef{recip(@pragma(defn)@index(recip)@index(reciprocal)@index(division)@i(sound))}@\A generalized reciprocal function.  
 If @i(sound) is a @code(SOUND), compute 1/@i(x) for each sample @i(x).  If @i(sound) is a number @i(x), just compute 1/@i(x).  If @i(sound) is a multichannel sound, return a multichannel sound with @code(recip) applied to each element.  The result has the type, sample rate, starting time, etc. of @i(sound).  Note that the reciprocal of 0 is undefined (some implementations return  infinity), so use this function with care on sounds.  Division of sounds is accomplished by multiplying by the reciprocal.  Again, be careful not to divide by zero.
 
-@codef{s-rest(@index(rest)@pragma(defn)@index(s-rest)[@i(duration)])} @c{[sal]}@*
-@altdef{@code{(s-rest [@i(duration)])} @c{[lisp]}}@\Create silence (zero samples)
+@codef{s-rest(@index(rest)@pragma(defn)@index(s-rest) [@i(duration)])}@\Create silence (zero samples)
 for the given 
 @i(duration) at the sample rate @code(*sound-srate*).  
 Default duration is 1.0 sec, and the sound is transformed in time according
 to @code[*warp*].  @p(Note:) @code(rest) is a Lisp function that is equivalent to @code(cdr).  Be careful to use @code(s-rest) when you need a sound!
 
 @label(noise-sec)
-@codef{noise(@pragma(defn)@index(noise)[@i(duration)])} @c{[sal]}@*
-@altdef{@code[(noise @i(duration))] @c{[lisp]}}@\Generate noise with the given 
+@codef{noise(@pragma(defn)@index(noise) [@i(duration)])}@\Generate noise with the given 
 @i(duration).  Duration (default is 1.0) 
 is transformed according to @code[*warp*].  The
 sample rate is @code(*sound-srate*) and the amplitude is +/- @code(*loud*).
@@ -4402,8 +4206,7 @@ sample rate is @code(*sound-srate*) and the amplitude is +/- @code(*loud*).
 @label(yin-sec)
 @codef{yin(@pragma(defn)@index(yin)@index(pitch detection)@index(fundamenal frequency
 estimation)@index(estimate frequency)@index(frequency analysis)@index(period
-estimation)@i(sound), @i(minstep), @i(maxstep), @i(stepsize))} @c{[sal]}@*
-@altdef{@code[(yin @i(sound) @i(minstep) @i(maxstep) @i(stepsize))] @c{[lisp]}}@\Fundamental 
+estimation)@i(sound), @i(minstep), @i(maxstep), @i(stepsize))}@\Fundamental 
 frequency estimation (pitch detection. Use the YIN algorithm to estimate
 the fundamental frequency of @i(sound), which must be a @code(SOUND). 
 The @i(minstep), a @code(FLONUM), is the minimum frequency considered (in steps), 
@@ -4460,15 +4263,13 @@ In this way, sections of code can be insulated from external
 transformations.
 
 @begin(fndefs)
-@codef{abs-env(@pragma(defn)@index(abs-env)@i(beh))} @c{[sal]}@*
-@altdef{@code[(abs-env @i(beh))] @c{[lisp]}}@\Compute @i(beh) in the default environment.  
+@codef{abs-env(@pragma(defn)@index(abs-env)@i(beh))}@\Compute @i(beh) in the default environment.  
 This is useful for computing waveform tables and signals that are 
 ``outside'' of
 time.  For example, @code[(at 10.0 (abs-env (my-beh)))] is equivalent to
 @code[(abs-env (my-beh))] because @code(abs-env) forces the default environment. Or in SAL, we would say @code[abs-env(my-beh()) @@ 10] is equivalent to @code[abs-env(my-beh())].
 
-@codef{at(@pragma(defn)@index(at)@i(time), @i(beh))} @c{[sal]}@*
-@altdef{@code[(at @i(time) @i(beh))] @c{[lisp]}}@\Evaluate @i(beh) with
+@codef{at(@pragma(defn)@index(at)@i(time), @i(beh))}@\Evaluate @i(beh) with
 @code(*warp*@index(*warp*)) shifted by @i(time). In SAL, you can use the infix
 operator @code(@@) as in @code[@i(beh) @@ @i(time)]. To discover how the
 environment is shifting time, use @code[local-to-global(@i(time))]. Most
@@ -4476,53 +4277,43 @@ commonly, you call @code[local-to-global(0)] to find when a sound created
 in the current environment will start, expressed in absolute (global) terms.  
 This can be regarded as the ``current time.''
 
-@codef{at-abs(@pragma(defn)@index(at-abs)@i(time), @i(beh))} @c{[sal]}@*
-@altdef{@code[(at-abs @i(time) @i(beh))] @c{[lisp]}}@\Evaluate @i(beh) with
+@codef{at-abs(@pragma(defn)@index(at-abs)@i(time), @i(beh))}@\Evaluate @i(beh) with
 @code(*warp*@index(*warp*)) shifted so that local time 0 maps to @i(time). In SAL, you can use the infix operator @code[@@@@] as in @code[@i(beh) @@@@ @i(time)].
 
 @label(continuous-control-warp)
-@codef{continuous-control-warp(@pragma(defn)@index(continuous-control-warp)@i(beh))} @c{[sal]}@*
-@altdef{@code[(continuous-control-warp @i(beh))] @c{[lisp]}}@\Applies the current warp environment to the signal returned by @i(beh). The result has the default control sample rate @code(*control-srate*). Linear interpolation is currently used. Implementation: @i(beh) is first evaluated without any shifting, stretching, or warping. The result is functionally composed with the inverse of the environment's warp function.
+@codef{continuous-control-warp(@pragma(defn)@index(continuous-control-warp)@i(beh))}@\Applies the current warp environment to the signal returned by @i(beh). The result has the default control sample rate @code(*control-srate*). Linear interpolation is currently used. Implementation: @i(beh) is first evaluated without any shifting, stretching, or warping. The result is functionally composed with the inverse of the environment's warp function.
 
 @label(continuous-sound-warp)
-@codef{continuous-sound-warp(@pragma(defn)@index(continuous-sound-warp)@i(beh))} @c{[sal]}@*
-@altdef{@code[(continuous-sound-warp @i(beh))] @c{[lisp]}}@\Applies the current warp environment to the signal returned by @i(beh). The result has the default sound sample rate @code(*sound-srate*). Linear interpolation is currently used. See @code(continuous-control-warp) for implementation notes.
+@codef{continuous-sound-warp(@pragma(defn)@index(continuous-sound-warp)@i(beh))}@\Applies the current warp environment to the signal returned by @i(beh). The result has the default sound sample rate @code(*sound-srate*). Linear interpolation is currently used. See @code(continuous-control-warp) for implementation notes.
 
 @label(control-srate-abs-sec)
 @codef{control-srate-abs(@pragma(defn)@index(control-srate-abs)@i(srate), 
-@i(beh))} @c{[sal]}@*
-@altdef{@code[(control-srate-abs @i(srate) @i(beh))] @c{[lisp]}}@\Evaluate @i(beh) with @code(*control-srate*@index(*control-srate*))
+@i(beh))}@\Evaluate @i(beh) with @code(*control-srate*@index(*control-srate*))
 set to sample rate @i(srate).  @p(Note:) there is no ``relative'' version of 
 this function.
 
-@codef{extract(@pragma(defn)@index(extract)@i(start), @i(stop), @i(beh))} @c{[sal]}@*
-@altdef{@code[(extract @i(start) @i(stop) @i(beh))] @c{[lisp]}}@\Returns a sound 
+@codef{extract(@pragma(defn)@index(extract)@i(start), @i(stop), @i(beh))}@\Returns a sound 
 which is the portion of
 @i(beh) between @i(start) and @i(stop).  Note that this is done 
 relative to the current @code(*warp*).  The result is shifted
 to start according to @code(*warp*), so normally the result will start without a delay of @i(start).
 
-@codef{extract-abs(@pragma(defn)@index(extract-abs)@i(start), @i(stop), @i(beh))} @c{[sal]}@*
-@altdef{@code[(extract-abs @i(start) @i(stop) @i(beh))] @c{[lisp]}}@\Returns a sound which
+@codef{extract-abs(@pragma(defn)@index(extract-abs)@i(start), @i(stop), @i(beh))}@\Returns a sound which
 is the portion of
 @i(beh) between @i(start) and @i(stop), independent of the 
 current @code(*warp*).  The result is shifted
 to start according to @code(*warp*).
 
-@codef{loud(@pragma(defn)@index(loud)@i(volume), @i(beh))} @c{[sal]}@*
-@altdef{@code[(loud @i(volume) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with @code(*loud*)
+@codef{loud(@pragma(defn)@index(loud)@i(volume), @i(beh))}@\Evaluates @i(beh) with @code(*loud*)
 incremented by @i(volume). (Recall that @code(*loud*) is in decibels, so increment is the proper operation.)
 
-@codef{loud-abs(@pragma(defn)@index(loud-abs)@i(volume), @i(beh))} @c{[sal]}@*
-@altdef{@code[(loud-abs @i(volume) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with @code(*loud*)
+@codef{loud-abs(@pragma(defn)@index(loud-abs)@i(volume), @i(beh))}@\Evaluates @i(beh) with @code(*loud*)
 set to @i(volume).
 
 @label(sound-srate-abs-sec)
-@codef{sound-srate-abs(@pragma(defn)@index(sound-srate-abs)@i(srate), @i(beh))} @c{[sal]}@*
-@altdef{@code[(sound-srate-abs @i(srate) @i(beh))] @c{[lisp]}}@\Evaluate @i(beh) with @code(*sound-srate*@index(*sound-srate*)) set to sample rate @i(srate).  @p(Note:) there is no ``relative'' version of this function.  
+@codef{sound-srate-abs(@pragma(defn)@index(sound-srate-abs)@i(srate), @i(beh))}@\Evaluate @i(beh) with @code(*sound-srate*@index(*sound-srate*)) set to sample rate @i(srate).  @p(Note:) there is no ``relative'' version of this function.  
 
-@codef{stretch(@pragma(defn)@index(stretch)@i(factor), @i(beh))} @c{[sal]}@*
-@altdef{@code[(stretch @i(factor) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with
+@codef{stretch(@pragma(defn)@index(stretch)@i(factor), @i(beh))}@\Evaluates @i(beh) with
 @code(*warp*) scaled by @i(factor).  The effect is to ``stretch'' the result
 of @i(beh) (under the current environment) by @i(factor).  See Chapter
 @ref(warp-chap) for more information. Use @code[get-duration(@i(dur))] to 
@@ -4537,28 +4328,21 @@ by mapping the current time (local time 0) using @code[local-to-global] to
 obtain an actual start time, and mapping @i(dur) to obtain an actual end time.
 The difference is returned.
 
-@codef{stretch-abs(@pragma(defn)@index(stretch-abs)@i(factor), @i(beh))} @c{[sal]}@*
-@altdef{@code[(stretch-abs @i(factor) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with @code(*warp*) set to a linear time transformation where each unit of logical time maps to @i(factor) units of real time.  The effect is to stretch the nominal behavior of @i(beh) (under the default global environment) by @i(factor).  See Chapter @ref(warp-chap) for more information.
+@codef{stretch-abs(@pragma(defn)@index(stretch-abs)@i(factor), @i(beh))}@\Evaluates @i(beh) with @code(*warp*) set to a linear time transformation where each unit of logical time maps to @i(factor) units of real time.  The effect is to stretch the nominal behavior of @i(beh) (under the default global environment) by @i(factor).  See Chapter @ref(warp-chap) for more information.
 
-@codef{sustain(@pragma(defn)@index(sustain)@index(legato)@index(overlap)@index(stacatto)@i(factor), @i(beh))} @c{[sal]}@*
-@altdef{@code[(sustain @i(factor) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with @code(*sustain*) scaled by @i(factor). The effect is to ``stretch'' the result of @i(beh) (under the current environment) by @i(factor); however, the logical stop times are not stretched. Therefore, the overall duration of a sequence is not changed, and sounds will tend to overlap if @code(*sustain*) is greater than one (legato) and be separated by silence if @code(*sustain*) is less than one.
+@codef{sustain(@pragma(defn)@index(sustain)@index(legato)@index(overlap)@index(stacatto)@i(factor), @i(beh))}@\Evaluates @i(beh) with @code(*sustain*) scaled by @i(factor). The effect is to ``stretch'' the result of @i(beh) (under the current environment) by @i(factor); however, the logical stop times are not stretched. Therefore, the overall duration of a sequence is not changed, and sounds will tend to overlap if @code(*sustain*) is greater than one (legato) and be separated by silence if @code(*sustain*) is less than one.
 
-@codef{sustain-abs(@pragma(defn)@index(sustain-abs)@i(factor), @i(beh))} @c{[sal]}@*
-@altdef{@code[(sustain-abs @i(factor) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with @code(*sustain*) set to @i(factor). (See @code(sustain), above.)
+@codef{sustain-abs(@pragma(defn)@index(sustain-abs)@i(factor), @i(beh))}@\Evaluates @i(beh) with @code(*sustain*) set to @i(factor). (See @code(sustain), above.)
 
-@codef{transpose(@pragma(defn)@index(transpose)@i(amount), @i(beh))} @c{[sal]}@*
-@altdef{@code[(transpose @i(amount) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with 
+@codef{transpose(@pragma(defn)@index(transpose)@i(amount), @i(beh))}@\Evaluates @i(beh) with 
 @code(*transpose*) shifted by @i(amount).  The effect is relative transposition by @i(amount) semitones.
 
-@codef{transpose-abs(@pragma(defn)@index(transpose-abs)@i(amount), @i(beh))} @c{[sal]}@*
-@altdef{@code[(transpose-abs @i(amount) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with 
+@codef{transpose-abs(@pragma(defn)@index(transpose-abs)@i(amount), @i(beh))}@\Evaluates @i(beh) with 
 @code(*transpose*) set to @i(amount).  The effect is the transposition of the nominal pitches in @i(beh) (under the default global environment) by @i(amount).
 
-@codef{warp(@pragma(defn)@index(warp)@i(fn), @i(beh))} @c{[sal]}@*
-@altdef{@code[(warp @i(fn) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with @code(*warp*) modified by @i(fn).  The idea is that @i(beh) and @i(fn) are written in the same time system, and @i(fn) warps that time system to local time.  The current environment already contains a mapping from local time to global (real) time.  The value of @code(*warp*) in effect when @i(beh) is evaluated is the functional composition of the initial @code(*warp*) with @i(fn).
+@codef{warp(@pragma(defn)@index(warp)@i(fn), @i(beh))}@\Evaluates @i(beh) with @code(*warp*) modified by @i(fn).  The idea is that @i(beh) and @i(fn) are written in the same time system, and @i(fn) warps that time system to local time.  The current environment already contains a mapping from local time to global (real) time.  The value of @code(*warp*) in effect when @i(beh) is evaluated is the functional composition of the initial @code(*warp*) with @i(fn).
 
-@codef{warp-abs(@pragma(defn)@index(warp-abs)@i(fn), @i(beh))} @c{[sal]}@*
-@altdef{@code[(warp-abs @i(fn) @i(beh))] @c{[lisp]}}@\Evaluates @i(beh) with @code(*warp*) set to @i(fn).  In other words, the current @code(*warp*) is ignored and not composed with @i(fn) to form the new @code(*warp*).
+@codef{warp-abs(@pragma(defn)@index(warp-abs)@i(fn), @i(beh))}@\Evaluates @i(beh) with @code(*warp*) set to @i(fn).  In other words, the current @code(*warp*) is ignored and not composed with @i(fn) to form the new @code(*warp*).
 @end(fndefs)
 
 @section(Combination and Time Structure)@index(Combination)@index(Time Structure)
@@ -4568,8 +4352,7 @@ on iteration.
 
 @begin(fndefs)
 @label(seq-sec)
- @codef{seq(@pragma(defn)@index(seq)@i(beh@-[1]) [, @i(beh@-[2]), @r(...)])} @c{[sal]}@*
-@altdef{@code{(seq @i(beh@-[1]) [@i(beh@-[2]) @r(...)])} @c{[lisp]}}@\Evaluates the first behavior
+ @codef{seq(@pragma(defn)@index(seq)@i(beh@-[1])[ ,@i(beh@-[2]), ...])}@\Evaluates the first behavior
 @i(beh@-[1]) according to @code(*time*) and each successive behavior at the
 @code(logical-stop) time of the previous one.  The results are summed to form a
 sound whose @code(logical-stop) is
@@ -4585,8 +4368,7 @@ that is then filled out with zero signals.  If another behavior returns more
 channels than the first behavior, the error is reported and the computation
 is stopped.  Sample rates are converted up or down to match the sample rate of the first sound in a sequence.
 
-@codef{seqrep(@pragma(defn)@index(seqrep)@i(var), @i(limit), @i(beh))} @c{[sal]}@*
-@altdef{@code[(seqrep @i(var) @i(limit) @i(beh))] @c{[lisp]}}@\Iteratively 
+@codef{seqrep(@pragma(defn)@index(seqrep)@i(var), @i(limit), @i(beh))}@\Iteratively 
 evaluates @i(beh) with the atom
 @i(var) set with values from 0 to @i(limit)-1, inclusive.  These sounds
 are placed sequentially in time as if by @code(seq). The symbol @i(var) is
@@ -4595,8 +4377,7 @@ or detected, but may cause a run-time error or crash. In LISP, the syntax is
  @code[(seqrep (@i(var) @i(limit)) @i(beh))].
 
 @label(sim-sec)
-@codef{sim(@pragma(defn)@index(sim)[@i(beh@-[1]), @i(beh@-[2]), @r(...)])} @c{[sal]}@*
-@altdef{@code{(sim [@i(beh@-[1]) @i(beh@-[2]) @r(...)])} @c{[lisp]}}@\Returns a sound which is the 
+@codef{sim(@pragma(defn)@index(sim)[@i(beh@-[1]), @i(beh@-[2]), ...])}@\Returns a sound which is the 
 sum of the given behaviors evaluated with current value of @code(*warp*).
 If behaviors return multiple channel sounds, the corresponding channels are
 added.  If the number of channels does not match, the result has the
@@ -4604,8 +4385,7 @@ maximum.  For example, if a two-channel sound [L, R] is added to a four-channel
 sound [C1, C2, C3, C4], the result is [L + C1, R + C2, C3, C4].  Arguments to @code(sim) may also be numbers.  If all arguments are numbers, @code(sim) is equivalent (although slower than) the @code(+) function.  If a number is added to a sound, @code(snd-offset) is used to add the number to each sample of the sound.  The result of adding a number to two or more sounds with different durations is not defined.  Use @code(const) to coerce a number to a sound of a specified duration.  An important limitation of @code(sim) is that it cannot handle hundreds of behaviors due to a stack size limitation in XLISP.  To compute hundreds of sounds (e.g. notes) at specified times, see @code(timed-seq), below.
 See also @code(sum) below.
 
-@codef{simrep(@pragma(defn)@index(simrep)@i(var), @i(limit), @i(beh))} @c{[sal]}@*
-@altdef{@code[(simrep @i(var) @i(limit) @i(beh))] @c{[lisp]}}@\Iteratively 
+@codef{simrep(@pragma(defn)@index(simrep)@i(var), @i(limit), @i(beh))}@\Iteratively 
 evaluates @i(beh) with the atom
 @i(var) set with values from 0 to @i(limit)-1, inclusive.  These sounds
 are then placed simultaneously in time as if by @code(sim).
@@ -4613,8 +4393,7 @@ In LISP, the syntax is
  @code[(seqrep (@i(var) @i(limit)) @i(beh))].
 
 @label(trigger-sec)
-@codef[trigger(@pragma(defn)@index(trigger)@i(s), @i(beh))] @c{[sal]}@*
-@altdef{@code[(trigger @i(s) @i(beh))] @c{[lisp]}}@\Returns a sound which is the
+@codef[trigger(@pragma(defn)@index(trigger)@i(s), @i(beh))]@\Returns a sound which is the
 sum of instances of the behavior @i(beh). One instance is created each time
 @code(SOUND) @i(s) makes a transition from less than or equal to zero to
 greater than zero. (If the first sample of @i(s) is greater than zero, an
@@ -4625,24 +4404,19 @@ in real time by making @i(s) a function of a Nyquist slider, which can be
 controlled by a graphical interface or by OSC messages. See @code(snd-slider)
 in Section @ref(snd-slider-sec).
 
-@codef[set-logical-stop(@pragma(defn)@index(set-logical-stop)@i(beh), @i(time))] @c{[sal]}@*
-@altdef{@code[(set-logical-stop @i(beh) @i(time))] @c{[lisp]}}@\Returns a sound with @i(time) as 
+@codef[set-logical-stop(@pragma(defn)@index(set-logical-stop)@i(beh), @i(time))]@\Returns a sound with @i(time) as 
 the logical stop time.
 
-@codef{sum(@pragma(defn)@index(sum)@index(mix)@i(a) [, @i(b), @r(...)])} @c{[sal]}@*
-@altdef{@code{(sum @i(a) [@i(b) @r(...)])} @c{[lisp]}}@\Returns the sum of @i(a), @i(b), ..., allowing mixed addition of sounds, multichannel sounds and numbers.  Identical to @i(sim). In SAL, use the infix ``+'' operator.
+@codef{sum(@pragma(defn)@index(sum)@index(mix)@i(a)[ ,@i(b), @i(c), ...])}@\Returns the sum of @i(a), @i(b), @i(c), ..., allowing mixed addition of sounds, multichannel sounds and numbers.  Identical to @i(sim).
 
-@codef{mult(@pragma(defn)@index(mult)@index(product)@index(multiply signals)@i(a) [, @i(b), @r(...)])} @c{[sal]}@*
-@altdef{@code{(mult @i(a) [@i(b) @r(...)])} @c{[lisp]}}@\Returns the product of @i(a), @i(b), ..., allowing mixed multiplication of sounds, multichannel sounds and numbers.
+@codef{mult(@pragma(defn)@index(mult)@index(product)@index(multiply signals)@i(a)[ ,@i(b), @i(c), ...])}@\Returns the product of @i(a), @i(b), @i(c), ..., allowing mixed multiplication of sounds, multichannel sounds and numbers.
 
-@codef{diff(@pragma(defn)@index(diff)@index(difference of sounds)@i(a), @i(b))} @c{[sal]}@*
-@altdef{@code[(diff @i(a) @i(b))] @c{[lisp]}}@\Returns the difference between @i(a) and @i(b). This function is defined as @code[(sum a (prod -1 b))].
+@codef{diff(@pragma(defn)@index(diff)@index(difference of sounds)@i(a), @i(b))}@\Returns the difference between @i(a) and @i(b). This function is defined as @code[(sum a (prod -1 b))].
 
 @label(timed-seq-sec)
-@codef{timed-seq(@pragma(defn)@index(timed-seq)@index(score)@index(note list)@i(score))} @c{[sal]}@*
-@altdef{@code[(timed-seq @i(score))] @c{[lisp]}}@\Computes sounds from a note list or ``score.'' The @i(score) 
+@codef{timed-seq(@pragma(defn)@index(timed-seq)@index(score)@index(note list)@i(score))}@\Computes sounds from a note list or ``score.'' The @i(score) 
 is of the form: @code[`((@i(time1) @i(stretch1) @i(beh1)) (@i(time2) 
-@i(stretch2) @i(beh2)) @r(...))], where @i(timeN) is the starting time, 
+@i(stretch2) @i(beh2)) ...)], where @i(timeN) is the starting time, 
 @i(stretchN) is the stretch factor, and @i(behN) is the behavior. Note 
 that @i(score) is normally a @i(quoted list)! The times must be in 
 increasing order, and each @i(behN) is evaluated using lisp's @code(eval), 
@@ -4667,8 +4441,7 @@ represents a rest and is ignored.
 @index(sound file I/O)
 @begin(fndefs)
 @label(play-sec)
-@codef[play @pragma(defn)@index(play)@i(sound)] @c{[sal]}@*
-@altdef{@code[(play @i(sound))] @c{[lisp]}}@\Play the sound 
+@codef[play @pragma(defn)@index(play)@i(sound)]@\Play the sound 
 through the DAC.  
 Note that @code(play) is a command in SAL. In XLISP, it is a function,
 so the syntax is @code[(play @i(sound))], and in SAL, you can call the
@@ -4686,15 +4459,16 @@ The @i(lookahead) method precomputes and buffers @code(*autonorm-max-samples*)
 samples, finds the peak value, and normalizes accordingly. The 
 @code('previous) method bases the normalization of the current sound on the peak value of the (entire) previous sound. This might be good if you are working with long sounds that start rather softly. See Section @ref(peak-ex-sec) for more details.
 
-If you want precise control over output levels, you should turn this feature off by typing (using SAL syntax):
+If you want precise control over output levels, you should turn this feature off by typing:
 @begin(example)
 autonorm-off()@index(autonorm-off)
 @end(example)
 Reenable the automatic normalization feature by typing:
-@begin(example)
-autonorm-on()@index(autonorm-on)
+@begin(example)@index(autonorm-on)
+autonorm-on()
 @end(example)
-Play normally produces real-time output.  The default is to send audio data to the DAC as it is computed in addition to saving samples in a file.  If computation is slower than real-time, output will be choppy, but since the samples end up in a file, you can type @code[(r)] to replay the stored sound. Real-time playback can be disabled by (using SAL syntax):
+
+Play normally produces real-time output.  The default is to send audio data to the DAC as it is computed in addition to saving samples in a file.  If computation is slower than real-time, output will be choppy, but since the samples end up in a file, you can type @code[(r)] to replay the stored sound. Real-time playback can be disabled by:
 @begin(example)
 sound-off()@index(sound-off)
 @end(example)
@@ -4713,27 +4487,21 @@ between sample computation and sample playback, the elapsed time may not
 be too accurate, and the computed elapsed time may not advance after all
 samples have been computed but the sound is still playing.
 
-@codef[play-file(@pragma(defn)@index(play-file)@i(filename))] @c{[sal]}@*
-@altdef{@code[(play-file @i(filename))] @c{[lisp]}}@\Play the contents of a sound file named by @i(filename). The @code(s-read) function is used to read the file, and unless 
+@codef[play-file(@pragma(defn)@index(play-file)@i(filename))]@\Play the contents of a sound file named by @i(filename). The @code(s-read) function is used to read the file, and unless 
 @i(filename) specifies an absolute path or starts with ``.'', it will be read from 
 @code(*default-sf-dir*).
 
-@codef[autonorm-on(@pragma(defn)@index(autonorm-on))] @c{[sal]}@*
-@altdef{@code[(autonorm-on)] @c{[lisp]}}@\Enable automatic adjustment of a scale factor applied to sounds computed using the @code(play) command.
+@codef[autonorm-on(@pragma(defn)@index(autonorm-on))]@\Enable automatic adjustment of a scale factor applied to sounds computed using the @code(play) command.
 
-@codef[autonorm-off(@pragma(defn)@index(autonorm-off))] @c{[sal]}@*
-@altdef{@code[(autonorm-off)] @c{[lisp]}}@\Disable automatic adjustment of a scale factor applied to sounds computed using the @code(play) command.
+@codef[autonorm-off(@pragma(defn)@index(autonorm-off))]@\Disable automatic adjustment of a scale factor applied to sounds computed using the @code(play) command.
 
-@codef[sound-on(@pragma(defn)@index(sound-on))] @c{[sal]}@*
-@altdef{@code[(sound-on)] @c{[lisp]}}@\Enable real-time audio output when sound is computed by the the @code(play) command.
+@codef[sound-on(@pragma(defn)@index(sound-on))]@\Enable real-time audio output when sound is computed by the the @code(play) command.
 
-@codef[sound-off(@pragma(defn)@index(sound-off))] @c{[sal]}@*
-@altdef{@code[(sound-off)] @c{[lisp]}}@\Disable real-time audio output when sound is computed by the the @code(play) command.
+@codef[sound-off(@pragma(defn)@index(sound-off))]@\Disable real-time audio output when sound is computed by the the @code(play) command.
 
 @label(s-save-sec)
 @codef{s-save(@pragma(defn)@index(s-save)@index(save samples to file)@index(write samples to file)@index(output samples to file)@i(expression), @i(maxlen),
-@i(filename), format: @i(format), mode: @i(mode), bits: @i(bits), swap: @i(flag), play: @i(play))} @c{[sal]}@*
-@altdef{@code{(s-save @i(expression) @i(maxlen) @i(filename) :format @i(format) :mode @i(mode) :bits @i(bits) :swap @i(flag) :play @i(play))} @c{[lisp]}}@\@label(s-save)Evaluates the @i(expression), which should result in a sound
+@i(filename)[ ,format: @i(format)] [, mode: @i(mode)] [, bits: @i(bits)] [, swap: @i(flag)] [, play: @i(play)])}@\@label(s-save)Evaluates the @i(expression), which should result in a sound
 or an array of sounds, and writes the result to the given @i(filename).  A
 @code(FLONUM) is returned giving the maximum absolute value of all samples
 written. (This is useful for normalizing sounds and detecting sample
@@ -4745,9 +4513,9 @@ highest rate in any channel so that all channels have the same sample rate.
 The maximum number of samples written per channel is given by @i(maxlen),
 which allows writing the initial part of a very long or infinite sound. A
 header is written according to @i(format), samples are encoded according to
-@i(mode), using @i(bits) bits/sample, and bytes are swapped if @i(flag) is not NIL.  Defaults for these are
+@i(mode), using @i(bits) bits/sample, and bytes are swapped if @i(swap) is not NIL.  Defaults for these are
 @code(*default-sf-format*), @code(*default-sf-mode*), and
-@code(*default-sf-bits*). The default for @i(flag) is NIL.
+@code(*default-sf-bits*). The default for @i(swap) is NIL.
 The @i(bits) parameter may be 8, 16, or 32.  The values for the @i(format) and @i(mode) options are described below:
 @end(fndefs)
 @b(Format)
@@ -4802,11 +4570,8 @@ SGI and Macintosh machines:@\@code(snd-head-AIFF), @code(snd-mode-pcm), @code(16
 
 @begin(fndefs)
 @label(s-read-sec)
-@codef{s-read(@pragma(defn)@index(s-read)@index(read samples from file)@i(filename), time-offset: @i(offset), srate: @i(sr), dur: @i(dur), nchans: @i(chans),
- format: @i(format), mode: @i(mode), bits: @i(n), swap: @i(flag))} @c{[sal]}@*
-@altdef{@code{(s-read @i(filename) :time-offset @i(offset) :srate @i(sr)
- :dur @i(dur) :nchans @i(chans) :format @i(format) :mode @i(mode) :bits @i(n)
- :swap @i(flag))} @c{[lisp]}}@\Reads a sound from
+@codef{s-read(@pragma(defn)@index(s-read)@index(read samples from file)@i(filename)[ ,time-offset: @i(offset)] [, srate:
+@i(sr)] [, dur: @i(dur)] [, nchans: @i(chans)] [, format: @i(format)] [, mode: @i(mode),]  [bits: @i(n)] [, swap: @i(flag)])}@\Reads a sound from
  @i(filename). The global @code(*default-sf-dir*) applies. If a header is
 detected, the header is used to determine the format
 of the file, and header information overrides format information provided by
@@ -4816,31 +4581,31 @@ s-read("mysound.snd", srate: 44100)
 @end(example)
 specifies a sample rate of 44100 hz, but if the file has a header specifying 22050 hz, the resulting sample rate will be 22050.  The parameters are:
 @begin(itemize)
- @i(offset) @itemsep the amount of time (in seconds) to skip from
+ @code(:time-offset) @itemsep the amount of time (in seconds) to skip from
 the beginning of the file.  The default is 0.0.
 
-@i(sr) @itemsep the sample rate of the samples in the file.  Default is
+@code(:srate) @itemsep the sample rate of the samples in the file.  Default is
 @code(*default-sf-srate*) @index(*default-sf-srate*), which is normally 44100.
 
- @i(dur) @itemsep the maximum duration in seconds to read.  Default is
+ @code(:dur) @itemsep the maximum duration in seconds to read.  Default is
 10000.
 
- @i(chans) @itemsep the number of channels to read.  It is assumed that
+ @code(:nchans) @itemsep the number of channels to read.  It is assumed that
 samples from each channel are interleaved.  Default is 1.
 
- @i(format) @itemsep the header format.  See @code(s-save) for details.
+ @code(:format) @itemsep the header format.  See @code(s-save) for details.
 Default is @code(*default-sf-format*), although this parameter is currently
 ignored.
 
- @i(mode) @itemsep the sample representation, e.g. PCM or float.  See
+ @code(:mode) @itemsep the sample representation, e.g. PCM or float.  See
 @code(s-save) for details.  Default is @code(*default-sf-format*).
 
- @i(n) @itemsep the number of bits per sample.  See @code(s-save) for
+ @code(:bits) @itemsep the number of bits per sample.  See @code(s-save) for
 details.  Default is @code(*default-sf-bits*).
 
- @i(flag) @itemsep (T or NIL) swap byte order of each sample. Default is NIL.
+ @code(:swap) @itemsep (T or NIL) swap byte order of each sample. Default is NIL.
 @end(itemize)
-If there is an error, for example if @i(offset) is greater than the length of the file, then @code(NIL) is returned rather than a sound. Information about the sound is also returned by @code(s-read) through @code(*rslt*)@foot(Since XLISP does not support multiple value returns, multiple value returns are simulated by having the function assign additional return values in a list to the global variable @code(*rslt*). Since this is a global, it should be inspected or copied immediately after the function return to insure that return values are not overwritten by another function.). The list assigned to @code(*rslt*) is of the form: (@i(format) @i(channels) @i(mode) @i(bits) @i(samplerate) @i(duration) @i(flags) @i(byte-offset)), which are defined as follows:
+If there is an error, for example if @code(:time-offset) is greater than the length of the file, then @code(NIL) is returned rather than a sound. Information about the sound is also returned by @code(s-read) through @code(*rslt*)@foot(Since XLISP does not support multiple value returns, multiple value returns are simulated by having the function assign additional return values in a list to the global variable @code(*rslt*). Since this is a global, it should be inspected or copied immediately after the function return to insure that return values are not overwritten by another function.). The list assigned to @code(*rslt*) is of the form: (@i(format) @i(channels) @i(mode) @i(bits) @i(samplerate) @i(duration) @i(flags) @i(byte-offset)), which are defined as follows:
 @begin(itemize)
 @i(format) @itemsep the header format. See @code(s-save) for details.
 
@@ -4867,8 +4632,7 @@ functions).
 @end(itemize)
 
 @codef{s-add-to(@pragma(defn)@index(s-add-to)@index(add to file samples)@index(mix to file)@i(expression), @i(maxlen), 
-@i(filename) [, @i(offset)])} @c{[sal]}@*
-@altdef{@code{(s-add-to @i(expression) @i(maxlen) @i(filename) [@i(offset)])} @c{[lisp]}}@\@label(s-add-to-sec)Evaluates the @i(expression), which should result in a sound
+@i(filename)[ ,@i(offset)])}@\@label(s-add-to-sec)Evaluates the @i(expression), which should result in a sound
 or an array of sounds, and adds the result to the given @i(filename).  
 The global @code(*default-sf-dir*) applies. A @code(FLONUM) is returned, 
 giving the maximum absolute value of all samples written. The
@@ -4884,8 +4648,7 @@ The file must be a recognized
 sound file with a header (not a raw sound file).
 
 
-@codef{s-overwrite(@pragma(defn)@index(s-overwrite)@index(replace file samples)@index(overwrite samples)@i(expression), @i(maxlen), @i(filename) [, @i(offset)])} @c{[sal]}@*
-@altdef{@code{(s-overwrite @i(expression) @i(maxlen) @i(filename) [@i(offset)])} @c{[lisp]}}@\@label(s-overwrite-sec)Evaluates 
+@codef{s-overwrite(@pragma(defn)@index(s-overwrite)@index(replace file samples)@index(overwrite samples)@i(expression), @i(maxlen), @i(filename)[ ,@i(offset)])}@\@label(s-overwrite-sec)Evaluates 
 the @i(expression), which should result in a sound
 or an array of sounds, and replaces samples in the given @i(filename).  
 The global @code(*default-sf-dir*) applies.
@@ -4901,19 +4664,14 @@ the original file, the file is not modified. (If necessary, use
 @code(s-add-to) to extend the file with zeros.) The file must be a recognized
 sound file with a header (not a raw sound file).
 
-@codef{sf-info(@pragma(defn)@index(sf-info)@index(sound file info)@i(filename))} @c{[sal]}@*
-@altdef{@code[(sf-info @i(filename))] @c{[lisp]}}@\Prints information about a sound file. The parameter @i(filename) is a string.  The file is assumed to be in *default-sf-dir* (see @code(soundfilename) below) unless the filename begins with ``.'' or ``/''. The source for this function is in the @code(runtime) and provides an example of how to determine sound file parameters. 
+@codef{sf-info(@pragma(defn)@index(sf-info)@index(sound file info)@i(filename))}@\Prints information about a sound file. The parameter @i(filename) is a string.  The file is assumed to be in *default-sf-dir* (see @code(soundfilename) below) unless the filename begins with ``.'' or ``/''. The source for this function is in the @code(runtime) and provides an example of how to determine sound file parameters. 
 
-@codef{soundfilename(@pragma(defn)@index(soundfilename)@i(name))} @c{[sal]}@*
-@altdef{@code[(soundfilename @i(name))] @c{[lisp]}}@\Converts a string @i(name) to a soundfile name.  If @i(name) begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from @code(*default-sf-dir*) is prepended to @i(name).  The @code(s-plot), @code(s-read), and @code(s-save) functions all use @code(soundfilename) translate filenames.
+@codef{soundfilename(@pragma(defn)@index(soundfilename)@i(name))}@\Converts a string @i(name) to a soundfile name.  If @i(name) begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from @code(*default-sf-dir*) is prepended to @i(name).  The @code(s-plot), @code(s-read), and @code(s-save) functions all use @code(soundfilename) translate filenames.
 
-@codef{s-plot(@pragma(defn)@index(s-plot)@i(sound) 
- [, @i(n), @i(dur)])} @c{[sal]}@*
-@altdef{@code{(s-plot @i(sound) 
- [@i(n) @i(dur)])} @c{[lisp]}}@\Plots sound in a window.  This function was designed to run a @code(plot) program on a Unix workstation, but now is
-primarily used with @code(NyquistIDE), which has self-contained plotting. Normally,
+@codef{s-plot(@pragma(defn)@index(s-plot)@i(sound)[, @i(n), @i(dur)])}@\Plots sound in a window.  This function was designed to run a @code(plot) program on a Unix workstation, but now is
+primarily used with @code(jNyqIDE), which has self-contained plotting. Normally,
 time/value pairs in ascii are written to @code(points.dat) and system-dependent code
-(or the @code(NyquistIDE) program) takes it from there. If the @i(sound) is 
+(or the @code(jNyqIDE) program) takes it from there. If the @i(sound) is 
 longer than the optional @i(dur) (default is 2 seconds), only the 
 first @i(dur) seconds are plotted. 
 If there are more than @i(n) samples to be plotted, the signal is interpolated
@@ -4923,8 +4681,7 @@ The data file used is:
 @codef(*default-plot-file*)@pragma(defn)@index(*default-plot-file*)@\The file containing the data points, defaults to "points.dat".
 @end(description)
 
-@codef{s-print-tree(@pragma(defn)@index(s-print-tree)@index(snd-print-tree)@i(sound))} @c{[sal]}@*
-@altdef{@code[(s-print-tree @i(sound))] @c{[lisp]}}@\Prints an ascii
+@codef{s-print-tree(@pragma(defn)@index(s-print-tree)@index(snd-print-tree)@i(sound))}@\Prints an ascii
 representation of the internal data structures representing a sound.  This
 is useful for debugging@index(debugging) Nyquist.  Identical to @code(snd-print-tree).
 
@@ -4941,15 +4698,13 @@ The basic operations that create sounds are described here.
 @begin(fndefs)
 
 @codef[snd-const(@pragma(defn)@index(snd-const)@i(value), @i(t0), @i(srate),
-@i(duration))] @c{[sal]}@*
-@altdef{@code[(snd-const @i(value) @i(t0) @i(srate) @i(duration))] @c{[lisp]}}@\Returns a sound with constant @i(value), starting at @i(t0)
+@i(duration))]@\Returns a sound with constant @i(value), starting at @i(t0)
 with the given @i(duration), at the sample rate @i(srate).  You might want
 to use @code(pwl) (see Section @ref(pwl-sec)) instead.
 
 @codef[snd-read(@pragma(defn)@index(snd-read)@i(filename), @i(offset), @i(t0), @i(format),
 @i(channels), @i(mode), @i(bits), @i(swap), @i(sr),
-@i(dur))] @c{[sal]}@*
-@altdef{@code[(snd-read @i(filename) @i(offset) @i(t0) @i(format) @i(channels) @i(mode) @i(bits) @i(swap) @i(sr) @i(dur))] @c{[lisp]}}@\Loads a sound from a file with name @i(filename).  Files are
+@i(dur))]@\Loads a sound from a file with name @i(filename).  Files are
 assumed to consist of a header followed by frames consisting of one sample
 from each channel.  The @i(format) specifies the type of header, but this
 information is currently ignored.  Nyquist looks for a number of header
@@ -4979,8 +4734,7 @@ call @code(s-read) (see Section @ref(s-read-sec)) instead of
 @i(mode) and @i(format) parameters.
 
 @codef[snd-save(@pragma(defn)@index(snd-save)@i(expression), @i(maxlen),
-@i(filename), @i(format), @i(mode), @i(bits), @i(swap), @i(play))] @c{[sal]}@*
-@altdef{@code[(snd-save @i(expression) @i(maxlen) @i(filename) @i(format) @i(mode) @i(bits) @i(swap) @i(play))] @c{[lisp]}}@\@label(snd-save)Evaluates 
+@i(filename), @i(format), @i(mode), @i(bits), @i(swap), @i(play))]@\@label(snd-save)Evaluates 
 the @i(expression), which should result in a sound
 or an array of sounds, and writes the result to the given @i(filename).  If
 a multichannel sound (array) is written, the channels are up-sampled to the
@@ -4996,8 +4750,7 @@ number of channels, and duration (in that order) of the saved sound.
 @code(s-save) (see Section @ref(s-save-sec)) instead.  The @i(format) and
 @i(mode) parameters are described in Section @ref(s-save-sec).
 
-@codef[snd-overwrite(@pragma(defn)@index(snd-overwrite)@i(expression), @i(maxlen), @i(filename), @i(offset), @i(format), @i(mode), @i(bits), @i(swap))] @c{[sal]}@*
-@altdef{@code[(snd-overwrite @i(expression) @i(maxlen) @i(filename) @i(offset) @i(format) @i(mode) @i(bits) @i(swap))] @c{[lisp]}}@\@label(snd-overwrite-sec)Evaluates 
+@codef[snd-overwrite(@pragma(defn)@index(snd-overwrite)@i(expression), @i(maxlen), @i(filename), @i(offset), @i(format), @i(mode), @i(bits), @i(swap))]@\@label(snd-overwrite-sec)Evaluates 
 the @i(expression), which should result in a sound
 or an array of sounds, and replaces samples in the given @i(filename), 
 writing the first frame at a time of @i(offset) seconds. The @i(offset) must 
@@ -5024,8 +4777,7 @@ Use @code(s-add-to) (in Section @ref(s-add-to-sec) or
 @code(s-overwrite) (in Section @ref(s-overwrite-sec) instead of this function.
 
 @codef[snd-coterm(@pragma(defn)@index(snd-coterm)@index(co-termination)@index(duration of
-another sound)@i(s1), @i(s2))] @c{[sal]}@*
-@altdef{@code[(snd-coterm @i(s1) @i(s2))] @c{[lisp]}}@\Returns a copy of @i(s1), except the start
+another sound)@i(s1), @i(s2))]@\Returns a copy of @i(s1), except the start
 time is the maximum of the start times of @i(s1) and @i(s2), and the
 termination time is the minimum of @i(s1) and @i(s2). (After the termination
 time, the sound is zero as if @i(s1) is gated by @i(s2).)  Some rationale
@@ -5045,31 +4797,26 @@ the result will have only the duration of the new sound, and this can be
 used to overwrite the file. This function is used in the implementation of
 @code(s-add-to), which is defined in @code(runtime/fileio.lsp).
 
-@code[(snd-from-array @r(...))] @c{[sal]}@*
-@altdef{@code[(snd-from-array @r(...))] @c{[lisp]}}@\See @pragma(startref) page @pageref(snd-from-array-sec).
+@codef[(snd-from-array @i(...))]@\See @pragma(startref) page @pageref(snd-from-array-sec).
 
-@codef[snd-white(@pragma(defn)@index(snd-white)@i(t0), @i(sr), @i(d))] @c{[sal]}@*
-@altdef{@code[(snd-white @i(t0) @i(sr) @i(d))] @c{[lisp]}}@\Generate white noise, starting at
+@codef[snd-white(@pragma(defn)@index(snd-white)@i(t0), @i(sr), @i(d))]@\Generate white noise, starting at
 @i(t0), with sample rate @i(sr), and duration @i(d).  You probably want to
 use @code(noise) (see Section @ref(noise-sec)).
 
- @codef[snd-zero(@pragma(defn)@index(snd-zero)@i(t0), @i(srate))] @c{[sal]}@*
-@altdef{@code[(snd-zero @i(t0) @i(srate))] @c{[lisp]}}@\Creates a sound that is
+ @codef[snd-zero(@pragma(defn)@index(snd-zero)@i(t0), @i(srate))]@\Creates a sound that is
 zero everywhere, starts at @i(t0), and has sample rate @i(srate).  The
 logical stop time is immediate, i.e. also at @i(t0).  You probably want
 to use @code(pwl) (see Section @ref(pwl-sec)) instead.
 
- @codef[get-slider-value(@pragma(defn)@index(get-slider-value)@i(index))] @c{[sal]}@*
-@altdef{@code[(get-slider-value @i(index))] @c{[lisp]}}@\@label(get-slider-value-sec)Return the current value of the slider
+ @codef[get-slider-value(@pragma(defn)@index(get-slider-value)@i(index))]@\@label(get-slider-value-sec)Return the current value of the slider
 named by @i(index) (an integer index into the array of sliders). 
 Note that this ``slider'' is just a floating point
 value in an array. Sliders can be changed by OSC messages (see @code(osc-enable)) and by sending character
 sequences to Nyquist's standard input. (Normally, these character sequences would 
-not be typed but generated by the NyquistIDE interactive development environment, which
+not be typed but generated by the jNyqIDE interactive development environment, which
 runs Nyquist as a sub-process, and which present the user with graphical sliders.) 
 
-@codef[snd-slider(@pragma(defn)@index(snd-slider)@i(index), @i(t0), @i(srate), @i(duration))] @c{[sal]}@*
-@altdef{@code[(snd-slider @i(index) @i(t0) @i(srate) @i(duration))] @c{[lisp]}}@\@label(snd-slider-sec)Create
+@codef[snd-slider(@pragma(defn)@index(snd-slider)@i(index), @i(t0), @i(srate), @i(duration))]@\@label(snd-slider-sec)Create
 a sound controlled by the slider named by @i(index) (an integer 
 index into the array of sliders; see @code(get-slider-value) for more information). 
 The function returns a sound. Since Nyquist sounds are computed in blocks of samples, 
@@ -5085,31 +4832,26 @@ This next set of functions take sounds as arguments, operate on them, and
 return a sound.
 
 @begin(fndefs)
-@codef[snd-abs(@pragma(defn)@index(snd-abs)@index(absolute value)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-abs @i(sound))] @c{[lisp]}}@\Computes a new 
+@codef[snd-abs(@pragma(defn)@index(snd-abs)@index(absolute value)@i(sound))]@\Computes a new 
 sound where each sample is the absolute value of the corresponding sample in
 @i(sound). You should probably use @code(s-abs) instead. (See Section @ref(s-abs-sec).)
 
-@codef[snd-sqrt(@pragma(defn)@index(snd-sqrt)@index(square root)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-sqrt @i(sound))] @c{[lisp]}}@\Computes a new 
+@codef[snd-sqrt(@pragma(defn)@index(snd-sqrt)@index(square root)@i(sound))]@\Computes a new 
 sound where each sample is the square root of the corresponding sample in
 @i(sound). If a sample is negative, it is taken to be zero to avoid raising a floating point error. You should probably use @code(s-sqrt) instead. (See Section @ref(s-sqrt-sec).)
 
- @codef[snd-add(@pragma(defn)@index(snd-add)@i(sound1), @i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-add @i(sound1) @i(sound))] @c{[lisp]}}@\Adds two sounds.  The
+ @codef[snd-add(@pragma(defn)@index(snd-add)@i(sound1), @i(sound))]@\Adds two sounds.  The
 resulting start time is the minimum of the two parameter start times, the
 logical stop time is the maximum of the two parameter stop times, and the
 sample rate is the maximum of the two parameter sample rates.  Use
 @code(sim) or @code(sum) instead of @code(snd-add) (see Section @ref(sim-sec)).
 
 @codef[snd-offset(@pragma(defn)@index(snd-offset)@index(offset to a sound)@index(add 
-offset to sound)@i(sound), @i(offset))] @c{[sal]}@*
-@altdef{@code[(snd-offset @i(sound) @i(offset))] @c{[lisp]}}@\Add an offset to a sound. The 
+offset to sound)@i(sound), @i(offset))]@\Add an offset to a sound. The 
 resulting start time, logical stop time, stop time, and sample rate are 
 those of @i(sound). Use @code(sum) instead (see Section @ref(sim-sec)).
 
-@codef[snd-avg(@pragma(defn)@index(snd-avg)@index(moving average)@index(RMS)@index(average)@i(sound), @i(blocksize), @i(stepsize), @i(operation))] @c{[sal]}@*
-@altdef{@code[(snd-avg @i(sound) @i(blocksize) @i(stepsize) @i(operation))] @c{[lisp]}}@\Computes the averages 
+@codef[snd-avg(@pragma(defn)@index(snd-avg)@index(moving average)@index(RMS)@index(average)@i(sound), @i(blocksize), @i(stepsize), @i(operation))]@\Computes the averages 
 or peak values of blocks of samples. Each output sample is an average or 
 peak of @i(blocksize) (a fixnum) adjacent samples from the input @i(sound). 
 After each average or peak is taken, the input is advanced by @i(stepsize), 
@@ -5122,13 +4864,11 @@ or @code(OP-PEAK).  (These are global lisp variables; the actual
 @i(operation) parameter is an integer.) For RMS computation, see 
 @code(rms) in Section @ref(rms-sec).
 
-@codef[snd-clip(@index(clip)@pragma(defn)@index(snd-clip)@i(sound), @i(peak))] @c{[sal]}@*
-@altdef{@code[(snd-clip @i(sound) @i(peak))] @c{[lisp]}}@\Hard limit @i(sound) 
+@codef[snd-clip(@index(clip)@pragma(defn)@index(snd-clip)@i(sound), @i(peak))]@\Hard limit @i(sound) 
 to the given @i(peak), a positive number. The samples of @i(sound) are constrained between an upper value
 of @i(peak) and a lower value of @subtract()@i(peak). Use @code(clip) instead (see Section @ref(clip-sec)).
 
-@codef[snd-compose(@index(compose)@index(signal composition)@pragma(defn)@index(snd-compose)@i(f), @i(g))] @c{[sal]}@*
-@altdef{@code[(snd-compose @i(f) @i(g))] @c{[lisp]}}@\Compose two signals, i.e.
+@codef[snd-compose(@index(compose)@index(signal composition)@pragma(defn)@index(snd-compose)@i(f), @i(g))]@\Compose two signals, i.e.
 compute @i(f)(@i(g)(@i(t))), where @i(f) and @i(g) are sounds. This function
 is used primarily to implement time warping, but it can be used in other
 applications such as frequency modulation.  For each sample @i(x) in @i(g),
@@ -5148,8 +4888,7 @@ see @code(demos/pitch_change.htm).@index(demos, pitch change)@index(pitch shifti
 
 @label(snd-tapv-sec)
 @codef[snd-tapv(@pragma(defn)@index(snd-tapv)@index(tap)@index(variable delay)@index(delay, 
-variable)@index(chorus)@i(sound), @i(offset), @i(vardelay), @i(maxdelay))] @c{[sal]}@*
-@altdef{@code[(snd-tapv @i(sound) @i(offset) @i(vardelay) @i(maxdelay))] @c{[lisp]}}@\A 
+variable)@index(chorus)@i(sound), @i(offset), @i(vardelay), @i(maxdelay))]@\A 
 variable delay: @i(sound) is delayed by the sum of @i(offset) (a @code(FIXNUM) or @code(FLONUM)) 
 and @i(vardelay) (a @code(SOUND)).  The specified delay is adjusted to lie in the range 
 of zero to @i(maxdelay) seconds to yield the actual delay, and the delay is 
@@ -5159,56 +4898,45 @@ the @i(vardelay) input is a slow sinusoid. The maximum delay is limited to
 @i(maxdelay), which determines the length of a fixed-sized buffer. The function
 @code(tapv) is equivalent and preferred (see Section @ref(tapv-sec)).
 
-@codef[snd-tapf(@pragma(defn)@index(snd-tapf)@index(variable delay)@index(delay, variable)@i(sound), @i(offset), @i(vardelay), @i(maxdelay))] @c{[sal]}@*
-@altdef{@code[(snd-tapf @i(sound) @i(offset) @i(vardelay) @i(maxdelay))] @c{[lisp]}}@\A
+@codef[snd-tapf(@pragma(defn)@index(snd-tapf)@index(variable delay)@index(delay, variable)@i(sound), @i(offset), @i(vardelay), @i(maxdelay))]@\A
 variable delay like @code(snd-tapv) except there is no linear interpolation. By 
 eliminating interpolation, the output is an exact copy of the input with no filtering
 or distortion. On the other hand, delays jump by samples causing samples to double or
 skip even when the delay is changed smoothly.
 
-@codef[snd-copy(@pragma(defn)@index(snd-copy)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-copy @i(sound))] @c{[lisp]}}@\Makes a copy of @i(sound).
+@codef[snd-copy(@pragma(defn)@index(snd-copy)@i(sound))]@\Makes a copy of @i(sound).
 Since operators always make (logical) copies of their sound parameters, this
 function should never be needed.  This function is here for debugging@index(dubugging).
 
-@codef[snd-down(@pragma(defn)@index(snd-down)@i(srate), @i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-down @i(srate) @i(sound))] @c{[lisp]}}@\Linear interpolation
+@codef[snd-down(@pragma(defn)@index(snd-down)@i(srate), @i(sound))]@\Linear interpolation
 of samples down to the given sample rate @i(srate), which must be lower than
 the sample rate of @i(sound).  Do not call this function.  Nyquist performs
 sample-rate conversion automatically as needed.  If you want to force a
 conversion, call @code(force-srate) (see Section @ref(force-srate-sec)).
 
-@codef[snd-exp(@pragma(defn)@index(snd-exp)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-exp @i(sound))] @c{[lisp]}}@\Compute the exponential of each sample of @i(sound). Use @code(s-exp) instead (see Section @ref(s-exp-sec)).
+@codef[snd-exp(@pragma(defn)@index(snd-exp)@i(sound))]@\Compute the exponential of each sample of @i(sound). Use @code(s-exp) instead (see Section @ref(s-exp-sec)).
 
 @label(snd-follow-sec)
-@codef[snd-follow(@pragma(defn)@index(snd-follow)@index(follower)@index(envelope follower)@i(sound), @i(floor), @i(risetime), @i(falltime), @i(lookahead))] @c{[sal]}@*
-@altdef{@code[(snd-follow @i(sound) @i(floor) @i(risetime) @i(falltime) @i(lookahead))] @c{[lisp]}}@\An envelope 
+@codef[snd-follow(@pragma(defn)@index(snd-follow)@index(follower)@index(envelope follower)@i(sound), @i(floor), @i(risetime), @i(falltime), @i(lookahead))]@\An envelope 
 follower. The basic goal of this function is to generate a smooth signal 
 that rides on the peaks of the input signal. The usual objective is to 
 produce an amplitude envelope given a low-sample rate (control rate) 
 signal representing local RMS measurements. The first argument is the 
 input signal. The @i(floor) is the minimum output value. The @i(risetime) is the time (in seconds) it takes for the output to rise (exponentially) from @i(floor) to unity (1.0) and the @i(falltime) is the time it takes for the output to fall (exponentially) from unity to @i(floor). The algorithm looks ahead for peaks and will begin to increase the output signal according to @i(risetime) in anticipation of a peak. The amount of anticipation (in sampless) is given by @i(lookahead).  The algorithm is as follows: the output value is allowed to increase according to @i(risetime) or decrease according to @i(falltime). If the next input sample is in this range, that sample is simply output as the next output sample.  If the next input sample is too large, the algorithm goes back in time as far as necessary to compute an envelope that rises according to @i(risetime) to meet the new value. The algorithm will only work backward as far as @i(lookahead).  If that is not far enough, then there is a final forward pass computing a rising signal from the earliest output sample. In this case, the output signal will be at least momentarily less than the input signal and will continue to rise exponentially until it intersects the input signal. If the input signal falls faster than indicated by @i(falltime), the output fall rate will be limited by @i(falltime), and the fall in output will stop when the output reaches @i(floor). This algorithm can make two passes througth the buffer on sharply rising inputs, so it is not particularly fast. With short buffers and low sample rates this should not matter. See @code(snd-avg) above for a function that can help to generate a low-sample-rate input for @code(snd-follow). See @code(snd-chase) in Section @ref(snd-chase-sec) for a related filter.
 
-@codef[snd-gate(@pragma(defn)@index(snd-gate)@index(noise gate)@index(gate)@i(sound), @i(lookahead), @i(risetime), @i(falltime), @i(floor), @i(threshold))] @c{[sal]}@*
-@altdef{@code[(snd-gate @i(sound) @i(lookahead) @i(risetime) @i(falltime) @i(floor) @i(threshold))] @c{[lisp]}}@\This function generates an exponential rise and decay intended for noise gate implementation. The decay starts when the signal drops below threshold and stays there for longer than lookahead. Decay continues until the value reaches floor, at which point the decay stops and the output value is held constant. Either during the decay or after the floor is reached, if the signal goes above threshold, then the output value will rise to unity (1.0) at the point the signal crosses the threshold. Again, look-ahead is used, so the rise actually starts before the signal crosses the threshold. The rise is a constant-rate exponential and set so that a rise from @i(floor) to unity occurs in @i(risetime).  Similarly, the fall is a constant-rate exponential such that a fall from unity to @i(floor) takes @i(falltime). The result is delayed by @i(lookahead), so the output is not actually synchronized with the input. To compensate, you should drop the initial @i(lookahead) of samples. Thus, @code(snd-gate) is not recommended for direct use. Use @code(gate) instead (see Section @ref(gate-sec)).
+@codef[snd-gate(@pragma(defn)@index(snd-gate)@index(noise gate)@index(gate)@i(sound), @i(lookahead), @i(risetime), @i(falltime), @i(floor), @i(threshold))]@\This function generates an exponential rise and decay intended for noise gate implementation. The decay starts when the signal drops below threshold and stays there for longer than lookahead. Decay continues until the value reaches floor, at which point the decay stops and the output value is held constant. Either during the decay or after the floor is reached, if the signal goes above threshold, then the output value will rise to unity (1.0) at the point the signal crosses the threshold. Again, look-ahead is used, so the rise actually starts before the signal crosses the threshold. The rise is a constant-rate exponential and set so that a rise from @i(floor) to unity occurs in @i(risetime).  Similarly, the fall is a constant-rate exponential such that a fall from unity to @i(floor) takes @i(falltime). The result is delayed by @i(lookahead), so the output is not actually synchronized with the input. To compensate, you should drop the initial @i(lookahead) of samples. Thus, @code(snd-gate) is not recommended for direct use. Use @code(gate) instead (see Section @ref(gate-sec)).
 
-@codef[snd-inverse(@index(inverse)@pragma(defn)@index(snd-inverse)@i(signal), @i(start), @i(srate))] @c{[sal]}@*
-@altdef{@code[(snd-inverse @i(signal) @i(start) @i(srate))] @c{[lisp]}}@\Compute the function inverse of @i(signal), that is, compute @i(g)(@i(t)) such that @i(signal)(@i(g)(@i(t))) = @i(t).  This function assumes that @i(signal) is non-decreasing, it uses linear interpolation, the resulting sample rate is @i(srate), and the result is shifted to have a starting time of @i(start).  If @i(signal) decreases, the true inverse may be undefined, so we define @code(snd-inverse) operationally as follows: for each output time point @i(t), scan ahead in @i(signal) until the value of signal exceeds @i(t).  Interpolate to find an exact time point @i(x) from @i(signal) and output @i(x) at time @i(t).  This function is intended for internal system use in implementing time warps.
+@codef[snd-inverse(@index(inverse)@pragma(defn)@index(snd-inverse)@i(signal), @i(start), @i(srate))]@\Compute the function inverse of @i(signal), that is, compute @i(g)(@i(t)) such that @i(signal)(@i(g)(@i(t))) = @i(t).  This function assumes that @i(signal) is non-decreasing, it uses linear interpolation, the resulting sample rate is @i(srate), and the result is shifted to have a starting time of @i(start).  If @i(signal) decreases, the true inverse may be undefined, so we define @code(snd-inverse) operationally as follows: for each output time point @i(t), scan ahead in @i(signal) until the value of signal exceeds @i(t).  Interpolate to find an exact time point @i(x) from @i(signal) and output @i(x) at time @i(t).  This function is intended for internal system use in implementing time warps.
 
-@codef[snd-log(@pragma(defn)@index(snd-log)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-log @i(sound))] @c{[lisp]}}@\Compute the natural logorithm of each sample of @i(sound). Use @code(s-log) instead (see Section @ref(s-log-sec)).
+@codef[snd-log(@pragma(defn)@index(snd-log)@i(sound))]@\Compute the natural logorithm of each sample of @i(sound). Use @code(s-log) instead (see Section @ref(s-log-sec)).
 
 @label(peak-sec)
-@codef[peak(@index(peak, maximum amplitude)@pragma(defn)@index(peak)@i(expression), @i(maxlen))] @c{[sal]}@*
-@altdef{@code[(peak @i(expression) @i(maxlen))] @c{[lisp]}}@\Compute the maximum absolute value of the amplitude of a sound.  The sound is created by evaluating @i(expression) (as in @code(s-save)).  Only the first @i(maxlen) samples are evaluated. The @i(expression) is automatically quoted (@code(peak) is a macro), so do not quote this parameter.  If @i(expression) is a variable, then the @i(global binding) of that variable will be used.  Also, since the variable retains a reference to the sound, the sound will be evaluated and left in memory.  See Section @ref(peak-ex-sec) on @pragma(startref) page @pageref(peak-ex-sec) for examples.
+@codef[peak(@index(peak, maximum amplitude)@pragma(defn)@index(peak)@i(expression), @i(maxlen))]@\Compute the maximum absolute value of the amplitude of a sound.  The sound is created by evaluating @i(expression) (as in @code(s-save)).  Only the first @i(maxlen) samples are evaluated. The @i(expression) is automatically quoted (@code(peak) is a macro), so do not quote this parameter.  If @i(expression) is a variable, then the @i(global binding) of that variable will be used.  Also, since the variable retains a reference to the sound, the sound will be evaluated and left in memory.  See Section @ref(peak-ex-sec) on @pragma(startref) page @pageref(peak-ex-sec) for examples.
 
 @label(snd-max-sec)
-@codef[snd-max(@pragma(defn)@index(snd-max)@index(maximum amplitude)@i(expression), @i(maxlen))] @c{[sal]}@*
-@altdef{@code[(snd-max @i(expression) @i(maxlen))] @c{[lisp]}}@\Compute the maximum absolute value of the amplitude of a sound.  The sound is created by evaluating @i(expression) (as in @code(snd-save)), which is therefore normally quoted by the caller.  At most @i(maxlen) samples are computed.  The result is the maximum of the absolute values of the samples.  @p(Notes:) It is recommended to use @code(peak) (see above) instead.  If you want to find the maximum of a sound bound to a local variable and it is acceptable to save the samples in memory, then this is probably the function to call.  Otherwise, use @code(peak).
+@codef[snd-max(@pragma(defn)@index(snd-max)@index(maximum amplitude)@i(expression), @i(maxlen))]@\Compute the maximum absolute value of the amplitude of a sound.  The sound is created by evaluating @i(expression) (as in @code(snd-save)), which is therefore normally quoted by the caller.  At most @i(maxlen) samples are computed.  The result is the maximum of the absolute values of the samples.  @p(Notes:) It is recommended to use @code(peak) (see above) instead.  If you want to find the maximum of a sound bound to a local variable and it is acceptable to save the samples in memory, then this is probably the function to call.  Otherwise, use @code(peak).
 
-@codef[snd-maxv(@pragma(defn)@index(snd-maxv)@index(maximum of two sounds)@i(sound1), @i(sound2))] @c{[sal]}@*
-@altdef{@code[(snd-maxv @i(sound1) @i(sound2))] @c{[lisp]}}@\Compute the maximum of @i(sound1) and @i(sound2) on a sample-by-sample basis. The resulting
+@codef[snd-maxv(@pragma(defn)@index(snd-maxv)@index(maximum of two sounds)@i(sound1), @i(sound2))]@\Compute the maximum of @i(sound1) and @i(sound2) on a sample-by-sample basis. The resulting
 sound has its start time at the maximum of the input start times and a logical stop
 at the minimum logical stop of the inputs. The physical stop time is the minimum of 
 the physical stop times of the two sounds. @i(Note that this violates the ``normal'' 
@@ -5219,8 +4947,7 @@ value in this extension will be zero because it will be after the physical stop 
 whereas if we simply treated) sound2 @i(as zero in this region and took the maximum, we
 would get a non-zero result.) Use @code(s-max) instead (see Section @ref(s-max-sec)).
 
-@codef[snd-normalize(@pragma(defn)@index(snd-normalize)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-normalize @i(sound))] @c{[lisp]}}@\Internally, sounds
+@codef[snd-normalize(@pragma(defn)@index(snd-normalize)@i(sound))]@\Internally, sounds
 are stored with a scale factor that applies to all samples of the sound.
 All operators that take sound arguments take this scale factor into account
 (although it is not always necessary to perform an actual multiply per
@@ -5228,23 +4955,20 @@ sample), so you should never need to call this function.  This function
 multiplies each sample of a sound by its scale factor, returning a sound
 that represents the same signal, but whose scale factor is 1.0.  
 
-@codef[snd-oneshot(@pragma(defn)@index(snd-oneshot)@index(oneshot)@index(threshold)@i(sound), @i(threshold), @i(ontime))] @c{[sal]}@*
-@altdef{@code[(snd-oneshot @i(sound) @i(threshold) @i(ontime))] @c{[lisp]}}@\Computes a new sound that is zero
+@codef[snd-oneshot(@pragma(defn)@index(snd-oneshot)@index(oneshot)@index(threshold)@i(sound), @i(threshold), @i(ontime))]@\Computes a new sound that is zero
 except where @i(sound) exceeds threshold. From these points, the result is 
 1.0 until @i(sound) remains below @i(threshold) for @i(ontime) (in seconds).
 The result has the same sample rate, start time, logical stop time, and 
 duration as @i(sound).
 
-@codef[snd-prod(@pragma(defn)@index(snd-prod)@index(signal multiplication)@index(multiplication)@i(sound1), @i(sound2))] @c{[sal]}@*
-@altdef{@code[(snd-prod @i(sound1) @i(sound2))] @c{[lisp]}}@\Computes the
+@codef[snd-prod(@pragma(defn)@index(snd-prod)@index(signal multiplication)@index(multiplication)@i(sound1), @i(sound2))]@\Computes the
 product of @i(sound1) and @i(sound2).  The resulting sound has its start
 time at the maximum of the input start times and a logical stop at the minimum
 logical stop of the inputs.  Do not use this function.  Use @code(mult) or
 @code(prod) instead (see Section @ref(mult-sec)).  Sample rate, start time, etc. are taken from @i(sound).
 
 @codef[snd-pwl(@pragma(defn)@index(snd-pwl)@index(piece-wise linear)@i(t0), @i(sr),
-@i(lis))] @c{[sal]}@*
-@altdef{@code[(snd-pwl @i(t0) @i(sr) @i(lis))] @c{[lisp]}}@\Computes a piece-wise linear function according to the breakpoints
+@i(lis))]@\Computes a piece-wise linear function according to the breakpoints
 in @i(lis).  The starting time is @i(t0), and the sample rate is @i(sr).
 The breakpoints are passed in an XLISP list (of type @code(LVAL)) where the
 list alternates sample numbers (@code(FIXNUM)s, computed in samples 
@@ -5255,24 +4979,20 @@ last
 value being implicitly zero (0).  The list is assumed to be well-formed.  Do
 not call this function.  Use @code(pwl) instead (see Section @ref(pwl-sec)).
 
-@codef[snd-quantize(@pragma(defn)@index(snd-quantize)@i(sound), @i(steps))] @c{[sal]}@*
-@altdef{@code[(snd-quantize @i(sound) @i(steps))] @c{[lisp]}}@\Quantizes a sound. See Section
+@codef[snd-quantize(@pragma(defn)@index(snd-quantize)@i(sound), @i(steps))]@\Quantizes a sound. See Section
 @ref(quantize-sec) for details.
 
-@codef[snd-recip(@pragma(defn)@index(snd-recip)@i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-recip @i(sound))] @c{[lisp]}}@\Compute the reciprocal of each sample of @i(sound). Use @code(recip) instead (see Section @ref(recip-sec)).
+@codef[snd-recip(@pragma(defn)@index(snd-recip)@i(sound))]@\Compute the reciprocal of each sample of @i(sound). Use @code(recip) instead (see Section @ref(recip-sec)).
 
 @codef[snd-resample(@pragma(defn)@index(snd-resample)@index(sample interpolation)@i(f),
-@i(rate))] @c{[sal]}@*
-@altdef{@code[(snd-resample @i(f) @i(rate))] @c{[lisp]}}@\Resample sound @i(f) using high-quality interpolation, yielding
+@i(rate))]@\Resample sound @i(f) using high-quality interpolation, yielding
 a new sound with the specified @i(rate). The result is scaled by 0.95 because often,
 in resampling, interpolated values exceed the original sample values, and this 
 could lead to clipping.
 The resulting start time, etc. are taken from
 @i(f). Use @code(resample) instead.
 
-@codef[snd-resamplev(@pragma(defn)@index(snd-resamplev)@index(sample interpolation)@index(signal composition)@i(f), @i(rate), @i(g))] @c{[sal]}@*
-@altdef{@code[(snd-resamplev @i(f) @i(rate) @i(g))] @c{[lisp]}}@\Compose two
+@codef[snd-resamplev(@pragma(defn)@index(snd-resamplev)@index(sample interpolation)@index(signal composition)@i(f), @i(rate), @i(g))]@\Compose two
 signals, i.e.  compute @i(f)(@i(g)(@i(t))), where @i(f) and @i(g) are
 sounds. The result has sample rate given by @i(rate).  At each time @i(t)
 (according to the @i(rate)), @i(g) is linearly interpolated to yield an
@@ -5289,15 +5009,12 @@ sample times. See @code(sound-warp) for a detailed discussion. See
 Normally, you should use @code(sound-warp) instead of this function.
 
 
-@codef[snd-scale(@pragma(defn)@index(snd-scale)@i(scale), @i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-scale @i(scale) @i(sound))] @c{[lisp]}}@\Scales the amplitude of @i(sound) by the factor @i(scale).  Use @code(scale) instead (see Section
+@codef[snd-scale(@pragma(defn)@index(snd-scale)@i(scale), @i(sound))]@\Scales the amplitude of @i(sound) by the factor @i(scale).  Use @code(scale) instead (see Section
 @ref(scale-sec)).
 
-@codef{snd-shape(@pragma(defn)@index(snd-shape)@i(signal), @i(table), @i(origin))} @c{[sal]}@*
-@altdef{@code[(snd-shape @i(signal) @i(table) @i(origin))] @c{[lisp]}}@\A waveshaping function.  This is the primitive upon which @code(shape) is based. The @code(snd-shape) function is like @code(shape) except that @i(signal) and @i(table) must be (single-channel) sounds.  Use @code(shape) instead (see Section @ref(shape-sec)).
+@codef{snd-shape(@pragma(defn)@index(snd-shape)@i(signal), @i(table), @i(origin))}@\A waveshaping function.  This is the primitive upon which @code(shape) is based. The @code(snd-shape) function is like @code(shape) except that @i(signal) and @i(table) must be (single-channel) sounds.  Use @code(shape) instead (see Section @ref(shape-sec)).
 
-@codef[snd-up(@pragma(defn)@index(snd-up)@i(srate), @i(sound))] @c{[sal]}@*
-@altdef{@code[(snd-up @i(srate) @i(sound))] @c{[lisp]}}@\Increases sample rate by linear
+@codef[snd-up(@pragma(defn)@index(snd-up)@i(srate), @i(sound))]@\Increases sample rate by linear
 interpolation.  The @i(sound) is the signal to be up-sampled, and @i(srate)
 is the output sample rate.  Do not call this function.  Nyquist performs
 sample-rate conversion automatically as needed.  If you want to force a
@@ -5305,8 +5022,7 @@ conversion, call @code(force-srate) (see Section @ref(force-srate-sec)).
 
 @label(snd-xform-sec)
 @codef[snd-xform(@pragma(defn)@index(snd-xform)@i(sound), @i(sr), @i(time), @i(start),
-@i(stop), @i(scale))] @c{[sal]}@*
-@altdef{@code[(snd-xform @i(sound) @i(sr) @i(time) @i(start) @i(stop) @i(scale))] @c{[lisp]}}@\Makes a copy of @i(sound) and then alters it in
+@i(stop), @i(scale))]@\Makes a copy of @i(sound) and then alters it in
 the following order:  (1) the start time (@code(snd-t0)) of the sound is shifted to 
 @i(time), (1) the sound is stretched as a result of setting the sample rate
 to @i(sr) (the start time is unchanged by this), (3) the sound is clipped
@@ -5319,8 +5035,7 @@ effect, so use @code(cue) to create a transformable sound (see Section
 @ref(use-sounds-sec)).
 
 @label(snd-yin-sec)
-@codef{snd-yin(@pragma(defn)@index(snd-yin)@i(sound), @i(minstep), @i(maxstep), @i(rate))} @c{[sal]}@*
-@altdef{@code[(snd-yin @i(sound) @i(minstep) @i(maxstep) @i(rate))] @c{[lisp]}}@\Identical to
+@codef{snd-yin(@pragma(defn)@index(snd-yin)@i(sound), @i(minstep), @i(maxstep), @i(rate))}@\Identical to
 @code[yin]. See Section @ref(yin-sec).
 
 @end(fndefs)
@@ -5336,21 +5051,17 @@ parameter, and coefficients are not interpolated.
 
 @begin(fndefs)
 
-@codef[snd-alpass(@pragma(defn)@index(snd-alpass)@i(sound), @i(delay), @i(feedback))] @c{[sal]}@*
-@altdef{@code[(snd-alpass @i(sound) @i(delay) @i(feedback))] @c{[lisp]}}@\An all-pass filter.  This produces a repeating echo effect without the resonances of @code(snd-delay).  The @i(feedback) should be less than one to avoid exponential amplitude blowup.  Delay is rounded to the nearest sample.  You should use @code(alpass) instead (see Section @ref(alpass-sec)).
+@codef[snd-alpass(@pragma(defn)@index(snd-alpass)@i(sound), @i(delay), @i(feedback))]@\An all-pass filter.  This produces a repeating echo effect without the resonances of @code(snd-delay).  The @i(feedback) should be less than one to avoid exponential amplitude blowup.  Delay is rounded to the nearest sample.  You should use @code(alpass) instead (see Section @ref(alpass-sec)).
 
 @codef[snd-alpasscv(@pragma(defn)@index(snd-alpasscv)@i(sound), @i(delay),
-@i(feedback))] @c{[sal]}@*
-@altdef{@code[(snd-alpasscv @i(sound) @i(delay) @i(feedback))] @c{[lisp]}}@\An all-pass filter with variable @i(feedback).  
+@i(feedback))]@\An all-pass filter with variable @i(feedback).  
 This is just like @i(snd-alpass) except @i(feedback) is a sound.
 You should use @code(alpass) instead (see Section @ref(alpass-sec)).
 
-@codef[snd-alpassvv(@pragma(defn)@index(snd-alpassvv)@i(sound), @i(delay), @i(feedback), @i(maxdelay))] @c{[sal]}@*
-@altdef{@code[(snd-alpassvv @i(sound) @i(delay) @i(feedback) @i(maxdelay))] @c{[lisp]}}@\An all-pass filter with variable @i(feedback) and @i(delay). This is just like @i(snd-alpass) except @i(feedback) and @i(delay) are sounds, and there is an additional @code(FLONUM) parameter, @i(maxdelay), that gives an upper bound on the value of @i(delay). @p(Note:) @i(delay) must remain between zero and @i(maxdelay). If not, results are undefined, and Nyquist may crash. You should use @code(alpass) instead (see Section @ref(alpass-sec)).
+@codef[snd-alpassvv(@pragma(defn)@index(snd-alpassvv)@i(sound), @i(delay), @i(feedback), @i(maxdelay))]@\An all-pass filter with variable @i(feedback) and @i(delay). This is just like @i(snd-alpass) except @i(feedback) and @i(delay) are sounds, and there is an additional @code(FLONUM) parameter, @i(maxdelay), that gives an upper bound on the value of @i(delay). @p(Note:) @i(delay) must remain between zero and @i(maxdelay). If not, results are undefined, and Nyquist may crash. You should use @code(alpass) instead (see Section @ref(alpass-sec)).
 
 @codef[snd-areson(@pragma(defn)@index(snd-areson)@i(sound), @i(hz), @i(bw),
-@i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-areson @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\A notch filter modeled after the @code(areson)
+@i(normalization))]@\A notch filter modeled after the @code(areson)
 unit generator in Csound.  The @code(snd-areson) filter is an exact
 complement of @code(snd-reson) such that if both are applied to the
 same signal with the same parameters, the sum of the results yeilds
@@ -5360,8 +5071,7 @@ for details on @i(normalization).  You should use @code(areson) instead (see
 Section @ref(areson-sec)).
 
 @codef[snd-aresoncv(@pragma(defn)@index(snd-aresoncv)@i(sound), @i(hz), @i(bw),
-@i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-aresoncv @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\This function is identical to @code(snd-areson) except
+@i(normalization))]@\This function is identical to @code(snd-areson) except
 the @i(bw) (bandwidth) parameter is a sound.  Filter coefficients are
 updated at the sample rate of @i(bw).  The ``@code(cv)'' suffix stands for Constant,
 Variable, indicating that @i(hz) and @i(bw) are constant (a number) and
@@ -5370,66 +5080,55 @@ You should use @code(areson) instead (see
 Section @ref(areson-sec)).
 
 @codef[snd-aresonvc(@pragma(defn)@index(snd-aresonvc)@i(sound), @i(hz), @i(bw),
-@i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-aresonvc @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\This function is identical to @code(snd-areson) except
+@i(normalization))]@\This function is identical to @code(snd-areson) except
 the @i(hz) (center frequency) parameter is a sound.  Filter coefficients are
 updated at the sample rate of @i(hz).  
 You should use @code(areson) instead (see
 Section @ref(areson-sec)).
 
 @codef[snd-aresonvv(@pragma(defn)@index(snd-aresonvv)@i(sound), @i(hz), @i(bw),
-@i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-aresonvv @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\This function is identical to @code(snd-areson) except
+@i(normalization))]@\This function is identical to @code(snd-areson) except
 both @i(hz) (center frequency) and @i(bw) (bandwidth) are sounds.  Filter
 coefficients are updated at the next sample of either @i(hz) or @i(bw).
 You should use @code(areson) instead (see
 Section @ref(areson-sec)).
 
-@codef[snd-atone(@pragma(defn)@index(snd-atone)@i(sound), @i(hz))] @c{[sal]}@*
-@altdef{@code[(snd-atone @i(sound) @i(hz))] @c{[lisp]}}@\A high-pass filter 
+@codef[snd-atone(@pragma(defn)@index(snd-atone)@i(sound), @i(hz))]@\A high-pass filter 
 modeled after the @code(atone) unit generator in Csound.  The @code(snd-atone) filter is an exact
 complement of @code(snd-tone) such that if both are applied to the
 same signal with the same parameters, the sum of the results yeilds
 the original signal.  You should use @code(hp) instead (see
 Section @ref(hp-sec)).
 
-@codef[snd-atonev(@pragma(defn)@index(snd-atonev)@i(sound), @i(hz))] @c{[sal]}@*
-@altdef{@code[(snd-atonev @i(sound) @i(hz))] @c{[lisp]}}@\This is just like
+@codef[snd-atonev(@pragma(defn)@index(snd-atonev)@i(sound), @i(hz))]@\This is just like
 @code(snd-atone) except that the @i(hz) cutoff frequency is a sound.  Filter
 coefficients are updated at the sample rate of @i(hz).  You should use
 @code(hp) instead (see Section @ref(hp-sec)).
 
-@codef[snd-biquad(@pragma(defn)@index(snd-biquad)@i(sound), @i(b0), @i(b1), @i(b2), @i(a1), @i(a2), @i(z1init), @i(z2init))] @c{[sal]}@*
-@altdef{@code[(snd-biquad @i(sound) @i(b0) @i(b1) @i(b2) @i(a1) @i(a2) @i(z1init) @i(z2init))] @c{[lisp]}}@\A general second order IIR filter, where @i(a0) is assumed to be unity. For @i(a1) and @i(a2), the sign convention is opposite to that of Matlab. All parameters except the input @i(sound) are of type @code(FLONUM). You should probably use one of @code(lowpass2), @code(highpass2), @code(bandpass2), @code(notch2), @code(allpass2), @code(eq-lowshelf), @code(eq-highshelf), @code(eq-band), @code(lowpass4), @code(lowpass6), @code(lowpass8), @code(highpass4), @code(highpass6), or @code(highpass8), which are all based on @code(snd-biquad) and described in Section @ref(lowpass2-sec). For completeness, you will also find @code(biquad) and @code(biquad-m) described in that section.
+@codef[snd-biquad(@pragma(defn)@index(snd-biquad)@i(sound), @i(b0), @i(b1), @i(b2), @i(a1), @i(a2), @i(z1init), @i(z2init))]@\A general second order IIR filter, where @i(a0) is assumed to be unity. For @i(a1) and @i(a2), the sign convention is opposite to that of Matlab. All parameters except the input @i(sound) are of type @code(FLONUM). You should probably use one of @code(lowpass2), @code(highpass2), @code(bandpass2), @code(notch2), @code(allpass2), @code(eq-lowshelf), @code(eq-highshelf), @code(eq-band), @code(lowpass4), @code(lowpass6), @code(lowpass8), @code(highpass4), @code(highpass6), or @code(highpass8), which are all based on @code(snd-biquad) and described in Section @ref(lowpass2-sec). For completeness, you will also find @code(biquad) and @code(biquad-m) described in that section.
 
 @label(snd-chase-sec)
-@codef[snd-chase(@pragma(defn)@index(snd-chase)@i(sound), @i(risetime), @i(falltime))] @c{[sal]}@*
-@altdef{@code[(snd-chase @i(sound) @i(risetime) @i(falltime))] @c{[lisp]}}@\A slew rate limiter. The output ``chases'' the input at rates determined by @i(risetime) and @i(falltime).  If the input changes too fast, the output will lag behind the input. This is a form of lowpass filter, but it was created to turn hard-switching square waves into smoother control signals that could be used for linear crossfades. If the input switches from 0 to 1, the output will linearly rise to 1 in @i(risetime) seconds. If the input switches from 1 to 0, the output will linearly fall to 0 in @i(falltime) seconds.  The generated slope is constant; the transition is linear; this is not an exponential rise or fall.  The @i(risetime) and @i(falltime) must be scalar constants; complain to the author if this is not adequate. The @code(snd-chase) function is safe for ordinary use. See @code(snd-follow) in Section @ref(snd-follow-sec) for a related function. 
+@codef[snd-chase(@pragma(defn)@index(snd-chase)@i(sound), @i(risetime), @i(falltime))]@\A slew rate limiter. The output ``chases'' the input at rates determined by @i(risetime) and @i(falltime).  If the input changes too fast, the output will lag behind the input. This is a form of lowpass filter, but it was created to turn hard-switching square waves into smoother control signals that could be used for linear crossfades. If the input switches from 0 to 1, the output will linearly rise to 1 in @i(risetime) seconds. If the input switches from 1 to 0, the output will linearly fall to 0 in @i(falltime) seconds.  The generated slope is constant; the transition is linear; this is not an exponential rise or fall.  The @i(risetime) and @i(falltime) must be scalar constants; complain to the author if this is not adequate. The @code(snd-chase) function is safe for ordinary use. See @code(snd-follow) in Section @ref(snd-follow-sec) for a related function. 
 
-@codef[snd-congen(@pragma(defn)@index(snd-congen)@i(gate), @i(risetime), @i(falltime))] @c{[sal]}@*
-@altdef{@code[(snd-congen @i(gate) @i(risetime) @i(falltime))] @c{[lisp]}}@\A simple ``contour generator'' based 
+@codef[snd-congen(@pragma(defn)@index(snd-congen)@i(gate), @i(risetime), @i(falltime))]@\A simple ``contour generator'' based 
 on analog synthesizers.  The @i(gate) is a sound that normally steps from 0.0 to 1.0 at the start of an envelop and goes from
 1.0 back to 0.0 at the beginning of the release. At each sample, the output converges to the input exponentially.  If @i(gate) is greater than the output, e.g. the attack, then the output converges half-way to the output in @i(risetime).  If the @i(gate) is less than the output, the half-time is @i(falltime).  The sample rate, starting time, logical-stop-time, and terminate time are taken from  @i(gate). You should use @code(congen) instead (see Section @ref(congen-sec).
 
-@codef[snd-convolve(@pragma(defn)@index(snd-convolve)@i(sound), @i(response))] @c{[sal]}@*
-@altdef{@code[(snd-convolve @i(sound) @i(response))] @c{[lisp]}}@\Convolves
+@codef[snd-convolve(@pragma(defn)@index(snd-convolve)@i(sound), @i(response))]@\Convolves
 @i(sound) by @i(response) using a simple O(N x M) algorithm. The @i(sound)
 can be any length, but the @i(response) is computed and stored in a table. The required compuation time per sample and total space are proportional to the
 length of @i(response). Use @code(convolve) instead (see Section
 @ref(convolve-sec)).
 
-@codef[snd-delay(@pragma(defn)@index(snd-delay)@i(sound), @i(delay), @i(feedback))] @c{[sal]}@*
-@altdef{@code[(snd-delay @i(sound) @i(delay) @i(feedback))] @c{[lisp]}}@\Feedback
+@codef[snd-delay(@pragma(defn)@index(snd-delay)@i(sound), @i(delay), @i(feedback))]@\Feedback
 delay.  The output, initially @i(sound), is recursively delayed by @i(delay), scaled by @i(feedback), and added to itself, producing an repeating echo effect.  The @i(feedback) should be less than one to avoid exponential amplitude blowup.  Delay is rounded to the nearest sample.  You should use @code(feedback-delay) instead (see Section @ref(feedback-delay-sec))
 
 @codef[snd-delaycv(@pragma(defn)@index(snd-delaycv)@i(sound), @i(delay),
-@i(feedback))] @c{[sal]}@*
-@altdef{@code[(snd-delaycv @i(sound) @i(delay) @i(feedback))] @c{[lisp]}}@\Feedback delay with variable @i(feedback).  This is just like
+@i(feedback))]@\Feedback delay with variable @i(feedback).  This is just like
 @i(snd-delay) except @i(feedback) is a sound.  You should use
 @code(feedback-delay) instead (see Section @ref(feedback-delay-sec)).
 
-@codef[snd-reson(@pragma(defn)@index(snd-reson)@i(sound), @i(hz), @i(bw), @i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-reson @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\A
+@codef[snd-reson(@pragma(defn)@index(snd-reson)@i(sound), @i(hz), @i(bw), @i(normalization))]@\A
 second-order resonating (bandpass) filter with center frequency @i(hz) and
 bandwidth @i(bw), modeled after the @code(reson) unit generator in Csound.  
 The @i(normalization) parameter must be an integer and (like in Csound)
@@ -5442,29 +5141,25 @@ You should use @code(reson) instead (see Section
 @ref(reson-sec)).
 
 @codef[snd-resoncv(@pragma(defn)@index(snd-resoncv)@i(sound), @i(hz), @i(bw),
-@i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-resoncv @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\This function is identical to @code(snd-reson) except
+@i(normalization))]@\This function is identical to @code(snd-reson) except
 @i(bw) (bandwidth) is a sound.  Filter coefficients are updated at the
 sample rate of @i(bw).  You should use @code(reson) instead (see Section
 @ref(reson-sec)).
 
 @codef[snd-resonvc(@pragma(defn)@index(snd-resonvc)@i(sound), @i(hz), @i(bw),
-@i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-resonvc @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\This function is identical to @code(snd-reson) except
+@i(normalization))]@\This function is identical to @code(snd-reson) except
 @i(hz) (center frequency) is a sound.  Filter coefficients are updated at the
 sample rate of @i(hz).  You should use @code(reson) instead (see Section
 @ref(reson-sec)).
 
 @codef[snd-resonvv(@pragma(defn)@index(snd-resonvv)@i(sound), @i(hz), @i(bw),
-@i(normalization))] @c{[sal]}@*
-@altdef{@code[(snd-resonvv @i(sound) @i(hz) @i(bw) @i(normalization))] @c{[lisp]}}@\This function is identical to @code(snd-reson) except
+@i(normalization))]@\This function is identical to @code(snd-reson) except
 botth @i(hz) (center frequency) and @i(bw) (bandwidth) are sounds.  Filter
 coefficients are updated at the next sample from either @i(hz) or @i(bw).  You should use @code(reson) instead (see Section
 @ref(reson-sec)).
 
 @codef[snd-stkchorus(@pragma(defn)@index(snd-stkchorus)@index(chorus)@index(effect, chorus)@index(STK chorus)@i(sound), @i(delay), @i(depth), @i(freq), @i(mix), 
-@i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-stkchorus @i(sound) @i(delay) @i(depth) @i(freq) @i(mix) @i(sr))] @c{[lisp]}}@\A chorus implemented in STK. The parameter @i(delay) is a @code(FIXNUM) 
+@i(sr))]@\A chorus implemented in STK. The parameter @i(delay) is a @code(FIXNUM) 
 representing the median desired delay length in samples. A typical
 value is 6000. The @code(FLONUM) parameters @i(depth) and @i(freq) set the modulation
 depth (from 0 to 1) and modulation frequency (in Hz), @i(mix) sets the mixture
@@ -5475,8 +5170,7 @@ is probably a mistake since sample rate is implied by @i(sound). This parameter
 may be removed in a future release.) You should use @code(pitshift) instead
 (see Section @ref(stkchorus-sec)).
 
-@codef[snd-stkpitshift(@pragma(defn)@index(snd-stkpitshift)@index(pitch shift)@index(effect, pitch shift)@index(STK pitch shift)@i(sound), @i(shift), @i(mix), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-stkpitshift @i(sound) @i(shift) @i(mix) @i(sr))] @c{[lisp]}}@\A 
+@codef[snd-stkpitshift(@pragma(defn)@index(snd-stkpitshift)@index(pitch shift)@index(effect, pitch shift)@index(STK pitch shift)@i(sound), @i(shift), @i(mix), @i(sr))]@\A 
 pitch shifter implemented in STK. The @i(sound) is shifted in pitch by
 @i(shift), a @code(FLONUM) representing the shift factor. A value of 1.0 means
  no shift.  The parameter @i(mix) sets the mixture of input and shifted sounds.
@@ -5486,8 +5180,7 @@ is probably a mistake since sample rate is implied by @i(sound). This parameter
 may be removed in a future release.) You should use @code(pitshift) instead
 (see Section @ref(stkpitshift-sec)).
 
-@codef[snd-stkrev(@pragma(defn)@index(snd-stkrev)@index(reverb)@index(effect, reverberation)@index(STK reverb)@i(rev-type), @i(sound), @i(decay), @i(mix), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-stkrev @i(rev-type) @i(sound) @i(decay) @i(mix) @i(sr))] @c{[lisp]}}@\A reverb 
+@codef[snd-stkrev(@pragma(defn)@index(snd-stkrev)@index(reverb)@index(effect, reverberation)@index(STK reverb)@i(rev-type), @i(sound), @i(decay), @i(mix), @i(sr))]@\A reverb 
 implemented in STK. The parameter rev-type is a @code(FIXNUM) ranging from zero to 
 two and selects the type of reverb. Zero selects NRev type, one selects JCRev, 
 and two selects PRCRev. The input @i(sound) is processed by the reverb with
@@ -5500,16 +5193,14 @@ by @i(sound). This parameter may be removed in a future release.) You
 should use @code(nrev), @code(jcrev) or @code(prcrev) instead (see 
 Section @ref(stkrev-sec)).
 
-@codef[snd-tone(@pragma(defn)@index(snd-tone)@index(low-pass filter)@i(sound), @i(hz))] @c{[sal]}@*
-@altdef{@code[(snd-tone @i(sound) @i(hz))] @c{[lisp]}}@\A
+@codef[snd-tone(@pragma(defn)@index(snd-tone)@index(low-pass filter)@i(sound), @i(hz))]@\A
 first-order recursive low-pass filter, based on the @i(tone) unit generator
 of Csound.  The @i(hz) parameter is the cutoff frequency, the response
 curve's half-power point.  The result sample rate, start time, etc. are takend from @i(sound).
 You should use @code(lp) instead (see Section
 @ref(lp-sec)).
 
-@codef[snd-tonev(@pragma(defn)@index(snd-tonev)@i(sound), @i(hz))] @c{[sal]}@*
-@altdef{@code[(snd-tonev @i(sound) @i(hz))] @c{[lisp]}}@\This function is
+@codef[snd-tonev(@pragma(defn)@index(snd-tonev)@i(sound), @i(hz))]@\This function is
 identical to @code(snd-tone) except @i(hz) (cutoff frequency) is a sound.
 The filter coefficients are updated at the sample rate of @i(hz).  You
 should use @code(lp) instead (see Section
@@ -5570,69 +5261,60 @@ parameter indicates that the table holds more than one fundamental period, then 
 
 @begin(fndefs)
  @codef[snd-amosc(@pragma(defn)@index(snd-amosc)@i(sound), @i(step), @i(sr), @i(hz), @i(t0),
-@i(am), @i(phase))] @c{[sal]}@*
-@altdef{@code[(snd-amosc @i(sound) @i(step) @i(sr) @i(hz) @i(t0) @i(am) @i(phase))] @c{[lisp]}}@\An oscillator with amplitude modulation.  The sound
+@i(am), @i(phase))]@\An oscillator with amplitude modulation.  The sound
 @i(am) specifies the amplitude and the logical stop time.  The physical stop
 time is also that of @i(am).  You should use @code(amosc) instead (see
 Section @ref(amosc-sec)).
 
 @codef[snd-fmosc(@pragma(defn)@index(snd-fmosc)@i(s), @i(step), @i(sr), @i(hz), @i(t0), @i(fm),
-@i(phase))] @c{[sal]}@*
-@altdef{@code[(snd-fmosc @i(s) @i(step) @i(sr) @i(hz) @i(t0) @i(fm) @i(phase))] @c{[lisp]}}@\A Frequency Modulation oscillator.  The sound @i(fm) specifies
+@i(phase))]@\A Frequency Modulation oscillator.  The sound @i(fm) specifies
 frequency deviation (in Hertz) from @i(hz).  You should use @code(fmosc)
 instead (see Section @ref(fmosc-sec)).
 
-@codef[snd-fmfb(@pragma(defn)@index(snd-fmfb)@i(t0), @i(hz), @i(sr), @i(index), @i(dur))] @c{[sal]}@*
-@altdef{@code[(snd-fmfb @i(t0) @i(hz) @i(sr) @i(index) @i(dur))] @c{[lisp]}}@\A Feedback FM oscillator. The resulting sound starts
+@code[snd-fmfb(@pragma(defn)@index(snd-fmfb)@i(t0), @i(hz), @i(sr), 
+@i(index), @i(dur))]@\A Feedback FM oscillator. The resulting sound starts
 at @i(t0), has a fundamental frequency of @i(hz), a sample rate of @i(sr),
 and a duration of @i(dur) seconds. The @i(index) is a @code(FLONUM) that
 specifies the amount of feedback. You should use @code(fmfb) instead (see
 Section @ref(fmfb-sec)).
 
-@codef[snd-fmfbv(@pragma(defn)@index(snd-fmfbv)@i(t0), @i(hz), @i(sr), @i(index))]@*
-@altdef{@code[(snd-fmfv @i(t0) @i(hz) @i(sr) @i(index))] @c{[lisp]}}@\A
- Feedback FM oscillator. The resulting sound starts
+@code[snd-fmfbv(@pragma(defn)@index(snd-fmfb)@i(t0), @i(hz), @i(sr), 
+@i(index))]@\A Feedback FM oscillator. The resulting sound starts
 at @i(t0), has a fundamental frequency of @i(hz), and
 a sample rate of @i(sr). The @i(index) is a @code(SOUND) that
 specifies the amount of feedback and determines the duration. 
 You should use @code(fmfb) instead (see Section @ref(fmfb-sec)).
 
-@codef[snd-buzz(@pragma(defn)@index(snd-buzz)@i(n), @i(sr), @i(hz), @i(t0), @i(fm))] @c{[sal]}@*
-@altdef{@code[(snd-buzz @i(n) @i(sr) @i(hz) @i(t0) @i(fm))] @c{[lisp]}}@\A
+@codef[snd-buzz(@pragma(defn)@index(snd-buzz)@i(n), @i(sr), @i(hz), @i(t0), @i(fm))]@\A
 buzz oscillator, which generates @i(n) harmonics of equal amplitude.
 The @i(fm) specifies
 frequency deviation (in Hertz) from @i(hz).  You should use @code(buzz)
 instead (see Section @ref(buzz-sec)).
 
 @codef[snd-pluck(@pragma(defn)@index(snd-pluck)@i(sr), @i(hz), @i(t0), @i(d),
- @i(final-amp))] @c{[sal]}@*
-@altdef{@code[(snd-pluck @i(sr) @i(hz) @i(t0) @i(d) @i(final-amp))] @c{[lisp]}}@\A Karplus-Strong plucked string oscillator with sample rate
+ @i(final-amp))]@\A Karplus-Strong plucked string oscillator with sample rate
 @i(sr), fundamental frequency @i(hz), starting time @i(t0), duration @i(d),
 initial amplitude approximately 1.0 (not exact because the string is
 initialized with random values) and final amplitude approximately 
 @i(final-amp). You should use @code(pluck) instead (see Section
  @ref(pluck-sec)).
 
-@codef[snd-osc(@pragma(defn)@index(snd-osc)@i(s), @i(step), @i(sr), @i(hz), @i(t0), @i(d), @i(phase))] @c{[sal]}@*
-@altdef{@code[(snd-osc @i(s) @i(step) @i(sr) @i(hz) @i(t0) @i(d) @i(phase))] @c{[lisp]}}@\A simple table lookup oscillator with fixed frequency.  The duration
+@codef[snd-osc(@pragma(defn)@index(snd-osc)@i(s), @i(step), @i(sr), @i(hz), @i(t0), @i(d), @i(phase))]@\A simple table lookup oscillator with fixed frequency.  The duration
 is @i(d) seconds.  You should use @code(osc) instead (see Section
 @ref(osc-sec)).
 
-@codef[snd-partial(@pragma(defn)@index(snd-partial)@i(sr), @i(hz), @i(t0), @i(env))] @c{[sal]}@*
-@altdef{@code[(snd-partial @i(sr) @i(hz) @i(t0) @i(env))] @c{[lisp]}}@\This is a
+@codef[snd-partial(@pragma(defn)@index(snd-partial)@i(sr), @i(hz), @i(t0), @i(env))]@\This is a
 special case of @code(snd-amosc) that generates a sinusoid starting at phase
 0 degrees.  The @i(env) parameter gives the envelope or any other amplitude
 modulation.  You should use @code(partial) instead (see Section
 @ref(partial-sec)).
 
-@codef[snd-sine(@pragma(defn)@index(snd-sine)@i(t0), @i(hz), @i(sr), @i(d))] @c{[sal]}@*
-@altdef{@code[(snd-sine @i(t0) @i(hz) @i(sr) @i(d))] @c{[lisp]}}@\This is a
+@codef[snd-sine(@pragma(defn)@index(snd-sine)@i(t0), @i(hz), @i(sr), @i(d))]@\This is a
 special case of @code(snd-osc) that always generates a sinusoid with initial
 phase of 0 degrees.  You should use @code(sine) instead (see Section @ref(sine-sec)).
 
 @codef[snd-siosc(@pragma(defn)@index(snd-siosc)@i(tables), @i(sr), @i(hz), @i(t0),
-@i(fm))] @c{[sal]}@*
-@altdef{@code[(snd-siosc @i(tables) @i(sr) @i(hz) @i(t0) @i(fm))] @c{[lisp]}}@\A Spectral Interpolation Oscillator with frequency modulation. The
+@i(fm))]@\A Spectral Interpolation Oscillator with frequency modulation. The
 @i(tables) is a list of sounds and sample counts as follows: (@i(table0)
 @i(count1) @i(table1) ... @i(countN) @i(tableN)). The initial waveform is given by @i(table0), which is interpolated linearly to @i(table1) over the first
 @i(count1) samples. From @i(count1) to @i(count2) samples, the waveform is
@@ -5647,8 +5329,7 @@ should use @code(siosc) instead (see Section @ref(siosc-sec)).
 @subsection(Physical Model Functions)
 These functions perform some sort of physically-based modeling synthesis.
 @begin(fndefs)
-@codef[(snd-bandedwg@pragma(defn)@index(snd-bandedwg)@index(STK banded waveguide) @i(freq) @i(bowpress-env) @i(preset) @i(sr))]@*
-@altdef{@code[(snd-bandedwg @i(freq) @i(bowpress-env) @i(preset) @i(sr))] @c{[lisp]}}@\A Banded Wave Guide 
+@code[(snd-bandedwg@pragma(defn)@index(snd-bandedwg)@index(STK banded waveguide) @i(freq) @i(bowpress-env) @i(preset) @i(sr))]@\A Banded Wave Guide 
 Percussion instrument implemented in STK. The parameter @i(freq) is a 
 @code(FLONUM) in Hz, @i(bowpress-env) is 
 a @code(SOUND) that ranges from zero to one, @i(preset) is a @code(FIXNUM), 
@@ -5659,20 +5340,17 @@ tibetan-bowl (3). You should use @code(wg-uniform-bar), @code(wg-tuned-bar),
 @ref(bandedwg-sec)).
 
 @codef[snd-bowed(@pragma(defn)@index(snd-bowed)@index(stk bowed)@i(freq),
-@i(bowpress-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-bowed @i(freq) @i(bowpress-env) @i(sr))] @c{[lisp]}}@\A bowed string instrument implemented in
+@i(bowpress-env), @i(sr))]@\A bowed string instrument implemented in
 STK. The freq is a @code(FLONUM) in Hertz, bowpress-env is a
  @code(SOUND) that ranges from z
 ero to one, and sr is the desired sample rate (a @code(FLONUM)). 
 You should use bowed instead  (see Section @ref(bowed-sec)).
 
-@codef[snd-bowed-freq(@pragma(defn)@index(snd-bowed-freq)@index(stk bowed)@i(freq), @i(bowpress-env), @i(freq-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-bowed-freq @i(freq) @i(bowpress-env) @i(freq-env) @i(sr))] @c{[lisp]}}@\A bowed model just like @code(snd-bowed) but with 
+@codef[snd-bowed-freq(@pragma(defn)@index(snd-bowed-freq)@index(stk bowed)@i(freq), @i(bowpress-env), @i(freq-env), @i(sr))]@\A bowed model just like @code(snd-bowed) but with 
 an additional parameter for continuous frequency control. You should use 
 @code(bowed-freq) instead (see Section @ref(bowed-sec)).
 
-@codef[snd-clarinet(@pragma(defn)@index(snd-clarinet)@index(stk clarinet)@i(freq), @i(breath-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-clarinet @i(freq) @i(breath-env) @i(sr))] @c{[lisp]}}@\A clarinet
+@codef[snd-clarinet(@pragma(defn)@index(snd-clarinet)@index(stk clarinet)@i(freq), @i(breath-env), @i(sr))]@\A clarinet
 model implemented in STK. The @i(freq) is a @code(FLONUM) in Hertz,
  @i(breath-env) is
 a @code(SOUND) that ranges from zero to one, and @i(sr) is the
@@ -5681,52 +5359,45 @@ rate (a @code(FLONUM)). You should use @code(clarinet) instead
  (see Section 
 @ref(clarinet-sec)).
 
-@codef[snd-clarinet-freq(@pragma(defn)@index(snd-clarinet-freq)@index(STK clarinet)@i(freq), @i(breath-env), @i(freq-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-clarinet-freq @i(freq) @i(breath-env) @i(freq-env) @i(sr))] @c{[lisp]}}@\A clarinet model just like @code(snd-clarinet) but with 
+@codef[snd-clarinet-freq(@pragma(defn)@index(snd-clarinet-freq)@index(STK clarinet)@i(freq), @i(breath-env), @i(freq-env), @i(sr))]@\A clarinet model just like @code(snd-clarinet) but with 
 an additional parameter for continuous frequency control. You should use 
 @code(clarinet-freq) instead (see Section @ref(clarinet-sec)).
 
 @codef[snd-clarinet-all(@pragma(defn)@index(snd-clarinet-all)@i(freq), @i(vibrato-freq),
 @i(vibrato-gain), @i(freq-env), @i(breath-env),
-@i(reed-stiffness), @i(noise), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-clarinet-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @i(reed-stiffness) @i(noise) @i(sr))] @c{[lisp]}}@\A clarinet model just like 
+@i(reed-stiffness), @i(noise), @i(sr))]@\A clarinet model just like 
 @code(snd-clarinet-freq) but with 
 additional parameters for vibrato generation and continuous control of
 reed stiffness and breath noise. You should use 
 @code(clarinet-all) instead (see Section @ref(clarinet-sec)).
 
 @codef[snd-flute(@pragma(defn)@index(snd-flute)@index(stk flute)@i(freq),
- @i(breath-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-flute @i(freq) @i(breath-env) @i(sr))] @c{[lisp]}}@\A flute implemented in STK. The @i(freq) is a 
+ @i(breath-env), @i(sr))]@\A flute implemented in STK. The @i(freq) is a 
 @code(FLONUM) in Hertz, @i(breath-env) is a @code(SOUND)
  that ranges from zero to one, and @i(sr) is
  the desired sample rate (a @code(FLONUM)). You should use @code(flute)
  instead (see Section @ref(flute-sec)).
 
 @codef[snd-flute-freq(@pragma(defn)@index(snd-flute-freq)@index(stk flute)@i(freq), @i(breath-env),
-@i(freq-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-flute-freq @i(freq) @i(breath-env) @i(freq-env) @i(sr))] @c{[lisp]}}@\A flute model just like @code(snd-flute) but with 
+@i(freq-env), @i(sr))]@\A flute model just like @code(snd-flute) but with 
 an additional parameter for continuous frequency control. You should use 
 @code(flute-freq) instead (see Section @ref(flute-sec)).
 
 @codef[snd-flute-all(@pragma(defn)@index(snd-flute-all)@index(stk flute)@i(freq), @i(vibrato-freq), @i(vibrato-gain), @i(freq-env), @i(breath-env),
-@i(jet-delay), @i(noise), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-flute-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @i(jet-delay) @i(noise) @i(sr))] @c{[lisp]}}@\A flute model just like 
+@i(jet-delay), @i(noise), @i(sr))]@\A flute model just like 
 @code(snd-flute-freq) but with 
 additional parameters for vibrato generation and continuous control of
 breath noise. You should use 
 @code(flute-all) instead (see Section @ref(flute-sec)).
 
-@codef[snd-mandolin(@pragma(defn)@index(snd-mandolin)@index(STK mandolin)@i(t0), @i(freq), @i(dur), @i(body-size), @i(detune), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-mandolin @i(t0) @i(freq) @i(dur) @i(body-size) @i(detune) @i(sr))] @c{[lisp]}}@\A plucked
+@codef[snd-mandolin(@pragma(defn)@index(snd-mandolin)@index(STK mandolin)@i(t0), @i(freq), @i(dur), @i(body-size), @i(detune), @i(sr))]@\A plucked
  double-string instrument model implemented in STK. The @i(t0) parameter
  is the starting time (in seconds), @i(freq) is a @code(FLONUM) in
  Hz, @i(body-size) and @i(detune) are @code(FLONUM)s, and @code(sr)
  is the desired sample
  rate. You should use @code(mandolin) instead (see Section @ref(mandolin-sec)).
 
-@codef[snd-modalbar(@pragma(defn)@index(snd-modalbar)@index(STK modal bar)@i(t0), @i(freq), @i(preset), @i(dur), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-modalbar @i(t0) @i(freq) @i(preset) @i(dur) @i(sr))] @c{[lisp]}}@\Struck bar instrument
+@codef[snd-modalbar(@pragma(defn)@index(snd-modalbar)@index(STK modal bar)@i(t0), @i(freq), @i(preset), @i(dur), @i(sr))]@\Struck bar instrument
  model implemented in STK. The parameter @i(t0) is the starting 
 time (in seconds), @i(freq) is a @code(FLONUM) in Hz,
  @code(preset) is a @code(FIXNUM) ranging from 0 to 8, @i(dur) is a 
@@ -5734,23 +5405,20 @@ time (in seconds), @i(freq) is a @code(FLONUM) in Hz,
  sets the duration (in seconds) and @i(sr) is the desired sample rate. You 
 should use @code(modalbar) instead (see Section @ref(modalbar-sec)).
 
-@codef[snd-sax(@pragma(defn)@index(snd-sax)@index(STK sax)@i(freq), @i(breath-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-sax @i(freq) @i(breath-env) @i(sr))] @c{[lisp]}}@\A sax
+@codef[snd-sax(@pragma(defn)@index(snd-sax)@index(STK sax)@i(freq), @i(breath-env), @i(sr))]@\A sax
 model implemented in STK. The @i(freq) is a @code(FLONUM) in Hertz, @i(breath-env) is
 a @code(SOUND) that ranges from zero to one, and @i(sr) is the desired sample
 rate (a @code(FLONUM)). You should use @code(sax) instead (see Section 
 @ref(sax-sec)).
 
 @codef[snd-sax-freq(@pragma(defn)@index(snd-sax-freq)@i(freq), @i(freq-env), @i(breath-env),
- @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-sax-freq @i(freq) @i(freq-env) @i(breath-env) @i(sr))] @c{[lisp]}}@\A sax model just like @code(snd-sax) but with 
+ @i(sr))]@\A sax model just like @code(snd-sax) but with 
 an additional parameter for continuous frequency control. You should use 
 @code(sax-freq) instead (see Section @ref(sax-sec)).
 
 @codef[snd-sax-all(@pragma(defn)@index(snd-sax-all)@i(freq), @i(vibrato-freq),
 @i(vibrato-gain), @i(freq-env), @i(breath-env),
-@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-sax-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @i(reed-stiffness) @i(noise) @i(blow-pos) @i(reed-table-offset) @i(sr))] @c{[lisp]}}@\A 
+@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset), @i(sr))]@\A 
 sax model just like 
 @code(snd-sax-freq) but with 
 additional parameters for vibrato generation and continuous control of
@@ -5759,8 +5427,7 @@ reed stiffness, breath noise, excitation position, and reed table offset.
 @code(sax-all) instead (see Section @ref(sax-sec)).
 
 @codef[snd-sitar(@pragma(defn)@index(snd-sitar)@index(STK sitar)@i(t0),
-@i(freq), @i(dur), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-sitar @i(t0) @i(freq) @i(dur) @i(sr))] @c{[lisp]}}@\A sitar model implemented in STK. The parameter 
+@i(freq), @i(dur), @i(sr))]@\A sitar model implemented in STK. The parameter 
 @i(t0) is the starting time, @i(freq) is a @code(FLONUM) (in Hz), E
 @i(dur) sets the duration and @i(sr) is the sample rate (in Hz) 
 of the resulting sound. You should use @code(sitar) instead (see Section
@@ -5774,8 +5441,7 @@ of the resulting sound. You should use @code(sitar) instead (see Section
 The next two functions are used to implement Nyquist's @code(seq) construct.
 
 @begin(fndefs)
-@codef[snd-seq(@pragma(defn)@index(snd-seq)@i(sound), @i(closure))] @c{[sal]}@*
-@altdef{@code[(snd-seq @i(sound) @i(closure))] @c{[lisp]}}@\This function returns
+@codef[snd-seq(@pragma(defn)@index(snd-seq)@i(sound), @i(closure))]@\This function returns
 @i(sound) until the logical stop time of @i(sound).  Then, the XLISP 
 @i(closure)
 is evaluated, passing it the logical stop time of @i(sound) as a
@@ -5784,8 +5450,7 @@ parameter.  The closure must return a sound, which is then added to
 stop if desired.)  Do not call this function.  See @code(seq) in Section
 @ref(seq-sec).
 
-@codef[snd-multiseq(@pragma(defn)@index(snd-multiseq)@i(array), @i(closure))] @c{[sal]}@*
-@altdef{@code[(snd-multiseq @i(array) @i(closure))] @c{[lisp]}}@\This
+@codef[snd-multiseq(@pragma(defn)@index(snd-multiseq)@i(array), @i(closure))]@\This
 function is similar to @code(snd-seq) except the first parameter is a
 multichannel sound rather than a single sound.  A multichannel sound is
 simply an XLISP array of sounds.  An array of sounds is returned which is
@@ -5795,9 +5460,7 @@ which is the maximum logical stop time of any element of @i(array).    Do
 not call this function.  See @code(seq) in Section @ref(seq-sec).
 @end(fndefs)
 
-@begin(fndefs)
-@codef[snd-trigger(@pragma(defn)@index(snd-trigger)@i(s), @i(closure))] @c{[sal]}@*
-@altdef{@code[(snd-trigger @i(s) @i(closure))] @c{[lisp]}}@\This is one of
+@codef[snd-trigger(@pragma(defn)@index(snd-trigger)@i(s), @i(closure))]@\This is one of
 the only ways in which a behavior instance can be created by changes in a
 signal. When @i(s) (a @code(SOUND)) makes a transition from less than or 
 equal to zero to greater than zero, the closure, which takes a starting
@@ -5816,7 +5479,6 @@ This could be combined with some LISP code similar to @code(seq) to sum up
 instances of the closure. However, this would force arbitrary look-ahead
 and therefore would not work with real-time inputs, which was the motivation
 for @code(snd-trigger) in the first place.
-@end(fndefs)
 
 @chapter(Nyquist Globals)
 @index(Global Variables)
@@ -5907,8 +5569,7 @@ which is part of the standard Nyquist release. The documentation for @code[snd-f
 @code[snd-ifft] follows.
 
 @begin(fndefs)
-@codef[snd-fft(@pragma(defn)@index(snd-fft)@index(fft)@i(sound), @i(length), @i(skip), @i(window))] @c{[sal]}@*
-@altdef{@code[(snd-fft @i(sound) @i(length) @i(skip) @i(window))] @c{[lisp]}}@\This
+@codef[snd-fft(@pragma(defn)@index(snd-fft)@index(fft)@i(sound), @i(length), @i(skip), @i(window))]@\This
 function performs an FFT on the first samples in @i(sound) and returns a Lisp array of @code[FLONUM]s. 
 The function modifies the @i(sound), violating the normal rule that sounds are immutable in Nyquist, so 
 it is advised that you copy the sound using @code[snd-copy] if there are any other references to 
@@ -5922,8 +5583,7 @@ this function returns @code[NIL]. The coefficients in the returned array, in ord
 the first real, the first imaginary, the second real, the second imaginary, etc. 
 The last array element corresponds to the real coefficient at the Nyquist frequency.
 
-@codef[snd-ifft(@pragma(defn)@index(snd-ifft)@index(ifft)@index(inverse fft)@i(time), @i(srate), @i(iterator), @i(skip), @i(window))] @c{[sal]}@*
-@altdef{@code[(snd-ifft @i(time) @i(srate) @i(iterator) @i(skip) @i(window))] @c{[lisp]}}@\This function performs an IFFT on a sequence of spectral frames obtained from @i(iterator) 
+@codef[snd-ifft(@pragma(defn)@index(snd-ifft)@index(ifft)@index(inverse fft)@i(time), @i(srate), @i(iterator), @i(skip), @i(window))]@\This function performs an IFFT on a sequence of spectral frames obtained from @i(iterator) 
 and returns a sound. The start time of the sound is given by @i(time). Typically, this would be computed 
 by calling @code[(local-to-global 0)]. The sample rate is given by @i(srate). Typically, this would 
 be @code[*sound-srate*], but it might also depend upon the sample rate of the sound from which the 
@@ -6014,8 +5674,7 @@ is @i(not) automatically loaded with Nyquist, so you must execute
 
 @section(LPC Classes and Functions)
 @begin(fndefs)
-@codef[make-lpanal-iterator(@pragma(defn)@index(make-lpanal-iterator)@i(sound), @i(framedur), @i(skiptime), @i(npoles))] @c{[sal]}@*
-@altdef{@code[(make-lpanal-iterator @i(sound) @i(framedur) @i(skiptime) @i(npoles))] @c{[lisp]}}@\Makes an iterator
+@codef[make-lpanal-iterator(@pragma(defn)@index(make-lpanal-iterator)@i(sound), @i(framedur), @i(skiptime), @i(npoles))]@\Makes an iterator
 object, an instance of @code(lpanal-class), 
 that returns LPC frames from successive frames of samples in
 @i(sound). The duration (in seconds)
@@ -6031,20 +5690,16 @@ described above. @code(NIL) is returned when @i(sound) terminates.
 padded with zeros. @code(NIL) is only returned when the corresponding
 window would begin after the termination time of the sound.)
 
-@codef[make-lpc-file-iterator(@pragma(defn)@index(make-lpc-file-iterator)@i(filename))] @c{[sal]}@*
-@altdef{@code[(make-lpc-file-iterator @i(filename))] @c{[lisp]}}@\Another way to get LPC frames is to read them from a
+@codef[make-lpc-file-iterator(@pragma(defn)@index(make-lpc-file-iterator)@i(filename))]@\Another way to get LPC frames is to read them from a
  file. This function opens an ASCII file containing LPC frames and
  creates an iterator object, an instance of class @code(lpc-file-class)
  to access them. Create a file using @code(save-lpc-file) (see below).
 
-@codef[save-lpc-file(@pragma(defn)@index(save-lpc-file)@i(lpc-iterator), @i(filename))] @c{[sal]}@*
-@altdef{@code[(save-lpc-file @i(lpc-iterator) @i(filename))] @c{[lisp]}}@\Create a file containing LPC frames.
+@codef[save-lpc-file(@pragma(defn)@index(save-lpc-file)@i(lpc-iterator), @i(filename))]@\Create a file containing LPC frames.
 This file can be read by @code[make-lpc-file-iterator] (see above).
 
 @codef{show-lpc-data(@pragma(defn)@index(show-lpc-data)@i(lpc-iterator),
-@i(iniframe), @i(endframe) [, @i(poles?)])} @c{[sal]}@*
-@altdef{@code{(show-lpc-data @i(lpc-iterator) @i(iniframe) @i(endframe)
- [@i(poles?)])} @c{[lisp]}}@\Print values of LPC
+@i(iniframe), @i(endframe)[ ,@i(poles?)])}@\Print values of LPC
 frames from an LPC iterator object. The object is @i(lpc-iterator),
 which is typically an instance of @code(lpanal-class) or 
 @code(lpc-file-class). Frames are numbered from zero, and only
@@ -6054,8 +5709,7 @@ the values for @i(RMS1), @i(RMS2), and @i(ERR) are printed, but
 if optional parameter @i(poles?) is non-@code[NIL], then
 the LPC coefficients are also printed.
 
-@codef[allpoles-from-lpc(@pragma(defn)@index(allpoles-from-lpc)@i(snd), @i(lpc-frame))] @c{[sal]}@*
-@altdef{@code[(allpoles-from-lpc @i(snd) @i(lpc-frame))] @c{[lisp]}}@\A single LPC frame defines a filter.
+@codef[allpoles-from-lpc(@pragma(defn)@index(allpoles-from-lpc)@i(snd), @i(lpc-frame))]@\A single LPC frame defines a filter.
 Use @code(allpoles-from-lpc) to apply this filter to @i(snd),
 a @code(SOUND). To obtain @i(lpc-frame), a @code(LIST)
  containing an LPC frame, either send @code(:next) to an
@@ -6063,8 +5717,7 @@ a @code(SOUND). To obtain @i(lpc-frame), a @code(LIST)
  is a @code(SOUND) whose duration is the same as that of @i(snd).
 
 @codef[lpreson(@pragma(defn)@index(lpreson)@i(snd), @i(lpc-iterator), 
-@i(skiptime))] @c{[sal]}@*
-@altdef{@code[(lpreson @i(snd) @i(lpc-iterator) @i(skiptime))] @c{[lisp]}}@\Implements a time-varying all-pole filter 
+@i(skiptime))]@\Implements a time-varying all-pole filter 
 controlled by a sequence of LPC frames from an iterator. The
 @code(SOUND) to be filtered is @i(snd), and the source of
 LPC frames is @i(lpc-iterator), typically an instance of 
@@ -6077,17 +5730,13 @@ speed up.) The result is a @code(SOUND). The duration of the
 result is the minimum of the duration of @i(snd) and that of
 the sequence of frames. 
 
-@codef[lpc-frame-rms1(@pragma(defn)@index(lpc-frame-rms1)@i(frame))] @c{[sal]}@*
-@altdef{@code[(lpc-frame-rms1 @i(frame))] @c{[lisp]}}@\Get the energy of the input signal from a frame.
+@codef[lpc-frame-rms1(@pragma(defn)@index(lpc-frame-rms1)@i(frame))]@\Get the energy of the input signal from a frame.
 
-@codef[lpc-frame-rms2(@pragma(defn)@index(lpc-frame-rms2)@i(frame))] @c{[sal]}@*
-@altdef{@code[(lpc-frame-rms2 @i(frame))] @c{[lisp]}}@\Get the energy of the residual from a frame.
+@codef[lpc-frame-rms2(@pragma(defn)@index(lpc-frame-rms2)@i(frame))]@\Get the energy of the residual from a frame.
 
-@codef[lpc-frame-err(@pragma(defn)@index(lpc-frame-err)@i(frame))] @c{[sal]}@*
-@altdef{@code[(lpc-frame-err @i(frame))] @c{[lisp]}}@\Get the square root of @i(RMS1)/@i(RMS2) from a frame.
+@codef[lpc-frame-err(@pragma(defn)@index(lpc-frame-err)@i(frame))]@\Get the square root of @i(RMS1)/@i(RMS2) from a frame.
 
-@codef[lpc-frame-filter-coefs(@pragma(defn)@index(lpc-frame-filter-coefs)@i(frame))] @c{[sal]}@*
-@altdef{@code[(lpc-frame-filter-coefs @i(frame))] @c{[lisp]}}@\Get the filter coefficients from a frame.
+@codef[lpc-frame-filter-coefs(@pragma(defn)@index(lpc-frame-filter-coefs)@i(frame))]@\Get the filter coefficients from a frame.
 
 @end(fndefs)
 
@@ -6102,23 +5751,20 @@ The lowest-level Nyquist functions for LPC are
 @end(itemize)
 
 @begin(fndefs)
-@codef[snd-lpanal(@pragma(defn)@index(snd-lpanal)@i(samps), @i(npoles))] @c{[sal]}@*
-@altdef{@code[(snd-lpanal @i(samps) @i(npoles))] @c{[lisp]}}@\Compute
+@codef[snd-lpanal(@pragma(defn)@index(snd-lpanal)@i(samps), @i(npoles))]@\Compute
 an LPC frame with @i(npoles) (a @code(FIXNUM)) poles from an 
 @code(ARRAY) of samples (@code(FLONUMS)). Note that @code(snd-fetch-array)
 can be used to fetch a sequence of frames from a sound. Ordinarily, you
 should not use this function. Use @code(make-lpanal-iterator) instead.
 
-@codef[snd-allpoles(@pragma(defn)@index(snd-allpoles)@i(snd), @i(lpc-coefs), @i(gain))] @c{[sal]}@*
-@altdef{@code[(snd-allpoles @i(snd) @i(lpc-coefs) @i(gain))] @c{[lisp]}}@\A fixed all-pole filter. The input is
+@codef[snd-allpoles(@pragma(defn)@index(snd-allpoles)@i(snd), @i(lpc-coefs), @i(gain))]@\A fixed all-pole filter. The input is
 @i(snd), a @code(SOUND). The filter coefficients are given by @i(lpc-coefs)
 (an @code(ARRAY)), and the filter gain is given by @i(gain), a @code(FLONUM).
 The result is a @code(SOUND) whose duration matches that of @i(snd). 
 Ordinarily, you should use @code(allpoles-from-lpc) instead (see above).
 
 @codef[snd-lpreson(@pragma(defn)@index(snd-lpreson)@i(snd), @i(lpc-iterator), 
-@i(skiptime))] @c{[sal]}@*
-@altdef{@code[(snd-lpreson @i(snd) @i(lpc-iterator) @i(skiptime))] @c{[lisp]}}@\This function is identical to @code(lpreson) (see above).
+@i(skiptime))]@\This function is identical to @code(lpreson) (see above).
 @end(fndefs)
 
 
@@ -6129,21 +5775,8 @@ throughout this manual, this chapter brings together many suggestions and techni
 should read this chapter before you spend too much time with Nyquist. Many problems that you will certainly run into are addressed here.
 
 @section(Debugging)
-Probably the most important debugging tool is the backtrace. There are
-two kinds of backtrace: one for SAL, and one for Lisp.
-
-SAL mode is actually just an XLISP function (@code(sal)) that reads
-input and evaluates it. When SAL encounters an error, it normally
-prints a trace of the SAL stack (all the active functions written in SAL),
-exists the current command, and reads the next command.
-
-If you call XLISP functions from SAL, including most Nyquist sound 
-processing functions, and an error occurs within these XLISP functions,
-you will only see the SAL function that called the XLISP functions
-listed in the stack trace. Sometimes you need more details.
-
-When Nyquist encounters an error when it is not running SAL, it 
-normally suspends execution and prints an 
+Probably the most important debugging tool is the backtrace. When 
+Nyquist encounters an error, it suspends execution and prints an 
 error message. To find out where in the program the error occurred 
 and how you got there, start by typing @code[(bt)]. This will print 
 out the last several function calls and their arguments, which is 
@@ -6160,13 +5793,7 @@ not saved and you cannot get a backtrace. Finally, @code(bt)
 is just a macro to save typing.  The actual backtrace function 
 is @code(baktrace), which takes an integer argument telling how 
 many levels to print.  All of these things are set up by default 
-when you start Nyquist.
-
-To get this XLISP backtrace behavior when SAL encounters an error,
-you need to have @code(*breakenable*) set while SAL is running. The
-best way to do this is to run within the NyquistIDE program,
-open the Preferences dialog, and choose the desired settings, e.g.
-``Enable XLISP break on SAL error.''
+when you start Nyquist.  
 
 Since Nyquist sounds are executed with a lazy evaluation scheme, some
 errors are encountered when samples are being generated.  In this
@@ -6218,14 +5845,12 @@ and another button named "SAL" that puts you back in SAL mode.
 
 @section(Useful Functions)
 @begin(fndefs)
-@codef[grindef(@pragma(defn)@index(grindef)@index(listing of lisp function)@i(name))] @c{[sal]}@*
-@altdef{@code[(grindef @i(name))] @c{[lisp]}}@\Prints
+@codef[grindef(@pragma(defn)@index(grindef)@index(listing of lisp function)@i(name))]@\Prints
 a formatted listing of a lisp function. This is often useful to quickly inspect
 a function without searching for it in source files. Do not forget to quote the
 name, e.g. @code[(grindef 'prod)].
 
-@codef[args(@pragma(defn)@index(args)@index(arguments to a lisp function)@i(name))] @c{[sal]}@*
-@altdef{@code[(args @i(name))] @c{[lisp]}}@\Similar
+@codef[args(@pragma(defn)@index(args)@index(arguments to a lisp function)@i(name))]@\Similar
 to @code(grindef), this function prints the arguments to a function. This may
 be faster than looking up a function in the documentation if you just need a
 reminder. For example, @code[(args 'lp)] prints ``(LP S C),'' which may help you
@@ -6237,24 +5862,20 @@ The following functions are useful short-cuts that might have been included in
 XLISP. They are so useful that they are defined as part of Nyquist.
 
 @begin(fndefs)
-@codef[incf(@pragma(defn)@index(incf)@index(increment)@i(symbol))] @c{[sal]}@*
-@altdef{@code[(incf @i(symbol))] @c{[lisp]}}@\Increment @i(symbol)
+@codef[incf(@pragma(defn)@index(incf)@index(increment)@i(symbol))]@\Increment @i(symbol)
 by one. This is a macro, and @i(symbol) can be anything that can be set by
 @code(setf). Typically, @i(symbol) is a variable: ``@code[(incf i)],'' but
 @i(symbol) can also be an array element: ``@code[(incf (aref myarray i))].''
 
-@codef[decf(@pragma(defn)@index(decf)@index(decrement)@i(symbol))] @c{[sal]}@*
-@altdef{@code[(decf @i(symbol))] @c{[lisp]}}@\Decrement @i(symbol)
+@codef[decf(@pragma(defn)@index(decf)@index(decrement)@i(symbol))]@\Decrement @i(symbol)
 by one. (See @code(incf), above.)
 
-@codef[push(@pragma(defn)@index(push)@i(val), @i(lis))] @c{[sal]}@*
-@altdef{@code[(push @i(val) @i(lis))] @c{[lisp]}}@\Push @i(val) onto @i(lis) (a Lisp
-list). This is a macro that is equivalent to writing (in Lisp) 
+@codef[push(@pragma(defn)@index(push)@i(val), @i(lis))]@\Push @i(val) onto @i(lis) (a Lisp
+list). This is a macro that is equivalent to writing 
 @code[(setf @i(lis) (cons @i(val) @i(lis)))].
 
-@codef[pop(@pragma(defn)@index(pop)@i(lis))] @c{[sal]}@*
-@altdef{@code[(pop @i(lis))] @c{[lisp]}}@\Remove (pop) the first item from @i(lis) (a
-Lisp list). This is a macro that is equivalent to writing (in Lisp)
+@codef[pop(@pragma(defn)@index(pop)@i(lis))]@\Remove (pop) the first item from @i(lis) (a
+Lisp list). This is a macro that is equivalent to writing 
 @code[(setf @i(lis) (cdr @i(lis)))]. Note that the remaining list is returned,
 not the head of the list that has been popped. Retrieve the head of the list
 (i.e. the top of the stack) using @code(first) or, equivalently, @code(car).
@@ -6263,16 +5884,13 @@ not the head of the list that has been popped. Retrieve the head of the list
 The following macros are useful control constructs.
 
 @begin(fndefs)
-@codef[while(@pragma(defn)@index(while)@i(test), @i(expr1), @i(expr2), @r(...))] @c{[sal]}@*
-@altdef{@code[(while @i(test) @i(expr1) @i(expr2) @r(...))] @c{[lisp]}}@\A conventional
-``while'' loop. If @i(test) is true, evaluate expressions
- (@i(expr1), @i(expr2), etc.) and repeat. If @i(test) is false, return. This
+@codef[while(@pragma(defn)@index(while)@i(test), @i(stmt1), @i(stmt2), ...)]@\A conventional
+``while'' loop. If @i(test) is true, perform the statements
+ (@i(stmt1), @i(stmt2), etc.) and repeat. If @i(test) is false, return. This
  expression evaluates to NIL unless the expression @code[(return @i(expr))]
- is evaluated, in which case the value of @i(expr) is returned. In SAL, the 
- loop statement is preferred.
+ is evaluated, in which case the value of @i(expr) is returned.
 
-@codef[when(@pragma(defn)@index(when)@i(test), @i(action))] @c{[sal]}@*
-@altdef{@code[(when @i(test) @i(action))] @c{[lisp]}}@\A conventional ``if-then'' 
+@codef[when(@pragma(defn)@index(when)@i(test), @i(action))]@\A conventional ``if-then'' 
 statement. If @i(test) is true, @i(action) is evaluated and returned. Otherwise,
 NIL is returned. (Use @code(if) or @code(cond) to implement
  ``if-then-else'' and more complex conditional forms.
@@ -6288,8 +5906,7 @@ the function does not yet exist, Nyquist satisfies the requirement by loading
 the file.
 @begin(fndefs)
 @codef{require-from(@pragma(defn)@index(require-from)@index(load file conditionally)@i(fnsymbol), 
-@i(filename) [, @i(path)])} @c{[sal]}@*
-@altdef{@code{(require-from @i(fnsymbol) @i(filename) [@i(path)])} @c{[lisp]}}@\Tests whether @i(fnsymbol), an unquoted 
+@i(filename) [, @i(path)])}@\Tests whether @i(fnsymbol), an unquoted 
 function name, is defined. If 
 not, @i(filename), a @code(STRING),
 is loaded. Normally @i(fnsymbol) is a function that will be called from
@@ -6304,18 +5921,15 @@ the @code(lib/piano.lsp) library loads data files from the @code(lib/piano) dire
 but how can we find out the full path of @code(lib)? The solution is:
 @begin(fndefs)
 @codef[current-path(@pragma(defn)@index(current-path)@index(path, 
-current)@index(full path name))] @c{[sal]}@*
-@altdef{@code[(current-path)] @c{[lisp]}}@\Returns the full path name of the file that is
+current)@index(full path name))]@\Returns the full path name of the file that is
 currently being loaded (see @code(load)). Returns NIL if no file is being loaded.
 @end(fndefs) 
 
 Finally, there are some helpful math functions:
 @begin(fndefs)
-@codef[real-random(@index(random)@index(uniform random)@pragma(defn)@index(real-random)@i(from), @i(to))] @c{[sal]}@*
-@altdef{@code[(real-random @i(from) @i(to))] @c{[lisp]}}@\Returns a random @code(FLONUM) between @i(from) and @i(to). (See also @code(rrandom), which is equivalent to @code((real-random 0 1))).
+@codef[real-random(@index(random)@index(uniform random)@pragma(defn)@index(real-random)@i(from), @i(to))]@\Returns a random @code(FLONUM) between @i(from) and @i(to). (See also @code(rrandom), which is equivalent to @code((real-random 0 1))).
 
-@codef[power(@pragma(defn)@index(power)@index(exponent)@i(x), @i(y))] @c{[sal]}@*
-@altdef{@code[(power @i(x) @i(y))] @c{[lisp]}}@\Returns @i(x) raised to
+@codef[power(@pragma(defn)@index(power)@index(exponent)@i(x), @i(y))]@\Returns @i(x) raised to
 the @i(y) power.
 @end(fndefs)
 
@@ -6449,9 +6063,8 @@ For example, two periods of @code[make-cycle({a b c})] would be
 @code[(A B C) (A B C)]. 
 
 @begin(fndefs)
-@codef{make-cycle(@pragma(defn)@index(make-cycle)@index(cycle pattern)@index(pattern, cycle)@i(items), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-cycle @i(items) :for @i(for) :name @i(name)
- :trace @i(trace))} @c{[lisp]}}@\Make a cycle 
+@codef{make-cycle(@pragma(defn)@index(make-cycle)@index(cycle pattern)@index(pattern, cycle)@i(items)[ ,for: @i(for)] [, name: @i(name),] 
+[trace: @i(trace)])}@\Make a cycle 
 pattern that iterates over @i(items). The default period length is the
 length of @i(items). (See above for a description of the 
 optional parameters.) If @i(items) is a pattern, a period of the 
@@ -6466,8 +6079,7 @@ For example, two periods of @code[make-line({a b c})] would be
 @code[(A B C) (C C C)]. 
 
 @begin(fndefs)
-@codef{make-line(@pragma(defn)@index(make-line)@index(line pattern)@index(pattern, line)@i(items), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-line @i(items) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Make a line 
+@codef{make-line(@pragma(defn)@index(make-line)@index(line pattern)@index(pattern, line)@i(items)[ ,for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Make a line 
 pattern that iterates over @i(items). The default period length is the
 length of @i(items). As with @code(make-cycle), @i(items) may be a 
 pattern. (See above for a description of the optional parameters.)
@@ -6487,15 +6099,13 @@ Weights (but not currently minima and maxima) can be patterns. The patterns
 (thus the weights) are recomputed every period.  
 
 @begin(fndefs)
-@codef{make-random(@pragma(defn)@index(make-random)@index(random pattern)@index(pattern, random)@i(items), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-random @i(items) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Make a random 
+@codef{make-random(@pragma(defn)@index(make-random)@index(random pattern)@index(pattern, random)@i(items)[ ,for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Make a random 
 pattern that selects from @i(items). Any (or all) element(s) of @i(items)
-may be lists of the following form: @code{(@i(value) :weight @i(weight)
-:min @i(mincount) :max @i(maxcount))}, where @i(value) is the item 
-(or pattern) to be generated, @i(weight) is the (optional) 
-relative probability of 
-selecting this item, @i(mincount) is the (optional) minimum number of repetitions
-when this item is selected, and @i(maxcount) is the (optional) maximum number of 
+may be lists of the following form: @code{(@i(value) [:weight @i(weight)]
+[:min @i(mincount)] [:max @i(maxcount)]}, where @i(value) is the item 
+(or pattern) to be generated, @i(weight) is the relative probability of 
+selecting this item, @i(mincount) is the minimum number of repetitions
+when this item is selected, and @i(maxcount) is the maximum number of 
 repetitions allowed before selecting some other item. The default period
 length is the length of @i(items). If @i(items) is a pattern, a period
 from that pattern becomes the list from which random selections are
@@ -6523,8 +6133,8 @@ make-palindrome({a b c}, elide: :last)
 @end(example)
 
 @begin(fndefs)
-@codef{make-palindrome(@pragma(defn)@index(make-palindrome)@index(palindrome pattern)@index(pattern, palindrome)@i(items), elide: @i(elide), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-palindrome @i(items) :elide @i(elide) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Generate items
+@codef{make-palindrome(@pragma(defn)@index(make-palindrome)@index(palindrome pattern)@index(pattern, palindrome)@i(items)[ ,elide: @i(elide),] 
+[for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Generate items
 from list alternating in-order and reverse-order sequencing. The keyword 
 parameter @i(elide) can have the values @code(:first), @code(:last), 
 @code(t), or @code(nil) to control repetition of the first and last elements.
@@ -6548,8 +6158,8 @@ If the list contains more than one copy of the same value, it may be repeated
 within a period regardless of the value of @code(:max).
 
 @begin(fndefs)
-@codef{make-heap(@pragma(defn)@index(make-heap)@index(heap pattern)@index(pattern, heap)@i(items), for: @i(for), max: @i(max), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-heap @i(items) :for @i(for) :max @i(max) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Generate items
+@codef{make-heap(@pragma(defn)@index(make-heap)@index(heap pattern)@index(pattern, heap)@i(items),
+[for: @i(for)] [, max: @i(max)] [, name: @i(name)] [, trace: @i(trace)])}@\Generate items
 randomly from list without replacement. If @i(max) is 1, the first element of 
 a new period will not be the same as the last element of the previous period,
 avoiding repetition. The default value of @i(max) is 2, meaning repetition is
@@ -6567,8 +6177,8 @@ first through the item. For example, if the list is (A B C), each
 generated period is (A A B A B C).
 
 @begin(fndefs)
-@codef{make-accumulation(@pragma(defn)@index(make-accumulation)@index(accumulation pattern)@index(pattern, accumulation)@i(items), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-accumulation @i(items) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\For each item, generate items from the first to
+@codef{make-accumulation(@pragma(defn)@index(make-accumulation)@index(accumulation pattern)@index(pattern, accumulation)@i(items)[ ,name: @i(name),] 
+[trace: @i(trace)])}@\For each item, generate items from the first to
 the item including the item. The period length is (@i(n)@+(2) + @i(n)) / 2
 where @i(n) is the length of @i(items).  If @i(items) is a pattern, a period
 from that pattern becomes the list from which items are generated,
@@ -6585,8 +6195,8 @@ keyword was used to force periods to be of length one so that
 each item is repeated by the @code(:repeat) count.
 
 @codef{make-copier(@pragma(defn)@index(make-copier)@index(copier 
-pattern)@index(pattern, copier)@i(sub-pattern), repeat: @i(repeat), merge: @i(merge), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-copier @i(sub-pattern) :repeat @i(repeat) :merge @i(merge) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Generate a period
+pattern)@index(pattern, copier)@i(sub-pattern)[ ,repeat: @i(repeat)] [, merge: @i(merge),] 
+[for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Generate a period
 from @i(sub-pattern) and repeat it @i(repeat) times. If @i(merge) is false
 (the default), each repetition of a period from @i(sub-pattern) results
 in a period by default. If @i(merge) is true (non-null), then all
@@ -6611,8 +6221,7 @@ The default output period length is the length of the input period.
 
 @begin(fndefs)
 @codef{make-accumulate(@pragma(defn)@index(make-accumulate)@index(accumulate 
-pattern)@index(pattern, accumulate)@i(sub-pattern), for: @i(for), max: @i(maximum), min: @i(minimum), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-accumulate @i(sub-pattern) :for @i(for) :max @i(maximum) :min @i(minimum) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Keep
+pattern)@index(pattern, accumulate)@i(sub-pattern)[ ,for: @i(for)] [, max: @i(maximum)] [, min: @i(minimum)] [, name: @i(name)] [, trace: @i(trace)])}@\Keep
 a running sum of numbers generated by @i(sub-pattern). The default
 period lengths match the period lengths from @i(sub-pattern). If @i(maximum) (a pattern or a number) is specified, and the running sum exceeds @i(maximum), the running sum is reset to @i(maximum). If @i(minimum) (a pattern or a number) is specified, and the running sum falls below @i(minimum), the running sum is reset to @i(minimum). If @i(minimum) is greater than @i(maximum), the running sum will be set to one of the two values. Note that this is similar in name but not in function to
 @code(make-accumulation).
@@ -6629,8 +6238,7 @@ second argument can be a pattern or a number.
 
 @begin(fndefs)
 @codef{make-sum(@pragma(defn)@index(make-sum)@index(sum
-pattern)@index(pattern, sum)@i(x), @i(y), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-sum @i(x) @i(y) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Form
+pattern)@index(pattern, sum)@i(x), @i(y)[ ,for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Form
 sums of items (which must be numbers) from pattern
  @i(x) and pattern or number @i(y).  The default
 period lengths match the period lengths from @i(x).
@@ -6647,8 +6255,7 @@ first argument. Therefore, the first argument must be a pattern, but the
 second argument can be a pattern or a number.
 
 @begin(fndefs)
-@codef{make-product(@pragma(defn)@index(make-product)@index(product pattern)@index(pattern, product)@i(x), @i(y), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-product @i(x) @i(y) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Form
+@codef{make-product(@pragma(defn)@index(make-product)@index(product pattern)@index(pattern, product)@i(x), @i(y)[ ,for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Form
 products of items (which must be numbers) from pattern
  @i(x) and pattern or number @i(y).  The default
 period lengths match the period lengths from @i(x).
@@ -6660,8 +6267,7 @@ The @code(eval-class) evaluates an expression to produce each output item.
 The default output period length is 1.
 
 @begin(fndefs)
-@codef{make-eval(@pragma(defn)@index(make-eval)@index(eval pattern)@index(pattern, eval)@index(expression pattern)@index(pattern, expression)@i(expr), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-eval @i(expr) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Evaluate
+@codef{make-eval(@pragma(defn)@index(make-eval)@index(eval pattern)@index(pattern, eval)@index(expression pattern)@index(pattern, expression)@i(expr)[ ,for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Evaluate
 @i(expr) to generate each item. If @i(expr) is a pattern, each item is generated by getting the next item from @i(expr) and evaluating it.
 @end(fndefs)
 
@@ -6683,8 +6289,7 @@ default palindrome periods.
 @begin(fndefs)
 @codef{make-length(@index(length pattern)@index(pattern, 
 length)@pragma(defn)@index(make-length)@i(pattern), @i(length-pattern), 
-name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-length @i(pattern) @i(length-pattern) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Make a pattern of class
+[name: @i(name)] [, trace: @i(trace)])}@\Make a pattern of class
 @code(length-class) that regroups items generated by a
 @i(pattern) according to pattern lengths given by @i(length-pattern).
 Note that @i(length-pattern) is not optional: There is no default
@@ -6703,8 +6308,7 @@ then the output periods will be (A B C), (B C D), (C D E), (D E F), ....
 @begin(fndefs)
 @codef{make-window(@index(window pattern)@index(pattern, 
 window)@pragma(defn)@index(make-window)@i(pattern), @i(length-pattern), 
-@i(skip-pattern), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-window @i(pattern) @i(length-pattern) @i(skip-pattern) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Make
+@i(skip-pattern)[ ,name: @i(name)] [, trace: @i(trace)])}@\Make
  a pattern of class
 @code(window-class) that regroups items generated by a
 @i(pattern) according to pattern lengths given by @i(length-pattern) 
@@ -6739,8 +6343,8 @@ two periods of @code[make-markov({{a -> b c} {b -> c} {c -> a}}, past: {a})]
 might be @code[(C A C) (A B C)].
 
 @begin(fndefs)
-@codef{make-markov(@pragma(defn)@index(make-markov)@index(markov pattern)@index(pattern, markov)@i(rules), past: @i(past), produces: @i(produces), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-markov @i(rules) @i(past) :produces @i(produces) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Generate a sequence
+@codef{make-markov(@pragma(defn)@index(make-markov)@index(markov pattern)@index(pattern, markov)@i(rules)[ ,past: @i(past)] [, produces: @i(produces),] 
+[for: @i(for)] [, name: @i(name)] [, trace: @i(trace)])}@\Generate a sequence
 of items from a Markov process. The @i(rules) parameter has the form: 
 @code[(@i(prev1) @i(prev2) ... @i(prevn) -> @i(next1) @i(next2) ... @i(nextn))]
 where @i(prev1) through @i(prevn) represent a sequence of most recent
@@ -6779,8 +6383,7 @@ be useful if states are Nyquist global variables such as
 @code(C4, CS4, D4, ]..., which evaluate to numerical 
 values (60, 61, 62, ...).
 
-@codef{markov-create-rules(@pragma(defn)@index(markov-create-rules)@index(markov analysis)@i(sequence), @i(order) [, @i(generalize)])} @c{[sal]}@*
-@altdef{@code{(markov-create-rules @i(sequence) @i(order) [@i(generalize)])} @c{[lisp]}}@\Generate a set of rules suitable for the 
+@codef{markov-create-rules(@pragma(defn)@index(markov-create-rules)@index(markov analysis)@i(sequence), @i(order)[ ,@i(generalize)])}@\Generate a set of rules suitable for the 
 @code(make-markov) function. The @i(sequence) is a ``typical'' sequence
 of states, and @i(order) is the order of the Markov model. It is often the
 case that a sample sequence will not have a transition from the last state 
@@ -6804,8 +6407,7 @@ The upper and lower bounds are implemented simply by drawing a random number fro
 
 
 @begin(fndefs)
-@codef[linear-dist(@pragma(defn)@index(linear-dist)@index(linear distribution)@i(g))] @c{[sal]}@*
-@altdef{@code[(linear-dist @i(g))] @c{[lisp]}}@\Return a @code(FLONUM) value from a linear distribution, where the probability of a value decreases linearly from zero to @i(g) which must be greater than zero. (See Figure @ref(linear-fig).) The linear distribution is useful for generating for generating time and pitch intervals.
+@codef[linear-dist(@pragma(defn)@index(linear-dist)@index(linear distribution)@i(g))]@\Return a @code(FLONUM) value from a linear distribution, where the probability of a value decreases linearly from zero to @i(g) which must be greater than zero. (See Figure @ref(linear-fig).) The linear distribution is useful for generating for generating time and pitch intervals.
 @end(fndefs)
 
 @begin(figure)
@@ -6817,8 +6419,7 @@ The upper and lower bounds are implemented simply by drawing a random number fro
 @end(figure)
 
 @begin(fndefs)
-@codef{exponential-dist(@pragma(defn)@index(exponential-dist)@index(exponential distribution)@i(delta) [, @i(high)])} @c{[sal]}@*
-@altdef{@code{(exponential-dist @i(delta) [@i(high)])} @c{[lisp]}}@\Return a @code(FLONUM) value from an exponential distribution. The initial downward slope is steeper with larger values of @i(delta), which must be greater than zero. (See Figure @ref(exponential-fig). The optional @i(high) parameter puts an artificial upper bound on the return value.
+@codef{exponential-dist(@pragma(defn)@index(exponential-dist)@index(exponential distribution)@i(delta)[ ,@i(high)])}@\Return a @code(FLONUM) value from an exponential distribution. The initial downward slope is steeper with larger values of @i(delta), which must be greater than zero. (See Figure @ref(exponential-fig). The optional @i(high) parameter puts an artificial upper bound on the return value.
 The exponential distribution generates values greater
 than 0, and can be used to generate time intervals. Natural random intervals such as the time intervals between the release of atomic particles or the passing of yellow volkswagons in traffic have exponential distributions. The
 exponential distribution is memory-less: knowing that a random number from this distribution is greater than some value (e.g. a note duration is at least 1 second) tells you nothing new about how soon the note will end. This
@@ -6834,8 +6435,7 @@ is a continuous distribution, but @code(geometric-dist) (described below) implem
 @end(figure)
 
 @begin(fndefs)
-@codef{gamma-dist(@pragma(defn)@index(gamma-dist)@i(nu) [, @i(high)])} @c{[sal]}@*
-@altdef{@code{(gamma-dist @i(nu) [@i(high)])} @c{[lisp]}}@\Return a @code(FLONUM) value from a Gamma distribution. The value is greater than zero, has a mean of @i(nu) (a @code(FIXNUM) greater than zero), and a mode (peak) of around @i(nu) - 1. 
+@codef{gamma-dist(@pragma(defn)@index(gamma-dist)@i(nu)[ ,@i(high)])}@\Return a @code(FLONUM) value from a Gamma distribution. The value is greater than zero, has a mean of @i(nu) (a @code(FIXNUM) greater than zero), and a mode (peak) of around @i(nu) - 1. 
  The optional @i(high) parameter puts an artificial upper bound on the return value.
 @end(fndefs)
 
@@ -6849,8 +6449,7 @@ is a continuous distribution, but @code(geometric-dist) (described below) implem
 
 @begin(fndefs)
 @codef{bilateral-exponential-dist(@pragma(defn)@index(bilateral-exponential-dist)@index(bilateral exponential distribution)@i(xmu),
- @i(tau) [, @i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code{(bilateral-exponential-dist @i(xmu) @i(tau) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from a bilateral exponential distribution, where @i(xmu) is the center of the double exponential and @i(tau) controls the spread of the distribution. A larger @i(tau) gives a wider distribution (greater variance), and @i(tau) must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+ @i(tau)[ ,@i(low)] [, @i(high)])}@\Returns a @code(FLONUM) value from a bilateral exponential distribution, where @i(xmu) is the center of the double exponential and @i(tau) controls the spread of the distribution. A larger @i(tau) gives a wider distribution (greater variance), and @i(tau) must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 This distribution is similar to the exponential, except
 it is centered at 0 and can output negative values as well. Like
 the exponential, it can be used to generate time intervals; however, it might be necessary to add a lower bound so as not to compute a negative time interval.
@@ -6865,8 +6464,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 @end(figure)
 
 @begin(fndefs)
-@codef{cauchy-dist(@pragma(defn)@index(cauchy-dist)@index(cauchy distribution)@i(tau) [, @i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code{(cauchy-dist @i(tau) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) from the Cauchy distribution, a symetric distribution with a high peak at zero and a width (variance) that increases with parameter @i(tau), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@codef{cauchy-dist(@pragma(defn)@index(cauchy-dist)@index(cauchy distribution)@i(tau)[ ,@i(low)] [, @i(high)])}@\Returns a @code(FLONUM) from the Cauchy distribution, a symetric distribution with a high peak at zero and a width (variance) that increases with parameter @i(tau), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
@@ -6878,8 +6476,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 @end(figure)
 
 @begin(fndefs)
-@codef{hyperbolic-cosine-dist(@pragma(defn)@index(hyperbolic-cosine-dist)[@i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code[(hyperbolic-cosine-dist [@i(low) @i(high)])] @c{[lisp]}}@\Returns a @code(FLONUM) value from the hyperbolic cosine distribution, a symetric distribution with its peak at zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@codef{hyperbolic-cosine-dist(@pragma(defn)@index(hyperbolic-cosine-dist) [@i(low)] [, @i(high)])}@\Returns a @code(FLONUM) value from the hyperbolic cosine distribution, a symetric distribution with its peak at zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
@@ -6891,8 +6488,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 @end(figure)
 
 @begin(fndefs)
-@codef{logistic-dist(@pragma(defn)@index(logistic-dist)@index(logistic distribution)@i(alpha), @i(beta) [, @i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code{(logistic-dist @i(alpha) @i(beta) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from the logistic distribution, which is symetric about the mean. The @i(alpha) parameter primarily affects dispersion (variance), with larger values resulting in values closer to the mean (less variance), and the @i(beta) parameter primarily influences the mean. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@codef{logistic-dist(@pragma(defn)@index(logistic-dist)@index(logistic distribution)@i(alpha), @i(beta)[ ,@i(low)] [, @i(high)])}@\Returns a @code(FLONUM) value from the logistic distribution, which is symetric about the mean. The @i(alpha) parameter primarily affects dispersion (variance), with larger values resulting in values closer to the mean (less variance), and the @i(beta) parameter primarily influences the mean. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
@@ -6904,8 +6500,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 @end(figure)
 
 @begin(fndefs)
-@codef{arc-sine-dist(@pragma(defn)@index(arc-sine-dist)@index(arcsine distribution))} @c{[sal]}@*
-@altdef{@code{(arc-sine-dist)} @c{[lisp]}}@\Returns a @code(FLONUM) value from the arc sine distribution, which outputs values between 0 and 1. It is symetric about the mean of 1/2, but is more likely to generate values closer to 0 and 1. 
+@codef{arc-sine-dist(@pragma(defn)@index(arc-sine-dist)@index(arcsine distribution))}@\Returns a @code(FLONUM) value from the arc sine distribution, which outputs values between 0 and 1. It is symetric about the mean of 1/2, but is more likely to generate values closer to 0 and 1. 
 @end(fndefs)
 
 @begin(figure)
@@ -6917,8 +6512,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 @end(figure)
 
 @begin(fndefs)
-@codef{gaussian-dist(@index(Gaussian distribution)@pragma(defn)@index(gaussian-dist)@i(xmu), @i(sigma) [, @i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code{(gaussian-dist @i(xmu) @i(sigma) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from the Gaussian or Gauss-Laplace distribution, a linear function of the normal distribution. It is symetric about the mean of @i(xmu), with a standard deviation of @i(sigma), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@codef{gaussian-dist(@index(Gaussian distribution)@pragma(defn)@index(gaussian-dist)@i(xmu), @i(sigma)[ ,@i(low)] [, @i(high)])}@\Returns a @code(FLONUM) value from the Gaussian or Gauss-Laplace distribution, a linear function of the normal distribution. It is symetric about the mean of @i(xmu), with a standard deviation of @i(sigma), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
@@ -6930,8 +6524,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 @end(figure)
 
 @begin(fndefs)
-@codef{beta-dist(@index(beta distribution)@pragma(defn)@index(beta-dist)@i(a), @i(b))} @c{[sal]}@*
-@altdef{@code[(beta-dist @i(a) @i(b))] @c{[lisp]}}@\Returns a @code(FLONUM) value from the Beta distribution. This distribution outputs values between 0 and 1, with outputs more likely to be close to 0 or 1. The parameter @i(a) controls the height (probability) of the right side of the distribution (at 1) and @i(b) controls the height of the left side (at 0). The distribution is symetric about 1/2 when @i(a) = @i(b).
+@codef{beta-dist(@index(beta distribution)@pragma(defn)@index(beta-dist)@i(a), @i(b))}@\Returns a @code(FLONUM) value from the Beta distribution. This distribution outputs values between 0 and 1, with outputs more likely to be close to 0 or 1. The parameter @i(a) controls the height (probability) of the right side of the distribution (at 1) and @i(b) controls the height of the left side (at 0). The distribution is symetric about 1/2 when @i(a) = @i(b).
 @end(fndefs)
 
 @begin(figure)
@@ -6943,8 +6536,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 @end(figure)
 
 @begin(fndefs)
-@codef{bernoulli-dist(@index(Bernoulli distribution)@pragma(defn)@index(bernoulli-dist)@i(px1) [, @i(x1), @i(x2)])} @c{[sal]}@*
-@altdef{@code{(bernoulli-dist @i(px1) [@i(x1) @i(x2)])} @c{[lisp]}}@\Returns either @i(x1) (default value is 1) with probability @i(px1) or @i(x2) (default value is 0) with probability 1 - @i(px1). The value of @i(px1) should be between 0 and 1. By
+@codef{bernoulli-dist(@index(Bernoulli distribution)@pragma(defn)@index(bernoulli-dist)@i(px1)[ ,@i(x1)] [, @i(x2)])}@\Returns either @i(x1) (default value is 1) with probability @i(px1) or @i(x2) (default value is 0) with probability 1 - @i(px1). The value of @i(px1) should be between 0 and 1. By
 convention, a result of @i(x1) is viewed as a success while @i(x2) is viewed as
 a failure.
 @end(fndefs)
@@ -6958,8 +6550,7 @@ a failure.
 @end(figure)
 
 @begin(fndefs)
-@codef{binomial-dist(@index(binomial distribution)@pragma(defn)@index(binomial-dist)@i(n), @i(p))} @c{[sal]}@*
-@altdef{@code{(binomial-dist @i(n) @i(p))} @c{[lisp]}}@\Returns a @code(FIXNUM) value from the binomial distribution, where @i(n) is the number of Bernoulli trials run (a @code(FIXNUM)) and @i(p) is the probability of success in the Bernoulli trial (a @code(FLONUM) from 0 to 1). The mean is the product of @i(n) and @i(p).
+@code{(binomial-dist@index(binomial distribution)@pragma(defn)@index(binomial-dist) @i(n) @i(p)}@\Returns a @code(FIXNUM) value from the binomial distribution, where @i(n) is the number of Bernoulli trials run (a @code(FIXNUM)) and @i(p) is the probability of success in the Bernoulli trial (a @code(FLONUM) from 0 to 1). The mean is the product of @i(n) and @i(p).
 @end(fndefs)
 
 @begin(figure)
@@ -6971,8 +6562,7 @@ a failure.
 @end(figure)
 
 @begin(fndefs)
-@codef{geometric-dist(@index(geometric distribution)@pragma(defn)@index(geometric-dist)@i(p))} @c{[sal]}@*
-@altdef{@code[(geometric-dist @i(p))] @c{[lisp]}}@\Returns a @code(FIXNUM) value from the geometric distribution, which is defined as the number of failures before a success is achieved in a Bernoulli trial with probability of success @i(p) (a @code(FLONUM) from 0 to 1).
+@codef{geometric-dist(@index(geometric distribution)@pragma(defn)@index(geometric-dist)@i(p))}@\Returns a @code(FIXNUM) value from the geometric distribution, which is defined as the number of failures before a success is achieved in a Bernoulli trial with probability of success @i(p) (a @code(FLONUM) from 0 to 1).
 @end(fndefs)
 
 @begin(figure)
@@ -6984,8 +6574,7 @@ a failure.
 @end(figure)
 
 @begin(fndefs)
-@codef{poisson-dist(@index(Poisson distribution)@pragma(defn)@index(poisson-dist)@i(delta))} @c{[sal]}@*
-@altdef{@code[(poisson-dist @i(delta))] @c{[lisp]}}@\Returns a @code(FIXNUM) value from the Poisson distribution with a mean of @i(delta) (a @code(FIXNUM)). The Poisson distribution is often used to generate a sequence of time intervals, resulting in random but often pleasing rhythms.
+@codef{poisson-dist(@index(Poisson distribution)@pragma(defn)@index(poisson-dist)@i(delta))}@\Returns a @code(FIXNUM) value from the Poisson distribution with a mean of @i(delta) (a @code(FIXNUM)). The Poisson distribution is often used to generate a sequence of time intervals, resulting in random but often pleasing rhythms.
 @end(fndefs)
 
 @begin(figure)
@@ -7001,8 +6590,7 @@ a failure.
 Note: this should remain out of Nyquist until the granulate code is cleaned up (why are there separate functions for pitch-dist and len-dist instead of a single function where any parameter can be specified by a closure?)
 *****************
 @begin(fndefs)
-@codef{pitch-dist-granulate(@pragma(defn)@index(pitch-dist-granulate)@index(granular synthesis)@i(filename), @i(grain-dur), @i(grain-dev), @i(ioi), @i(ioi-dev), @i(pitch-dist) [, @i(file-start), @i(file-end)])} @c{[sal]}@*
-@altdef{@code{(pitch-dist-granulate @i(filename) @i(grain-dur) @i(grain-dev) @i(ioi) @i(ioi-dev) @i(pitch-dist) [@i(file-start) @i(file-end)])} @c{[lisp]}}@\*** need to write this ***
+@codef{pitch-dist-granulate(@pragma(defn)@index(pitch-dist-granulate)@index(granular synthesis)@i(filename), @i(grain-dur), @i(grain-dev), @i(ioi), @i(ioi-dev), @i(pitch-dist)[ ,@i(file-start)] [, @i(file-end)])}@\*** need to write this ***
 
 @i(filename) @dash name of the file
 
@@ -7027,28 +6615,28 @@ synthesis function based on the one by Roger B. Dannenberg. The
 pitch of the grains will be based on the distribution you give to it. The
 distribution must be passed in as a continuation.
 
-(len-dist-granulate @i(filename) @i(dist ioi ioi-dev) @i(pitch-dev) [@i(file-start)@i(file-end)])
+(len-dist-granulate @i(filename) @i(dist ioi ioi-dev) @i(pitch-dev) [@i(file-start)] [@i(file-end)])
 
 @i(filename) @dash name of the file
 
-@i(grain-dur) @dash the duration of a grain
+@i(grain-dur)– the duration of a grain
 
-@i(grain-dev) @dash grain dur is actually grain-dur + random(0, grain-dev)
+@i(grain-dev)– grain dur is actually grain-dur + random(0, grain-dev)
 
-@i(ioi</span>) @dash the basic inter-onset-interval for grains
+@i(ioi</span>)– the basic inter-onset-interval for grains
 
-@i(ioi</span>-dev) @dash ioi is actually: ioi + random(0, ioi-dev)
+@i(ioi</span>-dev)– ioi is actually: ioi + random(0, ioi-dev)
 
-@i(pitch-dist) @dash the distribution of the alteration in pitch to the grains. The
+@i(pitch-dist)– the distribution of the alteration in pitch to the grains. The
 distribution values should be > 1.
 
-@i(file-start) @dash when to start reading the file (an offset from start). The
+@i(file-start)– when to start reading the file (an offset from start). The
 default is 0
 
-@i(file-end) @dash when to stop reading the file (an offset from end). The
+@i(file-end)– when to stop reading the file (an offset from end). The
 default is 0
 
-returns @dash a set of sound grains created from the input file
+returns– a set of sound grains created from the input file
 
 This is a granular
 synthesis function based on the one by Roger B. Dannenberg. The
@@ -7162,8 +6750,7 @@ using @code(timed-seq) (see Section @ref(timed-seq-sec)).
 
 The form of a call to @code(score-gen) is simply:
 @begin(fndefs)
-@codef[score-gen(@pragma(defn)@index(score-gen)@i(k1:) @i(e1), @i(k2:) @i(e2), @r(...))] @c{[sal]}@*
-@altdef{@code[(score-gen @i(k1:) @i(e1) @i(k2:) @i(e2) @r(...))] @c{[lisp]}}@\where the @i(k)'s 
+@codef[score-gen(@pragma(defn)@index(score-gen)@i(k1:) @i(e1), @i(k2:) @i(e2), ... )]@\where the @i(k)'s 
 are keywords and the @i(e)'s are 
 expressions. A score is generated by evaluating the expressions once for 
 each note and constructing a list of keyword-value pairs. A number
@@ -7284,60 +6871,48 @@ of events (or notes) in scores. Although lisp functions such as
 readable when more mnemonic functions are used to access events.
 
 @begin(fndefs)
-@codef[event-time(@pragma(defn)@index(event-time)@i(event))] @c{[sal]}@*
-@altdef{@code[(event-time @i(event))] @c{[lisp]}}@\Retrieve the time field from 
+@codef[event-time(@pragma(defn)@index(event-time)@i(event))]@\Retrieve the time field from 
 an event.
 
-@codef[event-set-time(@pragma(defn)@index(event-set-time)@i(event), @i(time))] @c{[sal]}@*
-@altdef{@code[(event-set-time @i(event) @i(time))] @c{[lisp]}}@\Construct
+@codef[event-set-time(@pragma(defn)@index(event-set-time)@i(event), @i(time))]@\Construct
 a new event where the time of @i(event) is replaced by @i(time).
 
-@codef[event-dur(@pragma(defn)@index(event-dur)@i(event))] @c{[sal]}@*
-@altdef{@code[(event-dur @i(event))] @c{[lisp]}}@\Retrieve the duration 
+@codef[event-dur(@pragma(defn)@index(event-dur)@i(event))]@\Retrieve the duration 
 (i.e. the stretch factor) field from an event.
 
-@codef[event-set-dur(@pragma(defn)@index(event-set-dur)@i(event), @i(dur))] @c{[sal]}@*
-@altdef{@code[(event-set-dur @i(event) @i(dur))] @c{[lisp]}}@\Construct
+@codef[event-set-dur(@pragma(defn)@index(event-set-dur)@i(event), @i(dur))]@\Construct
 a new event where the duration (or stretch factor) of @i(event) is
 replaced by @i(dur).
 
-@codef[event-expression(@pragma(defn)@index(event-expression)@i(event))] @c{[sal]}@*
-@altdef{@code[(event-expression @i(event))] @c{[lisp]}}@\Retrieve the expression 
+@codef[event-expression(@pragma(defn)@index(event-expression)@i(event))]@\Retrieve the expression 
 field from an event.
 
 @codef[event-set-expression(@pragma(defn)@index(event-set-expression)@i(event), 
-@i(dur))] @c{[sal]}@*
-@altdef{@code[(event-set-expression @i(event) @i(dur))] @c{[lisp]}}@\Construct
+@i(dur))]@\Construct
 a new event where the expression of @i(event) is replaced by @i(expression).
 
-@codef[event-end(@pragma(defn)@index(event-end)@i(event))] @c{[sal]}@*
-@altdef{@code[(event-end @i(event))] @c{[lisp]}}@\Retrieve the end time 
+@codef[event-end(@pragma(defn)@index(event-end)@i(event))]@\Retrieve the end time 
 of @i(event), its time plus its duration.
 
-@codef[expr-has-attr(@pragma(defn)@index(expr-has-attr)@i(expression), @i(attribute))] @c{[sal]}@*
-@altdef{@code[(expr-has-attr @i(expression) @i(attribute))] @c{[lisp]}}@\Test 
+@codef[expr-has-attr(@pragma(defn)@index(expr-has-attr)@i(expression), @i(attribute))]@\Test 
 whether a score event @i(expression) has the given @i(attribute).
 
-@codef{expr-get-attr(@pragma(defn)@index(expr-get-attr)@i(expression), @i(attribute) [, @i(default)])} @c{[sal]}@*
-@altdef{@code{(expr-get-attr @i(expression) @i(attribute) [@i(default)])} @c{[lisp]}}@\Get the value of the given @i(attribute) from a score event
+@codef{expr-get-attr(@pragma(defn)@index(expr-get-attr)@i(expression), @i(attribute), 
+[@i(default)])}@\Get the value of the given @i(attribute) from a score event
 @i(expression). If @i(attribute) is not present, return @i(default) if
 specified, and otherwise @code(nil).
 
-@codef{expr-set-attr(@pragma(defn)@index(expr-set-attr)@i(expr), @i(attribute), @i(value))} @c{[sal]}@*
-@altdef{@code[(expr-set-attr @i(expr) @i(attribute) @i(value))] @c{[lisp]}}@\Construct a new expression identical to @i(expr) except that the @i(attribute) has @i(value).
+@codef{expr-set-attr(@pragma(defn)@index(expr-set-attr)@i(expr), @i(attribute), @i(value))}@\Construct a new expression identical to @i(expr) except that the @i(attribute) has @i(value).
 
-@codef[event-has-attr(@pragma(defn)@index(event-has-attr)@i(event), @i(attribute))] @c{[sal]}@*
-@altdef{@code[(event-has-attr @i(event) @i(attribute))] @c{[lisp]}}@\Test 
+@codef[event-has-attr(@pragma(defn)@index(event-has-attr)@i(event), @i(attribute))]@\Test 
 whether a given score @i(event)'s expression has the given @i(attribute).
 
 @codef{event-get-attr(@pragma(defn)@index(event-get-attr)@i(event), @i(attribute), 
-[@i(default)])} @c{[sal]}@*
-@altdef{@code{(event-get-attr @i(event) @i(attribute) [@i(default)])} @c{[lisp]}}@\Get the value of the given @i(attribute) from a score 
+[@i(default)])}@\Get the value of the given @i(attribute) from a score 
 @i(event)'s expression. If @i(attribute) is not present, return @i(default) if
 specified, and otherwise @code(nil).
 
-@codef{event-set-attr(@pragma(defn)@index(event-set-attr)@i(event), @i(attribute), @i(value))} @c{[sal]}@*
-@altdef{@code[(event-set-attr @i(event) @i(attribute) @i(value))] @c{[lisp]}}@\Construct a new event identical to @i(event) except that the @i(attribute) has @i(value).
+@codef{event-set-attr(@pragma(defn)@index(event-set-attr)@i(event), @i(attribute), @i(value))}@\Construct a new event identical to @i(event) except that the @i(attribute) has @i(value).
 
 @end(fndefs)
 
@@ -7359,11 +6934,9 @@ is greater than or equal to the @i(from-time) and @i(strictly less than)
 only notes that satisfy @i(both) constraints are selected.
 
 @begin(fndefs)
-@codef[score-sorted(@pragma(defn)@index(score-sorted)@i(score))] @c{[sal]}@*
-@altdef{@code[(score-sorted @i(score))] @c{[lisp]}}@\Test if @i(score) is sorted.
+@codef[score-sorted(@pragma(defn)@index(score-sorted)@i(score))]@\Test if @i(score) is sorted.
 
-@codef{score-sort(@pragma(defn)@index(score-sort)@i(score) [, @i(copy-flag)])} @c{[sal]}@*
-@altdef{@code{(score-sort @i(score) [@i(copy-flag)])} @c{[lisp]}}@\Sort
+@codef{score-sort(@pragma(defn)@index(score-sort)@i(score)[ ,@i(copy-flag)])}@\Sort
  the notes in a 
 score into start-time order. If copy-flag is nil, this is a destructive
 operation which should only be performed if the top-level score list
@@ -7372,22 +6945,17 @@ is a fresh copy that is not shared by any other variables. (The
  For the following operations, it is assumed
 that scores are sorted, and all operations return a sorted score.
 
-@codef{score-shift(@pragma(defn)@index(score-shift)@i(score), @i(offset), from-index: @i(i), to-index: @i(j), from-time: @i(x),
- to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-shift @i(score) @i(offset)
- :from-index @i(i) :to-index @i(j) :from-time @i(x)
- :to-time @i(y))} @c{[lisp]}}@\Add a constant 
+@codef{score-shift(@pragma(defn)@index(score-shift)@i(score), @i(offset)[ ,from-index: @i(i),] 
+[to-index: @i(j)] [, from-time: @i(x)] [, to-time: @i(y)])}@\Add a constant 
 @i(offset) to the starting time of a set of notes in @i(score). By default,
 all notes are modified, but the range of notes can be limited with the
 keyword parameters. The begin time of the score is not changed, but the 
 end time is increased by @i(offset).
 The original score is not modified, and a new score is returned.
 
-@codef{score-stretch(@pragma(defn)@index(score-stretch)@i(score), @i(factor), dur: @i(dur-flag), time: @i(time-flag), from-index: @i(i),
- to-index: @i(j), from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-stretch @i(score) @i(factor)
- :dur @i(dur-flag) :time @i(time-flag) :from-index @i(i)
- :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Stretch  
+@codef{score-stretch(@pragma(defn)@index(score-stretch)@i(score), @i(factor), 
+[dur: @i(dur-flag)] [, time: @i(time-flag)] [, from-index: @i(i),] 
+[to-index: @i(j)] [, from-time: @i(x)] [, to-time: @i(y)])}@\Stretch  
 note times and durations by @i(factor). The default @i(dur-flag) is 
 non-null, but if @i(dur-flag) is null, the original durations are retained
 and only times are stretched. Similarly, the default @i(time-flag) is 
@@ -7405,12 +6973,9 @@ any notes are present or where they start. In other words, the
 The original score is not modified, and a new score is returned.
 
 @codef{score-transpose(@pragma(defn)@index(score-transpose)@i(score),
- @i(keyword),  @i(amount), from-index: @i(i), to-index: @i(j),
- from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-transpose @i(score)
- @i(keyword) @i(amount) :from-index @i(i) :to-index @i(j)
- :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\For 
- each note in the score and in any indicated range, if there is a keyword
+@i(keyword),  @i(amount)[ ,from-index: @i(i),] 
+[to-index: @i(j)] [, from-time: @i(x)] [, to-time: @i(y)])}@\For each note
+in the score and in any indicated range, if there is a keyword
  parameter matching @i(keyword) and the
 parameter value is a number, increment
 the parameter value by @i(amount). For example, to tranpose up by a whole
@@ -7418,37 +6983,30 @@ step, write @code[(score-transpose 2 :pitch @i(score))]. The
 original score is not modified, and a new score 
 is returned.
 
-@codef{score-scale(@pragma(defn)@index(score-scale)@i(score), @i(keyword), @i(amount), from-index: @i(i), to-index: @i(j), from-time: @i(x),
- to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-scale @i(score) @i(keyword) @i(amount)
- :from-index @i(i) :to-index @i(j) :from-time @i(x)
- :to-time @i(y))} @c{[lisp]}}@\For each note
+@codef{score-scale(@pragma(defn)@index(score-scale)@i(score), @i(keyword), @i(amount), 
+ [from-index: @i(i),] 
+[to-index: @i(j)] [, from-time: @i(x)] [, to-time: @i(y)])}@\For each note
 in the score and in any indicated range, if there is a keyword 
 parameter matching @i(keyword) and the
 parameter value is a number, multiply
 the parameter value by @i(amount). The original score is not modified, 
 and a new score is returned.
 
-@codef{score-sustain(@pragma(defn)@index(score-sustain)@i(score), @i(factor), from-index: @i(i), to-index: @i(j), from-time: @i(x),
- to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-sustain @i(score) @i(factor)
- :from-index @i(i) :to-index @i(j) :from-time @i(x)
- :to-time @i(y))} @c{[lisp]}}@\For each note
+@codef{score-sustain(@pragma(defn)@index(score-sustain)@i(score), @i(factor), 
+ [from-index: @i(i),] 
+[to-index: @i(j)] [, from-time: @i(x)] [, to-time: @i(y)])}@\For each note
 in the score and in any indicated range, multiply
 the duration (stretch factor) by @i(amount). This can be used to
 make notes sound more legato or staccato, and does not change their 
 starting times. The original score is not modified, and 
 a new score is returned.
 
-@codef{score-voice(@pragma(defn)@index(score-voice)@i(score),
- @i(replacement-list), from-index: @i(i), to-index: @i(j),
- from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-voice @i(score)
- @i(replacement-list) :from-index @i(i) :to-index @i(j)
- :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\For each note
+@codef{score-voice(@pragma(defn)@index(score-voice)@i(score), @i(replacement-list), 
+ [from-index: @i(i),] 
+[to-index: @i(j)] [, from-time: @i(x)] [, to-time: @i(y)])}@\For each note
 in the score and in any indicated range, replace the behavior (function)
 name using @i(replacement-list), which has the format: 
-@code[((@i(old1 new1)) (@i(old2 new2)) @r(...))], where @i(oldi) indicates
+@code[((@i(old1 new1)) (@i(old2 new2)) ...)], where @i(oldi) indicates
 a current behavior name and @i(newi) is the replacement. If @i(oldi) 
 is @code(*), it matches anything.  For example, to 
 replace @code(my-note-1) by @code(trombone) and @code(my-note-2) by
@@ -7458,8 +7016,7 @@ replace @code(my-note-1) by @code(trombone) and @code(my-note-2) by
 The original score is not modified, and a
  new score is returned.
 
-@codef{score-merge(@pragma(defn)@index(score-merge)@i(score1), @i(score2), @r(...))} @c{[sal]}@*
-@altdef{@code[(score-merge @i(score1) @i(score2) @r(...))] @c{[lisp]}}@\Create
+@codef{score-merge(@pragma(defn)@index(score-merge)@i(score1), @i(score2), ...)}@\Create
 a new score containing all the notes of the parameters, which are all
 scores. The resulting notes retain their original times and durations. The
 merged score begin time is the minimum of the begin times of the parameters
@@ -7467,20 +7024,16 @@ and the merged score end time is the maximum of the end times of
 the parameters. The original scores are not modified, and a new 
 score is returned.
 
-@codef{score-append(@pragma(defn)@index(score-append)@i(score1), @i(score2), @r(...))} @c{[sal]}@*
-@altdef{@code[(score-append @i(score1) @i(score2) @r(...))] @c{[lisp]}}@\Create
+@codef{score-append(@pragma(defn)@index(score-append)@i(score1), @i(score2), ...)}@\Create
 a new score containing all the notes of the parameters, which are all
 scores. The begin time of the first score is unaltered. The begin time of
  each other score is aligned to the end time of the
 previous score; thus, scores are ``spliced'' in sequence. The original 
 scores are not modified, and a new score is returned.
 
-@codef{score-select(@pragma(defn)@index(score-select)@index(score-filter)@i(score),
- @i(predicate), from-index: @i(i), to-index: @i(j), from-time: @i(x),
- to-time: @i(y), reject: @i(flag))} @c{[sal]}@*
-@altdef{@code{(score-select @i(score)
- @i(predicate) :from-index @i(i) :to-index @i(j) :from-time @i(x)
- :to-time @i(y) :reject @i(flag))} @c{[lisp]}}@\Select (or reject)
+@codef{score-select(@pragma(defn)@index(score-select)@index(score-filter)@i(score), @i(predicate), 
+ [from-index: @i(i)] [, to-index: @i(j),] 
+[from-time: @i(x)] [, to-time: @i(y)] [, reject: @i(flag)])}@\Select (or reject)
 notes to form a new score. Notes are selected if they fall into the
 given ranges of index and time @i(and) they satisfy @i(predicate), a function
 of three parameters that is applied to the start time, duration, and the 
@@ -7492,73 +7045,61 @@ the @code(:reject) parameter is non-null, the notes @i(not) selected form
  form the new score). The original score is not modified, and a
  new score is returned.
 
-@codef{score-set-begin(@pragma(defn)@index(score-set-begin)@i(score), @i(time))} @c{[sal]}@*
-@altdef{@code[(score-set-begin @i(score) @i(time))] @c{[lisp]}}@\The begin 
+@codef{score-set-begin(@pragma(defn)@index(score-set-begin)@i(score), @i(time))}@\The begin 
 time
  from the @i(score)'s @code(SCORE-BEGIN-END) marker is set to @i(time). The 
 original score is not modified, and a new score is returned.
 
-@codef{score-get-begin(@pragma(defn)@index(score-get-begin)@i(score))} @c{[sal]}@*
-@altdef{@code[(score-get-begin @i(score))] @c{[lisp]}}@\Return the begin
+@codef{score-get-begin(@pragma(defn)@index(score-get-begin)@i(score))}@\Return the begin
 time of the @i(score).
 
-@codef{score-set-end(@pragma(defn)@index(score-set-end)@i(score), @i(time))} @c{[sal]}@*
-@altdef{@code[(score-set-end @i(score) @i(time))] @c{[lisp]}}@\The end time
+@codef{score-set-end(@pragma(defn)@index(score-set-end)@i(score), @i(time))}@\The end time
  from the @i(score)'s @code(SCORE-BEGIN-END) marker is set to @i(time). The 
 original score is not modified, and a new score is returned.
 
-@codef{score-get-end(@pragma(defn)@index(score-get-end)@i(score))} @c{[sal]}@*
-@altdef{@code[(score-get-end @i(score))] @c{[lisp]}}@\Return the end
+@codef{score-get-end(@pragma(defn)@index(score-get-end)@i(score))}@\Return the end
 time of the @i(score).
 
-@codef{score-must-have-begin-end(@pragma(defn)@index(score-must-have-begin-end)@i(score))} @c{[sal]}@*
-@altdef{@code[(score-must-have-begin-end @i(score))] @c{[lisp]}}@\If 
+@codef{score-must-have-begin-end(@pragma(defn)@index(score-must-have-begin-end)@i(score))}@\If 
  @i(score) does not have a begin and end time, construct a score with a
  @code(SCORE-BEGIN-END) expression and return it. If score already has a begin
 and end time, just return the score. The orignal score is not modified.
 
 @codef{score-filter-length(@pragma(defn)@index(score-filter-length)@i(score), 
-@i(cutoff))} @c{[sal]}@*
-@altdef{@code[(score-filter-length @i(score) @i(cutoff))] @c{[lisp]}}@\Remove notes that extend beyond the @i(cutoff) time. This
+@i(cutoff))}@\Remove notes that extend beyond the @i(cutoff) time. This
 is similar to @code(score-select), but the here, events are removed when
 their nominal ending time (start time plus duration) exceeds the @i(cutoff),
 whereas the @code(:to-time) parameter is compared to the note's start time.
 The original score is not modified, and a new score is returned.
 
-@codef{score-repeat(@pragma(defn)@index(score-repeat)@i(score), @i(n))} @c{[sal]}@*
-@altdef{@code[(score-repeat @i(score) @i(n))] @c{[lisp]}}@\Make a sequence
+@codef{score-repeat(@pragma(defn)@index(score-repeat)@i(score), @i(n))}@\Make a sequence
 of @i(n) copies of @i(score). Each copy is shifted to that it's begin
 time aligns with the end time of the previous copy, as in @code(score-append).
 The original score is not modified, and a new score is returned.
 
 @codef{score-stretch-to-length(@pragma(defn)@index(score-stretch-to-length)@i(score), 
-@i(length))} @c{[sal]}@*
-@altdef{@code[(score-stretch-to-length @i(score) @i(length))] @c{[lisp]}}@\Stretch the score so that the end time of the score is
+@i(length))}@\Stretch the score so that the end time of the score is
 the score's begin time plus @i(length). 
 The original score is not modified, and a new score is returned.
 
-@codef{score-filter-overlap(@pragma(defn)@index(score-filter-overlap)@i(score))} @c{[sal]}@*
-@altdef{@code[(score-filter-overlap @i(score))] @c{[lisp]}}@\Remove
+@codef{score-filter-overlap(@pragma(defn)@index(score-filter-overlap)@i(score))}@\Remove
 overlapping notes (based on the note start time and duration), giving
 priority to the
 positional order within the note list (which is also time order). 
 The original score is not modified, 
 and a new score is returned.
 
-@codef{score-print(@pragma(defn)@index(score-print)@i(score))} @c{[sal]}@*
-@altdef{@code[(score-print @i(score))] @c{[lisp]}}@\Print a score with
+@codef{score-print(@pragma(defn)@index(score-print)@i(score))}@\Print a score with
 one note per line. Returns @code(nil).
 
-@codef{score-play(@pragma(defn)@index(score-play)@i(score))} @c{[sal]}@*
-@altdef{@code[(score-play @i(score))] @c{[lisp]}}@\Play @i(score)
+@codef{score-play(@pragma(defn)@index(score-play)@i(score))}@\Play @i(score)
 using @code(timed-seq) to convert the score to a sound, and 
  @code(play) to play the sound.
 
 @codef{score-adjacent-events(@pragma(defn)@index(score-adjacent-events)@i(score),
  @i(function),
- from-index: @i(i), to-index: @i(j), 
- from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-adjacent-events @i(score) @i(function) :from-index @i(i) :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Call
+ [from-index: @i(i)] [, to-index: @i(j),] 
+[from-time: @i(x)] [, to-time: @i(y)])}@\Call
  @code[(@i(function) @i(A) @i(B) @i(C))], where
 @i(A), @i(B), and @i(C) are consecutive notes in the score. The result
 replaces @i(B). If the result is @code(nil), @i(B) is deleted, and the
@@ -7573,9 +7114,8 @@ immediate context. The original score is not modified,
 and a new score is returned.
 
 @codef{score-apply(@pragma(defn)@index(score-apply)@i(score), @i(function),
- from-index: @i(i), to-index: @i(j), from-time: @i(x), to-time: @i(y))} 
-@c{[sal]}@*
-@altdef{@code{(score-apply @i(score) @i(function) :from-index @i(i) :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Replace
+ [from-index: @i(i)] [, to-index: @i(j),] 
+[from-time: @i(x)] [, to-time: @i(y)])}@\Replace
 each note in the score with the result of
  @code[(@i(function time dur expression))], where @i(time), @i(dur), 
 and @i(expression) are the time, duration, and expression of the note.
@@ -7583,25 +7123,21 @@ If a range is indicated, only notes in the range are replaced.
 The original score is not modified, and a new score is returned.
 
 @codef{score-indexof(@pragma(defn)@index(score-indexof)@i(score), @i(function),
- from-index: @i(i), to-index: @i(j), from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-indexof @i(score) @i(function) :from-index @i(i) :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Return the index (position)
+ [from-index: @i(i)] [, to-index: @i(j),] 
+[from-time: @i(x)] [, to-time: @i(y)])}@\Return the index (position)
 of the first score event (in range) for which applying @i(function) 
 using @code[(@i(function time dur expression))] returns true.
 
 
-@codef{score-last-indexof(@pragma(defn)@index(score-last-indexof)@i(score),
- @i(function), from-index: @i(i), to-index: @i(j), from-time: @i(x), 
-to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-last-indexof @i(score) @i(function)
- :from-index @i(i) :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Return the index (position)
+@codef{score-last-indexof(@pragma(defn)@index(score-last-indexof)@i(score), @i(function),
+ [from-index: @i(i)] [, to-index: @i(j),] 
+[from-time: @i(x)] [, to-time: @i(y)])}@\Return the index (position)
 of the last score event (in range) for which applying @i(function) 
 using @code[(@i(function time dur expression))] returns true.
 
-@codef{score-randomize-start(@pragma(defn)@index(score-randomize-start)@index(jitter)@index(feel factor)@index(offset)@i(score), @i(amt), from-index: @i(i), to-index: @i(j), from-time: @i(x),
- to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-randomize-start @i(score) @i(amt)
- :from-index @i(i) :to-index @i(j) :from-time @i(x)
- :to-time @i(y))} @c{[lisp]}}@\Alter the start times of notes by a 
+@codef{score-randomize-start(@pragma(defn)@index(score-randomize-start)@index(jitter)@index(feel factor)@index(offset)@i(score),
+@i(amt)[ ,from-index: @i(i)] [, to-index: @i(j),] 
+[from-time: @i(x)] [, to-time: @i(y)])}@\Alter the start times of notes by a 
 random amount up to plus or minus @i(amt).
 The original score is not modified, and a new score is returned.
 @end(fndefs)
@@ -7625,8 +7161,7 @@ Note also that note-off messages are implied by the stretch factor
 @i(dur) which is duration in seconds.
 
 @begin(fndefs)
-@codef{score-read-smf(@pragma(defn)@index(score-read-smf)@index(midi file)@i(filename))} @c{[sal]}@*
-@altdef{@code[(score-read-smf @i(filename))] @c{[lisp]}}@\Read a 
+@codef{score-read-smf(@pragma(defn)@index(score-read-smf)@index(midi file)@i(filename))}@\Read a 
 standard MIDI file from @i(filename). Return an Xmusic score, or @code(nil)
 if the file could not be opened. The
 start time is zero, and the end time is the maximum end time of all
@@ -7645,8 +7180,7 @@ the list returned as @code(*rslt*) can be passed
 to @code(score-write-smf), described below.
 
 @codef{score-write-smf(@pragma(defn)@index(score-write-smf)@index(midi file)@i(score), @i(filename),
-[@i(programs)])} @c{[sal]}@*
-@altdef{@code[(score-write-smf @i(score) @i(filename) @i(programs))] @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
+[@i(programs)])}@\Write a standard MIDI file to @i(filename) 
 with notes in @i(score). In this function,
 @i(every) event in the score with a @code(:pitch) attribute, regardless of the
 ``instrument'' (or function name), generates a
@@ -7699,26 +7233,22 @@ loaded, a function might run to convert saved data into a
 graphical interface. (This is how sliders are saved by the IDE.)
 
 @begin(fndefs)
-@codef[add-to-workspace(@pragma(defn)@index(add-to-workspace)@i(symbol))] @c{[sal]}@*
-@altdef{@code[(add-to-workspace @i(symbol))] @c{[lisp]}}@\Adds 
+@codef[add-to-workspace(@pragma(defn)@index(add-to-workspace)@i(symbol))]@\Adds 
 a global variable to the workspace. The @i(symbol) should be a (quoted)
 symbol.
 
-@codef[save-workspace(@pragma(defn)@index(save-workspace))] @c{[sal]}@*
-@altdef{@code{(save-workspace)} @c{[lisp]}}@\All global variables
+@codef[save-workspace(@pragma(defn)@index(save-workspace))]@\All global variables
 in the workspace are saved to @code(workspace.lsp) (in the current
 directory), overwriting the previous file.
 
-@codef{describe(@pragma(defn)@index(describe)@i(symbol) [, @i(description)])}
- @c{[sal]}@*
-@altdef{@code[(describe @i(symbol) [@i(description)])] @c{[lisp]}}@\If @i(description), a text string, is present, 
+@codef{describe(@pragma(defn)@index(describe)@i(symbol), 
+[@i(description)])}@\If @i(description), a text string, is present, 
 associate @i(description) with the variable named by the
 @i(symbol). If @i(symbol) is not already in the workspace, 
 it is added. If @i(description) is omitted, the function returns
 the current description (from a previous call) for @i(symbol).
 
-@codef{add-action-to-workspace(@pragma(defn)@index(add-action-to-workspace)@i(symbol))} @c{[sal]}@*
-@altdef{@code[(add-action-to-workspace @i(symbol))] @c{[lisp]}}@\Requests that the function named by @i(symbol) be
+@codef{add-action-to-workspace(@pragma(defn)@index(add-action-to-workspace)@i(symbol))}@\Requests that the function named by @i(symbol) be
 called when the workspace is loaded (if the function is defined).
 @end(fndefs)
 
@@ -7742,13 +7272,11 @@ This chapter concludes with details of various utility functions for score
 manipulation.
 
 @begin(fndefs)
-@codef[patternp(@pragma(defn)@index(patternp)@i(expression))] @c{[sal]}@*
-@altdef{@code[(patternp @i(expression))] @c{[lisp]}}@\Test if @i(expression) is 
+@codef[patternp(@pragma(defn)@index(patternp)@i(expression))]@\Test if @i(expression) is 
 an Xmusic pattern.
 
 @codef[params-transpose(@pragma(defn)@index(params-transpose)@i(params), @i(keyword), 
- @i(amount))] @c{[sal]}@*
-@altdef{@code[(params-transpose @i(params) @i(keyword) @i(amount))] @c{[lisp]}}@\Add a transposition amount to a score event parameter. The 
+ @i(amount))]@\Add a transposition amount to a score event parameter. The 
 @i(params)
 parameter is a list of keyword/value pairs (not preceded by a function name). 
 The @i(keyword) is the keyword of the value to be altered, and @i(amount)
@@ -7757,33 +7285,27 @@ in @i(params), then @i(params) is returned. Otherwise, a new parameter
 list is constructed and returned. The original @i(params) is not changed.
 
 @codef[params-scale(@pragma(defn)@index(params-scale)@i(params), @i(keyword),
- @i(amount))] @c{[sal]}@*
-@altdef{@code[(params-scale @i(params) @i(keyword) @i(amount))] @c{[lisp]}}@\Scale a score event parameter by some factor. This is like 
+ @i(amount))]@\Scale a score event parameter by some factor. This is like 
  @code(params-transpose), only using multiplication. The @i(params) 
 list is a list of 
 keyword/value pairs, @i(keyword) is the parameter keyword, 
 and @i(amount) is the scale factor. 
 
-@codef[interpolate(@pragma(defn)@index(interpolate)@index(linear interpolation)@i(x), @i(x1), @i(y1), @i(x2), @i(y2))] @c{[sal]}@*
-@altdef{@code[(interpolate @i(x) @i(x1) @i(y1) @i(x2) @i(y2))] @c{[lisp]}}@\Linearly interpolate (or extrapolate)
+@codef[interpolate(@pragma(defn)@index(interpolate)@index(linear interpolation)@i(x), @i(x1), @i(y1), @i(x2), @i(y2))]@\Linearly interpolate (or extrapolate)
  between points
 (@i(x1), @i(y1)) and (@i(x2), @i(y2)) to compute the y value
  corresponding to @i(x).
 
 @codef[intersection(@pragma(defn)@index(intersection)@index(set intersection)@i(a),
- @i(b))] @c{[sal]}@*
-@altdef{@code[(intersection @i(a) @i(b))] @c{[lisp]}}@\Compute the set intersection of lists @i(a) and @i(b).
+ @i(b))]@\Compute the set intersection of lists @i(a) and @i(b).
 
-@codef[union(@pragma(defn)@index(union)@index(set union)@i(a), @i(b))] @c{[sal]}@*
-@altdef{@code[(union @i(a) @i(b))] @c{[lisp]}}@\Compute 
+@codef[union(@pragma(defn)@index(union)@index(set union)@i(a), @i(b))]@\Compute 
 the set union of lists @i(a) and @i(b).
 
 @codef[set-difference(@index(difference)@pragma(defn)@index(set-difference)@i(a),
- @i(b))] @c{[sal]}@*
-@altdef{@code[(set-difference @i(a) @i(b))] @c{[lisp]}}@\Compute the set of all elements that are in @i(a) but not in @i(b).
+ @i(b))]@\Compute the set of all elements that are in @i(a) but not in @i(b).
 
-@codef[subsetp(@pragma(defn)@index(subsetp)@index(subset)@i(a), @i(b))] @c{[sal]}@*
-@altdef{@code[(subsetp @i(a) @i(b))] @c{[lisp]}}@\Returns true iff
+@codef[subsetp(@pragma(defn)@index(subsetp)@index(subset)@i(a), @i(b))]@\Returns true iff
 @i(a) is a subset of @i(b), that is, each element of @i(a) is a member 
 of @i(b).
 @end(fndefs)
@@ -7814,22 +7336,18 @@ example code can be found in
 There are several useful functions in this library:
 @begin(fndefs)
 @codef[piano-note(@pragma(defn)@index(piano-note)@index(piano synthesizer)@i(duration), @i(step), 
- @i(dynamic))] @c{[sal]}@*
-@altdef{@code[(piano-note @i(duration) @i(step) @i(dynamic))] @c{[lisp]}}@\Synthesizes a piano tone. @i(Duration) is the duration to the point of
+ @i(dynamic))]@\Synthesizes a piano tone. @i(Duration) is the duration to the point of
 key release, after which there is a rapid decay. @i(Step) is the pitch in half
 steps, and @i(dynamic) is approximately equivalent to a MIDI key velocity
 parameter. Use a value near 100 for a loud sound and near 10 for a soft sound.
 
-@codef[piano-note-2(@pragma(defn)@index(piano-note-2)@i(step), @i(dynamic))] @c{[sal]}@*
-@altdef{@code[(piano-note-2 @i(step) @i(dynamic))] @c{[lisp]}}@\Similar to @code(piano-note) except the duration is nominally 1.0.
+@codef[piano-note-2(@pragma(defn)@index(piano-note-2)@i(step), @i(dynamic))]@\Similar to @code(piano-note) except the duration is nominally 1.0.
 
-@codef[piano-midi(@pragma(defn)@index(piano-midi)@i(midi-file-name))] @c{[sal]}@*
-@altdef{@code[(piano-midi @i(midi-file-name))] @c{[lisp]}}@\Use the piano synthesizer 
+@codef[piano-midi(@pragma(defn)@index(piano-midi)@i(midi-file-name))]@\Use the piano synthesizer 
 to play a MIDI file. The file name (a string) is given by @i(midi-file-name).
 
 @codef[piano-midi2file(@pragma(defn)@index(piano-midi2file)@i(midi-file-name), 
-@i(sound-file-name))] @c{[sal]}@*
-@altdef{@code[(piano-midi2file @i(midi-file-name) @i(sound-file-name))] @c{[lisp]}}@\Use the piano synthesizer to play a MIDI file. The MIDI file
+@i(sound-file-name))]@\Use the piano synthesizer to play a MIDI file. The MIDI file
 is given by @i(midi-file-name) and the (monophonic) result is written to the file
 named @i(sound-file-name).
 @end(fndefs)
@@ -7867,11 +7385,8 @@ to set the overall level without clipping.
 @begin(fndefs)
 @codef{compress-map(@pragma(defn)@index(compress-map)@i(compress-ratio), 
 @i(compress-threshold), 
-@i(expand-ratio), @i(expand-ratio), limit: @i(limit), transition: 
-@i(transition))} @c{[sal]}@*
-@altdef{@code{(compress-map @i(compress-ratio) @i(compress-threshold)
- @i(expand-ratio) @i(expand-ratio) :limit @i(limit) :transition
- @i(transition)])} @c{[lisp]}}@\Construct
+@i(expand-ratio), @i(expand-ratio)[ ,limit: @i(limit)] [, transition: 
+@i(transition)])}@\Construct
 a map for the compress function. The map consists of two parts: a compression
 part and an expansion part.
 The intended use is to compress everything above compress-threshold by
@@ -7900,22 +7415,18 @@ dB to gain. Time 1.0 corresponds to 0dB, time 0.0 corresponds to
 -100 dB, and time 2.0 corresponds to +100dB, so this is a 
 100hz ``sample rate'' sound. The sound gives gain in dB.
 
-@codef[db-average(@pragma(defn)@index(db-average)@i(input))] @c{[sal]}@*
-@altdef{@code[(db-average @i(input))] @c{[lisp]}}@\Compute the average amplitude 
+@codef[db-average(@pragma(defn)@index(db-average)@i(input))]@\Compute the average amplitude 
 of @i(input) in dB.
 
-@codef{compress(@pragma(defn)@index(compress)@i(input), @i(map), @i(rise-time), @i(fall-time) [, @i(lookahead)])} @c{[sal]}@*
-@altdef{@code[(compress @i(input) @i(map) @i(rise-time) @i(fall-time)
- [@i(lookahead)])] @c{[lisp]}}@\Compress 
+@codef{compress(@pragma(defn)@index(compress)@i(input), @i(map), @i(rise-time), @i(fall-time),
+[@i(lookahead)])}@\Compress 
 @i(input) using @i(map), a compression curve
 probably generated by @code(compress-map) (see above). Adjustments in gain have
 the given @i(rise-time) and @i(fall-time). Lookahead tells how far ahead to look
 at the signal, and is @i(rise-time) by default.
 
 @codef{agc(@index(automatic gain control)@pragma(defn)@index(agc)@index(gain)@i(input),
-@i(range), @i(rise-time), @i(fall-time) [, @i(lookahead)])} @c{[sal]}@*
-@altdef{@code{(agc @i(input) @i(range) @i(rise-time) @i(fall-time)
- [@i(lookahead)])} @c{[lisp]}}@\An automatic
+@i(range), @i(rise-time), @i(fall-time)[ ,@i(lookahead)])}@\An automatic
 gain control applied to @i(input). The maximum gain in dB is @i(range). Peaks
 are attenuated to 1.0, and gain is controlled with the given @i(rise-time) and
 @i(fall-time). The look-ahead time default is @i(rise-time).
@@ -7936,8 +7447,7 @@ signal as opposed to changing filter coefficients.
 
 @begin(fndefs)
 @codef[soften-clipping(@pragma(defn)@index(soften-clipping)@index(clipping repair)@i(snd), 
-@i(cutoff))] @c{[sal]}@*
-@altdef{@code[(soften-clipping @i(snd) @i(cutoff))] @c{[lisp]}}@\Filter the loud regions of a signal where clipping is likely
+@i(cutoff))]@\Filter the loud regions of a signal where clipping is likely
 to have generated additional high frequencies. The input signal is @i(snd)
 and @i(cutoff) is the filter cutoff frequency
 (4 kHz is recommended for speech).
@@ -7953,16 +7463,14 @@ possibility is using computed control functions to make the equalization change
 over time.
 
 @begin(fndefs)
-@codef[nband-range(@pragma(defn)@index(nband-range)@index(graphical equalizer)@index(equalization)@i(input), @i(gains), @i(lowf), @i(highf))] @c{[sal]}@*
-@altdef{@code[(nband-range @i(input) @i(gains) @i(lowf) @i(highf))] @c{[lisp]}}@\A graphical equalizer applied to 
+@codef[nband-range(@pragma(defn)@index(nband-range)@index(graphical equalizer)@index(equalization)@i(input), @i(gains), @i(lowf), @i(highf))]@\A graphical equalizer applied to 
 @i(input) (a @code(SOUND)). The gain controls and number of bands is given by @i(gains), an
 ARRAY of @code(SOUND)s (in other words, a Nyquist multichannel @code(SOUND)). Any sound in the
 array may be replaced by a @code(FLONUM). The bands are
 geometrically equally spaced from the lowest frequency @i(lowf) to the
 highest frequency @i(highf) (both are @code(FLONUM)s).
 
-@codef[nband(@pragma(defn)@index(nband)@i(input), @i(gains))] @c{[sal]}@*
-@altdef{@code[(nband @i(input) @i(gains))] @c{[lisp]}}@\A graphical equalizer, identical 
+@codef[nband(@pragma(defn)@index(nband)@i(input), @i(gains))]@\A graphical equalizer, identical 
 to @code(nband-range) with a range of 20 to 20,000 Hz.
 @end(fndefs)
 
@@ -7970,8 +7478,7 @@ to @code(nband-range) with a range of 20 to 20,000 Hz.
 The @code(reverse.lsp) library implements functions to play sounds in reverse.
 
 @begin(fndefs)
-@codef[s-reverse(@index(reverse, sound)@pragma(defn)@index(s-reverse)@index(backward)@index(play in reverse)@i(snd))] @c{[sal]}@*
-@altdef{@code[(s-reverse @i(snd))] @c{[lisp]}}@\Reverses @i(snd) (a @code(SOUND)). Sound must be shorter
+@codef[s-reverse(@index(reverse, sound)@pragma(defn)@index(s-reverse)@index(backward)@index(play in reverse)@i(snd))]@\Reverses @i(snd) (a @code(SOUND)). Sound must be shorter
 than @code(*max-reverse-samples*), which is currently initialized to 
 25 million samples. Reversal allocates about 4 bytes per sample. This function
 uses XLISP in the inner sample loop, so do not be surprised if it calls the 
@@ -7980,9 +7487,7 @@ time given by the current environment (not necessarily the starting time
 of @i(snd)). If @i(snd) has multiple channels, a multiple channel, 
 reversed sound is returned.
 
-@codef{s-read-reverse(@index(read samples in reverse)@pragma(defn)@index(s-read-reverse)@i(filename), time-offset: @i(offset), srate: @i(sr), dur: @i(dur), nchans: @i(chans), format: @i(format), mode: @i(mode), bits: @i(n), swap: @i(flag))} @c{[sal]}@*
-@altdef{@code{(s-read-reverse @i(filename) :time-offset @i(offset)
- :srate @i(sr) :dur @i(dur) :nchans @i(chans) :format @i(format) :mode @i(mode) :bits @i(n) :swap @i(flag))} @c{[lisp]}}@\This function is identical to @code(s-read) (see @ref(s-read-sec)), except it reads the indicated samples in reverse. Like
+@codef{s-read-reverse(@index(read samples in reverse)@pragma(defn)@index(s-read-reverse)@i(filename)[ ,time-offset: @i(offset)] [, srate: @i(sr)] [, dur: @i(dur)] [, nchans: @i(chans)] [, format: @i(format)] [, mode: @i(mode)] [, bits: @i(n)] [, swap: @i(flag)])}@\This function is identical to @code(s-read) (see @ref(s-read-sec)), except it reads the indicated samples in reverse. Like
 @code(s-reverse) (see above), it uses XLISP in the inner loop, so it is slow.
 Unlike @code(s-reverse), @code(s-read-reverse) uses a fixed amount of 
 memory that is independent of how many samples are computed. Multiple channels
@@ -7993,23 +7498,19 @@ are handled.
 The @code(time-delay-fns.lsp) library implements chorus, phaser, and flange effects.
 
 @begin(fndefs)
-@codef[phaser(@pragma(defn)@index(phaser)@index(effects, phaser)@i(snd))] @c{[sal]}@*
-@altdef{@code[(phaser @i(snd))] @c{[lisp]}}@\A phaser effect
+@codef[phaser(@pragma(defn)@index(phaser)@index(effects, phaser)@i(snd))]@\A phaser effect
 applied to @i(snd) (a @code(SOUND)). There are no parameters, 
 but feel free to modify the source code of this one-liner.
 
-@codef[flange(@pragma(defn)@index(flange)@index(flange effect)@index(effect, flange)@i(snd))] @c{[sal]}@*
-@altdef{@code[(flange @i(snd))] @c{[lisp]}}@\A flange effect
+@codef[flange(@pragma(defn)@index(flange)@index(flange effect)@index(effect, flange)@i(snd))]@\A flange effect
 applied to @i(snd). To vary the rate and other parameters, see the source code.
 
-@codef[stereo-chorus(@index(chorus)@pragma(defn)@index(stereo-chorus)@i(snd))] @c{[sal]}@*
-@altdef{@code[(stereo-chorus @i(snd))] @c{[lisp]}}@\A chorus effect applied to @i(snd),
+@codef[stereo-chorus(@index(chorus)@pragma(defn)@index(stereo-chorus)@i(snd))]@\A chorus effect applied to @i(snd),
 a @code(SOUND) (monophonic). The output is a stereo sound. All parameters are built-in,
 but see the simple source code to make modifications.
 
 @codef[chorus(@pragma(defn)@index(chorus)@index(effect, chorus)@i(snd), @i(maxdepth), @i(depth), @i(rate), 
-@i(saturation))] @c{[sal]}@*
-@altdef{@code[(chorus @i(snd) @i(maxdepth) @i(depth) @i(rate) @i(saturation))] @c{[lisp]}}@\A chorus effect applied to @i(snd). All parameters may be arrays
+@i(saturation))]@\A chorus effect applied to @i(snd). All parameters may be arrays
 as usual. The @i(maxdepth) is a @code(FLONUM) giving twice the maximum value of @i(depth), 
 which may be a @code(FLONUM) or a @code(SOUND). The chorus is implemented as a variable delay 
 modulated by a sinusoid running at @i(rate) Hz (a @code(FLONUM)). The sinusoid is 
@@ -8040,8 +7541,7 @@ of one sound to another. Please contact us (dannenberg@@cs.cmu.edu) if you
 are interested in working on this library.
 
 @begin(fndefs)
-@codef[apply-banded-delay(@index(banded delay)@pragma(defn)@index(apply-banded-delay)@i(s), @i(lowp), @i(highp), @i(num-bands), @i(lowd), @i(highd), @i(fb), @i(wet))] @c{[sal]}@*
-@altdef{@code[(apply-banded-delay @i(s) @i(lowp) @i(highp) @i(num-bands) @i(lowd) @i(highd) @i(fb) @i(wet))] @c{[lisp]}}@\Separates
+@codef[apply-banded-delay( @index(banded delay)@pragma(defn)@index(apply-banded-delay)@i(s), @i(lowp), @i(highp), @i(num-bands), @i(lowd), @i(highd), @i(fb), @i(wet))]@\Separates
 input @code(SOUND) @i(s) into @code(FIXNUM) @i(num-bands) bands from a low frequency
 of @i(lowp) to a high frequency of @i(highp) (these are @code(FLONUMS) that specify
 steps, not Hz), and applies a delay to each band. The delay for the lowest band is
@@ -8052,16 +7552,14 @@ interpolated between these values. Each delay has feedback gain controlled by
 the original sound is scaled by 1 - @i(wet). All are summed to form the result, 
 a @code(SOUND).
 
-@codef[apply-banded-bass-boost(@index(banded bass boost)@pragma(defn)@index(apply-banded-bass-boost)@i(s), @i(lowp), @i(highp), @i(num-bands), @i(num-boost), @i(gain))] @c{[sal]}@*
-@altdef{@code[(apply-banded-bass-boost @i(s) @i(lowp) @i(highp) @i(num-bands) @i(num-boost) @i(gain))] @c{[lisp]}}@\Applies a boost to 
+@codef[apply-banded-bass-boost(@index(banded bass boost)@pragma(defn)@index(apply-banded-bass-boost)@i(s), @i(lowp), @i(highp), @i(num-bands), @i(num-boost), @i(gain))]@\Applies a boost to 
 low frequencies. Separates
 input @code(SOUND) @i(s) into @code(FIXNUM) @i(num-bands) bands from a low frequency
 of @i(lowp) to a high frequency of @i(highp) (these are @code(FLONUMS) that specify
 steps, not Hz), and scales the lowest @i(num-boost) (a @code(FIXNUM)) bands by @i(gain),
 a @code(FLONUM). The bands are summed to form the result, a @code(SOUND).
 
-@codef[apply-banded-treble-boost(@index(banded treble boost)@pragma(defn)@index(apply-banded-treble-boost)@i(s), @i(lowp), @i(highp), @i(num-bands), @i(num-boost), @i(gain))] @c{[sal]}@*
-@altdef{@code[(apply-banded-treble-boost @i(s) @i(lowp) @i(highp) @i(num-bands) @i(num-boost) @i(gain))] @c{[lisp]}}@\Applies a boost to 
+@codef[apply-banded-treble-boost(@index(banded treble boost)@pragma(defn)@index(apply-banded-treble-boost)@i(s), @i(lowp), @i(highp), @i(num-bands), @i(num-boost), @i(gain))]@\Applies a boost to 
 high frequencies. Separates
 input @code(SOUND) @i(s) into @code(FIXNUM) @i(num-bands) bands from a low frequency
 of @i(lowp) to a high frequency of @i(highp) (these are @code(FLONUMS) that specify
@@ -8083,8 +7581,7 @@ parameters) and avoid using all of your computer's memory.
 
 @begin(fndefs)
 @codef{sf-granulate(@index(granular synthesis)@pragma(defn)@index(sf-granulate)@i(filename), @i(grain-dur), @i(grain-dev), @i(ioi), @i(ioi-dev), @i(pitch-dev),
-[@i(file-start), @i(file-end)])} @c{[sal]}@*
-@altdef{@code{(sf-granulate @i(filename) @i(grain-dur) @i(grain-dev) @i(ioi) @i(ioi-dev) @i(pitch-dev) [@i(file-start) @i(file-end)])} @c{[lisp]}}@\Granular synthesis using a sound file
+[@i(file-start)] [, @i(file-end)])}@\Granular synthesis using a sound file
 named @i(filename) as the source for grains. Grains are extracted from
 a sound file named by @i(filename) by stepping through the file in equal
 increments. Each grain duration is the 
@@ -8118,11 +7615,9 @@ The @code(midishow.lsp) library has functions that can print the contents fo MID
 files. This intended as a debugging aid.
 
 @begin(fndefs)
-@codef[midi-show-file(@pragma(defn)@index(midi-show-file)@index(print midi file)@index(show midi file)@i(file-name))] @c{[sal]}@*
-@altdef{@code[(midi-show-file @i(file-name))] @c{[lisp]}}@\Print the contents of a MIDI file to the console.
+@codef[midi-show-file(@pragma(defn)@index(midi-show-file)@index(print midi file)@index(show midi file)@i(file-name))]@\Print the contents of a MIDI file to the console.
 
-@codef{midi-show(@pragma(defn)@index(midi-show)@i(the-seq) [, @i(out-file)])} @c{[sal]}@*
-@altdef{@code{(midi-show @i(the-seq) [@i(out-file)])} @c{[lisp]}}@\Print the
+@codef{midi-show(@pragma(defn)@index(midi-show)@i(the-seq)[ ,@i(out-file)])}@\Print the
 contents of the sequence @i(the-seq) to the file @i(out-file) (whose default value
 is the console.)
 @end(fndefs)
@@ -8132,8 +7627,7 @@ The @code(reverb.lsp) library implements artificial reverberation.
 
 @begin(fndefs)
 @codef[reverb(@pragma(defn)@index(reverb)@index(effect, reverberation)@i(snd), 
-@i(time))] @c{[sal]}@*
-@altdef{@code[(reverb @i(snd) @i(time))] @c{[lisp]}}@\Artificial reverberation applied to @i(snd) with a decay time of
+@i(time))]@\Artificial reverberation applied to @i(snd) with a decay time of
 @i(time).
 @end(fndefs)
 
@@ -8143,15 +7637,13 @@ The @code(dtmf.lsp) library implements DTMF encoding. DTMF is the
 ``touch tone'' code used by telephones.
 
 @begin(fndefs)
-@codef[dtmf-tone(@pragma(defn)@index(dtmf-tone)@i(key), @i(len), @i(space))] @c{[sal]}@*
-@altdef{@code[(dtmf-tone @i(key) @i(len) @i(space))] @c{[lisp]}}@\Generate a
+@codef[dtmf-tone(@pragma(defn)@index(dtmf-tone)@i(key), @i(len), @i(space))]@\Generate a
 single DTMF tone. The @i(key) parameter is either a digit (a @code(FIXNUM)
 from 0 through 9) or the atom @code(STAR) or @code(POUND). The duration of
 the done is given by @i(len) (a @code(FLONUM)) and the tone is followed by
 silence of duration @i(space) (a @code(FLONUM)).
 
-@codef[speed-dial(@pragma(defn)@index(speed-dial)@i(thelist))] @c{[sal]}@*
-@altdef{@code[(speed-dial @i(thelist))] @c{[lisp]}}@\Generates a sequence
+@codef[speed-dial(@pragma(defn)@index(speed-dial)@i(thelist))]@\Generates a sequence
 of DTMF tones using the keys in @i(thelist) (a @code(LIST) of keys as
 described above under @code(dtmf-tone)). The duration of each tone is 0.2
 seconds, and the space between tones is 0.1 second. Use @code(stretch) to
@@ -8172,49 +7664,39 @@ are a number of functions in @code(spatial.lsp) for testing. See the
 source code for comments about these.
 
 @begin(fndefs)
-@codef[stereoize(@pragma(defn)@index(stereoize)@index(mono to stereo)@index(effect, stereo)@i(snd))] @c{[sal]}@*
-@altdef{@code[(stereoize @i(snd))] @c{[lisp]}}@\Convert a mono sound, @i(snd), to stereo. Four bands of 
+@codef[stereoize(@pragma(defn)@index(stereoize)@index(mono to stereo)@index(effect, stereo)@i(snd))]@\Convert a mono sound, @i(snd), to stereo. Four bands of 
 equalization and some delay are used to create a stereo effect.
 
-@codef[widen(@pragma(defn)@index(widen)@index(effect, widen)@i(snd), @i(amt))] @c{[sal]}@*
-@altdef{@code[(widen @i(snd) @i(amt))] @c{[lisp]}}@\Artificially
+@codef[widen(@pragma(defn)@index(widen)@index(effect, widen)@i(snd), @i(amt))]@\Artificially
 widen the stereo field in @i(snd), a two-channel sound. The amount of widening
 is @i(amt), which varies from 0 (@i(snd) is unchanged) to 1 (maximum widening).
 The @i(amt) can be a @code(SOUND) or a number.
 
-@codef[span(@index(stereo pan)@index(pan, stereo)@index(effect, stereo pan)@pragma(defn)@index(span)@i(snd), @i(amt))] @c{[sal]}@*
-@altdef{@code[(span @i(snd) @i(amt))] @c{[lisp]}}@\Pan the virtual center channel of a stereo sound, @i(snd),
+@codef[span(@index(stereo pan)@index(pan, stereo)@index(effect, stereo pan)@pragma(defn)@index(span)@i(snd), @i(amt))]@\Pan the virtual center channel of a stereo sound, @i(snd),
 by @i(amt), where 0 pans all the way to the left, while 1 pans all the way 
 to the right. The @i(amt) can be a @code(SOUND) or a number.
 
-@codef[swapchannels(@pragma(defn)@index(swapchannels)@index(swap channels)@index(effect, swap channels)@i(snd))] @c{[sal]}@*
-@altdef{@code[(swapchannels @i(snd))] @c{[lisp]}}@\Swap left and right channels in @i(snd), a stereo sound.
+@codef[swapchannels(@pragma(defn)@index(swapchannels)@index(swap channels)@index(effect, swap channels)@i(snd))]@\Swap left and right channels in @i(snd), a stereo sound.
 
 @codef[prologic(@pragma(defn)@index(prologic)@index(Dolby Pro-Logic)@index(Surround Sound)@i(l), @i(c), 
-@i(r), @i(s))] @c{[sal]}@*
-@altdef{@code[(prologic @i(l) @i(c) @i(r) @i(s))] @c{[lisp]}}@\Encode four monaural @code(SOUND)s representing the front-left,
+@i(r), @i(s))]@\Encode four monaural @code(SOUND)s representing the front-left,
 front-center, front-right, and rear channels, respectively. 
 The return value is a stereo sound, which is a Dolby-encoded mix of the
 four input sounds. 
 
-@codef[pl-left(@pragma(defn)@index(pl-left)@i(snd))] @c{[sal]}@*
-@altdef{@code[(pl-left @i(snd))] @c{[lisp]}}@\Produce a Dolby-encoded (stereo)
+@codef[pl-left(@pragma(defn)@index(pl-left)@i(snd))]@\Produce a Dolby-encoded (stereo)
 signal with @i(snd), a @code(SOUND), encoded as the front left channel.
 
-@codef[pl-center(@pragma(defn)@index(pl-center)@i(snd))] @c{[sal]}@*
-@altdef{@code[(pl-center @i(snd))] @c{[lisp]}}@\Produce a Dolby-encoded (stereo)
+@codef[pl-center(@pragma(defn)@index(pl-center)@i(snd))]@\Produce a Dolby-encoded (stereo)
 signal with @i(snd), a @code(SOUND), encoded as the front center channel.
 
-@codef[pl-right(@pragma(defn)@index(pl-right)@i(snd))] @c{[sal]}@*
-@altdef{@code[(pl-right @i(snd))] @c{[lisp]}}@\Produce a Dolby-encoded (stereo)
+@codef[pl-right(@pragma(defn)@index(pl-right)@i(snd))]@\Produce a Dolby-encoded (stereo)
 signal with @i(snd), a @code(SOUND), encoded as the front right channel.
 
-@codef[pl-rear(@pragma(defn)@index(pl-rear)@i(snd))] @c{[sal]}@*
-@altdef{@code[(pl-rear @i(snd))] @c{[lisp]}}@\Produce a Dolby-encoded (stereo)
+@codef[pl-rear(@pragma(defn)@index(pl-rear)@i(snd))]@\Produce a Dolby-encoded (stereo)
 signal with @i(snd), a @code(SOUND), encoded as the rear, or surround, channel.
 
-@codef[pl-pan2d(@pragma(defn)@index(pl-pan2d)@i(snd), @i(x), @i(y))] @c{[sal]}@*
-@altdef{@code[(pl-pan2d @i(snd) @i(x) @i(y))] @c{[lisp]}}@\Comparable to Nyquist's
+@codef[pl-pan2d(@pragma(defn)@index(pl-pan2d)@i(snd), @i(x), @i(y))]@\Comparable to Nyquist's
 existing pan function, @code(pl-pan2d) provides not only left-to-right
 panning, but front-to-back panning as well. The function
 accepts three parameters: @i(snd) is the (monophonic) input @code(SOUND), 
@@ -8230,8 +7712,7 @@ panned totally to the rear will be played over both rear speakers. For
 example, it is not possible to play a sound exclusively through the 
 rear left speaker.
 
-@codef[pl-position(@pragma(defn)@index(pl-position)@i(snd), @i(x), @i(y), @i(config))] @c{[sal]}@*
-@altdef{@code[(pl-position @i(snd) @i(x) @i(y) @i(config))] @c{[lisp]}}@\The
+@codef[pl-position(@pragma(defn)@index(pl-position)@i(snd), @i(x), @i(y), @i(config))]@\The
 position function builds upon speaker panning to allow more abstract
 placement of sounds. Like @code(pl-pan2d), it accepts a (monaural) input
 sound as well as left-to-right (@i(x)) and front-to-back (@i(y)) coordinates,
@@ -8247,8 +7728,7 @@ has a predefined position as well. The input sound's position,
 relative to the listener, is given by the vector (@i(x),@i(y)).
 
 @codef[pl-doppler(@pragma(defn)@index(pl-doppler)@index(Doppler effect)@i(snd), 
-@i(r))] @c{[sal]}@*
-@altdef{@code[(pl-doppler @i(snd) @i(r))] @c{[lisp]}}@\Pitch-shift moving sounds according to the equation: @i(fr) =
+@i(r))]@\Pitch-shift moving sounds according to the equation: @i(fr) =
 @i(f0)((@i(c)+@i(vr))/@i(c)), where @i(fr) is the output frequency, 
 @i(f0) is the emitted (source) 
 frequency, @i(c) is the speed of sound (assumed to be 344.31 m/s), and 
@@ -8307,8 +7787,7 @@ There is also the file @code(demos/plight/beats.props) to serve as an
 example of how to specify sound files and beat patterns.
 
 @begin(fndefs)
-@codef{drum(@pragma(defn)@index(drum)@i(tracknum), @i(patternnum), @i(bpm))} @c{[sal]}@*
-@altdef{@code[(drum @i(tracknum) @i(patternnum) @i(bpm))] @c{[lisp]}}@\Create
+@codef{drum(@pragma(defn)@index(drum)@i(tracknum), @i(patternnum), @i(bpm))}@\Create
 a sound by playing drums sounds associated with track @i(tracknum) (a 
 FIXNUM) using pattern @i(patternnum). The tempo is given by @i(bpm) in
 beats per minute. Normally patterns are a sequence of sixteenth notes, so
@@ -8318,11 +7797,9 @@ then use the pattern specified for @code(beats.10). If the third character
 of this pattern is 3 and @i(tracknum) is 5, then on the third beat, play
 the soundfile assigned to @code(track.5.3). This function returns a @code(SOUND).
 
-@codef{drum-loop(@pragma(defn)@index(drum-loop)@i(snd), @i(duration), @i(numtimes))} @c{[sal]}@*
-@altdef{@code[(drum-loop @i(snd) @i(duration) @i(numtimes))] @c{[lisp]}}@\Repeat the sound given by @i(snd) @i(numtimes) times. The repetitions occur at a time offset of @i(duration), regardless of the actual duration of @i(snd). A @code(SOUND) is returned.
+@codef{drum-loop(@pragma(defn)@index(drum-loop)@i(snd), @i(duration), @i(numtimes))}@\Repeat the sound given by @i(snd) @i(numtimes) times. The repetitions occur at a time offset of @i(duration), regardless of the actual duration of @i(snd). A @code(SOUND) is returned.
 
-@codef{length-of-beat(@pragma(defn)@index(length-of-beat)@i(bpm))} @c{[sal]}@*
-@altdef{@code[(length-of-beat @i(bpm))] @c{[lisp]}}@\Given a tempo of 
+@codef{length-of-beat(@pragma(defn)@index(length-of-beat)@i(bpm))}@\Given a tempo of 
 @i(bpm), return the duration of the beat in seconds. Note that this software
 has no real notion of beat. A ``beat'' is just the duration of each character
 in the beat pattern strings. This function returns a @code(FLONUM).
@@ -8464,9 +7941,9 @@ corresponds to no glide. The range is zero to 10.
 @subsection(Input Format)
 A single note or a series of notes can be input to the Moog instrument
 by defining a list with the following format:
-@begin(example)
-list(list(@i(frequency), @i(duration), @i(articulation)), @r(...) )
-@end(example)
+@begin(display)
+(list (list @i(frequency duration articulation)) ... )
+@end(display)
 where @i(frequency) is a @code(FLONUM) in steps, @i(duration) is the duration
 of each note in seconds (regardless of the release time of the amplifier), 
 and @i(articulation) is a percentage of the duration that a sound will be
@@ -8556,18 +8033,10 @@ play moog(s, shape-osc1: *tri-table*, shape-osc2: *tri-table*,
 
 @appendix(Open Sound Control and Nyquist)@index(Open Sound Control)
 @label(osc-app)
-Open Sound Control (OSC) is a simple protocol for communicating music
-control parameters between software applications and across
-networks. For more information, see @html[<a
-href="http://wwww.cnmat.berkeley.edu/OpenSoundControl">]@code(http://www.cnmat.berkeley.edu/OpenSoundControl/)@html[</a>]. The
-Nyquist implementation of Open Sound Control is simple: an array of
-floats can be set by OSC messages and read by Nyquist functions. That
-is about all there is to it. 
+Open Sound Control (OSC) is a simple protocol for communicating music control parameters between software applications and across networks. For more information, see 
+@html[<a href="http://wwww.cnmat.berkeley.edu/OpenSoundControl">]@code(http://www.cnmat.berkeley.edu/OpenSoundControl/)@html[</a>]. The Nyquist implementation of Open Sound Control is simple: an array of floats can be set by OSC messages and read by Nyquist functions. That is about all there is to it.
 
-Note: Open Sound Control must be enabled by calling
-@code[osc-enable(t)]. If this fails under Windows, see the
-installation instructions in @code(sys/win/README.txt) regarding
-@code(SystemRoot).
+Note: Open Sound Control must be enabled by calling @code[osc-enable(t)]. If this fails under Windows, see the installation instructions regarding @code(SystemRoot).
 
 To control something in (near) real-time, you need to access a slider value as if it a signal, or more properly, a Nyquist @code(SOUND) type. The function @code(snd-slider), described in Section @ref(snd-slider-sec), takes a slider number and returns a @code(SOUND) type representing the current value of the slider. To fully understand this function, you need to know something about how Nyquist is actually computing sounds.
 
@@ -8577,7 +8046,7 @@ In addition to reading sliders as continually changing @code(SOUND)s, you can ge
 
 Note that if you store the value returned by @code(snd-slider) in a variable, you will capture the history of the slider changes. This will take a lot of memory, so be careful.
 
-Suppose you write a simple expression such as @code[(hzosc (mult 1000 (snd-slider 0 @r(...))))] (or in SAL, @code[hzosc(1000 * snd-slider(0 @r(...)))]) to control an oscillator frequency with a slider. How long does this sound last? The duration of @code[hzosc] is the duration of the frequency control, so what is the duration of a slider? To avoid infinitely long signals, you must specify a duration as one of the parameters of @code[snd-slider].
+Suppose you write a simple expression such as @code[(hzosc (mult 1000 (snd-slider 0 ...)))] to control an oscillator frequency with a slider. How long does this sound last? The duration of @code[hzosc] is the duration of the frequency control, so what is the duration of a slider? To avoid infinitely long signals, you must specify a duration as one of the parameters of @code[snd-slider].
 
 You might be thinking, what if I just want to tell the slider when to stop? At present, you cannot do that, but in the future there should be a function that stops when its input goes to zero. Then, moving a slider to zero could end the signal (and if you multiplied a complex sound by one of these ending functions, everything in the sound would end and be garbage collected).
 

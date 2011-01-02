@@ -1,74 +1,74 @@
-<html><head><title>The jNyqIDE Program</title></head>
+<html><head><title>The NyquistIDE Program</title></head>
 <body bgcolor="ffffff">
 <a href = "part2.html">Previous Section</a> | <a href = "part4.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "22"><h2>The jNyqIDE Program</h2></a>
+<a name = "16"><h2>The NyquistIDE Program</h2></a>
 
-The jNyqIDE program combines many helpful functions and interfaces to help you get the most out of Nyquist. jNyqIDE is implemented in Java, and you will need the Java runtime system or development system installed on your computer to use jNyqIDE. The best way to learn about jNyqIDE is to just use it. This chapter introduces some of the less obvious features. If you are confused by something and you do not find the information you need here, please contact the author.
+The NyquistIDE program combines many helpful functions and interfaces to help you get the most out of Nyquist. NyquistIDE is implemented in Java, and you will need the Java runtime system or development system installed on your computer to use NyquistIDE. The best way to learn about NyquistIDE is to just use it. This chapter introduces some of the less obvious features. If you are confused by something and you do not find the information you need here, please contact the author.
 <p>
-<a name = "23"><h3>jNyqIDE Overview</h3></a>
-The jNyqIDE runs the command-line version of Nyquist as a subtask, so everything that works in Nyquist should work when using the jNyqIDE and vice-versa. Input to Nyquist is usually entered in the top left window of the jNyqIDE. When you type return, if the expression or statement appears to be complete, the expression you typed is sent to Nyquist. Output from Nyquist appears in a window below. You cannot type into or edit the output window text.
+<a name = "17"><h3>NyquistIDE Overview</h3></a>
+The NyquistIDE runs the command-line version of Nyquist as a subtask, so everything that works in Nyquist should work when using the NyquistIDE and vice-versa. Input to Nyquist is usually entered in the top left window of the NyquistIDE. When you type return, if the expression or statement appears to be complete, the expression you typed is sent to Nyquist. Output from Nyquist appears in a window below. You cannot type into or edit the output window text.
 <p>
-The normal way to use the jNyqIDE is to create or open one or more files. You edit these files and then click the Load button. To load a file, jNyqIDE saves the file, sets the current directory of Nyquist to that of the file, then issues a <code>load</code> command to Nyquist. In this case and several others, you may notice that jNyqIDE sends expressions to Nyquist automatically for evaluation. You can always see the commands and their results in the output window.
+The normal way to use the NyquistIDE is to create or open one or more files. You edit these files and then click the Load button. To load a file, NyquistIDE saves the file, sets the current directory of Nyquist to that of the file, then issues a <code>load</code> command to Nyquist. In this case and several others, you may notice that NyquistIDE sends expressions to Nyquist automatically for evaluation. You can always see the commands and their results in the output window.
 <p>
-Notice that when you load a selected file window, jNyqIDE uses <code>setdir</code> to change Nyquist's current directory. This helps to keep the two programs in sync. Normally, you should keep all the files of a project in the same directory and avoid manually changing Nyquist's current directory (i.e. avoid calling <code>setdir</code> in your code).
+Notice that when you load a selected file window, NyquistIDE uses <code>setdir</code> to change Nyquist's current directory. This helps to keep the two programs in sync. Normally, you should keep all the files of a project in the same directory and avoid manually changing Nyquist's current directory (i.e. avoid calling <code>setdir</code> in your code).
 <p>
-Arranging windows in the jNyqIDE can be time-consuming, and depending on the
+Arranging windows in the NyquistIDE can be time-consuming, and depending on the
 operating system, it is possible for a window to get into a position where you
 cannot drag it to a new position. The Window:Tile menu command can be used
 to automatically lay out windows in a rational way. There is a preference 
 setting to determine the height of the completion list relative to the height of the output 
 window.
 <p>
-<a name = "24"><h3>The Button Bar</h3></a>
-<a name="index100">
+<a name = "18"><h3>The Button Bar</h3></a>
+<a name="index97">
 There are a number of buttons with frequently-used operations. These are:
 <ul>
 <li>
-Info - <a name="index101">Print information about Nyquist memory
+Info - <a name="index98">Print information about Nyquist memory
 utilization, including
 the number of free cons cells, the number of garbage collections,
 the total number of cons cells, the total amount of sample buffer memory,
 and the amount of memory in free sample buffers.
-<li>Break - <a name="index102">Send a break character to XLISP. This
+<li>Break - <a name="index99">Send a break character to XLISP. This
 can be used to enter the debugger (the break loop) while a program is 
 running. Resume by typing <code>(co)</code>.
-<li>SAL/Lisp - <a name="index103"><a name="index104">Switch modes.
+<li>SAL/Lisp - <a name="index100"><a name="index101">Switch modes.
 The button names the mode (SAL or Lisp) you will switch to, not the 
 current mode. For example, if you are in Lisp mode and want to type
 a SAL command, click the SAL button first.
-<li>Top - <a name="index105">Enters <code>(top)</code> into Nyquist.
+<li>Top - <a name="index102">Enters <code>(top)</code> into Nyquist.
 If the XLISP prompt is <code>1&gt;</code> or 
 some other integer followed by "<code>&gt;</code>", clicking the Top button
 will exit the debug loop and return to the top-level prompt.
-<li>Replay - <a name="index106">Enters <code>(r)</code> into Nyquist.
+<li>Replay - <a name="index103">Enters <code>(r)</code> into Nyquist.
 This command replays the last computed sound.
-<li>F2-F12 - <a name="index107">Enters <code>(f2)</code> etc. into Nyquist.
+<li>F2-F12 - <a name="index104">Enters <code>(f2)</code> etc. into Nyquist.
 These commands are not built-in, and allow users to define their own
 custom actions.
-<li>Browse - <a name="index108">Equivalent to the Window:Browse
-menu item. (See Section <a href = "#26">"Browser"</a>.)
-<li>EQ - <a name="index109">Equivalent to the Window:EQ menu item.
-(See Section <a href = "#28">"Equalizer Editor"</a>.)
-<li>EnvEdit - <a name="index110">Equivalent to the Window:Envelope Edit 
-menu item. (See Section <a href = "#27">"Envelope Editor"</a>.)
-<li>NewFile - <a name="index111">Equivalent to the File:New menu
+<li>Browse - <a name="index105">Equivalent to the Window:Browse
+menu item. (See Section <a href = "#20">"Browser"</a>.)
+<li>EQ - <a name="index106">Equivalent to the Window:EQ menu item.
+(See Section <a href = "#22">"Equalizer Editor"</a>.)
+<li>EnvEdit - <a name="index107">Equivalent to the Window:Envelope Edit 
+menu item. (See Section <a href = "#21">"Envelope Editor"</a>.)
+<li>NewFile - <a name="index108">Equivalent to the File:New menu
 item. Opens a new file editing window for creating and
 loading a Lisp or SAL program file.
-<li>OpenFile - <a name="index112">Equivalent to the File:Open menu
+<li>OpenFile - <a name="index109">Equivalent to the File:Open menu
 item. Opens an existing Lisp or SAL program file for editing and loading.
-<li>SaveFile - <a name="index113">Equivalent to the File:Save menu
+<li>SaveFile - <a name="index110">Equivalent to the File:Save menu
 item (found on the editing window's menu bar). Saves the contents
 of an editing window to its associated file.
-<li>Load - <a name="index114">Equivalent to the File:Load menu
+<li>Load - <a name="index111">Equivalent to the File:Load menu
 item (found on the editing window's menu bar). Performs a Save operation,
 then sends a command to Nyquist that loads the file as a program.
-<li>Mark - <a name="index115">Sends a Control-A to Nyquist. While
+<li>Mark - <a name="index112">Sends a Control-A to Nyquist. While
 playing a sound, this displays and records the approximate time in the
-audio stream. (See Section <a href = "part8.html#99">"Sound File Input and Output"</a> for more detail.)
-<li></ul><a name = "25"><h3>Command Completion</h3></a>
-To help with programming, jNyqIDE maintains a command-completion window.
-As you type the first letters of function names, jNyqIDE lists matching
+audio stream. (See Section <a href = "part8.html#93">"Sound File Input and Output"</a> for more detail.)
+<li></ul><a name = "19"><h3>Command Completion</h3></a>
+To help with programming, NyquistIDE maintains a command-completion window.
+As you type the first letters of function names, NyquistIDE lists matching
 functions and their parameters in the Completion List window. If you click
 on an entry in this window, the displayed expression will replace the 
 incompletely typed function name. A preference allows you to match initial
@@ -76,19 +76,19 @@ letters or any substring of the complete function name. This is controlled
 by the "Use full search for code completion" preference.
 <p>
 In addition, if you right click (or under Mac OS X, hold down the Alt/Option
-key and click) on an entry, jNyqIDE will display documentation for the function.
+key and click) on an entry, NyquistIDE will display documentation for the function.
 Documentation can come from a local copy or from the online copy (determined
 by the "Use online manual instead of local copy" preference). Documentation 
-can be displayed within the jNyqIDE window or in an external browser (determined
-by the "Use window in jNyqIDE for help browser" preference.) Currently, the
+can be displayed within the NyquistIDE window or in an external browser (determined
+by the "Use window in NyquistIDE for help browser" preference.) Currently, the
 external browser option does not seem to locate documentation properly, but 
 this should be fixed in the future.
 <p>
-<a name = "26"><h3>Browser</h3></a>
+<a name = "20"><h3>Browser</h3></a>
 
-<a name="index116"><a name="index117">
+<a name="index113"><a name="index114">
 If you click on the Browse button or use the Window:Browse menu command, 
-jNyqIDE will display a browser window that is pre-loaded with a number of
+NyquistIDE will display a browser window that is pre-loaded with a number of
  Nyquist commands to create sounds. You can adjust parameters, audition
 the sounds, and capture the expression that creates the sound. In many 
 cases, the expression checks to see if necessary functions are defined,
@@ -104,9 +104,11 @@ the sound you want into a function defined in a Lisp (<code>.lsp</code>) or SAL
 command to load a SAL file), and call the function from the language of 
 your choice.
 <p>
-<a name = "27"><h3>Envelope Editor</h3></a>
+<a name = "21"><h3>Envelope Editor</h3></a>
 
-<a name="index118">
+<a name="index115">
+<a name="index116">
+<a name="index117">
 The envelope editor allows you graphically to design and edit piece-wise
 linear and exponential envelopes. The editor maintains a list of envelopes
 and you select the one to edit or delete using the drop down list in the 
@@ -123,13 +125,14 @@ For example, if you define an envelope named "fast-attack," then you
 can create the envelope within a Nyquist SAL program by writing
 the expression <code>fast-attack()</code>.
 <p>
-These edited envelopes are saved to a file named <code>workspace.lsp</code> in
+These edited envelopes are saved to a file named <code>workspace.lsp</code> 
+ <a name="index118"> in
 the current directory. The workspace is Nyquist's mechanism for saving
-data of all kinds (see Section <a href = "part14.html#164">"Workspaces"</a>). The normal way to
+data of all kinds (see Section <a href = "part14.html#158">"Workspaces"</a>). The normal way to
 work with workspaces is to (1) load the workspace, i.e.
  <code>load "workspace"</code>, as soon as you start Nyquist; (2) invoke
 the envelope editor to change values in the workspace; and (3) save the
-workspace at any time, especially before you exit jNyqIDE. If you follow
+workspace at any time, especially before you exit NyquistIDE. If you follow
 these steps, envelopes will be preserved from session to session, and 
 the entire collection of envelopes will appear in the editor. Be 
 sure to make backups of your <code>workspace.lsp</code> file along with your
@@ -156,8 +159,8 @@ The Load button refreshes the editor from data saved in the Nyquist
 process. Normally, there is no need to use this because the editor
 automatically loads data when you open it.
 <p>
-<a name = "28"><h3>Equalizer Editor</h3></a>
-<a name="index119">
+<a name = "22"><h3>Equalizer Editor</h3></a>
+<a name="index119"><a name="index120">
 The Equalizer Editor provides a graphical EQ interface for creating and
 adjusting equalizers. Unlike the envelope editor, where you can type
 any envelope name, equalizers are named <code>eq-0</code>, <code>eq-1</code>, etc.,

@@ -3,4 +3,4 @@
 (expand 10)
 ;; sourcedir source       destdir  dest
 (g "../nyquist" "nyquistman" "../../doc" "home" t)
-
+(g "../nyquist" "nyquistman" "../../doc" "home" t)

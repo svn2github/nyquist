@@ -79,5 +79,5 @@
     (reverse scale)))
 
 (defun cell-aut-demo ()
-  (require-from 'piano-note-2 "pianosyn.lsp")
+  (require-from piano-note-2 "pianosyn.lsp")
   (play (scale 0.5 (cell-aut (cell-aut-major-scale) 0.2 30 80))))

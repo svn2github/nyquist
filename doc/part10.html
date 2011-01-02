@@ -2,7 +2,7 @@
 <body bgcolor="ffffff">
 <a href = "part9.html">Previous Section</a> | <a href = "part11.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "108"><h2>Time/Frequency Transformation</h2></a>
+<a name = "102"><h2>Time/Frequency Transformation</h2></a>
 Nyquist provides functions for FFT and inverse FFT operations on streams of audio data.
 Because sounds can be of any length, but an FFT operates on a fixed amount of data, FFT
 processing is typically done in short blocks or windows that move through the audio. Thus,
@@ -28,25 +28,30 @@ With <code>snd-fft</code> and <code>snd-ifft</code>, you can create all sorts of
 idea is to create intermediate objects that both accept and generate sequences of frames.
 These objects can operate on the frames to implement the desired spectral-domain
 processes. Examples of this can be found in the file 
-<code>fft_tutorial.htm</code><a name="index803"><a name="index804"><a name="index805">,
+<code>fft_tutorial.htm</code><a name="index804"><a name="index805"><a name="index806">,
 which is part of the standard Nyquist release. The documentation for <code>snd-fft</code> and
 <code>snd-ifft</code> follows.
 <p>
 <dl>
 <dt>
-<code>snd-fft(<a name="index806"><a name="index807"><i>sound</i>, <i>length</i>, <i>skip</i>, <i>window</i>)</code><dd>This
+<code>snd-fft(<a name="index807"><a name="index808"><i>sound</i>, <i>length</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
+
+<code>(snd-fft <i>sound</i> <i>length</i> <i>skip</i> <i>window</i>)</code> [LISP]<dd>This
 function performs an FFT on the first samples in <i>sound</i> and returns a Lisp array of <code>FLONUM</code>s. 
 The function modifies the <i>sound</i>, violating the normal rule that sounds are immutable in Nyquist, so 
 it is advised that you copy the sound using <code>snd-copy</code> if there are any other references to 
-<i>sound</i>. The length of the FFT is specified by <i>length</i>, a <code>FIXNUM</code> (integer). After 
+<i>sound</i>. The length of the FFT is specified by <i>length</i>, a <code>FIXNUM</code> (integer) which must
+be a power of 2. After 
 each FFT, the sound is advanced by <i>skip</i> samples, also of type <code>FIXNUM</code>. Overlapping FFTs, 
 where <i>skip</i> is less than <i>length</i>, are allowed. If <i>window</i> is not <code>NIL</code>, it must be a sound. 
 The first <i>length</i> samples of <i>window</i> are multiplied by <i>length</i> samples of <i>sound</i> before
 performing the FFT. When there are no more samples in <i>sound</i> to transform,
 this function returns <code>NIL</code>. The coefficients in the returned array, in order, are the DC coefficient,
-the first real, the first imaginary, the second real, the second imaginary, etc. If the length is even, 
-the last array element corresponds to the real coefficient at the Nyquist frequency.<br><br>
-<dt><code>snd-ifft(<a name="index808"><a name="index809"><a name="index810"><i>time</i>, <i>srate</i>, <i>iterator</i>, <i>skip</i>, <i>window</i>)</code><dd>This function performs an IFFT on a sequence of spectral frames obtained from <i>iterator</i> 
+the first real, the first imaginary, the second real, the second imaginary, etc. 
+The last array element corresponds to the real coefficient at the Nyquist frequency.<br><br>
+<dt><code>snd-ifft(<a name="index809"><a name="index810"><a name="index811"><i>time</i>, <i>srate</i>, <i>iterator</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
+
+<code>(snd-ifft <i>time</i> <i>srate</i> <i>iterator</i> <i>skip</i> <i>window</i>)</code> [LISP]<dd>This function performs an IFFT on a sequence of spectral frames obtained from <i>iterator</i> 
 and returns a sound. The start time of the sound is given by <i>time</i>. Typically, this would be computed 
 by calling <code>(local-to-global 0)</code>. The sample rate is given by <i>srate</i>. Typically, this would 
 be <code>*sound-srate*</code>, but it might also depend upon the sample rate of the sound from which the 
@@ -57,7 +62,8 @@ when the end of the sound is reached. After each frame is inverse transformed in
 added to the resulting sound. Each successive frame is added with a sample offset specified by <i>skip</i> 
 relative to the previous frame. This must be an integer greater than zero. If <i>window</i> is 
 not <code>NIL</code>, it must be a sound. This window signal is multiplied by the inverse transformed frame 
-before the frame is added to the output sound. The length of each frame should be the same. The length
+before the frame is added to the output sound. The length of each frame should be the same power of 2. 
+The length
 is implied by the array returned by <i>iterator</i>, so it does not appear as a parameter. This length
 is also the number of samples used from <i>window</i>. Extra samples are ignored, and window is padded
 with zeros if necessary, so be sure <i>window</i> is the right length. The resulting sound is computed on

@@ -2,15 +2,28 @@
 <body bgcolor="ffffff">
 <a href = "part12.html">Previous Section</a> | <a href = "part14.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "138"><h2>Developing and Debugging in Nyquist</h2></a>
-<a name="index973"><a name="index974">
+<a name = "132"><h2>Developing and Debugging in Nyquist</h2></a>
+<a name="index974"><a name="index975">
 There are a number of tools, functions, and techniques that can help to debug Nyquist programs. Since these are described in many places 
 throughout this manual, this chapter brings together many suggestions and techniques for developing code and debugging. You <i>really</i> 
 should read this chapter before you spend too much time with Nyquist. Many problems that you will certainly run into are addressed here.
 <p>
-<a name = "139"><h3>Debugging</h3></a>
-Probably the most important debugging tool is the backtrace. When 
-Nyquist encounters an error, it suspends execution and prints an 
+<a name = "133"><h3>Debugging</h3></a>
+Probably the most important debugging tool is the backtrace. There are
+two kinds of backtrace: one for SAL, and one for Lisp.
+<p>
+SAL mode is actually just an XLISP function (<code>sal</code>) that reads
+input and evaluates it. When SAL encounters an error, it normally
+prints a trace of the SAL stack (all the active functions written in SAL),
+exists the current command, and reads the next command.
+<p>
+If you call XLISP functions from SAL, including most Nyquist sound 
+processing functions, and an error occurs within these XLISP functions,
+you will only see the SAL function that called the XLISP functions
+listed in the stack trace. Sometimes you need more details.
+<p>
+When Nyquist encounters an error when it is not running SAL, it 
+normally suspends execution and prints an 
 error message. To find out where in the program the error occurred 
 and how you got there, start by typing <code>(bt)</code>. This will print 
 out the last several function calls and their arguments, which is 
@@ -27,7 +40,13 @@ not saved and you cannot get a backtrace. Finally, <code>bt</code>
 is just a macro to save typing.  The actual backtrace function 
 is <code>baktrace</code>, which takes an integer argument telling how 
 many levels to print.  All of these things are set up by default 
-when you start Nyquist.  
+when you start Nyquist.
+<p>
+To get this XLISP backtrace behavior when SAL encounters an error,
+you need to have <code>*breakenable*</code> set while SAL is running. The
+best way to do this is to run within the NyquistIDE program,
+open the Preferences dialog, and choose the desired settings, e.g.
+"Enable XLISP break on SAL error."
 <p>
 Since Nyquist sounds are executed with a lazy evaluation scheme, some
 errors are encountered when samples are being generated.  In this
@@ -80,14 +99,18 @@ There is a button named "Top" in the NyquistIDE that takes you back to the
 top level (ready to accept XLISP expressions), 
 and another button named "SAL" that puts you back in SAL mode.
 <p>
-<a name = "140"><h3>Useful Functions</h3></a>
+<a name = "134"><h3>Useful Functions</h3></a>
 <dl>
 <dt>
-<code>grindef(<a name="index975"><a name="index976"><i>name</i>)</code><dd>Prints
+<code>grindef(<a name="index976"><a name="index977"><i>name</i>)</code> [SAL]<br>
+
+<code>(grindef <i>name</i>)</code> [LISP]<dd>Prints
 a formatted listing of a lisp function. This is often useful to quickly inspect
 a function without searching for it in source files. Do not forget to quote the
 name, e.g. <code>(grindef 'prod)</code>.<br><br>
-<dt><code>args(<a name="index977"><a name="index978"><i>name</i>)</code><dd>Similar
+<dt><code>args(<a name="index978"><a name="index979"><i>name</i>)</code> [SAL]<br>
+
+<code>(args <i>name</i>)</code> [LISP]<dd>Similar
 to <code>grindef</code>, this function prints the arguments to a function. This may
 be faster than looking up a function in the documentation if you just need a
 reminder. For example, <code>(args 'lp)</code> prints "(LP S C)," which may help you
@@ -100,17 +123,25 @@ XLISP. They are so useful that they are defined as part of Nyquist.
 <p>
 <dl>
 <dt>
-<code>incf(<a name="index979"><a name="index980"><i>symbol</i>)</code><dd>Increment <i>symbol</i>
+<code>incf(<a name="index980"><a name="index981"><i>symbol</i>)</code> [SAL]<br>
+
+<code>(incf <i>symbol</i>)</code> [LISP]<dd>Increment <i>symbol</i>
 by one. This is a macro, and <i>symbol</i> can be anything that can be set by
 <code>setf</code>. Typically, <i>symbol</i> is a variable: "<code>(incf i)</code>," but
 <i>symbol</i> can also be an array element: "<code>(incf (aref myarray i))</code>."<br><br>
-<dt><code>decf(<a name="index981"><a name="index982"><i>symbol</i>)</code><dd>Decrement <i>symbol</i>
+<dt><code>decf(<a name="index982"><a name="index983"><i>symbol</i>)</code> [SAL]<br>
+
+<code>(decf <i>symbol</i>)</code> [LISP]<dd>Decrement <i>symbol</i>
 by one. (See <code>incf</code>, above.)<br><br>
-<dt><code>push(<a name="index983"><i>val</i>, <i>lis</i>)</code><dd>Push <i>val</i> onto <i>lis</i> (a Lisp
-list). This is a macro that is equivalent to writing 
+<dt><code>push(<a name="index984"><i>val</i>, <i>lis</i>)</code> [SAL]<br>
+
+<code>(push <i>val</i> <i>lis</i>)</code> [LISP]<dd>Push <i>val</i> onto <i>lis</i> (a Lisp
+list). This is a macro that is equivalent to writing (in Lisp) 
 <code>(setf <i>lis</i> (cons <i>val</i> <i>lis</i>))</code>.<br><br>
-<dt><code>pop(<a name="index984"><i>lis</i>)</code><dd>Remove (pop) the first item from <i>lis</i> (a
-Lisp list). This is a macro that is equivalent to writing 
+<dt><code>pop(<a name="index985"><i>lis</i>)</code> [SAL]<br>
+
+<code>(pop <i>lis</i>)</code> [LISP]<dd>Remove (pop) the first item from <i>lis</i> (a
+Lisp list). This is a macro that is equivalent to writing (in Lisp)
 <code>(setf <i>lis</i> (cdr <i>lis</i>))</code>. Note that the remaining list is returned,
 not the head of the list that has been popped. Retrieve the head of the list
 (i.e. the top of the stack) using <code>first</code> or, equivalently, <code>car</code>.
@@ -120,12 +151,17 @@ The following macros are useful control constructs.
 <p>
 <dl>
 <dt>
-<code>while(<a name="index985"><i>test</i>, <i>stmt1</i>, <i>stmt2</i>, ...)</code><dd>A conventional
-"while" loop. If <i>test</i> is true, perform the statements
- (<i>stmt1</i>, <i>stmt2</i>, etc.) and repeat. If <i>test</i> is false, return. This
+<code>while(<a name="index986"><i>test</i>, <i>expr1</i>, <i>expr2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+
+<code>(while <i>test</i> <i>expr1</i> <i>expr2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>A conventional
+"while" loop. If <i>test</i> is true, evaluate expressions
+ (<i>expr1</i>, <i>expr2</i>, etc.) and repeat. If <i>test</i> is false, return. This
  expression evaluates to NIL unless the expression <code>(return <i>expr</i>)</code>
- is evaluated, in which case the value of <i>expr</i> is returned.<br><br>
-<dt><code>when(<a name="index986"><i>test</i>, <i>action</i>)</code><dd>A conventional "if-then" 
+ is evaluated, in which case the value of <i>expr</i> is returned. In SAL, the 
+ loop statement is preferred.<br><br>
+<dt><code>when(<a name="index987"><i>test</i>, <i>action</i>)</code> [SAL]<br>
+
+<code>(when <i>test</i> <i>action</i>)</code> [LISP]<dd>A conventional "if-then" 
 statement. If <i>test</i> is true, <i>action</i> is evaluated and returned. Otherwise,
 NIL is returned. (Use <code>if</code> or <code>cond</code> to implement
  "if-then-else" and more complex conditional forms.
@@ -141,8 +177,10 @@ the function does not yet exist, Nyquist satisfies the requirement by loading
 the file.
 <dl>
 <dt>
-<code>require-from(<a name="index987"><a name="index988"><i>fnsymbol</i>, 
-<i>filename</i> [, <i>path</i>])</code><dd>Tests whether <i>fnsymbol</i>, an unquoted 
+<code>require-from(<a name="index988"><a name="index989"><i>fnsymbol</i>, 
+<i>filename</i> [, <i>path</i>])</code> [SAL]<br>
+
+<code>(require-from <i>fnsymbol</i> <i>filename</i> [<i>path</i>])</code> [LISP]<dd>Tests whether <i>fnsymbol</i>, an unquoted 
 function name, is defined. If 
 not, <i>filename</i>, a <code>STRING</code>,
 is loaded. Normally <i>fnsymbol</i> is a function that will be called from
@@ -157,15 +195,21 @@ the <code>lib/piano.lsp</code> library loads data files from the <code>lib/piano
 but how can we find out the full path of <code>lib</code>? The solution is:
 <dl>
 <dt>
-<code>current-path(<a name="index989"><a name="index990"><a name="index991">)</code><dd>Returns the full path name of the file that is
+<code>current-path(<a name="index990"><a name="index991"><a name="index992">)</code> [SAL]<br>
+
+<code>(current-path)</code> [LISP]<dd>Returns the full path name of the file that is
 currently being loaded (see <code>load</code>). Returns NIL if no file is being loaded.
 </dl> 
 <p>
 Finally, there are some helpful math functions:
 <dl>
 <dt>
-<code>real-random(<a name="index992"><a name="index993"><a name="index994"><i>from</i>, <i>to</i>)</code><dd>Returns a random <code>FLONUM</code> between <i>from</i> and <i>to</i>. (See also <code>rrandom</code>, which is equivalent to <code>(real-random 0 1</code>)).<br><br>
-<dt><code>power(<a name="index995"><a name="index996"><i>x</i>, <i>y</i>)</code><dd>Returns <i>x</i> raised to
+<code>real-random(<a name="index993"><a name="index994"><a name="index995"><i>from</i>, <i>to</i>)</code> [SAL]<br>
+
+<code>(real-random <i>from</i> <i>to</i>)</code> [LISP]<dd>Returns a random <code>FLONUM</code> between <i>from</i> and <i>to</i>. (See also <code>rrandom</code>, which is equivalent to <code>(real-random 0 1</code>)).<br><br>
+<dt><code>power(<a name="index996"><a name="index997"><i>x</i>, <i>y</i>)</code> [SAL]<br>
+
+<code>(power <i>x</i> <i>y</i>)</code> [LISP]<dd>Returns <i>x</i> raised to
 the <i>y</i> power.
 </dl>
 <p>

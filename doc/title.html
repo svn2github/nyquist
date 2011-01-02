@@ -30,6 +30,7 @@
 
 
 
+
 <head><title>Nyquist Reference Manual</title></head><body>
 
 
@@ -38,11 +39,11 @@
 <p>
 
 <h1>Nyquist Reference Manual</h1>
-<b>Version 3.03</b>
+<b>Version 3.04</b>
 
 <p>
 
-<b>Copyright 2009 by Roger B. Dannenberg</b>
+<b>Copyright 2011 by Roger B. Dannenberg</b>
 
 
 <blockquote></blockquote><blockquote></blockquote><blockquote></blockquote>
@@ -68,314 +69,304 @@ Pittsburgh, PA 15213, U.S.A.</blockquote>
 <li><a href = "part2.html#2"NIL>Introduction and Overview</a>
 <ul>
 <li><a href = "part2.html#3"NIL>Installation</a>
+<li><a href = "part2.html#4"NIL>Using NyquistIDE</a>
+<li><a href = "part2.html#5"NIL>Using SAL</a>
+<li><a href = "part2.html#6"NIL>Helpful Hints</a>
+<li><a href = "part2.html#7"NIL>Using Lisp</a>
+<li><a href = "part2.html#8"NIL>Examples</a>
 <ul>
-<li><a href = "part2.html#4"NIL>Unix Installation</a>
-<li><a href = "part2.html#5"NIL>Win32 Installation</a>
-<ul>
-<li><a href = "part2.html#6"NIL>What if Nyquist functions are undefined?</a>
-<li><a href = "part2.html#7"NIL>SystemRoot</a>
-<li><a href = "part2.html#8"NIL>The "java is not recognized" Error</a>
+<li><a href = "part2.html#9"NIL>Waveforms</a>
+<li><a href = "part2.html#10"NIL>Wavetables</a>
+<li><a href = "part2.html#11"NIL>Sequences</a>
+<li><a href = "part2.html#12"NIL>Envelopes</a>
+<li><a href = "part2.html#13"NIL>Piece-wise Linear Functions</a>
 </ul>
-<li><a href = "part2.html#9"NIL>MacOS X Installation</a>
+<li><a href = "part2.html#14"NIL>Predefined Constants</a>
+<li><a href = "part2.html#15"NIL>More Examples</a>
 </ul>
-<li><a href = "part2.html#10"NIL>Using jNyqIDE</a>
-<li><a href = "part2.html#11"NIL>Using SAL</a>
-<li><a href = "part2.html#12"NIL>Helpful Hints</a>
-<li><a href = "part2.html#13"NIL>Using Lisp</a>
-<li><a href = "part2.html#14"NIL>Examples</a>
+<li><a href = "part3.html#16"NIL>The NyquistIDE Program</a>
 <ul>
-<li><a href = "part2.html#15"NIL>Waveforms</a>
-<li><a href = "part2.html#16"NIL>Wavetables</a>
-<li><a href = "part2.html#17"NIL>Sequences</a>
-<li><a href = "part2.html#18"NIL>Envelopes</a>
-<li><a href = "part2.html#19"NIL>Piece-wise Linear Functions</a>
+<li><a href = "part3.html#17"NIL>NyquistIDE Overview</a>
+<li><a href = "part3.html#18"NIL>The Button Bar</a>
+<li><a href = "part3.html#19"NIL>Command Completion</a>
+<li><a href = "part3.html#20"NIL>Browser</a>
+<li><a href = "part3.html#21"NIL>Envelope Editor</a>
+<li><a href = "part3.html#22"NIL>Equalizer Editor</a>
 </ul>
-<li><a href = "part2.html#20"NIL>Predefined Constants</a>
-<li><a href = "part2.html#21"NIL>More Examples</a>
+<li><a href = "part4.html#23"NIL>Behavioral Abstraction</a>
+<ul>
+<li><a href = "part4.html#24"NIL>The Environment</a>
+<li><a href = "part4.html#25"NIL>Sequential Behavior</a>
+<li><a href = "part4.html#26"NIL>Simultaneous Behavior</a>
+<li><a href = "part4.html#27"NIL>Sounds vs. Behaviors</a>
+<li><a href = "part4.html#28"NIL>The At Transformation</a>
+<li><a href = "part4.html#29"NIL>The Stretch Transformation</a>
+<li><a href = "part4.html#30"NIL>Nested Transformations</a>
+<li><a href = "part4.html#31"NIL>Defining Behaviors</a>
+<li><a href = "part4.html#32"NIL>Overriding Default Transformations</a>
+<li><a href = "part4.html#33"NIL>Sample Rates</a>
 </ul>
-<li><a href = "part3.html#22"NIL>The jNyqIDE Program</a>
+<li><a href = "part5.html#34"NIL>Continuous Transformations and Time Warps</a>
 <ul>
-<li><a href = "part3.html#23"NIL>jNyqIDE Overview</a>
-<li><a href = "part3.html#24"NIL>The Button Bar</a>
-<li><a href = "part3.html#25"NIL>Command Completion</a>
-<li><a href = "part3.html#26"NIL>Browser</a>
-<li><a href = "part3.html#27"NIL>Envelope Editor</a>
-<li><a href = "part3.html#28"NIL>Equalizer Editor</a>
+<li><a href = "part5.html#35"NIL>Simple Transformations</a>
+<li><a href = "part5.html#36"NIL>Time Warps</a>
+<li><a href = "part5.html#37"NIL>Abstract Time Warps</a>
+<li><a href = "part5.html#38"NIL>Nested Transformations</a>
 </ul>
-<li><a href = "part4.html#29"NIL>Behavioral Abstraction</a>
+<li><a href = "part6.html#39"NIL>More Examples</a>
 <ul>
-<li><a href = "part4.html#30"NIL>The Environment</a>
-<li><a href = "part4.html#31"NIL>Sequential Behavior</a>
-<li><a href = "part4.html#32"NIL>Simultaneous Behavior</a>
-<li><a href = "part4.html#33"NIL>Sounds vs. Behaviors</a>
-<li><a href = "part4.html#34"NIL>The At Transformation</a>
-<li><a href = "part4.html#35"NIL>The Stretch Transformation</a>
-<li><a href = "part4.html#36"NIL>Nested Transformations</a>
-<li><a href = "part4.html#37"NIL>Defining Behaviors</a>
-<li><a href = "part4.html#38"NIL>Overriding Default Transformations</a>
-<li><a href = "part4.html#39"NIL>Sample Rates</a>
+<li><a href = "part6.html#40"NIL>Stretching Sampled Sounds</a>
+<li><a href = "part6.html#41"NIL>Saving Sound Files</a>
+<li><a href = "part6.html#42"NIL>Memory Space and Normalization</a>
+<li><a href = "part6.html#43"NIL>Frequency Modulation</a>
+<li><a href = "part6.html#44"NIL>Building a Wavetable</a>
+<li><a href = "part6.html#45"NIL>Filter Examples</a>
+<li><a href = "part6.html#46"NIL>DSP in Lisp</a>
 </ul>
-<li><a href = "part5.html#40"NIL>Continuous Transformations and Time Warps</a>
+<li><a href = "part7.html#47"NIL>SAL</a>
 <ul>
-<li><a href = "part5.html#41"NIL>Simple Transformations</a>
-<li><a href = "part5.html#42"NIL>Time Warps</a>
-<li><a href = "part5.html#43"NIL>Abstract Time Warps</a>
-<li><a href = "part5.html#44"NIL>Nested Transformations</a>
+<li><a href = "part7.html#48"NIL>SAL Syntax and Semantics</a>
+<ul>
+<li><a href = "part7.html#49"NIL>Expressions</a>
+<ul>
+<li><a href = "part7.html#50"NIL>Simple Expressions</a>
+<li><a href = "part7.html#51"NIL>Operators</a>
+<li><a href = "part7.html#52"NIL>Function Calls</a>
+<li><a href = "part7.html#53"NIL>Array Notation</a>
+<li><a href = "part7.html#54"NIL>Conditional Values</a>
 </ul>
-<li><a href = "part6.html#45"NIL>More Examples</a>
+<li><a href = "part7.html#55"NIL>SAL Statements</a>
 <ul>
-<li><a href = "part6.html#46"NIL>Stretching Sampled Sounds</a>
-<li><a href = "part6.html#47"NIL>Saving Sound Files</a>
-<li><a href = "part6.html#48"NIL>Memory Space and Normalization</a>
-<li><a href = "part6.html#49"NIL>Frequency Modulation</a>
-<li><a href = "part6.html#50"NIL>Building a Wavetable</a>
-<li><a href = "part6.html#51"NIL>Filter Examples</a>
-<li><a href = "part6.html#52"NIL>DSP in Lisp</a>
-</ul>
-<li><a href = "part7.html#53"NIL>SAL</a>
-<ul>
-<li><a href = "part7.html#54"NIL>SAL Syntax and Semantics</a>
-<ul>
-<li><a href = "part7.html#55"NIL>Expressions</a>
-<ul>
-<li><a href = "part7.html#56"NIL>Simple Expressions</a>
-<li><a href = "part7.html#57"NIL>Operators</a>
-<li><a href = "part7.html#58"NIL>Function Calls</a>
-<li><a href = "part7.html#59"NIL>Array Notation</a>
-<li><a href = "part7.html#60"NIL>Conditional Values</a>
-</ul>
-<li><a href = "part7.html#61"NIL>SAL Statements</a>
-<ul>
-<li><a href = "part7.html#62"NIL>begin and end</a>
-<li><a href = "part7.html#63"NIL>chdir</a>
-<li><a href = "part7.html#64"NIL>define variable</a>
-<li><a href = "part7.html#65"NIL>define function</a>
-<li><a href = "part7.html#66"NIL>display</a>
-<li><a href = "part7.html#67"NIL>exec</a>
-<li><a href = "part7.html#68"NIL>if</a>
-<li><a href = "part7.html#69"NIL>when</a>
-<li><a href = "part7.html#70"NIL>unless</a>
-<li><a href = "part7.html#71"NIL>load</a>
-<li><a href = "part7.html#72"NIL>loop</a>
-<li><a href = "part7.html#73"NIL>print</a>
-<li><a href = "part7.html#74"NIL>return</a>
-<li><a href = "part7.html#75"NIL>set</a>
-<li><a href = "part7.html#76"NIL>with</a>
-<li><a href = "part7.html#77"NIL>exit</a>
+<li><a href = "part7.html#56"NIL>begin and end</a>
+<li><a href = "part7.html#57"NIL>chdir</a>
+<li><a href = "part7.html#58"NIL>define variable</a>
+<li><a href = "part7.html#59"NIL>define function</a>
+<li><a href = "part7.html#60"NIL>display</a>
+<li><a href = "part7.html#61"NIL>exec</a>
+<li><a href = "part7.html#62"NIL>if</a>
+<li><a href = "part7.html#63"NIL>when</a>
+<li><a href = "part7.html#64"NIL>unless</a>
+<li><a href = "part7.html#65"NIL>load</a>
+<li><a href = "part7.html#66"NIL>loop</a>
+<li><a href = "part7.html#67"NIL>print</a>
+<li><a href = "part7.html#68"NIL>return</a>
+<li><a href = "part7.html#69"NIL>set</a>
+<li><a href = "part7.html#70"NIL>with</a>
+<li><a href = "part7.html#71"NIL>exit</a>
 </ul>
 </ul>
-<li><a href = "part7.html#78"NIL>Interoperability of SAL and XLISP</a>
+<li><a href = "part7.html#72"NIL>Interoperability of SAL and XLISP</a>
 <ul>
-<li><a href = "part7.html#79"NIL>Function Calls</a>
-<li><a href = "part7.html#80"NIL>Symbols and Functions</a>
-<li><a href = "part7.html#81"NIL>Playing Tricks On the SAL Compiler</a>
+<li><a href = "part7.html#73"NIL>Function Calls</a>
+<li><a href = "part7.html#74"NIL>Symbols and Functions</a>
+<li><a href = "part7.html#75"NIL>Playing Tricks On the SAL Compiler</a>
 </ul>
 </ul>
-<li><a href = "part8.html#82"NIL>Nyquist Functions</a>
+<li><a href = "part8.html#76"NIL>Nyquist Functions</a>
 <ul>
-<li><a href = "part8.html#83"NIL>Sounds</a>
+<li><a href = "part8.html#77"NIL>Sounds</a>
 <ul>
-<li><a href = "part8.html#84"NIL>What is a Sound?</a>
-<li><a href = "part8.html#85"NIL>Multichannel Sounds</a>
-<li><a href = "part8.html#86"NIL>Accessing and Creating Sound</a>
-<li><a href = "part8.html#87"NIL>Miscellaneous Functions</a>
+<li><a href = "part8.html#78"NIL>What is a Sound?</a>
+<li><a href = "part8.html#79"NIL>Multichannel Sounds</a>
+<li><a href = "part8.html#80"NIL>Accessing and Creating Sound</a>
+<li><a href = "part8.html#81"NIL>Miscellaneous Functions</a>
 </ul>
-<li><a href = "part8.html#88"NIL>Behaviors</a>
+<li><a href = "part8.html#82"NIL>Behaviors</a>
 <ul>
-<li><a href = "part8.html#89"NIL>Using Previously Created Sounds</a>
-<li><a href = "part8.html#90"NIL>Sound Synthesis</a>
+<li><a href = "part8.html#83"NIL>Using Previously Created Sounds</a>
+<li><a href = "part8.html#84"NIL>Sound Synthesis</a>
 <ul>
-<li><a href = "part8.html#91"NIL>Oscillators</a>
-<li><a href = "part8.html#92"NIL>Piece-wise Approximations</a>
-<li><a href = "part8.html#93"NIL>Filter Behaviors</a>
-<li><a href = "part8.html#94"NIL>Effects</a>
-<li><a href = "part8.html#95"NIL>Physical Models</a>
-<li><a href = "part8.html#96"NIL>More Behaviors</a>
-</ul>
-</ul>
-<li><a href = "part8.html#97"NIL>Transformations</a>
-<li><a href = "part8.html#98"NIL>Combination and Time Structure</a>
-<li><a href = "part8.html#99"NIL>Sound File Input and Output</a>
-<li><a href = "part8.html#100"NIL>Low-level Functions</a>
-<ul>
-<li><a href = "part8.html#101"NIL>Creating Sounds</a>
-<li><a href = "part8.html#102"NIL>Signal Operations</a>
-<li><a href = "part8.html#103"NIL>Filters</a>
-<li><a href = "part8.html#104"NIL>Table-Lookup Oscillator Functions</a>
-<li><a href = "part8.html#105"NIL>Physical Model Functions</a>
-<li><a href = "part8.html#106"NIL>Sequence Support Functions</a>
+<li><a href = "part8.html#85"NIL>Oscillators</a>
+<li><a href = "part8.html#86"NIL>Piece-wise Approximations</a>
+<li><a href = "part8.html#87"NIL>Filter Behaviors</a>
+<li><a href = "part8.html#88"NIL>Effects</a>
+<li><a href = "part8.html#89"NIL>Physical Models</a>
+<li><a href = "part8.html#90"NIL>More Behaviors</a>
 </ul>
 </ul>
-<li><a href = "part9.html#107"NIL>Nyquist Globals</a>
-<li><a href = "part10.html#108"NIL>Time/Frequency Transformation</a>
-<li><a href = "part11.html#109"NIL>MIDI, Adagio, and Sequences</a>
+<li><a href = "part8.html#91"NIL>Transformations</a>
+<li><a href = "part8.html#92"NIL>Combination and Time Structure</a>
+<li><a href = "part8.html#93"NIL>Sound File Input and Output</a>
+<li><a href = "part8.html#94"NIL>Low-level Functions</a>
 <ul>
-<li><a href = "part11.html#110"NIL>Specifying Attributes</a>
-<ul>
-<li><a href = "part11.html#111"NIL>Time</a>
-<li><a href = "part11.html#112"NIL>Pitch</a>
-<li><a href = "part11.html#113"NIL>Duration</a>
-<li><a href = "part11.html#114"NIL>Next Time</a>
-<li><a href = "part11.html#115"NIL>Rest</a>
-<li><a href = "part11.html#116"NIL>Articulation</a>
-<li><a href = "part11.html#117"NIL>Loudness</a>
-<li><a href = "part11.html#118"NIL>Voice</a>
-<li><a href = "part11.html#119"NIL>Timbre (MIDI Program)</a>
-<li><a href = "part11.html#120"NIL>Tempo</a>
-<li><a href = "part11.html#121"NIL>Rate</a>
-</ul>
-<li><a href = "part11.html#122"NIL>Default Attributes</a>
-<li><a href = "part11.html#123"NIL>Examples</a>
-<li><a href = "part11.html#124"NIL>Advanced Features</a>
-<ul>
-<li><a href = "part11.html#125"NIL>Time Units and Resolution</a>
-<li><a href = "part11.html#126"NIL>Multiple Notes Per Line</a>
-<li><a href = "part11.html#127"NIL>Control Change Commands</a>
-<li><a href = "part11.html#128"NIL>Multiple Tempi</a>
-<li><a href = "part11.html#129"NIL>MIDI Synchronization</a>
-<li><a href = "part11.html#130"NIL>System Exclusive Messages</a>
-<li><a href = "part11.html#131"NIL>Control Ramps</a>
-<li><a href = "part11.html#132"NIL>The !End Command</a>
-<li><a href = "part11.html#133"NIL>Calling C Routines</a>
-<li><a href = "part11.html#134"NIL>Setting C Variables</a>
+<li><a href = "part8.html#95"NIL>Creating Sounds</a>
+<li><a href = "part8.html#96"NIL>Signal Operations</a>
+<li><a href = "part8.html#97"NIL>Filters</a>
+<li><a href = "part8.html#98"NIL>Table-Lookup Oscillator Functions</a>
+<li><a href = "part8.html#99"NIL>Physical Model Functions</a>
+<li><a href = "part8.html#100"NIL>Sequence Support Functions</a>
 </ul>
 </ul>
-<li><a href = "part12.html#135"NIL>Linear Prediction Analysis and Synthesis</a>
+<li><a href = "part9.html#101"NIL>Nyquist Globals</a>
+<li><a href = "part10.html#102"NIL>Time/Frequency Transformation</a>
+<li><a href = "part11.html#103"NIL>MIDI, Adagio, and Sequences</a>
 <ul>
-<li><a href = "part12.html#136"NIL>LPC Classes and Functions</a>
-<li><a href = "part12.html#137"NIL>Low-level LPC Functions</a>
+<li><a href = "part11.html#104"NIL>Specifying Attributes</a>
+<ul>
+<li><a href = "part11.html#105"NIL>Time</a>
+<li><a href = "part11.html#106"NIL>Pitch</a>
+<li><a href = "part11.html#107"NIL>Duration</a>
+<li><a href = "part11.html#108"NIL>Next Time</a>
+<li><a href = "part11.html#109"NIL>Rest</a>
+<li><a href = "part11.html#110"NIL>Articulation</a>
+<li><a href = "part11.html#111"NIL>Loudness</a>
+<li><a href = "part11.html#112"NIL>Voice</a>
+<li><a href = "part11.html#113"NIL>Timbre (MIDI Program)</a>
+<li><a href = "part11.html#114"NIL>Tempo</a>
+<li><a href = "part11.html#115"NIL>Rate</a>
 </ul>
-<li><a href = "part13.html#138"NIL>Developing and Debugging in Nyquist</a>
+<li><a href = "part11.html#116"NIL>Default Attributes</a>
+<li><a href = "part11.html#117"NIL>Examples</a>
+<li><a href = "part11.html#118"NIL>Advanced Features</a>
 <ul>
-<li><a href = "part13.html#139"NIL>Debugging</a>
-<li><a href = "part13.html#140"NIL>Useful Functions</a>
-</ul>
-<li><a href = "part14.html#141"NIL>Xmusic and Algorithmic Composition</a>
-<ul>
-<li><a href = "part14.html#142"NIL>Xmusic Basics</a>
-<li><a href = "part14.html#143"NIL>Pattern Classes</a>
-<ul>
-<li><a href = "part14.html#144"NIL>cycle</a>
-<li><a href = "part14.html#145"NIL>line</a>
-<li><a href = "part14.html#146"NIL>random</a>
-<li><a href = "part14.html#147"NIL>palindrome</a>
-<li><a href = "part14.html#148"NIL>heap</a>
-<li><a href = "part14.html#149"NIL>accumulation</a>
-<li><a href = "part14.html#150"NIL>copier</a>
-<li><a href = "part14.html#151"NIL>accumulate</a>
-<li><a href = "part14.html#152"NIL>sum</a>
-<li><a href = "part14.html#153"NIL>product</a>
-<li><a href = "part14.html#154"NIL>eval</a>
-<li><a href = "part14.html#155"NIL>length</a>
-<li><a href = "part14.html#156"NIL>window</a>
-<li><a href = "part14.html#157"NIL>markov</a>
-</ul>
-<li><a href = "part14.html#158"NIL>Random Number Generators</a>
-<li><a href = "part14.html#159"NIL>Score Generation and Manipulation</a>
-<ul>
-<li><a href = "part14.html#160"NIL>Keyword Parameters</a>
-<li><a href = "part14.html#161"NIL>Using score-gen</a>
-<li><a href = "part14.html#162"NIL>Score Manipulation</a>
-<li><a href = "part14.html#163"NIL>Xmusic and Standard MIDI Files</a>
-<li><a href = "part14.html#164"NIL>Workspaces</a>
-<li><a href = "part14.html#165"NIL>Utility Functions</a>
+<li><a href = "part11.html#119"NIL>Time Units and Resolution</a>
+<li><a href = "part11.html#120"NIL>Multiple Notes Per Line</a>
+<li><a href = "part11.html#121"NIL>Control Change Commands</a>
+<li><a href = "part11.html#122"NIL>Multiple Tempi</a>
+<li><a href = "part11.html#123"NIL>MIDI Synchronization</a>
+<li><a href = "part11.html#124"NIL>System Exclusive Messages</a>
+<li><a href = "part11.html#125"NIL>Control Ramps</a>
+<li><a href = "part11.html#126"NIL>The !End Command</a>
+<li><a href = "part11.html#127"NIL>Calling C Routines</a>
+<li><a href = "part11.html#128"NIL>Setting C Variables</a>
 </ul>
 </ul>
-<li><a href = "part15.html#166"NIL>Nyquist Libraries</a>
+<li><a href = "part12.html#129"NIL>Linear Prediction Analysis and Synthesis</a>
 <ul>
-<li><a href = "part15.html#167"NIL>Piano Synthesizer</a>
-<li><a href = "part15.html#168"NIL>Dymanics Compression</a>
-<li><a href = "part15.html#169"NIL>Clipping Softener</a>
-<li><a href = "part15.html#170"NIL>Graphical Equalizer</a>
-<li><a href = "part15.html#171"NIL>Sound Reversal</a>
-<li><a href = "part15.html#172"NIL>Time Delay Functions</a>
-<li><a href = "part15.html#173"NIL>Multiple Band Effects</a>
-<li><a href = "part15.html#174"NIL>Granular Synthesis</a>
-<li><a href = "part15.html#175"NIL>MIDI Utilities</a>
-<li><a href = "part15.html#176"NIL>Reverberation</a>
-<li><a href = "part15.html#177"NIL>DTMF Encoding</a>
-<li><a href = "part15.html#178"NIL>Dolby Surround(R), Stereo and Spatialization Effects</a>
-<li><a href = "part15.html#179"NIL>Drum Machine</a>
-<li><a href = "part15.html#180"NIL>Minimoog-inspired Synthesis</a>
+<li><a href = "part12.html#130"NIL>LPC Classes and Functions</a>
+<li><a href = "part12.html#131"NIL>Low-level LPC Functions</a>
+</ul>
+<li><a href = "part13.html#132"NIL>Developing and Debugging in Nyquist</a>
 <ul>
-<li><a href = "part15.html#181"NIL>Oscillator Parameters</a>
-<li><a href = "part15.html#182"NIL>Noise Parameters</a>
-<li><a href = "part15.html#183"NIL>Filter Parameters</a>
-<li><a href = "part15.html#184"NIL>Amplitude Parameters</a>
-<li><a href = "part15.html#185"NIL>Other Parameters</a>
-<li><a href = "part15.html#186"NIL>Input Format</a>
-<li><a href = "part15.html#187"NIL>Sample Code/Sounds</a>
+<li><a href = "part13.html#133"NIL>Debugging</a>
+<li><a href = "part13.html#134"NIL>Useful Functions</a>
+</ul>
+<li><a href = "part14.html#135"NIL>Xmusic and Algorithmic Composition</a>
+<ul>
+<li><a href = "part14.html#136"NIL>Xmusic Basics</a>
+<li><a href = "part14.html#137"NIL>Pattern Classes</a>
+<ul>
+<li><a href = "part14.html#138"NIL>cycle</a>
+<li><a href = "part14.html#139"NIL>line</a>
+<li><a href = "part14.html#140"NIL>random</a>
+<li><a href = "part14.html#141"NIL>palindrome</a>
+<li><a href = "part14.html#142"NIL>heap</a>
+<li><a href = "part14.html#143"NIL>accumulation</a>
+<li><a href = "part14.html#144"NIL>copier</a>
+<li><a href = "part14.html#145"NIL>accumulate</a>
+<li><a href = "part14.html#146"NIL>sum</a>
+<li><a href = "part14.html#147"NIL>product</a>
+<li><a href = "part14.html#148"NIL>eval</a>
+<li><a href = "part14.html#149"NIL>length</a>
+<li><a href = "part14.html#150"NIL>window</a>
+<li><a href = "part14.html#151"NIL>markov</a>
+</ul>
+<li><a href = "part14.html#152"NIL>Random Number Generators</a>
+<li><a href = "part14.html#153"NIL>Score Generation and Manipulation</a>
+<ul>
+<li><a href = "part14.html#154"NIL>Keyword Parameters</a>
+<li><a href = "part14.html#155"NIL>Using score-gen</a>
+<li><a href = "part14.html#156"NIL>Score Manipulation</a>
+<li><a href = "part14.html#157"NIL>Xmusic and Standard MIDI Files</a>
+<li><a href = "part14.html#158"NIL>Workspaces</a>
+<li><a href = "part14.html#159"NIL>Utility Functions</a>
 </ul>
 </ul>
-<li><a href = "part16.html#188"NIL>Appendix 1: Extending Nyquist</a>
+<li><a href = "part15.html#160"NIL>Nyquist Libraries</a>
 <ul>
-<li><a href = "part16.html#189"NIL>Translating Descriptions to C Code</a>
-<li><a href = "part16.html#190"NIL>Rebuilding Nyquist</a>
-<li><a href = "part16.html#191"NIL>Accessing the New Function</a>
-<li><a href = "part16.html#192"NIL>Why Translation?</a>
-<li><a href = "part16.html#193"NIL>Writing a .alg File</a>
-<li><a href = "part16.html#194"NIL>Attributes</a>
-<li><a href = "part16.html#195"NIL>Generated Names</a>
-<li><a href = "part16.html#196"NIL>Scalar Arguments</a>
+<li><a href = "part15.html#161"NIL>Piano Synthesizer</a>
+<li><a href = "part15.html#162"NIL>Dymanics Compression</a>
+<li><a href = "part15.html#163"NIL>Clipping Softener</a>
+<li><a href = "part15.html#164"NIL>Graphical Equalizer</a>
+<li><a href = "part15.html#165"NIL>Sound Reversal</a>
+<li><a href = "part15.html#166"NIL>Time Delay Functions</a>
+<li><a href = "part15.html#167"NIL>Multiple Band Effects</a>
+<li><a href = "part15.html#168"NIL>Granular Synthesis</a>
+<li><a href = "part15.html#169"NIL>MIDI Utilities</a>
+<li><a href = "part15.html#170"NIL>Reverberation</a>
+<li><a href = "part15.html#171"NIL>DTMF Encoding</a>
+<li><a href = "part15.html#172"NIL>Dolby Surround(R), Stereo and Spatialization Effects</a>
+<li><a href = "part15.html#173"NIL>Drum Machine</a>
+<li><a href = "part15.html#174"NIL>Minimoog-inspired Synthesis</a>
+<ul>
+<li><a href = "part15.html#175"NIL>Oscillator Parameters</a>
+<li><a href = "part15.html#176"NIL>Noise Parameters</a>
+<li><a href = "part15.html#177"NIL>Filter Parameters</a>
+<li><a href = "part15.html#178"NIL>Amplitude Parameters</a>
+<li><a href = "part15.html#179"NIL>Other Parameters</a>
+<li><a href = "part15.html#180"NIL>Input Format</a>
+<li><a href = "part15.html#181"NIL>Sample Code/Sounds</a>
 </ul>
-<li><a href = "part17.html#197"NIL>Appendix 2: Open Sound Control and Nyquist</a>
-<ul>
-<li><a href = "part17.html#198"NIL>Sending Open Sound Control Messages</a>
-<li><a href = "part17.html#199"NIL>The ser-to-osc Program</a>
 </ul>
-<li><a href = "part18.html#200"NIL>Appendix 3: Intgen</a>
+<li><a href = "part16.html#182"NIL>Appendix 1: Extending Nyquist</a>
 <ul>
-<li><a href = "part18.html#202"NIL>Header file format</a>
-<ul>
-<li><a href = "part18.html#201"NIL>Extending Xlisp</a>
+<li><a href = "part16.html#183"NIL>Translating Descriptions to C Code</a>
+<li><a href = "part16.html#184"NIL>Rebuilding Nyquist</a>
+<li><a href = "part16.html#185"NIL>Accessing the New Function</a>
+<li><a href = "part16.html#186"NIL>Why Translation?</a>
+<li><a href = "part16.html#187"NIL>Writing a .alg File</a>
+<li><a href = "part16.html#188"NIL>Attributes</a>
+<li><a href = "part16.html#189"NIL>Generated Names</a>
+<li><a href = "part16.html#190"NIL>Scalar Arguments</a>
 </ul>
-<li><a href = "part18.html#203"NIL>Using #define'd macros</a>
-<li><a href = "part18.html#204"NIL>Lisp Include Files</a>
-<li><a href = "part18.html#205"NIL>Example</a>
-<li><a href = "part18.html#206"NIL>More Details</a>
+<li><a href = "part17.html#191"NIL>Appendix 2: Open Sound Control and Nyquist</a>
+<ul>
+<li><a href = "part17.html#192"NIL>Sending Open Sound Control Messages</a>
+<li><a href = "part17.html#193"NIL>The ser-to-osc Program</a>
 </ul>
-<li><a href = "part19.html#207"NIL>Appendix 4: XLISP: An Object-oriented Lisp</a>
+<li><a href = "part18.html#194"NIL>Appendix 3: Intgen</a>
 <ul>
-<li><a href = "part19.html#208"NIL>Introduction</a>
-<li><a href = "part19.html#209"NIL>A Note From The Author</a>
-<li><a href = "part19.html#210"NIL>XLISP Command Loop</a>
-<li><a href = "part19.html#211"NIL>Special Characters</a>
-<li><a href = "part19.html#212"NIL>Break Command Loop</a>
-<li><a href = "part19.html#213"NIL>Data Types</a>
-<li><a href = "part19.html#214"NIL>The Evaluator</a>
-<li><a href = "part19.html#215"NIL>Lexical Conventions</a>
-<li><a href = "part19.html#216"NIL>Readtables</a>
-<li><a href = "part19.html#217"NIL>Lambda Lists</a>
-<li><a href = "part19.html#218"NIL>Objects</a>
-<li><a href = "part19.html#219"NIL>The "Object" Class</a>
-<li><a href = "part19.html#220"NIL>The "Class" Class</a>
-<li><a href = "part19.html#221"NIL>Profiling</a>
-<li><a href = "part19.html#222"NIL>Symbols</a>
-<li><a href = "part19.html#223"NIL>Evaluation Functions</a>
-<li><a href = "part19.html#224"NIL>Symbol Functions</a>
-<li><a href = "part19.html#225"NIL>Property List Functions</a>
-<li><a href = "part19.html#226"NIL>Array Functions</a>
-<li><a href = "part19.html#227"NIL>List Functions</a>
-<li><a href = "part19.html#228"NIL>Destructive List Functions</a>
-<li><a href = "part19.html#229"NIL>Predicate Functions</a>
-<li><a href = "part19.html#230"NIL>Control Constructs</a>
-<li><a href = "part19.html#231"NIL>Looping Constructs</a>
-<li><a href = "part19.html#232"NIL>The Program Feature</a>
-<li><a href = "part19.html#233"NIL>Debugging and Error Handling</a>
-<li><a href = "part19.html#234"NIL>Arithmetic Functions</a>
-<li><a href = "part19.html#235"NIL>Bitwise Logical Functions</a>
-<li><a href = "part19.html#236"NIL>String Functions</a>
-<li><a href = "part19.html#237"NIL>Character Functions</a>
-<li><a href = "part19.html#238"NIL>Input/Output Functions</a>
-<li><a href = "part19.html#239"NIL>The Format Function</a>
-<li><a href = "part19.html#240"NIL>File I/O Functions</a>
-<li><a href = "part19.html#241"NIL>String Stream Functions</a>
-<li><a href = "part19.html#242"NIL>System Functions</a>
-<li><a href = "part19.html#243"NIL>File I/O Functions</a>
+<li><a href = "part18.html#196"NIL>Header file format</a>
 <ul>
-<li><a href = "part19.html#244"NIL>Input from a File</a>
-<li><a href = "part19.html#245"NIL>Output to a File</a>
-<li><a href = "part19.html#246"NIL>A Slightly More Complicated File Example</a>
+<li><a href = "part18.html#195"NIL>Extending Xlisp</a>
+</ul>
+<li><a href = "part18.html#197"NIL>Using #define'd macros</a>
+<li><a href = "part18.html#198"NIL>Lisp Include Files</a>
+<li><a href = "part18.html#199"NIL>Example</a>
+<li><a href = "part18.html#200"NIL>More Details</a>
+</ul>
+<li><a href = "part19.html#201"NIL>Appendix 4: XLISP: An Object-oriented Lisp</a>
+<ul>
+<li><a href = "part19.html#202"NIL>Introduction</a>
+<li><a href = "part19.html#203"NIL>A Note From The Author</a>
+<li><a href = "part19.html#204"NIL>XLISP Command Loop</a>
+<li><a href = "part19.html#205"NIL>Special Characters</a>
+<li><a href = "part19.html#206"NIL>Break Command Loop</a>
+<li><a href = "part19.html#207"NIL>Data Types</a>
+<li><a href = "part19.html#208"NIL>The Evaluator</a>
+<li><a href = "part19.html#209"NIL>Lexical Conventions</a>
+<li><a href = "part19.html#210"NIL>Readtables</a>
+<li><a href = "part19.html#211"NIL>Lambda Lists</a>
+<li><a href = "part19.html#212"NIL>Objects</a>
+<li><a href = "part19.html#213"NIL>The "Object" Class</a>
+<li><a href = "part19.html#214"NIL>The "Class" Class</a>
+<li><a href = "part19.html#215"NIL>Profiling</a>
+<li><a href = "part19.html#216"NIL>Symbols</a>
+<li><a href = "part19.html#217"NIL>Evaluation Functions</a>
+<li><a href = "part19.html#218"NIL>Symbol Functions</a>
+<li><a href = "part19.html#219"NIL>Property List Functions</a>
+<li><a href = "part19.html#220"NIL>Array Functions</a>
+<li><a href = "part19.html#221"NIL>List Functions</a>
+<li><a href = "part19.html#222"NIL>Destructive List Functions</a>
+<li><a href = "part19.html#223"NIL>Predicate Functions</a>
+<li><a href = "part19.html#224"NIL>Control Constructs</a>
+<li><a href = "part19.html#225"NIL>Looping Constructs</a>
+<li><a href = "part19.html#226"NIL>The Program Feature</a>
+<li><a href = "part19.html#227"NIL>Debugging and Error Handling</a>
+<li><a href = "part19.html#228"NIL>Arithmetic Functions</a>
+<li><a href = "part19.html#229"NIL>Bitwise Logical Functions</a>
+<li><a href = "part19.html#230"NIL>String Functions</a>
+<li><a href = "part19.html#231"NIL>Character Functions</a>
+<li><a href = "part19.html#232"NIL>Input/Output Functions</a>
+<li><a href = "part19.html#233"NIL>The Format Function</a>
+<li><a href = "part19.html#234"NIL>File I/O Functions</a>
+<li><a href = "part19.html#235"NIL>String Stream Functions</a>
+<li><a href = "part19.html#236"NIL>System Functions</a>
+<li><a href = "part19.html#237"NIL>File I/O Functions</a>
+<ul>
+<li><a href = "part19.html#238"NIL>Input from a File</a>
+<li><a href = "part19.html#239"NIL>Output to a File</a>
+<li><a href = "part19.html#240"NIL>A Slightly More Complicated File Example</a>
 </ul>
 </ul>
 </ul>
