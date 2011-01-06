@@ -4920,9 +4920,9 @@ sound file with a header (not a raw sound file).
 @altdef{@code[(soundfilename @i(name))] @c{[lisp]}}@\Converts a string @i(name) to a soundfile name.  If @i(name) begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from @code(*default-sf-dir*) is prepended to @i(name).  The @code(s-plot), @code(s-read), and @code(s-save) functions all use @code(soundfilename) translate filenames.
 
 @codef{s-plot(@pragma(defn)@index(s-plot)@i(sound) 
- [, @i(n), @i(dur)])} @c{[sal]}@*
+ [, @i(dur), @i(n)])} @c{[sal]}@*
 @altdef{@code{(s-plot @i(sound) 
- [@i(n) @i(dur)])} @c{[lisp]}}@\Plots sound in a window.  This function was designed to run a @code(plot) program on a Unix workstation, but now is
+ [@i(dur) @i(n)])} @c{[lisp]}}@\Plots sound in a window.  This function was designed to run a @code(plot) program on a Unix workstation, but now is
 primarily used with @code(NyquistIDE), which has self-contained plotting. Normally,
 time/value pairs in ascii are written to @code(points.dat) and system-dependent code
 (or the @code(NyquistIDE) program) takes it from there. If the @i(sound) is 
@@ -4930,10 +4930,9 @@ longer than the optional @i(dur) (default is 2 seconds), only the
 first @i(dur) seconds are plotted. 
 If there are more than @i(n) samples to be plotted, the signal is interpolated
 to have @i(n) samples before plotting.
-The data file used is:
-@begin(description, leftmargin +2 in, indent -2 in)
+The data file used is @code(*default-plot-file*):
+
 @codef(*default-plot-file*)@pragma(defn)@index(*default-plot-file*)@\The file containing the data points, defaults to "points.dat".
-@end(description)
 
 @codef{s-print-tree(@pragma(defn)@index(s-print-tree)@index(snd-print-tree)@i(sound))} @c{[sal]}@*
 @altdef{@code[(s-print-tree @i(sound))] @c{[lisp]}}@\Prints an ascii
