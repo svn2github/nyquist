@@ -21,7 +21,7 @@ Edit runtime/nyinit.lsp to contain correct version number.
 Edit documentation to contain correct version number.
 
 Is documentation current and installed?
-[Update and Commit via CVS]
+[Update and Commit via SVN]
 
 To rebuild documentation:
     cd docsrc
@@ -34,16 +34,14 @@ To rebuild documentation:
     copy nyquistman.pdf to doc
     copy nyqman.txt to doc
     cd docsrc/s2h
-    nyquist
+    ny
     (load "$system-dir$/system.lsp") -- use the appropriate one
-    (load "s2h")
-    (load "citations")
-    (load "do-nyquist-manual")
-    (load "do-nyquist-manual") -- 2nd time to get cross-references
+    (load "s2h") -- will load citations.lsp
+    (load "do-nyquist-manual") -- runs s2h 2x to get cross-references
     (exit)
     mv doc/NyquistWords.txt to jnyqide/NyquistWords.txt
 
-CVS commit -- documentation?
+SVN commit -- documentation?
 
 ON WINDOWS AND MAC
 

@@ -162,19 +162,31 @@ sequentially from <i>sound</i>. This returns a <code>FLONUM</code> after each ca
 <dt><code>snd-fetch-array(<a name="index257"><i>sound</i>, <i>len</i>,
 <i>step</i>)</code> [SAL]<br>
 
-<code>(snd-fetch-array <i>sound</i> <i>len</i> <i>step</i>)</code> [LISP]<dd>Reads sequential arrays of samples from <i>sound</i>, returning
-either an array of <code>FLONUM</code>s or <code>NIL</code> when the sound terminates. The
-<i>len</i> parameter, a <code>FIXNUM</code>, indicates how many samples should be returned
-in the result array.  After the array is returned, <i>sound</i> is modified by
-skipping over <i>step</i> (a <code>FIXNUM</code>) samples. If <i>step</i> equals <i>len</i>, then
-every sample is returned once.  If <i>step</i> is less than <i>len</i>, each
-returned array will overlap the previous one, so some samples will be
-returned more than once. If <i>step</i> is greater than <i>len</i>, then some
-samples will be skipped and not returned in any array. The <i>step</i> 
-and <i>len</i> may change at each call, but in the current implementation, an
-internal buffer is allocated for <i>sound</i> on the first call, so subsequent
-calls may not specify a greater <i>len</i> than the first. <b><i>Note:</i></b>
-<code>snd-fetch-array</code> modifies
+<code>(snd-fetch-array <i>sound</i> <i>len</i> <i>step</i>)</code>
+[LISP]<dd>Reads 
+sequential arrays of samples from <i>sound</i>, returning either an array
+of <code>FLONUM</code>s or <code>NIL</code> when the sound terminates. The <i>len</i>
+parameter, a <code>FIXNUM</code>, indicates how many samples should be
+returned in the result array.  After the array is returned, <i>sound</i>
+is modified by skipping over <i>step</i> (a <code>FIXNUM</code>) samples. If
+<i>step</i> equals <i>len</i>, then every sample is returned once.  If
+<i>step</i> is less than <i>len</i>, each returned array will overlap the
+previous one, so some samples will be returned more than once. If
+<i>step</i> is greater than <i>len</i>, then some samples will be skipped
+and not returned in any array. The <i>step</i> and <i>len</i> may change at
+each call, but in the current implementation, an internal buffer is
+allocated for <i>sound</i> on the first call, so subsequent calls may not
+specify a greater <i>len</i> than the first. When an array is returned,
+it will have <i>len</i> samples. If necessary, <code>snd-fetch-array</code>
+will read zeros beyond the end of the sound to fill the array. When
+this happens, <code>*rslt*</code> is set to a FIXNUM number of samples in
+the array that were read from the sound before the physical stop time 
+of the sound. If all samples in the array are "valid" samples from
+the sound (coming from the sound before the sound
+terminates), <code>*rslt*</code> is set to <code>NIL</code>. The <code>*rslt*</code>
+variable is global and used to return extra results from other
+functions, so programs should not assume <code>*rslt*</code> is valid after
+subsequent function calls. <b><i>Note:</i></b> <code>snd-fetch-array</code> modifies
 <i>sound</i>; it is strongly recommended to copy <i>sound</i> using
 <code>snd-copy</code> and access only the copy with <code>snd-fetch-array</code>.<br><br>
 <dt><code>snd-flatten(<a name="index258"><i>sound</i>, <i>maxlen</i>)</code> [SAL]<br>
@@ -1921,10 +1933,10 @@ sound file with a header (not a raw sound file).<br><br>
 
 <code>(soundfilename <i>name</i>)</code> [LISP]<dd>Converts a string <i>name</i> to a soundfile name.  If <i>name</i> begins with "." or "/", the name is returned without alteration.  Otherwise,  a path taken from <code>*default-sf-dir*</code> is prepended to <i>name</i>.  The <code>s-plot</code>, <code>s-read</code>, and <code>s-save</code> functions all use <code>soundfilename</code> translate filenames.<br><br>
 <dt><code>s-plot(<a name="index623"><i>sound</i> 
- [, <i>n</i>, <i>dur</i>])</code> [SAL]<br>
+ [, <i>dur</i>, <i>n</i>])</code> [SAL]<br>
 
 <code>(s-plot <i>sound</i> 
- [<i>n</i> <i>dur</i>])</code> [LISP]<dd>Plots sound in a window.  This function was designed to run a <code>plot</code> program on a Unix workstation, but now is
+ [<i>dur</i> <i>n</i>])</code> [LISP]<dd>Plots sound in a window.  This function was designed to run a <code>plot</code> program on a Unix workstation, but now is
 primarily used with <code>NyquistIDE</code>, which has self-contained plotting. Normally,
 time/value pairs in ascii are written to <code>points.dat</code> and system-dependent code
 (or the <code>NyquistIDE</code> program) takes it from there. If the <i>sound</i> is 
@@ -1932,11 +1944,8 @@ longer than the optional <i>dur</i> (default is 2 seconds), only the
 first <i>dur</i> seconds are plotted. 
 If there are more than <i>n</i> samples to be plotted, the signal is interpolated
 to have <i>n</i> samples before plotting.
-The data file used is:
-<dl>
-<dt>
-<code>*default-plot-file*</code><a name="index624"><dd>The file containing the data points, defaults to "points.dat".
-</dl><br><br>
+The data file used is <code>*default-plot-file*</code>:<br><br>
+<dt><code>*default-plot-file*</code><a name="index624"><dd>The file containing the data points, defaults to "points.dat".<br><br>
 <dt><code>s-print-tree(<a name="index625"><a name="index626"><i>sound</i>)</code> [SAL]<br>
 
 <code>(s-print-tree <i>sound</i>)</code> [LISP]<dd>Prints an ascii
