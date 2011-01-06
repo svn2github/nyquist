@@ -8,6 +8,7 @@ Nyquist functions are written by a special translator.  If you try to write
 a new function by hand, you will probably not succeed, and even if you do,
 you will waste a great deal of time.  (End of Warning.)
 
+
 @section(Translating Descriptions to C Code)
 
 The translator code used to extend Nyquist resides in the @code(trnsrc)
@@ -106,6 +107,16 @@ the @code(.alg) file is the inner loop which is the heart of the signal
 processing code.
 
 @section(Writing a .alg File)
+@p(WARNING:) Translation relies heavily on string substitution, which
+is fragile. In particular, variables with names that are substrings of
+other variables will cause problems. For example if you declare STATE
+variables "phase" and "iphase", then the translator will globally
+substitute "phase_reg" for "phase", converting "phase" to "phase_reg"
+and iphase" to "iphase_reg". Then it will substitute "iphase_reg" for
+iphase" which will convert the existing "iphase_reg" to
+"iphase_reg_reg". This will be confusing and will not compile.
+(End of WARNING)
+
 To give you some idea how functions are specified, here is the
 specification for @code(snd-prod), which generates over 250 lines of C code:
 @begin(example)

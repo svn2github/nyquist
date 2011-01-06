@@ -1,12 +1,27 @@
 README.txt -- Nyquist information for Unix systems
 
-Unix Installation)
+Unix Installation
 ------------------
 For Unix systems, Nyquist is distributed as a compressed file of
 sources named nyqsrc3<nn>.zip, where <nn> is the version number
 (e.g. v3.01 was in nyqsrc301.zip).  To install Nyquist, copy
 nyqsrc3<nn>.zip) to the directory on your machine where you would
-like to install Nyquist, and type:
+like to install Nyquist.
+
+Note 1: you will need the "normal tool chain" consisting of the Gnu
+C/C++ compiler, linker, C/C++ runtime libraries, autoconf, libtool,
+automake, etc. Most linux installations already have this, but some 
+more recent trimmed-down installations for netbooks and
+consumer-oriented computers do not have compilers installed by
+default.
+
+Note 2: Nyquist also assumes you have ALSA, the Linux audio system.
+This has also become standard, but your machine might not have the
+ALSA development package (probably named libasound2-dev), so you 
+might have to install it. If you find you are missing "asound", you
+are missing and need to install the ALSA developmnent package.
+
+After unzipping sources, type:
 
     gunzip nyqsrc3<nn>.zip
     cd nyquist

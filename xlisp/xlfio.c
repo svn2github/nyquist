@@ -19,13 +19,13 @@
 /* do some sanity checking: */
 #ifndef XL_BIG_ENDIAN
 #ifndef XL_LITTLE_ENDIAN
-configuration error -- either XL_BIG_ or XL_LITTLE_ENDIAN must be defined
+#error configuration error -- either XL_BIG_ or XL_LITTLE_ENDIAN must be defined
 in xlisp.h
 #endif
 #endif
 #ifdef XL_BIG_ENDIAN
 #ifdef XL_LITTLE_ENDIAN
-configuration error -- both XL_BIG_ and XL_LITTLE_ENDIAN are defined!
+#error configuration error -- both XL_BIG_ and XL_LITTLE_ENDIAN are defined!
 #endif
 #endif
 

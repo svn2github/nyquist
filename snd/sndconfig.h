@@ -62,7 +62,7 @@ void snd_free(void *a);
 #elif defined(IRIX)
   #include "sndirix.h"
 
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
   #include "sndfreebsd.h"
 
 #elif defined(_WIN32)

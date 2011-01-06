@@ -170,7 +170,7 @@ ErrorStruct SndfileErrors [] =
 
 	{	SFE_IRCAM_NO_MARKER		, "Error in IRCAM file, bad IRCAM marker." },
 	{	SFE_IRCAM_BAD_CHANNELS	, "Error in IRCAM file, bad channel count." },
-	{	SFE_IRCAM_UNKNOWN_FORMAT, "Error in IRCAM file, unknow encoding format." },
+	{	SFE_IRCAM_UNKNOWN_FORMAT, "Error in IRCAM file, unknown encoding format." },
 
 	{	SFE_W64_64_BIT			, "Error in W64 file, file contains 64 bit offset." },
 
@@ -2427,10 +2427,10 @@ psf_open_file (SF_PRIVATE *psf, int mode, SF_INFO *sfinfo)
 	{	if ((sfinfo->format & SF_FORMAT_TYPEMASK) == SF_FORMAT_RAW)
 		{	if (sf_format_check (sfinfo) == 0)
 				return SFE_RAW_BAD_FORMAT ;
-			}
+                }
 		else
 			memset (sfinfo, 0, sizeof (SF_INFO)) ;
-		} ;
+        } ;
 
 	sf_errno = error = 0 ;
 	sf_logbuffer [0] = 0 ;

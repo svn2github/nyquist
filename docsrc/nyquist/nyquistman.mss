@@ -3090,19 +3090,31 @@ sequentially from @i(sound). This returns a @code(FLONUM) after each call, or
 
 @codef[snd-fetch-array(@pragma(defn)@index(snd-fetch-array)@i(sound), @i(len),
 @i(step))] @c{[sal]}@*
-@altdef{@code[(snd-fetch-array @i(sound) @i(len) @i(step))] @c{[lisp]}}@\Reads sequential arrays of samples from @i(sound), returning
-either an array of @code(FLONUM)s or @code(NIL) when the sound terminates. The
-@i(len) parameter, a @code(FIXNUM), indicates how many samples should be returned
-in the result array.  After the array is returned, @i(sound) is modified by
-skipping over @i(step) (a @code(FIXNUM)) samples. If @i(step) equals @i(len), then
-every sample is returned once.  If @i(step) is less than @i(len), each
-returned array will overlap the previous one, so some samples will be
-returned more than once. If @i(step) is greater than @i(len), then some
-samples will be skipped and not returned in any array. The @i(step) 
-and @i(len) may change at each call, but in the current implementation, an
-internal buffer is allocated for @i(sound) on the first call, so subsequent
-calls may not specify a greater @i(len) than the first. @p(Note:)
-@code(snd-fetch-array) modifies
+@altdef{@code[(snd-fetch-array @i(sound) @i(len) @i(step))]
+@c{[lisp]}}@\Reads 
+sequential arrays of samples from @i(sound), returning either an array
+of @code(FLONUM)s or @code(NIL) when the sound terminates. The @i(len)
+parameter, a @code(FIXNUM), indicates how many samples should be
+returned in the result array.  After the array is returned, @i(sound)
+is modified by skipping over @i(step) (a @code(FIXNUM)) samples. If
+@i(step) equals @i(len), then every sample is returned once.  If
+@i(step) is less than @i(len), each returned array will overlap the
+previous one, so some samples will be returned more than once. If
+@i(step) is greater than @i(len), then some samples will be skipped
+and not returned in any array. The @i(step) and @i(len) may change at
+each call, but in the current implementation, an internal buffer is
+allocated for @i(sound) on the first call, so subsequent calls may not
+specify a greater @i(len) than the first. When an array is returned,
+it will have @i(len) samples. If necessary, @code(snd-fetch-array)
+will read zeros beyond the end of the sound to fill the array. When
+this happens, @code(*rslt*) is set to a FIXNUM number of samples in
+the array that were read from the sound before the physical stop time 
+of the sound. If all samples in the array are ``valid'' samples from
+the sound (coming from the sound before the sound
+terminates), @code(*rslt*) is set to @code(NIL). The @code(*rslt*)
+variable is global and used to return extra results from other
+functions, so programs should not assume @code(*rslt*) is valid after
+subsequent function calls. @p(Note:) @code(snd-fetch-array) modifies
 @i(sound); it is strongly recommended to copy @i(sound) using
 @code(snd-copy) and access only the copy with @code(snd-fetch-array).
 

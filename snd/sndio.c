@@ -20,7 +20,7 @@
 #ifdef WIN32
 #include <sys/stat.h>
 #include "io.h"
-#elif defined(__FreeBSD__) || defined(__APPLE__)
+#elif defined(__FreeBSD__) || defined(__APPLE__) || defined(__FreeBSD_kernel__)
 #include <sys/stat.h>
 #else
 #include <stat.h>

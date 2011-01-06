@@ -107,8 +107,15 @@ public class NyquistThread extends Thread {
                 myProcess = Runtime.getRuntime().exec( "./ny", envp );
             } catch (Exception e3) {
                 System.out.println("no ./ny found, trying ./nyquist");
-                myProcess = Runtime.getRuntime().exec("./nyquist", envp);
-                // if this one fails, we'll take the exception below
+                try {
+                    myProcess = Runtime.getRuntime().exec("./nyquist", envp);
+                } catch (Exception e3) {
+                    System.out.println("no ./nyquist found, trying ny");
+                    // try using PATH to find ny (for linux systems where
+                    // ny is installed)
+                    myProcess = Runtime.getRuntime().exec("ny", envp);
+                    // if this one fails, we'll take the exception below
+                }
             }
             System.out.print("myProcess: " + myProcess);
             

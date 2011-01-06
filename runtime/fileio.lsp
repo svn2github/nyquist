@@ -272,13 +272,16 @@
 (defun sound-on () (setf *soundenable* t))
 (defun sound-off () (setf *soundenable* nil))
 
+(defun coterm (snd1 snd2)
+  (multichan-expand #'snd-coterm snd1 snd2))
+
 (defmacro s-add-to (expr maxlen filename &optional (time-offset 0.0))
   `(let ((ny:fname (soundfilename ,filename))
          ny:peak ny:input (ny:offset ,time-offset))
     (format t "Adding sound to ~A at offset ~A~%" 
               ny:fname ,time-offset)
     (setf ny:peak (snd-overwrite '(let ((ny:addend ,expr))
-                                   (sum (snd-coterm
+                                   (sum (coterm
                                          (s-read ny:fname
                                           :time-offset ny:offset)
                                          ny:addend)
@@ -294,7 +297,7 @@
          ny:input ny:rslt ny:offset)
     (format t "Overwriting ~A at offset ~A~%" ny:fname ny:offset)
     (setf ny:offset (s-read-byte-offset ny:rslt))
-    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname time-offset
+    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ,time-offset
                    0, 0, 0, 0.0, 0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))

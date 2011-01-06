@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <cmath>
+#include <cstdio>
 
 using namespace Nyq;
 

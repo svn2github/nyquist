@@ -385,7 +385,7 @@ double sound_save(
             if (sndfile) {
                 /* use proper scale factor: 8000 vs 7FFF */
                 sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
-            }
+            } else xlabort("snd_save -- could not open file or bad parameters");
         }
         if (play)
             play = prepare_audio(play, &sf_info, &audio_stream);
@@ -513,6 +513,7 @@ double sound_overwrite(
         float *buf; // buffer for samples read in from sound file
         /* make sure all elements are of type a_sound */
         long i = getsize(result);
+        long channels = i;
         while (i > 0) {
             i--;
             if (!exttypep(getelement(result, i), a_sound)) {
@@ -520,7 +521,7 @@ double sound_overwrite(
                          result);
             }
         }
-        sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, i,
+        sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, channels,
                                  ROUND(getsound(getelement(result, 0))->sr),
                                  offset_secs, &buf);
 
