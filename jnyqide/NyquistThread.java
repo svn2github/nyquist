@@ -109,7 +109,7 @@ public class NyquistThread extends Thread {
                 System.out.println("no ./ny found, trying ./nyquist");
                 try {
                     myProcess = Runtime.getRuntime().exec("./nyquist", envp);
-                } catch (Exception e3) {
+                } catch (Exception e4) {
                     System.out.println("no ./nyquist found, trying ny");
                     // try using PATH to find ny (for linux systems where
                     // ny is installed)
