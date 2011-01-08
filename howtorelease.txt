@@ -55,16 +55,15 @@ Check for and delete editor backup files in:
 
 ON WINDOWS
 
-Run releasenyqide.bat to create release directory for nyqide_setup
-Run Setup Generator and select nyqide_setup
-Make sure Files:Source Directory is set to proper nyqrelide just
-created by releasenyqide.bat
-Click Make
+Run releasenyqide.bat to create release directory.
+Run Inno Setup 5/Inno Setup Compiler
+Select C:\Users\rbd\nyquist\sys\win\nyqrelide.iss
+Select Build:Compile
 
-rename setup/setupnyqiderun.exe to setup/setupnyqiderunNNN.exe, using
-the version number for NNN
+move sys\win\setup\setupnyqiderun.exe setupnyqiderunNNN.exe
+  , using the version number for NNN
 
-Visit https://frs.sourceforge.net/webupload and upload setup/setupnyqiderun.exe
+Visit https://frs.sourceforge.net/webupload and upload setupnyqiderun.exe
 
 copy the documentation from d:/rbd/nyquist to AFS, or
     scp /Volumes/rbd/nyquist/doc/* rbd@linux.gp.cs.cmu.edu:www/doc/nyquist/

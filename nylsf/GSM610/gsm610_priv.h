@@ -17,6 +17,10 @@
 #endif
 /* Added by Erik de Castro Lopo */
 
+#if defined(_MSC_VER) && _MSC_VER >= 1500 
+// Visual C++ 2008 or beyond
+#define inline __inline
+#endif
 
 
 typedef short				word;		/* 16 bit signed int	*/

@@ -93,12 +93,8 @@
             max_sample = -s; \
         }
 
-
-/* jlh Changed these to the <> format, so it will be sought for in the
-   include path */
-#include <portaudio.h>
-/* #include "exitpa.h" jlh obsolete? or windows only? PortAudio 2007
-                       has no such thing.  Is it PA 19 or PA 2.0??? */
+// should be looking for local portaudio
+#include "portaudio.h"
 
 long flush_count = 0; /* how many samples to write to finish */
 

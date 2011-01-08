@@ -18,7 +18,14 @@
 #define LO_ENDIAN_H
 
 #include <sys/types.h>
+
+#ifdef _MSC_VER
+#define inline __inline
+#define uint64_t unsigned __int64
+#define uint32_t unsigned __int32
+#else
 #include <stdint.h>
+#endif
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -100,7 +107,35 @@ static inline uint64_t lo_swap64(uint64_t x)
 
 /* Host to OSC and OSC to Host conversion macros */
 
-#if 0
+#if defined(__linux__) || defined(__GLIBC__)
+    #include <endian.h> // set __BYTE_ORDER
+#endif
+
+#ifndef __BIG_ENDIAN
+    #define __BIG_ENDIAN 4321
+    #define __LITTLE_ENDIAN 1234
+#endif
+
+#ifdef __APPLE__
+    #include <sys/types.h>
+    #if defined(__LITTLE_ENDIAN__)
+        #define __BYTE_ORDER __LITTLE_ENDIAN
+    #endif
+    #if defined(__BIG_ENDIAN)
+        #define __BYTE_ORDER __BIG_ENDIAN
+    #endif
+#endif
+
+#ifdef WIN32
+    #define __BYTE_ORDER __LITTLE_ENDIAN
+#endif
+
+#ifndef __BYTE_ORDER
+#error __BYTE_ORDER not defined
+#endif
+
+
+#if __BYTE_ORDER == __BIG_ENDIAN
 #define lo_htoo16(x) (x)
 #define lo_htoo32(x) (x)
 #define lo_htoo64(x) (x)
@@ -118,6 +153,12 @@ static inline uint64_t lo_swap64(uint64_t x)
 
 #ifdef __cplusplus
 }
+#endif
+
+#ifdef _MSC_VER
+#undef inline
+#undef uint64_t
+#undef uint32_t
 #endif
 
 #endif

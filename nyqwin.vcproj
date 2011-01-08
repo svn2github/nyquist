@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="nyqwin"
 	ProjectGUID="{19DEEB57-B0BB-476A-9960-CE360A884906}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -42,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\liblo;.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\sys\win\msvc;.\ffts;.\portaudio\pa_common;.\nyqstk;.\nyqstk\include;.\nylsf"
+				AdditionalIncludeDirectories=".\liblo;.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\sys\win\msvc;.\ffts;.\portaudio\include;.\nyqstk;.\nyqstk\include;.\nylsf;.\portaudio\src\common;.\ffts\src"
 				PreprocessorDefinitions="WINGUI;STDERR=stderr;WIN32;PA_NO_ASIO;PA_NO_DS"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
@@ -68,13 +69,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wsock32.lib winmm.lib"
+				AdditionalDependencies="wsock32.lib winmm.lib setupapi.lib ws2_32.lib"
 				OutputFile=".\NyqWinDebug/nyqwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\NyqWinDebug/nyqwin.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -96,9 +99,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -134,7 +134,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".\liblo;.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\sys\win\msvc;.\ffts\src;.\portaudio\pa_common;.\nyqstk;.\nyqstk\include;.\nylsf"
+				AdditionalIncludeDirectories=".\liblo;.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\sys\win\msvc;.\ffts;.\portaudio\include;.\nyqstk;.\nyqstk\include;.\nylsf;.\portaudio\src\common;.\ffts\src"
 				PreprocessorDefinitions="WINGUI;STDERR=stderr;WIN32;PA_NO_ASIO;PA_NO_DS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -160,12 +160,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wsock32.lib winmm.lib"
+				AdditionalDependencies="wsock32.lib winmm.lib setupapi.lib ws2_32.lib"
 				OutputFile=".\NyqWinRel/nyqwin.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\NyqWinRel/nyqwin.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -187,9 +189,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -268,10 +267,6 @@
 						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\liblo\address.c"
-				>
 			</File>
 			<File
 				RelativePath=".\nyqstk\src\ADSR.cpp"
@@ -570,10 +565,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\liblo\blob.c"
-				>
-			</File>
-			<File
 				RelativePath=".\nyqstk\src\Bowed.cpp"
 				>
 			</File>
@@ -583,10 +574,6 @@
 			</File>
 			<File
 				RelativePath=".\nylsf\broadcast.c"
-				>
-			</File>
-			<File
-				RelativePath=".\liblo\bundle.c"
 				>
 			</File>
 			<File
@@ -2038,14 +2025,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\liblo\message.c"
-				>
-			</File>
-			<File
-				RelativePath=".\liblo\method.c"
-				>
-			</File>
-			<File
 				RelativePath="cmt\midifile.c"
 				>
 				<FileConfiguration
@@ -2362,10 +2341,6 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\liblo\pattern_match.c"
-				>
 			</File>
 			<File
 				RelativePath=".\nylsf\pcm.c"
@@ -2780,10 +2755,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\liblo\send.c"
-				>
-			</File>
-			<File
 				RelativePath="cmt\seq.c"
 				>
 				<FileConfiguration
@@ -2958,10 +2929,6 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\liblo\server.c"
-				>
 			</File>
 			<File
 				RelativePath="tran\shape.c"
@@ -3450,10 +3417,6 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\liblo\timetag.c"
-				>
 			</File>
 			<File
 				RelativePath="tran\tone.c"
@@ -4835,290 +4798,176 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="portaudio-c"
+			Name="portaudio"
 			>
-			<File
-				RelativePath="portaudio\pa_common\pa_allocation.c"
+			<Filter
+				Name="src"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
+				<Filter
+					Name="common"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
+					<File
+						RelativePath=".\portaudio\src\common\pa_allocation.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_allocation.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_converters.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_converters.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_cpuload.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_cpuload.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_debugprint.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_debugprint.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_dither.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_dither.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_endianness.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_front.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_hostapi.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_process.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_process.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_ringbuffer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_skeleton.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_stream.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_stream.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_trace.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_trace.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_types.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\common\pa_util.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="hostapi"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_converters.c"
+					<File
+						RelativePath=".\portaudio\src\hostapi\wasapi\pa_win_wasapi.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\hostapi\wdmks\pa_win_wdmks.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\hostapi\wmme\pa_win_wmme.c"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="os-win"
+					>
+					<File
+						RelativePath=".\portaudio\src\os\win\pa_win_hostapis.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\os\win\pa_win_util.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\os\win\pa_win_waveformat.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\os\win\pa_win_wdmks_utils.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\os\win\pa_win_wdmks_utils.h"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\os\win\pa_x86_plain_converters.c"
+						>
+					</File>
+					<File
+						RelativePath=".\portaudio\src\os\win\pa_x86_plain_converters.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="include"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
+				<File
+					RelativePath=".\portaudio\include\pa_win_ds.h"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
+				</File>
+				<File
+					RelativePath=".\portaudio\include\pa_win_waveformat.h"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_cpuload.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
+				</File>
+				<File
+					RelativePath=".\portaudio\include\pa_win_wmme.h"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
+				</File>
+				<File
+					RelativePath=".\portaudio\include\portaudio.h"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_dither.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_front.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_process.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_skeleton.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_stream.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_win\pa_win_hostapis.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_win\pa_win_util.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="portaudio\pa_win_wmme\pa_win_wmme.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
-			Name="portaudio-h"
-			>
-			<File
-				RelativePath="portaudio\pa_common\pa_allocation.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_converters.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_cpuload.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_dither.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_process.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_stream.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\pa_util.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_win_wmme\pa_win_wmme.h"
-				>
-			</File>
-			<File
-				RelativePath="portaudio\pa_common\portaudio.h"
-				>
-			</File>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

@@ -223,20 +223,3 @@ todo - list of things to do (this may not be in the release)
 tran - descriptor (.alg) files for machine-translated Nyquist code
 xlisp - sources for Xlisp (these are linked into Nyquist)
 
-THE RUNTIME ONLY RELEASE
-========================
-The runtime-only release contains everything related to running
-Nyquist, but no source code. The files in this release are:
-    Readme.txt (this file)
-    nyquist.exe (located in the runtime directory)
-    runtime (directory)
-    lib (directory)
-    demos (directory)
-    test (directory)
-
-BUILDING UNDER LINUX
-====================
-in the nyquist directory:
-> ln -s sys/unix/linux/Makefile
-> make
-
