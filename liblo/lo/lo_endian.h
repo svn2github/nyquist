@@ -121,7 +121,7 @@ static inline uint64_t lo_swap64(uint64_t x)
     #if defined(__LITTLE_ENDIAN__)
         #define __BYTE_ORDER __LITTLE_ENDIAN
     #endif
-    #if defined(__BIG_ENDIAN)
+    #if defined(__BIG_ENDIAN__)
         #define __BYTE_ORDER __BIG_ENDIAN
     #endif
 #endif

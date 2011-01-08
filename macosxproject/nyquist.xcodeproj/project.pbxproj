@@ -362,6 +362,20 @@
 			remoteGlobalIDString = 3D3533810F0BD6CA0059CD05;
 			remoteInfo = libsndfile;
 		};
+		3D6C06C512D8FE6A0027E89B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D32216F0F53D4C300F074EF /* liblo */;
+			remoteInfo = liblo;
+		};
+		3D6C06D012D8FF430027E89B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D32216F0F53D4C300F074EF /* liblo */;
+			remoteInfo = liblo;
+		};
 		3D7327DB125BF99D009AAF15 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
@@ -1950,6 +1964,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3D6C06C612D8FE6A0027E89B /* PBXTargetDependency */,
 			);
 			name = "osc-test-client";
 			productName = "osc-test-client";
@@ -2055,6 +2070,7 @@
 			);
 			comments = "Serial input to OSC messages for Nyquist";
 			dependencies = (
+				3D6C06D112D8FF430027E89B /* PBXTargetDependency */,
 			);
 			name = "ser-to-osc";
 			productName = "ser-to-osc";
@@ -2524,6 +2540,16 @@
 			isa = PBXTargetDependency;
 			target = 3D3533810F0BD6CA0059CD05 /* libsndfile */;
 			targetProxy = 3D3533A40F0BD8A80059CD05 /* PBXContainerItemProxy */;
+		};
+		3D6C06C612D8FE6A0027E89B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D32216F0F53D4C300F074EF /* liblo */;
+			targetProxy = 3D6C06C512D8FE6A0027E89B /* PBXContainerItemProxy */;
+		};
+		3D6C06D112D8FF430027E89B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D32216F0F53D4C300F074EF /* liblo */;
+			targetProxy = 3D6C06D012D8FF430027E89B /* PBXContainerItemProxy */;
 		};
 		3D7327DC125BF99D009AAF15 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
