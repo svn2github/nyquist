@@ -3,7 +3,7 @@ README file for Nyquist Version 3.04
 Roger B. Dannenberg
 
 LICENSE: see license.txt
-WEB SITE: http://www.cs.cmu.edu/~rbd/nyquist.html
+WEB SITE: http://www.cs.cmu.edu/~music/nyquist
 
 INSTALLING NYQUIST
 ====================
