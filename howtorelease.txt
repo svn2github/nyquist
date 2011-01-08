@@ -71,7 +71,7 @@ copy the documentation from d:/rbd/nyquist to AFS, or
 FOR THE MAC
 
 build jNyqIDE project with xcode.
-source cmuinstallmac.sh
+source misc/cmu/cmuinstallmac.sh
 
 FOR PLIGHT DRUM MACHINE -- SHOULD NOT BE NECESSARY
 
