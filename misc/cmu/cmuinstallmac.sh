@@ -21,7 +21,7 @@ mv nyqosx*.tgz ~/nyquist
 cd ~/nyquist
 rm -rf nyquist
 mkdir nyquist
-svn export -DNOW nyquist
+svn export -r BASE . nyquist
 rm -rf nyquist/demos/plight
 zip -r "nyqsrc"$versionstring".zip" nyquist
 # THE FOLLOWING PUTS THE VERSION AT CMU, BUT NOW RELEASES GO TO SOURCEFORGE

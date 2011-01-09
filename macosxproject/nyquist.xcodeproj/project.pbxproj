@@ -366,14 +366,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3D32216F0F53D4C300F074EF /* liblo */;
+			remoteGlobalIDString = 3D32216F0F53D4C300F074EF;
 			remoteInfo = liblo;
 		};
 		3D6C06D012D8FF430027E89B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3D32216F0F53D4C300F074EF /* liblo */;
+			remoteGlobalIDString = 3D32216F0F53D4C300F074EF;
 			remoteInfo = liblo;
 		};
 		3D7327DB125BF99D009AAF15 /* PBXContainerItemProxy */ = {

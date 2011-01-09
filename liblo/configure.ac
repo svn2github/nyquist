@@ -67,9 +67,12 @@ AC_CHECK_FUNC([select], [AC_DEFINE(HAVE_SELECT, [1], [Define to 1 if select() is
 AC_CHECK_FUNC([poll], [AC_DEFINE(HAVE_POLL, [1], [Define to 1 if poll() is available.])])
 AC_CHECK_FUNC([inet_aton], [AC_DEFINE(HAVE_INET_ATON, [1], [Define to 1 if inet_aton() is available.])])
 
-AC_C_BIGENDIAN([LO_BIGENDIAN="1"], [LO_BIGENDIAN="0"])
-AC_DEFINE_UNQUOTED(LO_BIGENDIAN, "$LO_BIGENDIAN", [If machine is bigendian])
-AC_SUBST(LO_BIGENDIAN)
+# to make Windows compilation easier, lo/lo_endian.h uses conditional
+# compilation rather than configure to determine byte order
+
+#AC_C_BIGENDIAN([LO_BIGENDIAN="1"], [LO_BIGENDIAN="0"])
+#AC_DEFINE_UNQUOTED(LO_BIGENDIAN, "$LO_BIGENDIAN", [If machine is bigendian])
+#AC_SUBST(LO_BIGENDIAN)
 
 AC_CONFIG_FILES([
 	Makefile
@@ -77,7 +80,7 @@ AC_CONFIG_FILES([
 	src/tools/Makefile
 	examples/Makefile
 	lo/Makefile
-	lo/lo_endian.h
+#	lo/lo_endian.h
 	liblo.pc
 	doc/Makefile
 	doc/reference.doxygen
