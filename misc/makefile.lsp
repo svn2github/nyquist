@@ -367,7 +367,8 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 \t$(LN) liblo/test-client/test-client.o -o bin/test-client  $(LFLAGS)
 
 portaudio/Makefile:
-\tcd portaudio; ./configure
+\t# note: without-jack avoids 32/64-bit link error on Debian
+\tcd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack
 \t# sometimes, residual files cause problems
 \tcd portaudio; make clean
 
@@ -410,8 +411,8 @@ nyqsrc/seqfnintptrs.h: $(CMTHDRS) misc/intgen
 
 clean:
 \tcd misc; make clean
-\tcd liblo; make clean
-\tcd portaudio; make clean
+\tcd liblo; test -f Makefile && make clean || true
+\tcd portaudio; test -f Makefile && make clean || true
 \trm -f $(OBJECTS)
 # These could be deleted, but they're part of the release, so we won't
 # Note that these files are machine-generated:
@@ -662,14 +663,14 @@ LIBLO_PATH = liblo/src/.libs
 # to enable command line editing, use -DREADLINE. WARNING: THIS WILL 
 # DISABLE THE ABILITY TO INTERRUPT LISP AND USE SOME OTHER HANDY 
 # CONTROL CHARACTERS (You will also need the readline and curses libraries)
-CFLAGS = -DOSC -DCMTSTUFF -DPA_LITTLE_ENDIAN $(OPT) $(INCL) \\
+CFLAGS = -DOSC -DCMTSTUFF $(OPT) $(INCL) \\
     -DHAVE_LIBPTHREAD=1 -D_FILE_OFFSET_BITS=64 \\
     -DSTK_NYQUIST -DUSE_VSPRINTF \\
     -DHAVE_CONFIG_H
 LN = g++ -m32
 AR = ar
 # to enable command line editing, insert -lreadline -lcurses
-LFLAGS = $(LIBPA_PATH)/libportaudio.a -lm -lpthread -lasound -llo -L$(LIBLO_PATH)
+LFLAGS = $(LIBPA_PATH)/libportaudio.a -L$(LIBLO_PATH)/liblo.a -lm -lpthread -lrt
 
 TAGS:
 	find . \( -name "*.c" -o -name "*.h" \) -print | etags -
