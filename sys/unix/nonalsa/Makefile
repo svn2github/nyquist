@@ -1,5 +1,5 @@
 #
-# Makefile for Nyquist, SYSTEM-TYPE is LINUX
+# Makefile for Nyquist, SYSTEM-TYPE is NONALSA
 # run make in the top-level Nyquist directory to compile Nyquist
 #
 # NOTE: this file is machine-generated.  DO NOT EDIT!
@@ -55,7 +55,9 @@ INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Iffts/src \
    -Iportaudio/src/os/unix \
    -Iliblo -Inylsf
 
-# system dependent stuff for linux:
+# system dependent stuff for nonalsa:
+
+AUDIOLIBS =
 
 CC = gcc
 
@@ -73,7 +75,7 @@ CFLAGS = -DOSC -DCMTSTUFF $(OPT) $(INCL) \
 LN = g++ -m32
 AR = ar
 # to enable command line editing, insert -lreadline -lcurses
-LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a -lasound -lm -lpthread -lrt
+LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a $(AUDIOLIBS) -lm -lpthread -lrt
 
 TAGS:
 	find . ( -name 
@@ -299,7 +301,7 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 	$(LN) liblo/test-client/test-client.o -o bin/test-client  $(LFLAGS)
 
 portaudio/Makefile:
-	# note: without-jack avoids 32-bit/64-bit link error on Debian
+	# note: without-jack avoids 32/64-bit link error on Debian
 	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack
 	# sometimes, residual files cause problems
 	cd portaudio; make clean
@@ -312,11 +314,11 @@ $(NY): $(OBJECTS) $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a
 
 # copy appropriate system.lsp and make it read-only;
 # changes should be made to sys/unix/<system>/system.lsp
-runtime/system.lsp: sys/unix/linux/system.lsp
+runtime/system.lsp: sys/unix/nonalsa/system.lsp
 	# make sure it's there before you make it writeable
 	touch runtime/system.lsp
 	chmod +w runtime/system.lsp
-	cp -p sys/unix/linux/system.lsp runtime/system.lsp
+	cp -p sys/unix/nonalsa/system.lsp runtime/system.lsp
 	chmod -w runtime/system.lsp
 
 nyqsrc/sound.o: nyqsrc/sound.c nyqsrc/sound.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h

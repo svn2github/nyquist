@@ -1,12 +1,15 @@
 ;; makefile.lsp -- builds makefiles for various machine types
 
-(setf system-types '(rs6k next pmax sparc sgi linux))
+(setf old-system-types '(rs6k next pmax sparc sgi))
+(setf system-types '(alsa nonalsa))
 
 (if (not (boundp 'system-type)) (setf system-type nil))
 (if (not (boundp 'target-file)) (setf target-file "ny"))
 
 (format t "System types: ~A~%" system-types)
-(format t "(Only linux has been supported for a long time.)~%")
+(format t 
+  "The following types are not maintained but might get close: ~A~%"
+  old-system-types)
 (format t "Current type: ~A~%" system-type)
 (format t "Current target: ~A~%" target-file)
 (format t "~%Instructions: (run from top nyquist directory)~%")
@@ -63,18 +66,7 @@
 
 (setf stkfiles '("stkinit" "instr" "stkint"))
 
-(setf liblofiles '(
-"server" "timetag" "pattern_match"
-  "message" "send" "blob" "address" "bundle" "method"))
-
 (setf fftfiles '("fftext" "fftlib" "matlib"))
-
-;(setf pafiles '("src/common/pa_front" "src/os/unix/pa_unix_hostapis" 
-;                "src/hostapi/oss/pa_unix_oss" "src/os/unix/pa_unix_util"
-;                "src/common/pa_cpuload" "src/common/pa_allocation"
-;                "src/common/pa_stream" "src/common/pa_converters"
-;                "src/common/pa_process" "src/common/pa_dither"
-;                "src/common/pa_trace" "src/common/pa_debugprint"))
 
 ; note: audio<sys> and snd<sys> will be prepended to this list, e.g.
 ;   the strings "audiooss" and "sndlinux" will be added for linux systems
@@ -349,7 +341,7 @@ bin:
 \tmkdir bin
 
 liblo/Makefile:
-\tcd liblo; ./configure --enable-static --disable-shared
+\tcd liblo; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
 \t# sometimes, residual files cause problems
 \tcd liblo; make clean
 
@@ -491,11 +483,9 @@ backup: cleaner
                (add-prefix "nyqsrc/" (fix-sndsliders nyqsrcfiles)) ; pjm January 2008
                (add-prefix "nyqstk/src/" stksrcfiles)
                (add-prefix "nyqstk/" stkfiles)
-               ;(add-prefix "liblo/src/" liblofiles)
                (add-prefix "ffts/src/" fftfiles)
                (add-prefix "nyqsrc/" intfiles)
                ;(add-prefix "snd/" sndfiles)
-               ;(add-prefix "portaudio/" pafiles) ; jlh1
                '("sys/unix/osstuff" "sys/unix/term"))))
     (setf flist (add-suffix flist ".o"))
     (format outf "OBJECTS = ")
@@ -554,7 +544,6 @@ backup: cleaner
 	     (add-prefix "nyqsrc/" nyqfiles)
              ;(add-prefix "snd/" sndfiles)
              (add-prefix "ffts/src/" fftfiles)
-             ; (add-prefix "liblo/" liblofiles)
              (add-prefix "tran/" transfiles)
              (add-prefix "nyqsrc/" intfiles)))
     (let ((ex (assoc f depends-exceptions :test #'equal)))
@@ -653,6 +642,9 @@ LN = g++
 LFLAGS = -lm -lpthread
 ")
 
+;; this is the general plan for linux, but Debian cannot link with -lasound, 
+;; so to this string you need to prepend a definition for AUDIOLIBS which
+;; has extra link directives for audio libraries, e.g. -lasound (see below)
 (setf linux-defs "
 CC = gcc
 
@@ -670,11 +662,18 @@ CFLAGS = -DOSC -DCMTSTUFF $(OPT) $(INCL) \\
 LN = g++ -m32
 AR = ar
 # to enable command line editing, insert -lreadline -lcurses
-# DEBIAN: LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a -lm -lpthread -lrt
-LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a -lasound -lm -lpthread -lrt
+LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a $(AUDIOLIBS) -lm -lpthread -lrt
 
 TAGS:
 	find . \( -name "*.c" -o -name "*.h" \) -print | etags -
 
 tags: TAGS
 ")
+
+(setf alsa-defs (strcat "
+AUDIOLIBS = -lasound
+" linux-defs))
+
+(setf nonalsa-defs (strcat "
+AUDIOLIBS =
+" linux-defs))

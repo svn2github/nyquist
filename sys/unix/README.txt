@@ -1,7 +1,7 @@
 README.txt -- Nyquist information for Unix systems
 
-Unix Installation
-------------------
+UNIX INSTALLATION
+=================
 For Unix systems, Nyquist is distributed as a compressed file of
 sources named nyqsrc3<nn>.zip, where <nn> is the version number
 (e.g. v3.01 was in nyqsrc301.zip).  To install Nyquist, copy
@@ -15,17 +15,25 @@ more recent trimmed-down installations for netbooks and
 consumer-oriented computers do not have compilers installed by
 default.
 
-Note 2: Nyquist also assumes you have ALSA, the Linux audio system.
-This has also become standard, but your machine might not have the
-ALSA development package (probably named libasound2-dev), so you 
-might have to install it. If you find you are missing "asound", you
-are missing and need to install the ALSA developmnent package.
+Note 2: There are two main unix versions of Nyquist: alsa and nonalsa.
+The alsa version is probably what you want. This version uses ALSA,
+the Linux audio system. This has also become standard, but your
+machine might not have the ALSA development package (probably named
+libasound2-dev), so you might have to install it. If you find you are
+missing "asound", you are missing and need to install the ALSA
+developmnent package. The nonalsa version is a special version for 
+Debian linux. The ONLY difference is that it omits -lasound from the
+link step, so it does not try to link with ALSA. I assume this works
+because the PortAudio library which is included in the Nyquist sources
+configures itself differently on Debian and doesn't need ALSA.
 
 After unzipping sources, type:
 
     gunzip nyqsrc3<nn>.zip
     cd nyquist
-    ln -s sys/unix/linux/Makefile Makefile
+    # In the following line, Debian linux users should
+    #   type "nonalsa" in place of "alsa":
+    ln -s sys/unix/alsa/Makefile Makefile      
     setenv XLISPPATH `pwd`/runtime:`pwd`/lib
     make
 
@@ -37,31 +45,34 @@ After unzipping sources, type:
 The first line creates a nyquist directory and some
 subdirectories. The second line (cd) changes directories to the new
 nyquist directory. The third line (ln) makes a link from the top-level
-directory to the Makefile for your system. In place of linux in
-sys/unix/linux/Makefile, you should substitute your system
-type. Current systems are next, pmax, rs6k, sgi, linux, and sparc, but
-since only the linux version has been tested in recent years, do not
-expect anything else to work.  The setenv (or export) command tells
-Nyquist where to search for lisp files to be loaded when a file is not
-found in the current directory. The (runtime directory should always
-be on your XLISPPATH when you run Nyquist, so you may want to set
-XLISPPATH in your shell startup file, e.g. .cshrc.
+directory to the Makefile for your system. In place of "alsa" in
+sys/unix/alsa/Makefile, you should substitute your system
+type. Current systems are alsa, nonalsa, next, pmax, rs6k, sgi, and
+sparc, but since only the alsa and nonalsa versions have been tested
+in recent years, do not expect anything else to work.  The setenv (or
+export) command tells Nyquist where to search for lisp files to be
+loaded when a file is not found in the current directory. See 
+SHELL STARTUP below for information about how to automate this.
 
+RUNNING NYQUIST FROM THE COMMAND LINE
+=====================================
 Assuming the make completes successfully, you can run Nyquist as follows:
     ./ny
 When you get the prompt, you may begin typing expressions such as
 the ones in the following "Examples" section in the Nyquist
 manual. (See doc/nyquistman.pdf or doc/home.html).
 
+RUNNING NYQUIST USING NyquistIDE
+=====================================
 One you establish that Nyquist (ny) is working from the command line,
-you should try using jNyqIDE, the Java-based Nyquist development
+you should try using NyquistIDE, the Java-based Nyquist development
 environment. First, make jny executable (do this only once when you
 install Nyquist):
     chmod +x jny
 Then try running jNyqIDE by typing:
     ./jny
 
-If the jNyqIDE window does not appear, make sure you have Java
+If the NyquistIDE window does not appear, make sure you have Java
 installed (if not, you probably already encountered errors when you
 ran the make command.) You can also try recompiling the Java
 files. Note that jnyqide/SpecialMacHandler.java will NOT compile
@@ -70,7 +81,8 @@ from the Java compiler, compiles all the remaining java files, and
 then restores jnyqide/SpecialMacHandler.java:
     make jnyqide/jNyqIDE.jar
 
-
+NYQUIST SEARCH PATH UNDER NyquistIDE
+====================================
 Note: With Linux and Mac OS X, jNyqIDE defines the environment passed
 to Nyquist. If you set XLISPPATH as shown above, it will be passed
 along to Nyquist under jNyqIDE. If not, a default XLISPPATH will have
@@ -83,8 +95,10 @@ nyquist/xlisppath, which should have colon-separated paths on a single
 (long) line of text. This file will override the environment variable
 XLISPPATH.
 
+MORE DETAILS
+============
 It is good to have USER in the environment with your user ID. This
-string is used to construct some file names. jNyqIDE will look for it
+string is used to construct some file names. NyquistIDE will look for it
 in the environment. You can also specify your user ID using the file
 nyquist/user, but if you have a shared installation of Nyquist,
 this will not be very useful.
@@ -97,3 +111,28 @@ play.  Normally, Nyquist plays audio through the PortAudio library,
 which should work on any system. An alternative is to save audio to a
 file and invoke a local non-Nyquist program to play the sound file.
 You can modify system.lsp to accomplish this.
+
+SHELL STARTUP
+=============
+The (runtime
+directory should always be on your XLISPPATH when you run Nyquist, so
+you may want to set XLISPPATH in your shell startup file, e.g. .cshrc.
+
+Which shell are you using?  echo $SHELL will tell you. If you use
+/bin/bash, your startup file is probably ~/.profile. (Remember that
+"~/" means your home directory, so the file will be something like
+/home/rbd/.profile).  In this file, you can add a line such as:
+
+export XLISPPATH="/home/rbd/nyquist/runtime:/home/rbd/nyquist/lib"
+
+Do not use the shorthand `pwd`/runtime, because `pwd` returns the
+current working directory, which is not going to be your Nyquist
+directory when .profile is loaded.
+
+If you use /bin/csh (the C Shell), your startup file is probably
+~/.cshrc. (Remember that "~/" means your home directory, so the file
+will be something like /home/rbd/.profile).  In this file, you can add
+a line such as:
+
+setenv XLISPPATH "/home/rbd/nyquist/runtime:/home/rbd/nyquist/lib"
+

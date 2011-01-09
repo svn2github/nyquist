@@ -127,7 +127,7 @@ you see an error similar to "java is not recognized as in internal or
 external command error", the problem may be that paths are not set up
 properly to allow the Windows shell to find java. Right click on "My
 Computer" on the Windows desktop and select "Properties." Under the
-"Advanced" tap, press the "Environment Variables" button, and look for
+"Advanced" tab, press the "Environment Variables" button, and look for
 PATH under "System Variables." Make sure the Java bin directory is on
 the path. If it is not, you will have to find your installation of
 Java and add the appropriate directory to the PATH variable,
