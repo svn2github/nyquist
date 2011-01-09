@@ -670,7 +670,8 @@ CFLAGS = -DOSC -DCMTSTUFF $(OPT) $(INCL) \\
 LN = g++ -m32
 AR = ar
 # to enable command line editing, insert -lreadline -lcurses
-LFLAGS = $(LIBPA_PATH)/libportaudio.a -L$(LIBLO_PATH)/liblo.a -lm -lpthread -lrt
+# DEBIAN: LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a -lm -lpthread -lrt
+LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a -lasound -lm -lpthread -lrt
 
 TAGS:
 	find . \( -name "*.c" -o -name "*.h" \) -print | etags -
