@@ -1,0 +1,1523 @@
+<html><head>
+
+<title>Scribe</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<br>
+
+<hr>
+
+<h1>Scribe</h1>
+
+<hr>
+
+<ul>
+<li><nobr>@@ - insert an '@' sign</nobr></li>
+<li><nobr><a href="#inline">@+</a> - superscript</nobr></li>
+<li><nobr><a href="#inline">@&minus;</a> - subscript</nobr></li>
+<li><nobr><a href="#figures">@~</a> - unknown meaning</nobr></li>
+<li><nobr><a href="#whitespace">@\</a> - horizontal tabulator</nobr></li>
+<li><nobr><a href="#breaks">@*</a> - force a line break</nobr></li>
+<li><nobr><a href="#headings">@appendix</a> - start appendix chapter</nobr></li>
+<li><nobr><a href="#inline">@b</a> - bold text</nobr></li>
+<li><nobr><a href="#region">@begin</a> - start a region</nobr></li>
+<ul>
+<li><nobr><a href="#region-center">center</a> - centered text</nobr></li>
+<li><nobr><a href="#region-code">code</a> - code example, use typewriter font</nobr></li>
+<li><nobr><a href="#comments">comment</a> - invisible in the final document</nobr></li>
+<li><nobr><a href="#region-description">description</a> - definition list</nobr></li>
+<li><nobr><a href="#region-detail">detail</a> - use small font</nobr></li>
+<li><nobr><a href="#region-display">display</a> - non-justified text</nobr></li>
+<li><nobr><a href="#region-enumerate">enumerate</a> - ordered list</nobr></li>
+<li><nobr><a href="#region-example">example</a> - code example, use typewriter font</nobr></li>
+<li><nobr><a href="#region-fdescription">fdescription</a> - special definition-list format</nobr></li>
+<li><nobr><a href="#definitions">fgroup</a> - special PDF format for function definitions</nobr></li>
+<li><nobr><a href="#figures">figure</a> - insert a figure</nobr></li>
+<li><nobr><a href="#definitions">fndefs</a> - special PDF format for function definitions</nobr></li>
+<li><nobr><a href="#region-itemize">itemize</a> - unordered list</nobr></li>
+<li><nobr><a href="#figures">math</a> - render and insert a math formula</nobr></li>
+<li><nobr><a href="#region-pdescription">pdescription</a> - special definition-list format</nobr></li>
+<li><nobr><a href="#region-programexample">programexample</a> - code example, typewriter font</nobr></li>
+<li><nobr><a href="#region-smallcode">smallcode</a> - typewriter font, use small font in PDF</nobr></li>
+<li><nobr><a href="#title-page">titlebox</a> - put text into the title box</nobr></li>
+<li><nobr><a href="#title-page">titlepage</a> - define the title page</nobr></li>
+<li><nobr><a href="#figures">transparent</a> - transparent background color</nobr></li>
+</ul>
+<li><nobr><a href="#whitespace">@blankspace</a> - insert witepace with specific width</nobr></li>
+<li><nobr><a href="#inline">@c</a> - small capitals</nobr></li>
+<li><nobr><a href="#figures">@caption</a> - add text to an object</nobr></li>
+<li><nobr><a href="#headings">@chapter</a> - start an numbered chapter</nobr></li>
+<li><nobr><a href="#region-center">@center</a> - centered text</nobr></li>
+<li><nobr><a href="#bibliography">@cite</a> - cite an entry from the bibliograpy</nobr></li>
+<li><nobr><a href="#insert">@code</a> - inline code example, use typewriter font</nobr></li>
+<li><nobr><a href="#insert">@codef</a> - inline code example, use typewriter font</nobr></li>
+<li><nobr><a href="#settings">@commandstring</a> - define printing commands [for CMU use only]</nobr></li>
+<li><nobr><a href="#comments">@comment</a> - a comment, invisible in the final document</nobr></li>
+<li><nobr><a href="#settings">@dash</a> - insert a horizontal dash with specific width</nobr></li>
+<li><nobr><a href="#definitions">@define</a> - define a command or a variable</nobr></li>
+<li><nobr><a href="#settings">@device</a> - the printer device [for CMU use only]</nobr></li>
+<li><nobr><a href="#region-display">@display</a> - non-justified text</nobr></li>
+<li><nobr><a href="#region">@end</a> - end of a region</nobr></li>
+<li><nobr><a href="#figures">@fillcaption</a> - add formatted text to an object</nobr></li>
+<li><nobr><a href="#footnotes">@foot</a> - add a footnote</nobr></li>
+<li><nobr><a href="#figures">@graphic</a> - insert a picture</nobr></li>
+<li><nobr><a href="#html">@html</a> - insert text in HTML only</nobr></li>
+<li><nobr><a href="#html">@htmltitle</a> - insert a HTML header with title (HTML only)</nobr></li>
+<li><nobr><a href="#inline">@i</a> - italics</nobr></li>
+<li><nobr><a href="#at-include">@include</a> - read a different Scribe file</nobr></li>
+<li><nobr><a href="#indexing">@index</a> - index reference</nobr></li>
+<li><nobr><a href="#settings">@itemsep</a> - insert a horizontal dash with specific width</nobr></li>
+<li><nobr><a href="#cross-reference">@label</a> - add a label to a section</nobr></li>
+<li><nobr><a href="#settings">@libraryfile</a> - load Scribe library [for CMU use only]</nobr></li>
+<li><nobr><a href="#headings">@majorheading</a> - document title</nobr></li>
+<li><nobr><a href="#settings">@make</a> - printer output format [for CMU use only]</nobr></li>
+<li><nobr><a href="#figures">@math</a> - render and insert a math formula</nobr></li>
+<li><nobr><a href="#inline">@mult</a> - insert a multiplication sign</nobr></li>
+<li><nobr><a href="#settings">@modify</a> - change internal Scribe settings [for CMU use only]</nobr></li>
+<li><nobr><a href="#breaks">@newpage</a> - force a page break</nobr></li>
+<li><nobr><a href="#inline">@p</a> - bold italics</nobr></li>
+<li><nobr><a href="#at-pageheading">@pageheading</a> - format of the page heading</nobr></li>
+<li><nobr><a href="#cross-reference">@pageref</a> - insert the page number of a @label</nobr></li>
+<li><nobr><a href="#headings">@paragraph</a> - start a new paragraph</nobr></li>
+<li><nobr><a href="#figures">@parm</a> - unknown meaning</nobr></li>
+<li><nobr><a href="#at-part">@part</a> - faciliates separate compilation of parts of a larger document</nobr></li>
+<li><nobr><a href="#html">@pragma</a> - control the 's2h.lsp' HTML converter</nobr></li>
+<li><nobr><a href="#cross-reference">@ref</a> - insert the section number of a @label</nobr></li>
+<li><nobr><a href="#headings">@section</a> - start a section</nobr></li>
+<li><nobr>@set - set a Scribe variable [for CMU use only]</nobr></li>
+<li><nobr><a href="#at-style">@style</a> - change a Scribe document preset [for CMU use only]</nobr></li>
+<li><nobr><a href="#headings">@subsection</a> - start a sub-section</nobr></li>
+<li><nobr><a href="#settings">@subtract</a> - insert a horizontal dash with specific width</nobr></li>
+<li><nobr><a href="#inline">@t</a> - use typewriter font</nobr></li>
+<li><nobr><a href="#whitespace">@tabclear</a> - reset tabulator settings</nobr></li>
+<li><nobr><a href="#whitespace">@tabset</a> - define new tabulator settings</nobr></li>
+<li><nobr><a href="#whitespace">@tag</a> - add a label to a figure or table</nobr></li>
+<li><nobr><a href="#html">@textform</a> - define a text-formatting Scribe command</nobr></li>
+<li><nobr><a href="#at-title">@title</a> - define the page heading title</nobr></li>
+<li><nobr><a href="#headings">@unnumbered</a> - start an unnumbered chapter</nobr></li>
+<li><nobr><a href="#at-use">@use</a> - use a external database file</nobr></li>
+<li><nobr><a href="#">@value</a> - insert the value of a command or a variable</nobr></li>
+</ul>
+
+<hr>
+
+<h2>Table of Contents</h2>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#scribe">Scribe</a> - basic Syntax rules</nobr></li>
+<li><nobr><a href="#settings">General Settings</a> - start of 'myquistman.mss'</nobr></li>
+<ul>
+<li><nobr><a href="#at-dash">Dashes with different Width</a></nobr></li>
+<li><nobr><a href="#at-include">Commands for Large Documents</a></nobr></li>
+<li><nobr><a href="#at-style">The '@style' Command</a></nobr></li>
+<li><nobr><a href="#at-title">Numbering Pages and Page Headings</a></nobr></li>
+</ul>
+<li><nobr><a href="#definitions">Command Definitions</a> - Nyquist Scribe commands</nobr></li>
+<ul>
+<li><nobr><a href="#html">HTML Commands</a> - controling the 's2l.lsp' HTML converter</nobr></li>
+</ul>
+<li><nobr><a href="#inline">Inline Markup</a></nobr></li>
+<li><nobr><a href="#region">Regions</a></nobr></li>
+<li><nobr><a href="#lists">Lists</a></nobr></li>
+<li><nobr><a href="#comments">Comments</a></nobr></li>
+<li><nobr><a href="#footnotes">Footnotes</a></nobr></li>
+<li><nobr><a href="#indexing">Indexing</a></nobr></li>
+<li><nobr><a href="#headings">Headings</a></nobr></li>
+<li><nobr><a href="#title-page">Title Page</a></nobr></li>
+<li><nobr><a href="#whitespace">Tab Stops and Whitespace</a></nobr></li>
+<li><nobr><a href="#breaks">Line and Page Breaks</a></nobr></li>
+<li><nobr><a href="#cross-reference">Cross References</a></nobr></li>
+<li><nobr><a href="#bibliography">Bibliography and Citation</a></nobr></li>
+<li><nobr><a href="#figures">Figures and Tables</a></nobr></li>
+</ol>
+
+<a name="scribe"></a>
+
+<hr>
+
+<h2>Scribe</h2>
+
+<hr>
+
+<p>Scribe is a markup language and word processing system. <nobr>It
+was</nobr> designed and developed by Brian Reid of Carnegie Mellon
+University <nobr>around 1980</nobr>.</p>
+
+<ul>
+<li><nobr><a href="http://en.wikipedia.org/wiki/Scribe_(markup_language)"
+>http://en.wikipedia.org/wiki/Scribe_(markup_language)</a></nobr></li>
+</ul>
+
+<p>A source file prepared for input to Scribe consists primarily of plain
+text. Paragraphs are separated by blank lines, and commands, if present, are
+flagged with <nobr>'@' signs</nobr>. <nobr>If you</nobr> want an <nobr>'@'
+sign</nobr> to appear within your output, you must type two of <nobr>them
+'@@'</nobr>. <nobr>A file</nobr> containing no commands at all will work
+just fine, it will yield simple justified paragraphed text. <nobr>A
+Scribe</nobr> source file should be given the <nobr>extension '.mss'</nobr>.
+Upper and lower case may be used interchangeably in any Scribe command.</p>
+
+<p>A perhaps confusing aspect of Scribe is that you get to use any bracket
+as long as you close it with a matching one, so for example:</p>
+
+<pre class="example">
+@i(This is italic.)
+@i[This is also italic]
+@i{This italic has (parentheses) but it's ok because there is no curly brace}
+@begin(i)This form is allows [any] (brackets) {in} the text, but "at" (@@) must be escaped@end(i)
+</pre>
+
+<p>Legal delimiter pairs are:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>(<font color="#008844">...</font>)</code></nobr></td>
+  <td><nobr>&nbsp;,&nbsp;</nobr></td>
+  <td class="button"><nobr><code>[<font color="#008844">...</font>]</code></nobr></td>
+  <td><nobr>&nbsp;,&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#008844">...</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;,&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&quot;<font color="#008844">...</font>&quot;</code></nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>It doesn't really matter which delimiter is used as long as the closing
+delimiter matches the opening limiter.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="settings"></a>
+
+<hr>
+
+<h2>General Settings</h2>
+
+<hr>
+
+<p>Most of the definitions in this section affect the Scribe system at the
+<nobr>CMU only</nobr>.</p>
+
+<pre class="example">
+@device(mac52postscript)          <font color="#008844">@comment(printer device)</font>
+@make(manual)                     <font color="#008844">@comment(printer output format)</font>
+@libraryfile(mathematics10)
+@libraryfile(picture)
+@libraryfile(multilevelindex)
+@style(font timesroman)           <font color="#008844">@comment(printer font)</font>
+@style(fontscale 11)              <font color="#008844">@comment(printer font size)</font>
+@commandstring(dash @Y[M])
+@commandstring(subtract @Y[N])
+@commandstring(itemsep @Y[M])
+@Modify(indexenv, above=2 lines, leftmargin 8, columns=3, boxed)
+@define(prg=i)
+</pre>
+
+<a name="at-dash"></a><a name="at-subtract"></a><a name="at-itemsep"></a>
+
+<p>The '@commandstring' lines define three formatting directices:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">dash</code></nobr></td>
+  <td><nobr>&nbsp;,&nbsp;</nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">subtract</code></nobr></td>
+  <td><nobr>&nbsp;,&nbsp;</nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">itemsep</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">a minus sign in HTML, but different widths in PDF</td>
+</tr>
+</tbody></table></p>
+
+<p>[A block with
+<nobr><a href="#definitions"> Command Definitions</a></nobr> follows
+here in the original file, moved to a separate paragraph below.]</p>
+
+<pre class="example">
+@use(bibliography = "../bib/music.bib")
+@style(references ClosedAlphabetic)
+@counter(dummy-counter)
+@modify(FigureCounter,Within=dummy-counter,
+        Numbered &lt;@@b[Figure@@ @1:@@ @@ ]@@$&gt;,
+        Referenced "@1",Init 0)
+@modify(TableCounter,Within=dummy-counter,
+        Numbered &lt;@@b[Table@@ @1:@@ @@ ]@@$&gt;,
+        Referenced "@1",Init 0)
+@pageheading(left "", center "@value(page)", right "")
+@include(../template/filcap.mss)
+</pre>
+
+<a name="at-part"></a><a name="at-use"></a><a name="at-include"></a>
+
+<p>Scribe commands for producing large documents:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">part</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">faciliates separate compilation of parts of a larger document.</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">use</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">tells Scribe to use a particular database file, used to include the bibliography file</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">include</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">read another Scribe file</td>
+</tr>
+</tbody></table></p>
+
+<a name="at-style"></a>
+
+<p><b>The @style Command</b></p>
+
+<p>The database entry for a document type presets the value of all Scribe
+parameters. The '@style' command can be used to override these values. All
+'@style' commands used in a document must come at the beginning. Styles
+can't be changed in the middle of a document. Here is a list of '@style'
+commands used in the Nymqust manual:</p>
+
+<pre class="example">
+@<font color="#AA0000">style</font>(font timesroman)
+@<font color="#AA0000">style</font>(fontscale 11)
+@<font color="#AA0000">style</font>(references ClosedAlphabetic)
+@<font color="#AA0000">style</font>(pagenumbers="@i")
+@<font color="#AA0000">style</font>(pagenumbers="@1")
+</pre>
+
+<a name="at-pageheading"></a><a name="at-title"></a>
+
+<p><b>Numbering Pages and Page Headings</b></p>
+
+<p>The page heading and footing areas are divided into three parts. <nobr>A
+'left'</nobr> part, a 'center' part, and a 'right' part:</p>
+
+<pre class="example">
+@<font color="#AA0000">pageheading</font>(left "", center "@value(page)", right "")
+@<font color="#AA0000">pageheading</font>(even, left "Page @Value(Page)", right "@c(Nyquist Manual)")
+@<font color="#AA0000">pageheading</font>(odd, left "@c[@title(chapter)]", right "Page @Value(page)")
+</pre>
+
+<p>The text fields inside the quotes can contain anything, including Scribe
+commands.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="definitions"></a>
+
+<hr>
+
+<h2>Command Definitions</h2>
+
+<hr>
+
+<p>The definitions in this section are used in the Scribe sources.</p>
+
+<pre class="example">
+@define(detail=text, size 9, spacing 1.2, indent 0)
+@define(code, FaceCode T, size 11)
+@define(codef, FaceCode T, size 11)
+@define(smallcode, FaceCode T, size 8, spacing 0.8) @comment(was 10)
+@define(rbdisplay = display, group)
+@define(fndefs = description, leftmargin 0.5in, indent -0.5in)
+@define(fdescription = text, leftmargin +0.5in, indent -0.5in, spread 1)
+@define(pdescription = text, leftmargin +0.5in, indent -0.5in, spread 0)
+@define(fgroup = text, indent -0.5in, spread 0)
+</pre>
+
+<ul>
+<li><nobr><a href="#region-detail">detail</a> defines text with a small font</nobr></li>
+<li><nobr><a href="#at-code">code</a> and <a href="#at-codef">codef</a> define text with a typewriter font</nobr></li>
+<li><nobr><a href="#region-smallcode">smallcode</a> defines text with typewriter font, with a small font in PDF</nobr></li>
+<li><nobr>'rbdisplay' seems nowhere else to be used in the Nyquist manual</nobr></li>
+<li><nobr><font color="#AA0000">fndefs</font> and <font color="#AA0000">fgroup</font> define special PDF formatting parameters for function definitions</nobr></li>
+<li><nobr><a href="#region-fdescription">fdesription</a> and <a href="#region-pdescription">pdescription</a> define a special definition list format</nobr></li>
+</ul>
+
+<p>'@codef' is used to define a lisp function or variable. <nobr>A
+processor</nobr> uses this to extract completion hint info for jNyqIDE.</p>
+
+<a name="html"></a>
+
+<p><b>HTML Commands</b></p>
+
+<p>Three Scribe commands are added for the 's2h.lsp' HTML converter::</p>
+
+<pre class="example">
+@textform(html = [])
+@textform(htmltitle = [])
+@textform(pragma = [])
+</pre>
+
+<p>The first two commands insert text in the HTML file only, but not in
+<nobr>the PDF</nobr>:</p>
+
+<a name="at-html"></a><a name="at-htmltitle"></a>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">html</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">insert HTML text</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">htmltitle</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">insert a HTML header with title</td>
+</tr>
+</tbody></table></p>
+
+<a name="at-pragme"></a>
+
+<p>The '@pragma' command controls the 's2h.lsp' HTML converter:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@pragma(<font color="#AA0000">defn</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the next @index marks a term's definition in the manual</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@pragma(<font color="#AA0000">startscribe</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">ignore scribe file starting here</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@pragma(<font color="#AA0000">endscribe</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">stop ignoring scribe file</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@pragma(<font color="#AA0000">startref</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">use text between here and an @ref or @pageref as link text</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@pragma(<font color="#AA0000">doinclude</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">process the next include file (default is to ignore)</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@pragma(<font color="#AA0000">endcodef</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">end a code definition (used for completion list)</td>
+</tr>
+</tbody></table></p>
+
+<p><b>RBD:</b> '@pragma(defn)' is used to mark a term's point of definition.
+<nobr>I tried</nobr> to define(defn=index), but that didn't work in Scribe,
+so the approach now is to mark definitions. <nobr>In s2h</nobr>, the 'defn'
+pragma sets a flag that the NEXT index term is a definition. <nobr>The
+'s2h.lsp'</nobr> processor uses this to map terms defined within 'codef'
+(which go into the completion list) to URLs for the help system.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="inline"></a>
+
+<hr>
+
+<h2>Inline Markup</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>Scribe&nbsp;</nobr></td>
+  <td></td>
+  <td align="center"><nobr>HTML&nbsp;</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">b</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">b</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">b</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">bold</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">i</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">i</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">i</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">italics</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">p</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">b</font>&gt;&lt;<font color="#AA0000">i</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">i</font>&gt;&lt;/<font color="#AA0000">b</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">bold + italics</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">t</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">tt</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">tt</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">typewriter font</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">c</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">small</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">small</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">small capitals</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">+</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">sup</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">sup</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">superscript</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">&minus;</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">sub</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">sub</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">subscript</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="6"><nobr>User-<a href="#definitions">defined</a></nobr>
+    Scribe commands:</nobr></td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="at-code">&nbsp;</a><a name="at-codef">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">code</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">code</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">code</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">code example inside text</td>
+</tr>
+<tr>
+  <td height="2px"></a></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">codef</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">code</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">code</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">code example inside text</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="6"><nobr>Named entities:</nobr></td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="at-mult">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">mult</font></code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>*</code></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">insert a multiplication sign</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="region"></a>
+
+<hr>
+
+<h2>Regions</h2>
+
+<hr>
+
+<p><nobr>Text-formatting</nobr> Scribe commands can be written as
+<a href="#inline">inline</a> command or as a region command, delimited by
+'@begin' <nobr>and '@end'</nobr>:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">command</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><a href="#inline">inline</a> command</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">command</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">command</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">region command</td>
+</tr>
+</tbody></table></p>
+
+<p>The most often used Scribe region commands in the Nyquist manual are:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>Scribe&nbsp;</nobr></td>
+  <td></td>
+  <td align="center"><nobr>HTML&nbsp;</nobr></td>
+</tr>
+<tr>
+  <td height="2px"><a name="region-programexample"></a></a></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">programexample</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">programexample</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">pre</font>&gt;</nobr><br><font color="#0000CC">text</font><br><nobr>&lt;/<font color="#AA0000">pre</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">code example, typewriter font</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-example">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">example</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">example</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">pre</font>&gt;</nobr><br><font color="#0000CC">text</font><br><nobr>&lt;/<font color="#AA0000">pre</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">code example, typewriter font</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-display">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">display</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">display</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">blockquote</font>&gt;</nobr><br><font color="#0000CC">text</font><br><nobr>&lt;/<font color="#AA0000">blockquote</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">normal text, non-justified, each line separate</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">display</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td colspan="3" width="100%">same as above</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="6"><b>Scribe:</b> The 'example' and 'display' inserts types
+    are very similar, they differ only in the type face that will be used.
+    <nobr>In either</nobr> 'example' or 'display' inserts, each line of the
+    manuscript will produce one line in the document. Since 'example' is for
+    showing examples of computer <nobr>type-in</nobr> and
+    <nobr>type-out</nobr>, it will appear in a typeface that is designed to
+    look like computer output. 'display' inserts will appear in the normal
+    body typeface. If the document is printed on a device that cannot change
+    fonts, then 'example' and 'display' will look nearly identical.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-center">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">center</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">center</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">center</font>&gt;</nobr><br><font color="#0000CC">text</font><br><nobr>&lt;/<font color="#AA0000">center</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">each line centered</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">center</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td colspan="3" width="100%">same as above</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="6"><b>Scribe:</b> The 'center' insert is similar to
+    'display', except that it centers its lines rather than
+    <nobr>left-justifying</nobr> them. Like 'display', 'center' produces one
+    line in the document for each line of the manuscript file that is inside
+    the 'center'. <nobr>If there</nobr> is more than one line in a 'center'
+    insert, each line will be centered individually.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-detail">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">detail</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">detail</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">small</font>&gt;</nobr><br><font color="#0000CC">text</font><br><nobr>&lt;/<font color="#AA0000">small</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">use small font</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-code">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">code</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">code</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">code</font>&gt;</nobr><br><font color="#0000CC">text</font><br><nobr>&lt;/<font color="#AA0000">code</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">typewriter font</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-smallcode">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">smallcode</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">smallcode</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">code</font>&gt;</nobr><br><font color="#0000CC">text</font><br><nobr>&lt;/<font color="#AA0000">code</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">typewriter font, use small font in PDF</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lists"></a>
+
+<hr>
+
+<h2>Lists</h2>
+
+<hr>
+
+<a name="region-itemize"></a>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>Scribe&nbsp;</nobr></td>
+  <td></td>
+  <td align="center"><nobr>HTML&nbsp;</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></a></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">itemize</font>)</nobr><br><font color="#0000CC">item-1</font><br><br><font color="#0000CC">item-2</font><br><br><font color="#0000CC">item-3</font><br><nobr>@end(<font color="#AA0000">itemize</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">ul</font>&gt;</nobr><br>&lt;<font color="#AA0000">li</font>&gt;<font color="#0000CC">item-1</font><br>&lt;<font color="#AA0000">li</font>&gt;<font color="#0000CC">item-2</font><br>&lt;<font color="#AA0000">li</font>&gt;<font color="#0000CC">item-3</font><br><nobr>&lt;/<font color="#AA0000">ul</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">unordered list</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-enumerate">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">enumerate</font>)</nobr><br><font color="#0000CC">item-1</font><br><br><font color="#0000CC">item-2</font><br><br><font color="#0000CC">item-3</font><br><nobr>@end(<font color="#AA0000">enumerate</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">ol</font>&gt;</nobr><br>&lt;<font color="#AA0000">li</font>&gt;<font color="#0000CC">item-1</font><br>&lt;<font color="#AA0000">li</font>&gt;<font color="#0000CC">item-2</font><br>&lt;<font color="#AA0000">li</font>&gt;<font color="#0000CC">item-3</font><br><nobr>&lt;/<font color="#AA0000">ol</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">ordered list</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="6"><b>Scribe:</b> 'itemize' and 'enumerate' each expect a
+    sequence of paragraphs, separated by blank lines, and each justifies
+    those paragraphs into inset margins and puts a mark in front of each.
+    'itemize' puts a <nobr>tick-mark</nobr> or a bullet in front of each
+    paragraph, while 'enumerate' puts a number in front of each.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-description">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">description</font>)</nobr><br><font color="#0000CC">item-1</font>@\<font color="#0000CC">text-1</font><br><br><font color="#0000CC">item-2</font>@\<font color="#0000CC">text-2</font><br><br><font color="#0000CC">item-3</font>@\<font color="#0000CC">text-3</font><br><nobr>@end(<font color="#AA0000">description</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code><nobr>&lt;<font color="#AA0000">dl</font>&gt;</nobr><br><nobr>&lt;<font color="#AA0000">dt</font>&gt;<font color="#0000CC">item-1</font>&lt;<font color="#AA0000">dd</font>&gt;<font color="#0000CC">text-1</font></nobr><br><nobr>&lt;<font color="#AA0000">dt</font>&gt;<font color="#0000CC">item-2</font>&lt;<font color="#AA0000">dd</font>&gt;<font color="#0000CC">text-2</font></nobr><br><nobr>&lt;<font color="#AA0000">dt</font>&gt;<font color="#0000CC">item-3</font>&lt;<font color="#AA0000">dd</font>&gt;<font color="#0000CC">text-3</font></nobr><br><nobr>&lt;/<font color="#AA0000">dl</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">definition list</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="6"><b>Scribe:</b> <nobr>A 'description'</nobr> insert is
+   designed for the 'command description' style that is very common in
+   reference manuals. <nobr>The first</nobr> line of a 'description' insert
+   will be at the left margin, and the second and remaining lines will be
+   indented substantially, so that the word or phrase at the end of the head
+   of the description <nobr>stands out</nobr>. <nobr>If three</nobr> or more
+   blanks in a row are found in the first line of a 'description', they will
+   be taken as a signal to tab to the left margin provided that the left
+   margin has not been passed.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2"><a name="region-fdescription">&nbsp;</a><a name="region-pdescription">&nbsp;</a></font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">fdescription</font>)</nobr><br><font color="#0000CC">item</font><br><nobr>@begin(<font color="#AA0000">pdescription</font>)</nobr><br><font color="#0000CC">text-1</font><br><br><font color="#0000CC">text-2</font><br><br><font color="#0000CC">text-3</font><br><nobr>@end(<font color="#AA0000">pdescription</font>)</nobr><br><nobr>@end(<font color="#AA0000">fdescription</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><code>&lt;<font color="#AA0000">dl</font>&gt;<br>&lt;<font color="#AA0000">dt</font>&gt;<br><font color="#0000CC">item</font><br>&lt;<font color="#AA0000">dd</font>&gt;<br><font color="#0000CC">text-1</font>&lt;<font color="#AA0000">br</font>&gt;<br><font color="#0000CC">text-2</font>&lt;<font color="#AA0000">br</font>&gt;<br><font color="#0000CC">text-3</font>&lt;<font color="#AA0000">br</font>&gt;<br><nobr>&lt;/<font color="#AA0000">dl</font>&gt;</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">definition list</td>
+</tr>
+
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="comments"></a>
+
+<hr>
+
+<h2>Comments</h2>
+
+<hr>
+
+<p>Comments produce no text in the final document and can be written as
+<a href="#inline">inline</a> or as <a href="#region">region</a> command:</p>
+
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">comment</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><a href="#inline">inline</a> comment</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">comment</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">comment</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><a href="#region">region</a> comment</td>
+</tr>
+</tbody></table></p>
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Nach oben</a></nobr></p>
+
+<a name="footnotes"></a>
+
+<hr>
+
+<h2>Footnotes</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">foot</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">footnote</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="indexing"></a>
+
+<hr>
+
+<h2>Indexing</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">index</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;a name="index<font color="#0000CC">XX</font>"&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">nothing will appear in the printed text, but the 'text'
+    will appear in the index together with the current page number.</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="headings"></a>
+
+<hr>
+
+<h2>Headings</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>Scribe&nbsp;</nobr></td>
+  <td></td>
+  <td align="center"><nobr>HTML&nbsp;</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">majorheading</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">h1</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">h1</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">document title</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">unnumbered</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">h2</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">h2</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">unnumbered chapter (e.g. preface)</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">chapter</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">h2</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">h2</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">numbered chapter</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">appendix</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">h2</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">h2</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">appendix</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="6"><b>Scribe:</b> Notice that 'unnumbered', 'chapter', and
+    'appendix' cause Scribe to start at the top of a new page.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">section</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">h3</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">h3</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">section</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">subsection</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">h4</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">h4</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">subsection</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">paragraph</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>&lt;<font color="#AA0000">h5</font>&gt;<font color="#0000CC">text</font>&lt;/<font color="#AA0000">h5</font>&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">paragraph</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="title-page"></a>
+
+<hr>
+
+<h2>Title Page</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">titlepage</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">titlepage</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">this will cause the title page to be a page by itself,
+    and text within the titlepage will be centered.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td colspan="4"><b>Scribe:</b> The title page for a technical report
+    usually has the title, author, and date of publication visible within a
+    box that will be reproduced on the cover of the report. <nobr>The
+    'titlebox'</nobr> command can be used to put text in <nobr>this
+    box:</nobr></td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">titlebox</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">titlebox</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">this will produce a titlebox.</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="whitespace"></a>
+
+<hr>
+
+<h2>Tab Stops and Whitespace</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">tabclear</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">clear all tabs</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">tabset</font>(<font color="#0000CC">number</font> <font color="#0000CC">unit</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">set tab width to 'number' of units, 'unit' should be 'inch' or 'inches'</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">\</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">go to the right until the next tab. If there is no tab
+    stop to the right of the cursor position, then the cursor will be moved
+    to the right margin.</td>
+</tr>
+</tbody></table></p>
+
+<pre class="example">
+@tabset(.5 inches)
+@tabset(0.8 in, 3 in, 3.8 in)
+@tabset(1.5 inch)
+@tabset(0.8 inches)
+@tabset(0.5 inch)
+</pre>
+                      
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">blankspace</font>(<font color="#0000CC">number</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">forces a 'number' units of whitespace</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">blankspace</font>(<font color="#0000CC">number <font color="#0000CC">unit</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">forces a 'number' units of whitespace, 'unit' should be 'inch' or 'inches'</td>
+</tr>
+</tbody></table></p>
+
+<pre class="example">
+@blankspace(0.3 inches)
+@blankspace(0.5 inch)
+@blankspace(0.3 inch)
+@blankspace(1 inch)
+@blankspace(5 inches)
+@blankspace(1)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="breaks"></a>
+
+<hr>
+
+<h2>Line and Page Breaks</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">*</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">force a line break</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">newpage</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">force a page break</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cross-reference"></a>
+
+<hr>
+
+<h2>Cross References</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">label</font>(<font color="#0000CC">word</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">define a label (text reference to a section or page number)</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">ref</font>(<font color="#0000CC">word</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">insert the section number of the label</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">pageref</font>(<font color="#0000CC">word</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">insert the page number of the label</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">tag</font>(<font color="#0000CC">word</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">define a tag (object reference to a figure or a table)</td>
+</tr>
+</tbody></table></p>
+
+<p><b>Scribe:</b> The difference between a 'label' and a tag is a bit
+subtle. <nobr>A section</nobr> document has many different sequences of
+numbers that identify the pieces <nobr>of it</nobr>. Pages are numbered
+sequentially, chapters and sections are usually numbered independently of
+the pages. Figures and tables are often numbered within a chapter, ignoring
+section numbers. <nobr>If you</nobr> want to attach a codeword to the
+section number of the section that contains a particular figure or table,
+then use '@label'. If you want to attach a codeword to the figure or table,
+rather than to the section that it is contained in, then use the '@tag'
+command.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="bibliography"></a>
+
+<hr>
+
+<h2>Bibliography and Citation</h2>
+
+<hr>
+
+<p>A bibliography is a labeled list of books, articles, or papers. <nobr>A
+citation</nobr> is a marker in the text that refers to an entry in the
+bibliography. Because Scribe selects and prints only those entries in a
+bibliography that are actually cited in the text, a common bibliography file
+may be used for many different documents. The bibliography file consists of
+a series of entries, each with an identifier.</p>
+
+<pre class="example">
+@book(<font color="#AA0000">Touretzky</font>
+        ,key "Touretzky"
+        ,author "Touretzky, David S."
+        ,title "LISP: a gentle introduction to symbolic computation"
+        ,address "New York"
+        ,publisher "Harper & Row"
+        ,year 1984
+        )
+
+@inproceedings(<font color="#AA0000">ICMCFugue</font>
+        ,key "Dannenberg"
+        ,author "Dannenberg, R. B. and C. L. Fraley"
+        ,title "Fugue: Composition and Sound Synthesis With Lazy Evaluation
+        and Behavioral Abstraction"
+        ,booktitle = "Proceedings of the 1989
+                International Computer Music Conference"
+        ,editor "T. Wells and D. Butler"
+        ,year = "1989"
+        ,organization = "International Computer Music Association"
+        ,address "San Francisco"
+        ,pages "76-79"
+        )
+</pre>
+
+<p>Then just put a '@cite' command into the text at the spot where the
+citation should appear:</p>
+
+<pre class="example">
+@cite(<font color="#AA0000">Touretzky</font>)
+@cite(<font color="#AA0000">icmcfugue</font>)
+</pre>
+
+<p><b>RBD:</b> HTML citations are translated by '<nobr>s2h.lsp</nobr>' to
+links according to data in '<nobr>docsrc/s2h/citations.lsp</nobr>'.
+<nobr>The actual</nobr> bibliographic references must be
+<nobr>hand-translated</nobr> <nobr>to HTML</nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="figures"></a>
+
+<hr>
+
+<h2>Figures and Tables</h2>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><code><nobr>@begin(<font color="#AA0000">figure</font>)</nobr><br><font color="#0000CC">text</font><br><nobr>@end(<font color="#AA0000">figure</font>)</nobr></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">define a region to insert an object</td>
+</tr>
+</tbody></table></p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">graphic</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">insert a picture</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">math</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">insert a rendered math formula</td>
+</tr>
+</tbody></table></p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">caption</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">add text to an object</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>@<font color="#AA0000">fillcaption</font>(<font color="#0000CC">text</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">add formatted text to an object and modify object counters</td>
+</tr>
+</tbody></table></p>
+
+<p>With the Scribe <a href="#cross-reference">@tag</a> command a label can
+be added to an object. The best place to put the
+<a href="#cross-reference">@tag</a> command is after the '@caption' or
+'@fillcaption' command. If the <a href="#cross-reference">@tag</a> command
+appears before the '@caption' or '@fillcaption' command, then the wrong
+figure number will get assigned to the tag, because the number will not yet
+have been incremented.</p>
+
+<p>The '@fillcaption' command is defined in the file
+'<nobr>docsrc/template/filcap.mss</nobr>':</p>
+
+<pre class="example">
+@textform[FillCaption="@begin(transparent)@modify(captionenv,fill,indent 0,
+leftmargin +0.5 inch,rightmargin +0.5 inch)@modify(figurecounter,
+numbered &lt;@@b[Figure@@ @#@:-@1:@@ @@ ]&gt;)@modify(tablecounter,
+numbered &lt;@@b[Figure@@ @#@:-@1:@@ @@ ]&gt;)@caption&lt;@parm&lt;text&gt;&gt;@~
+@end(transparent)"]
+</pre>
+
+<p>The exact meaning of the Scribe '@parm' and '@~' commands are currently
+unknown.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>Formatting of the Nyquist Manual</h2>
+
+<hr>
+
+<p>The 's2h.lsp' HTML converter assumes a number of definitions in Scribe
+source, so for example, <a href="#settings">@dash</a> is defined for
+<nobr>Scribe by:</nobr></p>
+
+<pre class="example">
+@commandstring(dash @Y[M])
+</pre>
+
+<p>In the Scribe output this will create an '<nobr>em-dash</nobr>'
+(horizontal dash with a width of the <nobr>letter 'm')</nobr>, but the
+'s2h.lsp' HTML converter will always translate <a href="#settings">@dash</a>
+to a hyphen character, regardless of the Scribe
+<a href="#settings">@commandstring</a> definition, which 's2h.lsp' ignores.
+<nobr>In other</nobr> words, 's2h.lsp' is not written to handle any of the
+mechanisms provided by Scribe to extend the command set, but there are some
+<nobr>built-in</nobr> extensions such as <a href="#settings">@dash</a> so
+that 's2h.lsp' can translate Nyquist manuals.</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>@<font color="#AA0000">codef</font>(<font color="#0000CC">name</font>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><a href="#definitions">@codef</a> is used to define a
+   lisp function or variable. <nobr>A processor</nobr> uses this to extract
+   completion hint info for jNyqIDE.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>@<font color="#AA0000">pragma</font>(defn)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><a href="#html">@pragma(defn)</a> tells 's2h.lsp' that
+   the next <a href="#indexing">@index</a> marks a term's definition in
+   the manual.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>@<font color="#AA0000">index</font>(<font color="#0000CC">term</font>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><a href="#indexing">@index</a> is used to insert 'term'
+    in the manual's index.</td>
+</tr>
+</tbody></table></p>
+
+<p>Although Scribe has no support for marking up why a location is indexed,
+'s2h.lsp' uses <nobr><a href="#html">@pragma(defn)</a></nobr> before
+<nobr><a href="#indexing">@index(term)</a></nobr> to indicate that this
+location in the text provides the definition of 'term'. This information
+helps 's2h.lsp' give priority to this location in the text in cases where
+term may be indexed from multiple locations. <nobr>In short</nobr>, if you
+define a term, you should insert:</p>
+
+<pre class="example">
+@pragma(defn)@index(<font color="#0000CC">term</font>)
+</pre>
+
+<p>at the beginning of the definition.</p>
+
+<p>Function definitions in the Nyquist manual should be documented like
+this:</p>
+
+<pre class="example">
+@begin(fndefs)
+@codef[myfunction(@pragma(defn)@index(myfunction) ... parameters ...]@\Description of myfunction.
+
+@codef[myotherfn(@pragma(defn)@index(myotherfn) ... parameters ...]@\Description of myothernfn.
+@end(fndefs)
+</pre>
+
+<p>Where one or more function definitions can be inside the
+<nobr><a href="#settings">@begin(fndefs)</a></nobr> and
+<nobr><a href="#settings">@end(fndefs)</a></nobr> brackets.</p>
+
+<p>Another style of documenting functions, used in the XLISP documentation
+is to document the function and provide indented detailed descriptions of
+each parameter and the return value. This style is shown here and uses
+<a href="#region-fdescription">@fdescription</a> and
+<a href="#region-pdescription">@pdescription</a>:</p>
+
+<pre class="example">
+@begin(fdescription)
+        (eval@pragma(defn)@index(eval) @i&lt;expr&gt;) @itemsep evaluate an xlisp expression
+@begin(pdescription)
+            @i&lt;expr&gt; @itemsep     the expression to be evaluated
+
+            returns @itemsep     the result of evaluating the expression
+@end(pdescription)
+@blankspace(1)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<br>
+
+</body></html>
