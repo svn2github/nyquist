@@ -1,0 +1,84 @@
+<html><head><title>XLISP alphanumericp</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>alphanumericp</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>alphanumericp</b> <i>char</i>)</dt>
+<dd>char - a character expression<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the character
+is alphabetic or a digit, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p> The 'alphanumericp' function checks if the 'char' expression is an
+alphabetic or a digit character. <nobr>If 'char'</nobr> is an alphabetic
+[either an upper or lower case] or a digit character,
+<a href="t.htm">&nbsp;T&nbsp;</a> is returned, otherwise
+<a href="nil.htm">NIL</a> is returned. Note that XLISP is limited to
+<a href="../misc/ascii-table.htm">ASCII</a> characters, so there is no way
+to find out if an Unicode character with a
+<nobr><a href="char-code.htm">char-code</a></nobr> greater than
+<nobr>ASCII 127</nobr> is alphanumeric <nobr>or not</nobr>.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(alphanumericp #\A)  =&gt; T
+(alphanumericp #\a)  =&gt; T
+(alphanumericp #\1)  =&gt; T
+(alphanumericp #\[)  =&gt; NIL
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#character-functions">Character Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

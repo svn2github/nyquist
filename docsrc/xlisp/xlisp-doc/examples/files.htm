@@ -1,0 +1,459 @@
+<html><head>
+
+<title>Files and Directories</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Files and Directories</h1>
+
+<hr>
+
+<ul>
+<li><nobr>Interactive Functions</nobr></li>
+<ul>
+<li><nobr><a href="#pwd">pwd</a> - returns the current working directory</nobr></li>
+<li><nobr><a href="#cd">cd</a> - changes the current working directory</nobr></li>
+</ul>
+<li><nobr>Testing Files and Directories</nobr></li>
+<ul>
+<li><nobr><a href="#directory-exists-p">directory-exists-p</a> - tests if a directory exists</nobr></li>
+<li><nobr><a href="#file-exists-p">file-exists-p</a> - tests if a file exists</nobr></li>
+<li><nobr><a href="#filename-exists-p">filename-exists-p</a> - tests if a file or directory exists</nobr></li>
+</ul>
+<li><nobr>Testing Filenames</nobr></li>
+<ul>
+<li><nobr><a href="#absolute-filename-p">absolute-filename-p</a> - tests if a string is an absolute filename</nobr></li>
+</ul>
+<li><nobr>System Environment Variables</nobr></li>
+<ul>
+<li><nobr><a href="#windows-p">windows-p</a> - tests if the operation system is a Windows system</nobr></li>
+<li><nobr><a href="#user-home-directory">user-home-directory</a> - returns path to the user's HOME directory</nobr></li>
+<li><nobr><a href="#expand-tilde">expand-tilde</a> - replaces &quot;~/&quot; with the user's HOME directory</nobr></li>
+</ul>
+</ul>
+
+<a name="pwd"></a>
+
+<hr>
+
+<h2>pwd</h2>
+
+<hr>
+
+<p>The 'pwd' function returns the current working directory:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">pwd</font> ()
+  (setdir <font color="#880000">"."</font>))
+</pre>
+
+<p>Ok, this function does not belong to the masterpieces of computer
+science, but (pwd) is much easier to remember than <nobr>(setdir
+&quot;.&quot;)</nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cd"></a>
+
+<hr>
+
+<h2>cd</h2>
+
+<hr>
+
+<p>The 'cd' function changes the current working directory. <nobr>The
+directory</nobr> name must be given as a string:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">cd</font> (string)
+  (cond ((not (stringp string))
+         (error <font color="#880000">"argument must be a string"</font> string))
+        ((string= <font color="#880000">"."</font> string)
+         (setdir <font color="#880000">"."</font>))
+        (t
+         (let ((orig-dir (setdir <font color="#880000">"."</font>))
+               (new-dir  (setdir string)))
+           (when (string/= orig-dir new-dir)
+             new-dir)))))
+</pre>
+
+<p>Possible actions and return values are:</p>
+
+<ul>
+
+<li><p>It the argument is not a string, then an error will be
+raised.</p></li>
+
+<li><p>If the directory name is &quot;.&quot;, then the name of the current
+working directory is returned as a string. This is the same effect as if the
+directory has been changed to itself.</p></li>
+
+<li><p>If the directory has successfully been changed to the given
+directory, then the name of the new working directory is returned as a
+string.</p></li>
+
+<li><p>If the given directory has not been found, then NIL <nobr>[=
+false]</nobr> is returned.</p></li>
+
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="directory-exists-p"></a>
+
+<hr>
+
+<h2>directory-exists-p</h2>
+
+<hr>
+
+<p>The '<nobr>directory-exists-p</nobr>' function tests if a directory
+exists. <nobr>The directory</nobr> name must be given as a string:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">directory-exists-p</font> (string)
+  (cond ((not (stringp string))
+         (error <font color="#880000">"argument must be a string"</font> string))
+        ((string= <font color="#880000">"."</font> string)
+         (setdir <font color="#880000">"."</font>))
+        (t
+         (let ((orig-dir (setdir <font color="#880000">"."</font>))
+               (new-dir  (setdir string)))
+           (when (string/= orig-dir new-dir)
+             (setdir orig-dir)
+             new-dir)))))
+</pre>
+
+<p>Possible actions and return values are:</p>
+
+<ul>
+
+<li><p>It the argument is not a string, then an error will be
+raised.</p></li>
+
+<li><p>If the directory name is &quot;.&quot;, then the absolute name of the
+current working directory is returned as a string. <nobr>This is</nobr> not
+a very useful test, but makes the return values consistent.</p></li>
+
+<li><p>If the directory has been found, then the absolute name of the
+directory is returned as a string.</p></li>
+
+<li><p>If the directory has not been found, then NIL <nobr>[= false]</nobr>
+is returned.</p></li>
+
+</ul>
+
+<p>The '<nobr>directory-exists-p</nobr>' function is nearly the same as the
+<a href="#cd">cd</a> function above. <nobr>The only</nobr> difference is
+that the working directory will automatically be changed back to the initial
+directory.</p>
+
+<p>On Unix, with <nobr>soft-links</nobr>, the absolute name of the target
+directory <nobr>[i.e. not</nobr> the name of the <nobr>link-file</nobr>
+itself, but the name of the directory the link <nobr>points to]</nobr> is
+returned.</p>
+
+<p><div class="box">
+
+<p><b>Implementation Notes</b></p>
+
+<p>The Nyquist 'setdir' function always returns absolute directory names,
+even if a relative directory name has been given as a string by the user.
+That's why it's not possible to reliably compare the return value of
+<nobr>(setdir string)</nobr> directly with 'string'. Instead the absolute
+name of the initial working directory, returned by <nobr>(setdir
+&quot;.&quot;)</nobr>, is compared to the absolute name, returned when
+<nobr>(setdir string)</nobr> tries to change the directory. <nobr>If
+both</nobr> return values are the same, then <nobr>(setdir string)</nobr>
+has failed because the directory has not been found.</p>
+
+<p>If the directory string is &quot;.&quot;, then this trick doesn't work,
+because the initial directory is the same as the target directory, so even
+if the directory has 'successfully' been changed to itself, both return
+values still would be the same. This is one of the reasons why &quot;.&quot;
+has a separate 'cond' clause. The other reason is of course that it makes
+not really much sense to change a directory to itself, that's why we save
+the work and just return the absolute name of the current working
+directory.</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="file-exists-p"></a>
+
+<hr>
+
+<h2>file-exists-p</h2>
+
+<hr>
+
+<p>The '<nobr>file-exists-p</nobr>' function tests if a file exists.
+<nobr>The file</nobr> name must be given as a string:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">file-exists-p</font> (string)
+  (if (not (stringp string))
+      (error <font color="#880000">"argument must be a string"</font> string)
+      (unless (directory-exists-p string)
+        (let (file-stream)
+          (unwind-protect
+            (setq file-stream (open string))
+            (when file-stream (close file-stream)))
+          (when file-stream string)))))
+</pre>
+
+<p>On Unix systems a directory is a special kind of file, so on Unix the
+XLisp 'open' function can open directories, too. That's why we first must
+make sure that no directory exists with the same name as the file that we
+are looking for.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="filename-exists-p"></a>
+
+<hr>
+
+<h2>filename-exists-p</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">filename-exists-p</font> (string)
+  (if (not (stringp string))
+      (error <font color="#880000">"argument must be a string"</font> string)
+      (or (directory-exists-p string)
+          (file-exists-p string)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="absolute-filename-p"></a>
+
+<hr>
+
+<h2>absolute-filename-p</h2>
+
+<hr>
+
+<p>The 'absolute-filename-p' function tests if a string is an absolute file
+or directory name:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">absolute-filename-p</font> (string)
+  (if (not (stringp string))
+      (error <font color="#880000">"argument must be a string"</font> string)
+      (let ((end (length string)))
+        (when (or (and (&gt;= end 1)  <font color="#008844">; Unix "/..."</font>
+                       (char= #\/ (char string 0)))
+                  (and (&gt;= end 3)  <font color="#008844">; Windows "[a-zA-Z]:[\/]..."</font>
+                       (let ((char (char string 0)))
+                         <font color="#008844">;; upper- or lowercase character a-z, A-Z</font>
+                         (and (&gt; (char-code (char-downcase char)) 96)
+                              (&lt; (char-code (char-downcase char)) 123)))
+                       (char= #\: (char string 1))
+                       (let ((char (char string 2)))
+                         (or (char= #\\ char)
+                             (char= #\/ char)))))
+          string))))
+</pre>
+
+
+<p>Note that it is only tested whether the beginning of the string
+matches the beginning of an absolute file or directory name. <nobr>It
+is</nobr> not tested whether the string reperesents a meaningful name.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="system-environment-variables"></a>
+
+<hr>
+
+<h2>System Environment Variables</h2>
+
+<a name="get-env"></a>
+
+<hr>
+
+<h2>get-env</h2>
+
+<hr>
+
+<p>[This function works only with <nobr>Audacity 1.3.13</nobr> and
+above.]</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><nobr>(<b>get-env</b> &quot;<i>environment-variable</i>&quot;)</nobr></p></dt>
+
+
+
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="windows-p"></a>
+
+<hr>
+
+<h2>windows-p</h2>
+
+<hr>
+
+<p>[This function works only with <nobr>Audacity 1.3.13</nobr> and
+above.]</p>
+
+<p>The '<nobr>windows-p</nobr>' function tests if the underlying operation
+system is a Microsoft <nobr>Windows[tm]</nobr> system:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">windows-p</font> ()
+  (let* ((home (let ((drive (get-env <font color="#880000">"HOMEDRIVE"</font>))
+                     (path  (get-env <font color="#880000">"HOMEPATH"</font>)))
+                 (if (and drive path)
+                     (strcat drive path)
+                     (get-env <font color="#880000">"UserProfile"</font>))))
+         (path (get-env <font color="#880000">"PATH"</font>)))
+    (when home  <font color="#008844">; if HOMEDRIVE + HOMEPATH or UserProfile exist</font>
+      (if path  <font color="#008844">; search for Windows :\ drive-letter patterns</font>
+          (string-search ":\\" path)  
+          (error <font color="#880000">"no PATH environment variable found"</font>)))))
+</pre>
+
+<p>Nquist has a <nobr>*file-separator*</nobr> variable, that could be used
+much easier to detect the operation system:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">windows-p</font> ()
+  (char= <font color="#AA5500">*file-separator*</font> #\\))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="user-home-directory"></a>
+
+<hr>
+
+<h2>user-home-directory</h2>
+
+<hr>
+
+<p>[This function works only with <nobr>Audacity 1.3.13</nobr> and
+above.]</p>
+
+<p>The '<nobr>user-home-directory</nobr>' function returns the path to the
+user's home directory on Linux, Mac, and Windows:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">user-home-directory</font> ()
+  (or (get-env <font color="#880000">"HOME"</font>)
+      (let ((drive (get-env <font color="#880000">"HOMEDRIVE"</font>))
+            (path  (get-env <font color="#880000">"HOMEPATH"</font>)))
+        (when (and drive path)
+          (strcat drive path)))
+      (get-env <font color="#880000">"UserProfile"</font>)))
+</pre>
+
+<p>If the user's home directory could be identified, then the path to the
+home directory is returned as a string. <nobr>If the</nobr> user's home
+directory could not be identified, then <nobr>NIL [= false]</nobr> is
+returned.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(user-home-directory)  <font color="#444444">=&gt;</font> <font color="#008844">"/home/edgar"                        ; Linux</font>
+(user-home-directory)  <font color="#444444">=&gt;</font> <font color="#008844">"C:\\Documents and Settings\\Edgar"  ; Windows</font>
+</pre>
+
+<p>On Windows there is no HOME variable defined by Windows itself, but most
+programs will respect a HOME variable, if one had been defined by the user.
+This means that on Windows, if a HOME variable exists, the HOME variable
+will be used instead of HOMEDRIVE and HOMEPATH or 'UserProfile'.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="expand-tilde"></a>
+
+<hr>
+
+<h2>expand-tilde</h2>
+
+<hr>
+
+<p>[This function works only with <nobr>Audacity 1.3.13</nobr> and
+above.]</p>
+
+<pre class="example">
+(defun <font color="#0000CC">expand-filename</font> (string)
+  (cond ((not (stringp string))
+         (error <font color="#880000">"argument must be a string"</font> string))
+        ((and (> (length string) 1)
+                 (char= #\~ (char string 0))
+                 (or (char= #\/ (char string 1))
+                     (char= #\\ (char string 1))))
+         (strcat (user-home-directory)
+                 (subseq string 1)))
+        (t string)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>
+

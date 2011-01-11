@@ -1,0 +1,79 @@
+<html><head><title>XLISP char-downcase</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>char-downcase</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>char-downcase</b> <i>char</i>)</dt>
+<dd><i>char</i> - a character expression<br>
+returns - the lower case character</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The '<nobr>char-downcase</nobr>' function converts the 'char' expression
+to lower case. The lower case equivalent of 'char' is returned. <nobr>If
+'char'</nobr> is not alphabetic <nobr>[a-z or A-Z],</nobr> then the
+character is returned unchanged.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(char-downcase #\0)  =&gt; #\0
+(char-downcase #\A)  =&gt; #\a
+(char-downcase #\a)  =&gt; #\a
+(char-downcase #\[)  =&gt; #\[
+(char-downcase #\+)  =&gt; #\+
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#character-functions">Character Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

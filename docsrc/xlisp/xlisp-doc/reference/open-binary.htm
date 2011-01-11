@@ -1,0 +1,103 @@
+<html><head><title>XLISP open-binary</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>open-binary</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(open-binary <i>file</i> [:direction <i>in-out</i>])</dt>
+<dd><i>file</i> - a string expression or symbol<br>
+<i>in-out</i> - an optional keyword symbol that must be either ':input' or
+':output'. The default is ':input'.<br>
+returns - a stream</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The '<nobr>open-binary</nobr>' function opens the 'file' for binary input
+or output. The 'file' may be a string expression or a symbol. Following the
+'file', there is an optional keyword, ':direction'. The argument following
+this is either ':input' or ':output' which specifies the direction of the
+file. <nobr>If no</nobr> ':direction' is specified, the default is ':input'.
+When 'file' is a string, you may specify a complete file location or
+extensions like &quot;/usr/local/bin/myfile.lsp&quot; or
+&quot;A:\LISP\TIM.BAT&quot;. <nobr>If the</nobr> file open was successful,
+then a file pointer of the following form is returned as the result:</p>
+
+<pre class="example">
+#&lt;File: #99999&gt;
+</pre>
+
+<p>If the file open was not successful, a <a href="nil.htm">NIL</a> is
+returned. <nobr>For an</nobr> input file, the file has to exist, or an error
+will be signaled.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+
+</pre>
+
+<p>This will create a file named FOO-FILE, because XLISP uppercases its
+symbols:</p>
+
+<pre class="example">
+(open-binary 'foo-file :direction :output)
+</pre>
+
+<p>This will create a file named 'foo-file' because UNIX doesn't
+uppercase its file names:</p>
+
+<pre class="example">
+(open-binary "foo-file" :direction :output)
+</pre>
+
+<p>So, if you are having trouble with opening and accessing files, check to
+make sure the file name is in the proper case.</p>
+
+<p>See also <a href="bigendianp.htm">bigendianp</a>,
+<nobr><a href="read-int.htm">read-int</a></nobr>,
+<nobr><a href="write-int.htm">write-int</a></nobr>,
+<nobr><a href="read-float.htm">read-float</a></nobr>,
+<nobr><a href="write-float.htm">write-float</a></nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

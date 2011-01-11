@@ -1,0 +1,106 @@
+<html><head><title>XLISP *breakenable*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*breakenable*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xldbug.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<a href="setq.htm">setq</a> <b>*breakenable*</b> <i>boolean</i>)</dt>
+<dd><i>boolean</i> - a generalized boolean value<br>
+returns - <nobr>non-<a href="nil.htm">NIL</a></nobr> if errors shall be handled by the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>, or <a href="nil.htm">NIL</a> if not</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The *breakenable* system variable controls entry to the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr> and
+the trapping of errors. <nobr>If *breakenable*</nobr> is set to
+<nobr><a href="nil.htm">NIL</a> ,</nobr> then no errors from the
+system or from the <a href="error.htm">error</a> or
+<a href="cerror.htm">cerror</a> functions will be trapped.
+<nobr>If *breakenable*</nobr> is <nobr>non-<a href="nil.htm">NIL</a></nobr>,
+the <nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>
+will handle these errors. <nobr>The <a href="break.htm">break</a></nobr>
+function is not affected by *breakenable* and will always force entry to the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>.
+<nobr>If the</nobr> '<nobr>init.lsp</nobr>' initialization file sets
+*breakenable* to <nobr><a href="t.htm">&nbsp;T&nbsp;</a></nobr>,
+errors will be trapped by the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+&gt; (defun foo (x)            <font color="#008844">; define function FOO</font>
+    (+ x x))
+FOO
+
+&gt; (setq *breakenable* NIL)  <font color="#008844">; disable break loop</font>
+NIL
+
+&gt; (foo "a")
+error: bad argument type    <font color="#008844">; does NOT enter a break loop</font>
+
+&gt; (setq *breakenable* T)    <font color="#008844">; enable break loop</font>
+T
+
+&gt; (foo "a")
+error: bad argument type
+
+1&gt;                          <font color="#008844">; entered a break loop</font>
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#symbols">Symbols</a></nobr></li>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#debugging-and-error-handling">Debugging and Error Handling</a></nobr></li>
+<li><nobr>XLISP 2.0 Manual &rarr; <a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></li>
+<li><nobr>Tutorials &rarr; Nyquist &rarr; <a href="../tutorials/nyquist.htm#debugger-shortcuts">Debugger Shortcuts</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

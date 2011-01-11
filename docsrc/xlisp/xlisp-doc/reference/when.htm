@@ -1,0 +1,82 @@
+<html><head><title>XLISP when</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>when</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(when <i>test</i> [<i>expr</i> ... ])</dt>
+<dd><i>test</i> - an expression, <a href="nil.htm">NIL</a>
+or non-<a href="nil.htm">NIL</a><br>
+<i>expr</i> - expressions comprising a body of code<br>
+returns - the value of the last expression or
+<a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'when' macro executes the 'expr' forms if 'test' evaluates to a
+non-<a href="nil.htm">NIL</a> value. If 'test' is
+<nobr>non-<a href="nil.htm">NIL</a> ,</nobr> the value of the
+last 'expr' is returned as the result. If 'test' is
+<nobr><a href="nil.htm">NIL</a> ,</nobr>
+<a href="nil.htm">NIL</a> is returned with none of 'expr'
+evaluated.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(when NIL)                  <font color="#008844">; returns NIL</font>
+(when T)                    <font color="#008844">; returns T</font>
+
+(when T (print "hi") 'foo)  <font color="#008844">; prints "hi"  returns FOO</font>
+
+(when (listp '(a))
+      (print "a list"))     <font color="#008844">; prints  "a list"</font>
+                            <font color="#008844">; returns "a list"</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-019.htm#when">when</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

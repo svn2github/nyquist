@@ -1,0 +1,146 @@
+<html><head><title>XLISP macrolet</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>macrolet</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>macrolet</b> ([<i>macro</i> ... ]) <i>expr</i> ... )</dt>
+<dd><i>macro</i> - a macro definition binding which is of the form:<br>
+<dl><dd>(<i>symbol arg-list body</i>)</dd>
+<dl><dd><i>symbol</i> - the symbol specifying the macro name<br>
+<i>arg-list</i> - the argument list for the macro<br>
+<i>body</i> - the body of the macro</dd></dl></dl>
+<i>expr</i> - an expression<br>
+returns - the value of the last expression</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'macrolet' special form is basically a local <a
+href="block.htm">block</a> construct that allows local 'macro' definitions
+followed by a block of code to evaluate. <nobr>The first</nobr> form after
+the macrolet is the 'binding' form. <nobr>It contains</nobr> a series of
+'macros'. <nobr>The 'macrolet'</nobr> form will sequentially execute the
+'exprs' after defining the 'macros'. <nobr>The value</nobr> of the last
+'expr' evaluated is returned. When the 'macrolet' is finished execution, the
+'symbols' that were defined will no longer exist.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+&gt; (macrolet ((pls (n1 n2)     <font color="#008844">; MACROLET defining a PLS macro</font>
+               `(+ ,n1 ,n2)))
+    (pls 4 5))
+9
+
+&gt; (pls 4 5)                   <font color="#008844">; the PLS macro no longer exists</font>
+<font color="#AA0000">error: unbound function - PLS</font>
+
+&gt; (macrolet ()                <font color="#008844">; an empty MACROLET</font>
+    (print 'a))
+A  <font color="#008844">; screen output of PRINT</font>
+A  <font color="#008844">; return value</font>
+</pre>
+
+<h2>Known Problems</h2>
+
+<p><b>1.</b> In XLISP, only macros defined by
+
+<a href="defmacro.htm">defmacro</a> [interned in the
+<a href="global-obarray.htm">*obarray*</a>] can be used with
+<a href="setf.htm">setf</a>:</p>
+
+<pre class="example">
+(setq a #(1 2 3))
+
+(defmacro second-array-element (array)
+  `(aref ,array 1))
+
+(second-array-element a)            =&gt; 2
+(setf (second-array-element a) 'x)  =&gt; X
+a                                   =&gt; #(1 X 3)
+</pre>
+
+<p>With macros defined by 'macrolet' [stored in the lexical environment],
+<a href="setf.htm">setf</a> signals a '<nobr>bad place form</nobr>' error:</p>
+
+<pre class="example">
+(macrolet ((second-element (array)
+             `(aref ,array 1)))
+  (second-element a))               =&gt; X
+
+(macrolet ((second-element (array)
+             `(aref ,array 1)))
+  (setf (second-element a) 'y))     =&gt; <font color="#AA0000">error: bad place form</font>
+</pre>
+
+<p><b>2.</b> In XLISP, the <a href="macroexpand.htm">macroexpand</a> and
+<nobr><a href="macroexpand-1.htm">macroexpand-1</a></nobr> functions can
+only expand macros defined
+<nobr>by <a href="defmacro.htm">defmacro</a>:</nobr></p>
+
+<pre class="example">
+&gt; (macroexpand-1 '(second-array-element a))
+(AREF A 1)
+</pre>
+
+<p>With macros defined by 'macrolet', the macro form is returned
+unexpanded:</p>
+
+<pre class="example">
+&gt; (macrolet ((second-element (array)
+               `(aref ,array 1)))
+    (macroexpand-1 '(second-element a)))
+(SECOND-ELEMENT A)
+</pre>
+
+<p>In XLISP, the <a href="macroexpand.htm">macroexpand</a> and
+<nobr><a href="macroexpand-1.htm">macroexpand-1</a></nobr> functions only
+search in the <a href="global-obarray.htm">*obarray*</a> for defined macros,
+but not in the lexical environment.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,302 @@
+<html><head>
+
+<title>Macros</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Macro Programming</h1>
+
+<hr>
+
+<ul>
+<li><nobr><a href="#with-unique-names">with-unique-names</a> - create local <a href="../reference/gensym.htm">gensym</a> variables</nobr></li>
+</ul>
+
+<p><div class="box">
+
+<p><b>Note:</b> The best book for Lisp macro programming is Paul
+Graham's '<nobr>On Lisp</nobr>', available for free under:</p>
+
+<ul>
+<li><nobr><a href="http://www.paulgraham.com/onlisp.html"
+>http://www.paulgraham.com/onlisp.html</a></nobr></li>
+</ul>
+
+</div></p>
+
+<a name="with-unique-names"></a>
+
+<hr>
+
+<h2>with-unique-names</h2>
+
+<hr>
+
+<p>See <a href="http://www.cliki.net/WITH-UNIQUE-NAMES"
+>http://www.cliki.net/WITH-UNIQUE-NAMES</a>. This macro also appears in
+<nobr>Chapter 11</nobr> of Paul Graham's
+<nobr><a href="http://www.paulgraham.com/onlisp.html">On Lisp</a></nobr>
+under the name '<nobr>with-gensyms</nobr>'.</p>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>with-unique-names</b> (<i>symbols</i>) <i>body</i>)</nobr></dt>
+<dd><i>symbols</i> - a list of Lisp symbols, representing variable names<br>
+<i>body</i> - some Lisp code to execute<br>
+returns - the <i>body</i> with all <i>symbols</i> bound to different
+<a href="../reference/gensym.htm">gensym</a>s</dd>
+</dl>
+
+</div></p>
+
+<p>The '<nobr>with-unique-names</nobr>' macro helps to avoid name clashes in
+Lisp macros.</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">with-unique-names</font> (symbols &amp;rest body)
+  `(let ,(mapcar #'(lambda (x) `(,x (gensym))) symbols) ,@body))
+</pre>
+
+<p>The '<nobr>with-unique-names</nobr>' macro belongs to the category of
+<nobr>write-only</nobr> code. <nobr>No matter</nobr> how you write it, it's
+nearly impossible to understand its meaning by reading the macro definition.
+<nobr>It's easier</nobr> to understand if you look at the macro
+expansion:</p>
+
+<pre class="example">
+&gt; (macroexpand-1 '(with-unique-names (a b c)
+                    `(let ((,a 1) (,b 2) (,c 3))
+                       (list ,a ,b ,c))))
+
+(let ((a (gensym)) (b (gensym)) (c (gensym)))
+  `(let ((,a 1) (,b 2) (,c 3))
+     (list ,a ,b ,c)))
+</pre>
+
+<p>This translates in practice to the following idea:</p>
+
+<pre class="example">
+(let ((a (gensym)) (b (gensym)) (c (gensym)))  <font color="#008844">; outside the expansion</font>
+  `(let ((<font color="#AA5500">gensym1</font> 1) (<font color="#AA5500">gensym2</font> 2) (<font color="#AA5500">gensym3</font> 3))  <font color="#008844">; inside the expansion</font>
+     (list <font color="#AA5500">gensym1 gensym2 gensym3</font>)))
+</pre>
+
+<p>The variable names 'a', 'b', and 'c' have been replaced inside the macro
+expansion by three <a href="../reference/gensym.htm">gensym</a>s. This way a
+variable name inside the macro expansion cannot accidentally collide with a
+variable of the same name in the environment of the macro's expansion like
+shown here:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">print-macro</font> (x)         <font color="#008844">; bad example</font>
+  `(let ((<font color="#AA0000">macro-var</font> 'macro))
+     (print ,x)))
+
+&gt; (let ((<font color="#AA0000">local-var</font> 'let))         <font color="#008844">; this works</font>
+    (print local-var)
+    (print-macro local-var))
+LET  <font color="#008844">; printed by PRINT</font>
+LET  <font color="#008844">; printed by PRINT-MACRO</font>
+
+&gt; (let ((<font color="#AA0000">macro-var</font> 'let))         <font color="#008844">; this doesn't</font>
+    (print macro-var)
+    (print-macro macro-var))
+LET    <font color="#008844">; printed by PRINT</font>
+MACRO  <font color="#008844">; printed by PRINT-MACRO</font>
+</pre>
+
+<p>The reason for this behaviour is that the '<nobr>print-macro</nobr>'
+<nobr>expands to:</nobr></p>
+
+<pre class="example">
+&gt; (let ((<font color="#AA0000">local-var</font> 'let))         <font color="#008844">; this works</font>
+    (print local-var)
+    (let ((<font color="#AA0000">macro-var</font> 'macro))
+      (print local-var)))
+LET  <font color="#008844">; LOCAL-VAR inside the first LET</font>
+LET  <font color="#008844">; LOCAL-VAR inside the second LET</font>
+
+&gt; (let ((<font color="#AA0000">macro-var</font> 'let))         <font color="#008844">; this doesn't</font>
+    (print macro-var)
+    (let ((<font color="#AA0000">macro-var</font> 'macro))
+      (print macro-var)))
+LET    <font color="#008844">; MACRO-VAR inside the first LET</font>
+MACRO  <font color="#008844">; MACRO-VAR inside the second LET</font>
+</pre>
+
+<p>Now the same example with unique names. Note the
+<a href="..reference/backquote.htm">comma</a> before the
+'<nobr>macro-var</nobr>' inside the
+<nobr><a href="../reference/let.htm">let</a> form of the macro
+definition:</nobr></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">print-macro</font> (x)         <font color="#008844">; good example</font>
+  (with-unique-names (<font color="#AA0000">macro-var</font>)
+    `(let ((,<font color="#AA0000">macro-var</font> 'macro))
+       (print ,x))))
+
+&gt; (let ((<font color="#AA0000">macro-var</font> 'let))         <font color="#008844">; now it works</font>
+    (print macro-var)
+    (print-macro macro-var))
+LET  <font color="#008844">; printed by PRINT</font>
+LET  <font color="#008844">; printed by PRINT-MACRO</font>
+</pre>
+
+<p>The reason why it works is that the '<nobr>print-macro</nobr>' now
+<nobr>expands to:</nobr></p>
+
+<pre class="example">
+&gt; (let ((<font color="#AA0000">macro-var</font> 'let))         <font color="#008844">; works</font>
+    (print macro-var)
+    (let ((<font color="#AA5500">gensym</font> 'macro))
+      (print macro-var)))
+LET  <font color="#008844">; MACRO-VAR inside the first LET</font>
+LET  <font color="#008844">; MACRO-VAR inside the second LET</font>
+</pre>
+
+<nobr>Now '<nobr>macro-var</nobr>' can even be used as a variable name
+inside the macro definition without colliding with the
+'<nobr>macro-var</nobr>' bound
+<nobr>by <a href="../reference/let.htm">let</a>:</nobr></nobr>
+
+<pre class="example">
+(defmacro <font color="#0000CC">print-macro</font> (x)         <font color="#008844">; good example</font>
+  (with-unique-names (<font color="#AA0000">macro-var</font>)
+    `(let ((,<font color="#AA0000">macro-var</font> 'macro))
+       (print ,<font color="#AA0000">macro-var</font>)
+       (print ,x))))
+
+&gt; (let ((<font color="#AA0000">macro-var</font> 'let))         <font color="#008844">; works</font>
+    (print macro-var)
+    (print-macro macro-var))
+LET     <font color="#008844">; MACRO-VAR printed inside LET</font>
+MACRO   <font color="#008844">; GENSYMed MACRO-VAR, printed inside PRINT-MACRO</font>
+LET     <font color="#008844">; MACRO-VAR bound by LET, printed inside PRINT-MACRO</font>
+</pre>
+
+<p>The expansion of the '<nobr>print-macro</nobr>' shows why this works:</p>
+
+<pre class="example">
+&gt; (let ((<font color="#AA0000">macro-var</font> 'let))         <font color="#008844">; works</font>
+    (print macro-var)
+    (let ((<font color="#AA5500">gensym</font> 'macro))
+      (print <font color="#AA5500">gensym</font>)
+      (print macro-var)))
+LET     <font color="#008844">; MACRO-VAR printed inside LET</font>
+MACRO   <font color="#008844">; GENSYMed MACRO-VAR printed inside PRINT-MACRO</font>
+LET     <font color="#008844">; MACRO-VAR bound by LET, printed inside PRINT-MACRO</font>
+</pre>
+
+<p>You can give as many variable names as you like to
+'<nobr>with-unique-names</nobr>', the
+<a href="../reference/gensym.htm">gensym</a> management is done
+automatically:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">print-macro</font> (x y z)
+  (with-unique-names (a b c)
+    `(let ((,a 1) (,b 2) (,c 3))
+       (format t <font color="#880000">"outside: a: ~a  b: ~a  c: ~a~%"</font> ,x ,y ,z)
+       (format t <font color="#880000">" inside: a: ~a  b: ~a  c: ~a~%"</font> ,a ,b ,c))))
+
+&gt; (let ((a 'a) (b 'b) (c 'c))
+    (print-macro a b c))
+outside: a: A  b: B  c: C
+ inside: a: 1  b: 2  c: 3
+</pre>
+
+<p>Two things you still have to care about:</p>
+
+<ol>
+
+<li><p>The 'unique names' should not use the same smbol names as the
+parameter variables of the macro, otherwise you will have the same
+'shadowing' effect like in ordinary Lisp functions. This is not a real
+problem because when writing a macro you can see the parameter names before
+your eyes, while you usually cannot see the variable names of the
+environment, where the macro will be expanded. <nobr>You also</nobr> do not
+have to care which variable names had been used in a macro if you call the
+macro from arbitrary Lisp code, where you usually cannot see the code of the
+macro definition.</p></li>
+
+<li><p>The local <a href="../reference/gensym.htm">gensym</a>ed variables
+now themselves must be expanded by writing a
+<a href="../reference/backquote.htm">comma</a> in front of each when they appear
+inside a <a href="../reference/backquote.htm">backquote</a> scope.
+This sometimes can lead to tricky situations, because the
+<a href="../reference/backquote.htm">comma</a> expansion of the symbol does not
+produce the variable's value, instead it produces the name of the
+<a href="../reference/gensym.htm">gensym</a>, which holds the value.
+<nobr>But this</nobr> is a general phenomenon of
+<a href="../reference/gensym.htm">gensym</a>s in Lisp macro programming
+and not a bug of the '<nobr>with-unique-names</nobr>' macro.</p></li>
+
+</ol>
+
+<p>The alternative would be writing:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">print-macro</font> (x y z)
+  (let ((a (gensym)) (b (gensym)) (c (gensym)))
+    `(let ((,a 1) (,b 2) (,c 3))
+       (format t <font color="#880000">"outside: a: ~a  b: ~a  c: ~a~%"</font> ,x ,y ,z)
+       (format t <font color="#880000">" inside: a: ~a  b: ~a  c: ~a~%"</font> ,a ,b ,c))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

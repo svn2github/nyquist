@@ -1,0 +1,95 @@
+<html><head><title>XLISP make-array</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>make-array</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(make-array <i>size</i>)</dt>
+<dd><i>size</i> - the size [integer] of the array to be created<br>
+returns - the new array</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'make-array' function creates an array of the specified size and
+returns the array. Array elements may be any valid lisp data type, including
+lists or arrays. Arrays made by 'make-array' and accessed by
+<a href="aref.htm">aref</a> are <nobr>base 0.</nobr> This means
+the first element is accessed by element number '0' and the last element is
+accessed by element number 'n-1', where 'n' is the array size. Array
+elements are initialized to <a href="nil.htm">NIL</a>.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq my-array (make-array 16))     <font color="#008844">; make the array</font>
+(aref my-array 0)                   <font color="#008844">; return 0th (first) element</font>
+(aref my-array 15)                  <font color="#008844">; return 15th (last) element</font>
+(aref my-array 16)                  <font color="#008844">; error: non existant element</font>
+
+(dotimes (i 16)                     <font color="#008844">; set each element to its index</font>
+  (setf (aref my-array i) i))       <font color="#008844">;   by the setf function</font>
+
+(setq new (make-array 4))           <font color="#008844">; make another array</font>
+(setf (aref new 0) (make-array 4))  <font color="#008844">; make new[0] an array of 4</font>
+(setf (aref (aref new 0) 1) 'a)     <font color="#008844">; set new[0,1] = 'a</font>
+(setf (aref new 2) '(a b c))        <font color="#008844">; set new[2] = '(a b c)</font>
+my-array                            <font color="#008844">; look at array</font>
+</pre>
+
+<p><b>Read macro:</b> There is a built-in read-macro for arrays, '#(...)'
+[the hash symbol with an opening and a closing parenthesis]. This allows you
+to create arbitrary arrays with initial values without going through a
+'make-array' function. There is also the XLISP <a
+href="vector.htm">vector</a> function to create initialized arrays.</p>
+
+<p><b>Common Lisp:</b> Common Lisp supports multi-dimensional arrays, XLISP
+only supports one-dimensional arrays. In XLISP, multi-dimenstional arrays
+can be created by using 'arrays within arrays'. Common Lisp supports various
+keyword parameters that are not supported in XLISP.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-015.htm#make-array">make-array</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

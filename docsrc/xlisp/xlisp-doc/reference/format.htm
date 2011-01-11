@@ -1,0 +1,161 @@
+<html><head><title>XLISP format</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>format</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(format destination format [expr1 ... ])</dt>
+<dd><i>destination</i> - a required destination [see below]<br>
+<i>format</i> - a format string<br>
+<i>exprN</i> - an expression<br>
+returns - output string if stream is
+<nobr><a href="nil.htm">NIL</a> ,</nobr>
+<a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<p>The 'destination' must be a file pointer, a stream,
+<a href="nil.htm">NIL</a> [to create a string] or
+<a href="t.htm">&nbsp;T&nbsp;</a> [to print to
+<a href="global-standard-output.htm">*standard-output*</a>].</p>
+
+<h2>Description</h2>
+
+<p>The 'format' function prints the specified expressions [if any] to the
+specified 'destination' using the 'format' string to control the print
+format. If the 'destination' is
+<nobr><a href="nil.htm">NIL</a> ,</nobr> a string is created and
+returned with the contents of the 'format'. If the 'destination' is
+<nobr><a href="t.htm">&nbsp;T&nbsp;</a> ,</nobr> the printing
+occurs to <a href="global-standard-output.htm">*standard-output*</a>. The 'format'
+function returns <nobr><a href="nil.htm">NIL</a> ,</nobr> if
+the 'destination' was non-<a href="nil.htm">NIL</a>. The 'format'
+string is a string [surrounded by double-quote characters]. This string
+contains ASCII text to be printed along with formatting directives
+[identified by a preceeding tilde '~' character]. The character following
+the tilde character is not case sensitive ['~a' and '~A' will function
+equivalently].</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(format T "Now is the time for")         <font color="#008844">; prints  Now is the time for</font>
+(format T "all ~A ~S to" 'good 'men)     <font color="#008844">; prints  all GOOD MEN to</font>
+(format T "come to the")                 <font color="#008844">; prints  come to the</font>
+(format T "~A of their ~S"               <font color="#008844">; prints  aid of their "party"</font>
+          "aid" "party")
+(format *standard-ouput* "Hello there")  <font color="#008844">; prints  Hello there</font>
+(format nil "ho ho ~S" 'ho)              <font color="#008844">; returns "ho ho HO"</font>
+(format T "this is ~%a break")           <font color="#008844">; prints  this is</font>
+                                         <font color="#008844">;         a break</font>
+(format T "this is a long ~
+           string")                      <font color="#008844">; prints  this is a long string</font>
+</pre>
+
+<p><b>Supported format directives:</b> The 'format' string in XLISP supports
+the following format directives:</p>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr><code>~A</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%">ASCII, prints the 'expr'. If it is a string print it
+    without quotes. This is like the <a href="princ.htm">princ</a>
+    function.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>~S</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%">s-expr, prints the 'expr'. If it is a string print it
+    with quotes. This is like the <a href="prin1.htm">prin1</a>
+    function.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>~%</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%">prints a 'newline' control character.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>~~</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%">prints a single tilde '~' character.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>~&lt;newline&gt;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%">continue the 'format' string on the next line. This
+    signals a line break in the format. The 'format' function will ignore
+    all white-space [blanks, tabs, newlines]. This is useful when the
+    'format' string is longer than a program line. Note that the 'newline'
+    character must immediately follow the tilde character.</td>
+</tr>
+</tbody></table></p>
+
+<p><b>Common Lisp:</b> The 'format' function in Common Lisp is quite
+impressive. It includes 26 different formatting directives. XLISP, as shown
+above, does not include most of these. The more difficult ones that you
+might encounter are the decimal, octal, hexidecimal, fixed-format
+floating-point and exponential floating-point. It is possible to print in
+octal and hexadecimal notation by setting
+<a href="global-integer-format.htm">*integer-format*</a>. It is possible to print
+in fixed format and exponential by setting
+<a href="global-float-format.htm">*float-format*</a>. However, neither of these
+system variables are supported in Common Lisp and neither gives control over
+field size.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-028.htm#format">format</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

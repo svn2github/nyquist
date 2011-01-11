@@ -1,0 +1,90 @@
+<html><head><title>XLISP &lt;</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>&lt;</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(&lt; <i>expr1 expr2</i> ...)</nobr></dt>
+<dd><i>exprN</i> - a numeric expression<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the results of
+comparing the expressions are all true,
+<a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The <nobr>'&lt;' [less-than]</nobr> function takes an arbitrary number
+of numeric arguments. It checks to see if all the numbers are monotonically
+increasing. <a href="t.htm">&nbsp;T&nbsp;</a> is returned if
+the arguments are numerically, and monotonically increasing,
+<a href="nil.htm">NIL</a> is returned otherwise. In the case of
+two arguments, this has the effect of testing if 'expr1' is less than
+'expr2'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(&lt; 1 2)              =&gt; T
+(&lt; 1 1)              =&gt; NIL
+(&lt; -1.5 -1.4)        =&gt; T
+(&lt; 1 2 3 4)          =&gt; T
+(&lt; 1 2 3 2)          =&gt; NIL
+(&lt; "a" "b")          =&gt; <font color="#AA0000">error: bad argument type</font>
+(setq a 12 b 13.99)  =&gt; 13.99  <font color="#008844">; set up A and B with values</font>
+(&lt; a b)              =&gt; T
+(&lt; b a)              =&gt; NIL
+</pre>
+
+<p>See <a href="setq.htm">setq</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#arithmetic-functions">Arithmetic Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

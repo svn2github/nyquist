@@ -1,0 +1,94 @@
+<html><head><title>XLISP pprint</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>pprint</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlpp.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(pprint <i>expr</i> [<i>dest</i>])</dt>
+<dd><i>expr</i> - an expression to be pretty printed<br>
+<i>dest</i> - an optional destination, must be a file pointer or
+stream, default is <a href="global-standard-output.htm">*standard-output*</a><br>
+returns - always returns <a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'pprint' function produces a pretty looking version of the 'expr' and
+prints it to the specified 'destination'. If 'expr' is an atom like a
+string, a symbol, a number, etc., 'pprint' will print it like
+<a href="print.htm">print</a>. If 'expr' is a list, it will perform
+indenting, as necessary. <a href="nil.htm">NIL</a> is always
+returned as the result of 'pprint'. The 'destination' may be a file pointer
+or a stream. If there is no 'destination' or it is
+<nobr><a href="nil.htm">NIL</a> ,</nobr>
+<a href="global-standard-output.htm">*standard-output*</a> is the default.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(pprint 'a)      <font color="#008844">; prints  A       returns NIL</font>
+(pprint "abcd")  <font color="#008844">; prints  "abcd"  returns NIL</font>
+
+(pprint '(a-very-long-name (first list) (second list)))
+
+                 <font color="#008844">; prints (A-VERY-LONG-NAME (FIRST LIST)</font>
+                 <font color="#008844">;                          (SECOND LIST))</font>
+                 <font color="#008844">; returns NIL</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp specifies that 'pprint' with a
+'destination' of <a href="nil.htm">NIL</a> will go to
+<a href="global-standard-output.htm">*standard-output*</a>. XLISP does not send the
+output to <a href="global-standard-output.htm">*standard-output*</a> with a
+'destination' of <a href="nil.htm">NIL</a>. Common Lisp also
+specifies that a 'destination' of
+<a href="t.htm">&nbsp;T&nbsp;</a> will be sent to
+*terminal-io*, which is not defined in XLISP by default. XLISP does not
+allow <a href="t.htm">&nbsp;T&nbsp;</a> as a valid argument
+for 'destination'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-027.htm#pprint">pprint</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

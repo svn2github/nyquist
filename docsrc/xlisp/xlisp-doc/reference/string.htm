@@ -1,0 +1,88 @@
+<html><head><title>XLISP string</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>string</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(string <i>expr</i>)</dt>
+<dd><i>expr</i> - a symbol, character, integer or string expression<br>
+returns - a string</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'string' function makes the 'expr' to be a string. <nobr>If
+the</nobr> 'expr' is a string, it is returned, as is. <nobr>If the</nobr>
+'expr' is a character, a <nobr>one-character</nobr> string is returned.
+<nobr>If the</nobr> 'expr' is a symbol, the symbol is turned into a string.
+<nobr>If the</nobr> 'expr' is an integer, a string representing the
+character with an ASCII code of the lowest 8-bit of the intger will be
+returned:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>(string <font color="#0000CC">integer</font>)</code></nobr></td>
+  <td><nobr>&nbsp; &rarr; &nbsp;</nobr></td>
+  <td class="button"><nobr><code>(code-char (rem <font color="#0000CC">integer</font> 256))</code></nobr></td>
+  <td><nobr>&nbsp; &rarr; &nbsp;</nobr></td>
+  <td class="button"><nobr><code><font color="#0000CC">string</font></code></nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(string 'foo)        <font color="#008844">; returns "FOO"</font>
+(string 'x)          <font color="#008844">; returns "X"</font>
+(string "abcdef")    <font color="#008844">; returns "abcdef"</font>
+(string #\a)         <font color="#008844">; returns "a"</font>
+(string #\A)         <font color="#008844">; returns "A"</font>
+(string #\Newline)   <font color="#008844">; returns "\n"</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-025.htm#string">string</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

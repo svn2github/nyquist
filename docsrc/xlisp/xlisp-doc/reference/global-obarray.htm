@@ -1,0 +1,79 @@
+<html><head><title>XLISP *obarray*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*obarray*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlsym.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*obarray*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>The *obarray* system variable contains the system symbol table.
+This symbol table is an XLISP array that is constructed out of lists.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun lookin (sym)                  <font color="#008844">; create a function to</font>
+  (aref *obarray*                    <font color="#008844">;   look inside *OBARRAY*</font>
+    (hash sym (length *obarray*))))  <font color="#008844">;   and look for a specific</font>
+                                     <font color="#008844">;   symbol - returns a list</font>
+
+(lookin "CAR")                       <font color="#008844">; returns (TEST PEEK CAR)</font>
+(lookin "car")                       <font color="#008844">; returns NIL</font>
+</pre>
+
+<p><b>Note:</b> When looking into *obarray* or
+<a href="intern.htm">intern</a>ing symbols, remember that
+&quot;car&quot; and &quot;CAR&quot; written as strings [with quotation marks
+in front and behind] are two different symbols in *obarray*. Remember also
+that normal symbols created by XLISP are upper case names. So, if you type
+in 'car as a normal symbol [with a single quote in front of it], it will be
+the symbol CAR after this normal upper-casing operation.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#obarray">*obarray*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

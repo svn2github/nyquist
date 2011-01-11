@@ -1,0 +1,160 @@
+<html><head>
+
+<title>Binary Integer Numbers</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Binary Integer Numbers</h1>
+
+<hr>
+
+<p>XLISP provides the <a href="../manual/xlisp.htm#binary">#b</a>
+<nobr>read-macro</nobr> for binary numbers:</p>
+
+<pre class="example">
+#b0    =&gt; 0       #b1000  =&gt; 8        #b100000  =&gt; 16
+#b1    =&gt; 1       #b1001  =&gt; 9        #b100001  =&gt; 17
+#b10   =&gt; 2       #b1010  =&gt; 10       #b100010  =&gt; 18
+#b11   =&gt; 3       #b1011  =&gt; 11       #b100011  =&gt; 19
+#b100  =&gt; 4       #b1100  =&gt; 12       #b100100  =&gt; 20
+#b101  =&gt; 5       #b1101  =&gt; 13       #b100101  =&gt; 21
+#b110  =&gt; 6       #b1110  =&gt; 14       #b100110  =&gt; 22
+#b111  =&gt; 7       #b1111  =&gt; 15       #b100111  =&gt; 23
+</pre>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>bin-string</b> <i>integer</i> [<i>all</i>])</dt>
+<dd><i>integer</i> - an integer expression<br>
+<i>all</i> - a boolean expression<br>
+returns - the <i>integer</i> in binary form as string</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">bin-string</font> (integer &amp;optional all)
+  (if (integerp integer)
+      (let ((digits (or (dolist (bits '(16 32 64 128) nil)
+                          (let ((fixnum (round (expt 2.0 (1- bits)))))
+                            (and (plusp (1- fixnum))
+                                 (minusp fixnum)
+                                 (return bits))))
+                        (error <font color="#880000">"integer limit not found"</font>)))
+            (string <font color="#880000">""</font>))
+        (dotimes (x digits)
+          (let ((digit (logand (round (expt 2.0 x)) integer)))
+            (setq string (strcat (if (zerop digit) <font color="#880000">"0" "1"</font>) string))))
+        (format nil <font color="#880000">"~a"</font> (if all string (string-left-trim <font color="#880000">"0"</font> string))))
+      (error <font color="#880000">"not an integer"</font> integer)))
+</pre>
+
+<p>The '<nobr>bin-string</nobr>' function converts the 'integer' argument
+into binary form and returns is as a string. <nobr>If the</nobr>
+optional 'all' argument is not given or
+<a href="../reference/nil.htm">NIL</a>, leading zeros are not included in
+the string. <nobr>If the</nobr> optional 'all' argument is
+<nobr>non-<a href="../reference/nil.htm">NIL</a></nobr>, all digits of the
+internal representation of the 'integer' argument, including leading zeros,
+are contained in the string. This is useful for debugging integer overflow
+and <nobr>bit-wise</nobr> functions.</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>bin</b> <i>integer</i> [<i>all</i>])</dt>
+<dd><i>integer</i> - an integer expression<br>
+<i>all</i> - a boolean expression<br>
+prints - the <i>integer</i> in binary form<br>
+returns - the <i>integer</i> argument</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">bin</font> (integer &amp;optional all)
+  (if (integerp integer)
+      (format t <font color="#880000">"#b~a~%"</font> (bin-string integer all))
+      (format t <font color="#880000">";; not an integer~%"</font>))
+  integer)
+</pre>
+
+<p>The 'bin' function prints the 'integer' argument in binary form on
+the screen. Together with the
+<a href="../manual/xlisp.htm#binary">#b</a> <nobr>read-macro</nobr>
+this can be used for interactive binary computations.</p>
+
+<pre class="example">
+&gt; (bin 12345678)
+#b101111000110000101001110
+12345678
+
+&gt; (bin 12345678 :all)
+#b00000000101111000110000101001110
+12345678
+
+&gt; (bin 1.2345678)
+;; not an integer
+1.2345678
+
+&gt; (bin (logand #b1011 #b1101))
+#b1001
+9
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

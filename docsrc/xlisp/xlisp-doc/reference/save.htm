@@ -1,0 +1,124 @@
+<html><head><title>XLISP save</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>save</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr> xldmem.c, xlimage.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(save <i>file</i>)</dt>
+<dd><i>file</i> - a string or symbol for the name of the file<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if workspace was
+written, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'save' function saves the current XLISP workspace [system state] to
+the specified file. The 'file' may be a string or a symbol. If the 'file'
+does not include a '.wks' suffix, it will be extended to be called
+'file.wks'. The function returns
+<a href="t.htm">&nbsp;T&nbsp;</a> if the workspace was properly
+created and saved, <a href="nil.htm">NIL</a> is returned
+otherwise. There can be several saved workspaces. These workspaces can be
+restored as often as desired.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq myvar 5)       <font color="#008844">; set MYVAR to value 5</font>
+myvar                <font color="#008844">; returns 5</font>
+
+(save 'farp)         <font color="#008844">; save workspace in FARP.wks</font>
+
+(setq myvar "garp")  <font color="#008844">; change MYVAR to "garp"</font>
+myvar                <font color="#008844">; returns "garp"</font>
+
+(restore 'farp)      <font color="#008844">; restore workspace</font>
+myvar                <font color="#008844">; returns 5</font>
+</pre>
+
+<p><b>Bug:</b> The 'save' function generates a system error if the 'file'
+being created already exists. This 'file' will be modified and will not be
+restorable after restarting XLISP. [I still haven't tested this with
+Nyquist.]</p>
+
+<p><b>Note:</b> The saved workspace size is implementation dependent, but
+can be fairly large.</p>
+
+<p><b>File names:</b> In the PC and DOS world, all file names and extensions
+[&quot;foo.bat&quot;] are automatically made uppercase. In using XLISP, this
+means you don't have to worry about whether the name is &quot;foo.bat&quot;,
+&quot;FOO.BAT&quot; or even &quot;FoO.bAt&quot;, they will all work.
+However, in other file systems [UNIX in particular], uppercase and lowercase
+do make a difference:</p>
+
+<p>This will create a file named FOO-FILE in UNIX, because XLISP uppercases
+its symbols:</p>
+
+<pre class="example">
+(open 'foo-file :direction :output)
+</pre>
+
+<p>This will create a file named 'foo-file' because UNIX doesn't
+uppercase its file names:</p>
+
+<pre class="example">
+(open "foo-file" :direction :output)
+</pre>
+
+<p>So, if you are having trouble with opening and accessing files, check to
+make sure the file name is in the proper case.</p>
+
+<p><b>Common Lisp:</b> The XLISP 'save' function is similar in use to the
+'save-world' function in Common Lisp. The primarily difference is that
+'save-world' allows you to restart everything since it creates an executable
+file. The 'save' function requires you to start XLISP up first and then do a
+<a href="restore.htm">restore</a>. Depending on the operating system
+that you are using, it is possible to write a 'save-world' equivalent using
+'save', <a href="restore.htm">restore</a> and system.htm
+functions.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-031.htm#save">save</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

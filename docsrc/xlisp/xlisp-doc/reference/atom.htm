@@ -1,0 +1,90 @@
+<html><head><title>XLISP atom</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>atom</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>atom</b> <i>expr</i>)</dt>
+<dd><i>expr</i> - an arbitrary Lisp expression<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the value is
+an atom, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'atom' predicate function tests if the 'expr' is an atom.
+<a href="t.htm">&nbsp;T&nbsp;</a> is returned if 'expr' is an
+atom, <a href="nil.htm">NIL</a> is returned otherwise.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(atom 'a)                      =&gt; T   <font color="#008844">; symbol</font>
+(atom #'atom)                  =&gt; T   <font color="#008844">; subr - function</font>
+(atom "string")                =&gt; T   <font color="#008844">; string</font>
+(atom 4)                       =&gt; T   <font color="#008844">; integer</font>
+(atom 4.5)                     =&gt; T   <font color="#008844">; float</font>
+(atom object)                  =&gt; T   <font color="#008844">; object</font>
+(atom #(1 2 3))                =&gt; T   <font color="#008844">; array</font>
+(atom #'quote)                 =&gt; T   <font color="#008844">; fsubr</font>
+(atom *standard-output*)       =&gt; T   <font color="#008844">; stream</font>
+(atom '())                     =&gt; T   <font color="#008844">; NIL is an atom</font>
+(atom (lambda (x) (print x)))  =&gt; T   <font color="#008844">; closure</font>
+(atom '(a b c))                =&gt; NIL <font color="#008844">; list</font>
+(setq a '(a b))                =&gt; (A B)
+(atom a)                       =&gt; NIL <font color="#008844">; value of A is not an atom</font>
+</pre>
+
+<p><b>Note:</b> <a href="nil.htm">NIL</a> or '() is used in many places as a
+list or atom expression. Both 'atom' and <a href="listp.htm">listp</a>, when
+applied to <a href="nil.htm">NIL</a>, return
+<a href="t.htm">&nbsp;T&nbsp;</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#predicate-functions">Predicate Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">XLISP</a> &gt;
+<a href="../manual/xlisp-man-index.htm">XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a>&nbsp; -&nbsp;
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

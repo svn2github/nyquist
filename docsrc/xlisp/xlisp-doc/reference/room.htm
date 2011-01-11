@@ -1,0 +1,90 @@
+<html><head><title>XLISP room</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>room</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xldmem.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(room [<i>info</i>])</dt>
+<dd><i>info</i> - an optional, unused expression<br>
+returns - <a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'room' function prints the current memory statistics to
+<a href="global-standard-output.htm">*standard-output*</a>.
+<a href="nil.htm">NIL</a> is always returned. The message shows
+the statistics for:</p>
+
+<ul>
+<li><nobr>total nodes</nobr></li>
+<li><nobr>current free nodes</nobr></li>
+<li><nobr>current number of allocated memory segments</nobr></li>
+<li><nobr>node size of the allocated memory segments</nobr></li>
+<li><nobr>total memory in bytes</nobr></li>
+<li>total number of garbage collections that have occured
+since this session of XLISP started</li>
+</ul>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(room)    <font color="#008844">; prints  Nodes:       4000</font>
+          <font color="#008844">;         Free nodes:  1723</font>
+          <font color="#008844">;         Segments:    4</font>
+          <font color="#008844">;         Allocate:    1000</font>
+          <font color="#008844">;         Total:       52566</font>
+          <font color="#008844">;         Collections: 8</font>
+          <font color="#008844">; returns NIL</font>
+</pre>
+
+<p><b>Common Lisp:</b> In Common LISP, the 'info' argument controls the
+amount of information that is printed. In Common Lisp, the form of and
+information provided by the 'room' output is implementation dependent. For
+portability, you should not count on this information or form.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-031.htm#room">room</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

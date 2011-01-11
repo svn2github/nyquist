@@ -1,0 +1,109 @@
+<html><head><title>XLISP lambda</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>lambda</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(lambda <i>arg-list</i> [<i>body</i>])</dt>
+<dd><i>arg-list</i> - a list of the formal arguments to the function of the form:<br>
+<dl>
+<dd>([<i>arg1</i> ... ]<br>
+&nbsp;[<a href="lambda-keyword-optional.htm">&amp;optional</a> <i>oarg1</i> ... ]<br>
+&nbsp;[<a href="lambda-keyword-rest.htm">&amp;rest</a> <i>rarg</i>]<br>
+&nbsp;[<a href="lambda-keyword-key.htm">&amp;key</a> ... ]<br>
+&nbsp;[<a href="lambda-keyword-aux.htm">&amp;aux</a> <i>aux1</i> ... ])</dd>
+</dl>
+<i>body</i> - a series of LISP forms (expressions) that are executed in order<br>
+returns - the function closure</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The LAMBDA special form returns a function definition [an executable
+function] that has no name. All of the 'argN' formal arguments that are
+defined are required to appear in a call to the defined function. If there
+are any <a href="lambda-keyword-optional.htm">&amp;optional</a> arguments defined,
+they will be filled in order. If there is a
+<a href="lambda-keyword-rest.htm">&amp;rest</a> argument defined, and all the
+required formal arguments and <a href="lambda-keyword-optional.htm">&amp;optional</a>
+arguments are filled, any and all further parameters will be passed into the
+function via the 'rarg' argument. Note that there can be only one 'rarg'
+argument for <a href="lambda-keyword-rest.htm">&amp;rest</a>. If there are
+insufficient parameters for any of the
+<a href="lambda-keyword-optional.htm">&amp;optional</a> or
+<a href="lambda-keyword-rest.htm">&amp;rest</a> arguments, they will contain
+<a href="nil.htm">NIL</a>. The
+<a href="lambda-keyword-aux.htm">&amp;aux</a> variables are a mechanism for you
+to define variables local to the function definition. At the end of the
+function execution, these local symbols and their values are are
+removed.</p>
+
+<p>Read also the chapter about
+<nobr><a href="../manual/xlisp-man-009.htm">lambda lists</a></nobr>
+in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(funcall (lambda (a b) (* a b)) 4 8 )  <font color="#008844">; evaluate a lambda function</font>
+                                       <font color="#008844">;   returns 32</font>
+
+(funcall (lambda '(a b) (+ a b)) 1 2)  <font color="#008844">; evaluate another function</font>
+                                       <font color="#008844">;   returns 3</font>
+
+(funcall (lambda (a b)                 <font color="#008844">; evaluate a more complex function</font>
+            (print "a no-name fnc")    <font color="#008844">;   prints "a no-name fnc"</font>
+            (* a b)) 3 8)              <font color="#008844">;   and returns 24</font>
+</pre>
+
+<p><b>Note:</b> Using a <a href="setq.htm">setq</a> on a 'lambda'
+expression is not the same as a <a href="defun.htm">defun</a>. A
+<a href="setq.htm">setq</a> on a 'lambda' will give the
+variable the value of the 'lambda' closure. This does not mean that the
+variable name can be used as a function.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-012.htm#lambda">lambda</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

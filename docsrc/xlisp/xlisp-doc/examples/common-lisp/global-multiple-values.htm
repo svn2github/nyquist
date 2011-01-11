@@ -1,0 +1,142 @@
+<html><head>
+
+<title>cl:*multiple-values*</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:*multiple-values*</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>*multiple-values*</b></nobr> variable is used to signal
+if a function has returned multiple values:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>cl:<b>*multiple-values*</b></dt>
+<dd>returns - <a href="../../reference/t.htm">&nbsp;T&nbsp;</a> if a
+function returned multiple values</dd>
+</dl>
+
+</div></p>
+
+<p>Test if a function has returned multiple values:</p>
+
+<pre class="example">
+(setf cl:*multiple-values* nil)
+(let ((result (function ...)))
+  (if cl:*multiple-values*
+      (do-something-with *rslt* ...)
+      (do-something-with result ...))
+  ... )
+</pre>
+
+<p>Do not use <nobr>cl:<b>*multiple-values*</b></nobr> with
+<a href="../../reference/let.htm">let</a> like this:</p>
+
+<pre class="example">
+(let ((cl:*multiple-values* nil)
+      (result (function ...)))
+  (if cl:*multiple-values*
+      (do-something-with *rslt* ...)
+      (do-something-with result ...))
+  ... )
+</pre>
+
+<p>This doesn't work because 'function' is evaluated in the global XLISP
+environment, where the lexical <a href="../../reference/let.htm">let</a>
+binding of the <nobr>cl:<b>*multiple-values*</b></nobr> variable does not
+exist, while the <a href="../../reference/if.htm">&nbsp;if&nbsp;</a> form
+inside the <a href="../../reference/let.htm">let</a> form cannot see a
+global change of the <nobr>cl:<b>*multiple-values*</b></nobr> variable,
+because the global value is shadowed by the lexical
+<a href="../../reference/let.htm">let</a> binding.
+<nobr>See <a href="../environment.htm">Environment</a></nobr> for more
+details about variables.</p>
+
+<p>The XLISP <a href="../../reference/progv.htm">progv</a> special form can
+be used to encapsulate a multiple value call while automatically restoring
+the old values at the end like this:</p>
+
+<pre class="example">
+(values 1 2 3)        =&gt; 1
+
+cl:*multiple-values*  =&gt; T
+*rslt*                =&gt; (1 2 3)
+
+(progv '(cl:*multiple-values* *rslt*) '(nil nil)
+  (let ((result (function ...)))
+    (if cl:*multiple-values*
+        (do-something-with *rslt* ...)
+        (do-something-with result ...))))
+
+cl:*multiple-values*  =&gt; T
+*rslt*                =&gt; (1 2 3)
+</pre>
+
+<p><div class="box">
+
+<p><b>Note:</b> All functions returning multiple values set 
+<nobr>cl:<b>*multiple-values*</b></nobr> to
+<a href="../../reference/t.htm">&nbsp;T&nbsp;</a>, but it's up to the
+Lisp programmer to reset the variable
+<nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>.</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

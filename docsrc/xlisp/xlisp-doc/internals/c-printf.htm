@@ -1,0 +1,518 @@
+<html><head>
+
+<title>ANSI C 'printf' Format</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>ANSI C 'printf' Format</h1>
+
+<hr>
+
+<p><b>Nyquist/XLISP:</b> The
+<nobr><a href="../reference/global-float-format.htm">*float-format*</a></nobr> and
+<nobr><a href="../reference/global-integer-format.htm">*integer-format*</a></nobr>
+variables define format strings for the underlying 'sprintf' <nobr>C
+function</nobr>. <nobr>In C,</nobr> the same format string specification is
+used for 'fprint' [writes to <nobr>a file]</nobr>, 'printf' [writes to
+standard output] and 'sprintf' [writes to another string]. These three
+functions are meant in the following text with 'the printf functions'.</p>
+
+<p><b>ANSI C:</b> The printf functions write output under control of a
+format string that specifies how subsequent arguments are converted for
+output. If there are insufficient arguments for the format, the behavior is
+undefined. If the format is exhausted while arguments remain, the excess
+arguments are evaluated but are otherwise ignored. The printf functions
+return when the end of the format string is encountered.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="format-string"></a>
+
+<hr>
+
+<h2>Format String</h2>
+
+<hr>
+
+<p>The format string is composed of zero or more directives, which are
+ordinary characters <nobr>[except &quot;%&quot;]</nobr>, which are copied
+unchanged to the output stream, and conversion specifications, each of which
+results in fetching zero or more subsequent arguments. Each conversion
+specification is introduced by the <nobr>character &quot;%&quot;</nobr>:</p>
+
+<pre class="example">
+<font color="#AA0000">%</font>[<font color="#0000CC">flags</font>][<font color="#0000CC">field-with</font>][<font color="#0000CC">precision</font>][<font color="#0000CC">data-type</font>]<font color="#880000">conversion-type</font>
+</pre>
+
+<p>After the &quot;%&quot;, the following appear in sequence:</p>
+
+<ul>
+
+<li><p><b>Flags</b> - Zero or more <a href="#flags">flags</a> that modify
+the meaning of the conversion specification.</p></li>
+
+<li><p><b>Field Width</b> - <nobr>An optional</nobr> decimal integer
+specifying a minimum field width. <nobr>If the</nobr> converted value has
+fewer characters than the field width, it will be padded with spaces on the
+left  to the field width. <nobr>The field</nobr> is padded on the right if
+the <nobr><a href="#minus-flag">&nbsp;&minus;&nbsp;</a> flag</nobr> has been
+given, or padded with zeros if the
+<nobr><a href="#zero-flag">&nbsp;0&nbsp;</a> flag</nobr> had been
+given. <nobr>A negative</nobr> integer, given as '<nobr>field width</nobr>'
+argument, is interpreted as a
+<nobr><a href="#minus-flag">&nbsp;&minus;&nbsp;</a> flag</nobr> followed by
+a positive <nobr>field width</nobr>.</p></li>
+
+<li><p><b>Precision</b> - <nobr>An optional</nobr> decimal integer that
+gives the minimum number of digits to appear for
+<a href="#integer">integer</a> conversions, the number of digits to appear
+after the
+<nobr>decimal-point</nobr> character for <nobr>floating-point</nobr>
+<nobr><a href="#float-e">&nbsp;e&nbsp;</a></nobr> and
+<nobr><a href="#float-f">&nbsp;f&nbsp;</a></nobr> conversions, or the
+maximum number of significant digits for the <nobr>floating-point</nobr>
+<nobr><a href="#float-g">&nbsp;g&nbsp;</a></nobr> conversion.</p>
+
+<p>The precision takes the form of a period character followed by an
+optional decimal integer:</p>
+
+<pre class="example">
+.[<font color="#0000CC">integer</font>]
+</pre>
+
+<p><nobr>If the</nobr> integer is omitted, it is treated as zero, a
+negative precision argument is taken as if it were missing.</p>
+
+<p><b>Note:</b> <nobr>In C</nobr>, the precision also specifies the
+maximum number of characters to be written from a string in <nobr>'s'
+conversion</nobr>, but &quot;%s&quot; should not be used in the XLISP
+<nobr><a href="../reference/global-float-format.htm">*float-format*</a></nobr> or
+<nobr><a href="../reference/global-integer-format.htm">*integer-format*</a></nobr>
+variables, otherwise XLISP will crash.</p></li>
+
+</li>
+
+<li><p><b>Data Type</b> - <nobr>An optional</nobr> character specifying a
+<nobr><a href="#data-type">data type</a></nobr> to be used for the
+conversion.</p>
+
+<p><b>XLISP:</b> Nyquist/XLISP uses <nobr>C 'long'</nobr> signed integers
+and <nobr>C 'double'</nobr> floats only, so with <nobr>floating-point</nobr>
+numbers no special <nobr><a href="#data-type">data type</a></nobr> needs to
+be given, while <a href="#integer">integer</a> conversions should always be
+prefixed by a <nobr>'l' [lowercase L]</nobr>, otherwise the printed
+representation of integer numbers may be differently than the behaviour of
+the Nyquist/XLISP functions.</nobr></p></li>
+
+<li><p><b>Conversion Type</b> - <nobr>A character</nobr> that specifies the
+<nobr><a href="#conversion-type">conversion type</a></nobr> to be
+applied.</p></li>
+
+</ul>
+
+<p><b>Not with Nyquist/XLISP:</b> <nobr>In C</nobr>, a '<nobr>field
+width</nobr>' or 'precision', or both, may be indicated by an asterisk *
+instead of a digit string. In this case, an int argument supplies the field
+width or precision. The arguments specifying field width or precision, or
+both, shall appear [in that order] before the argument [if any] to be
+converted.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="flags"></a>
+
+<hr>
+
+<h2>Flags</h2>
+
+<hr>
+
+<p>The flag characters and their meanings are:</p>
+
+<p><div class="box">
+
+<dl>
+
+<a name="minus-flag"></a>
+
+<dt><p><nobr>&minus;&nbsp; [minus sign character]</nobr></p></dt>
+
+<dd><p>The result of the conversion will be <nobr>left-justified</nobr>
+within the field.</p></dd>
+
+<a name="plus-flag"></a>
+
+<dt><p><nobr>+&nbsp; [plus sign character]</nobr></p></dt>
+
+<dd><p>The result of a signed conversion will always begin with a plus or
+minus sign.</p></dd>
+
+<a name="space-flag"></a>
+
+<dt><p><nobr><i>space</i>&nbsp; [space character]</nobr></p></dt>
+
+<dd><p>If the first character of a signed conversion is not a sign, or if a
+signed conversion results in no characters, a space will be prepended to the
+result. <nobr>If the</nobr> 'space' and
+<nobr><a href="#plus-flag">&nbsp;+&nbsp;</a> flags</nobr> both appear, the
+'space' flag will be ignored.</p></dd>
+
+<a name="hash-flag"></a>
+
+<dt><p><nobr>#&nbsp; [hash character]</nobr></p></dt>
+
+<dd><p>The result is to be converted to an 'alternate form':</p>
+
+<p>Octal Numbers - For o conversion, it increases the precision to force the
+first digit of the result to be a zero.</p>
+
+<p>Hexadecimal Numbers - For x or X conversion, a nonzero result will have
+0x or 0X prepended to it.</p>
+
+<p>Floating-point Numbers - For e, E, f, g, and G conversions, the result
+will always contain a decimal-point character, even if no digits follow it
+(normally, a decimal-point character appears in the result of these
+conversions only if a digit follows it). For g and G conversions, trailing
+zeros will not be removed from the result. For other conversions, the
+behavior is undefined.</p>
+
+</dd>
+
+<a name="zero-flag"></a>
+
+<dt><p><nobr>0&nbsp; [number zero character]</nobr></p></dt>
+
+<dd><p>For integer d, i, o, u, x, X, and floating-point e, E, f, g, G
+conversions, leading zeros [following any indication of sign or base] are
+used to pad to the <nobr><a href="#format-string">field width</a></nobr>.
+<nobr>No <a href="#space-flag">space</a></nobr> padding is performed.
+<nobr>If the</nobr> '0' and
+<nobr><a href="#minus-flag">&nbsp;&minus;&nbsp;</a> flags</nobr> both
+appear, the <nobr>'0' flag</nobr> will be ignored. For integer d, i, o, u,
+x, X conversions, if a <a href="#format-string">precision</a> is specified,
+the <nobr>'0' flag</nobr> will be ignored. <nobr>For other</nobr>
+conversions, the behavior is undefined.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="data-type"></a>
+
+<hr>
+
+<h2>Data Type</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><nobr><b>h</b>&nbsp; [lowercase H character]</nobr></p></dt>
+
+<dd><p>A following d, i, o, u, x, or X conversion specifier applies to a
+short int or unsigned short int argument [the argument will have been
+promoted according to the integral promotions, and its value shall be
+converted to short int or unsigned short int before printing].</p>
+
+<p>A following n conversion specifier applies to a pointer to a short int
+argument.</p></dd>
+
+<dt><p><nobr><b>l</b>&nbsp; [lowercase L character]</nobr></p></dt>
+
+<dd><p>A following d, i, o, u, x, or X conversion specifier applies to a
+long int or unsigned long int argument.</p>
+
+<p>A following n conversion specifier applies to a pointer to a long int
+argument.</p></dd>
+
+<dt><p><nobr><b>L</b>&nbsp; [uppercase L character]</nobr></p></dt>
+
+<dd><p>A following e, E, f, g, or G conversion specifier applies to a long
+double argument.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p>If an h, l, or L appears with any other conversion specifier, the
+behavior is undefined.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="conversion-type"></a>
+
+<hr>
+
+<h2>Conversion Type</h2>
+
+<hr>
+
+<p><b>Integer</b> conversion:</p>
+
+<p><div class="box">
+
+<dl>
+
+<a name="integer"></a>
+
+<dt><p><nobr><b>d</b>, <b>i</b>, <b>o</b>, <b>u</b>, <b>x</b>,
+<b>X</b></nobr></p></dt>
+
+<dd><p>The integer argument is converted to:
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>d</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td><nobr>signed decimal</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>i</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td><nobr>signed decimal</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>o</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td><nobr>unsigned octal</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>u</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td><nobr>unsigned decimal</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>x</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td><nobr>unsigned hexadecimal, using 'abcdef'</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="center"><nobr>X</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td><nobr>unsigned hexadecimal, using 'ABCDEF'</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>The <a href="#format-string">precision</a> specifies the minimum number
+of digits to appear. <nobr>If the</nobr> value being converted can be
+represented in fewer digits, it will be expanded with leading zeros. The
+default precision <nobr>is 1</nobr>. The result of converting a zero value
+with an explicit precision of zero results in no characters.</p>
+
+<b>XLISP:</b> Nyquist/XLISP uses <nobr>C 'long'</nobr> signed integers, so
+the integer conversions should always be prefixed by a <nobr>'l' [lowercase
+L]</nobr> indicating a '<nobr>long int</nobr>' <nobr>C
+<a href="#data-type">data type</a></nobr>, otherwise the printed
+representation of integer numbers may be differently than the behaviour of
+the Nyquist/XLISP functions.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p><b>Floating-point</b> conversion:</p>
+
+<p><div class="box">
+
+<dl>
+
+<a name="float-f"></a>
+
+<dt><p><b>f</b></p></dt>
+
+<dd><p>The <nobr>floating-point</nobr> argument of <nobr>C data</nobr> type
+'double' is converted to decimal notation in the style:</p>
+
+<pre class="example">
+[-]<font color="#0000CC">ddd</font>.<font color="#0000CC">ddd</font>
+</pre>
+
+<p>where the number of digits after the <nobr>decimal-point</nobr> character
+is equal to the <a href="#format-string">precision</a> specification.
+<nobr>If the</nobr> <a href="#format-string">precision</a> is missing, it is
+taken <nobr>as 6</nobr>. <nobr>If the</nobr>
+<a href="#format-string">precision</a> is explicitly zero, no
+<nobr>decimal-point</nobr> character appears. <nobr>If a</nobr>
+<nobr>decimal-point</nobr> character appears, at least one digit appears
+<nobr>before it</nobr>. <nobr>The value</nobr> is rounded to the appropriate
+number of digits.</p></dd>
+
+<a name="float-e"></a>
+
+<dt><p><b>e</b>, <b>E</b></p></dt>
+
+<dd><p>The <nobr>floating-point</nobr> argument of <nobr>C data</nobr> type
+'double' is converted in the style:</p>
+
+<pre class="example">
+[-]<font color="#0000CC">d</font>.<font color="#0000CC">ddd</font><font color="#AA0000">e</font>+-<font color="#0000CC">dd</font>
+</pre>
+
+<p>where there is one digit before the <nobr>decimal-point</nobr> character
+[which is nonzero if the argument is nonzero] and the number of digits after
+it is equal to the <a href="#format-string">precision</a>. <nobr>If
+the</nobr> <a href="#format-string">precision</a> is missing, it is taken
+<nobr>as 6</nobr>. <nobr>If the</nobr>
+<a href="#format-string">precision</a> is zero, no
+<nobr>decimal-point</nobr> character appears. <nobr>The value</nobr> is
+rounded to the appropriate number of digits. <nobr>The exponent</nobr>
+always contains at least two digits. <nobr>If the</nobr> value is zero, the
+exponent is zero. <nobr>The &quot;E&quot;</nobr> conversion specifier will
+produce a number with 'E' instead of 'e' introducing the exponent.</p> </dd>
+
+<a name="float-g"></a>
+
+<dt><p><b>g</b>, <b>G</b></p></dt>
+
+<dd><p>The <nobr>floating-point</nobr> argument of <nobr>C data</nobr> type
+'double' is converted in style <a href="#float-f">&nbsp;f&nbsp;</a> or
+<a href="#float-e">&nbsp;e&nbsp;</a> or in style
+<a href="#float-e">&nbsp;E&nbsp;</a> in the case of a &quot;G&quot;
+conversion specifier, with the <a href="#format-string">precision</a>
+specifying the number of significant digits. <nobr>If an</nobr> explicit
+<a href="#format-string">precision</a> is zero, it is taken <nobr>as
+1</nobr>. <nobr>The style</nobr> used depends on the value converted.
+<nobr>Style <a href="#float-">&nbsp;e&nbsp;</a></nobr> will be used only if
+the exponent resulting from such a conversion is less <nobr>than -4</nobr>
+or greater than or equal to the <a href="#format-string">precision</a>.
+Trailing zeros are removed from the fractional portion of the result.
+<nobr>A decimal-point</nobr> character appears only if it is followed by
+<nobr>a digit</nobr>.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p>Other conversion types defined <nobr>in ANSI C</nobr>, but <b>not</b> to
+be used with the XLISP
+<nobr><a href="../reference/global-float-format.htm">*float-format*</a></nobr> and
+<nobr><a href="../reference/global-integer-format.htm">*integer-format*</a></nobr>
+variables, because XLISP will produce nonsense or just simply will crash:</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><b>c</b></p></dt>
+
+<dd><p>The integer argument is converted to an '<nobr>unsigned char</nobr>',
+and the resulting character is written.</p>
+
+<p><b>XLISP:</b> If the
+<nobr><a href="../reference/global-float-format.htm">*float-format*</a></nobr> or
+<nobr><a href="../reference/global-integer-format.htm">*integer-format*</a></nobr>
+variable is set to &quot;%c&quot;, then with integers or
+<nobr>floating-point</nobr> numbers, the lowest <nobr>8 bit</nobr> of the
+internal binary representation will be interpreted as an
+<a href="">ASCII</a> character.</p></dd>
+
+<dt><p><b>s</b></p></dt>
+
+<dd><p>The argument shall be a pointer to an array of character type.
+Characters from the array are written up to [but not including] a
+terminating null character. <nobr>If the</nobr>
+<a href="#format-string">precision</a> is specified, no more than that many
+characters are written. <nobr>If the</nobr>
+<a href="#format-string">precision</a> is not specified or is greater than
+the size of the array, the array shall contain a null character.</p>
+
+XLISP: If </dd>
+
+<dt><p><b>p</b></p></dt>
+
+<dd><p>The argument shall be a pointer to 'void'. The value of the pointer
+is converted to a sequence of printable characters, in an
+<nobr>implementation-defined</nobr> manner.</p></dd>
+
+<dt><p><b>n</b></p></dt>
+
+<dd><p>The argument shall be a pointer to an integer into which is written
+the number of characters written to the output stream so far by this call to
+the <nobr>C 'fprintf'</nobr> function.<nobr> No argument</nobr> is
+converted.</p></dd>
+
+<dt><p><b>%</b></p></dt>
+
+<dd><p><nobr>A &quot;%&quot;</nobr> is written. <nobr>No argument</nobr> is
+converted. <nobr>The complete</nobr> conversion specification <nobr>shall be
+&quot;%%&quot;</nobr>.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p>If a conversion specification is invalid, the behavior is undefined.
+<nobr>In no</nobr> case does a nonexistent or small
+<nobr><a href="#format-string">field width</a></nobr> cause truncation of a
+field. <nobr>If the</nobr> result of a conversion is wider than the
+<nobr><a href="#format-string">field width</a></nobr>, the field is expanded
+to contain the conversion result.</p>
+
+<p>The minimum value for the maximum number of characters produced by
+any single conversion shall be 509.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

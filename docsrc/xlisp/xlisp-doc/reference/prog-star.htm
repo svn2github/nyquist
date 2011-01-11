@@ -1,0 +1,101 @@
+<html><head><title>XLISP prog*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>prog*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(prog* ([<i>binding</i> ... ]) [<i>expr</i> ... ])</dt>
+<dd><i>binding</i> - a variable binding which is can take one of
+<dl><dd><i>symbol</i><br>
+(<i>symbol init-expr</i>)</dd>
+<dl><dd><i>symbol</i> - a symbol<br>
+<i>init-expr</i> - an initialization expression for <i>symbol</i></dd></dl></dl>
+<i>expr</i> - expressions comprising the body of the loop which may contain
+<a href="return.htm">return</a>s,
+<a href="go.htm">go</a>s or tags for
+<a href="go.htm">go</a><br>
+returns - <a href="nil.htm">NIL</a> or the argument passed to
+the <a href="return.htm">return</a> function</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'prog*' special form is basically a 'block' construct that contains
+symbols with optional initializations and a block of code [expressions] to
+evaluate. The 'prog*' special form evaluates its initializations in
+sequential order as opposed to <a href="">prog</a> which does it in no
+specified order. The first form after the 'prog*' is the 'binding' form. It
+contains a series of 'symbols' or 'bindings'. The 'binding' is a 'symbol'
+followed by an initialization expression 'init-expr'. If there is no
+'init-expr', the 'symbol' will be initialized to
+<a href="nil.htm">NIL</a>. The order of execution of the bindings
+is sequential. If a <a href="return.htm">return</a> form is
+evaluated, its value will be returned. Otherwise,
+<a href="nil.htm">NIL</a> is returned. When the 'prog*' is
+finished execution, the 'symbols' that were defined will no longer exist or
+retain their values.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(prog* (i j)                 <font color="#008844">; PROG* with vars I and J</font>
+       (print i) (print j))  <font color="#008844">; prints  NIL NIL  returns NIL</font>
+
+(prog* ((i 1) (j 2))         <font color="#008844">; PROG* with vars I and J</font>
+       (print i) (print j)
+       (return (+ i j)))     <font color="#008844">; prints 1 2  returns 3</font>
+
+(prog* () (print "hello"))   <font color="#008844">; prints "hello"  returns NIL</font>
+
+(prog ((i 1) (j (+ i 1)))    <font color="#008844">; PROG won't work due to order</font>
+      (print (+ i j)) )      <font color="#008844">; error: unbound variable - I</font>
+
+(prog* ((i 1) (j (+ i 1)))   <font color="#008844">; PROG* will work due to order</font>
+       (print (+ i j)) )     <font color="#008844">; prints 3  returns NIL</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-021.htm#prog*">prog*</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

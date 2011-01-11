@@ -1,0 +1,123 @@
+<html><head><title>XLISP *evalhook*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*evalhook*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xleval.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*evalhook*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>*evalhook* is a system variable whose value is user code that will
+intercept evaluations either through normal system evaluation or through
+calls to <a href="evalhook.htm">evalhook</a>. The default value for
+*evalhook* is <nobr><a href="nil.htm">NIL</a> ,</nobr> which
+specifies to use the built in system evaluator. If *evalhook* is
+<nobr>non-<a href="nil.htm">NIL</a> ,</nobr> the routine is
+called with expression and environment parameters. If the environment
+argument is <nobr><a href="nil.htm">NIL</a> ,</nobr> then the the
+current global environment is used. The environment, if
+<nobr>non-<a href="nil.htm">NIL</a> ,</nobr> is a structure
+composed of dotted pairs constructed of the symbol and its value which have
+the form:</p>
+
+<pre class="example">
+(((<font color="#008844"><i>sym1</i></font> . <font color="#008844"><i>val1</i></font>) (<font color="#008844"><i>sym2</i></font> . <font color="#008844"><i>val2</i></font>) ... )))
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun myeval (exp env)           <font color="#008844">; define MYEVAL routine</font>
+  (princ "exp: ") (print exp)
+  (princ "env: ") (print env)
+  (evalhook exp #'myeval NIL env))
+
+(defun foo (a) (+ a a))           <font color="#008844">; create simple function</font>
+(setq *evalhook* #'myeval)        <font color="#008844">; and install MYEVAL as hook</font>
+
+(foo 1)                           <font color="#008844">; prints exp: (FOO 1) env:NIL</font>
+                                  <font color="#008844">;        exp: 1       env:NIL</font>
+                                  <font color="#008844">;        exp: (+ A A) env:((((A . 1))))</font>
+                                  <font color="#008844">;        exp: A       env:((((A . 1))))</font>
+                                  <font color="#008844">;        exp: A       env:((((A . 1))))</font>
+                                  <font color="#008844">; returns 2</font>
+
+(top-level)                       <font color="#008844">; to clean up *evalhook*</font>
+</pre>
+
+<p><b>Note:</b> The <a href="evalhook.htm">evalhook</a> function and
+*evalhook* system variable are very useful in the construction of debugging
+facilities within XLISP. The <a href="trace.htm">trace</a> and
+<a href="untrace.htm">untrace</a> functions use
+<a href="evalhook.htm">evalhook</a> and *evalhook* to implement
+their functionality. The other useful aspect of
+<a href="evalhook.htm">evalhook</a> and *evalhook* is to help in
+understanding how XLISP works to see the expressions, their environment
+and how they are evaluated.</p>
+
+<p><b>Caution:</b> Be careful when using *evalhook* and
+<a href="evalhook.htm">evalhook</a>. If you put in a bad definition
+into *evalhook*, you might not be able to do anything and will need to
+exit XLISP.</p>
+
+<p><b>Unusual behaviour:</b> The <a href="evalhook.htm">evalhook</a>
+function and *evalhook* system variable, by their nature, cause some unusual
+things to happen. After you have set *evalhook* to some
+non-<a href="nil.htm">NIL</a> value, your function will be
+called. However, when you are all done and set *evalhook* to
+<a href="nil.htm">NIL</a> or some other new routine, it will
+never be set. This is because the
+<a href="evalhook.htm">evalhook</a> function [in the 'xlbfun.c'
+source file] saves the old value of *evalhook* before calling your routine,
+and then restores it after the evaluation. The mechanism to reset
+*evalhook* is to execute the
+<a href="top-level.htm">top-level</a> function, which sets
+*evalhook* to <a href="nil.htm">NIL</a>.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#evalhook">*evalhook*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

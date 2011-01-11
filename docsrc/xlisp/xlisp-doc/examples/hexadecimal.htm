@@ -1,0 +1,151 @@
+<html><head>
+
+<title>Hexadecimal Integer Numbers</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Hexadecimal Integer Numbers</h1>
+
+<hr>
+
+<p>XLISP provides the <a href="../manual/xlisp.htm#hexadecimal">#x</a>
+<nobr>read-macro</nobr> for hexadecimal numbers:</p>
+
+<pre class="example">
+#x0  =&gt; 0        #x8  =&gt; 8         #x10  =&gt; 16
+#x1  =&gt; 1        #x9  =&gt; 9         #x11  =&gt; 17
+#x2  =&gt; 2        #xa  =&gt; 10        #x12  =&gt; 18
+#x3  =&gt; 3        #xb  =&gt; 11        #x13  =&gt; 19
+#x4  =&gt; 4        #xc  =&gt; 12        #x14  =&gt; 20
+#x5  =&gt; 5        #xd  =&gt; 13        #x15  =&gt; 21
+#x6  =&gt; 6        #xe  =&gt; 14        #x16  =&gt; 22
+#x7  =&gt; 7        #xf  =&gt; 15        #x17  =&gt; 23
+</pre>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>hex-string</b> <i>integer</i> [<i>all</i>])</dt>
+<dd><i>integer</i> - an integer expression<br>
+<i>all</i> - a boolean expression<br>
+returns - the <i>integer</i> in hexadecimal form as string</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">hex-string</font> (integer &amp;optional all)
+  (if (integerp integer)
+      (let ((fmt (if all
+                     (or (dolist (bits '(16 32 64 128) nil)
+                           (let ((fixnum (round (expt 2.0 (1- bits)))))
+                             (and (plusp (1- fixnum))
+                                  (minusp fixnum)
+                                  (return (format nil <font color="#880000">"%.~ax"</font> (/ bits 4))))))
+                         (error <font color="#880000">"integer limit not found"</font>))
+                     <font color="#880000">"%x"</font>)))
+        (progv '(<font color="#AA5500">*integer-format*</font>) (list fmt)
+          (format nil <font color="#880000">"~a"</font> integer)))
+      (error <font color="#880000">"not an integer"</font> integer)))
+</pre>
+
+<p>The '<nobr>hex-string</nobr>' function converts the 'integer' argument
+into hexadecimal form and returns is as a string. <nobr>If the</nobr>
+optional 'all' argument is not given or
+<a href="../reference/nil.htm">NIL</a>, leading zeros are not included in
+the string. <nobr>If the</nobr> optional 'all' argument is
+<nobr>non-<a href="../reference/nil.htm">NIL</a></nobr>, all digits of the
+internal representation of the 'integer' argument, including leading zeros,
+are contained in the string. This is useful for debugging integer overflow
+and <nobr>bit-wise</nobr> functions.</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>hex</b> <i>integer</i> [<i>all</i>])</dt>
+<dd><i>integer</i> - an integer expression<br>
+<i>all</i> - a boolean expression<br>
+prints - the <i>integer</i> in hexadecimal form<br>
+returns - the <i>integer</i> argument</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">hex</font> (integer &amp;optional all)
+  (if (integerp integer)
+      (format t <font color="#880000">"#x~a~%"</font> (hex-string integer all))
+      (format t <font color="#880000">";; not an integer~%"</font>))
+  integer)
+</pre>
+
+<p>The 'hex' function prints the 'integer' argument in hexadecimal form on
+the screen. Together with the
+<a href="../manual/xlisp.htm#hexadecimal">#x</a> <nobr>read-macro</nobr>
+this can be used for interactive hexadecimal computations.</p>
+
+<pre class="example">
+&gt; (hex 12345678)
+#xbc614e
+12345678
+
+&gt; (hex (+ #x1f #xa3))
+#xc2
+194
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

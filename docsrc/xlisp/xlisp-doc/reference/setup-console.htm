@@ -1,0 +1,72 @@
+<html><head><title>XLISP setup-console</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>setup-console</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>sys/unix/osstuff.c, sys/mac/macstuff.c, sys/win/msvc/winfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(setup-console)</dt>
+<dd>returns - <a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The '<nobr>setup-console</nobr>' function sets the default console
+attributes.</p>
+
+<p><b>Note:</b> Under Windows, Nyquist normally starts up in a
+<nobr>medium-sized</nobr> console window with black text and a white
+background, with a window title of 'Nyquist'. This is normally accomplished
+by calling '<nobr>setup-console</nobr>' <nobr>in 'system.lsp'</nobr>.
+<nobr>In Nyquist</nobr>, you can avoid this behavior by setting
+<nobr>*setup-console*</nobr> to <a href="nil.htm">NIL</a> in your
+'<nobr>init.lsp</nobr>' file. <nobr>If 'setup-console'</nobr> is not called,
+Nyquist uses standard input and output <nobr>as is</nobr>. This is what you
+want if you are running Nyquist inside of emacs, for example.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

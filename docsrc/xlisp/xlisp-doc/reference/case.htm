@@ -1,0 +1,171 @@
+<html><head><title>XLISP case</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>case</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>case</b> <i>expr</i> [(<i>value action</i>) ... ])</dt>
+<dd><i>expr</i> - an expression that can be compared via <a href="eql.htm">eql</a><br>
+<i>value</i> - an unevaluated expression or list of unevaluated expressions<br>
+<i>action</i> - one or more expressions<br>
+returns - the value of the last expression of the matching case</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'case' special form first evaluates 'expr', the return value of this
+evaluation is then compared against all the 'value' entries:</p>
+
+<pre class="example">
+(case <font color="#0000CC">expr</font>
+  (<font color="#0000CC">value-</font><font color="#AA0000">1</font> <font color="#0000CC">action-</font><font color="#AA0000">1</font>)
+  (<font color="#0000CC">value-</font><font color="#AA0000">2</font> <font color="#0000CC">action-</font><font color="#AA0000">2</font>)
+    <font color="#008844">...</font>
+  (<font color="#0000CC">value-</font><font color="#AA0000">n</font> <font color="#0000CC">action-</font><font color="#AA0000">n</font>))
+</pre>
+
+<p>If 'value' is a single atom, the atom is compared against 'expr':</p>
+
+<pre class="example">
+&gt; (case 'a
+    ('a "a")
+    ('b "b"))
+"a"
+</pre>
+
+<p>If 'value' is a list, each of the elements of the list are compared
+against 'expr':</p>
+
+<pre class="example">
+&gt; (case 'a
+    ((1 2 3 4) "number")
+    ((a b c d) "alpha"))
+"alpha"
+</pre>
+
+<p>The 'action' associated with the first 'value' that matches 'expr' is
+evaluated and returned as the result of the 'case' special form.</p>
+
+<p>If no 'value' matches, <a href="nil.htm">NIL</a> is returned:</p>
+
+<pre class="example">
+&gt; (case 'c
+    ('a "a")
+    ('b "b"))
+NIL
+</pre>
+
+<p>If the last 'value' is the symbol <a href="t.htm">&nbsp;T&nbsp;</a> and
+no other 'value' has matched 'expr', then 'case' will evaluate the 'action'
+associated <nobr>with <a href="t.htm">&nbsp;T&nbsp;</a></nobr>:</p>
+
+<pre class="example">
+&gt; (case 3
+    (1 "one")
+    (2 "two")
+    (t "no match"))
+"no match"
+</pre>
+
+<p>If there are multiple <a href="t.htm">&nbsp;T&nbsp;</a> entries, the
+first is considered to be the end of the 'case':</p>
+
+<pre class="example">
+&gt; (case 9
+    (1 "one")
+    (t "first t")
+    (t "second t"))
+"first t"
+</pre>
+
+<p><b>Note:</b> The 'case' special form does not work with a list or string
+as the 'expr' because 'case' uses <a href="eql.htm">eql</a> which cannot
+compare lists or strings:</p>
+
+<pre class="example">
+&gt; (case "a"   <font color="#AA0000">; doesn't work!</font>
+    ("a" 'a)
+    ("b" 'b))
+NIL
+</pre>
+
+<p>The <a href="cond.htm">cond</a> special form can be used to test Lisp
+expressions that cannot be handled by 'case'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(case)     =&gt; NIL
+(case 'a)  =&gt; NIL
+
+(defun c-type (expr)
+  (case (type-of expr)
+    (flonum  "float")
+    (fixnum  "integer")
+    (string  "string")
+    (cons    "non-empty list")
+    (nil     "empty list")
+    (t       "other")))
+
+(c-type 1.2)     =&gt; "float"
+(c-type 3)       =&gt; "integer"
+(c-type "ab")    =&gt; "string"
+(c-type '(a b))  =&gt; "non-empty list"
+(c-type '())     =&gt; "empty list"
+(c-type 'a)      =&gt; "other"
+</pre>
+
+<p>See <a href="defun.htm">defun</a>,
+<nobr><a href="type-of.htm">type-of</a></nobr>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#control-constructs">Control Constructs</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

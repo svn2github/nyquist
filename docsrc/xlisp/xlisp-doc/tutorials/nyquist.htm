@@ -1,0 +1,383 @@
+<html><head>
+
+<title>Nyquist</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Nyquist</h1>
+
+<hr>
+
+<ul>
+<li><nobr><a href="#debugger-shortcuts">Debugger Shortcuts</a></nobr></li>
+<li><nobr><a href="#grindef">grindef</a> - print the function definition of a closure</nobr></li>
+<li><nobr><a href="#args">args</a> - print the argument list of a closure</nobr></li>
+<li><nobr><a href="#setfn">setfn</a> - define 'alias' names for functions</nobr></li>
+<li><nobr><a href="#display">display</a> - framework for debug messages</nobr></li>
+</ul>
+
+<p>This page will not save you from reading the Nyquist manual, it's a list
+of things I find useful but frequently have to look them up in the manuals
+when I haven't worked with Nyquist for a while. Many more useful tricks can
+be found in the 'Developing and Debugging in Nyquist' chapter in the Nyquist
+manual.</p>
+
+<a name="debugger-shortcuts"></a>
+
+<hr>
+
+<h2>Debugger Shortcuts</h2>
+
+<hr>
+
+<p>Some Nyquist/XLISP debugger shortcuts, defined in 'xlinit.lsp' and
+'misc.lsp':</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(bt)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><a href="../reference/baktrace.htm">baktrace</a></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(co)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><a href="../reference/continue.htm">continue</a></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(top)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><a href="../reference/top-level.htm">top-level</a></td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(res)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><a href="../reference/clean-up.htm">clean-up</a></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(up)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><a href="../reference/clean-up.htm">clean-up</a></td>
+</tr>
+</tbody></table></p>
+
+<p>The debugger commands only work if
+<a href="../reference/global-breakenable.htm">*breakenable*</a>
+is <nobr>non-<a href="../reference/nil.htm">NIL</a></nobr>:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(bkon)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><nobr>(setq
+    <a href="../reference/global-breakenable.htm">*breakenable*</a>
+    t)</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(bkoff)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><nobr>(setq
+    <a href="../reference/global-breakenable.htm">*breakenable*</a>
+    nil)</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>You can make your own
+<a href="../reference/global-tracenable.htm">*tracenable*</a>
+shortcuts like shown here:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">tron</font> ()
+  (setq <font color="#AA5500">*tracenable*</font> t))
+
+(defun <font color="#0000CC">troff</font> ()
+  (setq <font color="#AA5500">*tracenable*</font> nil))
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>XLISP 2.0 Manual &rarr; <a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="grindef"></a>
+
+<hr>
+
+<h2>grindef</h2>
+
+<hr>
+
+<p>The 'grindef' function prints the Lisp code of a
+<a href="../manual/xlisp.htm#data-types">closure</a> <nobr>[user-defined</nobr>
+function or macro]:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">grindef</font> (e)
+  (pprint (get-lambda-expression (symbol-function e))))
+</pre>
+
+<p>Example:</p>
+
+<pre class="example">
+&gt; (grindef 'grindef)
+(LAMBDA (E)
+        (PPRINT (GET-LAMBDA-EXPRESSION (SYMBOL-FUNCTION E))))
+NIL
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="args"></a>
+
+<hr>
+
+<h2>args</h2>
+
+<hr>
+
+<p>The 'args' function prints the name and the argument variables of a
+<a href="../manual/xlisp.htm#data-types">closure</a> <nobr>[user-defined</nobr>
+function or macro]:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">args</font> (e) 
+  (pprint (cons e (second (get-lambda-expression (symbol-function e))))))
+</pre>
+
+<p>Example:</p>
+
+<pre class="example">
+&gt; (args 'args)
+(ARGS E)
+NIL
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="setfn"></a>
+
+<hr>
+
+<h2>setfn</h2>
+
+<hr>
+
+<p>The 'setfn' macro defines 'alias' names for functions:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">setfn</font> (a b) 
+  `(setf (symbol-function ',a) (symbol-function ',b)))
+</pre>
+
+<p>Examples from 'xlinit.lsp':</p>
+
+<pre class="example">
+(setfn co  continue)
+(setfn top top-level)
+(setfn res clean-up)
+(setfn up  clean-up)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="display"></a>
+
+<hr>
+
+<h2>display</h2>
+
+<hr>
+
+<p>'display' is a debugging macro, defined in 'xlinit.lsp'.</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">display-macro</font> (label &amp;rest items)
+  (let ($res$)
+    (dolist ($item$ items)
+            (setq $res$ (cons
+                         `(format t <font color="#880000">"~A = ~A  "</font> ',$item$ ,$item$)
+                         $res$)))
+    (append (list 'let nil `(format t <font color="#880000">"~A : "</font> ,label))
+            (reverse $res$)
+            '((terpri)))))
+
+(defun <font color="#0000CC">display-on</font> ()
+  (setfn display display-macro) t)
+
+(defun <font color="#0000CC">display-off</font> ()
+  (setfn display or) nil)
+</pre>
+
+<p>Usage:</p>
+
+<pre class="example">
+(display <font color="#880000">"heading"</font> <font color="#0000CC">var1 var2</font> ...)
+</pre>
+
+<p>expands into:</p>
+
+<pre class="example">
+(let ()
+  (format t "~A: " <font color="#880000">"heading"</font>)
+  (format t "~A = ~A  " ',<font color="#0000CC">var1</font> ,<font color="#0000CC">var1</font>)
+  (format t "~A = ~A  " ',<font color="#0000CC">var2</font> ,<font color="#0000CC">var2</font>)
+   ... )
+</pre>
+
+<p>and then prints:</p>
+
+<pre class="example">
+<font color="#0000CC">heading</font> : <font color="#0000CC">VAR1</font> = <font color="#0000CC">value1 VAR2</font> = <font color="#0000CC">value2</font> ...
+</pre>
+
+<p>Using the 'display' macro in a function like shown here:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">hello</font> ()
+  (let ((local-var 'hello))
+    (display <font color="#880000">"debug message"</font> local-var)
+    local-var)) <font color="#008844">; return value</font>
+</pre>
+
+<p>Now the '<nobr>debug message</nobr>' can be switched on and off without
+changing the code:</p>
+
+<pre class="example">
+&gt; (display-on)
+T
+
+&gt; (hello)
+debug message : LOCAL-VAR = HELLO  
+HELLO
+
+&gt; (display-off)
+NIL
+
+&gt; (hello)
+HELLO
+</pre>
+
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

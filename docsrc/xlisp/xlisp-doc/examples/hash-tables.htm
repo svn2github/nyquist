@@ -1,0 +1,496 @@
+<html><head>
+
+<title>Hash Tables</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Hash Tables</h1>
+
+<hr>
+
+<p>The internal XLISP 'hash' function from 'xlsym.c':</p>
+
+<pre class="example">
+<font color="#008844">/* hash - hash a symbol name string */</font>
+int <font color="#0000CC">hash</font>(char *str, int len)
+{
+    int i;
+    for (i = 0; *str; )
+        i = (i &lt;&lt; 2) ^ *str++;
+    i %= len;
+    return (i &lt; 0 ? -i : i);
+}
+</pre>
+
+<p>In XLISP this would look like:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">lisp-hash</font> (string table-size)
+  (let ((i 0))
+    (dotimes (index (length string))
+      (setq i (logxor (bsh i 2) (char-code (char string index)))))
+    (setq i (rem i table-size))
+    (if (minusp i) (- i) i)))
+</pre>
+
+<p>A <a href="../reference/hash.htm">hash</a> function is a kind of random
+number generator, where the same input always produces the same output
+number. <nobr>The XLISP</nobr> <a href="../reference/hash.htm">hash</a>
+function computes equally distributed integer numbers in a given range from
+the characters of an input string.</p>
+
+<p>A very simple example:</p>
+
+<ol>
+
+<li><p>We want to store <nobr>4 strings</nobr> in <nobr>2 lists</nobr>,
+stored in <nobr>2 array</nobr> elements:</p>
+
+<pre class="example">
+&gt; (setq my-array (make-array 2))
+#(NIL NIL)  <font color="#008844">; NIL NIL = two empty lists</font>
+</pre>
+
+<p>If the array index is computed by the
+<a href="../reference/hash.htm">hash</a> function, then the equally
+distributed numbers make sure that every list will contain approximately
+the same number of strings:</p>
+
+<pre class="example">
+&gt; (dolist (string '("a" "b" "c" "d") my-array)
+    (push string (aref my-array (<font color="#AA0000">hash</font> string (length my-array)))))
+#(("d" "b") ("c" "a"))
+</pre>
+
+<p>The order of the strings in the array was computed by the
+<a href="../reference/hash.htm">hash</a> function, it is not the same order
+as given to <a href="../reference/dolist.htm">dolist</a>.</p></li>
+
+<li><p><nobr>If we</nobr> now search for a string in the lists then the
+<a href="../reference/hash.htm">hash</a> function will tell us the number of
+the array element with the list containing the string because the same input
+string to the <a href="../reference/hash.htm">hash</a> function always
+produces the same output number, as long as the same
+'<nobr>table-size</nobr>' [the same number of array elements] is used:</p>
+
+<pre class="example">
+&gt; (dolist (string '("a" "b" "c" "d"))
+    (format t "~s = ~s~%" string
+              (aref my-array (<font color="#AA0000">hash</font> string (length my-array)))))
+"a" = ("c" "a")
+"b" = ("d" "b")
+"c" = ("c" "a")
+"d" = ("d" "b")
+NIL
+</pre>
+
+<p>The <a href="../reference/hash.htm">hash</a> function will always find
+the correct list as long as the number of array elements has not
+changed.</p> </li>
+
+</ol>
+
+<p>The two main tasks of the <a href="../reference/hash.htm">hash</a>
+<nobr>function are</nobr>:</p>
+
+<ol>
+
+<li><p>Make sure that all lists contain approximately the same number of
+elements, independent from the characters in the input strings, no matter if
+the strings are very similar or completely different. With the
+<a href="../reference/hash.htm">hash</a> function it will nearly never
+happen that one list contains all strings while all other lists are
+empty.</p></li>
+
+<li><p>With the same 'name' and '<nobr>table-size</nobr>' arguments the
+<a href="../reference/hash.htm">hash</a> function will always return exactly
+the same integer number, so a string can always be found no matter in what
+order the strings are stored in the lists of the array.</p></li>
+
+</ol>
+
+<p>Now we can find strings stored in lists, but we want to store and find
+arbitrary things. Therefore we replace the ordinary lists with association
+lists:</p>
+
+<pre class="example">
+&gt; (setq my-array (make-array 2))
+#(() ())
+
+&gt; (dolist (a-cons '(("a" . 1) ("b" . 2) ("c" . 3) ("d" . 4)) my-array)
+    (push a-cons (aref my-array (<font color="#AA0000">hash</font> (car a-cons) (length my-array)))))
+#((("d" . 4) ("b" . 2)) (("c" . 3) ("a" . 1)))
+</pre>
+
+<p>We now have an array like this:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td></td>
+  <td align="center"><nobr>Array&nbsp;</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><code>&nbsp;&nbsp;</code>0<code>&nbsp;</code></nobr></td>
+  <td class="button"><nobr>Association List 1</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>(("d" . 4) ("b" . 2))</code></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><code>&nbsp;&nbsp;</code>1<code>&nbsp;</code></nobr></td>
+  <td class="button"><nobr>Association List 2</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td class="button"><nobr><code>(("c" . 3) ("a" . 1))</code></nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>The association lists give the flexibility to store an arbitrary number
+of <nobr>key/value</nobr> pairs, we are not limited by the fixed number of
+array elements, while the array together with the
+<a href="../reference/hash.htm">hash</a> function gives much more speed than
+a single association list if we want to manage a big number of
+ <nobr>key/value pairs</nobr>.</p>
+
+<p>With a big number of key/value pairs it is faster to keep them in many
+small association lists than in one single <nobr>big list</nobr>. Arrays
+provide random access, where every element can be accessed in the same time,
+while a list can only be searched from the beginning up to the matching
+element. <nobr>The longer</nobr> the list, the slower the search
+becomes.</p>
+
+<p>With the <a href="../reference/hash.htm">hash</a> function we find the
+association list containing <nobr>the key</nobr>:</p>
+
+<pre class="example">
+&gt; (dolist (key '("a" "b" "c" "d"))
+    (format t "~s = ~s~%" key
+              (aref my-array (<font color="#AA0000">hash</font> key (length my-array)))))
+"a" = (("c" . 3) ("a" . 1))
+"b" = (("d" . 4) ("b" . 2))
+"c" = (("c" . 3) ("a" . 1))
+"d" = (("d" . 4) ("b" . 2))
+NIL
+</pre>
+
+<p>With the <a href="../reference/assoc.htm">assoc</a> function we find the
+<nobr>key/value pair</nobr>:</p>
+
+<pre class="example">
+&gt; (dolist (key '("a" "b" "c" "d"))
+    (format t "~s = ~s~%" key
+              (<font color="#AA0000">assoc</font> key (aref my-array (<font color="#AA0000">hash</font> key (length my-array)))
+                     :test #'equal)))
+"a" = ("a" . 1)
+"b" = ("b" . 2)
+"c" = ("c" . 3)
+"d" = ("d" . 4)
+NIL
+</pre>
+
+<p>With the <a href="../reference/cdr.htm">cdr</a> function we get the
+value:</p>
+
+<pre class="example">
+&gt; (dolist (key '("a" "b" "c" "d"))
+    (format t "~s = ~s~%" key
+              (<font color="#AA0000">cdr</font> (<font color="#AA0000">assoc</font> key (aref my-array (<font color="#AA0000">hash</font> key (length my-array)))
+                          :test #'equal))))
+"a" = 1
+"b" = 2
+"c" = 3
+"d" = 4
+NIL
+</pre>
+
+<p>And now we have our first working <nobr>hash-table</nobr>.</p>
+
+<p>But we still have one problem. <nobr>The
+<a href="../reference/hash.htm">hash</a></nobr> function works only with
+symbols or strings, while <a href="../reference/assoc.htm">assoc</a> can
+also work with numbers, strings and even lists as 'key' argument. <nobr>To
+make</nobr> our <nobr>hash-table</nobr> work with all types
+<a href="../reference/assoc.htm">assoc</a> can handle, we must make the
+<a href="../reference/hash.htm">hash</a> function happy and convert the
+'key' argument with <a href="../reference/format.htm">format</a> into a
+string before computing the <nobr>hash index:</nobr></p>
+
+<pre class="example">
+&gt; (setq my-array (make-array 2))
+#(() ())
+
+&gt; (dolist (a-cons '((#\x . 1) ((y z) . 2) (12 . 3) (6.5 . 4)) my-array)
+    (push a-cons (aref my-array (<font color="#AA0000">hash</font> (<font color="#AA0000">format</font> nil "~s" (car a-cons))
+                                      (length my-array)))))
+#(((12 . 3) (#\x . 1)) ((6.5 . 4) ((Y Z) . 2)))
+
+&gt; (dolist (key '(#\x (y z) 12 6.5))
+    (format t "~s = ~s~%" key
+              (<font color="#AA0000">cdr</font> (<font color="#AA0000">assoc</font> key (aref my-array (<font color="#AA0000">hash</font> (<font color="#AA0000">format</font> nil "~s" key)
+                                                   (length my-array)))
+                          :test #'equal))))
+#\x = 1
+(Y Z) = 2
+12 = 3
+6.5 = 4
+NIL
+</pre>
+
+<p>Wonderful.</p>
+
+<p>A final quirk still needs to be solved. Maybe you have noticed the :test
+argument to <a href="../reference/assoc.htm">assoc</a>. Like with all Lisp
+functions providing :test arguments, the
+<a href="../reference/assoc.htm">assoc</a> :test defaults to
+<a href="../reference/eql.htm">eql</a> [because 
+<a href="../reference/eq.htm">eq</a> is unreliable with numbers, and
+<a href="../reference/eql.htm">eql</a> is faster
+<nobr>than <a href="../reference/equal.htm">equal</a>]</nobr>, but
+<a href="../reference/eql.htm">eql</a> doesn't work with
+<nobr>floating-point</nobr> numbers, strings and lists, so we had to
+<nobr>use <a href="../reference/equal.htm">equal</a></nobr>.</p>
+
+<p>The typical Lisp solution is to provide a :test argument to the
+'make-hash-table' function, so the programmer can choose which function to
+use. <nobr>The :test</nobr> argument to 'make-hash-table' becomes a property
+of the <nobr>hash-table</nobr> itself, so the :test only needs to be given
+once, at the time when the <nobr>hash-table</nobr> is created, and not every
+time the <nobr>hash-table</nobr> is accessed afterwards.</p>
+
+<p>We have the problem that <nobr>hash-tables</nobr> are no
+<nobr>built-in</nobr> XLISP data type and we want use
+<nobr>make-hash-table</nobr> in the same way
+<nobr>as <a href="../reference/make-array.htm">make-array</a></nobr>:</p>
+
+<pre class="example">
+(setq my-hash-table (make-hash-table <font color="#0000CC">size</font> :test #'equal))
+</pre>
+
+<p>Here the make-hash-table function has no access to the property list of
+the '<nobr>my-hash-table</nobr>' symbol, so the only solution is to make the
+:test function become part of the <nobr>hash-table</nobr> itself:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td></td>
+  <td align="center"><nobr>Array&nbsp;</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><code>&nbsp;&nbsp;</code>0<code>&nbsp;</code></nobr></td>
+  <td class="button"><nobr>Test Function</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><nobr>the :test argument to
+    <a href="../reference/assoc.htm">assoc</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><code>&nbsp;&nbsp;</code>1<code>&nbsp;</code></nobr></td>
+  <td class="button"><nobr>Association List 1</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><nobr>((<i>key1</i> . <i>value1</i>)
+    ... (<i>keyN</i> . <i>valueN</i>))</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><code>&nbsp;&nbsp;</code>2<code>&nbsp;</code></nobr></td>
+  <td class="button"><nobr>Association List 2</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><nobr>((<i>key1</i> . <i>value1</i>)
+    ... (<i>keyN</i> . <i>valueN</i>))</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><code>&nbsp;&nbsp;</code>3<code>&nbsp;</code></nobr></td>
+  <td class="button"><nobr>Association List 3</nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><nobr>((<i>key1</i> . <i>value1</i>)
+    ... (<i>keyN</i> . <i>valueN</i>))</nobr></td>
+</tr>
+<tr>
+  <td></td>
+  <td align="center"><nobr>...<code>&nbsp;</code></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><code>&nbsp;&nbsp;</code><i>n</i><code>&nbsp;</code></nobr></td>
+  <td class="button"><nobr>Association List <i>n</i></nobr></td>
+  <td><nobr>&nbsp;&rarr;&nbsp;</nobr></td>
+  <td width="100%"><nobr>((<i>key1</i> . <i>value1</i>)
+    ... (<i>keyN</i> . <i>valueN</i>))</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>This is the final layout of our <nobr>hash-tables</nobr>, so we can start
+to implement the <nobr>hash-table</nobr> functions.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="make-hash-table"></a>
+
+<hr>
+
+<h2>make-hash-table</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">make-hash-table</font> (size &amp;optional (test #'eql))
+  (and (&lt; size 1) (error <font color="#880000">"hash-table minimum size is 1"</font> size))
+  (let ((hash-table (make-array (1+ size))))
+    (setf (aref hash-table 0) test)
+    hash-table))
+
+(defun <font color="#0000CC">gethash</font> (key hash-table)
+  (let* ((size   (1- (length hash-table)))
+         (index  (1+ (hash (format nil "~s" key) size)))
+         (a-list (aref hash-table index))
+         (test   (aref hash-table 0)))
+    (cdr (assoc key a-list :test test))))
+
+(defun <font color="#0000CC">puthash</font> (key value hash-table)
+  (let* ((size   (1- (length hash-table)))
+         (index  (1+ (hash (format nil "~s" key) size)))
+         (a-list (aref hash-table index))
+         (test   (aref hash-table 0))
+         (a-cons (assoc key a-list :test test)))
+    (setf (aref hash-table index)
+          (cons (cons key value)
+                (if a-cons
+                    (remove-if #'(lambda (x)
+                                   (funcall test key (car x)))
+                               a-list)
+                    a-list)))))
+
+(defun <font color="#0000CC">remhash</font> (key hash-table)
+  (let* ((size   (1- (length hash-table)))
+         (index  (1+ (hash (format nil "~s" key) size)))
+         (a-list (aref hash-table index))
+         (test   (aref hash-table 0))
+         (a-cons (assoc key a-list :test test)))
+    (and a-cons
+         (setf (aref hash-table index)
+               (remove-if #'(lambda (x)
+                              (funcall test key (car x)))
+                          a-list)))
+    a-cons))
+
+(defun <font color="#0000CC">clrhash</font> (hash-table)
+  (let ((size (1- (length hash-table))))
+    (do ((index 1 (1+ index)))
+        ((&gt; index size))
+      (setf (aref hash-table index) nil))
+    hash-table))
+
+(defun <font color="#0000CC">hash-table-p</font> (expr)
+  (and (arrayp expr)             <font color="#008844">; expression is an array</font>
+       (&gt; (length expr) 1)       <font color="#008844">; with more than one elements</font>
+       (fboundp (aref expr 0))   <font color="#008844">; first element is a function</font>
+       (let ((size (1- (length expr))))   <font color="#008844">; all other</font>
+         (do ((index 1 (1+ index)))       <font color="#008844">; elements are lists</font>
+             ((or (&gt; index size)
+                  (not (listp (aref expr index))))
+              (&gt; index size))))))
+
+(defun <font color="#0000CC">hash-table-count</font> (hash-table)
+  (let ((size (1- (length hash-table)))
+        (entries 0))
+    (do ((index 1 (1+ index)))
+        ((&gt; index size))
+      (setf entries (+ entries (length (aref hash-table index)))))
+    entries))
+
+(defun <font color="#0000CC">hash-table-size</font> (hash-table)
+  (1- (length hash-table)))
+
+(defun <font color="#0000CC">hash-table-test</font> (hash-table)
+  (aref hash-table 0))
+
+(defun <font color="#0000CC">print-hash-table</font> (hash-table)
+  (if (not (arrayp hash-table))
+      (format t <font color="#880000">";; Not an array: ~s~%"</font> hash-table)
+      (dotimes (index (length hash-table))
+        (let ((element (aref hash-table index)))
+          (cond ((not (listp element))
+                 (format t <font color="#880000">";; array element ~a: ~s~%"</font> index element))
+                ((null element)
+                 (format t <font color="#880000">";; bucket ~a: ()~%"</font> index))
+                (t
+                 (format t <font color="#880000">";; bucket ~a:~%"</font> index)
+                 (let ((entry-counter 1))
+                   (dolist (entry element)
+                     (format t <font color="#880000">";; ~a.~a: ~s~%"</font> index entry-counter entry)
+                     (incf entry-counter)))))))))
+</pre>
+
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>
+

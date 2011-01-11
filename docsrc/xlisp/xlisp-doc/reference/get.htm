@@ -1,0 +1,97 @@
+<html><head><title>XLISP get</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>get</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(get <i>symbol property</i>)</dt>
+<dd><i>symbol</i> - the symbol with a property list<br>
+<i>property</i> - he property name being retrieved<br>
+returns - the property value or <a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'get' function returns the value of the'property' from the 'symbol'.
+If the 'property' does not exist, a <a href="nil.htm">NIL</a> is
+returned. The 'symbol' must be an existing symbol. The returned value may be
+a single value or a list.</p>
+
+<p>Property lists are lists attached to any user defined variables. The
+lists are in the form of:</p>
+
+<pre class="example">
+(<font color="#008844"><i>name1 value1 name2 value2</i></font> ... )
+</pre>
+
+<p>Any number of properties may be attached to a single variable.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq person 'bobby)                  <font color="#008844">; create a variable with a value</font>
+(putprop person 'boogie 'last-name)   <font color="#008844">; add a LAST-NAME property</font>
+(putprop person 'disc-jockey 'job)    <font color="#008844">; add a JOB property</font>
+
+(get person 'last-name)               <font color="#008844">; retrieve LAST-NAME - boogie</font>
+(get person 'job)                     <font color="#008844">; retrieve JOB - disc-jockey</font>
+(get person 'height)                  <font color="#008844">; non-existant - returns NIL</font>
+
+(putprop person '(10 20 30) 'stats)   <font color="#008844">; add STATS - a list</font>
+(get person 'stats)                   <font color="#008844">; retrieve STATS - (10 20 30)</font>
+</pre>
+
+<p><b>Note:</b> You can set a property to the value
+<a href="nil.htm">NIL</a>. However, this
+<a href="nil.htm">NIL</a> value is indistinguishable from the
+<a href="nil.htm">NIL</a> returned when a property does not
+exist.</p>
+
+<p><b>Common Lisp:</b> Common Lisp allows for an optional default value,
+which XLISP does not support.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-014.htm#get">get</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

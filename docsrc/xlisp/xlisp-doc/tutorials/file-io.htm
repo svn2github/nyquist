@@ -1,0 +1,349 @@
+<html><head><title>XLISP: An Object-oriented Lisp</title></head>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>File I/O</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#1">File I/O Examples</a> - from the XLISP 2.0 manual, by David Betz</nobr></li>
+<ul>
+<li><nobr><a href="#1-1">Input from a File</a></nobr></li>
+<li><nobr><a href="#1-2">Output to a File</a></nobr></li>
+<li><nobr><a href="#1-3">A Slightly More Complicated File Example</a></nobr></li>
+<li><nobr><a href="#1-4">Closing Files via 'unwind-protect'</a></nobr></li>
+</ul>
+<li><nobr><a href="#2">Files and Directories</a></nobr></li>
+<ul>
+<li><nobr><a href="#2-1">setdir</a></nobr></li>
+<li><nobr><a href="#2-2">listdir</a></nobr></li>
+</ul>
+<li><nobr><a href="#3">Testing Existence</a></nobr></li>
+<ul>
+<li><nobr><a href="#directory-exists-p">directory-exists-p</a></nobr></li>
+<li><nobr><a href="#file-exists-p">file-exists-p</a></nobr></li>
+<li><nobr><a href="#file-or-directory-exists-p">file-or-directory-exists-p</a></nobr></li>
+</ul>
+<li><nobr><a href="#4">Text File I/O</a></nobr></li>
+<ul>
+<li><nobr><a href="#">Reading from a Text File</a></nobr></li>
+<li><nobr><a href="#">Writing to a Text File</a></nobr></li>
+<li><nobr><a href="#">Appending to a Text File</a></nobr></li>
+</ul>
+<li><nobr><a href="#5">Binary File I/O</a></nobr></li>
+</ol>
+
+<a name="1"></a>
+
+<hr>
+
+<h2>1&nbsp; File I/O Examples</h2>
+
+<a name="1-1"></a>
+
+<hr>
+
+<h2>1.1&nbsp; Input from a File</h2>
+
+<hr>
+
+<p>The basics of file i/o with XLISP:</p>
+
+<ul>
+
+<li><p>To open a file for input, use the
+<a href="../reference/open.htm">open</a> function with the keyword argument
+:direction set to :input.</p></li>
+
+<li><p>To open a file for
+output, use the <a href="../reference/open.htm">open</a> function with the
+keyword argument :direction set to :output.</p></li>
+
+<li><p>To close a file, use the <a href="../reference/close.htm">close</a>
+function.</p></li>
+
+</ul>
+
+<p>The <a href="../reference/open.htm">open</a> function takes a single
+required argument which is the name of the file to be opened. This name can
+be in the form of a string or a symbol. <nobr>The
+<a href="../reference/open.htm">open</a></nobr> function returns an object
+of type '<nobr>file-stream</nobr>' if it succeeds in opening the specified
+file. <nobr>It returns</nobr> the value
+<a href="../reference/nil.htm">NIL</a> if it fails.</p>
+
+<p>In order to manipulate the file, it is necessary to save the value
+returned by the <a href="../reference/open.htm">open</a> function.
+This is usually done by assigning it to a variable with the
+<a href="../reference/setq.htm">setq</a> special form or by binding it using
+<a href="../reference/let.htm">let</a> or
+<a href="../reference/let-star.htm">let*</a>. Here is an example:</a>
+
+<pre class="example">
+(setq file-stream (open "init.lsp" :direction :input))
+</pre>
+
+<p>Evaluating this expression will result in the file 'init.lsp' being
+opened. The file object that will be returned by the
+<a href="../reference/open.htm">open</a> function will be
+assigned to the variable '<nobr>file-stream</nobr>'.</p>
+
+<p>It is now possible to use the file for input. <nobr>To read</nobr> an
+expression from the file, just supply the value of the
+'<nobr>file-stream</nobr>' variable as the optional 'stream' argument to the
+<a href="../reference/read.htm">read</a> function:</p>
+
+<pre class="example">
+(read file-stream)
+</pre>
+
+<p>Evaluating this expression will result in reading the first expression
+from the file 'init.lsp'. The expression will be returned as the
+result of the <a href="../reference/read.htm">read</a> function.
+More expressions can be read from the file using further calls to the
+<a href="../reference/read.htm">read</a> function. When there
+are no more expressions to read, the
+<a href="../reference/read.htm">read</a> function will return
+<a href="../reference/nil.htm">NIL</a> [or whatever value was
+supplied as the second argument to
+<a href="../reference/read.htm">read</a>].</p>
+
+<p>Once you are done reading from the file, you should close it. To close
+the file, use the <a href="../reference/close.htm">close</a>
+function:</p>
+
+<pre class="example">
+(close file-stream)
+</pre>
+
+<p>Evaluating this expression will cause the file to be closed.</p>
+
+<p>&nbsp;&nbsp;<a href="#top">Back to Top</a></p>
+
+<a name="1-2"></a>
+
+<hr>
+
+<h2>1.2&nbsp; Output to a File</h2>
+
+<hr>
+
+<p>Writing to a file is pretty much the same as reading from one. You need
+to open the file first. This time you should use the
+<a href="../reference/open.htm">open</a> function to indicate
+that you will do output to the file:</p>
+
+<pre class="example">
+(setq file-stream (open "test.dat" :direction :output))
+</pre>
+
+<p>Evaluating this expression will open the file 'test.dat' for output.
+<nobr>If the</nobr> file already exists, its current contents will be
+discarded. <nobr>If it</nobr> doesn't already exist, it will be created.
+<nobr>In any</nobr> case, a '<nobr>file-stream</nobr>' object will be
+returned by the <a href="../reference/open.htm">open</a> function. This file
+object will be assigned to the '<nobr>file-stream</nobr>' variable.</p>
+
+<p>It is now possible to write to this file by supplying the value of the
+'<nobr>file-stream</nobr>' variable as the optional 'stream' parameter in
+the <a href="../reference/print.htm">print</a> function.</p>
+
+<pre class="example">
+(print "Hello there" file-stream)
+</pre>
+
+<p>Evaluating this expression will result in the string <nobr>&quot;Hello
+there&quot;</nobr> being written to the <nobr>file
+&quot;test.dat&quot;</nobr>. More data can be written to the file using the
+same technique.</p>
+
+<p>Once you are done writing to the file, you should
+<nobr><a href="../reference/close.htm">close</a> it</nobr>. Closing an
+output file is just like closing an input file:</p>
+
+<pre class="example">
+(close file-stream)
+</pre>
+
+<p>Evaluating this expression will
+<a href="../reference/close.htm">close</a> the output file and
+make it permanent.</p>
+
+<p>&nbsp;&nbsp;<a href="#top">Back to Top</a></p>
+
+<a name="1-3"></a>
+
+<hr>
+
+<h2>1.3&nbsp; A Slightly More Complicated File Example</h2>
+
+<hr>
+
+<p>This example shows how to
+<a href="../reference/open.htm">open</a> a file,
+<a href="../reference/read.htm">read</a> each Lisp expression
+from the file and <a href="../reference/print.htm">print</a> it.
+It demonstrates the use of files and the use of the optional 'stream'
+argument to the <a href="../reference/read.htm">read</a>
+function.</p>
+
+<pre class="example">
+(do* ((file-stream (open "test.dat" :direction :input))
+      (expression (read file-stream) (read file-stream)))
+     ((null expression) nil)
+  (print expression))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="1-4"></a>
+
+<hr>
+
+<h2>1.4&nbsp; Closing Files via 'unwind-protect'</h2>
+
+<hr>
+
+<p>To make sure that the file gets closed in the end, the
+<nobr>file i/o</nobr> functions can be wrapped by an <nobr><a
+href="../reference/unwind-protect.htm">unwind-protect</a> form:</nobr></p>
+
+<pre class="example">
+(let ((file-stream (open "test.dat" :direction :input)))
+  (unwind-protect
+    <font color="#008844">;; protect-form</font>
+    (do ((expression (read file-stream) (read file-stream)))
+        ((null expression) nil)
+      (print expression))
+    <font color="#008844">;; clean-up form</font>
+    (when file-stream (close file-stream))))
+</pre>
+
+<p>This pattern can be found in many <nobr>file i/o</nobr> functions:</p>
+
+<pre class="example">
+(let ((<font color="#AA0000">file-stream</font> (open <font color="#0000CC">filename</font> :direction <font color="#0000CC">direction</font>)))
+  (unwind-protect
+    (progn
+      <font color="#008844">;; do something with the file-stream</font>
+      )
+    (when <font color="#AA0000">file-stream</font> (close <font color="#AA0000">file-stream</font>))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="3"></a>
+
+<hr>
+
+<h2>3&nbsp; Testing Existence</h2>
+
+<hr>
+
+<p><div class="box">
+
+<p>Note that these function are meant to prevent accidents during basic
+<nobr>file i/o</nobr>, they may not be able to test if a file or directory
+physically exists or is a link to a different place.</p>
+
+</div></p>
+
+<a name="directory-exists-p"></a>
+
+<p>The Nyquist <a href="../reference/listdir.htm">listdir</a> function can
+be used to test if a directory exists:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">directory-exists-p</font> (string)
+  (and (listdir string) t))
+</pre>
+
+<a name="file-exists-p"></a>
+
+<p>Testing if a file exists is a bit more tricky because on Unix [including
+Linux and <nobr>Mac OS X]</nobr> a directory is a special kind of file, so
+the XLISP <a href="../reference/open.htm">open</a> function also can open
+directories. That's why we first must make sure that the filename string is
+not the name of an existing directory:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">file-exists-p</font> (string)
+  (or (stringp string) (error <font color="#880000">"not a string"</font> string))
+  (unless (listdir string)
+    (let ((file-stream (open string)))
+      (when file-stream
+        (close file-stream)
+        string))))
+</pre>
+
+<a name="file-or-directory-exists-p"></a>
+
+<p>Before creating a new file it's always a good idea to check
+if a file or directory with the same name already exists:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">file-or-directory-exists-p</font> (string)
+  (or (stringp string) (error <font color="#880000">"not a string"</font> string))
+  (when (or (listdir string)
+            (let ((file-stream (open string)))
+              (when file-stream
+                (close file-stream)
+                t)))
+    string))
+</pre>
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

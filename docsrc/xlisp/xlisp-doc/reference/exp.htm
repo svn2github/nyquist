@@ -1,0 +1,76 @@
+<html><head><title>XLISP exp</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>exp</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(exp <i>power</i>)</dt>
+<dd><i>power</i> - floating point number/expression<br>
+returns - e to the x power</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p> The 'exp' function calculates e [2.7128] raised to the specified
+'power' and returns the result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(exp 0.0)   <font color="#008844">; returns 1</font>
+(exp 1.0)   <font color="#008844">; returns 2.71828 - e</font>
+(exp 2.0)   <font color="#008844">; returns 7.38906</font>
+(exp 10.0)  <font color="#008844">; returns 22026.5</font>
+(exp 0)     <font color="#008844">; error: bad integer operation</font>
+</pre>
+
+<p><b>Note:</b> 'exp' with a large 'power' like 1000.0 causes an incorrect
+value to be generated, with no error. The returned value will be a very
+large floating point number near the computer's limit [something like
+1.79000e+308].</p>
+
+<p>See the
+<a href="../manual/xlisp-man-023.htm#exp">exp</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

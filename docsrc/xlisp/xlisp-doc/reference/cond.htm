@@ -1,0 +1,95 @@
+<html><head><title>XLISP cond</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cond</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(cond [(<i>pred1 expr1</i>) [(<i>pred2 expr2</i>) ... ]])</dt>
+<dd><i>predN</i> - a predicate <nobr>(<a href="nil.htm">NIL</a> /
+non-<a href="nil.htm">NIL</a>)</nobr> expression<br>
+<i>exprN</i> - an expression<br>
+returns - the value of the first expression whose predicate is
+non-<a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'cond' special form evaluates a series of <nobr>predicate /</nobr>
+expression pairs. 'cond' will evaluate each predicate in sequential order
+until it finds one that returns a non-<a href="nil.htm">NIL</a>
+value. The expression that is associated with the
+non-<a href="nil.htm">NIL</a> value is evaluated. The resulting
+value of the evaluated expression is returned by 'cond'. If there are no
+predicates that return a non-<a href="nil.htm">NIL</a> value,
+<a href="nil.htm">NIL</a> is returned by 'cond'. Only one
+expression is evaluated, the first one with a
+non-<a href="nil.htm">NIL</a> predicate. Note that the predicate
+can be a symbol or expression.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(cond                                       <font color="#008844">; sample CONDitional</font>
+  ((not T) (print "this won't print"))
+  ( NIL    (print "neither will this"))
+  ( T      (print "this will print"))
+  ( T      (print "won't get here")))       <font color="#008844">; prints "this will print"</font>
+
+(defun print-what (parm)
+  (cond                                     <font color="#008844">; start of COND</font>
+    ((numberp parm) (print "numeric"))      <font color="#008844">; check for number</font>
+    ((consp parm)   (print "list"))         <font color="#008844">; check for list</font>
+    ((null parm)    (print "nil"))          <font color="#008844">; check for NIL</font>
+    (T              (print "something"))))  <font color="#008844">; catch-all</font>
+
+(print-what 'a)       <font color="#008844">; prints "something"</font>
+(print-what 12)       <font color="#008844">; prints "numeric"</font>
+(print-what NIL)      <font color="#008844">; prints "nil"</font>
+(print-what '(a b))   <font color="#008844">; prints "list"</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-019.htm#cond">cond</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

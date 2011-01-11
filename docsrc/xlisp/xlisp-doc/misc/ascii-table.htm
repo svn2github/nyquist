@@ -1,0 +1,1403 @@
+<html><head><title>ASCII Character Set</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<H1>The ASCII Character Set</H1>
+
+<hr>
+
+<p>The standard ASCII character set uses only 7 bits of the 8 bit byte for
+each character. There are several larger character sets that use all 8 bits
+of the byte, which gives them an 128 additional characters in the set. The
+extra characters are used to represent characters not used in the English
+language, graphics characters or symbols, and mathematical representations
+or symbols.</p>
+
+<p><b>ASCII Control Characters</b></p>
+
+<p>ASCII control characters are actually commands for the terminal, monitor,
+computer, I/O devices, printer or other peripherals to do something. The
+first 32 values are non-printing control characters, such as 'carriage
+return' and 'line feed'. You generate these characters on the keyboard by
+holding down the 'control' key while you strike another key. These
+characters are also capable of being sent to the device by a software
+sequence, most often by a program. They are usually sent as a string of
+characters following an attention character, usually 'escape', but not
+always.</p>
+
+<h2>ASCII Control Characters</h2>
+
+<p><table cellpadding="0" cellspacing="1" style="margin-left:10px"><tbody>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>Ctrl-key</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">NUL</td>
+  <td class="button" align="right">0</td>
+  <td class="button" align="right">0</td>
+  <td class="button" align="right">0</td>
+  <td class="button">Ctrl+@</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>null character</td>
+</tr>
+<tr>
+  <td class="button">SOH</td>
+  <td class="button" align="right">1</td>
+  <td class="button" align="right">1</td>
+  <td class="button" align="right">1</td>
+  <td class="button">Ctrl+a</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>start of heading</td>
+</tr>
+<tr>
+  <td class="button">STX</td>
+  <td class="button" align="right">2</td>
+  <td class="button" align="right">2</td>
+  <td class="button" align="right">2</td>
+  <td class="button">Ctrl+b</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>start of text</td>
+</tr>
+<tr>
+  <td class="button">ETX</td>
+  <td class="button" align="right">3</td>
+  <td class="button" align="right">3</td>
+  <td class="button" align="right">3</td>
+  <td class="button">Ctrl+c</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>end of text</td>
+</tr>
+<tr>
+  <td class="button">EOT</td>
+  <td class="button" align="right">4</td>
+  <td class="button" align="right">4</td>
+  <td class="button" align="right">4</td>
+  <td class="button">Ctrl+d</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>end of transmission</td>
+</tr>
+<tr>
+  <td class="button">ENQ</td>
+  <td class="button" align="right">5</td>
+  <td class="button" align="right">5</td>
+  <td class="button" align="right">5</td>
+  <td class="button">Ctrl+e</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>enquiry</td>
+</tr>
+<tr>
+  <td class="button">ACK</td>
+  <td class="button" align="right">6</td>
+  <td class="button" align="right">6</td>
+  <td class="button" align="right">6</td>
+  <td class="button">Ctrl+f</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>acknowledge</td>
+</tr>
+<tr>
+  <td class="button">BEL</td>
+  <td class="button" align="right">7</td>
+  <td class="button" align="right">7</td>
+  <td class="button" align="right">7</td>
+  <td class="button">Ctrl+g</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>rings terminal bell</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>Ctrl-key</b></td>
+  <td class="button"><b>XLISP</b></td>
+<tr>
+  <td class="button">BS</td>
+  <td class="button" align="right">10</td>
+  <td class="button" align="right">8</td>
+  <td class="button" align="right">8</td>
+  <td class="button">Ctrl+h</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>backspace (non-destructive)</td>
+</tr>
+<tr>
+  <td class="button">HT</td>
+  <td class="button" align="right">11</td>
+  <td class="button" align="right">9</td>
+  <td class="button" align="right">9</td>
+  <td class="button">Ctrl+i</td>
+  <td class="button"><code>#\Tab</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>horizontal tab</td>
+</tr>
+<tr>
+  <td class="button">LF</td>
+  <td class="button" align="right">12</td>
+  <td class="button" align="right">10</td>
+  <td class="button" align="right">A</td>
+  <td class="button">Ctrl+j</td>
+  <td class="button"><code>#\Newline</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>line feed</td>
+</tr>
+<tr>
+  <td class="button">VT</td>
+  <td class="button" align="right">13</td>
+  <td class="button" align="right">11</td>
+  <td class="button" align="right">B</td>
+  <td class="button">Ctrl+k</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>vertical tab</td>
+</tr>
+<tr>
+  <td class="button">FF</td>
+  <td class="button" align="right">14</td>
+  <td class="button" align="right">12</td>
+  <td class="button" align="right">C</td>
+  <td class="button">Ctrl+l</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>form feed</td>
+</tr>
+<tr>
+  <td class="button">CR</td>
+  <td class="button" align="right">15</td>
+  <td class="button" align="right">13</td>
+  <td class="button" align="right">D</td>
+  <td class="button">Ctrl+m</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>carriage return</td>
+</tr>
+<tr>
+  <td class="button">SO</td>
+  <td class="button" align="right">16</td>
+  <td class="button" align="right">14</td>
+  <td class="button" align="right">E</td>
+  <td class="button">Ctrl+n</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>shift out</td>
+</tr>
+<tr>
+  <td class="button">SI</td>
+  <td class="button" align="right">17</td>
+  <td class="button" align="right">15</td>
+  <td class="button" align="right">F</td>
+  <td class="button">Ctrl+o</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>shift in</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>Ctrl-key</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">DLE</td>
+  <td class="button" align="right">20</td>
+  <td class="button" align="right">16</td>
+  <td class="button" align="right">10</td>
+  <td class="button">Ctrl+p</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>data link escape</td>
+</tr>
+<tr>
+  <td class="button">DC1</td>
+  <td class="button" align="right">21</td>
+  <td class="button" align="right">17</td>
+  <td class="button" align="right">11</td>
+  <td class="button">Ctrl+q</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>device control 1, normally 'xon'</td>
+</tr>
+<tr>
+  <td class="button">DC2</td>
+  <td class="button" align="right">22</td>
+  <td class="button" align="right">18</td>
+  <td class="button" align="right">12</td>
+  <td class="button">Ctrl+r</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>device control 2</td>
+</tr>
+<tr>
+  <td class="button">DC3</td>
+  <td class="button" align="right">23</td>
+  <td class="button" align="right">19</td>
+  <td class="button" align="right">13</td>
+  <td class="button">Ctrl+s</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>device control 3, normally 'xoff'</td>
+</tr>
+<tr>
+  <td class="button">DC4</td>
+  <td class="button" align="right">24</td>
+  <td class="button" align="right">20</td>
+  <td class="button" align="right">14</td>
+  <td class="button">Ctrl+t</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>device control 4</td>
+</tr>
+<tr>
+  <td class="button">NAK</td>
+  <td class="button" align="right">25</td>
+  <td class="button" align="right">21</td>
+  <td class="button" align="right">15</td>
+  <td class="button">Ctrl+u</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>negative acknowledge</td>
+</tr>
+<tr>
+  <td class="button">SYN</td>
+  <td class="button" align="right">26</td>
+  <td class="button" align="right">22</td>
+  <td class="button" align="right">16</td>
+  <td class="button">Ctrl+v</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>synchronous idle</td>
+</tr>
+<tr>
+  <td class="button">ETB</td>
+  <td class="button" align="right">27</td>
+  <td class="button" align="right">23</td>
+  <td class="button" align="right">17</td>
+  <td class="button">Ctrl+w</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>end transmission block</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>Ctrl-key</b></td>
+  <td class="button"><b>XLISP</b></td>
+<tr>
+  <td class="button">CAN</td>
+  <td class="button" align="right">30</td>
+  <td class="button" align="right">24</td>
+  <td class="button" align="right">17</td>
+  <td class="button">Ctrl+x</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>cancel line</td>
+</tr>
+<tr>
+  <td class="button">EM</td>
+  <td class="button" align="right">31</td>
+  <td class="button" align="right">25</td>
+  <td class="button" align="right">19</td>
+  <td class="button">Ctrl+y</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>end of medium</td>
+</tr>
+<tr>
+  <td class="button">SUB</td>
+  <td class="button" align="right">32</td>
+  <td class="button" align="right">26</td>
+  <td class="button" align="right">1A</td>
+  <td class="button">Ctrl+z</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>substitute</td>
+</tr>
+<tr>
+  <td class="button">ESC</td>
+  <td class="button" align="right">33</td>
+  <td class="button" align="right">27</td>
+  <td class="button" align="right">1B</td>
+  <td class="button">Ctrl+[</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>escape</td>
+</tr>
+<tr>
+  <td class="button">FS</td>
+  <td class="button" align="right">34</td>
+  <td class="button" align="right">28</td>
+  <td class="button" align="right">1C</td>
+  <td class="button">Ctrl+\</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>file separator</td>
+</tr>
+<tr>
+  <td class="button">GS</td>
+  <td class="button" align="right">35</td>
+  <td class="button" align="right">29</td>
+  <td class="button" align="right">1D</td>
+  <td class="button">Ctrl+]</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>group separator</td>
+</tr>
+<tr>
+  <td class="button">RS</td>
+  <td class="button" align="right">36</td>
+  <td class="button" align="right">30</td>
+  <td class="button" align="right">1E</td>
+  <td class="button">Ctrl+^</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>record separator</td>
+</td>
+<tr>
+  <td class="button">US</td>
+  <td class="button" align="right">37</td>
+  <td class="button" align="right">31</td>
+  <td class="button" align="right">1F</td>
+  <td class="button">Ctrl+_</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>unit separator</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>Ctrl-key</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+</tbody></table></p>
+
+<h2>ASCII Printing Characters</h2>
+
+<p><table cellpadding="0" cellspacing="1" style="margin-left:10px"><tbody>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+
+</tr>
+<tr>
+  <td class="button">&nbsp;</td>
+  <td class="button" align="right">40</td>
+  <td class="button" align="right">32</td>
+  <td class="button" align="right">20</td>
+  <td class="button"><code>#\Space</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>space</td>
+</tr>
+<tr>
+  <td class="button">!</td>
+  <td class="button" align="right">41</td>
+  <td class="button" align="right">33</td>
+  <td class="button" align="right">21</td>
+  <td class="button"><code>#\!</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>exclamation mark</td>
+</tr>
+<tr>
+  <td class="button">&quot;</td>
+  <td class="button" align="right">42</td>
+  <td class="button" align="right">34</td>
+  <td class="button" align="right">22</td>
+  <td class="button"><code>#\&quot;</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>quotation mark</td>
+</tr>
+<tr>
+  <td class="button">#</td>
+  <td class="button" align="right">43</td>
+  <td class="button" align="right">35</td>
+  <td class="button" align="right">23</td>
+  <td class="button"><code>#\#</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>cross hatch, number sign</td>
+</tr>
+<tr>
+  <td class="button">$</td>
+  <td class="button" align="right">44</td>
+  <td class="button" align="right">36</td>
+  <td class="button" align="right">24</td>
+  <td class="button"><code>#\$</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>dollar sign</td>
+<tr>
+  <td class="button">%</td>
+  <td class="button" align="right">45</td>
+  <td class="button" align="right">37</td>
+  <td class="button" align="right">25</td>
+  <td class="button"><code>#\%</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>percent sign</td>
+</tr>
+<tr>
+  <td class="button">&amp;</td>
+  <td class="button" align="right">46</td>
+  <td class="button" align="right">38</td>
+  <td class="button" align="right">26</td>
+  <td class="button"><code>#\&amp;</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>ampersand</td>
+</tr>
+<tr>
+  <td class="button">`</td>
+  <td class="button" align="right">47</td>
+  <td class="button" align="right">39</td>
+  <td class="button" align="right">27</td>
+  <td class="button"><code>#\`</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>backquote, apostrophe</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">(</td>
+  <td class="button" align="right">50</td>
+  <td class="button" align="right">40</td>
+  <td class="button" align="right">28</td>
+  <td class="button"><code>#\(</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>opening parentheses</td>
+</tr>
+<tr>
+  <td class="button">)</td>
+  <td class="button" align="right">51</td>
+  <td class="button" align="right">41</td>
+  <td class="button" align="right">29</td>
+  <td class="button"><code>#\)</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>closing parentheses</td>
+</tr>
+<tr>
+  <td class="button">*</td>
+  <td class="button" align="right">52</td>
+  <td class="button" align="right">42</td>
+  <td class="button" align="right">2A</td>
+  <td class="button"><code>#\*</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>asterisk, star, multiply</td>
+</tr>
+<tr>
+  <td class="button">+</td>
+  <td class="button" align="right">53</td>
+  <td class="button" align="right">43</td>
+  <td class="button" align="right">2B</td>
+  <td class="button"><code>#\+</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>plus</td>
+</tr>
+<tr>
+  <td class="button">,</td>
+  <td class="button" align="right">54</td>
+  <td class="button" align="right">44</td>
+  <td class="button" align="right">2C</td>
+  <td class="button"><code>#\,</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>comma</td>
+</tr>
+<tr>
+  <td class="button">-</td>
+  <td class="button" align="right">55</td>
+  <td class="button" align="right">45</td>
+  <td class="button" align="right">2D</td>
+  <td class="button"><code>#\-</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>hyphen, dash, minus</td>
+</tr>
+<tr>
+  <td class="button">.</td>
+  <td class="button" align="right">56</td>
+  <td class="button" align="right">46</td>
+  <td class="button" align="right">2E</td>
+  <td class="button"><code>#\.</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>period</td>
+</tr>
+<tr>
+  <td class="button">/</td>
+  <td class="button" align="right">57</td>
+  <td class="button" align="right">47</td>
+  <td class="button" align="right">2F</td>
+  <td class="button"><code>#\/</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>slash forward, divide</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">0</td>
+  <td class="button" align="right">60</td>
+  <td class="button" align="right">48</td>
+  <td class="button" align="right">30</td>
+  <td class="button"><code>#\0</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>zero</td>
+</tr>
+<tr>
+  <td class="button">1</td>
+  <td class="button" align="right">61</td>
+  <td class="button" align="right">49</td>
+  <td class="button" align="right">31</td>
+  <td class="button"><code>#\1</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>one</td>
+</tr>
+<tr>
+  <td class="button">2</td>
+  <td class="button" align="right">62</td>
+  <td class="button" align="right">50</td>
+  <td class="button" align="right">32</td>
+  <td class="button"><code>#\2</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>two</td>
+</tr>
+<tr>
+  <td class="button">3</td>
+  <td class="button" align="right">63</td>
+  <td class="button" align="right">51</td>
+  <td class="button" align="right">33</td>
+  <td class="button"><code>#\3</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>three</td>
+</tr>
+<tr>
+  <td class="button">4</td>
+  <td class="button" align="right">64</td>
+  <td class="button" align="right">52</td>
+  <td class="button" align="right">34</td>
+  <td class="button"><code>#\4</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>four</td>
+</tr>
+<tr>
+  <td class="button">5</td>
+  <td class="button" align="right">65</td>
+  <td class="button" align="right">53</td>
+  <td class="button" align="right">35</td>
+  <td class="button"><code>#\5</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>five</td>
+</tr>
+<tr>
+  <td class="button">6</td>
+  <td class="button" align="right">66</td>
+  <td class="button" align="right">54</td>
+  <td class="button" align="right">36</td>
+  <td class="button"><code>#\6</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>six</td>
+</tr>
+<tr>
+  <td class="button">7</td>
+  <td class="button" align="right">67</td>
+  <td class="button" align="right">55</td>
+  <td class="button" align="right">37</td>
+  <td class="button"><code>#\7</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>seven</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">8</td>
+  <td class="button" align="right">70</td>
+  <td class="button" align="right">56</td>
+  <td class="button" align="right">38</td>
+  <td class="button"><code>#\8</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>eight</td>
+</tr>
+<tr>
+  <td class="button">9</td>
+  <td class="button" align="right">71</td>
+  <td class="button" align="right">57</td>
+  <td class="button" align="right">39</td>
+  <td class="button"><code>#\9</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>nine</td>
+</tr>
+<tr>
+  <td class="button">:</td>
+  <td class="button" align="right">72</td>
+  <td class="button" align="right">58</td>
+  <td class="button" align="right">3A</td>
+  <td class="button"><code>#\:</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>colon</td>
+</tr>
+<tr>
+  <td class="button">;</td>
+  <td class="button" align="right">73</td>
+  <td class="button" align="right">59</td>
+  <td class="button" align="right">3B</td>
+  <td class="button"><code>#\;</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>semicolon</td>
+</tr>
+<tr>
+  <td class="button">&lt;</td>
+  <td class="button" align="right">74</td>
+  <td class="button" align="right">60</td>
+  <td class="button" align="right">3C</td>
+  <td class="button"><code>#\&lt;</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>less than sign</td>
+</tr>
+<tr>
+  <td class="button">=</td>
+  <td class="button" align="right">75</td>
+  <td class="button" align="right">61</td>
+  <td class="button" align="right">3D</td>
+  <td class="button"><code>#\=</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>equals sign</td>
+</tr>
+<tr>
+  <td class="button">&gt;</td>
+  <td class="button" align="right">76</td>
+  <td class="button" align="right">62</td>
+  <td class="button" align="right">3E</td>
+  <td class="button"><code>#\&gt;</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>greater than sign</td>
+</tr>
+<tr>
+  <td class="button">?</td>
+  <td class="button" align="right">77</td>
+  <td class="button" align="right">63</td>
+  <td class="button" align="right">3F</td>
+  <td class="button"><code>#\?</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>question mark</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">@</td>
+  <td class="button" align="right">100</td>
+  <td class="button" align="right">64</td>
+  <td class="button" align="right">40</td>
+  <td class="button"><code>#\@</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>at-sign</td>
+</tr>
+<tr>
+  <td class="button">A</td>
+  <td class="button" align="right">101</td>
+  <td class="button" align="right">65</td>
+  <td class="button" align="right">41</td>
+  <td class="button"><code>#\A</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case A</td>
+</tr>
+<tr>
+  <td class="button">B</td>
+  <td class="button" align="right">102</td>
+  <td class="button" align="right">66</td>
+  <td class="button" align="right">42</td>
+  <td class="button"><code>#\B</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case B</td>
+</tr>
+<tr>
+  <td class="button">C</td>
+  <td class="button" align="right">103</td>
+  <td class="button" align="right">67</td>
+  <td class="button" align="right">43</td>
+  <td class="button"><code>#\C</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case C</td>
+</tr>
+<tr>
+  <td class="button">D</td>
+  <td class="button" align="right">104</td>
+  <td class="button" align="right">68</td>
+  <td class="button" align="right">44</td>
+  <td class="button"><code>#\D</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case D</td>
+</tr>
+<tr>
+  <td class="button">E</td>
+  <td class="button" align="right">105</td>
+  <td class="button" align="right">69</td>
+  <td class="button" align="right">45</td>
+  <td class="button"><code>#\E</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case E</td>
+</tr>
+<tr>
+  <td class="button">F</td>
+  <td class="button" align="right">106</td>
+  <td class="button" align="right">70</td>
+  <td class="button" align="right">46</td>
+  <td class="button"><code>#\F</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case F</td>
+</tr>
+<tr>
+  <td class="button">G</td>
+  <td class="button" align="right">107</td>
+  <td class="button" align="right">71</td>
+  <td class="button" align="right">47</td>
+  <td class="button"><code>#\G</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case G</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">H</td>
+  <td class="button" align="right">110</td>
+  <td class="button" align="right">72</td>
+  <td class="button" align="right">48</td>
+  <td class="button"><code>#\H</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case H</td>
+</tr>
+<tr>
+  <td class="button">I</td>
+  <td class="button" align="right">111</td>
+  <td class="button" align="right">73</td>
+  <td class="button" align="right">49</td>
+  <td class="button"><code>#\I</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case I</td>
+</tr>
+<tr>
+  <td class="button">J</td>
+  <td class="button" align="right">112</td>
+  <td class="button" align="right">74</td>
+  <td class="button" align="right">4A</td>
+  <td class="button"><code>#\J</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case J</td>
+</tr>
+<tr>
+  <td class="button">K</td>
+  <td class="button" align="right">113</td>
+  <td class="button" align="right">75</td>
+  <td class="button" align="right">4B</td>
+  <td class="button"><code>#\K</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case K</td>
+</tr>
+<tr>
+  <td class="button">L</td>
+  <td class="button" align="right">114</td>
+  <td class="button" align="right">76</td>
+  <td class="button" align="right">4C</td>
+  <td class="button"><code>#\L</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case L</td>
+</tr>
+<tr>
+  <td class="button">M</td>
+  <td class="button" align="right">115</td>
+  <td class="button" align="right">77</td>
+  <td class="button" align="right">4D</td>
+  <td class="button"><code>#\M</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case M</td>
+</tr>
+<tr>
+  <td class="button">N</td>
+  <td class="button" align="right">116</td>
+  <td class="button" align="right">78</td>
+  <td class="button" align="right">4E</td>
+  <td class="button"><code>#\N</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case N</td>
+</tr>
+<tr>
+  <td class="button">O</td>
+  <td class="button" align="right">117</td>
+  <td class="button" align="right">79</td>
+  <td class="button" align="right">4F</td>
+  <td class="button"><code>#\O</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case O</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">P</td>
+  <td class="button" align="right">120</td>
+  <td class="button" align="right">80</td>
+  <td class="button" align="right">50</td>
+  <td class="button"><code>#\P</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case P</td>
+</tr>
+<tr>
+  <td class="button">Q</td>
+  <td class="button" align="right">121</td>
+  <td class="button" align="right">81</td>
+  <td class="button" align="right">51</td>
+  <td class="button"><code>#\Q</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case Q</td>
+</tr>
+<tr>
+  <td class="button">R</td>
+  <td class="button" align="right">122</td>
+  <td class="button" align="right">82</td>
+  <td class="button" align="right">52</td>
+  <td class="button"><code>#\R</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case R</td>
+</tr>
+<tr>
+  <td class="button">S</td>
+  <td class="button" align="right">123</td>
+  <td class="button" align="right">83</td>
+  <td class="button" align="right">53</td>
+  <td class="button"><code>#\S</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case S</td>
+</tr>
+<tr>
+  <td class="button">T</td>
+  <td class="button" align="right">124</td>
+  <td class="button" align="right">84</td>
+  <td class="button" align="right">54</td>
+  <td class="button"><code>#\T</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case T</td>
+</tr>
+<tr>
+  <td class="button">U</td>
+  <td class="button" align="right">125</td>
+  <td class="button" align="right">85</td>
+  <td class="button" align="right">55</td>
+  <td class="button"><code>#\U</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case U</td>
+</tr>
+<tr>
+  <td class="button">V</td>
+  <td class="button" align="right">126</td>
+  <td class="button" align="right">86</td>
+  <td class="button" align="right">56</td>
+  <td class="button"><code>#\V</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case V</td>
+</tr>
+<tr>
+  <td class="button">W</td>
+  <td class="button" align="right">127</td>
+  <td class="button" align="right">87</td>
+  <td class="button" align="right">57</td>
+  <td class="button"><code>#\W</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case W</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">X</td>
+  <td class="button" align="right">130</td>
+  <td class="button" align="right">88</td>
+  <td class="button" align="right">58</td>
+  <td class="button"><code>#\X</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case X</td>
+</tr>
+<tr>
+  <td class="button">Y</td>
+  <td class="button" align="right">131</td>
+  <td class="button" align="right">89</td>
+  <td class="button" align="right">59</td>
+  <td class="button"><code>#\Y</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case Y</td>
+</tr>
+<tr>
+  <td class="button">Z</td>
+  <td class="button" align="right">132</td>
+  <td class="button" align="right">90</td>
+  <td class="button" align="right">5A</td>
+  <td class="button"><code>#\Z</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>upper case Z</td>
+</tr>
+<tr>
+  <td class="button">[</td>
+  <td class="button" align="right">133</td>
+  <td class="button" align="right">91</td>
+  <td class="button" align="right">5B</td>
+  <td class="button"><code>#\[</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>opening square bracket</td>
+</tr>
+<tr>
+  <td class="button">\</td>
+  <td class="button" align="right">134</td>
+  <td class="button" align="right">92</td>
+  <td class="button" align="right">5C</td>
+  <td class="button"><code>#\\</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>backslash, reverse slant</td>
+</tr>
+<tr>
+  <td class="button">]</td>
+  <td class="button" align="right">135</td>
+  <td class="button" align="right">93</td>
+  <td class="button" align="right">5D</td>
+  <td class="button"><code>#\]</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>closing square bracket</td>
+</tr>
+<tr>
+  <td class="button">^</td>
+  <td class="button" align="right">136</td>
+  <td class="button" align="right">94</td>
+  <td class="button" align="right">5E</td>
+  <td class="button"><code>#\^</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>caret, circumflex</td>
+</tr>
+<tr>
+  <td class="button">_</td>
+  <td class="button" align="right">137</td>
+  <td class="button" align="right">95</td>
+  <td class="button" align="right">5F</td>
+  <td class="button"><code>#\_</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>underscore</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">`</td>
+  <td class="button" align="right">140</td>
+  <td class="button" align="right">96</td>
+  <td class="button" align="right">60</td>
+  <td class="button"><code>#\`</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>opening single quote</td>
+</tr>
+<tr>
+  <td class="button">a</td>
+  <td class="button" align="right">141</td>
+  <td class="button" align="right">97</td>
+  <td class="button" align="right">61</td>
+  <td class="button"><code>#\a</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case a</td>
+</tr>
+<tr>
+  <td class="button">b</td>
+  <td class="button" align="right">142</td>
+  <td class="button" align="right">98</td>
+  <td class="button" align="right">62</td>
+  <td class="button"><code>#\b</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case b</td>
+</tr>
+<tr>
+  <td class="button">c</td>
+  <td class="button" align="right">143</td>
+  <td class="button" align="right">99</td>
+  <td class="button" align="right">63</td>
+  <td class="button"><code>#\c</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case c</td>
+</tr>
+<tr>
+  <td class="button">d</td>
+  <td class="button" align="right">144</td>
+  <td class="button" align="right">100</td>
+  <td class="button" align="right">64</td>
+  <td class="button"><code>#\d</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case d</td>
+</tr>
+<tr>
+  <td class="button">e</td>
+  <td class="button" align="right">145</td>
+  <td class="button" align="right">101</td>
+  <td class="button" align="right">65</td>
+  <td class="button"><code>#\e</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case e</td>
+</tr>
+<tr>
+  <td class="button">f</td>
+  <td class="button" align="right">146</td>
+  <td class="button" align="right">102</td>
+  <td class="button" align="right">66</td>
+  <td class="button"><code>#\f</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case f</td>
+</tr>
+<tr>
+  <td class="button">g</td>
+  <td class="button" align="right">147</td>
+  <td class="button" align="right">103</td>
+  <td class="button" align="right">67</td>
+  <td class="button"><code>#\g</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case g</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">h</td>
+  <td class="button" align="right">150</td>
+  <td class="button" align="right">104</td>
+  <td class="button" align="right">68</td>
+  <td class="button"><code>#\h</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case h</td>
+</tr>
+<tr>
+  <td class="button">i</td>
+  <td class="button" align="right">151</td>
+  <td class="button" align="right">105</td>
+  <td class="button" align="right">69</td>
+  <td class="button"><code>#\i</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case i</td>
+</tr>
+<tr>
+  <td class="button">j</td>
+  <td class="button" align="right">152</td>
+  <td class="button" align="right">106</td>
+  <td class="button" align="right">6A</td>
+  <td class="button"><code>#\j</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case j</td>
+</tr>
+<tr>
+  <td class="button">k</td>
+  <td class="button" align="right">153</td>
+  <td class="button" align="right">107</td>
+  <td class="button" align="right">6B</td>
+  <td class="button"><code>#\k</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case k</td>
+</tr>
+<tr>
+  <td class="button">l</td>
+  <td class="button" align="right">154</td>
+  <td class="button" align="right">108</td>
+  <td class="button" align="right">6C</td>
+  <td class="button"><code>#\l</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case l</td>
+</tr>
+<tr>
+  <td class="button">m</td>
+  <td class="button" align="right">155</td>
+  <td class="button" align="right">109</td>
+  <td class="button" align="right">6D</td>
+  <td class="button"><code>#\m</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case m</td>
+</tr>
+<tr>
+  <td class="button">n</td>
+  <td class="button" align="right">156</td>
+  <td class="button" align="right">110</td>
+  <td class="button" align="right">6E</td>
+  <td class="button"><code>#\n</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case n</td>
+</tr>
+<tr>
+  <td class="button">o</td>
+  <td class="button" align="right">157</td>
+  <td class="button" align="right">111</td>
+  <td class="button" align="right">6F</td>
+  <td class="button"><code>#\o</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case o</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">p</td>
+  <td class="button" align="right">160</td>
+  <td class="button" align="right">112</td>
+  <td class="button" align="right">70</td>
+  <td class="button"><code>#\p</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case p</td>
+</tr>
+<tr>
+  <td class="button">q</td>
+  <td class="button" align="right">161</td>
+  <td class="button" align="right">113</td>
+  <td class="button" align="right">71</td>
+  <td class="button"><code>#\q</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case q</td>
+</tr>
+<tr>
+  <td class="button">r</td>
+  <td class="button" align="right">162</td>
+  <td class="button" align="right">114</td>
+  <td class="button" align="right">72</td>
+  <td class="button"><code>#\r</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case r</td>
+</tr>
+<tr>
+  <td class="button">s</td>
+  <td class="button" align="right">163</td>
+  <td class="button" align="right">115</td>
+  <td class="button" align="right">73</td>
+  <td class="button"><code>#\s</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case s</td>
+</tr>
+<tr>
+  <td class="button">t</td>
+  <td class="button" align="right">164</td>
+  <td class="button" align="right">116</td>
+  <td class="button" align="right">74</td>
+  <td class="button"><code>#\t</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case t</td>
+</tr>
+<tr>
+  <td class="button">u</td>
+  <td class="button" align="right">165</td>
+  <td class="button" align="right">117</td>
+  <td class="button" align="right">75</td>
+  <td class="button"><code>#\u</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case u</td>
+</tr>
+<tr>
+  <td class="button">v</td>
+  <td class="button" align="right">166</td>
+  <td class="button" align="right">118</td>
+  <td class="button" align="right">76</td>
+  <td class="button"><code>#\v</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case v</td>
+</tr>
+<tr>
+  <td class="button">w</td>
+  <td class="button" align="right">167</td>
+  <td class="button" align="right">119</td>
+  <td class="button" align="right">77</td>
+  <td class="button"><code>#\w</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case w</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+<tr>
+  <td class="button">x</td>
+  <td class="button" align="right">170</td>
+  <td class="button" align="right">120</td>
+  <td class="button" align="right">78</td>
+  <td class="button"><code>#\x</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case x</td>
+</tr>
+<tr>
+  <td class="button">y</td>
+  <td class="button" align="right">171</td>
+  <td class="button" align="right">121</td>
+  <td class="button" align="right">79</td>
+  <td class="button"><code>#\y</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case y</td>
+</tr>
+<tr>
+  <td class="button">z</td>
+  <td class="button" align="right">172</td>
+  <td class="button" align="right">122</td>
+  <td class="button" align="right">7A</td>
+  <td class="button"><code>#\z</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>lower case z</td>
+</tr>
+<tr>
+  <td class="button">{</td>
+  <td class="button" align="right">173</td>
+  <td class="button" align="right">123</td>
+  <td class="button" align="right">7B</td>
+  <td class="button"><code>#\{</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>opening curly brace</td>
+</tr>
+<tr>
+  <td class="button">|</td>
+  <td class="button" align="right">174</td>
+  <td class="button" align="right">124</td>
+  <td class="button" align="right">7C</td>
+  <td class="button"><code>#\|</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>vertical line</td>
+</tr>
+<tr>
+  <td class="button">}</td>
+  <td class="button" align="right">175</td>
+  <td class="button" align="right">125</td>
+  <td class="button" align="right">7D</td>
+  <td class="button"><code>#\}</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>closing curly brace</td>
+</tr>
+<tr>
+  <td class="button">~</td>
+  <td class="button" align="right">176</td>
+  <td class="button" align="right">126</td>
+  <td class="button" align="right">7E</td>
+  <td class="button"><code>#\~</code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>tilde, approximate</td>
+</tr>
+<tr>
+  <td class="button">DEL</td>
+  <td class="button" align="right">177</td>
+  <td class="button" align="right">127</td>
+  <td class="button" align="right">7F</td>
+  <td class="button"><code></code></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td>delete, cross-hatch box</td>
+</tr>
+<tr>
+  <td class="button"><b>Char</b></td>
+  <td class="button"><b>Oct</b></td>
+  <td class="button"><b>Dec</b></td>
+  <td class="button"><b>Hex</b></td>
+  <td class="button"><b>XLISP</b></td>
+</tr>
+</tbody></table></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

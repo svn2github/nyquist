@@ -1,0 +1,134 @@
+<html><head><title>XLISP defun</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>defun</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(defun <i>symbol arg-list body</i>)</dt>
+<dd><i>symbol</i> - the name of the function being defined<br>
+<i>arg-list</i> -  a list of the formal arguments to the function of the form:<br>
+<dl>
+<dd>([<i>arg1</i> ... ]<br>
+&nbsp;[<a href="lambda-keyword-optional.htm">&amp;optional</a> <i>oarg1</i> ... ]<br>
+&nbsp;[<a href="lambda-keyword-rest.htm">&amp;rest</a> <i>rarg</i>]<br>
+&nbsp;[<a href="lambda-keyword-key.htm">&amp;key</a> ... ]<br>
+&nbsp;[<a href="lambda-keyword-aux.htm">&amp;aux</a> <i>aux1</i> ... ])<br></dd>
+</dl>
+<i>body</i> - a series of LISP forms (expressions) that are executed in order.<br>
+returns - the function <i>symbol</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'defun' special form defines a new function or re-defines an
+exisiting function. The last form in 'body' that is evaluated is the value
+that is returned when the function is executed.</p>
+
+<p>All of the 'argN' formal arguments that are defined are required to
+appear in a call to the defined function.</p>
+
+<p>If there are any <a href="lambda-keyword-optional.htm">&amp;optional</a>
+arguments defined, they will be filled in order.</p>
+
+<p>If there is a <a href="lambda-keyword-rest.htm">&amp;rest</a> argument
+defined, and all the required formal arguments and
+<a href="lambda-keyword-optional.htm">&amp;optional</a> arguments are filled, any
+and all further parameters will be passed into the function via the 'rarg'
+argument. <b>Note</b> that there can be only one 'rarg' argument for
+<a href="lambda-keyword-rest.htm">&amp;rest</a>.</p>
+
+<p>If there are insufficient parameters for any of the
+<a href="lambda-keyword-optional.htm">&amp;optional</a> or
+<a href="lambda-keyword-rest.htm">&amp;rest</a> arguments, they will contain
+<a href="nil.htm">NIL</a>.</p>
+
+<p>The <a href="lambda-keyword-aux.htm">&amp;aux</a> variables are a mechanism
+for you to define variables local to the function definition. At the end of
+the function execution, these local symbols and their values are are
+removed.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun my-add                          <font color="#008844">; define function MY-ADD</font>
+  (num1 num2)                          <font color="#008844">;   with 2 formal parameters</font>
+  (+ num1 num2))                       <font color="#008844">;   that adds the two paramters</font>
+
+(my-add 1 2)                           <font color="#008844">; returns 3</font>
+
+(defun foo                             <font color="#008844">; define function FOO</font>
+  (a b &amp;optional c d &amp;rest e)          <font color="#008844">;   with some of each argument</font>
+  (print a) (print b)
+  (print c) (print d)                  <font color="#008844">;   print out each</font>
+  (print e))
+
+(foo)                                  <font color="#008844">; error: too few arguments</font>
+(foo 1)                                <font color="#008844">; error: too few arguments</font>
+(foo 1 2)                              <font color="#008844">; prints 1 2 NIL NIL NIL</font>
+(foo 1 2 3)                            <font color="#008844">; prints 1 2 3 NIL NIL</font>
+(foo 1 2 3 4)                          <font color="#008844">; prints 1 2 3 4 NIL</font>
+(foo 1 2 3 4 5)                        <font color="#008844">; prints 1 2 3 4 (5)</font>
+(foo 1 2 3 4 5 6 7 8 9)                <font color="#008844">; prints 1 2 3 4 (5 6 7 8 9)</font>
+
+(defun my-add                          <font color="#008844">; define function MY-ADD</font>
+  (num1 &amp;rest num-list &amp;aux sum)       <font color="#008844">;   with 1 arg, rest, 1 aux var</font>
+  (setq sum num1)                      <font color="#008844">;   clear SUM</font>
+  (dotimes (i (length num-list) )      <font color="#008844">;   loop through rest list</font>
+    (setq sum (+ sum (car num-list)))  <font color="#008844">;      add the number to sum</font>
+    (setq num-list (cdr num-list)))    <font color="#008844">;      and remove num from list</font>
+  sum)                                 <font color="#008844">;   return sum when finished</font>
+
+(my-add 1 2 3 4)                       <font color="#008844">; returns 10</font>
+(my-add 5 5 5 5 5)                     <font color="#008844">; returns 25</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp supports an optional documentation
+string as the first form in the 'body' of a
+<a href="defmacro.htm">defmacro</a> or 'defun'. XLISP will accept this
+string as a valid form, but it will not do anything special with it.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-013.htm#defun">defun</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,125 @@
+<html><head><title>XLISP *gc-hook*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*gc-hook*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xldmem.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*gc-hook*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>*gc-hook* is a system variable that allows a user function to be
+performed everytime garbage is collected [either explicitly with
+<a href="gc.htm">gc</a> or automatically]. The default value for
+*gc-hook* is <a href="nil.htm">NIL</a>. When *gc-hook* is set to
+a non-<a href="nil.htm">NIL</a> symbol, it is enabled to execute
+the specified user routine. The user routine can be a quoted symbol or a
+closure. There are two parameters to the user routine, the total number of
+nodes and current free nodes after the garbage collection.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+*gc-hook*                           <font color="#008844">; returns NIL</font>
+(gc)                                <font color="#008844">; returns NIL</font>
+
+(defun mygchook (&amp;rest stuff)       <font color="#008844">; define the hook</font>
+  (print stuff)
+  (print "my hook"))
+
+(setq *gc-hook* 'mygchook)          <font color="#008844">; set up *GC-HOOK*</font>
+
+(gc)                                <font color="#008844">; prints (2640 232)</font>
+                                    <font color="#008844">;        "my hook"</font>
+                                    <font color="#008844">; returns NIL</font>
+
+(setq *gc-flag* T)                  <font color="#008844">; turn on the system GC message</font>
+
+(gc)                                <font color="#008844">; prints</font>
+                                    <font color="#008844">;   [ gc: total 2640, (2640 241)</font>
+                                    <font color="#008844">;   "my hook"</font>
+                                    <font color="#008844">;   236 free ]</font>
+                                    <font color="#008844">; returns NIL</font>
+
+(setq *gc-flag* NIL)                <font color="#008844">; turn off GC message</font>
+
+(setq *gc-hook* (lambda (x y)       <font color="#008844">; enable user routine</font>
+                  (princ "\007")))  <font color="#008844">;   that beeps at every GC</font>
+
+(gc)                                <font color="#008844">; beeps</font>
+
+(defun expand-on-gc (total free)    <font color="#008844">; define EXPAND-ON-GC</font>
+  (if (&lt; (/ free 1.0 total) .1)     <font color="#008844">; IF free/total &lt; .10</font>
+      (progn (expand 2)             <font color="#008844">;    THEN expand memory</font>
+             (princ "\007"))))      <font color="#008844">;         and beep</font>
+
+                                    <font color="#008844">; NOTE: XLISP already gets more nodes</font>
+                                    <font color="#008844">; automatically, this is just an example.</font>
+
+(setq *gc-hook* 'expand-on-gc)      <font color="#008844">; enable EXPAND-ON-GC</font>
+(gc)                                <font color="#008844">; beeps when low on nodes</font>
+</pre>
+
+<p><b>Note:</b> The *gc-hook* and <a href="global-gc-flag.htm">*gc-flag*</a>
+facilities can interact. If you do printing in the *gc-hook* user form and
+enable <nobr><a href="global-gc-flag.htm">*gc-flag*</a> ,</nobr> the
+*gc-hook* printing will come out in the middle of the
+<a href="global-gc-flag.htm">*gc-flag*</a> message.</p>
+
+<p><b>Note:</b> The *gc-hook* user form is evaluated after the execution of
+the actual garbage collection code. This means that if the user form causes
+an error, it does not prevent a garbage collection.</p>
+
+<p><b>Note:</b> Since *gc-hook* is set to a symbol, the user defined form
+can be changed by doing another <a href="defun.htm">defun</a> [or
+whatever] to the symbol in *gc-hook*. Note also that you should define the
+symbol first and then set *gc-hook* to the symbol. If you don't, an
+automatic garbage collection might occur before you set *gc-hook*,
+generating an error and stopping your program.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#gc-hook">*gc-hook*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

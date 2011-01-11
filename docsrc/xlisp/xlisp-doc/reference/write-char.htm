@@ -1,0 +1,92 @@
+<html><head><title>XLISP write-char</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>write-char</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(write-char <i>char-expr</i> [<i>dest</i>])</dt>
+<dd><i>char-expr</i> - a character expression<br>
+<i>dest</i> - an optional destination, must be a file pointer or stream,
+default is <a href="global-standard-output.htm">*standard-output*</a><br>
+returns - the character</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'write-char' function writes the 'char-expr' to the specified
+'destination'. Only the 'char-expr' is written. The 'char-expr' must be a
+character expression. The 'char-expr' is returned as the result. The
+'destination' may be a file pointer or a stream. If there is no
+'destination', <a href="global-standard-output.htm">*standard-output*</a> is the
+default.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(write-char #\C)                         <font color="#008844">; prints  C</font>
+
+(setq fp (open "t" :direction :output))  <font color="#008844">; create file</font>
+(write-char #\A fp)                      <font color="#008844">; returns #\A</font>
+(write-char #\B fp)                      <font color="#008844">; returns #\B</font>
+(write-char #\Newline fp)                <font color="#008844">; returns #\Newline</font>
+(close fp)                               <font color="#008844">; returns NIL</font>
+
+(read (open "t" :direction :input))      <font color="#008844">; returns AB</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp specifies that print operations with a
+'destination' of <a href="nil.htm">NIL</a> will go to
+<a href="global-standard-output.htm">*standard-output*</a>. XLISP does not send the
+output to <a href="global-standard-output.htm">*standard-output*</a> with a
+'destination' of <a href="nil.htm">NIL</a>. Common Lisp also
+specifies that a 'destination' of
+<a href="t.htm">&nbsp;T&nbsp;</a> will be sent to
+*terminal-io*, which is not defined in XLISP by default. XLISP does not
+allow <a href="t.htm">&nbsp;T&nbsp;</a> as a valid argument
+for 'destination'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-029.htm#write-char">write-char</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

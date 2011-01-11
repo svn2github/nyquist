@@ -1,0 +1,148 @@
+<html><head>
+
+<title>Octal Integer Numbers</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Octal Integer Numbers</h1>
+
+<hr>
+
+<p>XLISP provides the <a href="../manual/xlisp.htm#octal">#o</a>
+<nobr>read-macro</nobr> for octal numbers:</p>
+
+<pre class="example">
+#o0  =&gt; 0        #o10  =&gt; 8         #o20  =&gt; 16
+#o1  =&gt; 1        #o11  =&gt; 9         #o21  =&gt; 17
+#o2  =&gt; 2        #o12  =&gt; 10        #o22  =&gt; 18
+#o3  =&gt; 3        #o13  =&gt; 11        #o23  =&gt; 19
+#o4  =&gt; 4        #o14  =&gt; 12        #o24  =&gt; 20
+#o5  =&gt; 5        #o15  =&gt; 13        #o25  =&gt; 21
+#o6  =&gt; 6        #o16  =&gt; 14        #o26  =&gt; 22
+#o7  =&gt; 7        #o17  =&gt; 15        #o27  =&gt; 23
+</pre>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>oct-string</b> <i>integer</i> [<i>all</i>])</dt>
+<dd><i>integer</i> - an integer expression<br>
+<i>all</i> - a boolean expression<br>
+returns - the <i>integer</i> in octal form as string</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">oct-string</font> (integer &amp;optional all)
+  (if (integerp integer)
+      (let ((fmt (if all
+                     (or (dolist (bits '(16 32 64 128) nil)
+                           (let ((fixnum (round (expt 2.0 (1- bits)))))
+                             (and (plusp (1- fixnum))
+                                  (minusp fixnum)
+                                  (return (format nil <font color="#880000">"%.~ao"</font>
+                                                      (1+ (/ bits 3)))))))
+                         (error <font color="#880000">"integer limit not found"</font>))
+                     <font color="#880000">"%o"</font>)))
+        (progv '(<font color="#AA5500">*integer-format*</font>) (list fmt)
+          (format nil <font color="#880000">"~a"</font> integer)))
+      (error <font color="#880000">"not an integer"</font> integer)))
+</pre>
+
+<p>The '<nobr>oct-string</nobr>' function converts the 'integer' argument
+into octal form and returns is as a string. <nobr>If the</nobr>
+optional 'all' argument is not given or
+<a href="../reference/nil.htm">NIL</a>, leading zeros are not included in
+the string. <nobr>If the</nobr> optional 'all' argument is
+<nobr>non-<a href="../reference/nil.htm">NIL</a></nobr>, all digits of the
+internal representation of the 'integer' argument, including leading zeros,
+are contained in the string. This is useful for debugging integer overflow
+and <nobr>bit-wise</nobr> functions.</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>oct</b> <i>integer</i> [<i>all</i>])</dt>
+<dd><i>integer</i> - an integer expression<br>
+<i>all</i> - a boolean expression<br>
+prints - the <i>integer</i> in octal form<br>
+returns - the <i>integer</i> argument</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">oct</font> (integer &amp;optional all)
+  (if (integerp integer)
+      (format t <font color="#880000">"#o~a~%"</font> (oct-string integer all))
+      (format t <font color="#880000">";; not an integer~%"</font>))
+  integer)
+</pre>
+
+<p>The 'oct' function prints the 'integer' argument in octal form on
+the screen. Together with the
+<a href="../manual/xlisp.htm#octal">#o</a> <nobr>read-macro</nobr>
+this can be used for interactive octal computations.</p>
+
+<pre class="example">
+&gt; (oct 12345678)
+#o57060516
+12345678
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

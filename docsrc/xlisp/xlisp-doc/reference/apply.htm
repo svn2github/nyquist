@@ -1,0 +1,89 @@
+<html><head><title>XLISP apply</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>apply</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>apply</b> <i>function args</i>)</dt>
+<dd><i>function</i> - the function or symbol to be applied to 'args'<br>
+<i>args</i> - a list that contains the arguments to be passed to 'function'<br>
+returns - the result of applying the function to the arguments</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'apply' function causes 'function' to be evaluated with 'args' as the
+parameters, returning the result of 'function'. The 'args' argument must be
+a list.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+&gt; (defun my-add (x y)        <font color="#008844">; define MY-ADD function</font>
+    (+ x y))
+MY-ADD
+
+&gt; (my-add 1 2)               <font color="#008844">; ordinary function call</font>
+3                            <font color="#008844">; returns 3</font>
+
+&gt; (apply #'my-add '(2 4))    <font color="#008844">; symbol-function applied to argument-list</font>
+6                            <font color="#008844">; returns 6</font>
+</pre>
+
+<p><b>Note:</b> When using 'apply' to cause the evaluation of a function,
+you can use the <nobr>sharp-quoted</nobr> name of the function like
+#'my-add in the example, or <nobr>(function my-add)</nobr>. <nobr>In
+XLISP</nobr> also <nobr>'my-add</nobr> and <nobr>(quote my-add)</nobr> work,
+but this is no good Lisp style.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#evaluation-functions">Evaluation Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

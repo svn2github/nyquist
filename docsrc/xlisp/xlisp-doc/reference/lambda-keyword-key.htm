@@ -1,0 +1,132 @@
+<html><head><title>XLISP &amp;key</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>&amp;key</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>keyword</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xleval.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&amp;key <i>key-arg</i> ...<br>
+&amp;key (<i>key-arg</i> [<i>key-value</i> [<i>supplied-p-var</i>]]) ...<br>
+&amp;key ((<i>key-symbol key-arg</i>) [<i>key-value</i> [<i>supplied-p-var</i>]]) ...</dt>
+<dd><i>key-arg</i> - keyword argument<br>
+<i>key-symbol</i> - keyword argument symbol<br>
+<i>key-value</i> - keyword argument initialization<br>
+<i>supplied-p-var</i> - argument existence variable</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>In XLISP, there are several times that you define a formal argument list
+for a body of code [like
+<nobr><a href="defun.htm">defun</a> ,</nobr>
+<nobr><a href="defmacro.htm">defmacro</a> ,</nobr>
+<a href="keyword-answer.htm">:answer</a> and
+<a href="lambda.htm">lambda</a>].
+All of the formal arguments that are defined are required to appear in the
+invocation of the defined function or operation. If there are any
+<a href="lambda-keyword-optional.htm">&amp;optional</a> arguments defined, they will
+be filled in order.</p>
+
+<p>There are other optional arguments called 'keyword' arguments. These
+arguments are not position dependent but can be specified in any order by a
+preceding keyword [a symbol with a leading colon ':']. If there is no
+'key-symbol' specified in the argument list, the keyword will be constructed
+from the 'key-arg' name by adding a leading colon ':'. For example a
+'key-arg' of 'furter' will generate a keyword symbol of ':furter'.</p>
+
+<p>Like the <a href="lambda-keyword-optional.htm">&amp;optional</a> arguments, there
+can be initialization values provided via the 'key-value' argument. If there
+is no 'key-value' argument and no value is provided by the function call,
+the 'key-arg' value will be <a href="nil.htm">NIL</a>.</p>
+
+<p>The 'supplied-p-var', if it is specified, will contain a
+<a href="t.htm">&nbsp;T&nbsp;</a> if the 'key-arg' value was
+supplied by the function call and a <a href="nil.htm">NIL</a> if
+it was not supplied by the function call. This 'supplied-p-var' allows the
+programmer to test for an argument's existence. At the end of the function
+or operation execution, these local symbols and their values are are
+removed.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun foo (a &amp;key b c)
+  (print a) (print b) (print c))
+
+(foo)                           <font color="#008844">; error: too few arguments</font>
+(foo 1)                         <font color="#008844">; prints 1 NIL NIL</font>
+(foo 1 2)                       <font color="#008844">; prints 1 NIL NIL</font>
+(foo 1 :b 2 :c 3)               <font color="#008844">; prints 1 2 3</font>
+(foo 1 :c 3 :b 2)               <font color="#008844">; prints 1 2 3</font>
+(foo 1 :b 3 :b 2)               <font color="#008844">; prints 1 3 NIL</font>
+
+(defun fee (a &amp;key (b 9 b-passed))
+  (print a) (print b)
+  (if b-passed (print "b was passed")
+               (print "b not passed")))
+
+(fee)                           <font color="#008844">; error: too few arguments</font>
+(fee 1)                         <font color="#008844">; prints 1 9 "b not passed"</font>
+(fee 1 2)                       <font color="#008844">; prints 1 9 "b not passed"</font>
+(fee 1 :b 2)                    <font color="#008844">; prints 1 2 "b was passed"</font>
+
+(defun fi (a &amp;key ((:mykey b) 9 b-passed))
+  (print a) (print b)
+  (if b-passed (print "b was passed")
+               (print "b not passed")))
+
+(fi)                            <font color="#008844">; error: too few arguments</font>
+(fi 1)                          <font color="#008844">; prints 1 9 "b not passed"</font>
+(fi 1 2)                        <font color="#008844">; prints 1 9 "b not passed"</font>
+(fi 1 :b 2)                     <font color="#008844">; prints 1 9 "b not passed"</font>
+(fi 1 :mykey 2)                 <font color="#008844">; prints 1 2 "b was passed"</font>
+</pre>
+
+<p><b>Note:</b> There is a '&amp;allow-other-keys' keyword in XLISP and
+Common Lisp. In the case of XLISP, this keyword is extraneous since the
+default for keyword arguments is to allow other keys (without errors).</p>
+
+<p>See the
+<a href="../manual/xlisp-man-009.htm#9-1-4">&amp;key</a>
+keyword in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

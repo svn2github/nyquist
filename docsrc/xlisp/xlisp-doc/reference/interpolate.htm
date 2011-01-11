@@ -1,0 +1,76 @@
+<html><head><title>XLISP interpolate</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>interpolate</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>Lisp function (closure)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xm.lsp</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(interpolate <i>x x1 y1 x2 y2</i>)</nobr></dt>
+<dd><i>x</i>, <i>x1</i>, <i>y1</i>, <i>x2</i>, <i>y2</i> - integer or floating point numbers<br>
+returns - the 'y' value corresponding to 'x'</dd>
+</dl>
+
+</div></p>
+
+<p>In Nyquist, 'interpolate' is implemented as a Lisp function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">interpolate</font> (x x1 y1 x2 y2)
+  (cond ((= x1 x2) x1)
+        (t (+ y1 (* (- x x1) (/ (- y2 y1) (- x2 (float x1))))))))
+</pre>
+
+<h2>Description</h2>
+
+<p>The 'interpolate' function linearly interpolates [or extrapolates]
+between points <nobr>(x1, y1)</nobr> and <nobr>(x2, y2)</nobr> to compute
+the <nobr>'y' value</nobr> corresponding <nobr>to 'x'</nobr>.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

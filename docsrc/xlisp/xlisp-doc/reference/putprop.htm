@@ -1,0 +1,108 @@
+<html><head><title>XLISP putprop</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>putprop</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(putprop <i>symbol value property</i>)</dt>
+<dd><i>symbol</i> - the symbol with a property list<br>
+<i>value</i> - the value to be assigned to the property<br>
+<i>property</i> - the property name being changed or added<br>
+returns - the property value</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'putprop' function sets the value of the 'property' in the 'symbol'.
+If the 'property' does not exist, the 'property' is added to the property
+list. The 'symbol' must be an existing symbol. The 'value' may be a single
+value or a list.</p>
+
+<p>Property lists are lists attached to any user defined variables. The
+lists are in the form of:</p>
+
+<pre class="example">
+(<font color="#008844"><i>name1 val1 name2 val2</i></font> ... )
+</pre>
+
+<p>Any number of properties may be attached to a single variable.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq person 'bobby)                  <font color="#008844">; create a var with a value</font>
+(putprop person 'boogie 'last-name)   <font color="#008844">; add a LAST-NAME property</font>
+(putprop person 'disc-jockey 'job)    <font color="#008844">; add a JOB property</font>
+
+(get person 'last-name)               <font color="#008844">; retrieve LAST-NAME - boogie</font>
+(get person 'job)                     <font color="#008844">; retrieve JOB - disc-jockey</font>
+(get person 'height)                  <font color="#008844">; non-existant - returns NIL</font>
+
+(putprop person '(10 20 30) 'stats)   <font color="#008844">; add STATS - a list</font>
+(get person 'stats)                   <font color="#008844">; retrieve STATS - (10 20 30)</font>
+</pre>
+
+<p><b>Note:</b> You can set a property to the value
+<a href="nil.htm">NIL</a>. However, this
+<a href="nil.htm">NIL</a> value is indistinguishable from the
+<a href="nil.htm">NIL</a> returned when a property does not
+exist.</p>
+
+<p><b>Common Lisp:</b> Common LISP does not have a 'putprop' function. It
+uses <a href="setf.htm">setf</a> to achieve this functionality.
+Porting from Common Lisp to XLISP will work fine since XLISP supports the <a
+href="setf.htm">setf</a> modifications of property lists as well
+as the <a href="get.htm">get</a> function to retrieve property
+values from symbol names. Porting from XLISP to Common Lisp will require
+translating 'putprop' into <a href="setf.htm">setf</a> forms.</p>
+
+<p><b>Caution:</b> In XLISP, the order of 'putprop' arguments is 'symbol',
+'value', 'property'. This is different from many other Lisps which normally
+use 'symbol', 'property', 'value'. Be careful when porting existing Lisp
+code.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-014.htm#putprop">putprop</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

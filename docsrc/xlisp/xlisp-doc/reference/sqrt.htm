@@ -1,0 +1,76 @@
+<html><head><title>XLISP sqrt</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>sqrt</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(sqrt <i>expr</i>)</dt>
+<dd><i>expr</i> - floating point number or expression<br>
+returns - the square root of the number</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'sqrt' function calculates the square root of 'expr' and returns
+this result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(sqrt 1.0)    <font color="#008844">; returns 1</font>
+(sqrt 2.0)    <font color="#008844">; returns 1.41421</font>
+(sqrt 3.0)    <font color="#008844">; returns 1.73205</font>
+(sqrt 4.0)    <font color="#008844">; returns 2</font>
+(sqrt 5.0)    <font color="#008844">; returns 2.23607</font>
+(sqrt -1.0)   <font color="#008844">; error: square root of a negative number</font>
+(sqrt 2)      <font color="#008844">; error: bad integer operation</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp allows for integer numbers, which
+XLISP does not support for 'sqrt'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-023.htm#sqrt">sqrt</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

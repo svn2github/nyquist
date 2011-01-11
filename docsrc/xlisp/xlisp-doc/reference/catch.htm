@@ -1,0 +1,197 @@
+<html><head><title>XLISP catch, throw</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>catch, throw</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c, xljump.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>catch</b> <i>tag-symbol</i> [<i>expr</i> ... ])</dt>
+<dd><i>tag-symbol</i> - an expression that evaluates to a symbol<br>
+<i>expr</i> - an optional series of expressions to be evaluated<br>
+returns - the value of the last expression the
+<a href="throw.htm">throw</a> expression</dd>
+</dl>
+
+<dl>
+<dt>(<b>throw</b> <i>tag-symbol</i> [<i>expr</i>])</dt>
+<dd><i>tag-symbol</i> - an expression that evaluates to a symbol<br>
+<i>expr</i> - an optional expression to be returned<br>
+returns - never returns</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'catch' and 'throw' special forms allow for non-local exits and traps
+without going through the intermediate evaluations and function returns:</p>
+
+<pre class="example">
+(catch <font color="#0000CC">tag-symbol</font>
+  [<font color="#0000CC">expr</font> <font color="#008844">...</font>]
+  (throw <font color="#0000CC">tag-symbol</font> [<font color="#0000CC">expr</font>]))
+</pre>
+
+<p>If there is a 'catch' for a '<nobr>tag-symbol</nobr>' that has no 'throw'
+performed to it, 'catch' returns the value returned from 'expr':</p>
+
+<pre class="example">
+&gt; (catch 'mytag
+    (+ 1 (+ 2 3)))
+6
+</pre>
+
+<p>If there is no 'expr', <nobr><a href="nil.htm">NIL</a> is</nobr>
+returned:</p>
+
+<pre class="example">
+&gt; (catch 'mytag)
+NIL
+</pre>
+
+<p>The 'expr' in 'throw' specifies what value is to be returned by the
+corresponding 'catch':</p>
+
+<pre class="example">
+&gt; (catch 'mytag
+    (+ 1 (throw 'mytag 55)))
+55
+</pre>
+
+<p>If there is no 'expr' in 'throw', <a href="nil.htm">NIL</a> is returned
+to the corresponding 'catch':</p>
+
+<pre class="example">
+&gt; (catch 'mytag
+    (throw 'mytag))
+NIL
+</pre>
+
+<p>If more than one 'catch' is set up for the same
+'<nobr>tag-symbol</nobr>', the most recently evaluated
+'<nobr>tag-symbol</nobr>' will be the one that does the actual catching:</p>
+
+<pre class="example">
+&gt; (catch 'mytag
+    (catch 'mytag
+      (throw 'mytag))
+    (print 'hello))
+HELLO
+</pre>
+
+<p>If a 'throw' is evaluated with no corresponding 'catch', an error is
+signalled:</p>
+
+<pre class="example">
+&gt; (catch 'mytag
+    (throw 'foo))
+<font color="#AA0000">error: no target for THROW</font>
+</pre>
+
+<p></p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun in (x)
+  (if (numberp x)           <font color="#008844">; if X is a number</font>
+      (+ x x)               <font color="#008844">; then double X</font>
+      (throw 'math 42)))    <font color="#008844">; else throw 42</font>
+
+(defun out (x)
+  (princ "&lt;") 
+  (princ  (* (in x) 2))     <font color="#008844">; double via multiply</font>
+  (princ "&gt;")
+  "there")
+
+(defun main (x)
+  (catch 'math (out x)))    <font color="#008844">; catch the throw from IN</font>
+
+&gt; (in 5)
+10       <font color="#008844">; return value</font>
+
+&gt; (out 5)
+&lt;20&gt;     <font color="#008844">; screen output of PRINC</font>
+"there"  <font color="#008844">; return value</font>
+
+&gt; (main 5)
+&lt;20&gt;     <font color="#008844">; screen output of PRINC</font>
+"there"  <font color="#008844">; return value</font>
+
+&gt; (main 'a)
+&lt;        <font color="#008844">; screen output of PRINC</font>
+42       <font color="#008844">; return value</font>
+</pre>
+
+<p>See <nobr><a href="addition.htm">&nbsp;+&nbsp;</a></nobr>,
+<nobr><a href="multiplication.htm">&nbsp;*&nbsp;</a></nobr>,
+<a href="defun.htm">defun</a>,
+<nobr><a href="if.htm">&nbsp;if&nbsp;</a></nobr>,
+<a href="numberp.htm">numberp</a>,
+<a href="princ.htm">princ</a>.</p>
+
+<p><div class="box">
+
+<p><b>Note:</b> 'catch' and 'throw' accept not only symbols as
+'<nobr>tag-symbol</nobr>', but if a '<nobr>tag-symbol</nobr>' cannot be
+compared via <a href="eql.htm">eql</a>, an error is signalled:</p>
+
+<pre class="example">
+&gt; (catch "mytag"
+    (throw "mytag"))
+<font color="#AA0000">error: no target for THROW</font>
+</pre>
+
+<p>This was reproduced with <nobr>Nyquist 3.03</nobr> in <nobr>December
+2010</nobr>.</p>
+
+</div></p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#control-constructs">Control Constructs</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

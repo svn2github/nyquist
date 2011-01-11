@@ -1,0 +1,137 @@
+<html><head>
+
+<title>cl:ceiling</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:ceiling</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>ceiling</b></nobr> function
+<a href="../../reference/truncate.htm">truncate</a>s an integer or
+<nobr>floating-point</nobr> number toward positive infinity:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>ceiling</b> <i>number </i> [<i>divisor</i>])</dt>
+<dd><i>number</i> - an integer or <nobr>floating-point</nobr> number<br>
+<i>divisor</i> - an integer or <nobr>floating-point</nobr> number, except zero<br>
+<table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td valign="top"><nobr>returns</nobr></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the result of truncating the result of <i>number</i> divided by <i>divisor</i></td>
+</tr>
+<tr>
+  <td></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the remainder of the truncate operation</td>
+</tr>
+</tbody></table></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:ceiling</font> (number &amp;optional (divisor
+                                    (if (integerp number) 1 1.0)
+                                    divisor-p))
+  (let ((quotient
+          (cond ((and (not divisor-p) (integerp number)) number)
+                ((= number divisor) 1)
+                (t (let ((i-quotient (/ (truncate number) (truncate divisor)))
+                         (f-quotient (/ (float number) divisor)))
+                     (if (or (= i-quotient f-quotient)  <font color="#008844">; integer result</font>
+                             (not (plusp f-quotient)))
+                          (truncate f-quotient)
+                          (1+ (truncate f-quotient))))))))
+    (setq <font color="#AA5500">*rslt*</font> (list quotient (- number (* quotient divisor)))
+          <font color="#AA5500">cl:*multiple-values*</font> t)
+    quotient))
+</pre>
+
+<p>The <nobr>cl:<b>ceiling</b></nobr> function computes a quotient that has
+been truncated toward positive infinity. <nobr>That is</nobr>, the quotient
+represents the smallest mathematical integer that is not smaller than the
+mathematical result.</p>
+
+<p>The quotient is directly returned by the function, while a list:</p>
+
+<pre class="example">
+(quotient remainder)
+</pre>
+
+<p>is stored in the Nyquist/XLISP
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable and the
+<a href="global-multiple-values.htm">cl:*multiple-values*</a> is set to
+<a href="../../reference/t.htm">&nbsp;T&nbsp;</a> to signal that
+<a href="multiple-values.htm">Multiple Values</a> are returned.</p> 
+
+<nobr>See
+<a href="rounding-and-truncation.htm">Rounding and Truncation</a></nobr>
+for more details.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(cl:ceiling  3.5)  =&gt;  4  <font color="#008844">; *rslt* =&gt; ( 4 -0.5)</font>
+(cl:ceiling -3.5)  =&gt; -3  <font color="#008844">; *rslt* =&gt; (-3 -0.5)</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

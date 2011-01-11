@@ -1,0 +1,73 @@
+<html><head><title>XLISP system</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>system</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>sys/unix/osstuff.c, sys/mac/macfun.c, sys/win/msvc/winfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(system <i>command</i>)</dt>
+<dd><i>command</i> - the OS command string to be executed<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the command
+was successful, the error code otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'system' function will send the 'command' string to the underlying
+operating system for execution. After execution of the 'command', the
+'system' function will return a
+<a href="t.htm">&nbsp;T&nbsp;</a> result if the 'command' was
+successful. If the 'command' was not successful, the numeric error code will
+be returned. Any output from the 'command' execution will not be put in the
+transcript file.</p>
+
+<p><b>Note:</b> In Nyquist, this function is only defined to work on Unix
+systems [including Linux and <nobr>Mac OS X]</nobr>. <nobr>On
+Windows</nobr> systems, <a href="nil.htm">NIL</a> is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(system "ls")     <font color="#008844">; do a directory listing</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

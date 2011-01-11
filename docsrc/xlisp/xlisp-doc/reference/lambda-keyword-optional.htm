@@ -1,0 +1,98 @@
+<html><head><title>XLISP &amp;optional</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>&amp;optional</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>keyword</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xleval.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&amp;optional [<i>opt-arg</i> | (<i>opt-arg</i> [<i>opt-value</i> [<i>supplied-p</i>]])] ...</dt>
+<dd><i>opt-arg</i> - optional argument<br>
+<i>opt-value</i> - optional argument initialization value<br>
+<i>supplied-p</i> - optional argument existence variable</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>In XLISP, there are several times that you define a formal argument list
+for a body of code like
+<nobr><a href="defun.htm">defun</a> ,</nobr>
+<nobr><a href="defmacro.htm">defmacro</a> ,</nobr>
+<a href="keyword-answer.htm">:answer</a> and
+<a href="lambda.htm">lambda</a>. All of the formal arguments
+that are defined are required to appear in the invocation of the defined
+function or operation. If there are any '&amp;optional' arguments defined,
+they will be filled in order. If there are insufficient parameters for the
+'&amp;optional' arguments, they will contain
+<nobr><a href="nil.htm">NIL</a> ,</nobr> unless the arguments
+have an 'opt-value' initial value specified. The 'supplied-p' variable, if
+specified, will contain <a href="t.htm">&nbsp;T&nbsp;</a> if
+the 'opt-arg' was supplied by the function call and
+<a href="nil.htm">NIL</a> if it was not supplied by the function
+call. This 'supplied-p' variable allows the programmer to test for an
+arguments existence. At the end of the function or operation execution,
+these local symbols and their values are are removed.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun foo                              <font color="#008844">; define function FOO</font>
+  (a &amp;optional b (c 1) )                <font color="#008844">;   with some optional args</font>
+  (print a) (print b) (print c))
+(foo)                                   <font color="#008844">; error: too few arguments</font>
+(foo 1)                                 <font color="#008844">; prints 1 NIL 1</font>
+(foo 1 2)                               <font color="#008844">; prints 1 2 1</font>
+(foo 1 2 3)                             <font color="#008844">; prints 1 2 3</font>
+
+(defun fee                              <font color="#008844">; define function FEE</font>
+  (a &amp;optional (b 9 b-passed) )         <font color="#008844">;   with some optional args</font>
+  (print a) (print b)
+  (if b-passed (print "b was passed")
+               (print "b not passed")))
+(fee 1)                                 <font color="#008844">; prints 1 9 "b not passed"</font>
+(fee 1 2)                               <font color="#008844">; prints 1 2 "b was passed"</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-009.htm#9-1-2">&amp;optional</a>
+keyword in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

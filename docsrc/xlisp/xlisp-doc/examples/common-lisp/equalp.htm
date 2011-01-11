@@ -1,0 +1,162 @@
+<html><head>
+
+<title>cl:equalp</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:equalp</h1>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>equalp</b> <i>expr1 expr2</i>)</dt>
+<dd><i>exprN</i> - arbitrary Lisp expressions<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the expressions
+are structurally equal, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<p>Two expressions are 'equalp':</p>
+
+<ul>
+
+<li><p>If the expressions
+<nobr>are <a href="../../reference/equal.htm">equal</a></nobr>.</p></li>
+
+<li><p>If two numbers of arbitrary type <nobr>are
+<a href="../../reference/number-equal.htm">&nbsp;=&nbsp;</a></nobr>.</p></li>
+
+<li><p>If two characters are
+<nobr><a href="../../reference/char-equal-i.htm">char-equal</a></nobr>.</p></li>
+
+<li><p>If two strings are <nobr><a
+href="../../reference/string-equal-i.htm">string-equal</a></nobr>.</p></li>
+
+<li><p>If the two <a href="../../reference/car.htm">car</a>s in conses are
+'equalp' and the two <a href="../../reference/cdr.htm">cdr</a>s in conses
+are 'equalp'.</p></li>
+
+<li><p>If two arrays have the same number of elements and dimensions, and
+the corresponding elements in all dimensions are 'equalp'.</p></li>
+
+</ul>
+
+<p>Note that only 'equalp' can compare arrays.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:equalp</font> (expr-1 expr-2)
+  (or (equal expr-1 expr-2)
+      (and (numberp expr-1) (numberp expr-2) (= expr-1 expr-2))
+      (let ((type (type-of expr-1)))
+        (when (eq type (type-of expr-2))
+          (case type
+            (character (char-equal expr-1 expr-2))
+            (string    (string-equal expr-1 expr-2))
+            (cons      (do ((x (first expr-1)
+                               (if (consp expr-1) (first expr-1) expr-1))
+                            (y (first expr-2)
+                               (if (consp expr-2) (first expr-2) expr-2)))
+                           ((or (null expr-1)
+                                (null expr-2)
+                                (not (equalp x y)))
+                            (and (null expr-1)
+                                 (null expr-2)))
+                         (setq expr-1 (and (consp expr-1) (rest expr-1))
+                               expr-2 (and (consp expr-2) (rest expr-2)))))
+            (array     (let ((end (length expr-1)))
+                         (when (eql end (length expr-2))
+                           (dotimes (index end t)
+                             (and (not (equalp (aref expr-1 index)
+                                               (aref expr-2 index)))
+                                  (return nil)))))))))))
+</pre>
+
+<p><b>cons:</b> <a href="../../reference/do.htm">do</a> is used instead of
+recursion because XLISP has only two kilobytes stack size. <nobr>The
+(<a href="../../reference/consp.htm">consp</a> <i>expr</i>)</nobr> tests are
+necessary because in a dotted list the last
+<a href="../../reference/rest.htm">rest</a> element is not a cons.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(cl:equalp 1 1.0)                            =&gt; T
+(cl:equalp #\a #\A)                          =&gt; T
+(cl:equalp "Abc" "aBc")                      =&gt; T
+(cl:equalp '(1 #\a "Abc") '(1.0 #\A "aBc"))  =&gt; T
+(cl:equalp #(1 #\a "Abc") #(1.0 #\A "aBc"))  =&gt; T
+</pre>
+
+<p>Nested expressions only match if the nesting matches:</p>
+
+<pre class="example">
+(cl:equalp '(1 <font color="#AA0000">(</font>2 3<font color="#AA0000">)</font>) '(1.0 <font color="#AA0000">(</font>2.0 3.0<font color="#AA0000">)</font>)  =&gt; T
+(cl:equalp '(1 <font color="#AA0000">(</font>2 3<font color="#AA0000">)</font>) '(<font color="#AA0000">(</font>1.0 2.0<font color="#AA0000">)</font> 3.0)  =&gt; NIL
+(cl:equalp '(<font color="#AA0000">(</font>1 2<font color="#AA0000">)</font> 3) '(<font color="#AA0000">(</font>1.0 2.0<font color="#AA0000">)</font> 3.0)  =&gt; T
+(cl:equalp '(<font color="#AA0000">(</font>1 2<font color="#AA0000">)</font> 3) '(1.0 <font color="#AA0000">(</font>2.0 3.0<font color="#AA0000">)</font>)  =&gt; NIL
+</pre>
+
+<p>A character does not match a string with the same character:</p>
+
+<pre class="example">
+(cl:equalp #\a "a")  =&gt; NIL
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

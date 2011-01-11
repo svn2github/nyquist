@@ -1,0 +1,93 @@
+<html><head><title>XLISP member</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>member</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(member <i>expr list-expr</i> [{:test | :test-not} <i>test</i>])</dt>
+<dd><i>expr</i> - the expression to find [an atom or a list]<br>
+<i>list-expr</i> - the list to search<br>
+<i>test</i> - optional test function, default is
+<a href="eql.htm">eql</a><br>
+returns - the remainder of the list starting with <i>expr</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'member' function searches through 'list-expr' for 'expr'. If found,
+'member' returns the remainder of the 'list-expr' starting with 'expr'. If
+'expr' is not found, a <a href="nil.htm">NIL</a> is returned. You
+may specify your own test with the ':test' and ':test-not' keywords followed
+by the test you which to perform.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(member 'a '(1 2 3 4))                         <font color="#008844">; returns NIL</font>
+(member '2 '(1 2 3 4))                         <font color="#008844">; returns (2 3 4)</font>
+
+(setq mylist '(2 4 8 16 32 64 128 256))        <font color="#008844">; make a numeric list</font>
+(member 6 mylist :test '&lt;)                     <font color="#008844">; returns (8 16 32 64 128 256)</font>
+(member 6 (reverse mylist) :test-not '&lt;)       <font color="#008844">; returns (4 2)</font>
+(member '20 '(60 40 20 10) :test '&gt; )          <font color="#008844">; returns (10)</font>
+
+(member '(a) '((see) (a) (cat)) :test 'equal)  <font color="#008844">; returns ((A) (CAT)) with EQUAL as test</font>
+(member "hi" '("a" "hi" "c") :test 'string= )  <font color="#008844">; returns ("hi" "c") with STRING= as test</font>
+
+</pre>
+
+<p><b>Note:</b> The 'member' function can work with a list or string as the
+'expr'. However, the default <a href="eql.htm">eql</a> test does
+not work with lists or strings, only symbols and numbers. To make this work,
+you need to use the ':test' keyword along with
+<a href="equal.htm">equal</a> for 'test'.</p>
+
+<p><b>Common Lisp:</b> Common Lisp supports the use of the ':key' keyword
+which specifies a function that is applied to each element of 'list-expr'
+before it is tested. XLISP does not support this.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#member">member</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

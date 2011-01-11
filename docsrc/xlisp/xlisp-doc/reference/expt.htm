@@ -1,0 +1,79 @@
+<html><head><title>XLISP expt</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>expt</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(expt <i>expr</i> [<i>power</i> ... ])</dt>
+<dd><i>expr</i> - floating point number/expression<br>
+<i>power</i> - integer or floating point number/expression<br>
+returns - x to the y power</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'expt' function raises the 'expr' to the specified 'power' and
+returns the result. If there is no 'power' specified, the 'expr' is
+returned. If there are multiple 'powers', they will be applied sequentially
+to 'expr'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(expt 2.0 2)        <font color="#008844">; returns 4</font>
+(expt 2.0 10)       <font color="#008844">; returns 1024</font>
+(expt 2 2)          <font color="#008844">; error: bad integer operation</font>
+(expt 99.9)         <font color="#008844">; returns 99.9</font>
+(expt 2.0 2.0 2.0)  <font color="#008844">; returns 16</font>
+</pre>
+
+<p><b>Note:</b> 'expt' with a large values like (expt 999.9 999.9) causes an
+incorrect value to be generated, with no error. The returned value will be a
+very large floating point number near the computer's limit [something like
+1.79000e+308].</p>
+
+<p>See the
+<a href="../manual/xlisp-man-023.htm#expt">expt</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

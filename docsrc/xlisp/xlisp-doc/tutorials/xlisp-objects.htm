@@ -1,0 +1,839 @@
+<html><head><title>XLISP Objects Primer</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>XLISP Objects Primer</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#1">Programming Styles</a></nobr></li>
+<li><nobr><a href="#2">Object Oriented Programming</a></nobr></li>
+<li><nobr><a href="#3">Xlisp Object Terminology</a></nobr></li>
+<li><nobr><a href="#4">Sending Messages</a></nobr></li>
+<li><nobr><a href="#5">Classes</a></nobr></li>
+<li><nobr><a href="#6">A Better Class Example</a></nobr></li>
+<li><nobr><a href="#7">Instances</a></nobr></li>
+<li><nobr><a href="#8">Methods</a></nobr></li>
+<li><nobr><a href="#9">Sending Messages To A Superclass</a></nobr></li>
+<li><nobr><a href="#10">Object And Class</a></nobr></li>
+<li><nobr><a href="#11">Objects Example</a></nobr></li>
+</ol>
+
+<p>This tutorial is adapted from a '<nobr>XLISPOOP.DOC</nobr>' document with
+the following copyright:</p>
+
+<p><div class="box">
+
+<p>XLisp 2.0 Objects Primer by Tim I Mikkelsen - February 3, 1990</p>
+
+<blockquote>
+
+<p> Copyright (c) 1990 by Tim I. Mikkelsen. All Rights Reserved. No part of this
+document may be copied, reproduced or translated for commercial use without
+prior written consent of the author. Permission is granted for non-commercial
+use as long as this notice is left intact.
+
+<p> One of the features in the design of XLISP is object-oriented programming.
+This primer is intended to serve as a very brief introduction to the object
+facilities of the XLISP 2.0 dialect of LISP. Note that the object features of
+XLISP are not based on other existing object definitions in other LISP dialects.
+If you find problems in the primer, I'd appreciate hearing. </p>
+
+</blockquote>
+
+<p>Tim Mikkelsen, (tim@hpfcbig.SDE.HP.COM), 4316 Picadilly Drive, Fort Collins,
+Colorado  80526</p>
+
+</div></p>
+
+<a name="1"></a>
+
+<hr>
+
+<h2>1&nbsp; Programming Styles</h2>
+
+<hr>
+
+<p>There are many programming models, some of <nobr>them are:</nobr></p>
+
+<ul>
+<li>procedural</li>
+<li>functional</li>
+<li><nobr>rule-based</nobr></li>
+<li>declarative</li>
+<li><nobr>object-oriented</nobr></li>
+</ul>
+
+<p>A language can have aspects of one or many of these programming
+models.</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><b>Procedure-Oriented</b></p></dt>
+
+<dd><p>The programming paradigm most people are familiar with is the
+procedural style. The primitives in procedural programming are subroutines
+and data structures. Through these primitives, programmers have some limited
+abilities to share programs and program fragments. <nobr>C and</nobr> Pascal
+are examples of procedural languages. Some procedural languages <nobr>[such
+as</nobr> Modula <nobr>and ADA]</nobr> have extensions that provide for
+better sharing <nobr>of code</nobr>.</p></dd>
+
+<dt><p><b>Object-Oriented</b></p></dt>
+
+<dd><p><nobr>Object-oriented</nobr> programming is based on the primitives
+of objects, classes and messages. Objects are defined in terms of classes.
+Actions occur by sending a message to an object. <nobr>An object's</nobr>
+definition can be inherited from more general classes.
+<nobr>Objective-C</nobr> and C++ both are <nobr>object-oriented</nobr>
+dialects of the <nobr>C language</nobr>. <nobr>Many dialects</nobr> of Lisp
+have some <nobr>object-oriented</nobr> extension [Flavors, <nobr>Common
+LOOPS</nobr>, CLOS and others]. There currently is standards work proceeding
+to add <nobr>object-oriented</nobr> programming to <nobr>Common
+Lisp</nobr>.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="2"></a>
+
+<hr>
+
+<h2>2&nbsp; Object Oriented Programming</h2>
+
+<hr>
+
+<p>The <nobr>object-oriented</nobr> programming model is based around the
+concepts of objects, classes and messages. <nobr>An object</nobr> is
+essentially a black box that contains internal state information. <nobr>You
+send</nobr> an object a message which causes the object to perform some
+operation. Objects are defined and described through classes.</p>
+
+<p>One aspect of an object is that you do not have to know what is inside or
+how it works to be able to <nobr>use it</nobr>. From a programming point of
+view, this is very handy. <nobr>You can</nobr> develop a series of objects
+for someone to use. <nobr>If you</nobr> need to change what goes on inside,
+the users of the objects should be unaware.</p>
+
+<p>Another aspect of objects is that of inheritance. <nobr>You can</nobr>
+build up new classes from existing classes by inheriting the existing
+class's functionality and then extending the new definition. For example,
+you can define a 'tool' class with various attributes and then go about
+creating object instances like '<nobr>tool-1</nobr>', '<nobr>tool-2</nobr>',
+and <nobr>so on</nobr>. <nobr>You can</nobr> also create new
+<nobr>sub-classes</nobr> of the 'tool' class like '<nobr>power-tool</nobr>'.
+<nobr>This is</nobr> also very handy because you don't have to
+<nobr>re-implement</nobr> something if you can build it up from
+<nobr>existing code</nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="3"></a>
+
+<hr>
+
+<h2>3&nbsp; Xlisp Object Terminology</h2>
+
+<hr>
+
+<p>There are many different languages with <nobr>object-oriented</nobr>
+extensions and facilities. <nobr>The terminology</nobr>, operations and
+styles of these are very different. Some of the main definitions for XLISP's
+<nobr>object-oriented</nobr> extensions are:</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><nobr><b>object data type</b></nobr></p></dt>
+
+<dd><p>The <a href="../reference/object.htm">object</a> data type is a
+<nobr>built-in</nobr> data type of XLISP. Members of the object data type
+are object instances and classes.</p></dd>
+ 
+<dt><p><nobr><b>object instances</b></nobr></p></dt>
+
+<dd><p>An 'object instance' is a composite structure that contains internal
+state information, methods [the code which respond to messages], <nobr>a
+pointer</nobr> to the object instance's defining class and a pointer to the
+object's <nobr>super-class</nobr>. XLISP contains no <nobr>built-in</nobr>
+object instances.</p></dd>
+ 
+<dt><p><nobr><b>class objects</b></nobr></p></dt>
+
+<dd><p>A <a href="../reference/class.htm">class</a> object is, essentially,
+the template for defining the derived object instances. <nobr>A class
+object</nobr>, although used differently from a simple object instance, is
+structurally a member of the object data type. <nobr>It also</nobr> contains
+the linking mechanism that allows you to build class hierarchies
+<nobr>[sub-classes</nobr> and <nobr>super-classes]</nobr>. XLISP contains
+two <nobr>built-in</nobr> class objects, 'object' and 'class'.</p></dd>
+ 
+<dt><p><nobr><b>message selector</b></nobr></p></dt>
+
+<dd><p>The 'message selector' is the symbol that is used to select a
+particular action [method] from the object.</p></dd>
+ 
+<dt><p><b>message</b></p></dt>
+
+<dd><p>The 'message' is the combination of the message selector and the data
+<nobr>[if any]</nobr> to be sent to the object.</p></dd>
+ 
+<dt><p><b>method</b></p></dt>
+
+<dd><p>The 'method' is the actual code that gets executed when the object
+receives the message.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="4"></a>
+
+<hr>
+
+<h2>4&nbsp; Sending Messages</h2>
+
+<hr>
+
+<p>The mechanism for sending messages to XLISP objects is via the
+<a href="../reference/send.htm">send</a> function. <nobr>It takes</nobr>
+an object, a message selector and various optional arguments [depending on
+the message selector].</p>
+
+<p>The way that a user creates a new object is to
+<a href="../reference/send.htm">send</a> a
+<a href="../reference/keyword-new.htm">:new</a> message to a previously
+defined class. <nobr>The result</nobr> of this
+<a href="../reference/send.htm">send</a> will return an object, so this is
+normally preceded by <nobr>a
+<a href="../reference/setq.htm">setq</a></nobr>.</p>
+
+<pre class="example">
+&gt; (setq my-object (send object :new))
+#&lt;Object: #2e100&gt;
+</pre>
+
+<p><div class="box">
+
+<p><nobr>The examples</nobr> are similar to what you should see on your
+computer screen. <nobr>The '&gt;'</nobr> is the normal XLISP prompt, the
+characters that follow the prompt is what you type in to try the examples.
+Note that XLISP prints objects together with their internal pointer, like
+#2e100 in the example above. These <nobr>#ID numbers</nobr> may not match
+with the numbers you see on the screen if you try the examples, but this is
+not an error.</nobr></p>
+
+</div></p>
+
+<p> The object created above is of limited value. Most often, you create a
+'class' object and then you create instances of that class. <nobr>So
+in</nobr> the following example, a class called '<nobr>my-class</nobr>' is
+created that inherits its definition from the a <nobr>built-in</nobr> <a
+href="../reference/class.htm">class</a> definition. Then two instances are
+created of the new class:</p>
+
+<pre class="example">
+&gt; (setq my-class (send class :new '()))
+#&lt;Object: #27756&gt;
+
+&gt; (setq my-instance (send my-class :new))
+#&lt;Object: #27652&gt;
+
+&gt; (setq another-instance (send my-class :new))
+#&lt;Object: #275da&gt;
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="5"></a>
+
+<hr>
+
+<h2>5&nbsp; Classes</h2>
+
+<hr>
+
+<p> In the examples above, a <a href="../reference/keyword-new.htm">:new</a>
+message was used to create an object. <nobr>The message</nobr> used to see
+what is in an object is the
+<a href="../reference/keyword-show.htm">:show</a> message:</p>
+
+<pre class="example">
+&gt; (send my-class :show)
+Object is #&lt;Object: #27756&gt;, Class is #&lt;Object: #23fe2&gt;
+  MESSAGES = NIL
+  IVARS = NIL
+  CVARS = NIL
+  CVALS = NIL
+  SUPERCLASS = #&lt;Object: #23fd8&gt;
+  IVARCNT = 0
+  IVARTOTAL = 0
+#&lt;Object: #27756&gt;
+</pre>
+
+<p> From the display of the 'my-class' object you can see there are a
+variety of components. The components of a class are:</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><nobr><b>class pointer</b></nobr></p></dt>
+
+<dd><p>This pointer shows to what class the object [instance or class]
+belongs. For a class, this always points to the <nobr>built-in</nobr> object
+<a href="../reference/class.htm">class</a>. This is also true of the
+<a href="../reference/class.htm">class</a> object, its class pointer points
+to itself.</p></dd>
+ 
+<dt><p><nobr><b>superclass pointer</b></nobr></p></dt>
+
+<dd><p>This pointer shows what the next class up the class <nobr>hierarchy
+is</nobr>. <nobr>If the</nobr> user does not specify what class is the
+superclass, it will point to the built-in <nobr>class
+<a href="../reference/object.htm">object</a></nobr>.</p></dd>
+ 
+<dt><p><b>messages</b></p></dt>
+
+<dd><p>This component shows what messages are allowed for the class, and the
+description of the method that will be used. <nobr>If the</nobr> method is
+<nobr>system-defined</nobr>, it will show up in the <nobr>form
+of:</nobr></p>
+
+<pre class="example">
+#&lt;Subr-: #18b98&gt;
+</pre>
+
+<p>Remember that the class hierarchy [through the superclass pointer] is
+searched if the requested message is not found in the class.</p></dd>
+ 
+<dt><p><nobr><b>instance variables</b></nobr></p></dt>
+
+<dd><p>The IVARS component lists what instance variables will be created
+when an object instance is created. <nobr>If no</nobr> instances of the
+class exist, there are no instance variables. <nobr>If there</nobr> are
+<nobr>5 instances</nobr> of a class, there are <nobr>5 complete</nobr> and
+different groups of the instance variables.</p></dd>
+ 
+<dt><p><nobr><b>class variables and values</b></nobr></p></dt>
+
+<dd><p>The CVARS component lists what class variables exist within the
+class. The CVALS component shows what the current values of the variables
+are. Class variables are used to hold state information about a class. There
+will be one of each of the class variables, independent of the number of
+instances of the class created.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="6"></a>
+
+<hr>
+
+<h2>6&nbsp; A Better Class Example</h2>
+
+<hr>
+
+<p> The example shown in the previous section does work, but the class and
+instances created don't really do anything of interest. The following
+example sets up a tool class and creates some tool instances:</p>
+
+<pre class="example">
+&gt; (setq my-tools (send class :new '(power moveable operation)))
+#&lt;Object: #277a6&gt;
+
+&gt; (send my-tools :answer :isnew '(pow mov op) 
+    '((setq power pow moveable mov operation op))
+#&lt;Object: #277a6&gt;
+
+&gt; (setq drill (send my-tools :new 'AC t 'holes))
+#&lt;Object: #2ddbc&gt;
+
+&gt; (setq hand-saw (send my-tools :new 'none t 'cuts))
+#&lt;Object: #2dc40&gt;
+
+&gt; (setq table-saw (send my-tools :new 'AC nil 'cuts))
+#&lt;Object: #2db00&gt;
+</pre>
+
+<p>A class of objects called '<nobr>my-tools</nobr>' and three instances
+were created:</p>
+
+<p><nobr>&nbsp; <img alt="[Figure 1]" src="xobj-1.png"></nobr></p>
+
+<p>First the class '<nobr>my-tools</nobr>' was created by sending the
+<a href="../reference/keyword-new.htm">:new</a> message to the
+<nobr>built-in</nobr> <a href="../reference/class.htm">class</a> object.
+Then, within the '<nobr>my-tool</nobr>' class, three instances called
+'drill', '<nobr>hand-saw</nobr>' and '<nobr>table-saw</nobr>' were
+created by sending the <a href="../reference/keyword-new.htm">:new</a>
+message to the '<nobr>my-tools</nobr>' class. Notice the three parameters
+following the message selector. The instance variables are initialized
+from these parameters by the :isnew method, inherited from the
+'<nobr>my-tools</nobr>' class at the time when the instances were created.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="7"></a>
+
+<hr>
+
+<h2>7&nbsp; Instances</h2>
+
+<hr>
+
+<p>The following is a display of the contents of some of the instances
+created above, where the XLISP object #ID numbers had been replaced by the
+respective class and instance names:</p>
+
+<pre class="example">
+&gt; (send drill :show)
+Object is #&lt;Object: #[<font color="#0066CC">drill</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">my-tools</font>]&gt;
+  POWER = AC
+  MOVEABLE = T
+  OPERATION = HOLES
+#&lt;Object: #[<font color="#0066CC">drill</font>]&gt;
+
+&gt; (send hand-saw :show)
+Object is #&lt;Object: #[<font color="#0066CC">hand-saw</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">my-tools</font>]&gt;
+  POWER = NONE
+  MOVEABLE = T
+  OPERATION = CUTS
+#&lt;Object: #[<font color="#0066CC">hand-saw</font>]&gt;
+</pre>
+
+<p>From the display of these instances you can see there are some
+components and values. The components of an instance are:</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><nobr><b>class pointer</b></nobr></p></dt>
+
+<dd><p>This pointer shows to which class the current object instance
+belongs. It is through this link that the system finds the methods to
+execute for the received messages.</p></dd>
+ 
+<dt><p><nobr><b>instance variables and values</b></nobr></p></dt>
+
+<dd><p>The variables existing within the instance are shown together with
+their values. Instance Variables are used to hold state information for each
+instance. There will be a group of instance variables for each
+instance.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="8"></a>
+
+<hr>
+
+<h2>8&nbsp; Methods</h2>
+
+<hr>
+
+<p>There have been a few of the messages and methods in XLISP shown to this
+point like <a href="../reference/keyword-new.htm">:new</a> and
+<a href="../reference/keyword-show.htm">:show</a>. The following are the
+methods built into XLISP:</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><b>:answer</b></p></dt>
+
+<dd><p>The <a href="../reference/keyword-answer.htm">:answer</a> method
+allows you to define or change methods within a class.</p></dd>
+ 
+<dt><p><b>:class</b></p></dt>
+
+<dd><p>The <a href="../reference/keyword-class.htm">:class</a> method
+returns the class of an object.</p></dd>
+ 
+<dt><p><b>:isnew</b></p></dt>
+
+<dd><p>The <a href="../reference/keyword-.htm">:isnew</a> method causes an
+instance to run its initialization code. When the
+<a href="../reference/keyword-.htm">:isnew</a> method is run on a class, it
+resets the class state. This allows you to <nobr>re-define</nobr> instance
+variables, class <nobr>variables, etc.</nobr></p></dd>
+ 
+<dt><p><b>:new</b></p></dt>
+
+<dd><p>The <a href="../reference/keyword-new.htm">:new</a> method allows you
+to create an instance when the
+<a href="../reference/keyword-new.htm">:new</a> message is sent to a
+<nobr>user-defined</nobr> class. The
+<a href="../reference/keyword-new.htm">:new</a> method allows you to create
+a new class when the <a href="../reference/keyword-new.htm">:new</a> message
+is sent to the
+<nobr>built-in <a href="../reference/class.htm">class</a></nobr>.</p></dd>
+ 
+<dt><p><b>:show</b></p></dt>
+
+<dd><p>The <a href="../reference/keyword-show.htm">:show</a> method displays the instance or class.</p></dd>
+
+<dt><p><b>:isa</b></p></dt>
+
+<dd><p>The <a href="../reference/keyword-isa.htm">:isa</a> method tests if
+an object inherits from a class.</p></dd>
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="9"></a>
+
+<hr>
+
+<h2>9&nbsp; Sending Messages To A Superclass</h2>
+
+<hr>
+
+<p> In addition to the <a href="../reference/send.htm">send</a> function,
+there is another function called
+<nobr><a href="../reference/send-super.htm">send-super</a></nobr>. The
+<nobr><a href="../reference/send-super.htm">send-super</a></nobr>
+function causes the specified message to be performed by the superclass
+method. This is a mechanism to allow chaining of methods in a class
+hierarchy. This chaining behavior can be achieved by creating a method for a
+class with the <a href="../reference/keyword-answer.htm">:answer</a>
+message. Within the body of the method, you include a
+<nobr><a href="../reference/send-super.htm">send-super</a></nobr> form. This
+function is allowed only inside the execution of a method of an object.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="10"></a>
+
+<hr>
+
+<h2>10&nbsp; Object And Class</h2>
+
+<hr>
+
+<p>The definition of the built-in class 'object' is:</p>
+
+<pre class="example">
+&gt; (send object :show)
+Object is #&lt;Object: #[<font color="#0066CC">built-in-object</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">built-in-class</font>]&gt;
+  MESSAGES = ((:ISA   . #&lt;Subr-: #[<font color="#0000CC">built-in-isa-method</font>]&gt;)
+              (:SHOW  . #&lt;Subr-: #[<font color="#0000CC">built-in-show-method</font>]&gt;)
+              (:CLASS . #&lt;Subr-: #[<font color="#0000CC">built-in-class-method</font>]&gt;)
+              (:ISNEW . #&lt;Subr-: #[<font color="#0000CC">built-in-isnew-method</font>]&gt;))
+  IVARS = NIL
+  CVARS = NIL
+  CVALS = NIL
+  SUPERCLASS = NIL  <font color="#008844">; no superclass</font>
+  IVARCNT = 0
+  IVARTOTAL = 0
+#&lt;Object: #[<font color="#0066CC">built-in-object</font>]&gt;
+</pre>
+
+<p> Note that 'object' is a class, as opposed to an 'instance-style' object.
+'object' has no superclass, it is the top or root of the class hierarchy.
+'object's class is 'class'. </p>
+
+<pre class="example">
+&gt; (send class :show)
+Object is #&lt;Object: #[<font color="#0066CC">built-in-class</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">built-in-class</font>]&gt;
+  MESSAGES = ((:ANSWER . #&lt;Subr-: #[<font color="#0000CC">built-in-answer-method</font>]&gt;) 
+              (:ISNEW  . #&lt;Subr-: #[<font color="#0000CC">built-in-isnew-method</font>]&gt;) 
+              (:NEW    . #&lt;Subr-: #[<font color="#0000CC">built-in-new-method</font>]&gt;))
+  IVARS = (MESSAGES IVARS CVARS CVALS SUPERCLASS IVARCNT IVARTOTAL)
+  CVARS = NIL
+  CVALS = NIL
+  SUPERCLASS = #&lt;Object: #[<font color="#0066CC">built-in-object</font>]&gt;
+  IVARCNT = 7
+  IVARTOTAL = 7
+#&lt;Object: #[<font color="#0066CC">built-in-class</font>]&gt;
+</pre>
+
+<p>'class' has a superclass of 'object'. It's class is itself, 'class'.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="11"></a>
+
+<hr>
+
+<h2>11&nbsp; Objects Example</h2>
+
+<hr>
+
+<p> The following is an example, using the idea of tools again. <nobr>It
+contains</nobr> a hierarchy of tool classes. <nobr>The top</nobr> of the
+class hierarchy is 'tools'. '<nobr>hand-tools</nobr>' and
+'<nobr>shop-tools</nobr>' are <nobr>sub-classes</nobr> of 'tools'. The
+example creates instances of these <nobr>sub-classes</nobr>. <nobr>It
+is</nobr> possible to extend this example in various ways. One obvious
+extension would be to create a third tier of classes under
+'<nobr>hand-tools</nobr>' that could contain classes like drills,
+screwdrivers, pliers and <nobr>so on</nobr>. </p>
+
+<pre class="example">
+<font color="#008844">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;       Define the superclasses and classes</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</font>
+<font color="#008844">;;</font>
+<font color="#008844">;; make TOOLS superclass</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;   with a different :ISNEW method</font>
+<font color="#008844">;;   added methods are :BORROW and :RETURN</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;   class variables      NUMBER        contains # of tool instances</font>
+<font color="#008844">;;                        ACTIVE-LIST   contains list of current objects</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;   instance variables   POWER         list - (AC BATTERY HAND)</font>
+<font color="#008844">;;                        MOVEABLE      CAN-CARRY or CAN-ROLL or FIXED</font>
+<font color="#008844">;;                        OPERATIONS    list</font>
+<font color="#008844">;;                        MATERIAL      list - (WOOD METAL PLASTIC ...)</font>
+<font color="#008844">;;                        PIECES        list</font>
+<font color="#008844">;;                        LOCATION      HOME or person's name</font>
+<font color="#008844">;;</font>
+
+(setq tools (send class :new '(power moveable operations
+                               material pieces location) 
+                             '(number active-list)))
+
+(send tools :answer :isnew '() 
+  '((setq number      (if (null number) 1 (1+ number))
+          active-list (cons self active-list)
+          location    'home)))
+
+(send tools :answer :borrow '(by-who)
+  '((if (eq location 'home)
+        (setq location by-who)
+        (print <font color="#880000">"you can't"</font>))))
+
+(send tools :answer :return '()
+  '((if (eq location 'home)
+        (print <font color="#880000">"got it already"</font>)
+        (setq location 'home))))
+
+<font color="#008844">;; make HAND-TOOLS class</font>
+<font color="#008844">;; - with a different :ISNEW method</font>
+<font color="#008844">;; - new instance variable WEIGHT = &lt;number&gt; of pounds</font>
+<font color="#008844">;; - the rest is inherited from TOOLS</font>
+ 
+(setq hand-tools (send class :new '(weight) '() tools))
+
+(send hand-tools :answer :isnew '(pow op mat parts w-in)
+  '((setq power       pow
+          moveable    'can-carry
+          operations  op
+          material    mat
+          pieces      parts
+          weight      w-in)
+    (send-super :isnew)))
+
+<font color="#008844">;; make SHOP-TOOLS class</font>
+<font color="#008844">;; - with a different :ISNEW method</font>
+<font color="#008844">;; - no new instance variables</font>
+<font color="#008844">;; - the rest is inherited from TOOLS</font>
+
+(setq shop-tools (send class :new '() '() tools))
+
+(send shop-tools :answer :isnew '(pow mov op mat parts)
+  '((setq power       pow
+          moveable    mov
+          operations  op
+          material    mat
+          pieces      parts)
+    (send-super :isnew)))
+
+<font color="#008844">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;       Create instances of various tool classes</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</font>
+
+(setq hand-drill (send hand-tools :new       <font color="#008844">; make an instance - HAND-DRILL</font>
+                                  '(ac) 
+                                  '(drill polish grind screw)
+                                  '(wood metal plastic)
+                                  '(drill drill-bits screw-bits buffer)
+                                  '2.5))
+
+(setq table-saw  (send shop-tools :new       <font color="#008844">; make an instance - TABLE-SAW</font>
+                                  '(ac)
+                                  'fixed
+                                  '(rip cross-cut)
+                                  '(wood plastic)
+                                  '(saw blades fence)))
+
+(setq radial-arm (send shop-tools :new       <font color="#008844">; make an instance = RADIAL-ARM</font>
+                                  '(ac)
+                                  'can-roll
+                                  '(rip cross-cut)
+                                  '(wood plastic)
+                                  '(saw blades dust-bag)))
+</pre>
+
+<p>The following session shows how to use the tool definitions from the
+code above:</p>
+
+<pre class="example">
+&gt; (send hand-drill :borrow 'fred)
+FRED
+
+&gt; (send table-saw :return)
+"got it already"
+"got it already"
+
+&gt; (send hand-drill :borrow 'joe)
+"you can't"
+"you can't"
+
+&gt; (send hand-drill :return)
+HOME
+</pre>
+
+<p>Fred was able to borrow the '<nobr>hand-drill</nobr>'. When an attempt
+was made to return the '<nobr>table-saw</nobr>', it was already at home.
+<nobr>A second</nobr> attempt to borrow the '<nobr>hand-drill</nobr>'
+indicated that <nobr>&quot;you can't&quot;</nobr> because it was already
+<nobr>lent out</nobr>. Lastly, the '<nobr>hand-drill</nobr>' was returned
+successfully. <nobr>[Note that</nobr> the <nobr>&quot;got it
+already&quot;</nobr> and <nobr>&quot;you can't&quot;</nobr> strings show up
+twice in the display because the methods both print and return the
+string.)</p>
+
+<p>The following example shows the structure of the 'tools' object with the
+XLISP #ID numbers replaced by the related class and method names:</p>
+
+<pre class="example">
+&gt; (send tools :show)
+Object is #&lt;Object: #[<font color="#0066CC">tools</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">class</font>]&gt;
+  MESSAGES = ((:RETURN . #&lt;Closure-:RETURN: #[<font color="#0000CC">tools-return-method</font>]&gt;) 
+              (:BORROW . #&lt;Closure-:BORROW: #[<font color="#0000CC">tools-borrow-method</font>]&gt;) 
+              (:ISNEW  . #&lt;Closure-:ISNEW:  #[<font color="#0000CC">tools-isnew-method</font>]&gt;))
+  IVARS = (POWER MOVEABLE OPERATIONS MATERIAL PIECES LOCATION)
+  CVARS = (NUMBER ACTIVE-LIST)
+  CVALS = #(3 (#&lt;Object: #[<font color="#0066CC">radial-arm</font>]&gt; 
+               #&lt;Object: #[<font color="#0066CC">table-saw</font>]&gt; 
+               #&lt;Object: #[<font color="#0066CC">hand-drill</font>]&gt;))
+  SUPERCLASS = #&lt;Object: #[<font color="#0066CC">object</font>]&gt;
+  IVARCNT = 6
+  IVARTOTAL = 6
+#&lt;Object: #[<font color="#0066CC">tools</font>]&gt;
+</pre>
+
+<p>The two 'tools' sub-classes 'hand-tools' and 'shop-tools' structure looks
+like:</p>
+
+<pre class="example">
+&gt; (send hand-tools :show)
+Object is #&lt;Object: #[<font color="#0066CC">hand-tools</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">class</font>]&gt;
+  MESSAGES = ((:ISNEW . #&lt;Closure-:ISNEW: #[<font color="#0000CC">hand-tools-isnew-method</font>]&gt;))
+  IVARS = (WEIGHT)
+  CVARS = NIL
+  CVALS = NIL
+  SUPERCLASS = #&lt;Object: #[<font color="#0066CC">tools</font>]&gt;
+  IVARCNT = 1
+  IVARTOTAL = 7
+#&lt;Object: #[<font color="#0066CC">hand-tools</font>]&gt;
+
+&gt; (send shop-tools :show)
+Object is #&lt;Object: #[<font color="#0066CC">shop-tools</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">class</font>]&gt;
+  MESSAGES = ((:ISNEW . #&lt;Closure-:ISNEW: #[<font color="#0000CC">shop-tools-isnew-method</font>]&gt;))
+  IVARS = NIL
+  CVARS = NIL
+  CVALS = NIL
+  SUPERCLASS = #&lt;Object: #[<font color="#0066CC">tools</font>]&gt;
+  IVARCNT = 0
+  IVARTOTAL = 6
+#&lt;Object: #[<font color="#0066CC">shop-tools</font>]&gt;
+</pre>
+
+<p>The class 'hand-tools' has an instance 'hand-drill' which looks like:</p>
+
+<pre class="example">
+&gt; (send hand-drill :show)
+Object is #&lt;Object: #[<font color="#0066CC">hand-drill</font>]&gt;, Class is #&lt;Object: #[<font color="#0066CC">hand-tools</font>]&gt;
+  WEIGHT = 2.5
+  POWER = (AC)
+  MOVEABLE = CAN-CARRY
+  OPERATIONS = (DRILL POLISH GRIND SCREW)
+  MATERIAL = (WOOD METAL PLASTIC)
+  PIECES = (DRILL DRILL-BITS SCREW-BITS BUFFER)
+  LOCATION = HOME
+#&lt;Object: #[<font color="#0066CC">hand-drill</font>]&gt;
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

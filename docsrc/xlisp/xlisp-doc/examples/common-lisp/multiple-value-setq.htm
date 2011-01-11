@@ -1,0 +1,239 @@
+<html><head>
+
+<title>cl:multiple-value-setq</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:multiple-value-setq</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>multiple-value-setq</b></nobr> macro assigns multiple
+values to multiple variables:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>multiple-value-setq</b> <i>symbols expr</i>)</dt>
+<dd><i>symbols</i> - a list of symbols<br>
+<i>expr</i> - a Lisp expression returning one or more values<br>
+returns - the primary value returned by evaluating the expression</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">cl:multiple-value-setq</font> (symbols expr)
+  (and (or (not (consp symbols))
+           (eq 'quote (first symbols))
+           (dolist (symbol symbols)
+             (or (symbolp symbol) (return t))))
+       (error <font color="#880000">"not a list of symbols"</font> symbols))
+  (setq <font color="#AA5500">cl:*multiple-values*</font> nil)
+  (let* ((result (eval expr))
+         (values (if <font color="#AA5500">cl:*multiple-values*</font>
+                     <font color="#AA5500">*rslt*</font>
+                     (list result)))
+         (number-of-symbols (length symbols))
+         (number-of-values  (length values))
+         (assignments (list 'setq)))
+    (dotimes (index number-of-symbols)
+      (push (nth index symbols) assignments)
+      (push (when (&lt; index number-of-values)
+              (list 'quote (nth index values)))
+            assignments))
+    (setq assignments (reverse assignments))
+    `(progn ,assignments ',result)))
+</pre>
+
+<p>The expression is evaluated, and each symbol is assigned to the
+corresponding value returned by the evaluation. <nobr>If there</nobr> are
+more symbols than values returned,
+<a href="../../reference/nil.htm">NIL</a> is assigned to the extra symbols.
+<nobr>If there</nobr> are more values than symbols, the extra values are
+discarded.</p>
+
+<p><nobr>The
+<a href="#cl-global-multiple-values">cl:*multiple-values*</a></nobr>
+variable <nobr>is <a href="../../reference/t.htm">&nbsp;T&nbsp;</a></nobr>
+if evaluating the expression returns multiple values and
+<a href="../../reference/nil.htm">NIL</a> with a normal return value.</p>
+
+<p>The <nobr>cl:<b>multiple-value-setq</b></nobr> macro assigns multiple
+values to multiple variables
+<nobr>using <a href="../../reference/setq.htm">setq</a>:</nobr></p>
+
+<pre class="example">
+&gt; (macroexpand-1 '(cl:multiple-value-setq (a b c)
+                    (cl:values 1 2 3)))
+(PROGN (SETQ A (QUOTE 1)
+             B (QUOTE 2)
+             C (QUOTE 3))
+       (QUOTE 1))
+</pre>
+
+<p>The <a href="../../reference/quote.htm">quote</a>s are necessary to
+prevent 'unbound variable' and 'unbound function' errors with symbols and
+lists.</p>
+
+<p>Examples:</p>
+
+<p><b>1.</b> The <nobr>cl:<b>multiple-value-setq</b></nobr> macro assigns
+values returned by the <a href="values.htm">cl:values</a> function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">multiple-value-function</font> ()
+  (cl:values 1 2 3))  <font color="#008844">; multiple return values</font>
+
+&gt; (let ((a 'A) (b 'B) (c 'C))
+    (cl:multiple-value-setq (a b c)
+      (multiple-value-function))
+    (list a b c))
+(1 2 3)
+</pre>
+
+<p><b>2.</b> If there are no values returned in the Nyquist
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable, the normal
+function return value is assigned to the first symbol and all remaining
+symbols are assigned
+<nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">normal-lisp-function</font> ()
+  (+ 1 1))  <font color="#008844">; normal return value</font>
+
+&gt; (let ((a 'A) (b 'B) (c 'C))
+    (cl:multiple-value-setq (a b c)
+      (normal-lisp-function))
+    (list a b c))
+(2 NIL NIL)
+</pre>
+
+<p><b>3.</b> If there are less values than symbols, the extra symbols are
+assigned <nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">not-enough-values-function</font> ()
+  (cl:values 1 2))  <font color="#008844">; multiple return values</font>
+
+&gt; (let ((a 'A) (b 'B) (c 'C))
+    (cl:multiple-value-setq (a b c)
+      (not-enough-values-function))
+    (list a b c))
+(1 2 NIL)
+</pre>
+
+<p><b>4.</b> If there are more values than symbols, the extra values are
+ignored:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">too-many-values-function</font> ()
+  (cl:values 1 2 3 4 5))  <font color="#008844">; multiple return values</font>
+
+&gt; (let ((a 'A) (b 'B) (c 'C))
+    (cl:multiple-value-setq (a b c)
+      (too-many-values-function))
+    (list a b c))
+(1 2 3)
+</pre>
+
+<p><b>5.</b> Symbols not contained in the
+<nobr>cl:<b>multiple-value-setq</b></nobr> <nobr>symbol-list</nobr> are not
+changed:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">multiple-value-function</font> ()
+  (cl:values 1 2 3))  <font color="#008844">; multiple return values</font>
+
+&gt; (let ((a 'A) (b 'B) (c 'C) (d 'D) (e 'E))
+    (cl:multiple-value-setq (a b c)
+      (multiple-value-function))
+    (list a b c d e))
+(1 2 3 D E)
+</pre>
+
+<p><b>5.</b> If no bindings exist, new variables will be created:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">multiple-value-function</font> ()
+  (cl:values 1 2 3))  <font color="#008844">; multiple return values</font>
+
+&gt; (let ((c 'C) (d 'D) (e 'E))
+    (cl:multiple-value-setq (a b c)
+      (multiple-value-function))
+    (list a b c d e))
+(1 2 3 D E)
+</pre>
+
+<p><b>Caution:</b> In the last example, two global variables 'a' and 'b'
+were created, while the lexical <a href="../../reference/let.htm">let</a>
+variable 'c' was assigned to the <nobr>value 3</nobr>:</p>
+
+<pre class="example">
+&gt; (list a b)
+(1 2)
+
+&gt; (list a b c)
+<font color="#AA0000">error: unbound variable - C</font>
+</pre>
+
+<p>The lexical <a href="../../reference/let.htm">let</a> binding of 'c' does
+not exist in the global <nobr>top-level</nobr>.
+<nobr>See <a href="../environment.htm">Environment</a></nobr> for more
+details about variables.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

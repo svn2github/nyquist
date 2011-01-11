@@ -1,0 +1,89 @@
+<html><head><title>XLISP nconc</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>nconc</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(nconc [<i>list1</i> ... ])</dt>
+<dd><i>listN</i> - a list to destructively concatenate<br>
+returns - the result of concatenating the lists</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'nconc' function destructively concatenates a sequence of lists and
+returns the result of this concatentation. The destructive aspect of this
+operation means that the actual symbol values are used in the list-modifying
+operations, not copies. This means, for 'nconc', that the lists are spliced
+together. 'listN' must evaluate to a valid list. An atom for 'listN' will
+result in an error. <a href="nil.htm">NIL</a> is a valid
+'listN'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq a '(1 2 3))      <font color="#008844">; set up A with (1 2 3)</font>
+(setq b '(4 5 6))      <font color="#008844">; set up B with (4 5 6)</font>
+(setq c '(7 8 9))      <font color="#008844">; set up C with (7 8 9)</font>
+(NCONC a b c)          <font color="#008844">; returns (1 2 3 4 5 6 7 8 9)</font>
+(setf (nth 8 a) 'end)  <font color="#008844">; change last element of A</font>
+(print a)              <font color="#008844">; prints (1 2 3 4 5 6 7 8 END)</font>
+(print b)              <font color="#008844">; prints (4 5 6 7 8 END)</font>
+(print c)              <font color="#008844">; prints (7 8 END)</font>
+</pre>
+
+<p><b>Note:</b> with Nyquist, no error is raised if 'listN' is an atom.
+Instead, all atoms given to the 'nconc' function, if not given as the last
+argument, just disappear:</p>
+
+<pre class="example">
+(nconc 'a 'b 'c 'd)       <font color="#008844">; returns D</font>
+(nconc 'a '(b) 'c '(d))   <font color="#008844">; returns (B D)</font>
+(nconc '(a) 'b '(c) 'd)   <font color="#008844">; returns (A C . D)</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-017.htm#nconc">nconc</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

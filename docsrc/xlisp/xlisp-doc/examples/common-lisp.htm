@@ -1,0 +1,161 @@
+<html><head>
+
+<title>Common Lisp</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Where is the Nyquist Common Lisp Library?</h1>
+
+<hr>
+
+<p>Short answer - nowhere.</p>
+
+<p>Rationale:</p>
+
+<ol>
+
+<li><p>XLISP is a very simple Lisp. Many of the XLISP functions are just simple
+wrappers around the underlying <nobr>C functions</nobr>. This makes XLISP,
+as an interpreted language, run with reasonable speed. <nobr>The main</nobr>
+advantage of XLISP over <nobr>Common Lisp</nobr> is that XLISP is much
+smaller and therefore much easier to learn.</p></li>
+
+<li><p>The main trick of Nyquist is to use XLISP only in the initial setup
+phase, where the Lisp code is parsed, to <nobr>set-up</nobr> the
+<nobr>low-level</nobr> sound sample functions, written <nobr>in C</nobr>,
+not in Lisp.</p>
+
+<p><nobr>The Nyquist</nobr> <nobr>low-level</nobr> '<nobr>snd-...</nobr>'
+functions only look like Lisp functions, but they are direct wrappers around
+<nobr>C functions</nobr> and behave like that. They do not provide type
+contagion, instead they expect a correct number of arguments, given in
+correct order with correct data types, and if not given exactly as expected,
+chances are good that Nyquist will crash.</p>
+
+<p><nobr>In Nyquist</nobr>, <nobr>XLISP [slow]</nobr> is used to make sure
+that the <nobr>low-level</nobr> functions will be given the correct
+arguments, while the <nobr>low-level</nobr> sound sample functions after the
+initial setup phase will run in <nobr>high-speed C</nobr>, and not in Lisp
+anymore.</nobr></p></li>
+
+</ol>
+
+<p>Because the Nyquist <nobr>Common Lisp</nobr> functions are running in
+interpreted XLISP, they run slower than the <nobr>built-in</nobr> XLISP
+functions. Because many <nobr>Common Lisp</nobr> functions do extensive
+parsing and/or type checking on their arguments, they run many times
+slower than XLISP. That's why overloading Nyquist with an extensive
+<nobr>Common Lisp</nobr> layer makes not much sense.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>But why did you write so many Common Lisp functions?</h2>
+
+<hr>
+
+<p>I usually work with <nobr>Common Lisp</nobr> for prototyping, so if I'm
+porting code from <nobr>Common Lisp</nobr> to Nyquist:</p>
+
+<ol>
+
+<li><p>I first copy the <nobr>Common Lisp</nobr> code together with the
+respective Nyquist <nobr>Common Lisp</nobr> functions from screen into a
+Nyquist lisp file to see if the <nobr>Common Lisp</nobr> code works with
+Nyquist <nobr>at all</nobr>. Many of the Nyquist <nobr>Common Lisp</nobr>
+functions have argument tests to help with error tracking.</p></li>
+
+<li><p>When the <nobr>Common Lisp</nobr> code works with Nyquist I start to
+strip out everything I don't need for the particular problem at hand, making
+the Nyquist code run faster. Because this second step is highly depending on
+the particular problem at hand, there probably never will be a general
+solution for this.</p></li>
+
+</ol>
+
+<p><div class="box">
+
+<p>I have tried to keep the functions as <nobr>self-contained</nobr> as
+possible, any dependencies to <nobr>non-Nyquist</nobr> functions are noted
+directly below the code.</p>
+
+</div></p>
+
+<p>There are many XLISP functions that behave exactly like their
+<nobr>Common Lisp</nobr> counterparts, so I haven't written extra functions
+for them.</p>
+
+<ul>
+
+<li><p>If you already know <nobr>Common Lisp</nobr> then the Nyquist
+<nobr>Common Lisp</nobr> functions may help to understand how XLISP
+works.</p></li>
+
+<li><p>If you still don't know <nobr>Common Lisp</nobr> and maybe one day
+you decide to learn more <nobr>about it</nobr>, then the Nyquist
+<nobr>Common Lisp</nobr> functions may save you from learning everything
+double.</p></li>
+
+</ul>
+
+<p>In either case you can use the Nyquist <nobr>Common Lisp</nobr> functions
+as a <nobr>grab-bag</nobr> for your own functions.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

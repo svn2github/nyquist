@@ -1,0 +1,135 @@
+<html><head><title>XLISP cdaaar ... cddddr</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cdaaar ... cddddr</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>cdaaar</b> <i>expr</i>)<br>
+(<b>cdaadr</b> <i>expr</i>)<br>
+(<b>cdadar</b> <i>expr</i>)<br>
+(<b>cdaddr</b> <i>expr</i>)<br>
+(<b>cddaar</b> <i>expr</i>)<br>
+(<b>cddadr</b> <i>expr</i>)<br>
+(<b>cdddar</b> <i>expr</i>)<br>
+(<b>cddddr</b> <i>expr</i>)</dt>
+<dd><i>expr</i> -  a list or list expression<br>
+returns - the result of the last <a href="cdr.htm">cdr</a>
+function</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p> The 'cdaaar' ... 'cddddr' functions go through the list expression and
+perform a sequence of <a href="car.htm">car</a> or
+<a href="cdr.htm">cdr</a> operations. <nobr>The sequence</nobr> of
+operations is performed from right to left. <nobr>So 'cddaar'</nobr> does a
+<a href="car.htm">car</a> on the expression, followed by
+<nobr>a <a href="car.htm">car</a></nobr>, followed by
+<nobr>a <a href="cdr.htm">cdr</a></nobr>, followed by <nobr>another
+<a href="cdr.htm">cdr</a></nobr>. <nobr>If at</nobr> any point the list
+<nobr>is <a href="nil.htm">NIL</a></nobr>, then
+<a href="nil.htm">NIL</a> is returned. <nobr>If at</nobr> anypoint a
+<a href="car.htm">car</a> operation is performed on an atom [as
+opposed to a list] an error is signalled:</p>
+
+<pre class="example">
+<font color="#AA0000">error: bad argument</font>
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq mylist '((((111A 111B) (112A 112B) (113A 113B))   <font color="#008844">; 1st set</font>
+                ((121A 121B) (122A 122B) (123A 123B))
+                ((131A 131B) (132A 132B) (133A 133B))
+                ((141A 141B) (142A 142B) (143A 143B)))
+               (((211A 211B) (212A 212B) (213A 213B))   <font color="#008844">; 2nd set</font>
+                ((221A 221B) (222A 222B) (223A 223B))
+                ((231A 231B) (232A 232B) (233A 233B))
+                ((241A 241B) (242A 242B) (243A 243B)))
+               (((311A 311B) (312A 312B) (313A 313B))   <font color="#008844">; 3rd set</font>
+                ((321A 321B) (322A 322B) (323A 323B))
+                ((331A 331B) (332A 332B) (333A 333B))
+                ((341A 341B) (342A 342B) (343A 343B)))
+               (((411A 411B) (412A 412B) (413A 413B))   <font color="#008844">; 4th set</font>
+                ((421A 421B) (422A 422B) (423A 423B))
+                ((431A 431B) (432A 432B) (433A 433B))
+                ((441A 441B) (442A 442B) (443A 443B)))
+               (((511A 511B) (512A 512B) (513A 513B))   <font color="#008844">; 5th set</font>
+                ((521A 521B) (522A 522B) (523A 523B))
+                ((531A 531B) (532A 532B) (533A 533B))
+                ((541A 541B) (542A 542B) (543A 543B)))))
+
+(cdaaar mylist)  =&gt; (111B)
+(cdaadr mylist)  =&gt; ((212A 212B) (213A 213B))
+(cdadar mylist)  =&gt; ((122A 122B) (123A 123B))
+(cdaddr mylist)  =&gt; (((321A 321B) (322A 322B) (323A 323B))
+                     ((331A 331B) (332A 332B) (333A 333B))
+                     ((341A 341B) (342A 342B) (343A 343B)))
+(cddaar mylist)  =&gt; ((113A 113B))
+(cddadr mylist)      (((231A 231B) (232A 232B) (233A 233B))
+                     ((241A 241B) (242A 242B) (243A 243B)))
+(cdddar mylist)  =&gt; (((141A 141B) (142A 142B) (143A 143B)))
+(cddddr mylist)  =&gt; ((((511A 511B) (512A 512B) (513A 513B))
+                     ((521A 521B) (522A 522B) (523A 523B))
+                     ((531A 531B) (532A 532B) (533A 533B))
+                     ((541A 541B) (542A 542B) (543A 543B))))
+</pre>
+
+<p><b>Note:</b> The '<nobr>c...r</nobr>' functions are part of the
+historical Lisp functions. You may find it easier to work with the modern
+lisp functions like <a href="nth.htm">nth</a> and
+<a href="nthcdr.htm">nthcdr</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#list-functions">List Functions</a></nobr></li>
+<li><nobr>Tutorials &rarr; Lisp Hints &rarr; <a href="../tutorials/lisp-hints.htm#list-accessors">List Accessors</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

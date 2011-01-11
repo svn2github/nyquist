@@ -1,0 +1,83 @@
+<html><head><title>XLISP subseq</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>subseq</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(subseq <i>string start</i> [<i>end</i>])</dt>
+<dd><i>string</i> - a string expression<br>
+<i>start</i> - an integer expression<br>
+<i>end</i> - an integer expression<br>
+returns - the substring between <i>start</i> and <i>end</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p> The 'subseq' function extracts a substring from 'string' starting with
+the 'start' offset and ending with the 'end' offset. The 'start' offset has
+a origin or 0. The substring is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(subseq "12345678" 0)     <font color="#008844">; returns "12345678"</font>
+(subseq "12345678" 2)     <font color="#008844">; returns "345678"</font>
+(subseq "12345678" 2 4)   <font color="#008844">; returns "34"</font>
+(subseq "1234" 3)         <font color="#008844">; returns "4"</font>
+
+(subseq "1234" 4)         <font color="#008844">; returns ""</font>
+(subseq "1234" 4 2)       <font color="#008844">; returns ""</font>
+(subseq "1234" 5)         <font color="#008844">; error: string index out of bounds - 5</font>
+</pre>
+
+<p><b>Common Lisp:</b> The 'subseq' function in Common Lisp is intended to
+return a portion of a sequence, a sub-sequence. This function operates on
+lists and vectors [one-dimensional arrays of data], basically ordered data.
+Strings are just one of the valid types operated on by 'subseq' in Common
+Lisp. The XLISP 'subseq' function only operates on strings.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-025.htm#subseq">subseq</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

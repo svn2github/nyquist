@@ -1,0 +1,81 @@
+<html><head><title>XLISP tagbody</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>tagbody</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(tagbody [<i>expr</i> ... ])</dt>
+<dd><i>expr</i> - expressions comprising the body of the block which may
+contain <a href="go.htm">go</a>s or tags for
+<a href="go.htm">go</a><br>
+returns - <a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'tagbody' special form is basically a 'block' construct that contains
+a block of code [expressions] to evaluate. After the execution of the
+'tagbody' 'exprs', <a href="nil.htm">NIL</a> is returned. The
+'tagbody' special form allows 'go-to' style branching within the 'block'
+construct via the <a href="go.htm">go</a> special form. To allow
+this, each 'expr' may be a tag or a form. The tag-symbol is the 'label' and
+must exist somewhere within the 'block' that the <a
+href="go.htm">go</a> occurs within.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(tagbody                   <font color="#008844">; build the 'block'</font>
+   start (print "begin")   <font color="#008844">; tag - start</font>
+         (GO end)
+         (print "hello")   <font color="#008844">; won't ever be reached</font>
+   end   (print "done"))   <font color="#008844">; tag - END</font>
+                           <font color="#008844">; prints  "begin" "done"</font>
+                           <font color="#008844">; returns NIL</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-021.htm#tagbody">tagbody</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

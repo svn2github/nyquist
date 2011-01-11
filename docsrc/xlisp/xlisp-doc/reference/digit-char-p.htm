@@ -1,0 +1,87 @@
+<html><head><title>XLISP digit-char-p</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>digit-char-p</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(digit-char-p <i>char</i>)</dt>
+<dd><i>char</i> - a character expression<br>
+returns - the digit weight if character is a digit,
+<a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'digit-char-p' predicate function checks if the 'char' expression is
+a numeric digit. If 'char' is numeric digit, the equivalent integer value
+is returned, otherwise a <a href="nil.htm">NIL</a> is
+returned. Decimal digits are '0' [ASCII decimal <nobr>value 48]</nobr>
+through '9' [ASCII decimal <nobr>value 57].</nobr></p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(digit-char-p #\0)   <font color="#008844">; returns 0</font>
+(digit-char-p #\9)   <font color="#008844">; returns 9</font>
+(digit-char-p #\A)   <font color="#008844">; returns NIL</font>
+(digit-char-p #\a)   <font color="#008844">; returns NIL</font>
+(digit-char-p #\.)   <font color="#008844">; returns NIL</font>
+(digit-char-p #\-)   <font color="#008844">; returns NIL</font>
+(digit-char-p #\+)   <font color="#008844">; returns NIL</font>
+</pre>
+
+<p><b>Note:</b> Other non-digit characters used in numbers are NOT included:
+plus [+], minus [-], exponent <nobr>[e or E]</nobr> and decimal point
+[.].</p>
+
+<p><b>Common Lisp:</b> Common Lisp supports the use of an optional radix
+parameter. This option specifies numeric base. This allows the
+'digit-char-p' to function properly for hexadecimal digits [for example].
+Common LISP supports up to base 36 radix systems. XLISP does not support
+this radix parameter.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-026.htm#digit-char-p">digit-char-p</a>
+predicate function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

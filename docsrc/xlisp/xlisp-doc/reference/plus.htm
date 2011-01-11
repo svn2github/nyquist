@@ -1,0 +1,75 @@
+<html><head><title>XLISP + (variable)</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>+&nbsp; <font color="#444444">(variable)</font></h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlinit.c, xlisp.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>&nbsp;+</dt>
+<dd>returns - the most recent input expression</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The '+' variable is set to the most recent input expression.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq hi 'there)  =&gt; THERE
++                 =&gt; (SETQ HI (QUOTE THERE))
++                 =&gt; +
+</pre>
+
+<p>See <a href="setq.htm">setq</a>.</p>
+
+<p><b>Note:</b> The '+' variable is for interactive programming. <nobr>It
+is</nobr> not recommended to use the '+' variable in program code.</p>
+
+<p>See also the
+<nobr><a href="../manual/xlisp.htm#command-loop">XLISP Command Loop</a></nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

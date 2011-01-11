@@ -1,0 +1,82 @@
+<html><head><title>XLISP logior</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>logior</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(logior <i>expr1</i> ... )</dt>
+<dd><i>exprN</i> - an integer expression<br>
+returns - the result of the Inclusive OR operation</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'logior' function returns the logical bitwise 'inclusive-or' of the
+list of expressions. If there is only one argument, it is returned
+unaltered. If there are two or more arguments, the 'logior' function
+performs the 'inclusive-or' successively applying the bitwise operation.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(logior 0 0)               <font color="#008844">; returns 0</font>
+(logior 0 1)               <font color="#008844">; returns 1</font>
+(logior 1 0)               <font color="#008844">; returns 1</font>
+(logior 1 1)               <font color="#008844">; returns 1</font>
+        
+(logior 1 2 4 8 16 32 64)  <font color="#008844">; returns 127</font>
+(logior 5 #b010)           <font color="#008844">; returns 7</font>
+(logior 99 #x1FF)          <font color="#008844">; returns 511</font>
+(logior 99 #x400)          <font color="#008844">; returns 1123</font>
+</pre>
+
+<p><b>Note:</b> XLISP does not check when read-macro expansions like '#x0FF'
+are out of bounds. It gives no error message and will just truncate the
+number to the low-order bits that it can deal with [usually 32 bits or 8 hex
+digits].</p>
+
+<p>See the
+<a href="../manual/xlisp-man-024.htm#logior">logior</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

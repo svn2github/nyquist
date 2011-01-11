@@ -1,0 +1,580 @@
+<html><head>
+
+<title>Lists</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Lists</h1>
+
+<hr>
+
+<p>Lists are also <a href="sequences.htm">Sequences</a>.</p>
+
+<ul>
+<li><nobr><a href="#print-cons">print-cons</a> - print lists as conses</nobr></li>
+<li><nobr><a href="#dolist-star">dolist*</a> - a <a href="../reference/dolist.htm">dolist</a> version that can iterate dotted lists</nobr></li>
+<li><nobr>List Accessors</nobr></li>
+<ul>
+<li><nobr><a href="#cl-list-accessor">cl:list:unary-accessor</a></nobr></li>
+<li><nobr><a href="#cl-list-accessor">cl:list:binary-accessor</a></nobr></li>
+</ul>
+<li><nobr>List Membership</nobr></li>
+<ul>
+<li><nobr><a href="#cl-member">cl:member</a> - [Function] - test for membership in lists and sub-elements</nobr></li>
+<li><nobr><a href="#cl-member-if">cl:member-if</a> - [Function] - search for the first element matching a predicate</nobr></li>
+<li><nobr><a href="#cl-member-if-not">cl:member-if-not</a> - [Function] - search for the first element not matching a predicate</nobr></li>
+</ul>
+<li><nobr>Non-destructive Removal</nobr></li>
+<ul>
+<li><nobr>cl:remove</nobr></li>
+<li><nobr>cl:remove-if</nobr></li>
+<li><nobr>cl:remove-if-not</nobr></li>
+</ul>
+<li><nobr>Destructive Removal = Deletion</nobr></li>
+<ul>
+<li><nobr>cl:delete</nobr></li>
+<li><nobr>cl:delete-if</nobr></li>
+<li><nobr>cl:delete-if-not</nobr></li>
+</ul>
+<li><nobr>Lists as Sets</nobr></li>
+<ul>
+<li><nobr><a href="#cl-pushnew">cl:pushnew</a> - [Macro] -</nobr></li>
+<li><nobr><a href="#cl-union">cl:union</a></nobr> - [Function]</li>
+<li><nobr><a href="#cl-intersection">cl:intersection</a> - [Function]</nobr></li>
+<li><nobr><a href="#cl-set-difference">cl:set-difference</a> - [Function]</nobr></li>
+<li><nobr><a href="#cl-set-exclusive-or">cl:set-exclusive-or</a> - [Function]</nobr></li>
+<li><nobr><a href="#cl-subsetp">cl:subsetp</a> - [Function]</nobr></li>
+</ul>
+</ul>
+
+<a name="print-cons"></a>
+
+<hr>
+
+<h2>print-cons</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">print-cons</font> (item)
+  (labels ((cons-string (item)
+             (case (type-of item)
+               (array      (let ((end (length item))
+                                 (result <font color="#880000">""</font>))
+                             (dotimes (index end)
+                               (let ((string (cons-string (aref item index))))
+                                 (setq result 
+                                   (if (eql 0 index)
+                                       (format nil <font color="#880000">"#(~a"</font> string)
+                                       (format nil <font color="#880000">"~a ~a"</font> result string)))))
+                             (format nil <font color="#880000">"~a)"</font> result)))
+               (character  (format nil <font color="#880000">"~s"</font> item))
+               (cons       (format nil <font color="#880000">"(~a . ~a)"</font>
+                                   (cons-string (car item))
+                                   (cons-string (cdr item))))
+               (string     (format nil <font color="#880000">"\"~a\""</font> item))
+               (t          item))))
+    (format t <font color="#880000">"~a~%"</font> (cons-string item))
+    item))
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+&gt; (print-cons '(1 2 3))
+(1 . (2 . (3 . NIL)))
+(1 2 3)
+</pre>
+
+<p>The 'print-cons' function is useful for debugging association lists,
+where <a href="../reference/print.htm">print</a> often fails to display the
+correct layout:</p>
+
+<pre class="example">
+&gt; (print-cons (cons '((1 . 2) (3 . 4)) '((a . b) (c . d))))
+(((1 . 2) . ((3 . 4) . NIL)) . ((A . B) . ((C . D) . NIL)))
+(((1 . 2) (3 . 4)) (A . B) (C . D))  <font color="#008844">; &lt;- output of PRINT</font>
+</pre>
+
+<p>Do not think that <a href="../reference/print.htm">print</a> is bad, it
+saves you from reading things like this:</p>
+
+<pre class="example">
+&gt; (print-cons '(defun hello-world ()
+                 (print "Hello World!")))
+(DEFUN . (HELLO-WORLD . (NIL . ((PRINT . ("Hello World!" . NIL)) . NIL))))
+(DEFUN HELLO-WORLD NIL (PRINT "Hello World!"))  <font color="#008844">; &lt;- output of PRINT</font>
+</pre>
+
+<p>Test this if you don't believe:</p>
+
+<pre class="example">
+&gt; (DEFUN . (HELLO-WORLD . (NIL . ((PRINT . ("Hello World!" . NIL)) . NIL))))
+HELLO-WORLD
+
+&gt; (hello-world)
+"Hello World!"
+</pre>
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="dolist-star"></a>
+
+<hr>
+
+<h2>dolist*</h2>
+
+<hr>
+
+<p>A <a href="../reference/dolist.htm">dolist</a> version that can iterate
+dotted lists:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">dolist*</font> (fargs &amp;rest body)
+  (let ((list (gensym)))
+    `(let ((,list ,(second fargs)))
+       (if (not (listp ,list))
+           (error <font color="#880000">"not a list"</font> ,list)
+           (do ((,(first fargs) (first ,list)
+                                (if (consp ,list) (first ,list) ,list)))
+               ((null ,list))
+             (setq ,list (and (consp ,list) (rest ,list)))
+             ,@body)))))
+</pre>
+
+<pre class="example">
+(dolist  (i '(1 2 3)) (print i))    <font color="#008844">; prints 1 2 3</font>
+(dolist* (i '(1 2 3)) (print i))    <font color="#008844">; prints 1 2 3</font>
+
+(dolist  (i '(1 2 . 3)) (print i))  <font color="#008844">; prints 1 2</font>
+(dolist* (i '(1 2 . 3)) (print i))  <font color="#008844">; prints 1 2 3</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-member"></a>
+
+<hr>
+
+<h2>cl:member</h2>
+
+<hr>
+
+<p>XLISP already has the <a href="../reference/member.htm">member</a>
+function to for search elements in lists:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<a href="../reference/member.htm">member</a> <i>expr list</i> [{:test | :test-not} <i>test</i>])</dt>
+<dd><i>expr</i> - the expression to find [an atom or a list]<br>
+<i>list</i> - the list to search<br>
+<i>test</i> - optional test function, default is <a href="../reference/eql.htm">eql</a><br>
+returns - the remainder of the list starting with <i>expr</i></dd>
+</dl>
+
+</div></p>
+
+<nobr>The 'cl:member' function provides an additional :key argument for
+accessing <nobr>sub-elements</nobr> in the list:</nobr>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>cl:member</b> <i>expr list</i> [{:test | :test-not} <i>test</i> :key <i>key</i>])</dt>
+<dd><i>expr</i> - the expression to find [an atom or a list]<br>
+<i>list</i> - the list to search<br>
+<i>test</i> - an optional test function, default is <a href="../reference/eql.htm">eql</a><br>
+<i>key</i> - an optional accessor function for sub-elements in the list<br>
+returns - the remainder of the list starting with <i>expr</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:member</font> (expr list &amp;key test test-not key)
+  (and test test-not (error <font color="#880000">"both :TEST and :TEST-NOT specified"</font>))
+  (if key
+      (cond (test
+             (member expr list
+               :test #'(lambda (x y)
+                         (funcall test x (funcall key y)))))
+            (test-not
+             (member expr list
+               :test-not #'(lambda (x y)
+                             (funcall test-not x (funcall key y)))))
+            (t (member expr list
+                 :test #'(lambda (x y)
+                           (eql x (funcall key y))))))
+      (cond (test     (member expr list :test test))
+            (test-not (member expr list :test-not test-not))
+            (t        (member expr list)))))
+</pre>
+
+<p>Test if the number 4 matches the first or the second element in several
+sublists:</p>
+
+<pre class="example">
+(cl:member 4 '((1 2) (3 4) (5 6)) :key #'first)   =&gt; NIL            <font color="#008844">; no match</font>
+(cl:member 4 '((1 2) (3 4) (5 6)) :key #'second)  =&gt; ((3 4) (5 6))  <font color="#008844">; number found</font>
+</pre>
+
+<p>Subtle differences between XLISP and Common Lisp:</p>
+
+<pre class="example">
+<font color="#008844">;; Lisp Form              XLISP         Common Lisp</font>
+(member 1 '(1 2 . 3))  =&gt; (1 2 . 3)  =&gt; (1 2 . 3)
+(member 2 '(1 2 . 3))  =&gt; (2 . 3)    =&gt; (2 . 3)
+(member 3 '(1 2 . 3))  =&gt; NIL        =&gt; <font color="#AA0000">error: not a proper list</font>
+</pre>
+
+
+<p>Here is a 'cl:member' version that behaves <nobr>error-conform</nobr> to
+<nobr>Common Lisp</nobr> but produces an unintelligible backtrace in case of
+Lisp errors. <nobr>I also</nobr> have found no way how to macroexpand
+macrolets, so debugging this function is a real pain.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:member</font> (expr list &amp;key test test-not key)
+  (and test test-not (error <font color="#880000">"both :TEST and :TEST-NOT specified"</font>))
+  (macrolet ((internal-loop (list)
+    `(do ()
+         <font color="#008844">;; termination test</font>
+         ((or (not (consp list))
+              ,(if key
+                   (cond (test     `(funcall ,test ,expr (funcall ,key (car list))))
+                         (test-not `(not (funcall ,test ,expr (funcall ,key (car list)))))
+                         (t        `(eql ,expr (funcall ,key (car list)))))
+                   (cond (test     `(funcall ,test ,expr (car list)))
+                         (test-not `(not (funcall ,test ,expr (car list))))
+                         (t        `(eql ,expr (car list))))))
+          <font color="#008844">;; return value</font>
+          (if (not (listp list))
+              (error <font color="#AA0000">"a proper list must not end with"</font> list)
+              list))
+        <font color="#008844">;; body</font>
+        (setq list (cdr list)))))
+     (internal-loop list)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-member-if"></a>
+
+<hr>
+
+<h2>cl:member-if</h2>
+
+<hr>
+
+<p>Here are two functions to search for elements that satisfy a given
+predicate:</p>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>member-if</b> <i>predicate list</i> [:key <i>key</i>])</nobr></dt>
+<dd><i>predicate</i> - a test function with one argument<br>
+<i>list</i> - the list to search<br>
+<i>key</i> - optional accessor function for sub-elements in the list<br>
+returns - the remainder of the list starting with the first matching element</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:member-if-not</font> (predicate list &amp;key key)
+  (member nil list :test (if key
+                             #'(lambda (x y)
+                                 (funcall predicate (funcall key y)))
+                             #'(lambda (x y)
+                                 (funcall predicate y)))))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-member-if-not"></a>
+
+<hr>
+
+<h2>cl:member-if-not</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>member-if-not</b> <i>predicate list</i> [:key <i>key</i>])</nobr></dt>
+<dd><i>predicate</i> - a test function with one argument<br>
+<i>list</i> - the list to search<br>
+<i>key</i> - optional accessor function for sub-elements in the list<br>
+returns - the remainder of the list starting with the first non-matching element</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:member-if-not</font> (predicate list &amp;key key)
+  (member nil list :test-not (if key
+                                 #'(lambda (x y)
+                                     (funcall predicate (funcall key y)))
+                                 #'(lambda (x y)
+                                     (funcall predicate y)))))))
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+(cl:member-if     #'plusp  '(-2 -1 0 1 2))  =&gt; (1 2)    <font color="#008844">; 1 = first positive number</font>
+(cl:member-if-not #'minusp '(-2 -1 0 1 2))  =&gt; (0 1 2)  <font color="#008844">; 0 = first non-negative number</font>
+</pre>
+
+<p>More test functions see <a href="predicates.htm">Predicates</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-list-accessor"></a>
+
+<hr>
+
+<h2>cl:list:accessor</h2>
+
+<hr>
+
+<p>The 'lists as sets' functions have common :test, <nobr>:test-not</nobr>
+and :key parameters:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">cl:list:accessor</font> (test test-not &amp;optional key)
+  (if (and test test-not)
+      (error <font color="#880000">"both :TEST and :TEST-NOT specified"</font>))
+      (if key
+          (cond (test     `(lambda (x y)
+                             (funcall ,test (funcall ,key x)
+                                            (funcall ,key y))))
+                (test-not `(lambda (x y)
+                             (not (funcall ,test-not (funcall ,key x)
+                                                     (funcall ,key y)))))
+                (t        `(lambda (x y)
+                             (eql (funcall ,key x) (funcall ,key y)))))
+          (cond (test     `(lambda (x y)
+                             (funcall ,test x y)))
+                (test-not `(lambda (x y)
+                             (not (funcall ,test-not x y))))
+                (t        `(lambda (x y)
+                             (eql x y))))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-pushnew"></a>
+
+<hr>
+
+<h2>cl:pushnew</h2>
+
+<hr>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-union"></a>
+
+<hr>
+
+<h2>cl:union</h2>
+
+<hr>
+
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>union</b> <i>list1 list2</i> [{:test | :test-not} <i>test</i> :key <i>key</i>])</nobr></dt>
+<dd><i>listN</i> - a list of symbols or numbers<br>
+returns - the union of <i>list1</i> and <i>list2</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">union</font> (a b)
+  (let (result)
+    (dolist (element a)
+      (unless (member element result)
+        (push element result)))
+    (dolist (element b)
+      (unless (member element result)
+        (push element result)))
+    result))
+</pre>
+
+<p>The 'cl:union' function returns a list that contains every element that
+occurs in either 'list1' or 'list2'.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-intersection"></a>
+
+<hr>
+
+<h2>cl:intersection</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(intersection <i>list1 list2</i> [{:test | :test-not} <i>test</i> :key <i>key</i>])</nobr></dt>
+<dd><i>listN</i> - a list of symbols or numbers<br>
+returns - the intersection of <i>list1</i> and <i>list2</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">intersection</font> (a b)
+  (let (result)
+    (dolist (element a)
+      (when (member element b)
+        (push element result)))
+    result))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-set-difference"></a>
+
+<hr>
+
+<h2>cl:set-difference</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>set-difference</b> <i>list1 list2</i>)</nobr></dt>
+<dd><i>listN</i> - a list of symbols or numbers<br>
+returns - the set-difference of <i>list1</i> and <i>list2</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">set-difference</font> (a b)
+  (remove-if #'(lambda (element)
+                 (member element b))
+             a))
+</pre>
+
+<p>An element of list1 appears in the result if and only if it does not
+match any element of list2.</p>
+
+<pre class="example">
+(set-difference '(1 2 3) '(2 3 4)) =&gt; (1)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-set-exclusive-or"></a>
+
+<hr>
+
+<h2>cl:set-exclusive-or</h2>
+
+<hr>
+
+<p>The result contains precisely those elements of list1 and list2 that
+appear in no matching pair.</p>
+
+<pre class="example">
+(set-exclusive-or '(1 2 3) '(2 3 4)) =&gt; (1 4)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-subsetp"></a>
+
+<hr>
+
+<h2>cl:subsetp</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>subsetp</b> <i>list1 list2</i>)</nobr></dt>
+<dd><i>listN</i> - a list of symbols or numbers<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if <i>list1</i> is a subset of <i>list2</i>, NIL otherwise</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">subsetp</font> (a b)
+  (let ((result t))
+    (dolist (element a)
+      (when (not (member element b)
+        (setf result nil)
+        (return))))
+    result))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>
+

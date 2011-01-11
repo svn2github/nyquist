@@ -1,0 +1,72 @@
+<html><head><title>XLISP *debug-io*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*debug-io*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlinit.c, xlio.c, xldbug.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dd>
+<dt>*debug-io*</dt>
+</dd>
+
+<h2>Description</h2>
+
+<p>*debug-io* is a system variable that contains a file pointer pointing to
+the stream where all debug input and output goes to and from. The default
+file for *debug-io* is the system standard error device, normally the
+keyboard and screen.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+*debug-io*   <font color="#008844">; returns #&lt;File-Stream...&gt;</font>
+</pre>
+
+<p><b>Note:</b>
+<nobr><a href="global-trace-output.htm">*trace-output*</a> ,</nobr>
+*debug-io* and <a href="global-error-output.htm">*error-output*</a> are normally
+all set to the same file stream 'stderr'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#debug-io">*debug-io*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

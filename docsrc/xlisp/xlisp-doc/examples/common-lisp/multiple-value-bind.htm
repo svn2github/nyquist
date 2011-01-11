@@ -1,0 +1,193 @@
+<html><head>
+
+<title>cl:multiple-value-bind</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:multiple-value-bind</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>multiple-value-bind</b></nobr> macro creates new bindings
+for a list of symbols and evaluates expressions that use these bindings:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>multiple-value-bind</b> <i>symbols values</i> [<i>expr1</i> ...])</dt>
+<dd><i>symbols</i> - a list of symbols<br>
+<i>values</i> - a Lisp expression returning one or more values<br>
+<i>exprN</i> - arbitrary Lisp expressions<br>
+returns - the value[s] returned by the last expression</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">cl:multiple-value-bind</font> (symbols expr &rest body)
+  (and (or (not (consp symbols))
+           (eq 'quote (first symbols))
+           (dolist (symbol symbols)
+             (or (symbolp symbol) (return t))))
+       (error <font color="#880000">"not a list of symbols"</font> symbols))
+  (setq <font color="#AA5500">cl:*multiple-values*</font> nil)
+  (let* ((result (eval expr))
+         (values (if <font color="#AA5500">cl:*multiple-values*</font>
+                     <font color="#AA5500">*rslt*</font>
+                     (list result)))
+         (number-of-symbols (length symbols))
+         (number-of-values  (length values))
+         (bindings nil))
+    (dotimes (index number-of-symbols)
+      (push (if (&lt; index number-of-values)
+                (list (nth index symbols)
+                      (list 'quote (nth index values)))
+                (nth index symbols))
+            bindings))
+    (setq bindings (reverse bindings))
+    `(let ,bindings ,@body)))
+</pre>
+
+<p>The 'values' expression is evaluated, and each of the symbols is bound to
+the respective value returned by the evaluation. <nobr>If there</nobr> are
+more symbols than values returned, extra values of
+<a href="../../reference/nilo.htm">NIL</a> are bound to the remaining
+symbols. <nobr>If there</nobr> are more values than symbols, the extra
+values are ignored. The symbols are bound to the values <nobr>by
+<a href="../../reference/let.htm">let</a></nobr>, behaving like an
+<nobr>implicit <a href="../../reference/progn.htm">progn</a></nobr>.</p>
+
+<p><nobr>Before evaluating 'expr1', the
+<a href="global-multiple-values.htm">cl:*multiple-values*</a></nobr>
+variable <nobr>is <a href="../../reference/t.htm">&nbsp;T&nbsp;</a></nobr>
+if evaluating the 'values' expression returned multiple values and
+<a href="../../reference/nil.htm">NIL</a> with a normal return value.</p>
+
+<p>The <nobr>cl:<b>multiple-value-bind</b></nobr> macro binds multiple
+values to local <a href="../../reference/let.htm">let</a> variables::</p>
+
+<pre class="example">
+&gt; (macroexpand-1 '(cl:multiple-value-bind (a b c)
+                      (cl:values 1 2 3)
+                    (list a b c)))
+(LET ((A (QUOTE 1))
+      (B (QUOTE 2))
+      (C (QUOTE 3)))
+  (LIST A B C))
+</pre>
+
+<p>The <a href="../../reference/quote.htm">quote</a>s are necessary to
+prevent 'unbound variable' and 'unbound function' errors with symbols and
+lists.</p>
+
+<p>Examples:</p>
+
+<p><b>1.</b> The <nobr>cl:<b>multiple-value-bind</b></nobr> macro binds
+values returned by the <a href="values.htm">cl:values</a> function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">multiple-value-function</font> ()
+  (cl:values 1 2 3))  <font color="#008844">; multiple return values</font>
+
+&gt; (cl:multiple-value-bind (a b c)
+      (multiple-value-function)
+    (list a b c))
+(1 2 3)
+</pre>
+
+<p><b>2.</b> If there are no values returned in the Nyquist
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable, the normal
+function return value is bound to the first symbol and all remaining symbols
+are bound <nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">normal-lisp-function</font> ()
+  (+ 1 1))  <font color="#008844">; normal return value</font>
+
+&gt; (cl:multiple-value-bind (a b c)
+      (normal-lisp-function)
+    (list a b c))
+(2 NIL NIL)
+</pre>
+
+<p><b>3.</b> If there are less values than symbols, the extra symbols are
+bound <nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">not-enough-values-function</font> ()
+  (cl:values 1 2))  <font color="#008844">; multiple return values</font>
+
+&gt; (cl:multiple-value-bind (a b c)
+      (not-enough-values-function)
+    (list a b c))
+(1 2 NIL)
+</pre>
+
+<p><b>4.</b> If there are more values than symbols, the extra values are
+ignored:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">too-many-values-function</font> ()
+  (cl:values 1 2 3 4 5))  <font color="#008844">; multiple return values</font>
+
+&gt; (cl:multiple-value-bind (a b c)
+      (too-many-values-function)
+    (list a b c))
+(1 2 3)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

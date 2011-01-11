@@ -1,0 +1,82 @@
+<html><head><title>XLISP :show</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>:show</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>message selector</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(send <i>object</i> :show)</dt>
+<dd><i>object</i> - an existing <a href="object.htm">object</a><br>
+returns - the <i>object</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The ':show' message selector attempts to find the 'show' method in the
+specified <a href="object.htm">object</a>s class. Since the ':show'
+message selector is built-in in the root
+<a href="class.htm">class</a>, this is always a valid message
+selector. The <a href="object.htm">object</a> must already
+exist.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq my-class (send class :new '(state)))              <font color="#008844">; create MY-CLASS with STATE</font>
+
+(send my-class :answer :isnew '()                       <font color="#008844">; set up initialization</font>
+                              '((setq state nil) self))
+
+(send my-class :answer :set-it '(value)                 <font color="#008844">; create :SET-IT message</font>
+                               '((setq state value)))  
+
+(setq my-obj (send my-class :new))         <font color="#008844">; create MY-OBJ of MY-CLASS</font>
+(send my-obj :show)                        <font color="#008844">; returns object state including STATE = NIL</font>
+(send my-obj :set-it 5)                    <font color="#008844">; STATE is set to 5</font>
+(send new-obj :show)                       <font color="#008844">; error: unbound variable</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-010.htm#object-show">:show</a>
+message selector in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

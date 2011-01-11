@@ -1,0 +1,99 @@
+<html><head><title>XLISP address-of</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>address-of</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>address-of</b> <i>expr</i>)</dt>
+<dd>expr - an expression<br>
+returns - the memory address of the expression as an integer</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'address-of' function returns the internal memory address of the
+XLISP node that corresponds to 'expr'. The value returned is an integer.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq var 0)                    =&gt; 0   <font color="#008844">; set up VAR with 0</font>
+(address-of var)                =&gt; 123224
+(address-of 'var)               =&gt; 182638
+(peek (address-of var))         =&gt; 83951616
+(peek (1+ (address-of var)))    =&gt; 16777216
+(peek (+ 2 (address-of var)))   =&gt; 0   <font color="#008844">; value of VAR</font>
+(setq var 14)                   =&gt; 14  <font color="#008844">; change the value to 14</font>
+(peek (+ 2 (address-of var)))   =&gt; 14
+(setq var 99)                   =&gt; 99  <font color="#008844">; change the value to 99</font>
+(peek (+ 2 (address-of var)))   =&gt; 99
+</pre>
+
+<p>See <a href="addition.htm">&nbsp;+&nbsp;</a>,
+<a href="increment.htm">1+</a>, <a href="peek.htm">peek</a>,
+<a href="setq.htm">setq</a>.</p>
+
+<p><div class="box">
+
+<p><b>Nyquist:</b> The '<nobr>address-of</nobr>' function is internally
+disabled, but the code still exists. Look out for PEEK_AND_POKE in the
+Nyquist source code.</p>
+
+<p><b>Caution:</b> Be careful when modifying the internal state of XLISP.
+<nobr>If you</nobr> have modified it, it would be a good idea to exit XLISP
+and <nobr>re-enter</nobr> before doing any work you really want to
+retain.</p>
+
+</div></p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#system-functions">System Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

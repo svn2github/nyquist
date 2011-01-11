@@ -1,0 +1,2468 @@
+<html><head><title>Language Reference</title></head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+Reference
+
+<hr>
+
+<h1>Nyquist / XLISP 2.0 Language Reference</h1>
+
+<hr>
+
+<p><nobr>&nbsp;
+<a href="#num">&nbsp;<i>#</i>&nbsp;</a> |
+<a href="#a">&nbsp;<i>a</i>&nbsp;</a> |
+<a href="#b">&nbsp;<i>b</i>&nbsp;</a> |
+<a href="#c">&nbsp;<i>c</i>&nbsp;</a> |
+<a href="#d">&nbsp;<i>d</i>&nbsp;</a> |
+<a href="#e">&nbsp;<i>e</i>&nbsp;</a> |
+<a href="#f">&nbsp;<i>f</i>&nbsp;</a> |
+<a href="#g">&nbsp;<i>g</i>&nbsp;</a> |
+<a href="#h">&nbsp;<i>h</i>&nbsp;</a> |
+<a href="#i">&nbsp;<i>i</i>&nbsp;</a> |
+<a href="#k">&nbsp;<i>k</i>&nbsp;</a> |
+<a href="#l">&nbsp;<i>l</i>&nbsp;</a> |
+<a href="#m">&nbsp;<i>m</i>&nbsp;</a> |
+<a href="#n">&nbsp;<i>n</i>&nbsp;</a> |
+<a href="#o">&nbsp;<i>o</i>&nbsp;</a> |
+<a href="#p">&nbsp;<i>p</i>&nbsp;</a> |
+<a href="#q">&nbsp;<i>q</i>&nbsp;</a> |
+<a href="#r">&nbsp;<i>r</i>&nbsp;</a> |
+<a href="#s">&nbsp;<i>s</i>&nbsp;</a> |
+<a href="#t">&nbsp;<i>t</i>&nbsp;</a> |
+<a href="#u">&nbsp;<i>u</i>&nbsp;</a> |
+<a href="#v">&nbsp;<i>v</i>&nbsp;</a> |
+<a href="#w">&nbsp;<i>w</i>&nbsp;</a> |
+<a href="#z">&nbsp;<i>z</i>&nbsp;</a>
+</nobr></p>
+
+<ul>
+<li><nobr><a href="reference-copyright.htm">Copyright</a></nobr></li>
+<li><nobr><a href="reference-format.htm">Entry Format</a></nobr></li>
+</ul>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;*&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - most recent result</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;**&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - second recent result</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;***&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - third recent result</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;+&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - most recent input expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;++&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - second recent input expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;+++&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - third recent input expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;&minus;&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - the expression currently being evaluated</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="num"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="addition.htm">&nbsp;+&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - add one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="subtraction.htm">&nbsp;&minus;&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - negate one number or subtract several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="multiplication.htm">&nbsp;*&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - multiply one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="division.htm">&nbsp;/&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - divide one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="number-lessp.htm">&nbsp;&lt;&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if numbers are monotonically increasing</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="number-not-greaterp.htm">&nbsp;&lt;=&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if numbers are monotonically non-decreasing</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="number-equal.htm">&nbsp;=&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test numbers for equality</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="number-not-equal.htm">&nbsp;/=&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test numbers for non-equality</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="number-greaterp.htm">&nbsp;&gt;&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if numbers are monotonically decreasing</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="number-not-lessp.htm">&nbsp;&gt;=&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if numbers are monotonically non-increasing</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="increment.htm">&nbsp;1+&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - increment a number by one</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="decrement.htm">&nbsp;1&minus;&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - decrement a number by one</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="a"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="abs.htm">abs</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the absolute value of a number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="acos.htm">acos</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the arccosine of a floating point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="address-of.htm">address-of</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the address of an xlisp node</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="alloc.htm">alloc</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - change the number of nodes to allocate in each segment</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="alphanumericp.htm">alphanumericp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - is this an alphabetic or a digit character?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="and.htm">and</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - the logical 'and' of an arbitrary number of expressions</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-answer.htm">:answer</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">message selector</font>
+    - add a message to a class</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="append.htm">append</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - append lists</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="apply.htm">apply</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - apply a function to a list of arguments</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-applyhook.htm">*applyhook*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - returns <a href="nil.htm">NIL</a> [hook not implemented]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="aref.htm">aref</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - array accessor for the nth element of an array</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="arrayp.htm">arrayp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this an array?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="asin.htm">asin</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the arcsine of a floating point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="assoc.htm">assoc</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - find an expression in an association list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="atan.htm">atan</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the arctangent of a floating point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="atom.htm">atom</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this an atom?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="lambda-keyword-aux.htm">&amp;aux</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">keyword</font>
+    - define auxiliary variables</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="b"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="backquote.htm">backquote</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - fill in a template</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="baktrace.htm">baktrace</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - print n levels of trace back information</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="bigendianp.htm">bigendianp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - is this a bigendian machine?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="block.htm">block</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define a named block</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="both-case-p.htm">both-case-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this an uppercase or lowercase alphabetic character?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="boundp.htm">boundp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is a variable value bound to this symbol in the <a href="global-obarray.htm">*obarray*</a>?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="break.htm">break</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - enter a <a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-breakenable.htm">*breakenable*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - define if the <a href="../manual/xlisp.htm#break-loop">Break Loop</a> shall be entered on errors</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="c"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="car.htm">car</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the <a href="first.htm">first</a> element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="caar.htm">caar cadr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessors for a sequence of <a href="car.htm">car</a> and
+    <a href="cdr.htm">cdr</a> operations</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="caaar.htm">caaar...caddr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessors for a sequence of <a href="car.htm">car</a> and
+    <a href="cdr.htm">cdr</a> operations</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="caaaar.htm">caaaar...cadddr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessors for a sequence of <a href="car.htm">car</a> and
+    <a href="cdr.htm">cdr</a> operations</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="case.htm">case</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - select by case</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="catch.htm">catch</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - evaluate expressions and catch <a href="throw.htm">throw</a>s</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cdr.htm">cdr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the tail of a list with the
+    <a href="first.htm">first</a> element removed</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cddr.htm">cdar cddr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessors for a sequence of <a href="car.htm">car</a> and
+    <a href="cdr.htm">cdr</a> operations</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cdddr.htm">cdaar...cdddr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessors for a sequence of <a href="car.htm">car</a> and
+    <a href="cdr.htm">cdr</a> operations</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cddddr.htm">cdaaar...cddddr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessors for a sequence of <a href="car.htm">car</a> and
+    <a href="cdr.htm">cdr</a> operations</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cerror.htm">cerror</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - signal a correctable error</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char.htm">char</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - extract a character from a string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-not-equal-s.htm">char/=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are not equal, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-lessp-s.htm">char&lt;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are monotonically increasing, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-not-greaterp-s.htm">char&lt;=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are monotonically non-decreasing, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-equal-s.htm">char=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are equivalent, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-greaterp-s.htm">char&gt;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are monotonically decreasing, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-not-lessp-s.htm">char&gt;=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are monotonically non-increasing, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="characterp.htm">characterp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a character?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-code.htm">char-code</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the ASCII code of a character</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-downcase.htm">char-downcase</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert a character to lower case</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-equal-i.htm">char-equal</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are equivalent, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-greaterp-i.htm">char-greaterp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if characters are monotonically decreasing, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-int.htm">char-int</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert a character to an integer</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-lessp-i.htm">char-lessp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if characters are monotonically increasing, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-not-equal-i.htm">char-not-equal</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if characters are different values, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-not-greaterp-i.htm">char-not-greaterp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if characters are monotonically non-decreasing, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-not-lessp-i.htm">char-not-lessp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if characters are monotonically non-increasing, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="char-upcase.htm">char-upcase</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert a character to upper case</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="class.htm">class</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">object</font>
+    - the built-in object class</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-class.htm">:class</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">message selector</font>
+    - return the class of an object</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="clean-up.htm">clean-up</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - clean-up after an error</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="close.htm">close</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - close a file stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="code-char.htm">code-char</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the character with a specified ASCII code</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="backquote.htm">comma</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">reader expansion</font>
+    - comma evaluates expressions in a <a href="backquote.htm">backquote</a> form</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="backquote.htm">comma-at</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">reader expansion</font>
+    - splices a list into a expression in a <a href="backquote.htm">backquote</a> form</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cond.htm">cond</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - evaluate conditionally</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cons.htm">cons</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - construct a new list node</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="consp.htm">consp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a non-empty list?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-constituent.htm">:constituent</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">keyword</font>
+    - readtable entry to specify a character to be used as is</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="continue.htm">continue</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - continue from a correctable error</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="cos.htm">cos</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the cosine of a floating point number</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="d"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-debug-io.htm">*debug-io*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - file pointer for debug input and output</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="decf.htm">decf</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">macro</font>
+    - decrement a variable</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="defmacro.htm">defmacro</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define a Lisp macro</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="defun.htm">defun</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define a Lisp function</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="delete.htm">delete</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - delete elements from a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="delete-if.htm">delete-if</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - delete elements from a list that pass a test</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="delete-if-not.htm">delete-if-not</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - delete elements from a list that fail a test</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="digit-char.htm">digit-char</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert a decimal digit to a character</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="digit-char-p.htm">digit-char-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - convert a character to a decimal digit, if possible</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="do.htm">do</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - loop with local 'let' bindings</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="do-star.htm">do*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - loop with local 'let*' bindings</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="dolist.htm">dolist</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - loop through a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="dotimes.htm">dotimes</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    -  loop a given number of times</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="dribble.htm">dribble</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - create a file with a transcript of a Nyquist/ XLISP session</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="e"></a></td>
+</tr>
+</tr>
+<tr>
+  <td><nobr><a href="echoenabled.htm">echoenabled</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - turn the console input echo on or off</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="endp.htm">endp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this the end of a list?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="eq.htm">eq</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - equality test comparing memory pointers, may fail on numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="eql.htm">eql</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - same as 'eq', but works with all symbols and numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="equal.htm">equal</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - equality test by comparing printed values</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="error.htm">error</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - signal a non-correctable error</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-error-output.htm">*error-output*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - file pointer for error input and output</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="errset.htm">errset</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - trapping errors</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="eval.htm">eval</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - evaluate a Lisp expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="evalhook.htm">evalhook</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - evaluate with hooks</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-evalhook.htm">*evalhook*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - user substitute for the evaluator function</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="evenp.htm">evenp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this integer even?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="exit.htm">exit</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - exit XLISP</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="exp.htm">exp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute 'e' to the 'x' power</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="expand.htm">expand</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - expand memory by adding segments</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="expt.htm">expt</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute 'x' to the 'y' power</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="f"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="fboundp.htm">fboundp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is a function value bound to this symbol in the <a href="global-obarray.htm">*obarray*</a>??</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="filep.htm">filep</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - is this a file?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="find-in-xlisp-path.htm">find-in-xlisp-path</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - searches the XLISP path for a filename</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-file-separator.htm">*file-separator*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - the operating system's file separator character</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="first.htm">first</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the first element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="flatc.htm">flatc</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - length of printed representation using <a href="princ.htm">princ</a></nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="flatsize.htm">flatsize</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - length of printed representation using <a href="prin1.htm">prin1</a></nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="flet.htm">flet</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define local Lisp functions</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="float.htm">float</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert an integer to a floating point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-float-format.htm">*float-format*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - format for printing floating point numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="floatp.htm">floatp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this number a floating point number?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="format.htm">format</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - do formatted output</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="fourth.htm">fourth</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the fourth element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="funcall.htm">funcall</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - call a function with arguments</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="function.htm">function</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - get the functional value of a symbol or lambda expression</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="g"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="gc.htm">gc</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - call the garbage collector</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="gcd.htm">gcd</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the greatest common divisor</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-gc-flag.htm">*gc-flag*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - controls the printing of 'gc' messages</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-gc-hook.htm">*gc-hook*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - function to call after garbage collection</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="gensym.htm">gensym</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - generate an unique Lisp symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="get.htm">get</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for property lists</nobr></td>
+</tr>
+    <tr>
+      <td><nobr><a href="get-env.htm">get-env</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - get the value of an environment variable</nobr></td>
+    </tr>
+<tr>
+  <td colspan="4" width="100%">
+    <table cellpadding="0" cellspacing="0"><tbody>
+    <tr>
+      <td><nobr><a href="get-lambda-keyword-key.htm">get-key</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - get a single key stroke from the keyboard</nobr></td>
+    </tr>
+    <tr>
+      <td><nobr><a href="get-lambda-expression.htm">get-lambda-expression</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - get the Lisp code of a lambda or macro expression as a list</nobr></td>
+    </tr>
+    <tr>
+      <td><nobr><a href="get-output-stream-list.htm">get-output-stream-list</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - empty a stream and return it's data as a list</nobr></td>
+    </tr>
+    <tr>
+      <td><nobr><a href="get-output-stream-string.htm">get-output-stream-string</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - empty a stream and return it's data as a single string</nobr></td>
+    </tr>
+    <tr>
+      <td><nobr><a href="get-temp-path.htm">get-temp-path</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - get a path where a temporary file can be created</nobr></td>
+    </tr>
+    </tbody></table>
+  </td>
+</tr>
+<tr>
+  <td><nobr><a href="get-user.htm">get-user</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the current user name</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="go.htm">go</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - go to a tag within a 'tagbody' or 'prog'</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="h"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="hash.htm">hash</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the hash index for a symbol</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="i"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="if.htm">&nbsp;if&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - evaluate expressions conditionally</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="incf.htm">incf</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">macro</font>
+    - increment a variable</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="info.htm">info</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - show information about memory usage</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="int-char.htm">int-char</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert an integer to a character</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-integer-format.htm">*integer-format*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - format for printing integer numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="integerp.htm">integerp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this number an integer?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="intern.htm">intern</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - create a new interned symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="interpolate.htm">interpolate</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the 'y' coordinate value corresponding to 'x'</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="intersection.htm">intersection</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the intersection of two lists</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-isa.htm">:isa</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">message selector</font>
+    - test if object inherits from class</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-isnew.htm">:isnew</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">message selector</font>
+    - cause an instance to run its initialization method</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="k"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="keywordp.htm">keywordp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - is this a keyword?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="lambda-keyword-key.htm">&amp;key</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">lambda list keyword</font>
+    - define keyword arguments</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="l"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="labels.htm">labels</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define local Lisp functions in a mutually recursive manner</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="lambda.htm">lambda</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define a unnamed function</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="last.htm">last</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the last element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="length.htm">length</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - returns the length of a list, vector or string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="let.htm">let</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define local bindings, evaluated in no specific order</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="let-star.htm">let*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define local bindings, evaluated in sequencial order</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="list.htm">list</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - create a list of values</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="listdir.htm">listdir</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get a list of all filenames in a directory</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="listp.htm">listp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a list?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="load.htm">load</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - load a source file</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="log.htm">log</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - the natural logarithm of a floating-point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="logand.htm">logand</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - the bitwise 'and' of one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="logior.htm">logior</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - the bitwise 'inclusive or' of one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="lognot.htm">lognot</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - the bitwise 'exclusive or' of one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="logxor.htm">logxor</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - the bitwise 'not' of a number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="loop.htm">loop</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - basic looping form</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="lower-case-p.htm">lower-case-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a lowercase character?</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="m"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="macroexpand.htm">macroexpand</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - expand macro definitions recursively</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="macroexpand-1.htm">macroexpand-1</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - expand the first level of a macro definition</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="macrolet.htm">macrolet</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - define a local macro</nobr></td>
+</tr>
+<tr>
+  <td colspan="4" width="100%">
+    <table cellpadding="0" cellspacing="0"><tbody>
+    <tr>
+      <td><nobr><a href="make-array.htm">make-array</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - create an array of specified size</nobr></td>
+    </tr>
+    <tr>
+      <td><nobr><a href="make-string-input-stream.htm">make-string-input-stream</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - create an unnamed stream from a string expression</nobr></td>
+    </tr>
+    <tr>
+      <td><nobr><a href="make-string-output-stream.htm">make-string-output-stream</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - create and return an unnamed output stream</nobr></td>
+    </tr>
+    <tr>
+      <td><nobr><a href="make-symbol.htm">make-symbol</a></nobr></td>
+      <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+      <td width="100%"><nobr><font color="#444444">function</font>
+        - create a temporary, uninterned symbol</nobr></td>
+    </tr>
+    </tbody></table>
+  </td>
+</tr>
+<tr>
+  <td><nobr><a href="mapc.htm">mapc</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - apply a function to successive 'car's, return the first list of arguments</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="mapcar.htm">mapcar</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - apply a function to successive 'car's, return a list of the values</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="mapl.htm">mapl</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - apply a function to successive 'cdr's, return the first list of arguments</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="maplist.htm">maplist</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - apply a function to successive 'cdr's, return a list of the values</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="max.htm">max</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - return the largest of one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="member.htm">member</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if an expression is contained in a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-mescape.htm">:mescape</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">keyword</font>
+    - readtable entry specifying a character to be used as a multiple escape character</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="min.htm">min</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - return the smallest of one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="minusp.htm">minusp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this number negative?</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="n"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="nconc.htm">nconc</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - destructively concatenate lists</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-new.htm">:new</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">message selector</font>
+    - create a new instance of a class</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="nil.htm">nil</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system constant</font>
+    - representing the empty list as well as the false value</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-nmacro.htm">:nmacro</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">keyword</font>
+    - readtable entry to specify a character to be used as the start of a non-terminating read macro</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="not.htm">not</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this expression false?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="nstring-downcase.htm">nstring-downcase</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - destructively convert a string or a part of it to lower case</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="nstring-upcase.htm">nstring-upcase</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - destructively convert a string or a part of it to upper case</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="nth.htm">nth</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the nth element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="nthcdr.htm">nthcdr</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the nth tail of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="null.htm">null</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this an empty list?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="numberp.htm">numberp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a number?</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="o"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-obarray.htm">*obarray*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - the system symbol table</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="object.htm">object</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">object</font>
+    - the build-in object class</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="objectp.htm">objectp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this an object?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="oddp.htm">oddp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this integer number odd?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="open.htm">open</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - open a file for character or byte i/o</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="open-binary.htm">open-binary</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - open a file for multi-byte i/o</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="lambda-keyword-optional.htm">&amp;optional</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">lambda list keyword</font>
+    - define optional arguments</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="or.htm">or</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - the logical 'or' of an arbitrary number of expressions</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="p"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="peek.htm">peek</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - accessor for an internal computer memory value</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="peek-char.htm">peek-char</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - look at a single character from a specified source</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="pi.htm">pi</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">variable</font>
+    - floating point approximation of the number 'pi'</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="plusp.htm">plusp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this number positive?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="poke.htm">poke</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - write a value to the internal computer memory</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="pop.htm">pop</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">macro</font>
+    - pop a value from a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="power.htm">power</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute 'x' raised to the 'y' power</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="pprint.htm">pprint</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - print a pretty looking version of an expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="prin1.htm">prin1</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - print an expression without a newline</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="princ.htm">princ</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - print an expression without quoting and without a newline</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="print.htm">print</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - print an expression on a new line</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-print-case.htm">*print-case*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - specifies how symbols are printed</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="profile.htm">profile</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - turn profiling on or off</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="prog.htm">prog</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - a 'block' with local 'let' bindings</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="prog-star.htm">prog*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - a 'block' with local 'let*' bindings</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="prog1.htm">prog1</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - a 'block' returning the value of the first expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="prog2.htm">prog2</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - a 'block' returning the value of the second expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="progn.htm">progn</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - a 'block' returning the value of the last expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="progv.htm">progv</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - a 'block' with local bindings, created out of two lists</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="psetq.htm">psetq</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - perform 'setq' assignments in parallel</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="push.htm">push</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">macro</font>
+    - push a value to the front of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="putprop.htm">putprop</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - put a property onto a symbol's property list</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="q"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="quit.htm">quit</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - quit XLISP</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="quote.htm">quote</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - return an expression unevaluated</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="r"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="random.htm">random</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute an integer random number between 0 and n-1 inclusive</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="read.htm">read</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - read a Lisp expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="read-byte.htm">read-byte</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - read a byte from a stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="read-char.htm">read-char</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - read a character from a stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="read-float.htm">read-float</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - read a binary floating point number from a stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="read-int.htm">read-int</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - read a binary integer number from a stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="read-line.htm">read-line</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - read a line from a stream, returned as a string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-readtable.htm">*readtable*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - contains data structures relating to the processing of characters</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="real-random.htm">real-random</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute a floating point random number in an arbitrary range</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="rem.htm">rem</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the remainder of one or several numbers</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="remove.htm">remove</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - remove elements from a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="remove-if.htm">remove-if</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - remove elements from a list that pass a test</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="remove-if-not.htm">remove-if-not</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - remove elements from a list that fail a test</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="remprop.htm">remprop</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - remove a property from a symbol's property list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="rest.htm">rest</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the tail of a list, identical to 'cdr'</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="lambda-keyword-rest.htm">&amp;rest</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">lambda list keyword</font>
+    - define 'rest' arguments, to be collected in a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="restore.htm">restore</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - restore a XLISP workspace from a file</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="return.htm">return</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - return from a 'block' construct</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="return-from.htm">return-from</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - return from a named block</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="reverse.htm">reverse</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - reverse a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="room.htm">room</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - show memory allocation statistics</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="round.htm">round</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - round a number to the next integer value</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="rplaca.htm">rplaca</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - replace the first element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="rplacd.htm">rplacd</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - replace the tail of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="rrandom.htm">rrandom</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute a random floating point number between 0 and 1 inclusive</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-rslt.htm">*rslt*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - used to store multiple return values</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="s"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="save.htm">save</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - save a XLISP workspace to a file</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="second.htm">second</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the second element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="self.htm">self</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">symbol</font>
+    - evaluates to the current object when used within a message context</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="send.htm">send</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - send a message to an object</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="send-super.htm">send-super</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - send a message to the superclass of an object</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-sescape.htm">:sescape</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">keyword</font>
+    - readtable entry specifying a character to be used as a single escape character</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="set.htm">set</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - set the value of a symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="set-difference.htm">set-difference</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the set-difference of two lists</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="setdir.htm">setdir</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - set a new working directory</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="setf.htm">setf</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - set the value of a place</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="setq.htm">setq</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - set the value of a quoted symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="setup-console.htm">setup-console</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - set default console attributes</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-show.htm">:show</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">message selector</font>
+    - show an object's instance variables</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="sin.htm">sin</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the sine of a floating point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="sort.htm">sort</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - destructively sort a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="soundp.htm">soundp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - is this a sound?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="sqrt.htm">sqrt</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the square root of a floating point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-standard-input.htm">*standard-input*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - file pointer for standard input</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-standard-output.htm">*standard-output*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - file pointer for standard output</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="strcat.htm">strcat</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - concatenate strings</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="streamp.htm">streamp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a stream?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string.htm">string</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - make a string from a symbol, character or string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-not-equal-s.htm">string/=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if string1 is not equal to string2, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-lessp-s.htm">string&lt;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if string1 is less than string2, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-not-greaterp-s.htm">string&lt;=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if string1 is less than or equal to string2, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-equal-s.htm">string=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if the string arguments have the same values, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-greaterp-s.htm">string&gt;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if string1 is greater than string2, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-not-lessp-s.htm">string&gt;=</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if string1 is greater than or equal to string2, case is significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="stringp.htm">stringp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a string?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-downcase.htm">string-downcase</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert a string to lower case</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-equal-i.htm">string-equal</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if string1 equal to string2, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-greaterp-i.htm">string-greaterp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if string1 is greater than string2, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-left-trim.htm">string-left-trim</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - trim the left end of a string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-lessp-i.htm">string-lessp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if string1 is less than string2, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-not-equal-i.htm">string-not-equal</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if string1 is not equal to string2, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-not-greaterp-i.htm">string-not-greaterp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if string1 is less than or equal to string2, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-not-lessp-i.htm">string-not-lessp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - test if string1 is greater than or equal to string2, case is not significant</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-right-trim.htm">string-right-trim</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - trim the right end of a string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-search.htm">string-search</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - search for a pattern in a string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-trim.htm">string-trim</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - trim both ends of a string</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="string-upcase.htm">string-upcase</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - convert a string to upper case</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="sublis.htm">sublis</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - substitute expressions by using an association list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="subseq.htm">subseq</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - extract a substring</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="subsetp.htm">subsetp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - test if a list is a subset of another list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="subst.htm">subst</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - substitute expressions</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="symbol-function.htm">symbol-function</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the functional value of a symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="symbol-name.htm">symbol-name</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the print name of a symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="symbol-plist.htm">symbol-plist</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the property list of a symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="symbol-value.htm">symbol-value</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - get the value of a symbol</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="symbolp.htm">symbolp</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this a symbol?</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="system.htm">system</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - execute a command of the operating system</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="t"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="t.htm">&nbsp;t&nbsp;</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system constant</font>
+    - represents 'true'</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="tagbody.htm">tagbody</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - a 'block' form with labels</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="tan.htm">tan</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the tangent of a floating point number</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="terpri.htm">terpri</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - terminate printing, prints a newline character</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="third.htm">third</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - list accessor for the third element of a list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="throw.htm">throw</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - throw to a 'catch', allows non-local exits and traps</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-tmacro.htm">:tmacro</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">keyword</font>
+    - readtable entry to specify a character to be used as the start of a terminating read macro</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="top-level.htm">top-level</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - clean-up after an error and return to the top level</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="trace.htm">trace</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - add a function to the trace list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-tracelimit.htm">*tracelimit*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - the number of forms printed on entry to the <a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-tracelist.htm">*tracelist*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - a list of the current functions being traced</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-tracenable.htm">*tracenable*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - controls whether or not the <a href="../manual/xlisp.htm#break-loop">Break Loop</a> prints any back trace information on entry</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-trace-output.htm">*trace-output*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system variable</font>
+    - file pointer for trace output</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="truncate.htm">truncate</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - truncates a number to an integer</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="type-of.htm">type-of</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the type of a Lisp expression</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="u"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="global-unbound.htm">*unbound*</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">system constant</font>
+    - used to indicate when a symbol has no value</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="union.htm">union</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - compute the union of two lists</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="unless.htm">unless</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - evaluate only when a condition is false</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="untrace.htm">untrace</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - remove a function from the trace list</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="unwind-protect.htm">unwind-protect</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - allows the trapping of all forms of exit from a protected form</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="upper-case-p.htm">upper-case-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this an uppercase character?</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="v"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="vector.htm">vector</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - create an initialized vector [one-dimensional array]</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:5px"><tbody>
+<tr>
+  <td style="height:10px"><a name="w"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="when.htm">when</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">special form</font>
+    - evaluate only when a condition is true</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="while.htm">while</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">macro</font>
+    - loop while a condition is met</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="keyword-white-space.htm">:white-space</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">keyword</font>
+    - readtable entry to specifying a character that may be skipped over</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="write-byte.htm">write-byte</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - write a byte to a stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="write-char.htm">write-char</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - write a character to a stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="write-float.htm">write-float</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - write a binary floating point number to a stream</nobr></td>
+</tr>
+<tr>
+  <td><nobr><a href="write-int.htm">write-int</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">function</font>
+    - write a binary integer number to a stream</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td><nobr>&nbsp;[
+    <a href="#top"><font color="#444444">Back to Top</font></a> ]
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"><a name="z"></a></td>
+</tr>
+<tr>
+  <td><nobr><a href="zerop.htm">zerop</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><font color="#444444">predicate function</font>
+    - is this number zero?</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+Reference
+
+</body></html>

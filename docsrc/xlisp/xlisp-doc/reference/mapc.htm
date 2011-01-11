@@ -1,0 +1,87 @@
+<html><head><title>XLISP mapc</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>mapc</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(mapc <i>function list1</i> [<i>list2</i> ... ])</dt>
+<dd><i>function</i> - a function definition like a
+<a href="lambda.htm">lambda</a> form or a function name<br>
+<i>listN</i> - a list or list expression<br>
+returns - the first list of arguments</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'mapc' function applies the 'function' to the succesive
+<a href="car.htm">car</a>s of each of the lists 'listN'. Each of
+the lists supplies one of the arguments to 'function'. The 'mapc' function
+returns a list that is equivalent to the first list 'list1'. It's purpose is
+to perform operations that have side-effects. If the lists are of different
+lengths, the shortest list will determine the number of applications of
+'function'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(mapc 'princ '(hi there bob))         <font color="#008844">; prints HITHEREBOB</font>
+                                      <font color="#008844">;   returns (HI THERE BOB)</font>
+
+(mapc '+ '(1 2 3) '(1 2 3))           <font color="#008844">; returns (1 2 3)</font>
+                                      <font color="#008844">;   there were no side effects</font>
+
+(mapc (lambda (x y) (print (+ x y)))  <font color="#008844">; define a function with side effects</font>
+      '(1 2 3) '(1 2 3))              <font color="#008844">;   prints 2 4 6 </font>
+                                      <font color="#008844">;   returns (1 2 3)</font>
+</pre>
+
+<p><b>Note:</b> The use of the 'function' will work properly when it is a
+quoted symbol [the name of the function], an unquoted symbol, whose value is
+a function, or a closure object like a
+<a href="lambda.htm">lambda</a> form.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#mapc">mapc</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,358 @@
+<html><head><title>XLISP: An Object-oriented Lisp</title></head>
+
+<link rel="stylesheet" type="text/css" href="manual.css">
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>XLISP Object System</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#1">Definitions</a></nobr></li>
+<ul>
+<li><nobr><a href="#define-selector">selector</a> - a symbol used to select an appropriate method</nobr></li>
+<li><nobr><a href="#define-message">message</a> - a selector and a list of actual arguments</nobr></li>
+<li><nobr><a href="#define-method">method</a> - the code that implements a message</nobr></li>
+<li><nobr><a href="#define-object">object</a> - the top of the class hierarchy</nobr></li>
+<li><nobr><a href="#define-class">class</a> - the class of all object classes</nobr></li>
+</ul>
+<li><nobr><a href="#2">The 'send' Function</a></nobr></li>
+<li><nobr><a href="#3">The 'self' Symbol</a></nobr></li>
+<li><nobr><a href="#4">The 'send-super' Function</a></nobr></li>
+<li><nobr><a href="#5">The 'object' Class</a></nobr></li>
+<ul>
+<li><nobr><a href="#object">object</a> - the top of the class hierarchy</nobr></li>
+<ul>
+<li><nobr><a href="#object-show">:show</a> - show an object's instance variables</nobr></li>
+<li><nobr><a href="#object-class">:class</a> - return the class of an object</nobr></li>
+<li><nobr><a href="#object-isnew">:isnew</a> - the default object initialization routine</nobr></li>
+<li><nobr><a href="#send-super">send-super</a> - send superclass a message</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="#6">The 'class' Class</a></nobr></li>
+<ul>
+<li><nobr><a href="#class">class</a> - class of all object classes</nobr></li>
+<ul>
+<li><nobr><a href="#class-new">:new</a> - create a new instance of a class</nobr></li>
+<li><nobr><a href="#class-isnew">:isnew</a> - initialize a new class</nobr></li>
+<li><nobr><a href="#class-answer">:answer</a> - add a message to a class</nobr></li>
+</ul>
+</ul>
+</ol>
+
+<a name="1"></a>
+<a name="define-selector"></a>
+<a name="define-message"></a>
+<a name="define-method"></a>
+<a name="define-object"></a>
+<a name="define-class"></a>
+
+<hr>
+
+<h2>1&nbsp; Definitions</h2>
+
+<hr>
+
+<p><div class="box">
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td align="right"><nobr>selector</nobr></td>
+  <td valign="top"><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%"><nobr>a symbol used to select an appropriate method, usually a keyword</nobr></td>
+</tr>
+<tr>
+  <td align="right"><nobr>message</nobr></td>
+  <td valign="top"><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%"><nobr>a selector symbol and a list of actual arguments</nobr></td>
+</tr>
+<tr>
+  <td align="right"><nobr>method</nobr></td>
+  <td valign="top"><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%"><nobr>the Lisp code that implements a message</nobr></td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/object.htm">object</a></nobr></td>
+  <td valign="top"><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%"><nobr>the top of the class hierarchy</nobr></td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/class.htm">class</a></nobr></td>
+  <td valign="top"><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%"><nobr>the class of all object classes [including itself]</nobr></td>
+</tr>
+</tbody></table></p>
+
+</div></p>
+
+<p>Since XLISP was created to provide a simple basis for experimenting with
+<nobr>object-oriented</nobr> programming, one of the primitive data types
+included is <a href="../reference/object.htm">object</a>. <nobr>In
+XLISP</nobr>, an object consists of a data structure containing a pointer to
+the object's <a href="../reference/class.htm">class</a> as well as an array
+containing the values of the object's instance variables.</p>
+
+<p>Officially, there is no way to see inside an object [look at the values
+of its instance variables]. The only way to communicate with an object is by
+sending it a message.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="2"></a>
+
+<hr>
+
+<h2>2&nbsp; The 'send' Function</h2>
+
+<hr>
+
+<p>You can send a message to an object using the
+<a href="../reference/send.htm">send</a> function:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>send</b> <i>object selector</i> [<i>args</i>])</dt>
+<dd><i>object</i> - an <a href="object.htm">object</a><br>
+<i>selector</i> - message selector for <i>object</i><br>
+<i>arg</i> - parameter sent to <i>object</i> method<br>
+returns - the <i>object</i></dd>
+</dl>
+
+</div></p>
+
+<p>The <a href="../reference/send.htm">send</a> function takes the object as
+its first argument, the message selector as its second argument [which must
+be a symbol] and the message arguments as its remaining arguments. <nobr>It
+determines</nobr> the class of the receiving object and attempts to find a
+method corresponding to the message selector in the set of messages defined
+for that class. <nobr>If the</nobr> message is not found in the object's
+class and the class has a <nobr>super-class</nobr>, the search continues by
+looking at the messages defined for the <nobr>super-class</nobr>. This
+process continues from one <nobr>super-class</nobr> to the next until a
+method for the message is found. <nobr>If no</nobr> method is found, an
+error occurs.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="3"></a>
+
+<hr>
+
+<h2>3&nbsp; The 'self' Symbol</h2>
+
+<hr>
+
+<p>When a method is found, the evaluator binds the receiving object to the
+symbol <a href="../reference/self.htm">self</a> and evaluates the method
+using the remaining elements of the original list as arguments to the
+method. These arguments are always evaluated prior to being bound to their
+corresponding formal arguments. The result of evaluating the method becomes
+the result of the expression.</p>
+
+<p>Within the body of a method, a message can be sent to the current object
+by calling:</p>
+
+<pre class="example">
+(send self ... )
+</pre>
+
+<p>The method lookup starts with the object's class regardless of the class
+containing the current method.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="4"></a>
+
+<hr>
+
+<h2>4&nbsp; The 'send-super' Function</h2>
+
+<hr>
+
+<p>Sometimes it is desirable to invoke a general method in a superclass even
+when it is overridden by a more specific method in a subclass. This can be
+accomplished by calling <a
+href="../reference/send-super.htm">send-super</a>, which begins the
+method lookup in the superclass of the class defining the current method
+rather than in the class of the current object:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>send-super</b> <i>selector</i> [<i>args</i>])</dt>
+<dd><i>selector</i> - the message selector<br>
+<i>args</i> - the optional message arguments<br>
+returns - the result of sending the message</dd>
+</dl>
+
+</div></p>
+
+<p>The <a href="../reference/send-super.htm">send-super</a> function
+takes a selector as its first argument [which must be a symbol] and the
+message arguments as its remaining arguments. Notice that <a
+href="../reference/send-super.htm">send-super</a> can only be sent from
+within a method, and the target of the message is always the current object
+<a href="../reference/self.htm">self</a>.</p>
+
+<pre class="example">
+(send-super ... )
+</pre>
+
+<p>is similar to:</p>
+
+<pre class="example">
+(send self ... )
+</pre>
+
+<p>except that method lookup begins in the superclass of the class
+containing the current method rather than the class of the current
+object.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="5"></a>
+<a name="object"></a>
+<a name="object-show"></a>
+<a name="object-class"></a>
+<a name="object-isnew"></a>
+<a name="send-super"></a>
+
+<hr>
+
+<h2>5&nbsp; The 'object' Class</h2>
+
+<hr>
+
+<p><div class="box">
+
+<p><a href="../reference/object.htm">object</a> - the top of the class hierarchy.</p>
+
+</div></p>
+
+<p>Messages:</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt>(<a href="../reference/send.htm">send</a> <i>object</i> <a href="../reference/keyword-show.htm">:show</a>)
+- show an object's instance variables.</dt>
+<dd>returns - the object</dd>
+
+<br>
+
+<dt>(<a href="../reference/send.htm">send</a> <i>object</i> <a href="../reference/keyword-class.htm">:class</a>)
+- return the class of an object</dt>
+<dd>returns - the class of the object</dd>
+
+<br>
+
+<dt>(<a href="../reference/send.htm">send</a> <i>object</i> <a href="../reference/keyword-isnew.htm">:isnew</a> <i>args</i>)
+- run the default object initialization routine</dt>
+<dd>returns - the object</dd>
+
+<br>
+
+<dt>(<a href="../reference/send.htm">send</a> <i>object</i> <a href="../reference/keyword-isa.htm">:isa</a> <i>class</i>)
+- test if <i>object</i> inherits from <i>class</i></dt>
+<dd>returns - <a href="../reference/t.htm">&nbsp;T&nbsp;</a> if object
+is an instance of class or a subclass of class, otherwise
+<a href="../reference/nil.htm">NIL</a></dd>
+
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="6"></a>
+<a name="class"></a>
+<a name="class-new"></a>
+<a name="class-isnew"></a>
+<a name="class-answer"></a>
+
+<hr>
+
+<h2>6&nbsp; The 'class' Class</h2>
+
+<hr>
+
+<p><div class="box">
+
+<p><a href="../reference/class.htm">class</a>
+ - class of all object classes (including itself)</p>
+
+</div></p>
+
+<p>Messages:</p>
+
+<p><div class="box">
+
+<dl>
+
+<dt>(<a href="../reference/send.htm">send</a> <i>class</i> <a href="../reference/keyword-new.htm">:new</a> <i>ivars</i> [<i>cvars</i> [<i>super</i>]])
+ - create a new instance of a class</dt>
+<dd>returns -    the new class object</dd>
+
+<br>
+
+<dt>(<a href="../reference/send.htm">send</a> <i>class</i> <a href="../reference/keyword-isnew.htm">:isnew</a> <i>ivars</i> [<i>cvars</i> [<i>super</i>]])
+ - initialize a new class</dt>
+<dd><i>ivars</i> - list of instance variable symbols<br>
+<i>cvars</i> - list of class variable symbols<br>
+<i>super</i> - the superclass, default is <a href="../reference/object.htm">object</a><br>
+returns - the new class object</dd>
+
+<br>
+
+<dt>(<a href="../reference/send.htm">send</a> <i>class</i> <a href="../reference/keyword-answer.htm">:answer</a> <i>selector</i> <i>fargs</i> <i>body</i>)
+ - add a message to a class</dt>
+<dd><i>selector</i> - a message selector symbol<br>
+<i>fargs</i> - the formal argument list, a lambda list<br>
+<i>body</i> - a list of executable expressions<br>
+returns - the object</dd>
+
+</dl>
+
+</div></p>
+
+<p>When a new instance of a
+<a href="../reference/class.htm">class</a> is created by sending
+the message <a href="../reference/keyword-new.htm">:new</a>
+to an existing <a href="../reference/class.htm">class</a>, the
+message <a href="../reference/keyword-isnew.htm">:isnew</a> followed by
+whatever parameters were passed to the
+<a href="../reference/keyword-new.htm">:new</a> message is sent to the
+newly created <a href="../reference/object.htm">object</a>.</p>
+
+<p>When a new <a href="../reference/class.htm">class</a> is created
+by sending the <a href="../reference/keyword-new.htm">:new</a> message to
+the object <a href="../reference/class.htm">class</a>, an optional
+parameter may be specified indicating the superclass of the new
+<a href="../reference/class.htm">class</a>. If this parameter is
+omitted, the new <a href="../reference/class.htm">class</a> will be
+a subclass of <a href="../reference/object.htm">object</a>. A
+<a href="../reference/class.htm">class</a> inherits all instance
+variables, class variables, and methods from its superclass.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,111 @@
+<html><head><title>XLISP equal</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>equal</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c, xlsubr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>equal</b> <i>expr1 expr2</i>)</dt>
+<dd><i>exprN</i> - arbitrary Lisp expressions<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the expressions
+are structurally equivalent, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>Two expressions <nobr>are 'equal'</nobr>:</p>
+
+<ul>
+
+<li><p>If the expressions
+<nobr>are <a href="eql.htm">eql</a></nobr>.</p></li>
+
+<li><p>If two strings
+<nobr>are <a href="string-equal-s.htm.htm">string=</a></nobr>.</p></li>
+
+<li><p>If the two <a href="../reference/car.htm">car</a>s in conses are
+'equal' and the two <a href="../reference/cdr.htm">cdr</a>s in
+conses <nobr>are 'equal'</nobr>.</p></li>
+
+</ul>
+
+<p>In all other cases 'equal'
+<nobr>returns <a href="nil.htm">NIL</a></nobr>. Note that arrays are only
+'equal' if they <nobr>are <a href="eq.htm">eq</a></nobr>.</p>
+
+<p>A way to view 'equal' is that if 'expr1' and 'expr2' were printed
+<nobr>[via <a href="print.htm">print</a></nobr> <nobr>or
+<a href="princ.htm">princ</a>]</nobr> <nobr>and they</nobr> look the same,
+then 'equal' will <nobr>return <a href="t.htm">&nbsp;T&nbsp;</a></nobr>.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(equal 'a 'a)          =&gt; T
+(equal 1 1)            =&gt; T
+(equal 1 1.0)          =&gt; NIL  <font color="#008844">; different number types</font>
+(equal 1.0 1.0)        =&gt; T
+(equal "a" "a")        =&gt; T
+(equal '(a b) '(a b))  =&gt; T
+(equal 'a 34)          =&gt; NIL
+
+(setq a '(a b))        <font color="#008844">; set value of A to (A B)</font>
+(setq b a)             <font color="#008844">; set B to point to A's value</font>
+(setq c '(a b))        <font color="#008844">; set value of C to different (A B)</font>
+(equal a b)            =&gt; T
+(equal a c)            =&gt; T
+
+(equal '(a b) '(A B))  =&gt; T
+(equal '(a b) '(c d))  =&gt; NIL
+
+(equal "a" "A")        =&gt; NIL
+(equal "abc" "abcD")   =&gt; NIL
+</pre>
+
+<p>See also <a href="eq.htm">eq</a>, <a href="eql.htm">eql</a>,
+<nobr><a href="../examples/common-lisp/equalp.htm">cl:equalp</a></nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

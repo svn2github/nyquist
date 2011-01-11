@@ -1,0 +1,80 @@
+<html><head><title>XLISP symbol-name</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>symbol-name</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>symbol-name</b> <i>symbol</i>)</dt>
+<dd><i>symbol</i> - an expression that evaluates to a symbol name<br>
+returns - the symbol's print name</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'symbol-name' function takes the 'symbol' expression and returns the
+printable string of the 'symbol'. If the 'symbol' had not existed, then it
+will be created and <a href="intern.htm">intern</a>ed into the
+system symbol table
+<nobr><a href="global-obarray.htm">*obarray*</a> ,</nobr> but with it's
+value unbound and an empty property list.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(symbol-name 'foo)        <font color="#008844">; returns "FOO"</font>
+(symbol-name 'gleep)      <font color="#008844">; returns "GLEEP"</font>
+
+(setq my-symbol 'flop)    <font color="#008844">; define MY-SYMBOL</font>
+(symbol-name my-symbol)   <font color="#008844">; returns "FLOP"</font>
+</pre>
+
+<p><b>XLISP Bug:</b> The 'symbol-name' function signals a 'bad
+argument type' error with the <nobr>symbol
+<a href="nil.htm">NIL</a></nobr> <nobr>[Nyquist 3.03</nobr> in
+<nobr>December 2010]</nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

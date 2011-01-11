@@ -1,0 +1,117 @@
+<html><head><title>XLISP baktrace</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>baktrace</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xldbug.c, xlsys.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>baktrace</b> [<i>level</i>])</dt>
+<dd><i>level</i> - an optional integer expression<br>
+returns - <a href="nil.htm">NIL</a></dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p> The 'baktrace' function is used to examine the system execution stack
+from within the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a>.</nobr> It
+shows the nested forms that got the system to the current state. The
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr> can be
+entered by a system error, or by the Nyquist/XLISP
+<a href="error.htm">error</a>, <a href="cerror.htm">cerror</a>, or
+<a href="break.htm">break</a> functions. <nobr>If the</nobr> 'levels'
+parameter is not specified, all the nested forms will be shown back to the
+main loop form that started the execution. <nobr>If 'level'</nobr> is
+specified the most recent 'level' nested forms will be shown.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun out (x)
+  (print x)
+  (mid 99))
+
+(defun mid (x)
+  (print x)
+  (in 999))
+
+(defun in (x)
+  (print x)
+  (break "in" x))  <font color="#008844">; break</font>
+
+&gt; (out 9)
+9
+99
+999
+<font color="#AA0000">break: in - 999</font>
+<font color="#AA0000">if continued: return from BREAK</font>
+
+1&gt; (baktrace)   <font color="#008844">; the 1 before the &gt; indicates a break loop</font>
+Function: #&lt;Subr-BAKTRACE: #9af6688&gt;
+Function: #&lt;Subr-BREAK: #9af6778&gt;
+Arguments:
+  "in"
+  999
+Function: #&lt;Closure-IN: #9b99574&gt;
+Arguments:
+  999
+Function: #&lt;Closure-MID: #9b99670&gt;
+Arguments:
+  99
+Function: #&lt;Closure-OUT: #9b99778&gt;
+Arguments:
+  9
+NIL
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#debugging-and-error-handling">Debugging and Error Handling</a></nobr></li>
+<li><nobr>XLISP 2.0 Manual &rarr; <a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

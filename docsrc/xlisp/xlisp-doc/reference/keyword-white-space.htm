@@ -1,0 +1,92 @@
+<html><head><title>XLISP :white-space</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>:white-space</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>keyword</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlread.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;:white-space</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>The ':white-space' keyword is an entry that is used in the <a
+href="global-readtable.htm">*readtable*</a> system variable that contains
+XLISP's data structures relating to the processing of characters from the
+user [or files] and read-macro expansions. The existance of the
+':white-space' keyword means that the specified character may be skipped
+over. The system defines that 'tab', 'space', 'return' and 'line-feed' are
+':white-space' characters.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+<font color="#008844">;; define a function to look in a table</font>
+<font color="#008844">;; and print out any white-space characters</font>
+
+(defun look-at (table)
+  (dotimes (ch 127)
+    (prog ((entry (aref table ch)))
+      (case entry
+        (nil          nil)
+        (:constituent nil)
+        (:white-space (print ch))
+        (t            nil))))
+  (terpri))
+
+(look-at *readtable*)  <font color="#008844">; prints  9   - tab</font>
+                       <font color="#008844">;         10  - newline</font>
+                       <font color="#008844">;         12  - formfeed</font>
+                       <font color="#008844">;         13  - return</font>
+                       <font color="#008844">;         32  - space</font>
+</pre>
+
+<p><b>Caution:</b> If you experiment with
+<nobr><a href="global-readtable.htm">*readtable*</a> ,</nobr> it is useful
+to save the old value in a variable, so that you can restore the system
+state.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-008.htm#white-space">:white-space</a>
+keyword in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

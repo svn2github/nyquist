@@ -1,0 +1,118 @@
+<html><head><title>XLISP and</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>and</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>and</b>  [<i>expr1</i> ... ])</nobr></dt>
+<dd><i>exprN</i> - an expression<br>
+returns - <a href="nil.htm">NIL</a> if any expression evaluates
+to <nobr><a href="nil.htm">NIL</a> ,</nobr> otherwise the value
+of the last expression<br>
+<b>Note:</b> evaluation of expressions stops after the first
+expression that evaluates to <a href="nil.htm">NIL</a></dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'and' special form evaluates a sequence of expressions and returns
+the effect of a logical AND on the expressions. <nobr>If, at</nobr> any
+point, an expression is <a href="nil.htm">NIL</a>, then
+<a href="nil.htm">NIL</a> is returned as the result of the 'and'
+function. <nobr>If all</nobr> of the expressions have a
+<nobr>non-<a href="nil.htm">NIL</a></nobr> value, the value of the last
+expression is returned as the result. Evaluation of the expressions will
+stop when an expression evaluates <nobr>to <a href="nil.htm">NIL</a></nobr>,
+none of the subsequent expressions will be evaluated. <nobr>If there</nobr>
+are no expressions, then 'and' returns <a href="t.htm">&nbsp;T&nbsp;</a>
+as its result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(and t t t)  =&gt; T</font>
+(and nil t)  =&gt; NIL</font>
+(and t nil)  =&gt; NIL</font>
+(and)        =&gt; T</font>
+</pre>
+
+<p>Some more practical examples:</p>
+
+<pre class="example">
+&gt; (and T "boo" "hiss" T "rah")
+"rah"    <font color="#008844">; return value of AND</font>
+
+&gt; (and (princ "hi") NIL (princ "ho"))
+hi       <font color="#008844">; prints "hi"</font>
+NIL      <font color="#008844">; return value of AND</font>
+</pre>
+
+See <a href="princ.htm">princ</a>.
+
+<pre class="example">
+> (setq a 5 b 6)                 <font color="#008844">; set up A and B</font>
+6                                <font color="#008844">; return value of SETQ</font>
+ 
+> (if (and (numberp a)           <font color="#008844">; if A is a number</font>
+           (numberp b)           <font color="#008844">; and B is a number</font>
+           (&lt; a b))              <font color="#008844">; and A &lt; B</font>
+    (print "A is less than B")   <font color="#008844">; then do this</font>
+    (print "error"))             <font color="#008844">; else do this</font>
+"A is less than B"               <font color="#008844">; screen output of PRINT</font>
+"A is less than B"               <font color="#008844">; return value of IF</font>
+</pre>
+
+<p>See <a href="number-lessp.htm">&nbsp;&lt;&nbsp;</a>,
+<a href="if.htm">&nbsp;if&nbsp;</a>, <a href="print.htm">print</a>,
+<a href="setq.htm">setq</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#control-constructs">Control Constructs</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">XLISP</a> &gt;
+<a href="../manual/xlisp-man-index.htm">XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a>&nbsp; -&nbsp;
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

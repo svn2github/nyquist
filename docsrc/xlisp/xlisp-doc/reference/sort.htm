@@ -1,0 +1,104 @@
+<html><head><title>XLISP sort</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>sort</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(sort <i>list test</i>)</dt>
+<dd><i>list</i> - a list containing elements to be sorted<br>
+<i>test</i> - the test to use for the sort<br>
+returns - the sorted list</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'sort' function sorts the 'list' using the 'test' to order the
+list. The 'sort' function is destructive and modifies the 'list'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq a '(3 1 4 1 5 9 6 7))          <font color="#008844">; returns (3 1 4 1 5 9 6 7)</font>
+
+(sort a '&lt;)                          <font color="#008844">; returns (1 1 3 4 5 6 7 9)</font>
+
+(print a)                            <font color="#008844">; returns (1 1 3 4 5 6 7 9)</font>
+                                     <font color="#008844">; notice that A is modified</font>
+
+(sort a '&gt;)                          <font color="#008844">; returns (9 7 6 5 4 3 1 1)</font>
+
+(sort '("a" "bar" "foo") 'string&gt;)   <font color="#008844">; returns ("foo" "bar" "a")</font>
+</pre>
+
+<p><div class="box">
+
+<p><b>XLISP Bug</b></p>
+
+<p>Nyquist 'sort' returns the proper value, but improperly modifies the
+symbol or the actual 'list', for example:</p>
+
+<pre class="example">
+(setq a '(3 1 4 1 5 9 6 7))  =&gt; (3 1 4 1 5 9 6 7)
+(sort a '&lt;)                  =&gt; (1 1 3 4 5 6 7 9)  <font color="#008844">; OK</font>
+a                            =&gt; (3 4 5 6 7 9)      <font color="#AA0000">; BUG</font>
+</pre>
+
+<p>But this way it works:</p>
+
+<pre class="example">
+(setq a '(3 1 4 1 5 9 6 7))  =&gt; (3 1 4 1 5 9 6 7)
+(setq a (sort a '&lt;))         =&gt; (1 1 3 4 5 6 7 9)
+a                            =&gt; (1 1 3 4 5 6 7 9)
+</pre>
+
+</div></p>
+
+<p><b>Common Lisp:</b> Common Lisp allows for a ':key' keyword, which
+allows a specified function to be run before the ordering takes place, which
+XLISP does not support.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-017.htm#sort">sort</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

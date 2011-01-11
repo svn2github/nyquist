@@ -1,0 +1,81 @@
+<html><head><title>XLISP while</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>while</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>Lisp macro (closure)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>misc.lsp</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>while</b> <i>condition body</i>)</nobr></dt>
+<dd><i>condition</i> - test expression for terminating the 'while' loop<br>
+<dd><i>body</i> - Lisp expressions to be executed inside the loop<br>
+returns - returns <a href="nil.htm">NIL</a> or a value defined by
+(<a href="return.htm">return</a> <i>expr</i>) inside <i>body</i></dd>
+</dl>
+
+</div></p>
+
+<p>In Nyquist, 'while' is implemented as a Lisp macro:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">while</font> (condition &rest body)
+  `(prog () loop (if ,condition () (return)) ,@body (go loop)))
+</pre>
+
+<h2>Description</h2>
+
+<p>The 'while' macro implements a conventional 'while' loop. <nobr>If
+the</nobr> 'condition' evaluates to true, the expressions in the in the
+'body' are evaluated, then the 'condition' is tested again. <nobr>If
+the</nobr> 'condition' evaluates to false, the 'while' loop terminates. The
+'while' macro returns <a href="nil.htm">NIL</a> unless a <nobr>(<a
+href="return.htm">return</a> <i>expr</i>)</nobr> is evaluated in the 'body',
+in which case the value of 'expr' is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

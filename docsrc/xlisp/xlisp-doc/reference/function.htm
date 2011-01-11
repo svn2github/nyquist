@@ -1,0 +1,87 @@
+<html><head><title>XLISP function</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>function</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(function <i>expr</i>)</dt>
+<dd><i>expr</i> - an expression that evaluates to a function<br>
+returns - the functional interpretation</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'function' special form returns the function definition of the
+'expr'. Execution of the 'expr' form does not occur. 'function' will operate
+on functions, special forms, lambda-expressions and macros.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(function car)              <font color="#008844">; returns #&lt;Subr-CAR: #23ac4&gt;</font>
+(function quote)            <font color="#008844">; returns #&lt;FSubr-QUOTE: #23d1c&gt;</font>
+#'quote                     <font color="#008844">; returns #&lt;FSubr-QUOTE: #23d1c&gt;</font>
+(function 'cdr)             <font color="#008844">; error: not a function</font>
+
+(defun foo (x) (+ x x))     <font color="#008844">; define FOO function</font>
+(function foo)              <font color="#008844">; returns #&lt;Closure-FOO: #2cfb6&gt;</font>
+
+(defmacro bar (x) (+ x x))  <font color="#008844">; define FOOMAC macro</font>
+(function bar)              <font color="#008844">; returns #&lt;Closure-BAR: #2ceee&gt;</font>
+
+(setq my 99)                <font color="#008844">; define a variable MY</font>
+(function my)               <font color="#008844">; error: unbound function</font>
+
+(defun my (x) (print x))    <font color="#008844">; define a function MY</font>
+(function my)               <font color="#008844">; returns #&lt;Closure-MY: #2cdd6&gt;</font>
+</pre>
+
+<p><b>Read macro:</b> XLISP supports the normal Lisp read macro of a hash
+and quote [#'] as a short-hand method of writing the 'function' special
+form.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-012.htm#function">function</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

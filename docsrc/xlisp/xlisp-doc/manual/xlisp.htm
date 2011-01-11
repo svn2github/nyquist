@@ -1,0 +1,1256 @@
+<html><head>
+
+<title>XLISP 2.0</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #the-readtable08080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #the-readtable08080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #the-readtable08080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>XLISP 2.0</h1>
+
+<hr>
+
+<p><nobr><b>XLISP: An Object-oriented Lisp</b>&nbsp;</nobr> <nobr>Version
+2.0</nobr>, <nobr>February 6, 1988</nobr>, by <nobr>David Michael
+Betz</nobr>, <nobr>127 Taylor Road</nobr>, Peterborough, <nobr>NH
+03458</nobr></p>
+
+<p><nobr>Copyright (c) 1988</nobr>, by <nobr>David Michael Betz</nobr>,
+<nobr>All Rights Reserved</nobr>, Permission is granted for unrestricted
+<nobr>non-commercial use</nobr>.</p>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#introduction">Introduction</a></nobr></li>
+<li><nobr><a href="#a-note-from-the-author">A Note From The Author</a></nobr></li>
+<li><nobr><a href="#command-loop">Command Loop</a></nobr></li>
+<li><nobr><a href="#break-loop">Break Loop</a></nobr></li>
+<li><nobr><a href="#data-types">Data Types</a></nobr></li>
+<li><nobr><a href="#the-evaluator">The Evaluator</a></nobr></li>
+<li><nobr><a href="#lexical-conventions">Lexical Conventions</a></nobr></li>
+<li><nobr><a href="#the-readtable">The Readtable</a></nobr></li>
+<li><nobr><a href="#lambda-lists">Lambda Lists</a></nobr></li>
+<ul>
+<li><nobr><a href="#arguments">Arguments</a></nobr></li>
+<ul>
+<li><nobr><a href="#required-arguments">Required Arguments</a></nobr></li>
+<li><nobr><a href="#optional-arguments">Optional Arguments</a></nobr></li>
+<li><nobr><a href="#rest-argument">Rest Argument</a></nobr></li>
+<li><nobr><a href="#keyword-arguments">Keyword Arguments</a></nobr></li>
+<li><nobr><a href="#auxiliary-variables">Auxiliary Variables</a></nobr></li>
+</ul>
+<li><nobr><a href="#lambda-list-syntax">Lambda List Syntax</a></nobr></li>
+</ul>
+</ol>
+
+<a name="introduction"></a>
+
+<hr>
+
+<h2>1&nbsp; Introduction</h2>
+
+<hr>
+
+<p>XLISP is an experimental programming language combining some of the
+features of Common Lisp with an object-oriented extension capability. It was
+implemented to allow experimentation with object-oriented programming on
+small computers. Implementations of XLISP run on virtually every operating
+system. XLISP is completely written in the programming language C and is
+easily extended with user written built-in functions and classes. It is
+available in source form to non-commercial users. Many Common Lisp functions
+are built into XLISP. In addition, XLISP defines the objects <a
+href="../reference/object.htm">object</a> and <a
+href="../reference/class.htm">class</a> as primitives. Object is the
+only class that has no superclass and hence is the root of the class
+hierarchy tree. Class is the class of which all classes are instances [it is
+the only object that is an instance of itself].</p>
+
+<p>This document is a brief description of XLISP. It assumes some knowledge
+of LISP and some understanding of the concepts of object-oriented
+programming. I recommend the book 'Lisp' by Winston and Horn and published
+by Addison Wesley for learning Lisp. The first edition of this book is based
+on MacLisp and the second edition is based on Common Lisp. You will probably
+also need a copy of 'Common Lisp, The Language' by Guy L. Steele, Jr.,
+published by Digital Press to use as a reference for some of the Common Lisp
+functions that are described only briefly in this document.</p>
+
+<p>A list with Lisp books and documents available for free in the internet
+can be found under <a href="../misc/links.htm">Lisp Links</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="a-note-from-the-author"></a>
+
+<hr>
+
+<h2>2&nbsp; A Note From The Author</h2>
+
+<hr>
+
+<p>If you have any problems with XLISP, feel free to contact me [David Betz]
+for help or advice. Please remember that since XLISP is available in source
+form in a high level language, many users have been making versions
+available on a variety of machines. If you call to report a problem with a
+specific version, I may not be able to help you if that version runs on a
+machine to which I don't have access. Please have the version number of the
+version that you are running readily accessible before calling me.</p>
+
+<p>If you find a bug in XLISP, first try to fix the bug yourself using the
+source code provided. If you are successful in fixing the bug, send the bug
+report along with the fix to me. If you don't have access to a C compiler or
+are unable to fix a bug, please send the bug report to me and I'll try to
+fix it.</p>
+
+<p>Any suggestions for improvements will be welcomed. Feel free to extend
+the language in whatever way suits your needs. However,</p>
+
+<p><div class="box">
+
+<p><b>PLEASE DO NOT RELEASE ENHANCED VERSIONS WITHOUT CHECKING WITH ME
+FIRST!!</b></p>
+
+</div></p>
+
+<p>I would like to be the clearing house for new features added to XLISP. If
+you want to add features for your own personal use, go ahead. But, if you
+want to distribute your enhanced version, contact me first. Please remember
+that the goal of XLISP is to provide a language to learn and experiment with
+LISP and object-oriented programming on small computers. I don't want it to
+get so big that it requires megabytes of memory to run.</p>
+
+<p>The official XLISP homepage is:</p>
+
+<ul>
+<li><a href="http://www.mv.com/ipusers/xlisper/">http://www.mv.com/ipusers/xlisper/</a></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="command-loop"></a>
+
+<hr>
+
+<h2>3&nbsp; Command Loop</h2>
+
+<hr>
+
+<p>When XLISP is started, it first tries to load the workspace 'xlisp.wks'
+from the current directory. If that file doesn't exist, XLISP builds an
+initial workspace, empty except for the built-in functions and symbols. Then
+XLISP attempts to load 'init.lsp' from the current directory. It then loads
+any files named as parameters on the command line [after appending '.lsp' to
+their names].</p>
+
+<p>XLISP then issues the following prompt:</p>
+
+<pre class="example">
+&gt;
+</pre>
+
+<p>This indicates that XLISP is waiting for an expression to be typed. When
+a complete expression has been entered, XLISP attempts to evaluate that
+expression. If the expression evaluates successfully, XLISP prints the
+result and then returns to the initial prompt waiting for another expression
+to be typed.</p>
+
+<a name="interactive-programming"></a>
+
+<p><div class="box">
+
+<p><b>Interactive Programming</b></p>
+
+<p>There are several symbols maintained by the <nobr>read-eval-print</nobr>
+loop:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>*</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>the most recent result</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>**</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>the second recent result</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>***</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>the third recent result</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>+</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>the most recent input expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>++</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>the second recent input expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>+++</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>the third recent input expression</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>&minus;</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the expression currently being evaluated, becomes the
+    value of + at the end of the evaluation</td>
+</tr>
+</tbody></table></p>
+
+<p>These symbols are for interactive programming. <nobr>It is</nobr> not
+recommended to use them in program code.</p>
+
+</div></p>
+
+<a name="special-characters"></a>
+
+<p><div class="box">
+
+<p><b>Special Characters</b></p>
+
+<p>When XLISP is running from a console <nobr>[not in</nobr> the Nyquist
+<nobr>Java IDE]</nobr>, some control characters invoke operations:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-c</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">executes the <a href="../reference/top-level.htm">top-level</a> function</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-g</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">executes the <a href="../reference/clean-up.htm">clean-up</a> function</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-p</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">executes the <a href="../reference/continue.htm">continue</a> function</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-b</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">stops execution and enters the break command loop,
+    execution can be continued by typing Control-p <nobr>or
+    (<a href="../reference/continue.htm">continue</a>)</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-e</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">turns on character echoing [Linux and <nobr>Mac OS X</nobr> only]</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-f</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">turns off character echoing [Linux and <nobr>Mac OS X</nobr> only]</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-t</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">evaluates the <a href="../reference/info.htm">info</a> function</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>Control-u</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">erases the entire input line</td>
+</tr>
+</tbody></table></p>
+
+<p>Backspace and Delete characters erase the previous character on the input
+line <nobr>[if any]</nobr>.</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="break-loop"></a>
+
+<hr>
+
+<h2>4&nbsp; Break Loop</h2>
+
+<hr>
+
+<p>When XLISP encounters an error while evaluating an expression, it
+attempts to handle the error in the following way:</p>
+
+<dl>
+
+<p><b>1.</b> If the symbol
+<a href="../reference/global-breakenable.htm">*breakenable*</a> is true, the
+message corresponding to the error is printed. <nobr>If the</nobr> error is
+correctable, the correction message is printed.</p>
+
+<dd>
+<ul>
+
+<li><p>If the symbol
+<a href="../reference/global-tracenable.htm">*tracenable*</a> is true, a
+trace back is printed. The number of entries printed depends on the value of
+the symbol <a href="../reference/global-tracelimit.htm">*tracelimit*</a>.
+<nobr>If this</nobr> symbol is set to something other than a number, the
+entire trace back stack is printed.</p></li>
+
+</ul>
+
+<p>XLISP then enters a '<nobr>read-eval-print</nobr>' loop to allow the user
+to examine the state of the interpreter in the context of the error. This
+loop differs from the normal <nobr>top-level</nobr>
+'<nobr>read-eval-print</nobr>' loop in that if the user invokes the
+<a href="../reference/continue.htm">continue</a> function:</p>
+
+<pre class="example">
+1&gt; (continue)
+</pre>
+
+<p>XLISP will continue from a correctable error. <nobr>If the</nobr> user
+invokes the <a href="../reference/clean-up.htm">clean-up</a> function:</p>
+
+<pre class="example">
+1&gt; (clean-up)
+</pre>
+
+<p>XLISP will abort the break loop and return to the top level or the next
+lower numbered break loop. When in a break loop, XLISP prefixes the break
+level to the normal prompt with a number.</p></dd>
+
+<dt><p><b>2.</b> If the symbol
+<a href="../reference/global-breakenable.htm">*breakenable*</a>
+is <a href="../reference/nil.htm">NIL</a>, XLISP looks for a surrounding
+<a href="../reference/errset.htm">errset</a> function:</p></dt>
+
+</dl>
+
+<ul>
+
+<li type="circle"><p>If an error happened within the scope of an
+<a href="../reference/errset.htm">errset</a> function, XLISP examines the
+value of the <a href="../reference/errset.htm">errset</a> print flag.
+<nobr>If this</nobr> flag is true, the error message is printed.
+<nobr>In case</nobr> of an error, the
+<a href="../reference/errset.htm">errset</a> function  always <nobr>returns
+<a href="../reference/nil.htm">NIL</a></nobr>.</p></li>
+
+<li type="circle"><p>If there is no surrounding
+<a href="../reference/errset.htm">errset</a> function, XLISP prints the
+error message and returns to the top level.</p></li>
+
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="data-types"></a>
+
+<hr>
+
+<h2>5&nbsp; Data Types</h2>
+
+<hr>
+
+<p>There are several different data types available to XLISP
+programmers:</p>
+
+<ul>
+<li><nobr><a href="../reference/nil.htm">nil</a> - boolean false as well as the empty <a href="../reference/listp.htm">list</a></nobr></li>
+<li><nobr><a href="../reference/arrayp.htm">array</a> - including <a href="../reference/hash.htm">hash</a>-tables</nobr></li>
+<li><a href="../reference/characterp.htm">character</a></li>
+<li><a href="../reference/numberp.htm">number</a></li>
+<ul>
+<li><a href="../reference/integerp.htm">fixnum</a> - integer number</li>
+<li><a href="../reference/floatp.htm">flonum</a> - floating point number</li>
+</ul>
+<li><nobr><a href="../reference/consp.htm">cons</a> - a non-empty list, where a <a href="../reference/listp.htm">list</a> is of type <a href="../reference/consp.htm">cons</a> or <a href="../reference/nil.htm">nil</a></nobr></li>
+<li><a href="../reference/objectp.htm">object</a></li>
+<li><a href="../reference/streamp.htm">stream</a></li>
+<ul>
+<li><nobr><b>file-stream</b> - returned by <a href="../reference/open.htm">open</a></nobr></li>
+<li><nobr><b>unnamed-stream</b> - returned by <a href="../reference/make-string-input-stream.htm">make-string-input-stream</a></nobr></li>
+</ul>
+<li><nobr><a href="../reference/stringp.htm">string</a></nobr></li>
+<li><nobr><a href="../reference/symbolp.htm">symbol</a> - including keywords</nobr></li>
+<li><nobr><b>subr</b> - built-in function</nobr></li>
+<li><nobr><b>fsubr</b> - special form</nobr></li>
+<li><nobr><b>closure</b> - user defined function</nobr></li>
+<li><nobr><a href="../reference/filep.htm">file</a></nobr></li>
+<li><nobr><a href="../reference/soundp.htm">sound</a> - a Nyquist sound</nobr></li>
+</ul>
+
+<p>See also the <nobr><a href="../reference/type-of.htm">type-of</a></nobr>
+function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="the-evaluator"></a>
+
+<hr>
+
+<h2>6&nbsp; The Evaluator</h2>
+
+<hr>
+
+<p>The process of evaluation in XLISP:</p>
+
+<ul>
+
+<li><p>The following Lisp objects evaluate to themselves:</p>
+
+<ul>
+<li><nobr><a href="../reference/stringp.htm">string</a></nobr></li>
+<li><nobr><a href="../reference/integerp.htm">fixnum</a></nobr></li>
+<li><nobr><a href="../reference/characterp.htm">character</a></nobr></li>
+<li><nobr><a href="../reference/floatp.htm">flonum</a></nobr></li>
+<li><nobr><a href="../reference/objectp.htm">object</a></nobr></li>
+<li><nobr><a href="../reference/arrayp.htm">array</a></nobr></li>
+<li><nobr><a href="../reference/streamp.htm">stream</a></nobr></li>
+<li><nobr><b>subr</b> - built-in function</nobr></li>
+<li><nobr><b>fsubr</b>  - special form</nobr></li>
+<li><nobr><b>closure</b> - user defined function</nobr></li>
+</ul>
+</li>
+
+<li><p><font color="#000088"><b>Symbols</b></font> act as variables and are
+evaluated by retrieving the value associated with their current
+binding.</p></li>
+
+<li><p><font color="#000088"><b>Lists</b></font> are evaluated by examining
+the first element of the list and then taking one of the following
+actions:</p></li>
+
+<ul>
+
+<li><p>If it is a <font color="#000088"><b>symbol</b></font>, the functional
+binding of the symbol is retrieved.</p></li>
+
+<li><p>If it is a <font color="#000088"><b>lambda expression</b></font>, a
+closure is constructed for the function described by the lambda
+expression.</p></li>
+
+<li><p>If it is a <font color="#000088"><b>subr</b></font> [built-in
+function], <font color="#000088"><b>fsubr</b></font> [special form] or <font
+color="#000088"><b>closure</b></font> [user defined function], it stands for
+itself.</p></li>
+
+<li><p>Any other value is an <font color="#AA0000"><b>error</b></font>.</p></li>
+
+</ul>
+
+<p>Then, the value produced by the previous step is examined:</p>
+
+<ul>
+
+<li><p>If it is a <font color="#000088"><b>subr</b></font>
+<nobr>[built-in</nobr> function] or <font
+color="#000088"><b>closure</b></font> [user defined function], the remaining
+list elements are evaluated and the subr or closure is called with these
+evaluated expressions as arguments.</p></li>
+
+<li><p>If it is an <font color="#000088"><b>fsubr</b></font> [special form],
+the fsubr is called using the remaining list elements as arguments
+[unevaluated].</p></li>
+
+<li><p>If it is a<font color="#000088"><b> macro</b></font>, the macro is
+expanded using the remaining list elements as arguments [unevaluated]. The
+macro expansion is then evaluated in place of the original macro
+call.</p></li>
+
+</ul>
+
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lexical-conventions"></a>
+
+<hr>
+
+<h2>7&nbsp; Lexical Conventions</h2>
+
+<hr>
+
+<p>The following conventions must be followed when entering XLISP
+programs:</p>
+
+<ul>
+
+<li><p>Comments in XLISP code begin with a semicolon character and continue
+to the end of the line.</p></li>
+
+<li><p>Symbol names in XLISP can consist of any sequence of non-blank
+printable characters except the following:</p></li>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr>(</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>opening parenthesis</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr>)</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>closing parenthesis</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr>'</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>single-quote</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr>`</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>backquote</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr>,</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>comma</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr>&quot;</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>double-quote</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr>;</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>semicolon</nobr></td>
+</tr>
+</tbody></table></p>
+
+<li><p>Uppercase and lowercase characters are not distinguished within
+symbol names. All lowercase characters are mapped to uppercase on
+input.</p></li>
+
+<li><p>Integer literals consist of a sequence of digits optionally beginning
+with a '+' [plus] or '-' [minus]. The range of values an integer can
+represent is limited by the size of a C 'long' value on the machine on which
+XLISP is running. <nobr>Also be</nobr> aware that Nyquist doesn't check for
+CPU register overflow with integer numbers, so for example if you add 1 to
+the biggest Nyquist integer number, the result will be a negative
+number.</p></li>
+
+<li><p>Floating point literals consist of a sequence of digits optionally
+beginning with a '+' [plus] or '-' [minus] and including an embedded decimal
+point. The range of values a floating point number can represent is limited
+by the size of a C 'float' [or 'double' on machines with 32 bit addresses]
+on the machine on which XLISP is running.</p></li>
+
+<li><p>Literal strings are sequences of characters surrounded by double
+quotes. Within quoted strings the '\' [backslash] character is used to allow
+non-printable characters to be included. The codes recognized are:</p></li>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>\\</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the character '\' [backslash]</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>\n</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">newline</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>\t</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">tab</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>\r</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">return</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>\f</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">form feed</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>\<font color="#0000CC">nnn</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the character whose octal code is 'nnn'</td>
+</tr>
+</tbody></table></p>
+
+<p>An <a href="../misc/ascii-table.htm">ASCII</a> table
+is provided with this version of the XLISP manual with all octal, decimal
+and hexadecimal character values.</p>
+
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="the-readtable"></a>
+
+<hr>
+
+<h2>8&nbsp; The Readtable</h2>
+
+<hr>
+
+<a name="constituent"></a><a name="white-space"></a>
+<a name="tmacro"></a><a name="nmacro"></a>
+<a name="sescape"></a><a name="mescape"></a>
+
+<p>The behavior of the reader is controlled by a data structure called a
+'readtable'. The reader uses the symbol
+<a href="../reference/global-readtable.htm">*readtable*</a> to locate the
+current readtable. This table controls the interpretation of input
+characters. It is an array with 128 entries, one for each of the
+<a href="../misc/ascii-table.htm">ASCII</a> character codes. Each
+entry contains one of the following things:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>&nbsp;NIL</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>indicating an invalid character</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="../reference/nil.htm">nil</a>]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>:CONSTITUENT</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>indicating a symbol constituent</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="../reference/keyword-constituent.htm">:constituent</a>]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>:WHITE-SPACE</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>indicating a whitespace character</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="../reference/keyword-white-space.htm">:white-space</a>]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>(:TMACRO . <font color="#0000CC">function</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>terminating readmacro</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="../reference/keyword-tmacro.htm">:tmacro</a>]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>(:NMACRO . <font color="#0000CC">function</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>non-terminating readmacro</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="../reference/keyword-nmacro.htm">:nmacro</a>]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>:SESCAPE</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>single escape character '\'</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="../reference/keyword-sescape.htm">:sescape</a>]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>:MESCAPE</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>multiple escape character '|'</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="../reference/keyword-mescape.htm">:mescape</a>]</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>In the case of <a href="../reference/keyword-tmacro.htm">:tmacro</a> and
+<a href="../reference/keyword-nmacro.htm">:nmacro</a>, the 'fun' component
+is a function. This can either be a built-in readmacro function or a
+<a href="../reference/lambda.htm">lambda</a> expression. The
+function should take two parameters. The first is the input stream and the
+second is the character that caused the invocation of the readmacro. The
+readmacro function should return
+<a href="../reference/nil.htm">NIL</a> to indicate that the
+character should be treated as white space or a value
+<a href="../reference/cons.htm">cons</a>ed with
+<a href="../reference/nil.htm">NIL</a> to indicate that the
+readmacro should be treated as an occurence of the specified value. Of
+course, the readmacro code is free to
+<a href="../reference/read.htm">read</a> additional characters
+from the input stream.</p>
+
+<a name="quote"></a><a name="function"></a><a name="array"></a>
+<a name="hexadecimal"></a><a name="octal"></a><a name="binary"></a>
+<a name="character"></a><a name="comment"></a><a name="uninterned"></a>
+<a name="backquote"></a><a name="comma"></a><a name="comma-at"></a>
+
+<p>XLISP defines several useful read macros:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>'<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>(<a href="../reference/quote.htm">quote</a>
+    <i>expr</i>)</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#'<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>(<a href="../reference/function.htm">function</a>
+    <i>expr</i>)</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#(<font color="#0000CC">expression</font><font color="#008844">...</font>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>an array of the specified expressions</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#x<font color="#0000CC">digits</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>a hexadecimal number [0-9,A-F]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#o<font color="#0000CC">digits</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>an octal number [0-7]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#b<font color="#0000CC">digits</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>a binary number [0-1]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#\<font color="#0000CC">character</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>a single character</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#| <font color="#008844">...</font> |#</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>a comment</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#:<font color="#0000CC">symbol</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>an uninterned symbol</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>`<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>(<a href="../reference/backquote.htm">backquote</a>
+    <i>expr</i>)</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>,<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>(<a href="../reference/backquote.htm">comma</a>
+    <i>expr</i>)</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>,@<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>(<a href="../reference/backquote.htm">comma-at</a>
+    <i>expr</i>)</nobr></td>
+</tr>
+</tbody></table></p>
+
+<a name="Tab"></a><a name="Newline"></a><a name="Space"></a>
+
+<p>Characters names handled by the reader:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#\Tab</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td><nobr>horiz. tab</nobr></td>
+  <td><nobr>&nbsp;&nbsp; [<a href="../misc/ascii-table.htm">ASCII</a> decimal value 9]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#\Newline</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td><nobr>newline</nobr></td>
+  <td><nobr>&nbsp;&nbsp; [<a href="../misc/ascii-table.htm">ASCII</a> decimal value 10]</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>#\Space</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;=&nbsp;&nbsp;</nobr></td>
+  <td><nobr>space</nobr></td>
+  <td><nobr>&nbsp;&nbsp; [<a href="../misc/ascii-table.htm">ASCII</a> decimal value 32]</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lambda-lists"></a>
+
+<hr>
+
+<h2>9&nbsp; Lambda Lists</h2>
+
+<a name="arguments"></a>
+
+<hr>
+
+<h2>9.1&nbsp; Arguments</h2>
+
+<hr>
+
+<p>There are several forms in XLISP that require that a <nobr>'lambda
+list'</nobr> be specified. A lambda list is a definition of the arguments
+accepted by a function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="required-arguments"></a>
+
+<hr>
+
+<h2>9.1.1&nbsp; Required Arguments</h2>
+
+<hr>
+
+<p>The lambda list starts with 'required' arguments. Required arguments must
+be specified in every call to the function.</p>
+
+<p>The function '<nobr>print-x</nobr>' has exactly one required
+<nobr>argument 'x'</nobr>:</p>
+
+<pre class="example">
+(defun print-x (x)
+  (print x))
+
+(print-x 1)    =&gt; 1
+(print-x)      =&gt; <font color="#AA0000">error: too few arguments</font>
+(print-x 1 2)  =&gt; <font color="#AA0000">error: too many arguments</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="optional-arguments"></a>
+
+<hr>
+
+<h2>9.1.2&nbsp; Optional Arguments</h2>
+
+<hr>
+
+<p>The <nobr><a href="#required-arguments">Required Arguments</a></nobr> are followed by
+the <a href="../reference/lambda-keyword-optional.htm">&amp;optional</a>
+arguments. Optional arguments may be provided or omitted in a call. An
+initialization expression may be specified to provide a default value for an
+<a href="../reference/lambda-keyword-optional.htm">&amp;optional</a>
+argument if it is omitted from a call. If no initialization expression is
+specified, an omitted argument is initialized to
+<a href="../reference/nil.htm">NIL</a>.</p>
+
+<p>It is also possible to provide the name of a 'supplied-p' variable that
+can be used to determine if a call provided a value for the argument or if
+the initialization expression was used. If specified, the 'supplied-p'
+variable will be bound to
+<a href="../reference/t.htm">&nbsp;T&nbsp;</a> if a value was
+specified in the call and
+<a href="../reference/nil.htm">NIL</a> if the default value was
+used.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="rest-argument"></a>
+
+<hr>
+
+<h2>9.1.3&nbsp; Rest Argument</h2>
+
+<hr>
+
+<p>The <nobr><a href="#optional-arguments">Optional Arguments</a></nobr> are followed by
+the <a href="../reference/lambda-keyword-rest.htm">&amp;rest</a> argument.
+<nobr>The <a href="../reference/lambda-keyword-rest.htm">&amp;rest</a></nobr>
+argument gets bound to the remainder of the argument list after the required
+and <a href="../reference/lambda-keyword-optional.htm">&amp;optional</a>
+arguments have been removed.</p>
+
+<p><div class="box">
+
+<p><b>Known Problems with the Rest Argument</b></p>
+
+<p>A subtle problem arises if
+<nobr><a href="#optional-arguments">Optional Arguments</a></nobr> are used together with
+a <a href="../reference/lambda-keyword-rest.htm">&amp;rest</a> argument:</p>
+
+<pre class="example">
+(defun test (&amp;optional opt &amp;rest rest)
+  (format t "opt = ~a, rest = ~a~%" opt rest))
+
+(test 1)      =&gt; opt = 1, rest = NIL
+(test 1 2)    =&gt; opt = 1, rest = (2)
+(test 1 2 3)  =&gt; opt = 1, rest = (2 3)
+</pre>
+
+<p>Now the
+<a href="../reference/lambda-keyword-optional.htm">&amp;optional</a>
+argument is not optional anymore, there is no way to make the first argument
+appear in the <a href="../reference/lambda-keyword-rest.htm">&amp;rest</a>
+list and not in the
+<a href="../reference/lambda-keyword-optional.htm">&amp;optional</a>
+variable. This is not a XLISP bug, this is a general Lisp phenomenon.
+<nobr>In Lisp</nobr> it's not a good idea to use
+<nobr><a href="#optional-arguments">Optional Arguments</a></nobr> together with a
+<a href="../reference/lambda-keyword-rest.htm">&amp;rest</a> argument.</p>
+
+<p>If a <a href="../reference/lambda-keyword-rest.htm">&amp;rest</a>
+argument is used togethter with
+<nobr><a href="#keyword-arguments">Keyword Arguments</a></nobr>, then the keywords and
+their arguments appear in the list bound to the
+<a href="../reference/lambda-keyword-rest.htm">&amp;rest</a></nobr>
+argument. This is not neccessarily a XLISP bug, this also happens with
+other Lisps. <nobr>In Lisp</nobr> it's also not a good idea to use
+<nobr><a href="#keyword-arguments">Keyword Arguments</a></nobr> together with a
+<a href="../reference/lambda-keyword-rest.htm">&amp;rest</a> argument.</p>
+
+<p><b>XLISP Bug:</b> <nobr>If the</nobr> number of elements in a
+<a href="../reference/lambda-keyword-rest.htm">&amp;rest</a> list
+is odd, then <a href="../reference/lambda-keyword-key.htm">&amp;key</a>
+variables have wrong values:</p>
+
+<pre class="example">
+(defun test (&amp;rest rest &amp;key (key t))
+  (format t "rest = ~a, key = ~a~%" rest key))
+
+(test 1     :key 'a)  =&gt; rest = (1 :KEY A),     key = T  <font color="#AA0000">; wrong KEY value</font>
+(test 1 2   :key 'a)  =&gt; rest = (1 2 :KEY A),   key = A  <font color="#008844">; quirk, but correct KEY value</font>
+(test 1 2 3 :key 'a)) =&gt; rest = (1 2 3 :KEY A), key = T  <font color="#AA0000">; again wrong KEY value</font>
+</pre>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="keyword-arguments"></a>
+
+<hr>
+
+<h2>9.1.4&nbsp; Keyword Arguments</h2>
+
+<hr>
+
+<p>The <nobr><a href="#rest-argument">Rest Argument</a></nobr> is
+followed by the <a href="../reference/lambda-keyword-key.htm">&amp;key</a>
+arguments. When a keyword argument is passed to a function, a pair of values
+appears in the argument list. The first expression in the pair should
+evaluate to a keyword symbol [a symbol that begins with a <nobr>colon
+':'].</nobr> The value of the second expression is the value of the keyword
+argument.</p>
+
+<p>Like <a href="../reference/lambda-keyword-optional.htm">&amp;optional</a>
+arguments, <a href="../reference/lambda-keyword-key.htm">&amp;key</a> arguments can
+have initialization expressions and 'supplied-p' variables. In addition, it
+is possible to specify the keyword to be used in a function call. If no
+keyword is specified, the keyword obtained by adding a colon ':' to the
+beginning of the keyword argument symbol is used.</p>
+
+<p>In other words, if the keyword argument symbol is:</p>
+
+<pre class="example">
+foo
+</pre>
+
+<p>the keyword will be:</p>
+
+<pre class="example">
+:foo
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="auxiliary-variables"></a>
+
+<hr>
+
+<h2>9.1.5&nbsp; Auxiliary Variables</h2>
+
+<hr>
+
+<p>The <nobr><a href="#keyword-arguments">Keyword Arguments</a></nobr> are followed by
+the <a href="../reference/lambda-keyword-aux.htm">&amp;aux</a> variables.
+These are local variables that are bound during the evaluation of the
+function body. It is possible to have initialization expressions for the
+<a href="../reference/lambda-keyword-aux.htm">&amp;aux</a> variables.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="lambda-list-syntax"></a>
+
+<hr>
+
+<h2>9.2&nbsp; Lambda List Syntax</h2>
+
+<hr>
+
+<p>Here is the complete syntax for lambda lists:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td width="100%" colspan="2"><nobr>(<i>required-arg</i> ...</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>[<b>&amp;optional</b> [<i>optional-arg</i> | (<i>optional-arg</i> [<i>init-form</i> [<i>supplied-var</i>]])] ... ]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>[<b>&amp;rest</b> <i>rest-arg</i>]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>[<b>&amp;key</b> [<i>key-arg</i> | ([<i>key-arg</i> | (<i>keyword</i> <i>key-arg</i>)] [<i>init-form</i> [<i>supplied-var</i>]]) ...] <b>&amp;allow-other-keys</b>]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>[<b>&amp;aux</b> [<i>aux-var</i> | (<i>aux-var</i> [<i>init-form</i>])] ... ])</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>where:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>required-arg</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is a <a href="#required-arguments">required</a> argument symbol</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>optional-arg</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is an <a href="#optional-arguments">&amp;optional</a> argument symbol</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>rest-arg</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is the <a href="#rest-argument">&amp;rest</a> argument symbol</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>key-arg</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is a <a href="#keyword-arguments">&amp;key</a> argument symbol</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>keyword</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is a <a href="#keyword-arguments">keyword</a> symbol</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>aux-var</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is an <a href="#auxiliary-variables">auxiliary</a> variable symbol</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>init-form</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is an initialization expression</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr><i>supplied-var</i></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td width="100%">is a supplied-p variable symbol</td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

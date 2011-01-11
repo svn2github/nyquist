@@ -1,0 +1,73 @@
+<html><head><title>XLISP *standard-input*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*standard-input*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlinit.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*standard-input*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>The *standard-input* system variable contains a file pointer that points
+to the file where all normal input from the programmer or user comes from.
+The default file for *standard-input* is the system standard input device,
+normally the system keyboard.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+*standard-input*   <font color="#008844">; returns #&lt;File-Stream: #2442e&gt;</font>
+</pre>
+
+<p><b>Note:</b> Be careful when modifying the *standard-input*. If you do
+not save the old file pointer, you will not be able to return to normal
+operation and will need to exit XLISP. If the file or source that you have
+set *standard-input* to does not reset *standard-input* to its previous
+value, you will never get control back to the keyboard.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#standard-input">*standard-input*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

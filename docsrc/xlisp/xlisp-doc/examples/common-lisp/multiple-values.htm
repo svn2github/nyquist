@@ -1,0 +1,181 @@
+<html><head>
+
+<title>Multiple Values</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Multiple Values</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#multiple-values">Multiple Values</a></nobr></li>
+<ul>
+<li><nobr>Nyquist/XLISP helpers</nobr></li>
+<ul>
+<li><nobr><a href="global-multiple-values.htm">cl:*multiple-values*</a> - [Variable] - signals if a function has returned multiple values</nobr></li>
+<li><nobr><a href="debug-mv.htm">cl:debug:mv</a> - [Function] - debug multiple values</nobr></li>
+</ul>
+<li><nobr>Returning Multiple Values</nobr></li>
+<ul>
+<li><nobr><a href="values.htm">cl:values</a> - [Function] - return multiple values</nobr></li>
+<li><nobr><a href="values-list.htm">cl:values-list</a> - [Function] - return multiple values from a list</nobr></li>
+</ul>
+<li><nobr>Working with Multiple Values</nobr></li>
+<ul>
+<li><nobr><a href="multiple-value-list.htm">cl:multiple-value-list</a> - [Macro] - evaluate an expression and return all values in a list</nobr></li>
+<li><nobr><a href="multiple-value-bind.htm">cl:multiple-value-bind</a> - [Macro] - bind multiple values to multiple <a href="../reference/let.htm">let</a> variables</nobr></li>
+<li><nobr><a href="multiple-value-setq.htm">cl:multiple-value-setq</a> - [Macro] - assign multiple values to multiple variables using <a href="../reference/setq.htm">setq</a></nobr></li>
+<li><nobr><a href="multiple-value-prog1.htm">cl:multiple-value-prog1</a> - [Macro] - eveluate multiple expressions, return the values of the first expression</nobr></li>
+<li><nobr><a href="multiple-value-call.htm">cl:multiple-value-call</a> - [Macro] - apply a function to multiple values collected in a list</nobr></li>
+</ul>
+</ul>
+</ol>
+
+<a name="multiple-values"></a>
+
+<hr>
+
+<h2>Multiple Values</h2>
+
+<hr>
+
+<p>This is a port of the Common List framework for passing multiple values
+from one place to another. <nobr>It is</nobr> most often used to return
+multiple values from a function with
+<a href="values.htm">cl:values</a> or to bind multiple values to multiple
+variables with
+<nobr><a href="multiple-value-bind.htm">cl:multiple-value-bind</a></nobr> or
+<nobr><a href="multiple-value-setq.htm">cl:multiple-value-setq</a></nobr>.</p>
+
+<p>The multiple value functions and macros use the
+<nobr>Nyquist/XLISP</nobr>
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable to store the
+values as a list, while the
+<nobr><a href="global-multiple-values.htm">cl:*multiple-values*</a></nobr>
+variable is used as a flag to indicate if a function has returned multiple
+values.</p>
+
+<p><b>What happens if a normal Lisp function are given multiple
+values?</b></p>
+
+<p>A normal Lisp function only sees the 'primary' return value, as returned
+by every Lisp function. <nobr>The additional</nobr> return values
+[including the primary return value] are stored in the
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable and are only read
+by the multiple value functions. This also means that with multiple values,
+the most important value should always be returned as the first value,
+because only the first value can be seen by a normal Lisp function.
+<nobr>See <a href="values.htm">cl:values</a></nobr> for examples.</p>
+
+<p><b>What happens if a function expecting multiple values is given a normal
+Lisp return value?</b></p>
+
+<p>The first symbol will be set to the function's return value, while all
+other symbol will be set to <a href="../../reference/nil.htm">NIL</a>.
+<nobr>No symbol</nobr> will be left unset. <nobr>All functions</nobr>
+expecting multiple values are protected against a wrong number of values.
+<nobr>If there</nobr> are more symbols than values, then the extra symbols
+are set to <a href="../../reference/nil.htm">NIL</a>, if there are more
+values than symbols, the extra values will be ignored.</p>
+
+<p><div class="box">
+
+<p><b>Known Limitations</b></p>
+
+<p><b>1.</b> In Nyquist/XLISP, <a href="values.htm">cl:values</a> cannot be
+used as argument to <a href="../../reference/setf.htm">setf</a>. <nobr>But
+this</nobr> is not a real problem, because the values are stored as a
+simple list in the <a href="../../reference/global-rslt.htm">*rslt*</a>
+variable, where they can be manipulated with any arbitrary Lisp
+functions, not only <nobr>with
+<a href="../../reference/setf.htm">setf</a></nobr>.</p>
+
+<p><b>2.</b> In <nobr>Common Lisp</nobr> there exists the option to return
+<nobr>'no value</nobr>' by calling the 'values' function with no arguments.
+<nobr>In Nyquist/XLISP</nobr> there is no <nobr>built-in</nobr> way to
+return '<nobr>no value</nobr>' from a function. <nobr>The symbol</nobr>
+<a href="../../reference/global-unbound.htm">*unbound*</a> cannot be used for
+this because in <nobr>Common Lisp</nobr>, if '<nobr>no value</nobr>' is
+assigned to a symbol as variable value, the new value will be
+<a href="../../reference/nil.htm">NIL</a> and not
+<a href="../../reference/global-unbound.htm">*unbound*</a>.</p>
+
+<p>In Nyquist/XLISP, the <a href="values.htm">cl:values</a> function, if
+called with no arguments, always returns
+<a href="../../reference/nil.htm">NIL</a>, and the
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable will be
+set <nobr>to <a href="../../reference/nil.htm">NIL</a>, too:</nobr></p>
+
+<pre class="example">
+(cl:values)      =&gt; NIL  <font color="#008844">; *rslt* = NIL</font>
+(cl:values nil)  =&gt; NIL  <font color="#008844">; *rslt* = (NIL)</font>
+</pre>
+
+<p>Maybe this observation helps to write a '<nobr>no values</nobr>' test if
+anybody really <nobr>needs it</nobr>.</p>
+
+<p><b>3.</b> Neither in <nobr>Common Lisp</nobr> nor in Nyquist/XLISP is it
+possibe to return nested multiple values:</p>
+
+<pre class="example">
+(cl:values (1 (cl:values 2 3) 4)  =&gt; 1  <font color="#008844">; *rslt* = (1 2 4)</font>
+</pre>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

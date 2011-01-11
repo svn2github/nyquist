@@ -1,0 +1,105 @@
+<html><head><title>XLISP peek-char</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>peek-char</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(peek-char [<i>skip-flag</i> [<i>source</i>]])</dt>
+<dd><i>skip-flag</i> - an optional expression, default is
+<a href="nil.htm">NIL</a><br>
+<i>source</i> - an optional source, must be a file pointer or stream, default
+is <a href="global-standard-input.htm">*standard-input*</a><br>
+returns - the character</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'peek-char' function looks at a single character from the specified
+'source'. The character looked-at is returned as an integer value for the
+result. If the 'skip-flag' expression is
+<nobr><a href="nil.htm">NIL</a> ,</nobr> then the next character
+will be looked-at, without advancing the position within the file. If the
+'skip-flag' expression is <nobr>non-<a href="nil.htm">NIL</a>
+,</nobr> then the next non-white-space character will be looked-at. This
+skipping does advance the position within the file. White-space characters
+include 'blank', 'tab' and 'new-line' characters. If 'skip-flag' is not
+used, no skipping will occur. The 'source' may be a file pointer or a
+stream. If there is no 'source',
+<a href="global-standard-input.htm">*standard-input*</a> is the default. If an
+end-of-file is encountered in the 'source', then
+<a href="nil.htm">NIL</a> will be returned as the result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq fp (open "f" :direction :output))  <font color="#008844">; create file "f"</font>
+(print 12 fp)
+(princ "  34" fp)
+(terpri fp)
+(close fp)
+
+(setq fp (open "f" :direction :input))   <font color="#008844">; open "f" for reading</font>
+(peek-char NIL fp)                       <font color="#008844">; returns #\1</font>
+(peek-char NIL fp)                       <font color="#008844">; returns #\1 - didn't advance</font>
+(read-char fp)                           <font color="#008844">; returns #\1 - force advance</font>
+(peek-char NIL fp)                       <font color="#008844">; returns #\2</font>
+(read-char fp)                           <font color="#008844">; returns #\2 - force advance</font>
+(peek-char NIL fp)                       <font color="#008844">; returns #\Newline</font>
+(peek-char T fp)                         <font color="#008844">; returns #\3 - skipped blanks</font>
+(read-line fp)                           <font color="#008844">; returns "34"</font>
+(close fp)
+</pre>
+
+<p><b>Common Lisp:</b> The XLISP and Common Lisp 'peek-char' functions are
+compatible for simple cases. They both allow for the optional 'skip-flag'
+and 'source'. However, in Common Lisp, there are additional parameters which
+occur right after 'source' that support various end-of-file operations and
+recursive calls. So, when porting from Common Lisp to XLISP, remember there
+are additional arguments in Common Lisp's 'peek-char' that are not supported
+in XLISP.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-029.htm#peek-char">peek-char</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,92 @@
+<html><head><title>XLISP code-char</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>code-char</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(code-char <i>code</i>)</dt>
+<dd><i>code</i> - a numeric expression representing the
+<a href="../misc/ascii-table.htm">ASCII</a> code as an integer<br>
+returns - the character with that code or <a href="nil.htm">NIL</a> </dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'code-char' function returns a character which is the result of
+turning 'code' expression into a character. If a 'code' cannot be made into
+a character, <a href="nil.htm">NIL</a> is returned. The range
+that 'code' produces a valid character is <nobr>0 through 127.</nobr></p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(code-char 48)    <font color="#008844">; returns #\0</font>
+(code-char 65)    <font color="#008844">; returns #\A</font>
+(code-char 97)    <font color="#008844">; returns #\a</font>
+(code-char 91)    <font color="#008844">; returns #\[</font>
+(code-char 10)    <font color="#008844">; returns #\Newline</font>
+(code-char 128)   <font color="#008844">; returns NIL</font>
+(code-char 999)   <font color="#008844">; returns NIL</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp allows for some optional arguments in
+'code-char' because it supports the concept of a complex character that
+includes not only the ASCII code value, but also fonts and bits. The bits
+allow for more than <nobr>8 bits</nobr> per character <nobr>[16 bits</nobr>
+is especially useful in oriental languages]. The fonts allow for up to 128
+different fonts. XLISP does not support fonts and bits or the optional
+parameters associated with them.</p>
+
+<p><b>Note:</b> Unlike the <a href="char-code.htm">char-code</a> and
+<a href="char-int.htm">char-int</a> functions, 'code-char' and
+<a href="int-char.htm">int-char</a> are not identical in use.
+'code-char' accepts 0..127 for its range and then produces
+<a href="nil.htm">NIL</a> results.
+<a href="int-char.htm">int-char</a> accepts 0..255 for its range and
+then produces errors.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-026.htm#code-char">code-char</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

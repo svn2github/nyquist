@@ -1,0 +1,81 @@
+<html><head><title>XLISP round</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>round</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>Lisp function (closure)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>fileio.lsp</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>round</b> <i>number</i>)</nobr></dt>
+<dd><i>number</i> - an integer or floating point numbers<br>
+returns - the number, rounded to the next integer value</dd>
+</dl>
+
+</div></p>
+
+<p>In Nyquist, 'round' is implemented as a Lisp function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">round</font> (x) 
+  (cond ((> x 0) (truncate (+ x 0.5)))
+        ((= (- x 0.5) (truncate (- x 0.5))) (truncate x))
+        (t (truncate (- x 0.5)))))
+</pre>
+
+<h2>Description</h2>
+
+<p>The 'round' function rounds a number to the next integer value. This is
+tricky because <a href="truncate.htm">truncate</a> rounds toward zero as
+<nobr>does C</nobr> in other words, rounding is down for positive numbers
+and up for negative numbers. <nobr>You can</nobr> convert rounding up to
+rounding down by subtracting one, but this fails on the integers, so we need
+a special test if <nobr>(- x 0.5)</nobr> is an integer.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(round .5)   =&gt; 1
+(round -.5)  =&gt; 0
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

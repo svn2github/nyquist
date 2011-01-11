@@ -1,0 +1,110 @@
+<html><head>
+
+<title>cl:debug:mv</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:debug:mv</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>debug:mv</b></b></nobr> function can be used to debug
+multiple value expressions:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>debug:mv</b> <i>expr</i></dt>
+<dd><i>expr</i> - a Lisp expression, returning an arbitrary number of values<br>
+returns - the normal Lisp return value from evaluating <i>expr</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:debug:mv</font> (expr)
+  (setq <font color="#AA5500">cl:*multiple-values*</font> nil)
+  (let ((result (eval expr)))
+    (format t <font color="#880000">";; cl:*multiple-values* =&gt; ~a~%"</font> <font color="#AA5500">cl:*multiple-values*</font>)
+    (format t <font color="#880000">";; *rslt* =&gt; ~a~a~%"</font> <font color="#AA5500">*rslt*</font>
+              (if <font color="#AA5500">cl:*multiple-values*</font> <font color="#880000">"" " [invalid]"</font>))
+    result))
+</pre>
+
+<p>The <nobr>cl:<b>debug:mv</b></nobr> function first sets the
+<nobr><a href="global-multiple-values.htm">cl:*multiple-values*</a></nobr>
+variable <nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>, then it
+evaluates the expression. After evaluation it prints the values of the
+<nobr><a href="global-multiple-values.htm">cl:*multiple-values*</a></nobr>
+and <a href="../../reference/global-rslt.htm">*rslt*</a> variables and
+returns the normal Lisp return value from the evaluation.</p>
+
+<p>Example:</p>
+
+<pre class="example">
+&gt; (cl:debug:mv '(cl:values 1 2 3))
+;; cl:*multiple-values* =&gt; T
+;; *rslt* =&gt; (1 2 3)
+1
+
+&gt; (cl:debug:mv 1)
+;; cl:*multiple-values* =&gt; NIL
+;; *rslt* =&gt; (1 2 3) [invalid]
+1
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

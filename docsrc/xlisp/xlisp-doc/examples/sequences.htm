@@ -1,0 +1,563 @@
+<html><head>
+
+<title>Sequences</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Sequences</h1>
+
+<hr>
+
+<p>Sequences are <a href="lists.htm">Lists</a>,
+<a href="strings.htm">Strings</a>,
+<nobr>or <a href="arrays.htm">Arrays</a></nobr>.</p>
+
+<ul>
+<li><nobr><a href="#sequencep">sequencep</a> - test if a Lisp object is a sequence</nobr></li>
+<li><nobr><a href="#length">length</a> - the length of a sequence</nobr></li>
+<li><nobr><a href="#identity">identity</a> - do nothing, just return the value</nobr></li>
+<li><nobr><a href="#cl-subseq">cl:subseq</a> - subsequences of lists, strings, or arrays</nobr></li>
+<li><nobr>Properties of elements in sequences:</nobr></li>
+<ul>
+<li><nobr>find</nobr></li>
+<li><nobr>count</nobr></li>
+<li><nobr>position</nobr></li>
+</ul>
+<li><nobr>Predicates for testing sequences:</nobr></li>
+<ul>
+<li><nobr>every</nobr></li>
+<li><nobr>some</nobr></li>
+<li><nobr>notevery</nobr></li>
+<li><nobr>notany </nobr></li>
+</ul>
+<li><nobr>Functions to modify sequences:</nobr></li>
+<ul>
+<li><nobr>map</nobr></li>
+<li><nobr>flatten</nobr></li>
+</ul>
+</ul>
+
+<a name="sequencep"></a>
+
+<hr>
+
+<h2>sequencep</h2>
+
+<hr>
+
+<p>The following example demonstrates how a XLISP expression can be tested
+for being a sequence:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">sequencep</font> (x)
+  (and (lboundp 'x)                <font color="#008844">; not *unbound*</font>
+       (or (and (listp x)          <font color="#008844">; a list or NIL</font>
+                (consp (last x)))  <font color="#008844">; but not a dotted list</font>
+           (stringp x)             <font color="#008844">; or a string</font>
+           (arrayp x))))           <font color="#008844">; or an array</font>
+</pre>
+
+<p>Depends on <a href="environment.htm#lboundp">lboundp</a>,
+see also <a href="../reference/and.htm">and</a>,
+<a href="../reference/arrayp.htm">arrayp</a>,
+<a href="../reference/consp.htm">consp</a>,
+<a href="../reference/defun.htm">defun</a>,
+<a href="../reference/last.htm">last</a>,
+<a href="../reference/listp.htm">listp</a>,
+<a href="../reference/or.htm">or</a>,
+<a href="../reference/stringp.htm">stringp</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="length"></a>
+
+<hr>
+
+<h2>length</h2>
+
+<hr>
+
+<p>XLISP already knows sequences, even if the manual doesn't explicitely
+<nobr>tell you:</nobr></p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<a href="../reference/length.htm">length</a> <i>expr</i>)</dt>
+<dd><i>expr</i> - expression, evaluating to a list, string, or array<br>
+returns - the length of the list,  string, or array</dd>
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="identity"></a>
+
+<hr>
+
+<h2>identity</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">identity</font> (x)
+  x)
+</pre>
+
+<p>The 'identity' function is handy if a mapping function needs a '<nobr>do
+nothing</nobr>, just return the value' function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-subseq"></a>
+
+<hr>
+
+<h2>cl:subseq</h2>
+
+<hr>
+
+<p>XLISP already has a <a href="../reference/subseq.htm">subseq</a> function
+returning a subsequence of a string:</p>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<a href="../reference/subseq.htm">subseq</a> <i>string start</i> [<i>end</i>])</nobr></dt>
+<dd><i>string</i> - a string expression<br>
+<i>start</i> - the position of the first element, an integer<br>
+<i>end</i> - the position following last element, defaults to the end of the sequence<br>
+returns - the substring between <i>start</i> and <i>end</i></dd>
+</dl>
+
+</div></p>
+
+<p>The 'cl:subseq' function works like
+<a href="../reference/subseq.htm">subseq</a>, but returns subsequences of
+lists, strings, and arrays:</p>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(cl:<b>subseq</b> <i>sequence start</i> [<i>end</i>])</nobr></dt>
+<dd><i>sequence</i> - a list, string, or array<br>
+<i>start</i> - the position of the first element, an integer<br>
+<i>end</i> - the position following last element, defaults to the end of the sequence<br>
+returns - the subsequence in the same type as <i>sequence</i></dd>
+</dl>
+
+</div></p>
+
+<p>The 'cl:subseq' function creates a sequence that is a copy of the
+subsequence of 'sequence' bounded by 'start' and 'end'. 'cl:subseq' always
+allocates a new sequence for a result, it never shares storage with an old
+sequence. <nobr>The resulting</nobr> subsequence is always of the same type
+as the input sequence.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:subseq</font> (sequence start &amp;optional (end nil end-p))
+  (let ((type (type-of sequence)))
+    (if (not (member type '(nil cons string array)))
+        (error <font color="#880000">"not a sequence"</font> sequence)
+        (let* ((length (length sequence))
+               (end (or end length)))
+          (cond ((or (&gt; start length) (minusp start))
+                 (error <font color="#880000">"start index out of bounds"</font> start))
+                ((and end-p (or (&gt; end length) (minusp end)))
+                 (error <font color="#880000">"end index out of bounds"</font> end))
+                ((&gt; start end)
+                 (error (format nil <font color="#880000">"bad range start ~a end ~a"</font> start end)))
+                (t (case type
+                     (nil    nil)
+                     (cons   (if (not (consp (last sequence)))
+                                 <font color="#008844">;; a dotted list is not a sequence</font>
+                                 (error <font color="#880000">"not a proper sequence"</font> sequence)
+                                 (if (&gt;= start end)
+                                     nil
+                                     (nthcdr start
+                                             (if end-p
+                                                 (reverse
+                                                   (nthcdr (- length end)
+                                                     (reverse sequence)))
+                                                 sequence)))))
+                     (string (subseq sequence start end))
+                     (array  (if (&gt;= start end)
+                                 (make-array 0)
+                                 (let ((new-array (make-array (- end start))))
+                                   (do ((n-index 0 (1+ n-index))
+                                        (s-index start (1+ s-index)))
+                                       ((&gt;= s-index end))
+                                     (setf (aref new-array n-index)
+                                           (aref sequence s-index)))
+                                   new-array))))))))))
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+(cl:subseq "012345" 2)          =&gt; "2345"
+(cl:subseq "012345" 3 5)        =&gt; "34"
+
+(cl:subseq '(0 1 2 3 4 5) 2)    =&gt; (2 3 4 5)
+(cl:subseq '(0 1 2 3 4 5) 3 5)  =&gt; (3 4)
+
+(cl:subseq #(0 1 2 3 4 5) 2)    =&gt; #(2 3 4 5)
+(cl:subseq #(0 1 2 3 4 5) 3 5)  =&gt; #(3 4)
+</pre>
+
+<p>In XLISP, neither <a href="../reference/subseq.htm">subseq</a> nor
+'cl:subseq' can be used as arguments to
+<a href="../reference/setf.htm">setf</a>.
+<nobr>See <a href="#cl-replace">cl:replace</a></nobr> below how to replace
+subsequences.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-replace"></a>
+
+<hr>
+
+<h2>cl:replace</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(cl:<b>replace</b> <i>sequence1 sequence2</i> &amp;key <i>start1 end1 start2 end2</i>)</nobr></dt>
+<dd><i>sequenceN</i> - a list, string, or array<br>
+<i>startN</i> - the position of the first element in <i>sequenceN</i>, an integer<br>
+<i>endN</i> - the position following last element in <i>sequenceN</i>, defaults to the end of <i>sequenceN</i><br>
+returns - the subsequence in the same type as <i>sequence</i></dd>
+</dl>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<h2>map</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+
+<dt><nobr><b>map</b> <i>result-type function</i> <i>sequence-1</i> [<i>sequence-2</i> ...]</nobr></dt>
+<dd><i>result-type</i> - list, string, or array<br>
+<i>function</i> - a function, applied to each element of each sequenceN<br>
+<i>sequenceN</i> - a list, string, or array<br>
+returns - a sequence where each element is the result of applying the function to each element of each sequenceN</dd>
+</dl>
+
+<dl>
+
+</div></p>
+
+<p>The 'sequence:string' function can handle lists and arrays containing not
+only characters but also strings, because XLISP Unicode characters are
+represented as strings.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">sequence:string</font> (sequence)
+  (if (stringp sequence)
+      sequence
+      (let ((result <font color="#880000">""</font>))
+        (flet ((strcat-element (element)
+                 (let ((string (cond ((stringp element) element)
+                                     ((characterp element) (string element))
+                                     (t (error <font color="#880000">"not a character or string"</font>
+                                               element)))))
+                   (setq result (strcat result string)))))
+          (case (type-of sequence)
+            (array  (let ((end (length sequence)))
+                      (dotimes (index end)
+                        (if (eq (aref sequence index) '*unbound*)
+                            (error <font color="#880000">"not a character or string"</font> '*unbound*)
+                            (strcat-element (aref sequence index))))))
+            (cons   (let ((end (length sequence)))
+                      (if (not (consp (last sequence)))
+                          (error <font color="#880000">"not a proper sequence"</font> sequence)
+                          (dotimes (index end)
+                            (if (eq (nth index sequence) '*unbound*)
+                                (error <font color="#880000">"not a character or string"</font> '*unbound*)
+                                (strcat-element (nth index sequence)))))))
+            (nil    nil)
+            (t      (error <font color="#880000">"not a sequence"</font> sequence)))
+          result))))
+
+(defun <font color="#0000CC">list-to-string</font> (list)
+  (let ((string ""))
+    (dolist (element list string)
+      (setq string (strcat string (if (consp element)
+                                      (list-to-string element)
+                                      (format nil "~a" element)))))))
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">sequence:vector</font> (sequence)
+  (if (not (boundp 'sequence))
+      (error <font color="#880000">"not a sequence"</font> '*unbound*)
+      (let ((type (type-of sequence)))
+        (if (not (member type '(array cons nil string)))
+            (error <font color="#880000">"not a sequence"</font> sequence)
+            (let* ((end (length sequence))
+                   (result (make-array end)))
+              (unless (zerop end)
+                (case type
+                  (array  (dotimes (index end)
+                            (setf (aref result index)
+                                  (if (eq (aref sequence index) '*unbound*)
+                                      '*unbound*
+                                      (aref sequence index)))))
+                  (cons   (if (not (consp (last sequence)))
+                              (error <font color="#880000">"not a proper sequence"</font> sequence)
+                              (dotimes (index end)
+                                (setf (aref result index)
+                                      (if (eq (nth index sequence) '*unbound*)
+                                          '*unbound*
+                                          (nth index sequence))))))
+                  (string (dotimes (index end)
+                            (setf (aref result index)
+                                  (char sequence index))))))
+              result)))))
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">sequence:array</font> (sequence)
+  (let ((type (type-of sequence)))
+    (if (not (member type '(array cons nil string)))
+        (error <font color="#880000">"not a sequence"</font> sequence)
+        (let* ((end (length sequence))
+               (result (make-array end)))
+          (if (zerop end)
+              result
+              (labels ((array-element (element index)
+                         (setf (aref result index)
+                               (if (or (consp element) (arrayp element))
+                                   (sequence:array element)
+                                   element))))
+                (case type
+                  (array  (dotimes (index end)
+                            (if (eq (aref sequence index) '*unbound*)
+                                (setf (aref result index) '*unbound*)
+                                (array-element (aref sequence index) index))))
+                  (cons   (if (not (consp (last sequence)))
+                              (error <font color="#880000">"not a proper sequence"</font> sequence)
+                              (dotimes (index end)
+                                (if (eq (nth index sequence) '*unbound*)
+                                    (setf (aref result index) '*unbound*)
+                                    (array-element (nth index sequence) index)))))
+                  (string (dotimes (index end)
+                            (setf (aref result index)
+                                  (char sequence index)))))
+                result))))))
+
+
+(defun <font color="#0000CC">list-to-array</font> (list)
+  (let* ((end (length list))
+         (array (make-array end)))
+    (dotimes (index end array)
+      (let ((element (nth index list)))
+        (setf (aref array index) (if (consp element)
+                                     (list-to-array element)
+                                     element))))))
+
+(defun <font color="#0000CC">list-from-input</font> (input)
+  (let (result)
+    (dolist (element input)  <font color="#008844">; input is always a list</font>
+      (format t ";; ~s ~s~%" element (type-of element))
+      (case (type-of element)
+        (nil    (push element result))
+        (cons   (if (consp (last element))
+                    (push element result)
+                    (error <font color="#880000">"not a proper list"</font> element)))
+        (array  (let (local (end (length element)))
+                  (dotimes (index end)
+                    (push (aref element index) local))
+                  (push (reverse local) result)))
+        (string (let (local (end (length element)))
+                  (dotimes (index end)
+                    (push (char element index) local))
+                  (push (reverse local) result)))
+        (t      (error <font color="#880000">"not a sequence"</font> element))))
+    (reverse result)))
+
+(defun <font color="#0000CC">list-from-input*</font> (input &optional recursion-p)
+  (let (result)
+    (labels ((test (element)
+               (if (member (type-of element) '(array cons string))
+                   (list-from-input* element t)
+                   (if (or recursion-p (null element))
+                       element
+                       (error <font color="#880000">"not a sequence"</font> element)))))
+      (format t ";; ~s~%" input)
+      (case (type-of input)
+        (nil     (push input result))
+        (cons    (if (consp (last input))
+                     (dolist (element input)
+                       (push (test element) result))
+                     (error <font color="#880000">"not a proper list"</font> input)))
+        (array   (let ((end (length input)))
+                   (dotimes (index end)
+                     (push (test (aref input index)) result))))
+        (string  (let ((end (length input)))
+                   (dotimes (index end)
+                     (push (test (char input index)) result))))
+        (t       (error <font color="#880000">"not a sequence"</font> input)))
+      (reverse result))))
+
+(defun <font color="#0000CC">map</font> (result-type function &amp;rest sequences)
+  (if (not (member result-type '(list string array)))
+      (error <font color="#880000">"invalid result type"</font> result-type)
+      (let* ((input-list (list-from-input sequences))
+             (result (if function
+                         (apply #'mapcar (cons function input-list))
+                         (if (rest sequences)
+                             input-list
+                             (first input-list)))))
+        (case result-type
+          (list   result)
+          (string (list-to-string result))
+          (array  (list-to-array result))))))
+
+(defun <font color="#0000CC">mapcar*</font> (function &amp;rest lists)
+  (unless (or (null lists)
+              (dolist (list lists nil)
+                (and (null list) (return t))))
+    (let ((end (length lists))
+          (result nil))
+      (do ((stop nil) (recurse t t)) (stop)
+        (let (local)
+          (dotimes (index end)
+            (let ((first (first (nth index lists)))
+                  (rest  (rest  (nth index lists))))
+              (push first local)
+              (unless (consp first) (setq recurse nil))
+              (setf (nth index lists) rest)
+              (when (null rest) (setq stop t))))
+          (setq local (reverse local))
+          (format t ";; local: ~a~%" local)
+          (format t ";; lists: ~a~%" lists)
+          (format t ";; recurse: ~a~%" recurse)
+          (if recurse
+              (push (apply #'mapcar* (cons function local)) result)
+              (push (apply function local) result))))
+      (reverse result))))
+
+(defun <font color="#0000CC">map*</font> (result-type function &amp;rest sequences)
+  (if (not (member result-type '(list string array)))
+      (error <font color="#880000">"invalid result type"</font> result-type)
+      (let* ((input-list (list-from-input* sequences))
+             (result (if function
+                         (apply #'mapcar* (cons function input-list))
+                         (if (rest sequences)
+                             input-list
+                             (first input-list)))))
+        (format t ";; ~s~%" input-list)
+        (case result-type
+          (list   result)
+          (string (list-to-string result))
+          (array  (list-to-array result))))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<dt><nobr><b>find</b> <i>item sequence</i> &amp;key <i>from-end test test-not start end key</i> &rArr; <i>element</i></nobr></dt>
+<dt><nobr><b>find-if</b> predicate sequence &amp;key from-end start end key &rArr; element</nobr></dt>
+<dt><nobr><b>find-if-not</b> predicate sequence &amp;key from-end start end key &rArr; element</nobr></dt>
+
+<dd><p>Search for an element of the sequence bounded by start and end that
+satisfies the predicate or that satisfies the test or test-not, as
+appropriate.</p></dd>
+
+<dt><nobr><b>count</b> item sequence &amp;key from-end start end key test test-not &rArr; n</nobr></dt>
+<dt><nobr><b>count-if</b> predicate sequence &amp;key from-end start end key &rArr; n</nobr></dt>
+<dt><nobr><b>count-if-not</b> predicate sequence &amp;key from-end start end key &rArr; n</nobr></dt>
+
+<dd><p>Count and return the number of elements in the sequence bounded by
+start and end that satisfy the test. </p></dd>
+
+<dt><b>position</b> item sequence &amp;key from-end test test-not start end key &rArr; position</dt>
+<dt><b>position-if</b> predicate sequence &amp;key from-end start end key &rArr; position</dt>
+<dt><b>position-if-not</b> predicate sequence &amp;key from-end start end key &rArr; position</dt>
+
+<dd><p>Search sequence for an element that satisfies the test. The position
+returned is the index within sequence of the leftmost (if from-end is true)
+or of the rightmost (if from-end is false) element that satisfies the test;
+otherwise nil is returned. The index returned is relative to the left-hand
+end of the entire sequence, regardless of the value of start, end, or
+from-end.</p></dd>
+
+</dl>
+
+<pre class="example">
+(defun <font color="#0000CC">list-find</font> (element list &amp;key from-end test test-not start end)
+  (when from-end (setq list (reverse-list)))
+  (first (cond (test (member element list :test test))
+               (test-not (member element list :test-not test-not))
+               (t (member element list)))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

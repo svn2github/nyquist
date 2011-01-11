@@ -1,0 +1,79 @@
+<html><head><title>XLISP lower-case-p</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>lower-case-p</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(lower-case-p <i>char</i>)</dt>
+<dd><i>char</i> - a character expression<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a>
+if the character is lower case,
+<a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'lower-case-p' predicate function checks if the 'char' expression
+is a lower case character. If 'char' is lower case a
+<a href="t.htm">&nbsp;T&nbsp;</a> is returned,
+otherwise a
+<a href="nil.htm">NIL</a> is returned.
+Lower case characters are 'a'
+[<a href="../misc/ascii-table.htm">ASCII</a> decimal value 97]
+through 'z'
+[<a href="../misc/ascii-table.htm">ASCII</a> decimal value 122].</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(lower-case-p #\a)   <font color="#008844">; returns T</font>
+(lower-case-p #\A)   <font color="#008844">; returns NIL</font>
+(lower-case-p #\1)   <font color="#008844">; returns NIL</font>
+(lower-case-p #\[)   <font color="#008844">; returns NIL</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-026.htm#lower-case-p">lower-case-p</a>
+predicate function form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

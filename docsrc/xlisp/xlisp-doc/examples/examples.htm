@@ -1,0 +1,211 @@
+<html><head><title>XLISP Examples</title></head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+Examples |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>XLISP Examples</h1>
+
+<hr>
+
+<p><b>Nyquist/XLISP</b></p>
+
+<ul>
+<li><nobr><a href="lists.htm">Lists</a></nobr></li>
+<ul>
+<li><nobr>print-cons - print lists as dotted conses</nobr></li>
+<li><nobr>dolist* - a <a href="../reference/dolist.htm">dolist</a> version that can iterate dotted lists</nobr></li>
+</ul>
+<li><nobr><a href="arrays.htm">Arrays</a></nobr></li>
+<ul>
+<li><nobr>make-array* - create multi-dimensional arrays</nobr></li>
+<li><nobr>aref* - access multi-dimensional arrays</nobr></li>
+</ul>
+<li><nobr><a href="circular-lists.htm">Circular Access</a></nobr></li>
+<ul>
+<li><nobr>c-nth - circular list accessor</nobr></li>
+<li><nobr>c-aref - circular array accessor</nobr></li>
+</ul>
+<li><nobr><a href="hash-tables.htm">Hash Tables</a></nobr></li>
+<ul>
+<li><nobr>make-hash-table - create a hash-table</nobr></li>
+<li><nobr>puthash - store a key/value pair in a hash-table</nobr></li>
+<li><nobr>gethash - get a value from a hash-table by using a key</nobr></li>
+<li><nobr>remhash - remove a key/value pair from a hash-table</nobr></li>
+<li><nobr>clrhash - remove all key/value pairs from a hash-table</nobr></li>
+<li><nobr>hash-table-p - is this a hash-table?</nobr></li>
+<li><nobr>hash-table-size - get the number of buckets</nobr></li>
+<li><nobr>hash-table count - get the number of key/value pairs</nobr></li>
+<li><nobr>hash-table-test - get the :test argument given to to make-hash-table</nobr></li>
+<li><nobr>print-hash-table - print a hash-table in human-readable form</nobr></li>
+</ul>
+<li><nobr><a href="strings.htm">Strings and Characters</a></nobr></li>
+<ul>
+<li><nobr>string* - make a string out of everything</nobr></li>
+<li><nobr><a href="posix-chars.htm">POSIX Character Classes</a></nobr></li>
+</ul>
+<li><nobr><a href="sequences.htm">Sequences</a> - lists, strings, and arrays</nobr></li>
+<li><nobr><a href="predicates.htm">Predicates and Comparison</a></nobr></li>
+<li><nobr><a href="files.htm">Files and Directories</a></nobr></li>
+<li><nobr><a href="math.htm">Numbers</a></nobr></li>
+<ul>
+<li><nobr>Non-decimal Number Formats</nobr></li>
+<ul>
+<li><nobr><a href="binary.htm">Binary Integer Numbers</a></nobr></li>
+<li><nobr><a href="octal.htm">Octal Integer Numbers</a></nobr></li>
+<li><nobr><a href="hexadecimal.htm">Hexadecimal Integer Numbers</a></nobr></li>
+</ul>
+<li><nobr>divide-float - divide numbers as floating-point numbers</nobr></li>
+<li><nobr><a href="xlisp/ceiling.htm">ceiling</a> - truncate a number toward positive infinity</nobr></li>
+<li><nobr><a href="xlisp/floor.htm">floor</a> - truncate a number toward negative infinity</nobr></li>
+<li><nobr><a href="xlisp/ash.htm">ash</a> - arithmetic bit-shift left or right</nobr></li>
+<li><nobr><a href="xlisp/bsh.htm">bsh</a> - binary bit-shift left or right</nobr></li>
+<li><nobr>csh - circular bit-shift left or right</nobr></li>
+</ul>
+<li><nobr><a href="reader.htm">Reader</a></nobr></li>
+<ul>
+<li><nobr>read-from-string</nobr></li>
+<li><nobr>*readtable*</nobr></li>
+<ul>
+<li><nobr>print-readtable - print the XLISP *readtable* in human-readable form</nobr></li>
+<li><nobr>get-macro-character</nobr></li>
+<li><nobr>set-macro-character</nobr></li>
+</ul>
+</ul>
+</ul>
+
+<ul>
+<li><nobr><a href="apropos.htm">Apropos</a></nobr></li>
+<li><nobr><a href="macros.htm">Macro Programming</a></nobr></li>
+<li><nobr><a href="evaluation.htm">Evaluation</a></nobr></li>
+<li><nobr><a href="environment.htm">Environment</a></nobr></li>
+<li><nobr><a href="../objects/advanced-objects.htm">Advanced XLISP Objects</a></nobr></li>
+</ul>
+
+<ul>
+<li><nobr><a href="reader.htm">XLISP Reader</a></nobr></li>
+</ul>
+
+<p><b>Common Lisp</b> - written in Nyquist/XLISP</p>
+
+<ul>
+<li><nobr><a href="common-lisp.htm">Where is the Nyquist Common Lisp Library?</a></nobr></li>
+</ul>
+
+<ul>
+<li><nobr>Data and Control Flow</nobr></li>
+<ul>
+<li><nobr>Comparison</nobr></li>
+<ul>
+<li><nobr><a href="../reference/eq.htm">eq</a></nobr> - [Function] - test if arguments are identical</li>
+<li><nobr><a href="../reference/eql.htm">eql</a> - [Function] - test if arguments are identical or same integer value</nobr></li>
+<li><nobr><a href="../reference/equal.htm">equal</a> - [Function] - test if arguments are structurally equivalent</nobr></li>
+<li><nobr><a href="common-lisp/equalp.htm">cl:equalp</a> - [Function] - test arguments with 'equality' functions</nobr></li>
+</ul>
+<li><nobr><a href="common-lisp/multiple-values.htm">Multiple Values</a></nobr></li>
+<ul>
+<li><nobr>XLISP helpers</nobr></li>
+<ul>
+<li><nobr><a href="common-lisp/global-multiple-values.htm">cl:*multiple-values*</a> - [Variable] - signals if a function has returned multiple values</nobr></li>
+<li><nobr><a href="common-lisp/debug-mv.htm">cl:debug:mv</a> - [Function] - debug multiple value expressions</nobr></li>
+</ul>
+<li><nobr>Returning Multiple Values</nobr></li>
+<ul>
+<li><nobr><a href="common-lisp/values.htm">cl:values</a> - [Function] - return results from evaluated arguments as multiple values</nobr></li>
+<li><nobr><a href="common-lisp/values-list.htm">cl:values-list</a> - [Function] - return multiple values from a list unevaluated</nobr></li>
+</ul>
+<li><nobr>Working with Multiple Values</nobr></li>
+<ul>
+<li><nobr><a href="common-lisp/multiple-value-list.htm">cl:multiple-value-list</a> - [Macro] - evaluate an expression and return all values in a list</nobr></li>
+<li><nobr><a href="common-lisp/multiple-value-bind.htm">cl:multiple-value-bind</a> - [Macro] - bind multiple values to multiple <a href="../reference/let.htm">let</a> variables</nobr></li>
+<li><nobr><a href="common-lisp/multiple-value-setq.htm">cl:multiple-value-setq</a> - [Macro] - assign multiple values to multiple variables using <a href="../reference/setq.htm">setq</a></nobr></li>
+<li><nobr><a href="common-lisp/multiple-value-prog1.htm">cl:multiple-value-prog1</a> - [Macro] - eveluate multiple expressions, return the values of the first expression</nobr></li>
+<li><nobr><a href="common-lisp/multiple-value-call.htm">cl:multiple-value-call</a> - [Macro] - apply a function to multiple values collected in a list</nobr></li>
+</ul>
+</ul>
+</ul>
+<li><nobr><a href="common-lisp/numbers.htm">Numbers</a></nobr></li>
+<ul>
+<li><nobr><a href="common-lisp/rounding-and-truncation.htm">Rounding and Truncation</a></nobr></li>
+<ul>
+<li><nobr><a href="common-lisp/round.htm">cl:round</a> - round towards the next integer</nobr></li>
+<li><nobr><a href="common-lisp/truncate.htm">cl:truncate</a> - truncate towards zero</nobr></li>
+<li><nobr><a href="common-lisp/ceiling.htm">cl:ceiling</a> - truncate towards positive infinity</nobr></li>
+<li><nobr><a href="common-lisp/floor.htm">cl:floor</a> - truncate towards negative infinity</nobr></li>
+</ul>
+<li><nobr><a href="common-lisp/remainder-and-modulus.htm">Remainder and Modulus</a></nobr></li>
+<ul>
+<li><nobr><a href="common-lisp/rem.htm">cl:rem</a></nobr></li>
+<li><nobr><a href="common-lisp/mod.htm">cl:mod</a></nobr></li>
+</ul>
+<li><nobr>Exponentiation, Logarithms, and Roots</nobr></li>
+<ul>
+<li><nobr><a href="common-lisp/exp.htm">cl:exp</a> - compute 'e' to the power of 'x'</nobr></li>
+<li><nobr><a href="common-lisp/expt.htm">cl:expt</a> - compute 'x' to the power of 'y'</nobr></li>
+<li><nobr><a href="common-lisp/log.htm">cl:log</a> - logarithms of arbitrary base</nobr></li>
+<li><nobr><a href="common-lisp/sqrt.htm">cl:sqrt</a> - sqare root or arbitrary numbers</nobr></li>
+</ul>
+</ul>
+<li><nobr>Conses</nobr></li>
+<ul>
+<li><nobr>List Membership</nobr></li>
+<ul>
+<li><nobr>cl:member - [Function] - test for membership in lists and sub-elements</nobr></li>
+<li><nobr>cl:member-if - [Function] - search for the first element matching a predicate</nobr></li>
+<li><nobr>cl:member-if-not - [Function] - search for the first element not matching a predicate</nobr></li>
+</ul>
+<li><nobr>Non-destructive Removal</nobr></li>
+<ul>
+<li><nobr>cl:remove</nobr></li>
+<li><nobr>cl:remove-if</nobr></li>
+<li><nobr>cl:remove-if-not</nobr></li>
+</ul>
+<li><nobr>Destructive Removal = Deletion</nobr></li>
+<ul>
+<li><nobr>cl:delete</nobr></li>
+<li><nobr>cl:delete-if</nobr></li>
+<li><nobr>cl:delete-if-not</nobr></li>
+</ul>
+<li><nobr>Lists as Sets</nobr></li>
+<ul>
+<li><nobr>cl:pushnew - [Macro] -</nobr></li>
+<li><nobr>cl:union - [Function]</nobr></li>
+<li><nobr>cl:intersection - [Function]</nobr></li>
+<li><nobr>cl:set-difference - [Function]</nobr></li>
+<li><nobr>cl:set-exclusive-or - [Function]</nobr></li>
+<li><nobr>cl:subsetp - [Function]</nobr></li>
+</ul>
+</ul>
+<li><nobr>Sequences</nobr></li>
+<ul>
+<li><nobr>Subsequences</nobr></li>
+<ul>
+<li><nobr>cl:subseq - subsequences of lists, strings, or arrays</nobr></li>
+</ul>
+<li><nobr>Properties of elements in sequences:</nobr></li>
+<ul>
+<li><nobr>cl:find</nobr></li>
+<li><nobr>cl:count</nobr></li>
+<li><nobr>cl:position</nobr></li>
+</ul>
+<li><nobr>Predicates for testing sequences:</nobr></li>
+<ul>
+<li><nobr>cl:every</nobr></li>
+<li><nobr>cl:some</nobr></li>
+<li><nobr>cl:notevery</nobr></li>
+<li><nobr>cl:notany</nobr></li>
+</ul>
+<li><nobr>Functions to modify sequences:</nobr></li>
+<ul>
+<li><nobr>cl:map</nobr></li>
+</ul>
+</ul>
+</ul>
+
+</body></html>

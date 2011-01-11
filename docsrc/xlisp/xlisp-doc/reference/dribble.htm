@@ -1,0 +1,82 @@
+<html><head><title>XLISP dribble</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>dribble</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlisp.c, xlsys.c, msstuff.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(dribble [<i>file-str</i>])</dt>
+<dd><i>file-str</i> - a string expression for a file name<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the transcript
+is opened, <a href="nil.htm">NIL</a> if it is closed</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'dribble' function, when called with a 'file-str' argument, opens the
+specified file and records a transcript of the XLISP session. When 'dribble'
+is called with no 'file-str' argument, it closes the current transcript file
+[if any]. 'dribble' will return
+<a href="t.htm">&nbsp;T&nbsp;</a> if the specified 'file-str'
+was successfully opened. It will return a
+<a href="nil.htm">NIL</a> if the 'file-str' was not opened
+successfully or if 'dribble' was evaluated to close a transcript.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(dribble "my-trans-file")  <font color="#008844">; open file "my-trans-file"</font>
+                           <font color="#008844">;   for a session transcript</font>
+(+ 2 2)                                 
+(dribble)                  <font color="#008844">; close the transcript</font>
+</pre>
+
+<p><b>Note:</b> It is also possible to start a transcript when invoking
+XLISP. To start XLISP with a transcript file of 'myfile' type in
+<nobr>'xlisp -tmyfile'.</nobr> <nobr>[I haven't</nobr> tested this with
+Nyquist.]</p>
+
+<p>See the
+<a href="../manual/xlisp-man-031.htm#dribble">dribble</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

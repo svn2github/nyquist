@@ -1,0 +1,86 @@
+<html><head><title>XLISP char-code</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>char-code</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>char-code</b> <i>char</i>)</dt>
+<dd><i>char</i> - a character expression<br>
+returns - the decimal <a href="../misc/ascii-table.htm">ASCII</a>
+value as an integer</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'char-code' function returns the decimal
+<a href="../misc/ascii-table.htm">ASCII</a> value of the 'char'
+expression.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(char-code #\0)              =&gt; 48
+(char-code #\A)              =&gt; 65
+(char-code #\a)              =&gt; 97
+(char-code #\[)              =&gt; 91
+(char-code #\newline)        =&gt; 10
+(char-code (code-char 127))  =&gt; 127
+(char-code (int-char 255))   =&gt; 255
+</pre>
+
+<p><b>Note:</b> In <nobr>Nyquist/XLISP</nobr>, '<nobr>char-code</nobr>' and
+<a href="char-int.htm">char-int</a> are two different functions, but behave
+exactly the same <nobr>[Nyquist 3.03</nobr>, <nobr>December
+2010</nobr>].</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#character-functions">Character Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

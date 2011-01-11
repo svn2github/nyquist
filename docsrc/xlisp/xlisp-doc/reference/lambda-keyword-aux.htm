@@ -1,0 +1,116 @@
+<html><head><title>XLISP &amp;aux</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>&amp;aux</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>keyword</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xleval.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><b>&amp;aux</b> [<i>aux-var</i> | (<i>aux-var aux-value</i>)] ...</dt>
+<dd><i>aux-var</i> - auxiliary variable<br>
+<i>aux-value</i> - auxiliary variable initialization</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p> In XLISP, there are several times that you define a formal argument list
+for a body of code [like <a href="defun.htm">defun</a>,
+<a href="defmacro.htm">defmacro</a>,
+<a href="keyword-answer.htm">:answer</a> and <a
+href="lambda.htm">lambda</a>]. <nobr>The 'aux-var'</nobr> variables are a
+mechanism for you to define variables local to the function or operation
+definition. <nobr>If there</nobr> is an optional <nobr>'aux-value'</nobr>,
+they will be set to that value on entry to the body of code. Otherwise, they
+are initialized <nobr>to <a href="nil.htm">NIL</a></nobr>. <nobr>At
+the</nobr> end of the function or operation execution, these local symbols
+and their values are removed.</p>
+
+<h2>Examples</h2>
+
+<p>A function '<nobr>my-add</nobr>' with <nobr>one required</nobr> argument
+'num1', <nobr>one <a href="lambda-keyword-rest.htm">&amp;rest</a></nobr>
+argument <nobr>'num-list'</nobr>, and <nobr>one &amp;aux</nobr>
+<nobr>variable 'sum'</nobr>:</p>
+
+<pre class="example">
+(defun my-add (num1 &amp;rest num-list &amp;aux sum)
+  (setq sum num1)          <font color="#008844">; initialize SUM</font>
+  (dolist (i num-list)     <font color="#008844">; loop through the num-list</font>
+    (setq sum (+ sum i)))  <font color="#008844">; add each number to SUM</font>
+  sum)                     <font color="#008844">; return SUM when finished</font>
+
+(my-add 1 2 3 4)    =&gt; 10
+(my-add 5 5 5 5 5)  =&gt; 25
+</pre>
+
+<p>See <nobr><a href="addition.htm">&nbsp;+&nbsp;</a></nobr>,
+<a href="defun.htm">defun</a>, <a href="dolist.htm">dolist</a>,
+<a href="lambda-keyword-rest.htm">&amp;rest</a>,
+<a href="setq.htm">setq</a>.</p>
+
+<p>A function '<nobr>more-keys</nobr>' with <nobr>one required</nobr>
+<nobr>argument 'a'</nobr> and <nobr>three &amp;aux</nobr> variables <nobr>'b'
+[initialized</nobr> <nobr>to <a href="nil.htm">NIL</a>]</nobr>, <nobr>'c'
+[initialized</nobr> <nobr>to 99]</nobr>, and <nobr>'d' [initialized</nobr>
+<nobr>to <a href="t.htm">&nbsp;T&nbsp;</a>]</nobr>:</p>
+
+<pre class="example">
+(defun more-keys (a &amp;aux b (c 99) (d t))
+  (format t "a=~a b=~a c=~a d=~a~%" a b c d))
+
+&gt; (more-keys "hi")
+a=hi b=NIL c=99 d=T
+NIL
+</pre>
+
+<p>See <a href="defun.htm">defun</a>, <a href="format.htm">format</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr><a href="../manual/xlisp.htm#auxiliary-variables">Auxiliary Variables</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

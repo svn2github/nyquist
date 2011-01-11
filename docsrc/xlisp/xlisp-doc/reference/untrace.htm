@@ -1,0 +1,86 @@
+<html><head><title>XLISP untrace</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>untrace</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(untrace function ... )</dt>
+<dd><i>function</i> - a function name<br>
+returns - the trace list</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'untrace' function removes 'function' from the current list of traced
+functions. 'untrace' returns a list containing the current set of functions
+that are being traced. If the 'function' does currently exist or is
+currently be traced, there will be no error reported. If there are no
+functions being traced, a <a href="nil.htm">NIL</a> is
+returned. A list of all currently traced functions can be found in the
+<a href="global-tracelist.htm">*tracelist*</a> system variable.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun foo (x) (print (car x)))  <font color="#008844">; define FOO</font>
+(trace 'foo)                     <font color="#008844">; returns (FOO)</font>
+
+(foo '(a))                       <font color="#008844">; Entering: FOO, Argument list: ((A))</font>
+                                 <font color="#008844">; A</font>
+                                 <font color="#008844">; Exiting: FOO, Value: A</font>
+                                 <font color="#008844">; returns A</font>
+
+(untrace 'foo)                   <font color="#008844">; returns NIL</font>
+(untrace 'glip)                  <font color="#008844">; returns NIL</font>
+
+(foo '(a))                       <font color="#008844">; prints A  returns A</font>
+</pre>
+
+<p><b>Common Lisp:</b> The XLISP 'untrace' function does not support any
+options, which Common Lisp allows.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-022.htm#untrace">untrace</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

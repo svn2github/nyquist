@@ -1,0 +1,162 @@
+<html><head><title>XLISP load</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>load</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlsys.c, xlread.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(load <i>file</i> [:verbose <i>v-flag</i>] [:print <i>p-flag</i>]))</dt>
+<dd><i>file</i> - a string expression or symbol<br>
+<i>v-flag</i> - an optional key-word expression, default is
+<a href="t.htm">&nbsp;T&nbsp;</a><br>
+<i>p-flag</i> - an optional key-word expression, default is
+<a href="nil.htm">NIL</a><br>
+returns - the filename</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'load' function opens the 'file', reads and evaluates all the forms
+within the 'file'. 'file' may be a string expression or a symbol. When
+'file' is a string, you may specify a complete file location or extensions
+like &quot;/usr/local/bin/myfile.lsp&quot; or &quot;A:\LISP\TIM.LSP&quot;.
+If 'file' is a string and includes a file type or an extension [like
+&quot;.lsp&quot;], then 'load' accesses the specified file. If there is no
+extension on 'file', it will add &quot;.lsp&quot;. If the ':verbose' keyword
+is present and 'v-flag' is
+<nobr>non-<a href="nil.htm">NIL</a> ,</nobr> a load message of
+the form:</p>
+
+<pre class="example">
+; loading "xxxx.lsp"
+</pre>
+
+<p>will be printed to <a href="global-standard-output.htm">*standard-output*</a>.
+If the ':print' keyword is present and 'p-flag' is
+<nobr>non-<a href="nil.htm">NIL</a> ,</nobr> the resulting value
+of each top-level form in 'file' will be printed to
+<a href="global-standard-output.htm">*standard-output*</a>. If the file load was
+successful, then <a href="t.htm">&nbsp;T&nbsp;</a> is returned
+as the result. If the file load was not successful, a
+<a href="nil.htm">NIL</a> is returned.</p>
+
+<p><b>Note:</b> in Nyquist, the XLISP 'load' function first tries to load a
+file from the current directory. <nobr>A '.lsp'</nobr> extension is added if
+there is not already an alphanumeric extension following a period. <nobr>If
+that</nobr> fails, XLISP searches the path, which is obtained from the
+XLISPPATH environment variable in Unix and
+HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH under Win32.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(load 'gloop)                     <font color="#008844">; prints  ; loading "GLOOP.lsp"</font>
+                                  <font color="#008844">; returns NIL   there is no file</font>
+
+(defun foo (x) (print x))         <font color="#008844">; create a function</font>
+(savefun foo)                     <font color="#008844">; create a file FOO.lsp</font>
+
+(load 'foo)                       <font color="#008844">; prints  ; loading "FOO.lsp"</font>
+                                  <font color="#008844">; returns T</font>
+
+(load 'foo :verbose NIL)          <font color="#008844">; no printing   returns T</font>
+
+(load 'foo :print T)              <font color="#008844">; prints  FOO   returns T</font>
+
+(load 'save :verbose T :print T)  <font color="#008844">; prints  ; loading "FOO.lsp"</font>
+                                  <font color="#008844">; prints  FOO   returns T</font>
+
+(load "foo")                      <font color="#008844">; prints  ; loading "foo.lsp"</font>
+                                  <font color="#008844">; returns NIL - didn't work</font>
+                                  <font color="#008844">;   because the file is "FOO.lsp"</font>
+
+(load "FOO")                      <font color="#008844">; prints  ; loading "FOO.lsp"</font>
+                                  <font color="#008844">; returns T - did work</font>
+
+(load "FOO.lsp")                  <font color="#008844">; prints  ; loading "FOO.lsp"</font>
+                                  <font color="#008844">; returns T - did work</font>
+</pre>
+
+<p><b>File names:</b> In the PC and DOS world, all file names and extensions
+[&quot;foo.bat&quot;] are automatically made uppercase. In using XLISP, this
+means you don't have to worry about whether the name is &quot;foo.bat&quot;,
+&quot;FOO.BAT&quot; or even &quot;FoO.bAt&quot;, they will all work.
+However, in other file systems [UNIX in particular], uppercase and lowercase
+do make a difference:</p>
+
+<p>This will create a file named FOO-FILE in UNIX, because XLISP uppercases
+its symbols:</p>
+
+<pre class="example">
+(open 'foo-file :direction :output)
+</pre>
+
+<p>This will create a file named 'foo-file' because UNIX doesn't
+uppercase its file names:</p>
+
+<pre class="example">
+(open "foo-file" :direction :output)
+</pre>
+
+<p>So, if you are having trouble with opening and accessing files, check to
+make sure the file name is in the proper case.</p>
+
+<p><b>Common Lisp:</b> Common Lisp has a 'load' function that is similar
+to XLISP's 'load'. The only difference is that Common Lisp uses an optional
+keyword parameter ':if-does-not-exist' which XLISP does not support.</p>
+
+<p><b>Nyquist:</b> in Nyquist, the XLISP 'load' function first tries to load
+a file from the current directory. A '.lsp' extension is added if there is
+not already an alphanumeric extension following a period. If that fails,
+XLISP searches the path, which is obtained from the XLISPPATH environment
+variable in Unix and HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH under
+Win32. [The Macintosh version has no search path.]</p>
+
+<p><b>Note:</b> In XLISP, the keyword parameters are order sensitive. If
+both ':verbose' and ':print' keywords are used, ':verbose' must come
+first.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-031.htm#load">load</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

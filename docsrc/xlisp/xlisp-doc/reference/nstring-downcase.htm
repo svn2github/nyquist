@@ -1,0 +1,82 @@
+<html><head><title>XLISP nstring-downcase</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>nstring-downcase</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(nstring-downcase <i>string</i> [{:start | :end} <i>offset</i>] ... )</dt>
+<dd><i>string</i> - a string expression<br>
+<i>offset</i> - an optional integer expression for a keyword<br>
+returns - the converted string, not a copy</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'nstring-downcase' function takes a string argument and makes it
+lower case. This function modifies the string or string variable itself, it
+does not just make a copy. The lower case string is returned.</p>
+
+<p> The keyword arguments allow for accessing substrings within 'string'.
+The keyword arguments require a keyword [':start' or ':end'] first and a
+single integer expression second. The ':start' keyword specifies the
+starting offset for the 'nstring-downcase' operation on 'string'. A value of
+0 starts the string at the beginning [no offset]. The ':end' keyword
+specifies the end offset for the operation on 'string'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(nstring-downcase "ABcd+-12&amp;[")                <font color="#008844">; returns "abcd+-&amp;["</font>
+(nstring-downcase "ABCDEFGH" :start 2 :end 4)  <font color="#008844">; returns "ABcdEFGH"</font>
+
+(setq mystr "ABcdEFgh")        <font color="#008844">; set up variable</font>
+(nstring-downcase mystr)       <font color="#008844">; returns "abcdefgh"</font>
+(print mystr)                  <font color="#008844">; prints  "abcdefgh"</font>
+                               <font color="#008844">; note that MYSTR is modified</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-025.htm#nstring-downcase">nstring-downcase</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

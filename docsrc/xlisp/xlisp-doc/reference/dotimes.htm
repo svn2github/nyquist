@@ -1,0 +1,101 @@
+<html><head><title>XLISP dotimes</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>dotimes</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(dotimes (<i>symbol end-expr</i> [<i>result</i>]) [<i>expr</i> ... ])</dt>
+<dd><i>symbol</i> - a symbol<br>
+<i>end-expr</i> - an integer expression<br>
+<i>result</i> - an optional expression for the returned result<br>
+<i>expr</i> - expressions comprising the body of the loop which may
+contain <a href="return.htm">return</a>s,
+<a href="go.htm">go</a>s or tags for
+<a href="go.htm">go</a><br>
+returns - the return value of the result expression or
+<a href="nil.htm">NIL</a> </dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'dotimes' special form is basically a 'for' looping construct that
+contains a loop 'symbol', an 'end-expr' to specify the final value for
+'symbol', an optional 'return' value and a block of code [expressions] to
+evaluate. The sequence of execution is:</p>
+
+
+<pre>
+  <i>symbol</i> := 0
+  while  <i>symbol</i> value is not equal to <i>end-expr</i> value
+    loop code execution
+    <i>symbol</i> := <i>symbol</i> + 1
+  end-while
+  return <i>result</i>
+</pre>
+
+<p>The main loop 'symbol' will take on successive values from zero to
+<nobr>('end-expr' - 1).</nobr> The 'dotimes' form will go through and create
+and initialize the 'symbol' to zero. After execution of the loop 'exprs',
+the 'symbol' value is incremented. This continues until the 'symbol' value
+is equal to 'end-expr'. The value of the 'result' expression is evaluated
+and returned. If no 'result' is specified,
+<a href="nil.htm">NIL</a> is returned. When the 'dotimes' is
+finished execution, the 'symbol' that was defined will no longer exist or
+retain its value. If the 'end-expr' is zero or less, then there will be no
+execution of the loop body's code.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(dotimes (i 4 "done") (princ i))  <font color="#008844">; prints 0123 returns "done"</font>
+(dotimes (i 4) (princ i))         <font color="#008844">; prints 0123 returns NIL</font>
+(dotimes (i 1) (princ i))         <font color="#008844">; prints 0    returns NIL</font>
+(dotimes (i 0) (princ i))         <font color="#008844">; returns NIL</font>
+(dotimes (i -9) (princ i))        <font color="#008844">; returns NIL</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-020.htm#dotimes">dotimes</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

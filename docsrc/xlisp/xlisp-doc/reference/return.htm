@@ -1,0 +1,93 @@
+<html><head><title>XLISP return</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>return</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(return [<i>expr</i>])</dt>
+<dd><i>expr</i> - an expression<br>
+returns - never returns</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'return' special form allows the return of an arbitrary value at
+arbitrary times within 'block' constructs like
+<nobr><a href="do.htm">do</a> ,</nobr>
+<nobr><a href="do-star.htm">do*</a> ,</nobr>
+<nobr><a href="dolist.htm">dolist</a> ,</nobr>
+<nobr><a href="dotimes.htm">dotimes</a> ,</nobr>
+<nobr><a href="loop.htm">loop</a> ,</nobr>
+<a href="prog.htm">prog</a> and
+<a href="prog-star.htm">prog*</a>. The 'expr' will be returned by the
+outer 'block' construct. A <a href="nil.htm">NIL</a> will be
+returned by the outer 'block' construct if there is no 'expr' specified.</p>
+
+<p>If 'return' is used without being within a valid 'block' construct, an
+error is generated:</p>
+
+<pre class="example">
+<font color="#AA0000">error: no target for RETURN</font>
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(prog (i)                              <font color="#008844">; PROG form</font>
+  (print i) (RETURN "foo") (print j))  <font color="#008844">; prints NIL  returns "foo"</font>
+
+(dotimes (i 10)
+  (if (eql i 5) (RETURN 20)
+                (princ i)))            <font color="#008844">; prints 01234  returns 20</font>
+
+(prog1 (print "hi") (RETURN "foo"))    <font color="#008844">; prints "hi"</font>
+                                       <font color="#008844">; error: no target for RETURN</font>
+
+(return 9)                             <font color="#008844">; error: no target for RETURN</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-021.htm#return">return</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

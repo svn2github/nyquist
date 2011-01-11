@@ -1,0 +1,117 @@
+<html><head><title>XLISP intern</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>intern</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(intern <i>name-str</i>)</dt>
+<dd><i>name-str</i> - a string expression<br>
+returns - the new symbol</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'intern' function takes a string name 'name-str' and creates a new
+interned symbol. What this means is that the symbol 'name-str' will be
+placed into the symbol hash table
+<a href="global-obarray.htm">*obarray*</a>. It's value will be unbound. It's
+property list will be <a href="nil.htm">NIL</a> [empty]. If the
+symbol already exists, no error or action is taken and the old values and
+property lists remain intact. The 'intern' function returns the symbol as
+its result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun lookin (sym)                  <font color="#008844">; create a function to</font>
+  (aref *obarray*                    <font color="#008844">;   look inside *OBARRAY* and</font>
+    (hash sym (length *obarray*))))  <font color="#008844">;   look for a specific symbol</font>
+                                     <font color="#008844">;   returns a list</font>
+
+(lookin "FINGERS")                   <font color="#008844">; see if "FINGERS" is a symbol</font>
+                                     <font color="#008844">;   returns (:START1) - it isn't</font>
+
+(intern "FINGERS")                   <font color="#008844">; intern "FINGERS" as a symbol</font>
+                                     <font color="#008844">;   returns FINGERS</font>
+
+(lookin "FINGERS")                   <font color="#008844">; returns (FINGERS :START1)</font>
+
+(print fingers)                      <font color="#008844">; error: unbound variable</font>
+                                     <font color="#008844">;   it exists, but has no value</font>
+
+(lookin "TOES")                      <font color="#008844">; returns NIL - doesn't exist</font>
+toes                                 <font color="#008844">; error: unbound variable</font>
+
+(lookin "TOES")                      <font color="#008844">; returns (TOES)</font>
+                                     <font color="#008844">;   the act of looking for a</font>
+                                     <font color="#008844">;   value or using a symbol</font>
+                                     <font color="#008844">;   causes it to be INTERNed</font>
+
+(lookin "KNEECAPS")                  <font color="#008844">; returns (MAX MAPLIST)</font>
+                                     <font color="#008844">;   KNEECAPS doesn't exist</font>
+
+(setq kneecaps 'a-bone)              <font color="#008844">; create symbol with a value</font>
+(lookin "KNEECAPS")                  <font color="#008844">; returns (KNEECAPS MAX MAPLIST)</font>
+</pre>
+
+<p><b>Note:</b> When you 'intern' a string symbol like &quot;fingers&quot;
+in lower case letters, this gets placed in the
+<a href="global-obarray.htm">*obarray*</a> symbol table as a lower case
+symbol. Note that this is different from doing an 'intern' on a string
+symbol &quot;FINGERS&quot; in upper case letters which will get placed in
+the <a href="global-obarray.htm">*obarray*</a> as a upper case symbol.
+&quot;fingers&quot; and &quot;FINGERS&quot; then are two different symbols
+in <a href="global-obarray.htm">*obarray*</a>. Remember also that normal
+symbols created by XLISP are automatically converted to upper case names.
+So, an intern of the lower case symbol name 'fingers and the upper case
+symbol name 'FINGERS will result in the effect that both symbol names get
+interned as the same upper-case symbol FINGERS.</p>
+
+<p><b>Common Lisp:</b> Common LISP allows an optional package
+specification, which XLISP does not support.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-013.htm#intern">intern</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

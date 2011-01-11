@@ -1,0 +1,133 @@
+<html><head><title>XLISP progv</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>progv</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>progv</b> <i>symbols values</i> [<i>expr1 expr2</i> ... ])</dt>
+<dd><i>symbols</i> - a list of symbols to be bound<br>
+<i>values</i> - a list of values to be bound to symbols<br>
+<i>exprN</i> - expressions for the body of the loop<br>
+returns - the value of the last expression</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'progv' special form is basically a 'block' construct that contains a
+block of code [expressions] to evaluate. 'progv' is different from
+<nobr><a href="prog1.htm">prog1</a></nobr>, <a href="prog2.htm">prog2</a>
+and <a href="progn.htm">progn</a> in that it contains a pair of lists,
+'symbols' and 'values'. Before evaluating the expressions, 'progv'
+will dynamically bind the 'values' to the corresponding 'symbols'.
+<nobr>If there</nobr> are too many 'symbols' for the 'values', the 'symbols'
+with no corresponding 'values' will be bound to <a href="nil.htm">NIL</a>.
+<nobr>The variables</nobr> will be unbound after the execution of 'progv'.
+<nobr>The value</nobr> of the last 'expr' will be returned as the result of
+'progv'. <nobr>If there</nobr> are no 'exprs',
+<a href="nil.htm">NIL</a> is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+&gt; (progv '(var) '(2)
+    (print var)
+    (print "two"))
+2      <font color="#008844">; output of PRINT</font>
+"two"  <font color="#008844">; output of PRINT</font>
+"two"  <font color="#008844">; return value</font>
+
+&gt; (setq a "beginning")   <font color="#008844">; initialize A</font>
+"beginning"
+
+&gt; (progv '(a) '(during)  <font color="#008844">; bind A to a new value</font>
+    (print a))
+DURING  <font color="#008844">; output of PRINT</font>
+DURING  <font color="#008844">; return value     restore A the original value</font>
+
+&gt; (print a)
+"beginning"              <font color="#008844">; prints the original value</font>
+"beginning"
+
+&gt; (progv '(no-way) '(no-how))
+NIL
+
+&gt; (progv)
+<font color="#AA0000">error: too few arguments</font>
+</pre>
+
+<p><b>Note:</b> 'progv' is different from
+<nobr><a href="prog.htm">prog</a></nobr>, which allows symbols and
+initialization forms, in that 'progv' allows its 'symbols' and 'values' to
+be evaluated. This allows you to pass in forms that generate the 'symbols'
+and their 'values'.</p>
+
+<p><b>Note:</b> <nobr><a href="prog1.htm">prog1</a></nobr>,
+<nobr><a href="prog2.htm">prog2</a></nobr>, <a href="progn.htm">progn</a>
+and 'progv' do not allow the use of <a href="return.htm">return</a> or
+<a href="go.htm">go</a> or tags for <a href="go.htm">go</a>.</p>
+
+<p><b>Important:</b> In contrast to all other binding constructs, 'progv'
+binds global variables and not lexical variables, so 'progv' behaves
+like:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">progv</font> (symbols values &amp;rest body)  <font color="#008844">; this function does</font>
+  (push symbol-values <font color="#AA5500">*internal-stack*</font>)   <font color="#008844">; not really work,</font>
+  (setq symbols values)                   <font color="#008844">; it only demonstates</font>
+  (prog1                                  <font color="#008844">; the principle</font>
+    (eval body)
+    (setq symbol-values (pop <font color="#AA5500">*internal-stack*</font>))))
+</pre>
+
+<p>Variables bound by 'progv' can be manipulated by global functions
+including <nobr><a href="symbol-value.htm">symbol-value</a></nobr>.
+<nobr>All changes</nobr> to the 'progv' variables by other functions, called
+in the 'progv' body, will be lost after 'progv' is finished, because the
+original value from the beginning of 'progv' will be restored. This can be
+good or bad, depending on the situation.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

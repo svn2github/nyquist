@@ -1,0 +1,268 @@
+<html><head>
+
+<title>apropos</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>apropos</h1>
+
+<hr>
+
+
+
+<p><div class="box">
+
+<dl>
+
+<dt><p><nobr>(<b>apropos</b> &amp;optional <i>pattern type</i>)</nobr></p></dt>
+
+<dd><p>The 'apropos' function searches the Nyquist/XLISP *obarray* for
+matching symbol names containing 'pattern' and being of 'type'. <nobr>It
+prints</nobr> a list of the results in alphabetical order.</p>
+
+<p>'pattern and 'type' can be given as symbols or strings. <nobr>If
+no</nobr> 'pattern' is given, all symbol names are considered as matching.
+<nobr>If no</nobr> 'type' is given, all symbol types are considered as
+matching. With 'type', only the first letter is important. <nobr>A
+type</nobr> of 'f' searches for symbols with a valid function value, while a
+type of 'v' searches for symbols with a valid variable value.</p></dd>
+
+</dd>
+
+</dl>
+
+</div></p>
+
+<p>Examples:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(apropos)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>all symbols known by Nyquist</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(apropos nil 'f)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>all bound functions known by Nyquist</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(apropos nil 'v)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>all bound variables known by Nyquist</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(apropos 'snd 'f)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>all function names containing 'snd'</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>A method to introspect classes and objects:</p>
+
+<pre class="example">
+(setq instance-var '*wrong-variable*)                 ; value outside the object
+
+(setq my-class (send class :new '(instance-var)))                ; class with instance variable
+(send my-class :answer :isnew '() '((setq instance-var '*OK*)))  ; value inside an object
+(send my-class :answer :eval '(list) '((eval list)))             ; evaluation method
+
+(setq my-object (send my-class :new))                 ; instance of my-class
+(send my-object :eval 'instance-var)                  =&gt; <font color="#008844">*OK*</font>
+(send my-object :eval '(apropos 'instance-var 'v t))  =&gt; <font color="#AA0000">*WRONG-VARIABLE*</font>
+</pre>
+
+<p>The first version works because the call to 'eval' happens inside the
+object:</p>
+
+<pre class="example">
+(send my-class :answer :eval '(list) '((eval list))) =&gt; <font color="#008844">*OK*</font>
+</pre>
+
+<p>The second version doesn't work because the call to 'eval' happens
+outside the object:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">external-function</font> (list)
+  (eval list))
+
+(send my-class :answer :eval '(list) '((external-function list))) =&gt; <font color="#AA0000">*WRONG-VARIABLE*</font>
+</pre>
+
+<p>The call to 'apropos' doesn't work because 'apropos' is executed outside
+the object:</p>
+
+<pre class="example">
+(send my-object :eval '(apropos)) =&gt; <font color="#AA0000">*WRONG-VARIABLE*</font>
+</pre>
+
+<p>The trick is to pass the Lisp code of 'apropos' as a list into the inside
+of the object and 'apply' it there to the arguments:</p>
+
+<pre class="example">
+(send my-class :answer :apropos '(args)
+  '((apply (get-lambda-expression #'apropos) args)))
+
+(send my-object :apropos '(instance-var v t)) =&gt; <font color="#008844">*OK*</font>
+</pre>
+
+<p>But this only works if all function that need access to internal instance
+or class variables are executed inside the object. For example, if 'apropos'
+calls a function that needs access to an internal instance variable, I
+would get a 'unbound variable' error.</p>
+
+<p>Here is the code of the 'apropos' function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">apropos</font> (&amp;optional pattern type)
+  (let (result-list (<font color="#AA5500">*gc-flag*</font> nil))
+    <font color="#008844">;; make sure 'pattern' is a string, either empty or upper-case</font>
+    (if pattern
+        (setf pattern (string-upcase (string pattern)))
+      (setf pattern <font color="#880000">""</font>))
+    <font color="#008844">;; take only the first letter of 'type' and make it an upper-case string</font>
+    (if type (setf type (string-upcase (subseq (string type) 0 1))))
+    <font color="#008844">;; go through all entries in the *obarray* symbol hash table</font>
+    (dotimes (i (length <font color="#AA5500">*obarray*</font>))
+      (let ((entry (aref <font color="#AA5500">*obarray*</font> i)))  <font color="#008844">; *obarray* is an array of lists</font>
+        <font color="#008844">;; if the *obarray* entry is not an empty list</font>
+        (if entry
+          <font color="#008844">;; go through all elements of the *obarray* entry list</font>
+          <font color="#008844">;; do not use 'dolist' because *obarray* contains *unbound*</font>
+          (dotimes (j (length entry))
+            <font color="#008844">;; convert the symbol to a string to enable pattern matching</font>
+            (let ((string (string (nth j entry))))
+              <font color="#008844">;; if the symbol string matches the search pattern</font>
+              (if (string-search pattern string)
+                  <font color="#008844">;; if a special symbol type to search for was given</font>
+                  (if type
+                      <font color="#008844">;; if a 'type' search was initiated and the current</font>
+                      <font color="#008844">;; symbol has no 'type' value bound to it, do nothing</font>
+                      <font color="#008844">;; and return from 'cond' without adding the symbol</font>
+                      <font color="#008844">;; string to the result list</font>
+                      (cond ((and (string= type <font color="#880000">"F"</font>)  <font color="#008844">; bound functions only</font>
+                                  (not (fboundp (nth j entry))))
+                             nil)
+                            ((and (string= type <font color="#880000">"V"</font>)  <font color="#008844">; bound variables only</font>
+                                  (not (boundp (nth j entry))))
+                             nil)
+                            <font color="#008844">;; if the symbol has passed all tests,</font>
+                            <font color="#008844">;; add the symbol string to the result list</font>
+                            (t (setf result-list (cons string result-list))))
+                    <font color="#008844">;; if no special symbol type to search for had been given,</font>
+                    <font color="#008844">;; but the symbol string had matched the search pattern,</font>
+                    <font color="#008844">;; add the symbol string to the result list</font>
+                    (setf result-list (cons string result-list)))))))))
+    <font color="#008844">;; if the result list contains more than one element</font>
+    <font color="#008844">;; make it become an alphabetically sorted list</font>
+    (if (> (length result-list) 1)
+        (setf result-list (sort result-list 'string&lt;)))
+    <font color="#008844">;; print a message according to the search type and pattern</font>
+    (cond ((and type (string= type <font color="#880000">"F"</font>)) (setf type <font color="#880000">"function"</font>))
+          ((and type (string= type <font color="#880000">"V"</font>)) (setf type <font color="#880000">"variable"</font>))
+          (t (setf type <font color="#880000">"symbol"</font>)))
+    (if (string= pattern <font color="#880000">""</font>)
+        (format t <font color="#880000">"All ~a names known by Nyquist:~%"</font> type)
+        (format t <font color="#880000">"All ~a names containing pattern ~a:~%"</font> type pattern))
+    <font color="#008844">;; print the search results</font>
+    (cond (result-list
+           (let ((list-length (length result-list)))
+             (format t <font color="#880000">";; number of symbols: ~a~%"</font> list-length)
+             (dolist (i result-list) (format t <font color="#880000">"~a~%"</font> i))
+             (if (> list-length 20)
+               (format t <font color="#880000">";; number of symbols: ~a~%"</font> list-length))))
+          (t (format t <font color="#880000">"No matches found."</font>)))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

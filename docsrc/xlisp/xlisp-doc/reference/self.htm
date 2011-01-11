@@ -1,0 +1,81 @@
+<html><head><title>XLISP self</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>self</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>symbol</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;self</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'self' symbol evaluates to the current object when used within a
+message context.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq my-class (send class :new '(state)))               <font color="#008844">; create MY-CLASS with STATE</font>
+
+(send my-class :answer :isnew '()                        <font color="#008844">; set up initialization</font>
+                              '((setq state nil) SELF))  <font color="#008844">;   returning SELF</font>
+
+(send my-class :answer :set-it '(value)                  <font color="#008844">; create :SET-IT message</font>
+                               '((setq state value)))
+
+(setq my-obj (send my-class :new))                       <font color="#008844">; create MY-OBJ of MY-CLASS</font>
+(send my-obj :set-it 5)                                  <font color="#008844">; STATE is set to 5</font>
+</pre>
+
+<p><b>Context:</b> 'self' does not exist except within the context of a
+method and it's execution.</p>
+
+<p><b>Note:</b> In the previous example, there is a 'self' in the line that
+creates the ':set-it' message. What this does is to return the object as the
+last operation when you do an <a href="keyword-isnew.htm">:isnew</a>.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-010.htm#10-3">self</a>
+symbol in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

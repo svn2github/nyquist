@@ -1,0 +1,311 @@
+<html><head>
+
+<title>XLISP reader</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Reader</h1>
+
+<hr>
+
+
+
+<hr>
+
+<h2>read-from-string</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">read-from-string</font> (string)
+  (read (make-string-input-stream string)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="global-readtable"></a>
+
+<hr>
+
+<h2>*readtable*</h2>
+
+<hr>
+
+<p>The <a href="../reference/global-readtable.htm">*readtable*</a> system
+variable contains the reader table array. <nobr>The table</nobr> is
+<nobr>128 entries</nobr> <nobr>[0..127]</nobr> for each of the
+<nobr>7-bit</nobr> ASCII characters that XLISP
+<nobr>can <a href="../reference/read.htm">read</a></nobr>.</p>
+
+<ul>
+<li><nobr><a href="../reference/read.htm">read</a> - function to read a lisp expression</nobr></li>
+<li><nobr><a href="../reference/global-readtable.htm">*readtable*</a> - system variable, holding the readtable</nobr></li>
+<ul>
+<li><nobr><a href="../reference/nil.htm">NIL</a> - invalid character</nobr></li>
+<li><nobr><a href="../reference/keyword-constituent.htm">:constituent</a> - symbol constituent</nobr></li>
+<li><nobr><a href="../reference/keyword-sescape.htm">:sescape</a> - whitespace character</nobr></li>
+<li><nobr><a href="../reference/keyword-mescape.htm">:mescape</a> - multiple escape character</nobr></li>
+<li><nobr><a href="../reference/keyword-white-space.htm">:white-space</a> - single escape character</nobr></li>
+<li><nobr><a href="../reference/keyword-tmacro.htm">:tmacro</a> - terminating readmacro</nobr></li>
+<li><nobr><a href="../reference/keyword-nmacro.htm">:nmacro</a> - non-terminating readmacro</nobr></li>
+</ul>
+</ul>
+
+<p>See also the
+<nobr><a href="../manual/xlisp.htm#lexical-conventions">Lexical Conventions</a></nobr>
+and  <a href="../manual/xlisp.htm#the-readtable">Readtable</a> sections in the
+<nobr>XLISP 2.0</nobr> manual.</p>
+
+<a name="print-readtable"></a>
+
+<hr>
+
+<h2>print-readtable</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">print-readtable</font> ()
+  (dotimes (index 128)
+    (format t <font color="#880000">"ASCII-~a ~a = ~a~%"</font>
+              (cond ((&lt;=  0 index  9) (format nil "00~a" index))
+                    ((&lt;= 10 index 99) (format nil "0~a"  index))
+                    (t index))
+              (if (&lt; 31 index 127)
+                  (code-char index)
+                  (case index
+                    (0   "[null]                  ")
+                    (1   "[start of heading]      ")
+                    (2   "[start of text]         ")
+                    (3   "[end of text]           ")
+                    (4   "[end of transmission]   ")
+                    (5   "[enquiry]               ")
+                    (6   "[acknowledge]           ")
+                    (7   "[terminal bell]         ")
+                    (8   "[backspace]             ")
+                    (9   "[horizontal tab]        ")
+                    (10  "[line feed]             ")
+                    (11  "[vertical tab]          ")
+                    (12  "[form feed]             ")
+                    (13  "[carriage return]       ")
+                    (14  "[shift out]             ")
+                    (15  "[shift in]              ")
+                    (16  "[data link escape]      ")
+                    (17  "[device control 1, xon] ")
+                    (18  "[device control 2]      ")
+                    (19  "[device control 3, xoff]")
+                    (20  "[device control 4]      ")
+                    (21  "[negative acknowledge]  ")
+                    (22  "[synchronous idle]      ")
+                    (23  "[end transmission block]")
+                    (24  "[cancel line]           ")
+                    (25  "[end of medium]         ")
+                    (26  "[substitute]            ")
+                    (27  "[escape]                ")
+                    (28  "[file separator]        ")
+                    (29  "[group separator]       ")
+                    (30  "[record separator]      ")
+                    (31  "[unit separator]        ")
+                    (127 "[delete]")))
+              (aref <font color="#AA5500">*readtable*</font> index))))
+</pre>
+
+<hr>
+
+<h2>get-macro-character</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>get-macro-character</b> <i>char</i>)</dt>
+<dd><i>char</i> - a character<br>
+returns - the code associated with the
+<a href="../reference/global-readtable.htm">*readtable*</a> entry or
+<a href="../reference/nil.htm">NIL</a></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">get-macro-character</font> (char)
+  (if (consp (aref <font color="#AA5500">*readtable*</font> (char-code char)))
+      (cdr (aref <font color="#AA5500">*readtable*</font> (char-int char)))
+      nil))
+</pre>
+
+<p> The '<nobr>get-macro-character</nobr>' function returns the code that
+will be executed when the specified character 'char' is encountered by the
+XLISP reader.</p>
+
+<p>The 'get-macro-character' function will return a
+<a href="../reference/nil.htm">NIL</a> value if the table entry is
+<nobr><a href="../reference/nil.htm">NIL</a> ,</nobr>
+<nobr><a href="../reference/keyword-constituent.htm">:constituent</a> ,</nobr>
+<nobr><a href="../reference/keyword-sescape.htm">:sescape</a> ,</nobr>
+<a href="../reference/keyword-mescape.htm">:mescape</a> or
+<a href="../reference/keyword-white-space.htm">:white-space</a>. If the table entry is
+<a href="../reference/keyword-tmacro.htm">:tmacro</a> or
+<nobr><a href="../reference/keyword-nmacro.htm">:nmacro</a> ,</nobr> then the code
+associated with the entry is returned.
+<a href="../reference/keyword-tmacro.htm">:tmacro</a> is used for a terminating
+read-macro. <a href="../reference/keyword-nmacro.htm">:nmacro</a> is used for a
+non-terminating read-macro. 'get-macro-character' does not differentiate
+whether the code returned is a
+<a href="../reference/keyword-tmacro.htm">:tmacro</a> or an
+<a href="../reference/keyword-nmacro.htm">:nmacro</a>.</p>
+
+<p>The function returned may be a built-in read-macro function or a user
+defined <a href="../reference/lambda.htm">lambda</a> expression. The function
+takes two parameters, an input stream specification, and an integer that is
+the character value. The function should return
+<a href="../reference/nil.htm">NIL</a> if the character is 'white-space' or a
+value <a href="../reference/cons.htm">cons</a>ed with
+<a href="../reference/nil.htm">NIL</a> to return the value.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(get-macro-character #\()      =&gt; #&lt;Subr-(null): #...&gt;</font>
+(get-macro-character #\#)      =&gt; #&lt;Subr-(null): #...&gt;</font>
+(get-macro-character #\Space)  =&gt; NIL</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<a name="set-macro-character"></a>
+
+<hr>
+
+<h2>set-macro-character</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>set-macro-character</b> <i>char function</i> [<i>termination-flag</i>])</dt>
+<dd><i>char</i> - a character expression<br>
+<i>function</i> - a function definition<br>
+<i>termination-flag</i> - an expression, <a href="../reference/nil.htm">NIL</a> or
+non-<a href="../reference/nil.htm">NIL</a><br>
+returns - always returns <a href="../reference/t.htm">&nbsp;T&nbsp;</a></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">set-macro-character</font> (char function &optional terminate-p)
+  (setf (aref <font color="#AA5500">*readtable*</font> (char-code char))
+        (cons (if terminate-p :tmacro :nmacro) function))
+  t)
+</pre>
+
+<p>The '<nobr>set-macro-character</nobr>' function installs the code that
+will be executed when the specified character 'char' is encountered by the
+XLISP reader.</p>
+
+<p>The 'set-macro-character' function only allows you to put in a
+terminating read-macro function <a href="../reference/keyword-tmacro.htm">:tmacro</a> or
+a non-terminating read-macro-function
+<a href="../reference/keyword-nmacro.htm">:nmacro</a>. If the 'termflag' is present and
+non-<nobr><a href="../reference/nil.htm">NIL</a> ,</nobr> then the 'function'
+will be put in <a href="../reference/global-readtable.htm">*readtable*</a> as a
+<a href="../reference/keyword-tmacro.htm">:tmacro</a> entry. If 'termflag' is not present
+or <nobr><a href="../reference/nil.htm">NIL</a> ,</nobr> then 'function' will
+be put in <a href="../reference/global-readtable.htm">*readtable*</a> as a
+<a href="../reference/keyword-nmacro.htm">:nmacro</a> entry. The 'function' can be a
+built-in read-macro function or a user defined
+<a href="../reference/defun.htm">defun</a> symbol or a
+<a href="../reference/lambda.htm">lambda</a> expression.</p>
+
+<p>The 'function' takes two parameters, an input stream specification, and
+an integer that is the character value. The 'function' should return
+<a href="../reference/nil.htm">NIL</a> if the character is 'white-space' or a
+value <a href="../reference/cons.htm">cons</a>ed with
+<a href="../reference/nil.htm">NIL</a> to return the value. The function
+'set-macro-character' always returns
+<a href="../reference/t.htm">&nbsp;T&nbsp;</a>.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+&gt; (print "hi") % comment
+"hi"
+"hi"
+<font color="#AA0000">error: unbound variable - %</font>       <font color="#008844">; % is interpreted as a variable</font>
+
+&gt; (setq readtable-backup *readtable*)
+#( ... very-long-value ... )
+
+&gt; (set-macro-character #\% (get-macro-character #\;) t)
+T
+
+&gt; (print "hi") % comment
+"hi"                              <font color="#008844">; no error because</font>
+"hi"                              <font color="#008844">; % is now a comment character</font>
+
+&gt; (setq *readtable* readtable-backup)
+#( ... very-long-value ... )
+</pre>
+
+<p><b>Important:</b> before manipulating the XLISP
+<a href="../reference/global-readtable.htm">*readtable*</a> it's always a
+good idea to store the original contents in some other variable.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

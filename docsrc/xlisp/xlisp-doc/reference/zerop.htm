@@ -1,0 +1,81 @@
+<html><head><title>XLISP zerop</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>zerop</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(zerop <i>expr</i>)</dt>
+<dd><i>expr</i> - the numeric expression to check<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the number is
+zero, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'zerop' predicate function checks to see if the number 'expr' is
+zero. <a href="t.htm">&nbsp;T&nbsp;</a> is returned if the
+number is zero, <a href="nil.htm">NIL</a> is returned otherwise.
+An error is generated if the 'expr' is not a numeric expression:</p>
+
+<pre class="example">
+<font color="#AA0000">error: bad argument type</font>
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(zerop 0)                <font color="#008844">; returns T</font>
+(zerop 0.0)              <font color="#008844">; returns T</font>
+(zerop 99999.9)          <font color="#008844">; returns NIL</font>
+(zerop -0.000000000002)  <font color="#008844">; returns NIL</font>
+
+(zerop 'a)               <font color="#008844">; error: bad argument type</font>
+(setq a 0)               <font color="#008844">; set value of A to 0</font>
+(zerop a)                <font color="#008844">; returns T</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-018.htm#zerop">zerop</a>
+predicate function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

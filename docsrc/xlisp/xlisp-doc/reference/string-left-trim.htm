@@ -1,0 +1,84 @@
+<html><head><title>XLISP string-left-trim</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>string-left-trim</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(string-left-trim <i>trim-stuff string</i>)</dt>
+<dd><i>trim-stuff</i> - a string expression<br>
+<i>string</i> - a string expression<br>
+returns - a trimed copy of the string</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'string-left-trim' function takes the 'trim-stuff' characters and
+removes them from the left end of the 'string'. The 'trim-stuff' characters
+are an un-ordered set of characters to be removed, so any character that
+occurs in 'trim-stuff' is removed if it appears in left portion of 'string'.
+A new string is created and returned as the result of this function.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(string-left-trim "." "....foo....")     <font color="#008844">; returns "foo...."</font>
+(string-left-trim "&lt;&gt;" "&lt;&lt;&lt;&lt;bar&gt;&gt;&gt;&gt;")    <font color="#008844">; returns "bar&gt;&gt;&gt;&gt;"</font>
+(string-left-trim "(.)" "..(12.34)..")   <font color="#008844">; returns "12.34).."</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp also supports a list of characters as
+a valid 'trim-stuff' argument. An example:</p>
+
+<pre class="example">
+(string-trim '(#\Tab #\Newline) mystring)
+</pre>
+
+<p>XLISP does not support non-string parameters. Porting from XLISP will
+be no problem, but modifications will be necessary if porting from Common
+Lisp code which uses a list of characters.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-025.htm#string-left-trim">string-left-trim</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

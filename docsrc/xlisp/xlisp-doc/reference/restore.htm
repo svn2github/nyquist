@@ -1,0 +1,112 @@
+<html><head><title>XLISP restore</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>restore</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xldmem.c, xlimage.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(restore <i>file</i>)</dt>
+<dd><i>file</i> - a string or symbol for the name of the file<br>
+returns - <a href="nil.htm">NIL</a> on failure, otherwise never
+returns</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'restore' function restores the previously
+<a href="save.htm">save</a>d XLISP workspace [system state] from
+the specified file. The 'file' may be a string or a symbol. If the 'file'
+does not include a '.wks' suffix, it will be extended to be called
+'file.wks'. If successful, 'restore' will print a message saying:</p>
+
+<pre class="example">
+[ returning to the top level ]
+</pre>
+
+<p>and will not return any value. If 'restore' fails, it will return
+<a href="nil.htm">NIL</a>. There can be several saved workspaces.
+These workspaces can be restored as often as desired.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq myvar 5)       <font color="#008844">; set MYVAR to value 5</font>
+myvar                <font color="#008844">; returns 5</font>
+
+(save 'farp)         <font color="#008844">; save workspace in FARP.wks</font>
+
+(setq myvar "garp")  <font color="#008844">; change MYVAR to "garp"</font>
+myvar                <font color="#008844">; returns "garp"</font>
+
+(restore 'farp)      <font color="#008844">; restore workspace</font>
+myvar                <font color="#008844">; returns 5</font>
+</pre>
+
+<p><b>File names:</b> In the PC and DOS world, all file names and extensions
+[&quot;foo.bat&quot;] are automatically made uppercase. In using XLISP, this
+means you don't have to worry about whether the name is &quot;foo.bat&quot;,
+&quot;FOO.BAT&quot; or even &quot;FoO.bAt&quot;, they will all work.
+However, in other file systems [UNIX in particular], uppercase and lowercase
+do make a difference:</p>
+
+<p>This will create a file named FOO-FILE in UNIX, because XLISP uppercases
+its symbols:</p>
+
+<pre class="example">
+(open 'foo-file :direction :output)
+</pre>
+
+<p>This will create a file named 'foo-file' because UNIX doesn't
+uppercase its file names:</p>
+
+<pre class="example">
+(open "foo-file" :direction :output)
+</pre>
+
+<p>So, if you are having trouble with opening and accessing files, check to
+make sure the file name is in the proper case.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-031.htm#restore">restore</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

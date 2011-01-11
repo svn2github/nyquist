@@ -1,0 +1,85 @@
+<html><head><title>XLISP pop</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>pop</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>Lisp macro</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>misc.lsp</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>pop</b> <i>list</i>)</dt>
+<dd><i>list</i> - a list<br>
+returns - the first element from the list</dd>
+</dl>
+
+</div></p>
+
+<p>'pop' is implemented as a Lisp macro:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">pop</font> (lis)
+  `(prog1 (car ,lis)
+          (setf ,lis (cdr ,lis))))
+</pre>
+
+<h2>Description</h2>
+
+<p>The 'pop' macro reads, removes and returns the first element from the
+list.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq stack '(a b c))  =&gt; (A B C)
+(pop stack)            =&gt; A  
+stack                  =&gt; (B C)
+(pop stack)            =&gt; B  
+stack                  =&gt; (C)
+(pop stack)            =&gt; C 
+stack                  =&gt; NIL
+(pop stack)            =&gt; NIL
+stack                  =&gt; NIL
+</pre>
+
+<p>See <a href="setq.htm">setq</a>. See also the <a href="push.htm">push</a> macro.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

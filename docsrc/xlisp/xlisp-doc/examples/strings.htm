@@ -1,0 +1,802 @@
+<html><head>
+
+<title>Characters and Strings</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Characters and Strings</h1>
+
+<hr>
+
+<p>Strings are also <a href="sequences.htm">Sequences</a>.</p>
+
+<ul>
+<li><nobr><a href="#make-string">make-string</a> - make a string of a specific number of characters</nobr></li>
+<li><nobr><a href="#string-star">string*</a> - make a string out of arbitrary Lisp expressions</nobr></li>
+<li><nobr><a href="#posix">POSIX Character Classes</a> - character predicates</nobr></li>
+<li><nobr><a href="#unicode">Unicode Strings</a></nobr></li>
+<ul>
+<li><nobr><a href="#utf-8-byte-p">utf-8-byte-p</a> - tests if a XLISP character is a valid UTF-8 byte</nobr></li>
+<li><nobr><a href="#utf-8-bytes">utf-8-bytes</a>  - returns the number of bytes of an UTF-8 character</nobr></li>
+<li><nobr><a href="#utf-8-bytes">utf-8-string-to-list</a> - converts an UTF-8 string to a list of 'string-characters'</nobr></li>
+<li><nobr><a href="#utf-8-bytes">utf-8-list-to-string</a> - converts a list of 'string-characters' to an XLISP string</nobr></li>
+</ul>
+</ul>
+
+<a name=""></a>
+
+<hr>
+
+<h2>make-string</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">make-string</font> (length initial-element)
+  (cond ((not (and (integerp length)
+                   (plusp    length)))
+         (error <font color="#AA0000">"not a positive integer"</font> length))
+        ((not (characterp initial-element))
+         (error <font color="#AA0000">"not a character"</font> initial-element))
+        (t
+         (let ((element (string initial-element))
+               (string <font color="#AA0000">""</font>))
+           (dotimes (x length)
+             (setq string (strcat string element)))
+           string))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="string-star"></a>
+
+<hr>
+
+<h2>string*</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+
+<dt><nobr>(<b>string*</b> [<i>expr1</i> ...])</nobr></dt>
+<dd><i>exprN</i> - arbitrary Lisp expressions<br>
+returns - the expression[s], converted and concatenated into a single string</dd>
+</dl>
+
+<dl>
+
+</div></p>
+
+<p>The 'string*' function tries to make a string out of everything:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">string*</font> (&amp;rest items)
+  (if (null items)
+      <font color="#880000">""</font>
+      (let ((end (length items))
+            (result <font color="#880000">""</font>))
+        (labels ((strcat-element (element)
+                   (let ((string (if (or (consp element) (arrayp element))
+                                     (string* element)
+                                     (format nil <font color="#880000">"~a"</font> element))))
+                     (setq result (strcat result string)))))
+          (dotimes (index end)
+            (if (eq (nth index items) '*unbound*)
+                (strcat-element <font color="#880000">"*UNBOUND*"</font>)
+                (let ((item (nth index items)))
+                  (case (type-of item)
+                    (cons  (let ((end (length item)))
+                             (when (not (consp (last item))) (incf end))
+                             (dotimes (index end)
+                               (if (eq (nth index item) '*unbound*)
+                                   (strcat-element <font color="#880000">"*UNBOUND*"</font>)
+                                   (strcat-element (nth index item))))))
+                    (array (let ((end (length item)))
+                             (dotimes (index end)
+                               (if (eq (aref item index) '*unbound*)
+                                   (strcat-element <font color="#880000">"*UNBOUND*"</font>)
+                                   (strcat-element (aref item index))))))
+                    (t     (strcat-element item))))))
+          result))))
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+(string*)              =&gt; ""
+
+(string* #\A "B" 'c)   =&gt; "ABC"
+(string* 1 2 3)        =&gt; "123"
+
+(string* 1 "st")       =&gt; "1st"
+(string* "2" #\n #\d)  =&gt; "2nd"
+
+(setq a 3)             =&gt; 3
+(string* 'a "=" a)     =&gt; "A=3"
+</pre>
+
+<p>Nested expressions will be flattened:</p>
+
+<pre class="example">
+(string* #(1 (#\2) "3"))  =&gt; "123"
+</pre>
+
+<p>The result may contain nonsense:</p>
+
+<pre class="example">
+(string* #'car)                    =&gt; "#&lt;Subr-CAR: #8645768&gt;"
+(string* '(lambda (x) (print x)))  =&gt; "LAMBDAXPRINTX"
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="posix"></a>
+
+<hr>
+
+<h2>POSIX Character Classes</h2>
+
+<hr>
+
+<p>The <nobr>built-in</nobr> XLISP character test functions
+<a href="../reference/upper-case-p.htm">upper-case-p</a>,
+<a href="../reference/lower-case-p.htm">lower-case-p</a>,
+<a href="../reference/both-case-p.htm">both-case-p</a>, return the boolean
+values <a href="../reference/t.htm">&nbsp;T&nbsp;</a> or
+<a href="../reference/nil.htm">NIL</a> instead of the tested character,
+while <a href="../reference/digit-char-p.htm">digit-char-p</a> returns an
+integer <nobr>or <a href="../reference/nil.htm">NIL</a></nobr>, what is
+handy if you want to convert arbitrary Lisp symbols into numbers without
+producing an error, but all this is impractical for writing a string
+parser.</p>
+
+<p>The following functions implement tests for the standard POSIX character
+classes, where all functions return the tested character if the test
+succeeds, or <a href="../reference/nil.htm">NIL</a></nobr> if the test
+fails. <nobr>The 'internal'</nobr> functions do not check if the argument is
+a character and therefore are faster than the 'user' functions. Also note
+that XLISP is limited to ASCII characters, so there is no way to find out if
+an unicode character is upper- or lowercase if the character code is greater
+than <nobr>ASCII 127</nobr>.</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td colspan="3"><nobr><b>POSIX</b></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><b>Internal</b></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><b>User Function</b></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>alnum</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-alnum-p">char:alnum-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#alnum-character-p">alnum-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>alphanumeric = [a-z], [A-Z], [0-9]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>alpha</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-alpha-p">char:alpha-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#alpha-character-p">alpha-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>alphabetic = [a-z], [A-Z]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>blank</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-blank-p">char:blank-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#blank-character-p">blank-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>space and horizontal-tab</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>cntrl</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-cntrl-p">char:cntrl-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#cntrl-character-p">cntrl-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>code-chars 0-31 and 127</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>digit</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-digit-p">char:digit-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#digit-character-p">digit-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>decimal = [0-9]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>graph</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-graph-p">char:graph-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#graph-character-p">graph-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>graphical = alnum + punct</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>lower</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-lower-p">char:lower-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#lower-character-p">lower-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>lowercase = [a-z]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>print</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-print-p">char:print-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#print-character-p">print-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>printable = alnum + punct + space</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>punct</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-punct-p">char:punct-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#punct-character-p">punct-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>punctuation marks</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>space</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-space-p">char:space-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#space-character-p">space-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>characters producing whitespace</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>upper</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-upper-p">char:upper-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#upper-character-p">upper-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>uppercase = [A-Z]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>xdigit</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-xdigit-p">char:xdigit-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#xdigit-character-p">xdigit-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>hexadecimal = [0-9], [a-f], [A-F]</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p><b>Internal Functions</b> for POSIX character classes:</p>
+
+<a name="char-alnum-p"></a>
+
+<pre class="example">
+<font color="#008844">;; alphanumeric characters = a-z, A-z, 0-9</font>
+
+(defun <font color="#0000CC">char:alnum-p</font> (char)
+  (and (alphanumericp char)
+       char))
+<a name="char-alpha-p"></a>
+<font color="#008844">;; alphabetic characters = a-z, A-Z</font>
+
+(defun <font color="#0000CC">char:alpha-p</font> (char)
+  (and (both-char-p char)
+       char))
+<a name="char-blank-p"></a>
+<font color="#008844">;; blanks = space and horizontal-tab</font>
+
+(defun <font color="#0000CC">char:blank-p</font> (char)
+  (and (or (char= char #\Space)
+           (char= char #\Tab))
+       char))
+<a name="char-cntrl-p"></a>
+<font color="#008844">;; control characters = code-chars 0-31 and 127</font>
+
+(defun <font color="#0000CC">char:cntrl-p</font> (char)
+  (let ((code (char-code char)))
+    (and (or (&lt;= 0 code 31)
+             (= code 127))
+         char)))
+<a name="char-digit-p"></a>
+<font color="#008844">;; decimal digits = 0-9</font>
+
+(defun <font color="#0000CC">char:digit-p</font> (char)
+  (and (digit-char-p char)
+       char))
+<a name="char-graph-p"></a>
+<font color="#008844">;; graphical characters = alnum + punct</font>
+
+(defun <font color="#0000CC">char:graph-p</font> (char)
+  (and (&lt;= 33 (char-code char) 126)
+       char))
+<a name="char-lower-p"></a>
+<font color="#008844">;; lowercase characters = a-z</font>
+
+(defun <font color="#0000CC">char:lower-p</font> (char)
+  (and (lower-case-p char)
+       char))
+<a name="char-print-p"></a>
+<font color="#008844">;; printable characters = alnum + punct + space</font>
+
+(defun <font color="#0000CC">char:print-p</font> (char)
+  (and (&lt;= 32 (char-code char) 126)
+       char))
+<a name="char-punct-p"></a>
+<font color="#008844">;; punctuation marks</font>
+
+(defun <font color="#0000CC">char:punct-p</font> (char)
+  (let ((code (char-code char)))
+    (and (or (&lt;=  33 code  47)   <font color="#008844">;  ! " # $ % &amp; ' ( ) * + , - . /</font>
+             (&lt;=  58 code  64)   <font color="#008844">;  : ; &lt; = &gt; ? @</font>
+             (&lt;=  91 code  96)   <font color="#008844">;  [ \ ] ^ _ `</font>
+             (&lt;= 123 code 126))  <font color="#008844">;  { | } ~</font>
+         char)))
+<a name="char-space-p"></a>
+<font color="#008844">;; characters producing whitespace</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;  9 = horizontal tab   10 = line feed         11 = vertical tab</font>
+<font color="#008844">;; 12 = form feed        13 = carriage return   32 = space</font>
+
+(defun <font color="#0000CC">char:space-p</font> (char)
+  (and (member (char-code char) '(9 10 11 12 13 32))
+       char))
+<a name="char-upper-p"></a>
+<font color="#008844">;; uppercase characters = A-Z</font>
+
+(defun <font color="#0000CC">char:upper-p</font> (char)
+  (and (upper-case-p char)
+       char))
+<a name="char-xdigit-p"></a>
+<font color="#008844">;; hexadecimal digits = 0-9, a-f, A-F</font>
+
+(defun <font color="#0000CC">char:xdigit-p</font> (char)
+  (and (or (digit-char-p char)
+           (let ((code (char-code char)))
+             (or (&lt;= 65 code  70)     <font color="#008844">; A-Z</font>
+                 (&lt;= 97 code 102))))  <font color="#008844">; a-z</font>
+       char))
+</pre>
+
+<p><b>User Functions</b> for POSIX character classes:</p>
+
+<a name="alnum-character-p"></a>
+
+<pre class="example">
+<font color="#008844">;; alphanumeric characters = a-z, A-z, 0-9</font>
+
+(defun <font color="#0000CC">alnum-character-p</font> (char)
+  (and (characterp char)
+       (char:alnum-p char)))
+<a name="alpha-character-p"></a>
+<font color="#008844">;; alphabetic characters = a-z, A-Z</font>
+
+(defun <font color="#0000CC">alpha-character-p</font> (char)
+  (and (characterp char)
+       (char:alpha-p char)))
+<a name="blank-character-p"></a>
+<font color="#008844">;; blanks = space and horizontal-tab</font>
+
+(defun <font color="#0000CC">blank-character-p</font> (char)
+  (and (characterp char)
+       (char:blank-p char)))
+<a name="cntrl-character-p"></a>
+<font color="#008844">;; control characters = code-chars 0-31 and 127</font>
+
+(defun <font color="#0000CC">cntrl-character-p</font> (char)
+  (and (characterp char)
+       (char:cntrl-p char)))
+<a name="digit-character-p"></a>
+<font color="#008844">;; decimal digits = 0-9</font>
+
+(defun <font color="#0000CC">digit-character-p</font> (char)
+  (and (characterp char)
+       (char:digit-p char)))
+<a name="graph-character-p"></a>
+<font color="#008844">;; graphical characters = alnum + punct</font>
+
+(defun <font color="#0000CC">graph-character-p</font> (char)
+  (and (characterp char)
+       (char:graph-p char)))
+<a name="lower-character-p"></a>
+<font color="#008844">;; lowercase characters = a-z</font>
+
+(defun <font color="#0000CC">lower-character-p</font> (char)
+  (and (characterp char)
+       (char:lower-p char)))
+<a name="print-character-p"></a>
+<font color="#008844">;; printable characters = alnum + punct + space</font>
+
+(defun <font color="#0000CC">print-character-p</font> (char)
+  (and (characterp char)
+       (char:print-p char)))
+<a name="punct-character-p"></a>
+<font color="#008844">;; punctuation marks</font>
+
+(defun <font color="#0000CC">punct-character-p</font> (char)
+  (and (characterp char)
+       (char:punct-p char)))
+<a name="space-character-p"></a>
+<font color="#008844">;; characters producing whitespace</font>
+
+(defun <font color="#0000CC">space-character-p</font> (char)
+  (and (characterp char)
+       (char:space-p char)))
+<a name="upper-character-p"></a>
+<font color="#008844">;; uppercase characters = A-Z</font>
+
+(defun <font color="#0000CC">upper-character-p</font> (char)
+  (and (characterp char)
+       (char:upper-p char)))
+<a name="xdigit-character-p"></a>
+<font color="#008844">;; hexadecimal digits = 0-9, a-f, A-F</font>
+
+(defun <font color="#0000CC">xdigit-character-p</font> (char)
+  (and (characterp char)
+       (char:xdigit-p char)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="unicode"></a>
+
+<hr>
+
+<h2>Unicode</h2>
+
+<hr>
+
+<p>The UTF-8 functions may help to write custom <nobr>UTF-8</nobr> string
+access functions like <nobr>UTF-8-SUBSEQ</nobr> or
+<nobr>UTF-8-STRING-SEARCH</nobr> with no need to care about the underlying
+<nobr>low-level</nobr> octal sequences.</p>
+
+
+
+<p>In the list of "string-characters" every ASCII or UTF-8 character
+from 1-byte to 4-byte is represented by its own list element:</p>
+
+<pre class="example">
+(utf-8-string-to-list "hällö") => ("h" "\303\244" "l" "l" "\303\266")
+                                    h       ä      l   l       ö
+</pre>
+
+<p>The list can be manipulated by standard Nyquist list functions and
+then re-converted into a string by UTF-8-LIST-TO-STRING.</p>
+
+Practical examples
+
+<p>In Nyquist code, non-ASCII characters are represented by their
+native bytes sequences, represented by escaped octal numbers:</p>
+
+<pre class="example">
+(print "ä")  =&gt; "\303\244"  <font color="#008844">; on UTF-8 systems</font>
+</pre>
+
+<p>So for example matching the second "ä" from "hällo" in the list
+above, represented by the octal sequence "\303\244":</p>
+
+<pre class="example">
+(let ((string-list (utf-8-string-to-list "hällö")))
+  (string= "ä" (nth 1 string-list)))  ; 0 = first, 1 = second element
+=&gt; T                                  ; T = true = identified
+</pre>
+
+<p>Advantage: The number of the element in the list is the same as the
+number of the character in the string, independent from the number of bytes
+in the underlying character encoding.</p>
+
+;; The UTF-8 toolbox is intended to manipulate UTF-8 encoded file-
+;; or directory names, typed in by the user or read from environment 
+;; variables, before they are given to SETDIR or OPEN.
+;;
+;; Information from the environment
+;;
+;; Because the encoding of the non-ASCII characters depends on the
+;; underlying operation system [with non-unicode operation systems
+;; there will be no UTF-8 encoding available], it's always better
+;; to refer to strings from environment variables, user input, or
+;; strings returned from the underlying file system, instead of
+;; hand-coded strings in the Nyquist source code, for example:
+;;
+;; GET-ENV - can read strings from environment variables:
+;;
+;; (defun user-home-directory ()
+;;   (or (get-env "HOME")           ; Unix
+;;       (get-env "UserProfile")))  ; Windows
+;;
+;; On Windows, there is no HOME variable defined by Windows itself,
+;; but most programs will respect a HOME variable, if one has been
+;; defined by the user. That's why the HOME variable is read first.
+;;
+;; SETDIR - can test if a directory exists and return its name:
+;;
+;; (defun directory-exists-p (string)
+;;   (let ((orig-dir (setdir "."))
+;;         (new-dir  (setdir string)))
+;;     (when (string/= orig-dir new-dir)
+;;       (setdir orig-dir)
+;;       new-dir)))
+;;
+;; SETDIR always returns abloute direcory names, even if STRING is a
+;; relative direcory name. That's why DIRECTORY-EXISTS-P first stores
+;; the absolute name of the current working directory in the ORIG-DIR
+;; variable and compares it then against the absolute directory name
+;; returned by SETDIR when it tries to change the directory to STRING.
+;;
+;; OPEN - can test if a file exists and return its name:
+;;
+;; (defun file-exists-p (string)
+;;   (unless (directory-exists-p string)
+;;     (let (file-stream)
+;;       (unwind-protect
+;;         (setq file-stream (open string))
+;;         (when file-stream (close file-stream)))
+;;       (when file-stream string))))
+;;
+;; On Unix, a directory is a special kind of file, so the Nyquist/XLISP
+;; OPEN function opens directories, too. That's why FILE-EXISTS-P first
+;; must test and make sure that STRING is not the name of a directory.
+;;
+;;; Known bugs and limitations of the UTF-8 toolbox:
+;;
+;; The UTF-8 toolbox does not provide support for UTF-8 case-detection
+;; or UTF-8 case-conversion. It cannot be detected if a UTF-8 character
+;; is upper- or lowercase, it's also not possible to convert characters
+;; from upper- to lowercase or vice versa.
+;;
+;; The library does not provide functions to compare UTF-8 characters
+;; or to sort UTF-8 characters.
+;;
+;; The XLISP character functions do not work with UTF-8 octal sequences,
+;; so matching must be done via XLISP's STRING= and STRING/= functions.
+;;
+;; The XLISP string comparison functions like STRING<, STRING>, etc.
+;; do not work reliably with multibyte characters.
+;;
+;; The string matching and sorting algorithms of the Unicode Consortium
+;; are too complex to be implemented in XLISP with reasonable speed.
+;;
+;; See:  http://www.unicode.org/reports/tr10/  - string comparison
+;;
+;; The library is implemented in interpreted Lisp, so please do not
+;; expect high-speed performance with advanced list manipulations.
+;;
+;; The library still has not been tested with ISO encoded systems.
+;;
+
+<p><b>UTF-8 Encoding</b> - see also http://en.wikipedia.org/wiki/UTF-8</p>
+
+
+<p>In an UTF-8 encoded character the first byte starts with:</p>
+
+<pre class="example">
+;;    one-byte  0xxxxxxx -> legal char-codes   0 to 127  [UTF-8/ASCII]
+;;    two-byte  110xxxxx -> legal char-codes 194 to 223  [UTF-8]
+;;  three-byte  1110xxxx -> legal char-codes 224 to 239  [UTF-8]
+;;   four-byte  11110xxx -> legal char-codes 240 to 244  [UTF-8]
+;;
+;; The second, third, and fourth characters start with:
+;;
+;;              10xxxxxx -> legal char-codes 128 to 191  [UTF-8]
+</pre>
+
+
+<p>UTF-8-BYTE-P tests if a XLISP character is a valid UTF-8 byte</p>
+
+<pre class="example">
+(defun utf-8-byte-p (char)
+  (when (characterp char)
+    (let ((code (char-code char)))
+      (when (or (&lt;=   0 code 191)
+                (&lt;= 194 code 244))  
+        char))))
+</pre>
+
+<p>UTF-8-BYTES tries to determine from the XLISP character code
+how many bytes the character has in UTF-8 encoding</p>
+
+<pre class="example">
+(defun utf-8-bytes (char)
+  (cond ((not (characterp char))
+         (error "not a character" char))
+        ((not (utf-8-byte-p char))
+         (error "invalid UTF-8 byte" char))
+        (t
+         (let ((code (char-code char)))
+           (cond ((&lt;=   0 code 127) 1)  ; one byte [= ASCII]
+                 ((&lt;= 194 code 223) 2)  ; two bytes
+                 ((&lt;= 224 code 239) 3)  ; three bytes
+                 ((&lt;= 240 code 244) 4)  ; four bytes
+                 (t (error "utf-8-bytes: not an UTF-8 identifer" char)))))))
+</pre>
+
+<p>UTF-8-STRING-TO-LIST converts a string containing ASCII or UTF-8
+characters from one to four bytes into a list, where:</p>
+
+<ul>
+<li><nobr><b>ASCII</b> - ASCII string</nobr></li>
+<li><nobr><b>UTF-8</b> - string of octal-sequences</nobr></li>
+</ul>
+
+;; Every character (single-byte or multi-byte) is represented
+;; by its own list element:
+;;
+;; (utf-8-string-to-list "hällö") => ("h" "\303\244" "l" "l" "\303\266")
+;;                                     h       ä      l   l       ö
+;;
+;; The list can be manipulated by standard XLISP list functions and
+;; then re-converted into a string by UTF-8-LIST-TO-STRING below.
+
+<pre class="example">
+(defun utf-8-string-to-list (string)
+  (cond
+    ((not (stringp string))
+     (error "utf-8-string-to-list: not a string" string))
+    ((string= "" string) nil)
+    (t
+     (let ((end (length string))
+           (list nil))
+       (do ((index 0 (1+ index)))
+           ((>= index end))
+         (let* ((char (char string index))
+                (bytes (1- (utf-8-bytes char)))
+                (utf-8 (string char)))
+           (dotimes (rest-of bytes) ; runs only if bytes > 0
+             (incf index)
+             (if (> index end)
+                 (error "utf-8-string-to-list: index out of range" index)
+                 (let ((byte (char string index)))
+                   (if (not (utf-8-byte-p byte))
+                       (error "utf-8-string-to-list: invalid UTF-8 byte" byte)
+                       (setq utf-8 (strcat utf-8 (string byte)))))))
+           (push utf-8 list)))
+       (reverse list)))))
+</pre>
+
+;; UTF-8-LIST-TO-STRING re-converts a list containing ASCII and
+;; UTF-8 "string-characters"  back to a XLISP string, intended
+;; to be given to SETDIR or OPEN for file or directory operations.
+
+<pre class="example">
+(defun utf-8-list-to-string (list)
+  (cond ((not (listp list))
+         (error "utf-8-list-to-string: not a list" list))
+        ((null list) "")
+        (t
+         (let ((result ""))
+           (dolist (string list)
+             (if (not (stringp string))
+                 (error "utf-8-list-to-string: not a string" string)
+                 (setq result (strcat result string))))
+           result))))
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

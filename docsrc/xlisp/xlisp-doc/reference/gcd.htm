@@ -1,0 +1,75 @@
+<html><head><title>XLISP gcd</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>gcd</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(gcd [<i>int</i> ... ])</dt>
+<dd><i>int</i> - an integer expression<br>
+returns - the greatest common divisor</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'gcd' function returns the greatest common divisor of a series of
+integers. If no arguments are given, a zero is returned. If only one
+argument is given, the absolute value of the argument is returned. The
+successful result is always a positive integer.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(gcd 51 34)       <font color="#008844">; returns 17</font>
+(gcd 99 66 22)    <font color="#008844">; returns 11</font>
+(gcd -99 66 -33)  <font color="#008844">; returns 33</font>
+(gcd -14)         <font color="#008844">; returns 14</font>
+(gcd 0)           <font color="#008844">; returns 0</font>
+(gcd)             <font color="#008844">; returns 0</font>
+(gcd .2)          <font color="#008844">; error: bad argument type - 0.2</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-023.htm#gcd">gcd</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,77 @@
+<html><head><title>XLISP power</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>power</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>Lisp function (closure)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>misc.lsp</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>power</b> <i>x y</i>)</nobr></dt>
+<dd><i>x</i>, <i>y</i> - two integer or floating point numbers<br>
+returns - <i>x</i> raised to the <i>y</i> power as a floating point number</dd>
+</dl>
+
+</div></p>
+
+<p>In Nyquist, 'power' is implemented as a Lisp function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">power</font> (x y)
+  (exp (* (log (float x)) y)))
+</pre>
+
+<h2>Description</h2>
+
+<p>The 'power' function returns 'x' raised to the 'y' power as a floating
+point number.</nobr>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(power 2 8)   =&gt; 256
+(power 4 .5)  =&gt; 2.0
+</pre>
+
+<p>See also <a href="expt.htm">expt</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

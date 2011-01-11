@@ -1,0 +1,74 @@
+<html><head><title>XLISP cons</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cons</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(cons <i>expr-car expr-cdr</i>)</dt>
+<dd><i>expr-car</i> - an expression<br>
+<i>expr-cdr</i> - an expression<br>
+returns - the new list</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'cons' function takes two expressions and constructs a new list from
+them. If the 'expr-cdr' is not a list, then the result will be a
+'dotted-pair'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(cons 'a 'b)           <font color="#008844">; returns (A . B)</font>
+(cons 'a nil)          <font color="#008844">; returns (A)</font>
+(cons 'a '(b))         <font color="#008844">; returns (A B)</font>
+(cons '(a b) '(c d))   <font color="#008844">; returns ((A B) C D)</font>
+(cons '(a b) 'c)       <font color="#008844">; returns ((A B) . C)</font>
+(cons (- 4 3) '(2 3))  <font color="#008844">; returns (1 2 3)</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#cons">cons</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

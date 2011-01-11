@@ -1,0 +1,590 @@
+<html><head>
+
+<title>Advanced XLISP Objects</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Advanced XLISP Objects</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="standard-xlisp-objects">Standard XLISP Objects</a></nobr></li>
+<li><nobr><a href="initializing-class-variables">Initializing Class Variables</a></nobr></li>
+<li><nobr><a href="accessing-class-and-instance-variables">Accessing Class and Instance Variables</a></nobr></li>
+</ol>
+
+<a name="standard-xlisp-objects"></a>
+
+<hr>
+
+<h2>Standard XLISP Objects</h2>
+
+<hr>
+
+<p>Define a class with an instance variable and a class variable:</p>
+
+<pre class="example">
+(setq my-class (send class :new '(instance-var) '(class-var)))
+</pre>
+
+<p>Look at the layout of the new class:</p>
+
+<pre class="example">
+&gt; (send my-class :show)
+Object is #&lt;Object...&gt;, Class is #&lt;Object...&gt;
+  MESSAGES = NIL
+  IVARS = (INSTANCE-VAR)
+  CVARS = (CLASS-VAR)
+  CVALS = #(NIL) <font color="#008844">; default init-value of class variables</font>
+  SUPERCLASS = #&lt;Object...&gt;
+  IVARCNT = 1
+  IVARTOTAL = 1
+#&lt;Object...&gt;
+</pre>
+
+<p>Make an instance of '<nobr>my-class</nobr>':</p>
+
+<pre class="example">
+(setq my-object (send my-class :new))
+</pre>
+
+<p>Look at the layout of the new object:</p>
+
+<pre class="example">
+&gt; (send my-object :show)
+Object is #&lt;Object...&gt;, Class is #&lt;Object...&gt;
+  INSTANCE-VAR = NIL <font color="#008844">; default init-value of instance variables</font>
+#&lt;Object...&gt;
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>Initializing Class Variables</h2>
+
+<hr>
+
+<p><b>1.</b> Add an :isnew <nobr>init-method</nobr> to '<nobr>my-class</nobr>':</p>
+
+<pre class="example">
+(send my-class :answer :isnew nil '((setq class-var 1)))
+</pre>
+
+<p>Now reset the class:</p>
+
+<pre class="example">
+(send my-class :isnew)  =&gt; <font color="#AA0000">error: too few arguments</font>
+</pre>
+
+<p>It turns out that :isnew needs at least a list of instance variables plus
+an optional list of class variables:</p>
+
+<pre class="example">
+(send my-class :isnew '(ivar))           <font color="#008844">; overwrites INSTANCE-VAR, deletes CLASS-VAR</font>
+(send my-class :isnew '(ivar) '(cvar)))  <font color="#008844">; overwrites INSTANCE-VAR and CLASS-VAR</font>
+</pre>
+
+<p><b>2.</b> Add an :init method to '<nobr>my-class</nobr>':</p>
+
+<pre class="example">
+(send my-class :answer :init nil '((setq class-var 1)))
+</pre>
+
+<p>Now call the :init method:</p>
+
+<pre class="example">
+(send my-class :init)  =&gt; <font color="#AA0000">error: no method for this message - :INIT</font>
+</pre>
+
+<p>This is not true, there is an :init method:</p>
+
+<pre class="example">
+&gt; (send my-class :show)
+Object is #&lt;Object...&gt;, Class is #&lt;Object...&gt;
+  MESSAGES = ((<font color="#0000CC">:INIT</font> . <font color="#0000CC">#&lt;Closure-:INIT:...&gt;</font>))
+  IVARS = (INSTANCE-VAR)
+  CVARS = (CLASS-VAR)
+  CVALS = #(NIL)
+  SUPERCLASS = #&lt;Object...&gt;
+  IVARCNT = 1
+  IVARTOTAL = 1
+#&lt;Object...&gt;
+</pre>
+
+<p>The problem here is that in XLISP, methods cannot be called from the
+class they were defined in, methods only can be called from instances, and
+exactly the same happens with manipulating class variables. There seems to
+be no standard XLISP way to initialize class variables with values at the
+time when the class is defined.</p>
+
+<p><b>3.</b> The only way I know in XLISP to initialize a class variable is
+to create an instance of the class and set the class variable e.g. from the
+:isnew method of the instance:</p>
+
+<pre class="example">
+(setq my-object (send my-class :new))
+</pre>
+
+<p>The :isnew method of '<nobr>my-object</nobr>', inherited from
+'<nobr>my-class</nobr>', has set the class variable in
+'<nobr>my-class</nobr>' to a new value:</p>
+
+<pre class="example">
+&gt; (send my-class :show)
+Object is #&lt;Object...&gt;, Class is #&lt;Object...&gt;
+  MESSAGES = ((:ISNEW . #&lt;Closure-:ISNEW:...&gt;))
+  IVARS = (INSTANCE-VAR)
+  CVARS = (CLASS-VAR)
+  CVALS = #(1) <font color="#008844">; new value of CLASS-VAR</font>
+  SUPERCLASS = #&lt;Object...&gt;
+  IVARCNT = 1
+  IVARTOTAL = 1
+#&lt;Object...&gt;
+</pre>
+
+<p>This works, but now I have two problems:</p>
+
+<ol>
+
+<li><p>If a class variable is set from an instance's :isnew method,
+inherited from the superclass, then, whenever an instance is created, the
+class variable will be reset to its initial value. <nobr>Note that</nobr> in
+Lisp, instances can be created at arbitrary <nobr>run-time</nobr>, not only
+at the beginning of a program. Setting class variables from an :isnew method
+can produce unexpected <nobr>side-effects</nobr> if a class variable is used
+for object <nobr>inter-communication</nobr>.</p></li>
+
+<li><p>Because instances can be created at arbitrary runtime, a framework
+would need to be written when a class variable is allowed to be set or reset
+and <nobr>when not</nobr>. <nobr>Ok, if</nobr> class variables are used for
+object <nobr>inter-communication</nobr>, a framework needs to be witten
+anyway, but I do not want to be forced to think about this only because I
+want to initialize a single class variable.</p></li>
+
+</ol>
+
+<p><b>4.</b> Here is a trick I use to initialize class variables.</p>
+
+<p>Create a class with class variables:</p>
+
+<pre class="example">
+(setq my-class (send class :new nil '(cvar-1 cvar-2)))
+</pre>
+
+<p>Add an :isnew method to set the class variables:</p>
+
+<pre class="example">
+(send my-class :answer :isnew nil '((setq cvar-1 "a" cvar-2 "b")))
+</pre>
+
+<p>Create a temporary dummy object to initialize the class variables:</p>
+
+<pre class="example">
+(let ((x (send my-class :new))))
+</pre>
+
+<p>Replace the :isnew method with a dummy version <nobr>[or a</nobr> real
+version, initializing the instance variables]:</p>
+
+<pre class="example">
+(send my-class :answer :isnew nil nil)
+</pre>
+
+<p>Now I have a class with initialized class variables:</p>
+
+<pre class="example">
+&gt; (send my-class :show)
+Object is #&lt;Object...&gt;, Class is #&lt;Object...&gt;
+  MESSAGES = ((:ISNEW . #&lt;Closure-:ISNEW...&gt;))  <font color="#008844">; dummy method</font>
+  IVARS = NIL
+  CVARS = (CVAR-1 CVAR-2)  <font color="#008844">; class variables</font>
+  CVALS = #("a" "b")       <font color="#008844">; init values</font>
+  SUPERCLASS = #&lt;Object...&gt;
+  IVARCNT = 0
+  IVARTOTAL = 0
+#&lt;Object...&gt;
+</pre>
+
+<p>See defclass below how to make this work automatically.</p>
+
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>Accessing Class and Instance Variables</h2>
+
+<hr>
+
+<pre class="example">
+(setq my-class (send class :new '(i-var) '(c-var)))
+(setq my-object (send my-class :new))
+</pre>
+
+<p>A message to read internal class and instance variables:</p>
+
+<pre class="example">
+(send my-class :answer :<font color="#0000CC">internal-slot-get</font> '(slot-name)
+  '((eval slot-name)))
+</pre>
+
+<p>A message to write internal class and instance variables:</p>
+
+<pre class="example">
+(send my-class :answer :<font color="#0000CC">internal-slot-set</font> '(slot-name value)
+  '((eval (list 'setq slot-name value))))
+</pre>
+
+<p><div class="box">
+
+<p><b>Implementation Notes</b></p>
+
+<p><b>1.</b> It's not really good Lisp style to explicitely call 'eval' in
+Lisp code at <nobr>run-time</nobr>, because 'eval' produces a lot of
+overhead, but here the only way to get access to the internal environment of
+an object is passing the message arguments to 'eval' inside the object
+itself.</p>
+
+<p><b>2.</b> In the XLISP object system, an :answer message can only be
+accessed in an <b>instance</b> of a class <nobr>[a sub-class</nobr> or on
+object], but not in the class, where the :answer message has been defined,
+so the :internal-slot accessor will only work in '<nobr>my-object</nobr>'
+but ont in '<nobr>my-class</nobr>'.</p>
+
+<p><b>3.</b> If a method had been changed in a superclass, the change will
+automatically be inherited by all instances of the class
+[<nobr>sub-classes</nobr> and objects], with no need to redefine them.</p>
+
+<p><b>Warning:</b> If '<nobr>internal-slot-set</nobr>' is given a
+<nobr>slot-name</nobr> that doesn't exist inside the object, a global
+variable will be created.</p>
+
+</div></p>
+
+<p>Reading and writing an instance variable:</p>
+
+<pre class="example">
+&gt; (send my-object :internal-slot-get 'i-var)     <font color="#008844">; read</font>
+NIL
+
+&gt; (send my-object :internal-slot-set 'i-var 55)  <font color="#008844">; write</font>
+55
+
+&gt; (send my-object :internal-slot-get 'i-var)     <font color="#008844">; read</font>
+55
+
+&gt; (send my-object :show)
+Object is #&lt;Object: #9b95998&gt;, Class is #&lt;Object: #9b95c50&gt;
+  I-VAR = 55 <font color="#008844">; new value</font>
+#&lt;Object: #9b95998&gt;
+</pre>
+
+<p>Reading and writing a class variable:</p>
+
+<pre class="example">
+&gt; (send my-object :internal-slot-get 'c-var)      <font color="#008844">; read</font>
+NIL
+
+&gt; (send my-object :internal-slot-set 'c-var 123)  <font color="#008844">; write</font>
+123
+
+&gt; (send my-object :internal-slot-get 'c-var)      <font color="#008844">; read</font>
+123
+
+&gt; (send my-class :show)
+Object is #&lt;Object: #9b95c50&gt;, Class is #&lt;Object: #9af7dd4&gt;
+  MESSAGES = ((:INTERNAL-SLOT-GET . #&lt;Closure-:INTERNAL-SLOT-GET: #9b90080&gt;)
+              (:INTERNAL-SLOT-SET . #&lt;Closure-:INTERNAL-SLOT-SET: #9b900d4&gt;))
+  IVARS = (I-VAR)
+  CVARS = (C-VAR)
+  CVALS = #(123) <font color="#008844">; new value</font>
+  SUPERCLASS = #&lt;Object: #9af7dc8&gt;
+  IVARCNT = 1
+  IVARTOTAL = 1
+#&lt;Object: #9b95c50&gt;
+</pre>
+
+<p>See the '<nobr>slot-get</nobr>' and '<nobr>slot-set</nobr>' functions
+below how this can be generalized to access any class or instance variable
+in any class or object via only two functions.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="defclass"></a>
+
+<hr>
+
+<h2>defclass</h2>
+
+<hr>
+
+<p>The original RBD 'defclass' macro:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">defclass</font> (name super locals class-vars)
+  (if (not (boundp name))
+    (if super
+        `(setq ,name (send class :new ',locals ',class-vars ,super))
+        `(setq ,name (send class :new ',locals ',class-vars)))))
+</pre>
+
+<p>In order to read or write XLISP class or object variables two
+<nobr>slot-acessor</nobr> messages need to be added to every new
+<nobr>top-level</nobr> class:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">defclass</font> (name super locals class-vars)
+  (when (boundp name)
+    (format t <font color="#880000">";; WARNING: redefining ~a~%"</font> name))
+  (if super
+      `(setq ,name (send class :new ',locals ',class-vars ,super))
+      `(progn
+         (setq ,name (send class :new ',locals ',class-vars))
+         (send ,name :answer :internal-slot-set '(slot-name value)
+           '((eval (list 'setq slot-name value))))
+         (send ,name :answer :internal-slot-get '(slot-name)
+           '((eval slot-name))))))
+</pre>
+
+<p>The third version provides <nobr>'let'-syntax</nobr> with instance and
+class variables. <nobr>A list</nobr> of symbols will create variables
+initialized <nobr>to NIL</nobr>. This is the XLISP default behaviour.
+<nobr>If an</nobr> element is a <nobr>(symbol value)</nobr> list, then the
+variable will be initialized with 'value', as soon as an instance of the
+class is created.</p>
+
+<p><div class="box">
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td colspan="7"><nobr>(<b>defclass</b> <i>class</i> {<i>superclass</i> | NIL}</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code>({</nobr></td>
+  <td align="center"><nobr><i>ivar</i></nobr></td>
+  <td><nobr>&nbsp;|&nbsp;(</nobr></td>
+  <td align="center"><nobr><i>ivar</i></nobr></td>
+  <td><nobr>&nbsp;<i>init-form</i></nobr></td>
+  <td><nobr>)} ... )<code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>; instance variables</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code>({</nobr></td>
+  <td align="center"><nobr><i>cvar</i></nobr></td>
+  <td><nobr>&nbsp;|&nbsp;(</nobr></td>
+  <td align="center"><nobr><i>cvar</i></nobr></td>
+  <td><nobr>&nbsp;<i>init-form</i></nobr></td>
+  <td><nobr>)} ... ))<code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>; class variables</nobr></td>
+</tr>
+</tbody></table></p>
+
+</div></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">expand-init-values</font> (vars var-list init-list)
+  (let ((var (gensym)))
+    `(dolist (,var ,vars (setq ,var-list  (reverse ,var-list)
+                               ,init-list (reverse ,init-list)))
+       (cond ((symbolp ,var)
+              <font color="#008844">;; if the element is a single symbol,</font>
+              <font color="#008844">;; then add it to the variable list</font>
+              (push ,var ,var-list))
+             ((and (listp ,var) (symbolp (first ,var)))
+              <font color="#008844">;; if the element is a (symbol value) list, then add</font>
+              <font color="#008844">;; an (setq symbol value) element to the init-list</font>
+              (push (list 'setq (first ,var) (second ,var)) ,init-list)
+              <font color="#008844">;; and add the symbol to the variable-list</font>
+              (push (first ,var) ,var-list))
+             (t (error <font color="#880000">"bad argument type"</font> ,var))))))
+
+(defmacro <font color="#0000CC">with-unique-names</font> (symbols &rest body)
+  `(let ,(mapcar #'(lambda (x) `(,x (gensym))) symbols) ,@body))
+
+(defmacro <font color="#0000CC">defclass</font> (name super class-vars instance-vars)
+  (with-unique-names (class-list class-init instance-list instance-init x)
+    `(let (,instance-list ,instance-init ,class-list ,class-init)
+       (expand-init-values ',class-vars ,class-list ,class-init)
+       (expand-init-values ',instance-vars ,instance-list ,instance-init)
+       (if (boundp ',name)
+           (format t <font color="#880000">";; Redefining ~a~%"</font> ',name)
+           (format t <font color="#880000">";; CLASS ~a~%"</font> ',name))
+       (format t <font color="#880000">";; CVARS ~a~%"</font> ',class-vars)
+       (format t <font color="#880000">";; IVARS ~a~%"</font> ',instance-vars)
+       ,(if super
+            `(setq ,name (send class :new ,instance-list ,class-list ,super))
+            `(setq ,name (send class :new ,instance-list ,class-list)))
+       <font color="#008844">;; initialize class and instance variables</font>
+       (when ,class-list
+         (send ,name :answer :isnew nil ,class-init)
+         (let ((,x (send ,name :new)))))
+       (when (or ,instance-list ,class-list)
+         (send ,name :answer :isnew nil ,instance-init))
+       <font color="#008844">;; add slot-accessors to top-level classes</font>
+       ,(unless super
+          `(progn
+             (send ,name :answer :internal-slot-set '(slot-name value)
+               '((eval (list 'setq slot-name value))))
+             (send ,name :answer :internal-slot-get '(slot-name)
+               '((eval slot-name))))))))
+</pre>
+
+<p><nobr>Sub-classes</nobr> and objects inherit their acessors from the
+<nobr>super-class</nobr>.</p>
+
+<p>Define a class with an <nobr>instance-variable</nobr>, a
+<nobr>class-variable</nobr> and slot acessors:</p>
+
+<pre class="example">
+&gt; (defclass my-class nil 
+    ((a 1) (b 2) (c 3))
+    ((d 4) (e 5) (f 6)))
+
+&gt; 
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="slot-value"></a>
+
+<hr>
+
+<h2>Generalized Slot Accessors</h2>
+
+<hr>
+
+<p>Now the slot accessors for internal class and instance variables can be
+defined as ordinary XLISP functions:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">slot-set</font> (object slot-name value)
+  (send object :internal-slot-set slot-name value))
+
+(defun <font color="#0000CC">slot-get</font> (object slot-name)
+  (send object :internal-slot-get slot-name))
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+&gt; (slot-set my-object 'i-var 333)
+333
+
+&gt; (slot-get my-object 'i-var)
+333
+</pre>
+
+<p>Even typing the quote could be saved if 'slot-set' and 'slot-get' are
+defined as macros:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">slot-set</font> (object slot-name value)
+  `(send ,object :internal-slot-set ',slot-name ,value))
+
+(defmacro <font color="#0000CC">slot-get</font> (object slot-name)
+  (send ,object :internal-slot-set ',slot-name ,value))
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+&gt; (slot-set my-object i-var 444)
+444
+
+&gt; (slot-get my-object i-var)
+444
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>Removing a Method from a Class or Instance</h2>
+
+<hr>
+
+<p>In Smalltalk, if a method's body is unbound and no other object refernces
+the method, then the method is automatically garbage collected.
+Unfortunately in XLISP this doesn't work because the instance variables,
+including the list of methods, are not accessed by the garbage collector
+<nobr>at all</nobr>. This means that even if the message body is set to NIL,
+the message is not garbage collected, instead the '<nobr>no function</nobr>'
+message returns NIL and blocks the <nobr>built-in</nobr> search for
+<nobr>super-class</nobr> messages.</p>
+
+<p>Because messages cannot be removed from XLISP objects, the only way to
+make a message 'disappear' is to replage it's body by a call to the
+<nobr>super-class</nobr>, passing the arguments of the original message:</p>
+
+<pre class="example">
+(defun remove-method (object message-selector &rest args)
+  (send object message-selector
+  (send-super message-selector args))
+</pre>
+
+<p>Shit: this doesn't work if the metod is defined in a super-class.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

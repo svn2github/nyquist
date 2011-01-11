@@ -1,0 +1,133 @@
+<html><head><title>XLISP do</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>do</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(do ([<i>binding</i> ... ]) (<i>test-expr</i> [<i>result</i>]) [<i>expr</i> ... ])</dt>
+<dd><i>binding</i> - a variable binding which is can take one of the following forms:<br>
+<dl><dd><i>symbol</i><br>
+(<i>symbol init-expr</i> [<i>step-expr</i>])
+<dl><dd><i>symbol</i> - a symbol<br>
+<i>init-expr</i> - an initialization expression for <i>symbol</i><br>
+<i>step-expr</i> - an expression with that <i>symbol</i> is updated
+at the end of each loop</dd></dl></dd></dl>
+<i>test-expr</i> - iteration ends when this expression returns a
+non-<a href="nil.htm">NIL</a> value<br>
+<i>result</i> - an optional expression for the returned result<br>
+<i>expr</i> - expressions comprising the body of the loop which may
+contain <a href="return.htm">return</a>s,
+<a href="go.htm">go</a>s or tags for
+<a href="go.htm">go</a><br>
+returns - the value of the last result expression</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'do' special form is basically a 'while' looping construct that
+contains symbols [with optional initializations and updates], a loop test
+[with an optional return value] and a block of code [expressions] to
+evaluate. The 'do' form evaluates its initializations and updates in no
+specified order [as opposed to <a href="do-star.htm">do*</a> which
+does it in sequential order]. The sequence of these events is:</p>
+
+<pre>
+  <i>init-expr</i> execution
+  while not <i>test-expr</i> do
+    loop code execution
+    <i>step-expr</i> execution
+  end-while
+  return <i>result</i>
+</pre>
+
+
+<p> The first form after the 'do' is the 'binding' form. It contains a
+series of 'symbols' or 'bindings'. The 'binding' is a 'symbol' followed by
+an initialization expression 'init-expr' and an optional 'step-expr'. If
+there is no 'init-expr', the 'symbol' will be initialized to
+<a href="nil.htm">NIL</a>. There is no specification as to the
+order of execution of the bindings or the step expressions, except that
+they happen all together.</p>
+
+<p>The 'do' form will go through and create and initialize the symbols.
+This is followed by evaluating the 'test-expr'. If 'test-expr' returns a
+non-<a href="nil.htm">NIL</a> value, the loop will terminate.
+If 'test-expr' returns a <a href="nil.htm">NIL</a> value then
+the 'do' will sequentially execute the 'exprs'. After execution of the loop
+'exprs', the 'symbols' are set to the 'step-exprs' [if the 'step-exprs'
+exist]. Then, the 'test-expr' is re-evaluated, and so on. The value of the
+'result' expression is evaluated and returned. If no 'result' is specified,
+<a href="nil.htm">NIL</a> is returned. When the 'do' is finished
+execution, the 'symbol's that were defined will no longer exist or retain
+their values.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(do (i)                              <font color="#008844">; DO loop with var I</font>
+  ((eql i 0) "done")                 <font color="#008844">;   test and result</font>
+  (print i) (setq i 0) (print i))    <font color="#008844">;   prints NIL 0</font>
+                                     <font color="#008844">;   returns "done"</font>
+
+(do (i)                              <font color="#008844">; DO loop with var I</font>
+  ((eql i 0))                        <font color="#008844">;   test but no result</font>
+  (print i) (setq i 0) (print i))    <font color="#008844">;   prints NIL 0</font>
+                                     <font color="#008844">;   returns NIL</font>
+
+(do                                  <font color="#008844">; DO loop</font>
+   ((i 0 (setq i (1+ i)))            <font color="#008844">;   var I=0  increment by 1</font>
+    (j 10 (setq j (1- j))))          <font color="#008844">;   var J=10 decrement by 1</font>
+   ((eql i j)  "met in the middle")  <font color="#008844">;   test and result</font>
+   (princ i) (princ " ")             <font color="#008844">;   prints  0 10</font>
+   (princ j) (terpri))               <font color="#008844">;           1 9</font>
+                                     <font color="#008844">;           2 8</font>
+                                     <font color="#008844">;           3 7</font>
+                                     <font color="#008844">;           4 6</font>
+                                     <font color="#008844">;   returns "met in the middle"</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-020.htm#do">do</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

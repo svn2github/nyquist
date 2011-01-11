@@ -1,0 +1,85 @@
+<html><head><title>XLISP car</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>car</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>car</b> <i>expr</i>)</dt>
+<dd><i>expr</i> - a list or list expression<br>
+returns - the first element of the list</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'car' function returns the <a href="first.htm">first</a> element of
+the expression. <nobr>If the</nobr> <a href="first.htm">first</a> expression
+is itself a list, then the sublist is returned. <nobr>If the</nobr> list is
+<nobr><a href="nil.htm">NIL</a> ,</nobr> <a href="nil.htm">NIL</a> is
+returned.</p>
+
+<p>The 'car' function returns the same result as the
+<a href="first.htm">first</a> function.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(car '(a b c))       =&gt; A
+(car '((a b) c d))   =&gt; (A B)
+(car NIL)            =&gt; NIL
+(car 'a)             =&gt; <font color="#AA0000">error: bad argument type</font>
+(setq bob '(1 2 3))  =&gt; (1 2 3)
+(car bob)            =&gt; 1
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#list-functions">List Functions</a></nobr></li>
+<li><nobr>Tutorials &rarr; Lisp Hints &rarr; <a href="../tutorials/lisp-hints.htm#list-accessors">List Accessors</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

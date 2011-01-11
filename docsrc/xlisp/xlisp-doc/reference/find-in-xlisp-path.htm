@@ -1,0 +1,66 @@
+<html><head><title>XLISP find-in-xlisp-path</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>find-in-xlisp-path</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>path.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(find-in-xlisp-path <i>filename</i>)</dt>
+<dd><i>filename</i> - the name of the file to search for as string<br>
+returns - a full path name to the first occurrence found</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The '<nobr>find-in-xlisp-path</nobr>' function searches the XLISP search
+path <nobr>[e.g. XLISPPATH</nobr> from the environment] for 'filename'.
+<nobr>If 'filename'</nobr> is not found as is, and there is no file
+extension, '.lsp' is appended to filename and searched again. <nobr>The
+current</nobr> directory is not searched.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

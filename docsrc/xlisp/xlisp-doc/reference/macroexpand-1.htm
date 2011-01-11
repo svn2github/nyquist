@@ -1,0 +1,85 @@
+<html><head><title>XLISP macroexpand-1</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>macroexpand-1</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(macroexpand-1 <i>form</i>)</dt>
+<dd><i>form</i> - a macro form<br>
+returns - the macro expansion</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'macroexpand-1' function takes a 'form' and expands the first level
+of the macro definition used in the 'form'. The function returns the
+expansion. If the 'form' does not contain a macro, the form is returned
+unaltered.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defmacro plus (n1 n2) `(+ ,n1 ,n2))   <font color="#008844">; define PLUS macro</font>
+(plus 1 2)                             <font color="#008844">; returns 3</font>
+(macroexpand '(plus 3 4))              <font color="#008844">; returns (+ 3 4)</font>
+(macroexpand-1 '(plus 3 4))            <font color="#008844">; returns (+ 3 4)</font>
+
+(defmacro pl (p1 p2) `(plus ,p1 ,p2))  <font color="#008844">; define PL macro using PLUS</font>
+(pl 3 4)                               <font color="#008844">; returns 7</font>
+(macroexpand '(pl 3 4))                <font color="#008844">; returns (+ 3 4)</font>
+(macroexpand-1 '(pl 3 4))              <font color="#008844">; returns (PLUS 3 4)</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp returns 2 values for its result of
+'macroexpand-1', the expanded form and a
+<a href="t.htm">&nbsp;T&nbsp;</a> or
+<a href="nil.htm">NIL</a> value that indicates if the form was a
+macro. XLISP returns only the expanded form.  Common Lisp also supports an
+optional argument in 'macroexpand-1' for the environment of the expansion.
+XLISP does not support this optional argument.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-012.htm#macroexpand-1">macroexpand-1</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

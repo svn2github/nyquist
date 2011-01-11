@@ -1,0 +1,112 @@
+<html><head>
+
+<title>cl:multiple-value-list</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:multiple-value-list</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>multiple-value-list</b></nobr> macro evaluates a Lisp
+expression and returns all values in a list:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>multiple-value-list</b> <i>expr</i>)</dt>
+<dd><i>expr</i> - an arbitrary Lisp expression<br>
+returns - all values in a list</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">cl:multiple-value-list</font> (expr)
+  (setq <font color="#AA5500">cl:*multiple-values*</font> nil)
+  (let ((result (eval expr)))
+    (if <font color="#AA5500">cl:*multiple-values*</font>
+        '<font color="#AA5500">*rslt*</font>
+        `(list ,result))))
+</pre>
+
+<p>The <nobr>cl:<b>multiple-value-list</b></nobr> macro first evaluates the
+expression. <nobr>If the</nobr> evaluation returned multiple values, the
+value of the <a href="../../reference/global-rslt.htm">*rslt*</a> variable
+is returned, otherwise the normal Lisp return value is returned in a list of
+one element.</p>
+
+<p><nobr>The
+<a href="global-multiple-values.htm">cl:*multiple-values*</a></nobr>
+variable <nobr>is <a href="../../reference/t.htm">&nbsp;T&nbsp;</a></nobr>
+if evaluating the expression returns multiple values and
+<a href="../../reference/nil.htm">NIL</a> with a normal return value.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(cl:multiple-value-list 1)  =&gt; (1)      <font color="#008844">; cl:*multiple-values* =&gt; NIL</font>
+                                        <font color="#008844">; *rslt* =&gt; [invalid]</font>
+(cl:multiple-value-list
+  (+ 1 1))                  =&gt; (2)      <font color="#008844">; cl:*multiple-values* =&gt; NIL</font>
+                                        <font color="#008844">; *rslt* =&gt; [invalid]</font>
+(cl:multiple-value-list
+  (cl:values 1 2 3))        =&gt; (1 2 3)  <font color="#008844">; cl:*multiple-values* =&gt; T</font>
+                                        <font color="#008844">; *rslt* =&gt; (1 2 3)</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

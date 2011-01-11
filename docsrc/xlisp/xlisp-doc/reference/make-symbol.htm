@@ -1,0 +1,93 @@
+<html><head><title>XLISP make-symbol</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>make-symbol</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(make-symbol <i>symbol-str</i>)</dt>
+<dd><i>symbol-str</i> - a string expression<br>
+returns - the new symbol</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'make-symbol' function takes a string name 'symbol-str' and creates a
+new symbol. This symbol is temporary and is not
+<a href="intern.htm">intern</a>ed [placed] into the symbol hash
+table <a href="global-obarray.htm">*obarray*</a>. If the symbol already
+exists, no error or action is taken and the old values and property lists
+remain intact. The 'make-symbol' function returns the symbol as its
+result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun lookin (sym)                  <font color="#008844">; create a function to</font>
+  (aref *obarray*                    <font color="#008844">;   look inside *OBARRAY*</font>
+    (hash sym (length *obarray*))))  <font color="#008844">;   and look for a specific</font>
+                                     <font color="#008844">;   symbol - returns a list</font>
+
+(lookin "FEE")                       <font color="#008844">; returns (CHAR-INT NTH ++)</font>
+                                     <font color="#008844">;   FEE symbol doesn't exist</font>
+
+(make-symbol "FEE")                  <font color="#008844">; returns FEE symbol</font>
+(lookin "FEE")                       <font color="#008844">; returns (CHAR-INT NTH ++)</font>
+                                     <font color="#008844">;   FEE still doesn't exist</font>
+
+(intern "FEE")                       <font color="#008844">; intern FEE symbol</font>
+(lookin "FEE")                       <font color="#008844">; returns (FEE CHAR-INT NTH ++)</font>
+                                     <font color="#008844">;   FEE does now exist</font>
+</pre>
+
+<p><b>Note:</b> When you 'make-symbol' a string type symbol like
+&quot;fingers&quot;, this is a lower case symbol. This is different from
+doing a 'make-symbol' on a string type symbol &quot;FINGERS&quot;, which is
+an upper case symbol. With string type symbols, &quot;fingers&quot; and
+&quot;FINGERS&quot; are two different symbols. Remember also that normal
+symbols created by XLISP are automatically converted to upper case.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-013.htm#make-symbol">make-symbol</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

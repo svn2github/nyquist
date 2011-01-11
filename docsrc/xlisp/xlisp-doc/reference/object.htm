@@ -1,0 +1,120 @@
+<html><head><title>XLISP object</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>object</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>object</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;object</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>'object' is an object <a href="class.htm">class</a>. An object
+is a composite structure that contains internal state information, methods
+[which respond to messages], a pointer to the object's
+<a href="class.htm">class</a> and a pointer to the object's
+super-class. XLISP contains two built in objects: 'object' and
+<a href="class.htm">class</a>. 'object' is the superclass for the
+<a href="class.htm">class</a> object.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(send object :show)                                     <font color="#008844">; look at the object definition</font>
+
+                                                        <font color="#008844">; example use of objects</font>
+(setq my-class (send class :new '(state)))              <font color="#008844">; new class MY-CLASS with STATE</font>
+       
+(send my-class :answer :isnew '()                       <font color="#008844">; set up initialization</font>
+                              '((setq state nil) self))
+
+(send my-class :answer :set-it '(value)                 <font color="#008844">; create :SET-IT message</font>
+                               '((setq state value)))
+
+(setq my-obj (send my-class :new))                      <font color="#008844">; create MY-OBJ out of MY-CLASS</font>
+(send my-obj :set-it 5)                                 <font color="#008844">; STATE is set to 5</font>
+</pre>
+
+<p><b>Object definition:</b> The internal definition of the 'object' object
+instance is:</p>
+
+<pre class="example">
+Object is #&lt;Object: #23fd8&gt;, Class is #&lt;Object: #23fe2&gt;
+  MESSAGES = ((:SHOW . #&lt;Subr-: #23db2&gt;) 
+              (:CLASS . #&lt;Subr-: #23dee&gt;) 
+              (:ISNEW . #&lt;Subr-: #23e2a&gt;))
+  IVARS = NIL
+  CVARS = NIL
+  CVALS = NIL
+  SUPERCLASS = NIL
+  IVARCNT = 0
+  IVARTOTAL = 0
+#&lt;Object: #23fd8&gt;
+</pre>
+
+<p>The <a href="class.htm">class</a> of 'object' is
+<a href="class.htm">class</a>. There is no superclass of 'object'.
+Remember that the location information [like #23fd8] varies from system to
+system, yours will probably look different.</p>
+
+<p><b>Built-in methods:</b> The built in methods in XLISP include:</p>
+
+<ul>
+<li><nobr><a href="keyword-answer.htm">:answer</a> - add a method to an object</nobr></li>
+<li><nobr><a href="keyword-class.htm">:class</a> - return the object's <a href="class.htm">class</a></nobr></li>
+<li><nobr><a href="keyword-isnew.htm">:isnew</a> - run initialization code on object</nobr></li>
+<li><nobr><a href="keyword-new.htm">:new</a> - create a new object [instance or <a href="class.htm">class</a>]</nobr></li>
+<li><nobr><a href="keyword-show.htm">:show</a> - show the internal state of the object</nobr></li>
+</ul>
+
+<p><b>Message structure:</b> The normal XLISP convention for a 'message' is
+to have a valid symbol preceeded by a colon like
+<a href="keyword-isnew.htm">:isnew</a> or ':my-message'. However, it is
+possible to define a 'message' that is a symbol without a colon, but this
+makes the code less readable.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-010.htm#object">object</a>
+class in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

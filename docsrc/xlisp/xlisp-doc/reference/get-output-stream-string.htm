@@ -1,0 +1,80 @@
+<html><head><title>XLISP get-output-stream-string</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>get-output-stream-string</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(get-output-stream-string <i>stream</i>)</dt>
+<dd><i>stream</i> - an output stream expression<br>
+returns - the output so far as a string</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'get-output-stream-string' function empties the specified 'stream'
+and returns this data as a single string. The output stream is emptied by
+this operation.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq out (make-string-output-stream))  <font color="#008844">; returns #&lt;Unnamed-Stream: #...&gt;</font>
+
+(format out "fee fi fo fum ")           <font color="#008844">; \</font>
+(format out "I smell the blood of ")    <font color="#008844">;  fill up output stream</font>
+(format out "Elmer Fudd")               <font color="#008844">; /</font>
+(get-output-stream-string out)          <font color="#008844">; returns "fee fi fo fum I smell the blood of Elmer Fudd"</font>
+
+(format out "~%now what")               <font color="#008844">; add more to output stream</font>
+(get-output-stream-string out)          <font color="#008844">; returns "\nnow what"</font>
+(get-output-stream-string out)          <font color="#008844">; returns ""</font>
+
+(format out "hello")                    <font color="#008844">; add more to output stream</font>
+(read out)                              <font color="#008844">; returns HELLO</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-030.htm#get-output-stream-string">get-output-stream-string</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

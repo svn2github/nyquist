@@ -1,0 +1,89 @@
+<html><head><title>XLISP mapl</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>mapl</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(mapl <i>function list1</i> [<i>list2</i> ... ])</dt>
+<dd><i>function</i> - a function definition like a
+<a href="lambda.htm">lambda</a> form  or a function name<br>
+<i>listN</i> - a list or list expression<br>
+returns - a list that is equivalent to <i>list1</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>Tha 'mapl' function applies the 'function' to the successive
+<a href="cdr.htm">cdr</a>s of each of the lists 'listN'. Each of
+the lists supplies one of the arguments to 'function'. The 'mapl' function
+returns a list that is equivalent to the first list 'list1'. It's purpose is
+to perform operations that have side-effects. If the lists are of different
+lengths, the shortest list will determine the number of applications of
+'function'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(mapl 'print '(a b c))       <font color="#008844">; prints (A B C)</font>
+                             <font color="#008844">;        (B C)</font>
+                             <font color="#008844">;        (C)</font>
+                             <font color="#008844">; returns (A B C)</font>
+
+<font color="#008844">;; apply a lambda function to a list</font>
+(mapl (lambda (x y) (princ x) (princ y) (terpri))
+      '(a b c) '(1 2 3))     <font color="#008844">; prints (A B C)(1 2 3)</font>
+                             <font color="#008844">;        (B C)(2 3)</font>
+                             <font color="#008844">;        (C)(3)</font>
+                             <font color="#008844">; returns (A B C)</font>
+</pre>
+
+<p><b>Note:</b> The use of the 'function' will work properly when it is a
+quoted symbol [the name of the function], an unquoted symbol whose value is
+a function or a closure object like a
+<a href="lambda.htm">lambda</a> form.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#mapl">mapl</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

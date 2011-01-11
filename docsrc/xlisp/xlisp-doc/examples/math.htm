@@ -1,0 +1,824 @@
+<html><head>
+
+<title>Math</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Math</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#number-types">Number Types</a></nobr></li>
+<li><nobr><a href="#integer-limits">Integer Limits</a></nobr></li>
+<li><nobr><a href="#rounding-and-truncation">Rounding and Truncation</a></nobr></li>
+<ul>
+<li><nobr><a href="#cl-round">cl:round</a> - round towards the next integer</nobr></li>
+<li><nobr><a href="#cl-truncate">cl:truncate</a> - truncate towards zero</nobr></li>
+<li><nobr><a href="#cl-ceiling">cl:ceiling</a> - truncate towards positive infinity</nobr></li>
+<li><nobr><a href="#cl-floor">cl:floor</a> - truncate towards negative infinity</nobr></li>
+</ul>
+<li><nobr><li><nobr><a href="#remainder-and-modulus">Remainder and Modulus</a></nobr></li></nobr></li>
+<ul>
+<li><nobr><a href="#cl-rem">cl:rem</a></nobr></li>
+<li><nobr><a href="#cl-mod">cl:mod</a></nobr></li>
+</ul>
+<li><nobr>Power and Roots</nobr></li>
+<ul>
+<li><nobr><a href="#cl-exp">cl:exp</a> - compute 'e' to the power of 'x'</nobr></li>
+<li><nobr><a href="#cl-expt">cl:expt</a> - compute 'x' to the power of 'y'</nobr></li>
+<li><nobr><a href="#cl-log">cl:log</a></nobr></li>
+<li><nobr><a href="#cl-sqrt">cl:sqrt</a></nobr></li>
+</ul>
+</ol>
+
+<hr>
+
+<h2>Number Types</h2>
+
+<hr>
+
+<p>Nyquist/XLISP only knows two types of numers:</p>
+
+<ul>
+<li><nobr><b>fixnum</b>  - integer numbers</nobr></li>
+<li><nobr><b>flonum</b>  - floating-point numbers</nobr></li>
+</ul>
+
+<p>In Nyquist/XLISP, there are no ratios or complex numbers. Even if the
+math functions on this page are modelled after <nobr>Common Lisp</nobr>, no
+attempt is made to emulate these numbers.</p>
+
+<a name="integer-limits"></a>
+
+<hr>
+
+<h2>Integer Limits</h2>
+
+<hr>
+
+<pre class="example">
+(setq <font color="#AA5500">*most-positive-fixnum*</font>  2147483647)
+(setq <font color="#AA5500">*most-negative-fixnum*</font> -2147483648)
+</pre>
+
+<p><b>Note:</b> these are the limits for <nobr>32-bit</nobr> machines.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">fixnum-bits</font> ()
+  (dolist (bits '(15 31 63) nil)
+    (let ((fixnum (round (expt 2.0 bits))))
+      (and (plusp (1- fixnum))
+           (minusp fixnum)
+           (return (1+ bits))))))
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">fixnum-limits</font> ()
+  (if (dolist (bits '(15 31 63) nil)
+        (let* ((negative (round (expt 2.0 bits)))
+               (positive (1- negative)))
+           (when (and (plusp  positive)
+                      (minusp negative))
+             (setq most-positive-fixnum positive
+                   most-negative-fixnum negative)
+             (return t))))
+      most-positive-fixnum
+      (error <font color="#880000">"fixnum limit not found"</font>)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="print-float"></a>
+
+<hr>
+
+<h2>print-float</h2>
+
+<hr>
+
+<p>The '<nobr>print-float</nobr>' function prints
+<nobr>floating-point</nobr> numbers ending in '.0' as
+<nobr>floating-point</nobr> numbers and not as integers:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">print-float</font> (item)
+  (if (not (floatp item))
+      item
+      (let ((string (format nil <font color="#880000">"~a"</font> item)))
+        (if (not (string-search <font color="#880000">"."</font> string))
+            (strcat string <font color="#880000">".0"</font>)
+            string))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="divide-float"></a>
+
+<hr>
+
+<h2>divide-float</h2>
+
+<hr>
+
+<p>An easy way to force a sequence of integers to be divided as floating
+point numbers is to insert the number 1.0 after the first argument in the
+list of arguments to the divider function or to explicitely convert the
+first argument into a floating point number by using the XLISP <a
+href="float.htm">float</a> function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">divide-float</font> (&rest args)
+  (if (null args)
+      (error <font color="#880000">"too few arguments"</font>)
+      (apply #'/ (cons (float (first args)) (rest args)))))
+</pre>
+
+<p>See <a href="apply.htm">apply</a>, <a href="cons.htm">cons</a>,
+<a href="defun.htm">defun</a>, <a href="error.htm">error</a>,
+<a href="first.htm">first</a>, <a href="float.htm">float</a>,
+<a href="if.htm">if</a>, <a href="null.htm">null</a>,
+<a href="rest.htm">rest</a>,
+<a href="lambda-keyword-rest.htm">&amp;rest</a>.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(divide-float 1)    =&gt; 1.0
+(divide-float 1 2)  =&gt; 0.5
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="rounding-and-truncation"></a>
+
+<hr>
+
+<h2>Rounding and Truncation</h2>
+
+<hr>
+
+<p>The <a href="#cl-round">cl:round</a>,
+<a href="#cl-truncate">cl:truncate</a>,
+<a href="#cl-ceiling">cl:ceiling</a> and
+<a href="#cl-floor">cl:floor</a> functions divide a number by a divisor,
+returning a quotient and a remainder:</p>
+
+<p><div class="box">
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="#cl-round">cl:round</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="#cl-truncate">cl:truncate</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="#cl-ceiling">cl:ceiling</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="#cl-floor">cl:floor</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;
+<i>quotient</i> * <i>divisor</i> + <i>remainder</i> = <i>number</i></nobr></p>
+
+</div></p>
+
+<p>The 'quotient' always represents a mathematical integer. <nobr>The
+'remainder'</nobr> is an integer if both 'number' and 'divisor' arguments
+are integers, and a <nobr>floating-point</nobr> number if either the
+'number' or the 'divisor' or both are <nobr>floating-point</nobr>
+numbers.</p>
+
+<p>With Nyquist/XLISP, the 'quotient' is always directly returned by the
+function, while a list:</p>
+
+<pre class="example">
+(<font color="#0000CC">quotient remainder</font>)
+</pre>
+
+<p>is stored in the Nyquist/XLISP
+<a href="../reference/global-rslt.htm">*rslt*</a> variable and the
+<a href="values.htm#cl-global-multiple-values">cl:*multiple-values*</a> is
+set to <a href="../reference/t.htm">&nbsp;T&nbsp;</a> to signal that
+<a href="values.htm">Multiple Values</a> are returned.</p>
+
+Examples:
+
+<pre class="example">
+(cl:round     3.5)  =&gt;  4  <font color="#008844">; *rslt* = ( 4 -0.5)</font>
+(cl:truncate  3.5)  =&gt;  3  <font color="#008844">; *rslt* = ( 3  0.5)</font>
+(cl:ceiling   3.5)  =&gt;  4  <font color="#008844">; *rslt* = ( 4 -0.5)</font>
+(cl:floor     3.5)  =&gt;  3  <font color="#008844">; *rslt* = ( 3  0.5)</font>
+
+(cl:round    -3.5)  =&gt; -4  <font color="#008844">; *rslt* = (-4  0.5)</font>
+(cl:truncate -3.5)  =&gt; -3  <font color="#008844">; *rslt* = (-3 -0.5)</font>
+(cl:ceiling  -3.5)  =&gt; -3  <font color="#008844">; *rslt* = (-3 -0.5)</font>
+(cl:floor    -3.5)  =&gt; -4  <font color="#008844">; *rslt* = (-4  0.5)</font>
+</pre>
+
+Force integer division:
+
+<pre class="example">
+(cl:truncate 3.0 2.0)              =&gt; 1
+(/ (truncate 3.0) (truncate 2.0))  =&gt; 1
+(/ 3 4)                            =&gt; 1
+</pre>
+
+<p><div class="box">
+
+<p><b>Implementation Notes</b></p>
+
+<pre class="example">
+(defun <font color="#0000CC">name</font> (number &amp;optional (divisor (if (<font color="#AA0000">integerp</font> number) 1 1.0)))
+  ... )
+</pre>
+
+<p>The <a href="../reference/integerp.htm">integerp</a> test in the
+parameter list signals an error if the 'number' argument is not a number,
+also the <nobr><a href="../reference/division.htm">&nbsp;/&nbsp;</a>
+[division]</nobr> function signals errors if the 'divisor' argument is zero
+or not a number, so we do not explicitely need to test the arguments.</p>
+
+<p>The <nobr><a href="#cl-ceiling">cl:ceiling</a></nobr> and <nobr><a
+href="#cl-floor">cl:floor</a></nobr> functions test if 'number' is an
+integer multiple of 'divisor' by comparing the results of an integer
+division and a <nobr>floating-point</nobr> division:</p>
+
+<pre class="example">
+(let ((<font color="#AA0000">i-quotient</font> (/ (truncate number) (truncate divisor)))
+      (<font color="#AA0000">f-quotient</font> (/ (float number) divisor)))
+  (if (= <font color="#AA0000">i-quotient f-quotient</font>)
+        ...
+</pre>
+
+<p>I'm not sure if this really catches all cases <nobr>[e.g.
+regarding</nobr> floating point precision], but have found no problems so
+far.</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-round"></a>
+
+<hr>
+
+<h2>cl:round</h2>
+
+<hr>
+
+<p>The '<nobr>cl:round</nobr>' function truncates towards the next
+integer:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>round</b> <i>number </i> [<i>divisor</i>])</dt>
+<dd><i>number</i> - an integer or <nobr>floating-point</nobr> number<br>
+<i>divisor</i> - an integer or <nobr>floating-point</nobr> number, except zero<br>
+<table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td valign="top"><nobr>returns</nobr></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the result of runding the result of <i>number</i> divided by <i>divisor</i></td>
+</tr>
+<tr>
+  <td></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the remainder of the round operation</td>
+</tr>
+</tbody></table></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:round</font> (number &amp;optional (divisor
+                                  (if (integerp number) 1 1.0)
+                                  divisor-p))
+  (let* ((x (/ (float number) divisor))
+         (quotient (cond ((and (not divisor-p) (integerp number)) number)
+                         ((= number divisor) 1)
+                         ((plusp x) (truncate (+ x 0.5)))
+                         ((= (- x 0.5) (truncate (- x 0.5)))
+                          (if (minusp x)
+                              (1- (truncate x))
+                              (truncate x)))
+                         (t (truncate (- x 0.5))))))
+    (setq <font color="#AA5500">*rslt*</font> (list quotient (- number (* quotient divisor)))
+          <font color="#AA5500">cl:*multiple-values*</font> t)
+    quotient))
+</pre>
+
+<p>The '<nobr>cl:round</nobr>' function computes a quotient that has been rounded to the
+nearest mathematical integer. <nobr>If the</nobr> mathematical quotient is
+exactly halfway between two integers, [that is, it has the form
+<nobr>'integer+1/2']</nobr>, then the quotient has been rounded to the even
+[divisible <nobr>by two]</nobr> integer. <nobr>See
+<a href="#rounding-and-truncation">Rounding and Truncation</a></nobr>
+above for more details.</p>
+
+<pre class="example">
+(round  3.5)     =&gt;  4
+(round -3.5)     =&gt; -3
+
+(cl:round  3.5)  =&gt;  4  <font color="#008844">; *rslt* = ( 4 -0.5)</font>
+(cl:round -3.5)  =&gt; -4  <font color="#008844">; *rslt* = (-4  0.5)</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-truncate"></a>
+
+<hr>
+
+<h2>cl:truncate</h2>
+
+<hr>
+
+<p>The '<nobr>cl:truncate</nobr>' function truncates towards zero:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>truncate</b> <i>number </i> [<i>divisor</i>])</dt>
+<dd><i>number</i> - an integer or <nobr>floating-point</nobr> number<br>
+<i>divisor</i> - an integer or <nobr>floating-point</nobr> number, except zero<br>
+<table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td valign="top"><nobr>returns</nobr></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the result of truncating the result of <i>number</i> divided by <i>divisor</i></td>
+</tr>
+<tr>
+  <td></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the remainder of the truncate operation</td>
+</tr>
+</tbody></table></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:truncate</font> (number &amp;optional (divisor (if (integerp number) 1 1.0)))
+  (let ((quotient (truncate (/ (float number) divisor))))
+    (setq <font color="#AA5500">*rslt*</font> (list quotient (- number (* quotient divisor)))
+          <font color="#AA5500">cl:*multiple-values*</font> t)
+    quotient))
+</pre>
+
+<p>The '<nobr>cl:truncate</nobr>' function computes a quotient that has been
+truncated towards zero. That is, the quotient represents the mathematical
+integer of the same sign as the mathematical quotient, and that has the
+greatest integral magnitude not greater than that of the mathematical
+quotient. <nobr>See
+<a href="#rounding-and-truncation">Rounding and Truncation</a></nobr>
+above for more details.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-ceiling"></a>
+
+<hr>
+
+<h2>cl:ceiling</h2>
+
+<hr>
+
+<p>The '<nobr>cl:ceiling</nobr>' function truncates towards positive
+infinity:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>ceiling</b> <i>number </i> [<i>divisor</i>])</dt>
+<dd><i>number</i> - an integer or <nobr>floating-point</nobr> number<br>
+<i>divisor</i> - an integer or <nobr>floating-point</nobr> number, except zero<br>
+<table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td valign="top"><nobr>returns</nobr></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the result of truncating the result of <i>number</i> divided by <i>divisor</i></td>
+</tr>
+<tr>
+  <td></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the remainder of the truncate operation</td>
+</tr>
+</tbody></table></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:ceiling</font> (number &amp;optional (divisor
+                                    (if (integerp number) 1 1.0)
+                                    divisor-p))
+  (let ((quotient
+          (cond ((and (not divisor-p) (integerp number)) number)
+                ((= number divisor) 1)
+                (t (let ((i-quotient (/ (truncate number) (truncate divisor)))
+                         (f-quotient (/ (float number) divisor)))
+                     (if (or (= i-quotient f-quotient)  <font color="#008844">; integer result</font>
+                             (not (plusp f-quotient)))
+                          (truncate f-quotient)
+                          (1+ (truncate f-quotient))))))))
+    (setq <font color="#AA5500">*rslt*</font> (list quotient (- number (* quotient divisor)))
+          <font color="#AA5500">cl:*multiple-values*</font> t)
+    quotient))
+</pre>
+
+<p>The '<nobr>cl:ceiling</nobr>' function computes a quotient that has been
+truncated toward positive infinity. That is, the quotient represents the
+smallest mathematical integer that is not smaller than the mathematical
+result. <nobr>See
+<a href="#rounding-and-truncation">Rounding and Truncation</a></nobr>
+above for more details.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-floor"></a>
+
+<hr>
+
+<h2>cl:floor</h2>
+
+<hr>
+
+<p>The '<nobr>cl:floor</nobr>' function truncates towards negative infinity:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>floor</b> <i>number </i> [<i>divisor</i>])</dt>
+<dd><i>number</i> - an integer or <nobr>floating-point</nobr> number<br>
+<i>divisor</i> - an integer or <nobr>floating-point</nobr> number, except zero<br>
+<table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td valign="top"><nobr>returns</nobr></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the result of truncating the result of <i>number</i> divided by <i>divisor</i></td>
+</tr>
+<tr>
+  <td></td>
+  <td valign="top"><nobr>&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">the remainder of the truncate operation</td>
+</tr>
+</tbody></table></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:floor</font> (number &amp;optional (divisor
+                                  (if (integerp number) 1 1.0)
+                                  divisor-p))
+  (let ((quotient
+          (cond ((and (not divisor-p) (integerp number)) number)
+                ((= number divisor) 1)
+                (t (let ((i-quotient (/ (truncate number) (truncate divisor)))
+                         (f-quotient (/ (float number) divisor)))
+                     (if (or (= i-quotient f-quotient)  <font color="#008844">; integer result</font>
+                             (not (minusp f-quotient)))
+                          (truncate f-quotient)
+                          (1- (truncate f-quotient))))))))
+    (setq <font color="#AA5500">*rslt*</font> (list quotient (- number (* quotient divisor)))
+          <font color="#AA5500">cl:*multiple-values*</font> t)
+    quotient))
+</pre>
+
+<p>The <nobr>'cl:floor</nobr>' function computes a quotient that has been
+truncated toward negative infinity. That is, the quotient represents the
+largest mathematical integer that is not larger than the mathematical
+quotient. <nobr>See
+<a href="#rounding-and-truncation">Rounding and Truncation</a></nobr>
+above for more details.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="remainder-and-modulus"></a>
+
+<hr>
+
+<h2>Remainder and Modulus</h2>
+
+<hr>
+
+<p>The <a href="#cl-mod">cl:mod</a> and <a href="#cl-rem">cl:rem</a>
+function are generalizations of the modulus and remainder functions.
+<nobr>The <a href="#cl-mod">cl:mod</a></nobr> function performs the
+<a href="#cl-floor">cl:floor</a> operation on its arguments and returns the
+remainder of the <a href="#cl-floor">cl:floor</a> operation.
+<nobr>The <a href="#cl-rem">cl:rem</a></nobr> function performs the
+<a href="cl-truncate">cl:truncate</a> operation on its arguments and returns
+the remainder of the <a href="cl-truncate">cl:truncate</a> operation.
+<nobr>The <a href="#cl-mod">cl:mod</a></nobr> and
+<a href="#cl-rem">cl:rem</a> functions are the modulus and remainder
+functions when the 'number' and 'divisor' arguments both are integers.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-rem"></a>
+
+<hr>
+
+<h2>cl:rem</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>rem</b> <i>number divisor</i>)</dt>
+<dd><i>number</i> - an integer or floating-point number<br>
+<i>divisor</i> - an integer or floating-point number<br>
+returns - the remainder of a <a href="cl-truncate">cl:truncate</a> operation</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:rem</font> (number divisor)
+  (if (= (abs number) (abs divisor))
+      (if (and (integerp number) (integerp divisor)) 0 0.0)
+      (let ((quotient (truncate (/ (float number) divisor))))
+        (- number (* quotient divisor)))))
+</pre>
+
+<p>The '<nobr>cl:rem</nobr>' function performs the
+<a href="cl-truncate">cl:truncate</a> operation on its arguments and returns
+the remainder of the <a href="cl-truncate">cl:truncate</a> operation.
+<nobr>The result</nobr> is either zero or an integer or
+<nobr>floating-point</nobr> number with the same sign as the 'number'
+argument. <nobr>If both</nobr> arguments are integer numbers, the
+'<nobr>cl:rem</nobr>' function is equal to the mathematical remainder
+function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-mod"></a>
+
+<hr>
+
+<h2>cl:mod</h2>
+
+<hr>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>mod</b> <i>number divisor</i>)</dt>
+<dd><i>number</i> - an integer or floating-point number<br>
+<i>divisor</i> - an integer or floating-point number<br>
+returns - the remainder of a <a href="#cl-floor">cl:floor</a> operation</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:mod</font> (number divisor)
+  (if (= (abs number) (abs divisor))
+      (if (and (integerp number) (integerp divisor)) 0 0.0)
+      (let* ((i-quotient (/ (truncate number) (truncate divisor)))
+             (f-quotient (/ (float number) divisor))
+             (quotient (if (or (= i-quotient f-quotient)  <font color="#008844">; integer result</font>
+                               (not (minusp f-quotient)))
+                           (truncate f-quotient)
+                           (1- (truncate f-quotient)))))
+        (- number (* quotient divisor)))))
+</pre>
+
+<p>The '<nobr>cl:mod</nobr>' function performs the
+<a href="#cl-floor">cl:floor</a> operation on its arguments and returns the
+remainder of the <a href="#cl-floor">cl:floor</a> operation. <nobr>The
+result</nobr> is either zero or an integer or <nobr>floating-point</nobr>
+number with the same sign as the 'divisor' argument. <nobr>If both</nobr>
+arguments are integer numbers, the '<nobr>cl:rem</nobr>' function is equal
+to the mathematical modulus function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-exp"></a>
+
+<hr>
+
+<h2>cl:exp</h2>
+
+<hr>
+
+<p>The '<nobr>cl:exp</nobr>' function does the same as the Nyquist/XLISP
+<a href="../reference/exp.htm">exp</a> function, but it also accepts
+integer numbers as argument:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>exp</b> <i>power</i>)</dt>
+<dd><i>power</i> - an integer or floating-point number<br>
+returns - the result of <nobr>'e' [2.7128]</nobr> to the power of <i>power</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:exp</font> (x)
+  (exp (float x)))
+</pre>
+
+<p>The '<nobr>cl:exp</nobr>' function computes <nobr>'e' [2.7128]</nobr>
+raised to the specified 'power'. <nobr>The result</nobr> is always a
+<nobr>floating-point</nobr> number.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-expt"></a>
+
+<hr>
+
+<h2>cl:expt</h2>
+
+<hr>
+
+<p>The '<nobr>cl:expt</nobr>' function computes the result of 'x' to the
+power <nobr>of 'y'</nobr>:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>expt</b> <i>base power</i>)</dt>
+<dd><i>base</i> - the base<br>
+<i>power</i> - the exponent<br>
+returns - the result of <i>base</i> to the power of <i>power</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:expt</font> (x y)
+  (let ((power (expt (float x) y)))
+    (if (and (integerp x) (integerp y))
+        (round power)
+        power)))
+</pre>
+
+<p>See <a href="../reference/and.htm">and</a>,
+<a href="../reference/defun.htm">defun</a>,
+<a href="../reference/expt.htm">expt</a>,
+<a href="../reference/float.htm">float</a>,
+<nobr><a href="../reference/if.htm">&nbsp;if&nbsp;</a></nobr>,
+<a href="../reference/integerp.htm">integerp</a>,
+<a href="../reference/let.htm">let</a>,
+<a href="../reference/power.htm">power</a>,
+<a href="../reference/round.htm">round</a>.</p>
+
+<p>The '<nobr>cl:expt</nobr>' function accepts integer and floating point
+numbers as arguments. <nobr>If both</nobr> arguments are integer numbers,
+the result will be an integer number, <nobr>if one</nobr> or both arguments
+are <nobr>floating-point</nobr> numbers, the result will be a
+<nobr>floating-point</nobr> number. <nobr>In contrast</nobr> to the
+Nyquist/XLISP <a href="../reference/expt.htm">expt</a> function, the
+'<nobr>cl:expt</nobr>' function specifies exactly two arguments.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-log"></a>
+
+<hr>
+
+<h2>cl:log</h2>
+
+<hr>
+
+<p>The '<nobr>cl:log</nobr>' function does the same as the Nyquist/XLISP
+<a href="../reference/log.htm">log</a> function, but also accepts
+integer numbers and has an optional 'base' argument:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>log</b> <i>number</i> [<i>base</i>])</dt>
+<dd><i>number</i> - an integer or floating-point number<br>
+<i>base</i> - an integer or floating-point number<br>
+returns - the the logarithm of <i>number</i> in base <i>base</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:log</font> (number &amp;optional base)
+  (if base
+      (if (zerop base)
+          0.0
+          (/ (log (float number)) (log (float base))))
+      (log (float number))))
+</pre>
+
+<p>The '<nobr>cl:log</nobr>' function returns the logarithm of 'number' in
+base 'base'. <nobr>If 'base'</nobr> is not supplied its value <nobr>is
+'e'</nobr>, the base of the natural logarithms. <nobr>If the</nobr> 'base'
+argument is zero, then 'cl:log' returns zero. <nobr>The result</nobr> is
+always a <nobr>floating-point</nobr> number.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="cl-sqrt"></a>
+
+<hr>
+
+<h2>cl:sqrt</h2>
+
+<hr>
+
+<p>The '<nobr>cl:sqrt</nobr>' function does the same as the Nyquist/XLISP
+<a href="../reference/sqrt.htm">sqrt</a> function, but it also accepts
+integer numbers as argument:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>sqrt</b> <i>number</i>)</dt>
+<dd><i>number</i> - an integer or floating-point number<br>
+returns - the square root of <i>number</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:sqrt</font> (x)
+  (sqrt (float x)))
+</pre>
+
+<p><nobr>The result</nobr> is always a <nobr>floating-point</nobr>
+number.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

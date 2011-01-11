@@ -1,0 +1,81 @@
+<html><head><title>XLISP progn</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>progn</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c, xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(progn [expr1 expr2 ... ])</dt>
+<dd><i>exprN</i> - expressions comprising the body of the loop<br>
+returns - the value of the last expression</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'progn' special form is basically a 'block' construct that contains a
+block of code [expressions] to evaluate. The value of the last expression
+'exprN' will be returned as the result of 'progn'. If there are no 'exprs',
+<a href="nil.htm">NIL</a> is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(progn (print "hi") (print "ho"))  <font color="#008844">; prints "hi" "ho"  returns "ho"</font>
+(progn)                            <font color="#008844">; returns NIL</font>
+(progn "hey" (print "ho"))         <font color="#008844">; prints "ho"  returns "ho"</font>
+(progn 'a)                         <font color="#008844">; returns A</font>
+(progn 'a 'b 'c)                   <font color="#008844">; returns C</font>
+</pre>
+
+<p><b>Note:</b> <nobr><a href="prog1.htm">prog1</a> ,</nobr>
+<nobr><a href="prog2.htm">prog2</a> ,</nobr>
+'progn' and
+<a href="progv.htm">progv</a> do not allow the use of
+<a href="return.htm">return</a> or
+<a href="go.htm">go</a> or tags for
+<a href="go.htm">go</a>.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-021.htm#progn">progn</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

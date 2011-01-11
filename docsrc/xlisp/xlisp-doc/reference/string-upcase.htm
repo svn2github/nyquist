@@ -1,0 +1,80 @@
+<html><head><title>XLISP string-upcase</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>string-upcase</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(string-upcase <i>string</i> [{:start | :end} <i>offset</i>] ... )</dt>
+<dd><i>string</i> - a string expression<br>
+<i>offse</i>t - an optional integer expression for a keyword<br>
+returns - a converted copy of the string</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'string-upcase' function takes a string argument and returns a new
+string that has been made upper case.</p>
+
+<p>The keyword arguments allow for accessing substrings within 'string'. The
+keyword arguments require a keyword ':start' or ':end' first and a single
+integer expression second. The ':start' keyword specifies the starting
+offset for the 'string-upcase' operation on 'string'. A value of 0 starts
+the string at the beginning [no offset]. The ':end' keyword specifies the
+end offset for the operation on 'string'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(string-upcase "ABcd+-12&amp;[")                <font color="#008844">; returns "ABCD+-&amp;["</font>
+(string-upcase "abcdefgh" :start 2 :end 4)  <font color="#008844">; returns "abCDefgh"</font>
+
+(setq mystr "ABcdEFgh")       <font color="#008844">; set up variable</font>
+(string-upcase mystr)         <font color="#008844">; returns "ABCDEFGH"</font>
+(print mystr)                 <font color="#008844">; prints  "ABcdEFgh"</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-025.htm#string-upcase">string-upcase</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

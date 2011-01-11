@@ -1,0 +1,83 @@
+<html><head><title>XLISP if</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>if</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(if <i>test-expr then-expr</i> [<i>else-expr</i>])</dt>
+<dd><i>test-expr</i> - an expression<br>
+<i>then-expr</i> - the THEN clause, an expression<br>
+<i>else-expr</i> - the ELSE clause, an optional expression<br>
+returns - the value of the selected expression</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'if' special form evaluates the 'test-expr'. If 'test-expr' evaluates
+to a non-<a href="nil.htm">NIL</a> value, then 'then-expr' is
+evaluated and returned as the result. If 'test-expr' evaluates to
+<a href="nil.htm">NIL</a> and there is an 'else-expr', then the
+'else-expr' is evaluated and its result is returned. If there is no
+'else-expr' and 'test-expr' evaluates to
+<nobr><a href="nil.htm">NIL</a> ,</nobr> then
+<a href="nil.htm">NIL</a> is returned as a result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(if T (print "will print")     <font color="#008844">; prints  "will print"</font>
+      (print "won't print"))
+
+(if NIL (print "won't print")
+        (print "will print"))  <font color="#008844">; prints  "will print"</font>
+
+(if 'a T NIL)                  <font color="#008844">; returns T</font>
+
+(if NIL 'nope 'yep)            <font color="#008844">; returns YEP</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-019.htm#if">&nbsp;if&nbsp;</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

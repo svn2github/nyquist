@@ -1,0 +1,78 @@
+<html><head><title>XLISP psetq</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>psetq</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(psetq [symbol expr] ... )</dt>
+<dd><i>symbol</i> - un-evaluated symbol<br>
+<i>expr</i> - value for <i>symbol</i><br>
+returns - the value from the last <i>expr</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>'psetq' sets 'expr' as the value of 'symbol'. There can be several pairs
+of assignment. 'psetq' performs these assignments in parallel, the 'symbols'
+are not assigned new values until all the 'exprs' have been evaluated.
+'psetq' returns the value from the last 'expr' as it's result.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(psetq a 1)              <font color="#008844">; symbol A gets value 1</font>
+(psetq b '(a b c))       <font color="#008844">; symbol B gets value (A B C)</font>
+(psetq mynum (+ 3 4))    <font color="#008844">; symbol MYNUM gets value 7</font>
+
+(setq goo 'ber)          <font color="#008844">; returns BER</font>
+(setq num 1)             <font color="#008844">; returns 1</font>
+(psetq goo num num goo)  <font color="#008844">; returns BER</font>
+(print goo)              <font color="#008844">; returns 1</font>
+(print num)              <font color="#008844">; returns BER</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-013.htm#psetq">psetq</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

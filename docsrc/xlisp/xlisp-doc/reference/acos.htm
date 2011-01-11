@@ -1,0 +1,93 @@
+<html><head><title>XLISP acos</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>acos</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>Lisp function (closure)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr></nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>acos</b> <i>flonum</i>)</nobr></dt>
+<dd><i>flonum</i> - an integer or floating point expression<br>
+returns - the <nobr>arc-cosine</nobr> of the number</dd>
+</dl>
+
+</div></p>
+
+<p><b>Note:</b> the 'acos' function is not implemented in Nyquist. Here
+is a Lisp implementation of 'acos', using the <a href="atan.htm">atan</a>
+function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">acos</font> (x)
+  (cond ((not (numberp x)) (error <font color="#880000">"bad argument type"</font> x))
+        ((= x 1) 0.0)
+        ((= x -1) pi)
+        ((&lt; -1 x 1) (+ (atan (/ (- x) (sqrt (1+ (* x (- (float x))))))) (/ pi 2.0)))
+        (t (error <font color="#880000">"argument out of range"</font> x))))
+</pre>
+
+<h2>Description</h2>
+
+<p>The 'acos' function returns the <nobr>arc-cosine</nobr> of an integer or
+floating point expression. <nobr>The result</nobr> is a floating point
+number in radians. <nobr>If the</nobr> argument is less <nobr>than -1</nobr>
+or greater <nobr>than +1</nobr>, the <nobr>arc-cosine</nobr> is a complex
+number. Complex numbers are not available <nobr>in XLISP</nobr>. <nobr>In
+this</nobr> case the 'acos' function signals an 'argument out of range'
+error.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(acos 0.0)   =&gt; 1.5708
+(acos 1.0)   =&gt; 0.0
+(acos -1.0)  =&gt; 3.14159
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#arithmetic-functions">Arithmetic Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

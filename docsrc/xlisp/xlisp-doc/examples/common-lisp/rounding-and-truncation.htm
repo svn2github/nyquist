@@ -1,0 +1,179 @@
+<html><head>
+
+<title>Rounding and Truncation</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Rounding and Truncation</h1>
+
+<hr>
+
+<p>The <a href="round.htm">cl:round</a>,
+<a href="truncate.htm">cl:truncate</a>,
+<a href="ceiling.htm">cl:ceiling</a> and
+<a href="floor.htm">cl:floor</a> functions divide a number by a divisor,
+returning a quotient and a remainder:</p>
+
+<p><div class="box">
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="round.htm">cl:round</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="truncate.htm">cl:truncate</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="ceiling.htm">cl:ceiling</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+<tr valign="top">
+  <td align="right"><nobr>(<a href="floor.htm">cl:floor</a>&nbsp;</nobr></td>
+  <td><nobr><i>number</i> [<i>divisor</i>])</nobr></td>
+  <td><nobr>&nbsp; &rArr; &nbsp;</nobr></td>
+  <td><nobr><i>quotient</i>, <i>remainder</i></nobr></td>
+</tr>
+</tbody></table></p>
+
+<p><nobr>&nbsp;
+<i>quotient</i> * <i>divisor</i> + <i>remainder</i> = <i>number</i></nobr></p>
+
+</div></p>
+
+<p>The 'quotient' always represents a mathematical integer. <nobr>The
+'remainder'</nobr> is an integer if both 'number' and 'divisor' arguments
+are integers, and a <nobr>floating-point</nobr> number if either the
+'number' or the 'divisor' or both are <nobr>floating-point</nobr>
+numbers.</p>
+
+<p>With Nyquist/XLISP, the 'quotient' is always directly returned by the
+function, while a list:</p>
+
+<pre class="example">
+(<font color="#0000CC">quotient remainder</font>)
+</pre>
+
+<p>is stored in the Nyquist/XLISP
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable and the
+<a href="global-multiple-values.htm">cl:*multiple-values*</a> is set to
+<a href="../../reference/t.htm">&nbsp;T&nbsp;</a> to signal that
+<a href="multiple-values.htm">Multiple Values</a> are returned.</p>
+
+Examples:
+
+<pre class="example">
+(cl:round     3.5)  =&gt;  4  <font color="#008844">; *rslt* = ( 4 -0.5)</font>
+(cl:truncate  3.5)  =&gt;  3  <font color="#008844">; *rslt* = ( 3  0.5)</font>
+(cl:ceiling   3.5)  =&gt;  4  <font color="#008844">; *rslt* = ( 4 -0.5)</font>
+(cl:floor     3.5)  =&gt;  3  <font color="#008844">; *rslt* = ( 3  0.5)</font>
+
+(cl:round    -3.5)  =&gt; -4  <font color="#008844">; *rslt* = (-4  0.5)</font>
+(cl:truncate -3.5)  =&gt; -3  <font color="#008844">; *rslt* = (-3 -0.5)</font>
+(cl:ceiling  -3.5)  =&gt; -3  <font color="#008844">; *rslt* = (-3 -0.5)</font>
+(cl:floor    -3.5)  =&gt; -4  <font color="#008844">; *rslt* = (-4  0.5)</font>
+</pre>
+
+<p>Force an integer division:</p>
+
+<pre class="example">
+(cl:truncate 3.0 2.0)              =&gt; 1  <font color="#008844">; Common Lisp</font>
+(/ (truncate 3.0) (truncate 2.0))  =&gt; 1  <font color="#008844">; Nyquist/XLISP</font>
+(/ 3 2)                            =&gt; 1  <font color="#008844">; integer division</font>
+</pre>
+
+<p><div class="box">
+
+<p><b>Implementation Notes</b></p>
+
+<pre class="example">
+(defun <font color="#0000CC">name</font> (number &amp;optional (divisor (if (<font color="#AA0000">integerp</font> number) 1 1.0)))
+  ... )
+</pre>
+
+<p>The <a href="../../reference/integerp.htm">integerp</a> test in the
+parameter list signals an error if the 'number' argument is not a number,
+also the <nobr><a href="../../reference/division.htm">&nbsp;/&nbsp;</a>
+[division]</nobr> function signals errors if the 'divisor' argument is zero
+or not a number, so we do not explicitely need to test the arguments.</p>
+
+<p>The <nobr><a href="ceiling.htm">cl:ceiling</a></nobr> and
+<nobr><a href="floor.htm">cl:floor</a></nobr> functions test if 'number' is
+an integer multiple of 'divisor' by comparing the results of an integer
+division and a <nobr>floating-point</nobr> division:</p>
+
+<pre class="example">
+(let ((<font color="#AA0000">i-quotient</font> (/ (truncate number) (truncate divisor)))
+      (<font color="#AA0000">f-quotient</font> (/ (float number) divisor)))
+  (if (= <font color="#AA0000">i-quotient f-quotient</font>)
+        ...
+</pre>
+
+<p>I'm not sure if this really catches all cases <nobr>[e.g.
+regarding</nobr> floating point precision], but have found no problems so
+far.</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

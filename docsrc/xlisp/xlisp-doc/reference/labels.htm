@@ -1,0 +1,101 @@
+<html><head><title>XLISP labels</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>labels</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(labels ([<i>function</i> ... ]) <i>expr</i> ... )</dt>
+<dd><i>function</i> - a function definition binding which is of the form:<br>
+<dl><dd>(<i>symbol arg-list body</i>)</dd>
+<dl><dd><i>symbol</i> - the symbol specifying the function name<br>
+<i>arg-list</i> - the argument list for the function<br>
+<i>body</i> - the body of the function</dd></dl></dl>
+<i>expr</i> - an expression<br>
+returns - the value of the last expression</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'labels' special form is basically a local block construct that
+allows local 'function' definitions followed by a block of code to evaluate.
+The first form after the labels is the 'binding' form. It contains a series
+of 'functions'. 'labels' allows the'functions' to be defined in a mutually
+recursive manner. [The similar <a href="flet.htm">flet</a> form
+does not allow this.] The 'labels' form will go through and define the
+'symbols' of the 'functions' and then sequentially execute the 'exprs'. The
+value of the last 'expr' evaluated is returned. When the 'labels' is
+finished execution, the 'symbols' that were defined will no longer
+exist.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(labels ((fuzz (x) (+ x x)))      <font color="#008844">; a LABELS with a local function FUZZ</font>
+  (fuzz 2))                       <font color="#008844">; returns 4</font>
+
+                                  <font color="#008844">; FUZZ no longer exists</font>
+(fuzz 2)                          <font color="#008844">; error: unbound function - FUZZ</font>
+
+                                  <font color="#008844">; an empty LABELS</font>
+(labels () (print 'a))            <font color="#008844">; prints A</font>
+
+                                  <font color="#008844">; LABELS form including</font>
+(labels ((inc (arg) (est arg))    <font color="#008844">;   INC definition using EST</font>
+         (est (var) (* .1 var)))  <font color="#008844">;   EST definition</font>
+  (inc 99) )                      <font color="#008844">;   returns 9.9</font>
+
+                                  <font color="#008844">; FLET form including</font>
+(flet ((inc (arg) (est arg))      <font color="#008844">;   INC definition using EST</font>
+       (est (var) (* .1 var)))    <font color="#008844">;   EST definition</font>
+  (inc 99)                        <font color="#008844">; error: unbound function - EST</font>
+</pre>
+
+<p><b>Note:</b> <a href="flet.htm">flet</a> does not allow
+recursive definitions of functions. The 'label' special form does allow
+this.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-019.htm#labels">labels</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

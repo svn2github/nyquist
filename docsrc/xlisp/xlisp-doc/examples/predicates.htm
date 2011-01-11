@@ -1,0 +1,526 @@
+<html><head>
+
+<title>Predicates</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Predicates and Comparison</h1>
+
+<hr>
+
+<p>Lisp has extensive support for <nobr>run-time</nobr> tests.</p>
+
+<p><nobr><b>Generalized Lisp Functions</b> - slower than the build-ins, but no errors</nobr></p>
+
+<ol>
+<li><nobr><a href="#built-in-xlisp-functions">Built-in XLISP Functions</a></nobr></li>
+<li><nobr>Generalized Comparison - one or more arguments</nobr></li>
+<ul>
+<li><nobr><a href="#equalp">equalp</a> - compares expressions with 'equality' functions.</nobr></li>
+</ul>
+<li><nobr>Symbol Predicates - one argument</nobr></li>
+<ul>
+<li><nobr><a href="#variablep">variablep</a> - is this a symbol with a variable value bound to it?</nobr></li>
+<li><nobr><a href="#functionp">functionp</a> - is this a function or a symbol with a function value bound to it?</nobr></li>
+<li><nobr><a href="#specialp">specialp</a> - is this a special form or a symbol with a special form bound to it?</nobr></li>
+<li><nobr><a href="#subrp">macrop</a> - is this a Lisp macro or a symbol with a Lisp macro bound to it?</nobr></li>
+</ul>
+<li><nobr>Function Predicates - one argument</nobr></li>
+<ul>
+<li><nobr><a href="#subrp">subrp</a> - is this a build-in function?</nobr></li>
+<li><nobr><a href="#fsubrp">fsubrp</a> - is this a build-in special form?</nobr></li>
+<li><nobr><a href="#closurep">closurep</a> - is this a user-defined function?</nobr></li>
+</ul>
+<li><nobr>Character Predicates - one argument</nobr></li>
+<ul>
+<li><nobr><a href="strings.htm#posix">POSIX Character Classes</a></nobr></li>
+</ul>
+</ol>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="built-in-xlisp-functions"></a>
+
+<hr>
+
+<h2>Built-in XLISP Functions</h2>
+
+<hr>
+
+<ol>
+<li><nobr><b>Boolean Predicates</b> - one argument [all types]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/not.htm">not</a> - does this expression evaluate to false?</nobr></li>
+</ul>
+<li><nobr><b>Generalized Comparison</b> - two arguments [all types]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/eq.htm">eq</a> - are the expressions identical?</nobr></li>
+<li><nobr><a href="../reference/eql.htm">eql</a> - are the expressions identical or equal numbers?</nobr></li>
+<li><nobr><a href="../reference/equal.htm">equal</a> - do the <a href="../reference/print.htm">print</a>ed expressions look the same?</nobr></li>
+</ul>
+<li><nobr><b>Type Predicates</b> - one argument [all types]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/atom.htm">atom</a> - is this an atom?</nobr></li>
+<li><nobr><a href="../reference/symbolp.htm">symbolp</a> - is this a symbol?</nobr></li>
+<ul>
+<li><nobr><b>Symbol Predicates</b> - one argument [error if not a symbol]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/boundp.htm">boundp</a> - has the symbol a variable value?</nobr></li>
+<li><nobr><a href="../reference/fboundp.htm">fboundp</a> - has the symbol a function value?</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="../reference/numberp.htm">numberp</a> - is this a number?</nobr></li>
+<ul>
+<li><nobr><b>Number Predicates</b> - one argument [error if not a number]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/plusp.htm">plusp</a> - is the number positive?</nobr></li>
+<li><nobr><a href="../reference/minusp.htm">minusp</a> - is the number negative?</nobr></li>
+<li><nobr><a href="../reference/zerop.htm">zerop</a> - is the number equal to zero?</nobr></li>
+<li><nobr><a href="../reference/integerp.htm">integerp</a> - is the number an integer?</nobr></li>
+<ul>
+<li><nobr><b>Integer Predicates</b> - one argument [error if not an integer]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/evenp.htm">evenp</a> - is the integer even?</nobr></li>
+<li><nobr><a href="../reference/oddp.htm">oddp</a> - is the integer odd?</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="../reference/floatp.htm">floatp</a> - is the number a floating-point number?</nobr></li>
+</ul>
+<li><nobr><b>Numerical Comparison</b> - one or more arguments [error if not numbers only]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/number-lessp.htm">&nbsp;&lt;&nbsp;</a> - true if all numbers are monotonically increasing</nobr></li>
+<li><nobr><a href="../reference/number-not-greaterp.htm">&nbsp;&lt;=&nbsp;</a> - true if all numbers are monotonically nondecreasing</nobr></li>
+<li><nobr><a href="../reference/number-equal.htm">&nbsp;=&nbsp;</a> - true if all all numbers are the same value</nobr></li>
+<li><nobr><a href="../reference/number-not-equal.htm">&nbsp;/=&nbsp;</a> - true if no two numbers have the same value</nobr></li>
+<li><nobr><a href="../reference/number-not-lessp.htm">&nbsp;&gt;=&nbsp;</a> - true if all numbers are monotonically nonincreasing</nobr></li>
+<li><nobr><a href="../reference/number-greaterp.htm">&nbsp;&gt;&nbsp;</a> - true if all numbers are monotonically decreasing</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="../reference/null.htm">null</a> - is this an empty list?</nobr></li>
+<li><nobr><a href="../reference/consp.htm">consp</a> - is it a non-empty list?</nobr></li>
+<li><nobr><a href="../reference/listp.htm">listp</a> - is this a list?</nobr></li>
+<ul>
+<li><nobr><b>List Predicates</b> - one argument [error if not a list]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/endp.htm">endp</a> - is this the end of a list?</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="../reference/stringp.htm">stringp</a> - is this a string?</nobr></li>
+<ul>
+<li><nobr><b>String Comparison</b> - one or more arguments [error if not strings only]</nobr></li>
+<ul>
+<li><nobr>Case Sensitive</nobr></li>
+<ul>
+<li><nobr><a href="../reference/string-lessp-s.htm">string&lt;</a> - test for less than in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-not-greaterp-s.htm">string&lt;=</a> - test for less than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-equal-s.htm">string=</a> - test for equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-not-equal-s.htm">string/=</a> - test for not equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-not-lessp-s.htm">string&gt;=</a> - test for greater than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-greaterp-s.htm">string&gt;</a> - test for greater than in ASCII ordering</nobr></li>
+</ul>
+<li><nobr>Case Insensitive</nobr></li>
+<ul>
+<li><nobr><a href="../reference/string-lessp-i.htm">string-lessp</a> - is this less than in ASCII ordering ?</nobr></li>
+<li><nobr><a href="../reference/string-not-greaterp-i.htm">string-not-greaterp</a> - is this not greater than in ASCII ordering ?</nobr></li>
+<li><nobr><a href="../reference/string-equal-i.htm">string-equal</a> - is this equal in ASCII ordering ?</nobr></li>
+<li><nobr><a href="../reference/string-not-equal-i.htm">string-not-equal</a> - is this not equal in ASCII ordering ?</nobr></li>
+<li><nobr><a href="../reference/string-not-lessp-i.htm">string-not-lessp</a> - is this not less than in ASCII ordering ?</nobr></li>
+<li><nobr><a href="../reference/string-greaterp-i.htm">string-greaterp</a> - is this greater than in ASCII ordering ?</nobr></li>
+</ul>
+<li><nobr>See also <a href="strings.htm#unicode">Unicode</a> examples.</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="../reference/characterp.htm">characterp</a> - is this a character?</nobr></li>
+<ul>
+<li><nobr><b>Character Predicates</b> - one argument [error if not a character]</nobr></li>
+<ul>
+<li><nobr><a href="../reference/upper-case-p.htm">upper-case-p</a> - is this an upper case character?</nobr></li>
+<li><nobr><a href="../reference/lower-case-p.htm">lower-case-p</a> - is this a lower case character?</nobr></li>
+<li><nobr><a href="../reference/both-case-p.htm">both-case-p</a> - is this an alphabetic [either case] character?</nobr></li>
+<li><nobr><a href="../reference/digit-char-p.htm">digit-char-p</a> - is this a digit character?</nobr></li>
+<li><nobr><a href="../reference/alphanumericp.htm">alphanumericp</a> - is this an alphabetic or a digit character?</nobr></li>
+<li><nobr>See also <a href="strings.htm#posix">POSIX Character Classes</a>.</nobr></li>
+</ul>
+<li><nobr><b>Character Comparison</b> - one or more arguments [error if not characters only]</nobr></li>
+<ul>
+<li><nobr>Case Sensitive</nobr></li>
+<ul>
+<li><nobr><a href="../reference/char-lessp-s.htm">char&lt;</a> - test for less than in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-not-greaterp-s.htm">char&lt;=</a> - test for less than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-equal-s.htm">char=</a> - test for equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-not-equal-s.htm">char/=</a> - test for not equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-not-lessp-s.htm">char&gt;=</a> - test for greater than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-greaterp-s.htm">char&gt;</a> - test for greater than in ASCII ordering</nobr></li>
+</ul>
+<li><nobr>Case Insensitive</nobr></li>
+<ul>
+<li><nobr><a href="../reference/char-lessp-i.htm">char-lessp</a> - is this less than in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-not-greaterp-i.htm">char-not-greaterp</a> - is this not greater than in ASCII ordering ?</nobr></li>
+<li><nobr><a href="../reference/char-equal-i.htm">char-equal</a> - is this equal in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-not-equal-i.htm">char-not-equal</a> - is this not equal in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-not-lessp-i.htm">char-not-lessp</a> - is this not less than in ASCII ordering ?</nobr></li>
+<li><nobr><a href="../reference/char-greaterp-i.htm">char-greaterp</a> - is this greater than in ASCII ordering?</nobr></li>
+</ul>
+<li><nobr>See also <a href="strings.htm#unicode">Unicode</a> examples.</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="../reference/arrayp.htm">arrayp</a> - is this an array?</nobr></li>
+<li><nobr><a href="../reference/streamp.htm">streamp</a> - is this a stream?</nobr></li>
+<li><nobr><a href="../reference/objectp.htm">objectp</a> - is this an object?</nobr></li>
+<li><nobr>filep - is this a file?</nobr></li>
+<li><nobr>soundp - is this a sound?</nobr></li>
+</ul>
+</ol>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="equalp"></a>
+
+<hr>
+
+<h2>equalp</h2>
+
+<hr>
+
+<p>Two expressions are 'equalp':</p>
+
+<ul>
+
+<li><p>If two numbers <nobr>are
+<a href="../reference/number-equal.htm">&nbsp;=&nbsp;</a></nobr>
+numerical equal.</p></li>
+
+<li><p>If two characters are
+<nobr><a href="../reference/char-equal.htm">char-equal</a></nobr>.</p></li>
+
+<li><p>If two strings are <nobr><a
+href="../reference/string-equal.htm">string-equal</a></nobr>.</p></li>
+
+<li><p>If the two <a href="../reference/car.htm">car</a>s in conses are
+'equalp' and the two <a href="../reference/cdr.htm">cdr</a>s in conses
+are 'equalp'.</p></li>
+
+<li><p>If two arrays have the same number of elements and dimensions, and
+the corresponding elements in all dimensions are 'equalp'.</p></li>
+
+</ul>
+
+<pre class="example">
+(defun <font color="#0000CC">equalp</font> (expr-1 expr-2)
+  (or (equal expr-1 expr-2)
+      (and (numberp expr-1) (numberp expr-2) (= expr-1 expr-2))
+      (let ((type (type-of expr-1)))
+        (when (eq type (type-of expr-2))
+          (case type
+            (character (char-equal expr-1 expr-2))
+            (string    (string-equal expr-1 expr-2))
+            (cons      (do ((x (first expr-1)
+                               (if (consp expr-1) (first expr-1) expr-1))
+                            (y (first expr-2)
+                               (if (consp expr-2) (first expr-2) expr-2)))
+                           ((or (null expr-1)
+                                (null expr-2)
+                                (not (equalp x y)))
+                            (and (null expr-1)
+                                 (null expr-2)))
+                         (setq expr-1 (and (consp expr-1) (rest expr-1))
+                               expr-2 (and (consp expr-2) (rest expr-2)))))
+            (array     (let ((end (length expr-1)))
+                         (when (eql end (length expr-2))
+                           (dotimes (index end t)
+                             (and (not (equalp (aref expr-1 index)
+                                               (aref expr-2 index)))
+                                  (return nil)))))))))))
+</pre>
+
+<p><b>cons:</b> I used <a href="../reference/do.htm">do</a> instead of
+recursion because XLISP has only two kilobytes stack size. <nobr>The
+(<a href="../reference/consp.htm">consp</a> <i>expr</i>)</nobr> tests are
+necessary because in a dotted list the last
+<a href="../reference/rest.htm">rest</a> element is not a cons.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(equalp 1 1.0)                            =&gt; T
+(equalp #\a #\A)                          =&gt; T
+(equalp "Abc" "aBc")                      =&gt; T
+(equalp '(1 #\a "Abc") '(1.0 #\A "aBc"))  =&gt; T
+(equalp #(1 #\a "Abc") #(1.0 #\A "aBc"))  =&gt; T
+</pre>
+
+<p>Nested expressions only match if the nesting matches:</p>
+
+<pre class="example">
+(equalp '(1 <font color="#AA0000">(</font>2 3<font color="#AA0000">)</font>) '(1.0 <font color="#AA0000">(</font>2.0 3.0<font color="#AA0000">)</font>)  =&gt; T
+(equalp '(1 <font color="#AA0000">(</font>2 3<font color="#AA0000">)</font>) '(<font color="#AA0000">(</font>1.0 2.0<font color="#AA0000">)</font> 3.0)  =&gt; NIL
+(equalp '(<font color="#AA0000">(</font>1 2<font color="#AA0000">)</font> 3) '(<font color="#AA0000">(</font>1.0 2.0<font color="#AA0000">)</font> 3.0)  =&gt; T
+(equalp '(<font color="#AA0000">(</font>1 2<font color="#AA0000">)</font> 3) '(1.0 <font color="#AA0000">(</font>2.0 3.0<font color="#AA0000">)</font>)  =&gt; NIL
+</pre>
+
+<p>A character does not match a string with the same character:</p>
+
+<pre class="example">
+(equalp #\a "a")  =&gt; NIL
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="variablep"></a>
+
+<hr>
+
+<h2>variablep</h2>
+
+<hr>
+
+<p>The 'variablep' macro tests if a Lisp expression evaluates to a symbol
+with a valid variable value bound to it in the current global or lexical
+environment:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">variablep</font> (expr)
+  `(and (symbolp ,expr)
+        (valuep ,expr)))
+</pre>
+
+<p>Depends on <a href="environment.htm#valuep">valuep</a>, see
+<a href="../reference/and.htm">and</a>,
+<a href="../reference/defmacro.htm">defmacro</a>,
+<a href="../reference/symbolp.htm">symbolp</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="functionp"></a>
+
+<hr>
+
+<h2>functionp</h2>
+
+<hr>
+
+<p>The 'functionp' macro tests if a Lisp expression eveluates to a function
+or a symbol with a valid function value bound to it in the current global or
+lexical environment:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">functionp</font> (expr)
+  `(case (type-of ,expr)
+     (closure (eq 'lambda (car (get-lambda-expression ,expr))))
+     (subr    t)
+     (symbol  (and (or (lfboundp ,expr) (fboundp ,expr))
+                   (functionp (function ,(if (consp expr) (cadr expr) expr)))))
+     (t       nil)))
+</pre>
+
+<p>Depends on <a href="environment.htm#lfboundp">lfboundp</a>, see
+<a href="../reference/and.htm">and</a>,
+<a href="../reference/caar.htm">cadr</a>,
+<a href="../reference/car.htm">car</a>,
+<a href="../reference/case.htm">case</a>,
+<a href="../manual/xlisp.htm#data-types">closure</a>,
+<a href="../reference/defmacro.htm">defmacro</a>,
+<a href="../reference/eq.htm">eq</a>,
+<a href="../reference/fboundp.htm">fboundp</a>,
+<a href="../reference/function.htm">function</a>,
+<nobr><a href="../reference/get-lambda-expression.htm">get-lambda-expression</a></nobr>,
+<a href="../reference/lambda.htm">lambda</a>,
+<a href="../reference/nil.htm">nil</a>,
+<a href="../reference/or.htm">or</a>,
+<a href="../manual/xlisp.htm#data-types">subr</a>,
+<a href="../manual/xlisp.htm#data-types">symbol</a>,
+<nobr><a href="../reference/t.htm">&nbsp;t&nbsp;</a></nobr>,
+<nobr><a href="../reference/type-of.htm">type-of</a></nobr>.</p>
+
+<p>The awkward <nobr>(function ,(if (consp expr) (cadr expr) expr))</nobr>
+construct is necessary because the
+<a href="../reference/function.htm">function</a> special form needs a
+<nobr>pre-evaluated</nobr> argument, what must be
+done at <nobr>macro-expansion</nobr> time, so an additional
+<nobr><a href="../reference/consp.htm">consp</a></nobr> test is
+needed if the 'expr' argument is a list at all, otherwise
+<a href="../reference/cadr.htm">cadr</a> will produce an error.</p>
+
+Examples:
+
+<pre class="example">
+(functionp #'car)  =&gt; T    <font color="#008844">; subr = built-in function</font>
+(functionp  'car)  =&gt; T    <font color="#008844">; symbol with a function value</font>
+
+(functionp #'and)  =&gt; NIL  <font color="#008844">; fsubr = built-in special form</font>
+(functionp "and")  =&gt; NIL  <font color="#008844">; string</font>
+
+(defun a () nil)   =&gt; A    <font color="#008844">; closure = user-defined function</font>
+(functionp #'a)    =&gt; T    <font color="#008844">; closure</font>
+(functionp  'a)    =&gt; T    <font color="#008844">; symbol with a function value</font>
+
+(setq b #'a)       =&gt; A    <font color="#008844">; function A stored in variable B</font>
+(fboundp 'b)       =&gt; NIL  <font color="#008844">; no function B found</font>
+(fboundp b)        =&gt; T    <font color="#008844">; variable B evaluates to function A</font>
+
+(functionp #'(lambda () nil))  =&gt; T    <font color="#008844">; closure</font>
+(functionp  '(lambda () nil))  =&gt; NIL  <font color="#008844">; list</font>
+(functionp   (lambda () nil))  =&gt; T    <font color="#008844">; closure</font>
+
+(functionp #'functionp)        =&gt; NIL  <font color="#008844">; macro</font>
+
+(let ((x nil))        <font color="#008844">; lexical variable</font>
+  (functionp x))
+=&gt; NIL
+
+(flet ((y () nil))    <font color="#008844">; lexical closure</font>
+  (functionp y))
+=&gt; T
+
+(labels ((z () nil))  <font color="#008844">; lexical closure</font>
+  (functionp z))
+=&gt; T
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="specialp"></a>
+
+<hr>
+
+<h2>specialp</h2>
+
+<hr>
+
+<pre class="example">
+(defmacro <font color="#0000CC">specialp</font> (expr)
+  `(case (type-of ,expr)
+     (fsubr   t)
+     (symbol  (and (or (lfboundp ,expr) (fboundp ,expr))
+                   (functionp (function ,(if (consp expr) (cadr expr) expr)))))
+     (t       nil)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="macrop"></a>
+
+<hr>
+
+<h2>macrop</h2>
+
+<hr>
+
+<pre class="example">
+(defmacro <font color="#0000CC">macrop</font> (expr)
+  `(case (type-of ,expr)
+     (closure (eq 'macro (car (get-lambda-expression ,expr))))
+     (symbol  (and (or (lfboundp ,expr) (fboundp ,expr))
+                   (macrop (function ,(if (consp expr) (cadr expr) expr)))))
+     (t       nil)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="subrp"></a>
+
+<hr>
+
+<h2>subrp</h2>
+
+<hr>
+
+<p>The 'subrp' function returns T if the symbol is a build-in function.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">subrp</font> (symbol)
+  (eq 'subr (type-of symbol))) 
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="fsubrp"></a>
+
+<hr>
+
+<h2>fsubrp</h2>
+
+<hr>
+
+<p>The 'fsubrp' function returns T if the symbol is a build-in special
+function.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">fsubrp</font> (symbol)
+  (eq 'fsubr (type-of symbol))) 
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="closurep"></a>
+
+<hr>
+
+<h2>closurep</h2>
+
+<hr>
+
+<p>The 'closurep' function returns T if the symbol is a user-defined
+function.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">closurep</font> (symbol)
+  (eq 'closure (type-of symbol)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>
+

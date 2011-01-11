@@ -1,0 +1,99 @@
+<html><head><title>XLISP delete</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>delete</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(delete <i>expr list</i> [{:test | :test-not} <i>test</i>])</dt>
+<dd><i>expr</i> - the expression to delete from <i>list</i><br>
+<i>list</i> - the list to destructively modify<br>
+<i>test</i> - optional test function (default is <a href="eql.htm">eql</a>)<br>
+returns - the list with the matching expressions deleted</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'delete' function destructively modifies the 'list' by removing the
+'expr'. The destructive aspect of this operation means that the actual
+symbol value is used in the list-modifying operations, not a copy. If 'expr'
+appears multiple times in the 'list', all occurances will be removed.</p>
+
+<p>'list' must evaluate to a valid list. An atom for 'list' will result in
+an error:</p>
+
+<pre class="example">
+<font color="#AA0000">error: bad argument type</font>
+</pre>
+
+<p>Having <a href="nil.htm">NIL</a> for 'list' will return a
+<a href="nil.htm">NIL</a> as the result. You may specify your own
+test with the ':test' and ':test-not' keywords.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(delete 'b NIL)                          <font color="#008844">; returns NIL</font>
+(delete 'b '(a b b c b))                 <font color="#008844">; returns (A C)</font>
+(setq a '(1 2 3)) (setq b a)             <font color="#008844">; set up A and B</font>
+(delete '2 a)                            <font color="#008844">; returns (1 3)</font>
+(print a)                                <font color="#008844">; prints (1 3)    A IS MODIFIED!</font>
+(print b)                                <font color="#008844">; prints (1 3)    B IS MODIFIED!</font>
+(delete '(b) '((a)(b)(c)))               <font color="#008844">; returns ((A) (B) (C))</font>
+                                         <font color="#008844">;   EQL doesn't work on lists</font>
+(delete '(b) '((a)(b)(c)) :test 'equal)  <font color="#008844">; returns ((A) (C))</font>
+</pre>
+
+<p><b>Note:</b> The 'delete' function can work with a list or string as the
+'expr'. However, the default <a href="eql.htm">eql</a> test does
+not work with lists or strings, only symbols and numbers. To make this work,
+you need to use the ':test' keyword along with
+<a href="equal.htm">equal</a> for 'test'.</p>
+
+<p><b>Common Lisp:</b> XLISP does not support the ':from-end', ':start',
+':end', ':count' and ':key' keywords which Common Lisp does.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-017.htm#delete">delete</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

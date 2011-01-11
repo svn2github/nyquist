@@ -1,0 +1,430 @@
+<html><head>
+
+<title>Arrays</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Arrays</h1>
+
+<hr>
+
+<p>Arrays are also <a href="sequences.htm">Sequences</a>.</p>
+
+<ul>
+<li><nobr><a href="#make-array-star">make-array*</a> - create multi-dimensional arrays</nobr></li>
+<li><nobr><a href="#aref-star">aref*</a> - access multi-dimensional-arrays</nobr></li>
+<li><nobr><a href="#vector-star">vector*</a> - make a one-dimensional array out of arbitrary Lisp expressions</nobr></li>
+<li><nobr><a href="#vector-star">array*</a> - make a multi-dimensional array out of arbitrary Lisp expressions</nobr></li>
+</ul>
+
+<a name="make-array-star"></a>
+
+<hr>
+
+<h2>make-array*</h2>
+
+<hr>
+
+<p>XLISP already has the
+<nobr><a href="../reference/make-array.htm">make-array</a></nobr>
+function to create <nobr>one-dimensional</nobr> arrays:</p>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<a href="../reference/make-array.htm">make-array</a> <i>size</i>)</nobr></dt>
+<dd><i>size</i> - the size [integer] of the array to be created<br>
+returns - the new array</dd>
+</dl>
+
+</div></p>
+
+<p>Here is a function to create <nobr>multi-dimensional</nobr> arrays:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>make-array*</b> <i>size-1</i> [<i>size-2</i> ...])</dt>
+<dd><i>sizeN</i> - the size [integer] of the <i>N</i>-th dimension in the array to be created<br>
+returns - the new array</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">make-array*</font> (&amp;rest dimensions-list)
+  (cond ((null dimensions-list)
+         (error <font color="#880000">"too few arguments"</font>))
+        ((and (null (rest dimensions-list))
+              (eql 0 (first dimensions-list)))
+         (make-array 0))
+        (t (labels ((multi-vector (dimensions-list)
+                      (let ((count (first dimensions-list)))
+                        (if (not (and (integerp count) (plusp count)))
+                            (error <font color="#880000">"not a positive integer"</font> count)
+                            (let ((rest (rest dimensions-list))
+                                  (elements-list nil))
+                              (dotimes (i count)
+                                (push (when rest
+                                        (multi-vector rest))
+                                      elements-list))
+                              (apply #'vector (reverse elements-list)))))))
+             (multi-vector dimensions-list)))))
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+(make-array* 2 3)    =&gt; #(#(NIL NIL NIL) #(NIL NIL NIL)))
+(make-array* 2 2 1)  =&gt; #(#(#(NIL) #(NIL)) #(#(NIL) #(NIL)))
+</pre>
+
+<p>Like <nobr><a href="../reference/make-array.htm">make-array</a></nobr> it
+is possible to create <nobr>one-dimensional</nobr> arrays with zero
+elements:</p>
+
+<pre class="example">
+(make-array* 0)  =&gt; #()
+(make-array  0)  =&gt; #()
+</pre>
+
+<p>But it is not allowed to create <nobr>multi-dimensional</nobr> arrays
+with <nobr>zero-size</nobr> dimensions:</p>
+
+<pre class="example">
+(make-array* 1 0 1)  =&gt; <font color="#AA0000">error: not a positive integer - 0</font>
+</pre>
+
+<p><b>Rationale:</b> Multi-dimensional arrays are implemented as nested
+vectors and a <nobr>zero-element</nobr> vector cannot hold the vector for
+the subsequent dimension. <nobr>We would</nobr> need some additional
+administration overhead to keep the subsequent dimensions accessible, but
+this would break the compatibility to the <nobr>build-in</nobr> XLISP
+<a href="../reference/aref.htm">aref</a> function.</p>
+
+<p>More practical examples see 'aref*' below.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="aref-star"></a>
+
+<hr>
+
+<h2>aref*</h2>
+
+<hr>
+
+<p>XLISP already has the <a href="../reference/aref.htm">aref</a> function
+to access elements in one-dimensional arrays:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<a href="../reference/aref.htm">aref</a> <i>array dimension-1</i>)</dt>
+<dd><i>array</i> - one-dimensional array<br>
+<i>dimension-1</i> - element number in the first dimension<br>
+returns - the value of the array element</dd>
+</dl>
+
+</div></p>
+
+<p>Here is a macro for accessing elements in <nobr>multi-dimensional</nobr>
+arrays:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>aref*</b> <i>array dimension-1</i> [<i>dimension-2</i> ...])</dt>
+<dd><i>array</i> - any-dimensional array<br>
+<i>dimensionN</i> - element number in the <i>N</i>-th dimension<br>
+returns - the value of the array element</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">aref*</font> (array &amp;rest index-list)
+  (labels ((multi-aref (array-name index-list)
+             (let ((index (first index-list)))
+               (if (not (integerp index))
+                   (error <font color="#880000">"not an integer"</font> index)
+                   (let ((rest (rest index-list))
+                         (expansion-list (list 'aref)))
+                     (push (if rest
+                               (multi-aref array-name rest)
+                               array-name)
+                           expansion-list)
+                     (push index expansion-list)
+                     (reverse expansion-list))))))
+    (multi-aref `,array (reverse `,index-list))))
+</pre>
+
+<p>The symbols inside the <a href="../reference/labels.htm">labels</a> form
+do not leak into the expansion, so 'aref*' also works with array names like
+'array', '<nobr>array-name</nobr>' 'index', '<nobr>index-list</nobr>' or
+'<nobr>expansion-list</nobr>'. Also the values of local or global variables
+with these names are not changed.</p>
+
+<pre class="example">
+(macroexpand-1 '(aref* a 1 2 3))  =&gt; (aref (aref (aref a 1) 2) 3)
+</pre>
+
+<p>Examples:</p>
+
+<pre class="example">
+&gt; (setq a (make-array* 2 3))
+#(#(NIL NIL NIL) #(NIL NIL NIL)))
+
+&gt; (setf (aref* a 0 1) "hello")
+"hello"
+
+&gt; a
+#(#(NIL "hello" NIL) #(NIL NIL NIL))
+
+&gt; (aref* a 0 1)
+"hello"
+</pre>
+
+<p>'aref*' with only one 'dimension' argument behaves
+<nobr>like <a href="../reference/aref.htm">aref</a>:</nobr></p>
+
+<pre class="example">
+(aref* a 0)            =&gt; #(NIL "hello" NIL)
+(aref  a 0)            =&gt; #(NIL "hello" NIL)
+
+(aref* (aref* a 0) 1)  =&gt; "hello"
+(aref  (aref  a 0) 1)  =&gt; "hello"
+
+(aref* a 0 1)          =&gt; "hello"
+(aref  a 0 1)          =&gt; <font color="#AA0000">error: too many arguments</font>
+</pre>
+
+<p>'aref*' like <a href="../reference/aref.htm">aref</a> also works
+<nobr>with <a href="../reference/setf.htm">setf</a></nobr> to store
+values in <nobr>multi-dimensional</nobr> arrays:</p>
+
+<pre class="example">
+(setf (aref* (aref* a 0) 1) "1")  =&gt; "1" <font color="#008844">; a =&gt; #(#(NIL "1" NIL) #(NIL NIL NIL)))</font>
+(setf (aref  (aref  a 0) 1) "2")  =&gt; "2" <font color="#008844">; a =&gt; #(#(NIL "2" NIL) #(NIL NIL NIL)))</font>
+
+(setf (aref* 0 1) "3")            =&gt; "3" <font color="#008844">; a =&gt; #(#(NIL "3" NIL) #(NIL NIL NIL)))</font>
+(setf (aref  0 1) "4")            =&gt; <font color="#AA0000">error: too many arguments</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="vector-star"></a>
+
+<hr>
+
+<h2>vector*</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">vector*</font> (&amp;rest items)
+  (if (null items)
+      (make-array 0)
+      (let* ((end (length items))
+             (result (make-array end)))
+        (if (&gt; end 1)
+            (dotimes (index end)               <font color="#008844">; more than one item</font>
+              (setf (aref result index)
+                    (if (eq (nth index items) '*unbound*)
+                        '*unbound*
+                        (nth index items))))
+            (if (eq (first items) '*unbound*)  <font color="#008844">; one item only</font>
+                (setf (aref result 0) '*unbound*)
+                (let ((item (first items)))
+                  (case (type-of item)
+                    (cons   (let ((end (length item)))
+                              (setq result (make-array end))
+                              (dotimes (index end)
+                                (setf (aref result index)
+                                      (if (eq (nth index item) '*unbound*)
+                                          '*unbound*
+                                          (nth index item))))))
+                    (array  (let ((end (length item)))
+                              (setq result (make-array end))
+                              (dotimes (index end)
+                                (setf (aref result index)
+                                      (if (eq (aref item index) '*unbound*)
+                                          '*unbound*
+                                          (aref item index))))))
+                    (string (let ((end (length item)))
+                              (setq result (make-array end))
+                              (dotimes (index end)
+                                (setf (aref result index)
+                                      (char item index)))))
+                    (t      (setf (aref result 0) item))))))
+        result)))
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">list*</font> (&amp;rest items)
+  (if (null items)
+      nil
+      (let* ((end (length items))
+             (result nil))
+        (labels ((push-element (element)
+                   (if (member (type-of element) '(array cons string))
+                       (setq result (append (reverse (list* element)) result))
+                       (push element result))))
+          (dotimes (index end)
+            (if (eq (nth index items) '*unbound*)
+                (push '*unbound* result)
+                (let ((item (nth index items)))
+                  (case (type-of item)
+                    (nil    (push item result))
+                    (cons   (let ((end (length item)))
+                              (when (not (consp (last item))) (incf end))
+                              (dotimes (index end)
+                                (if (eq (nth index item) '*unbound*)
+                                    (push '*unbound* result)
+                                    (push-element (nth index item))))))
+                    (array  (let ((end (length item)))
+                              (dotimes (index end)
+                                (if (eq (aref item index) '*unbound*)
+                                    (push '*unbound* result)
+                                    (push-element (aref item index))))))
+                    (string (let ((end (length item)))
+                              (dotimes (index end)
+                                (push (char item index) result))))
+                    (t      (push item result))))))
+          (reverse result)))))
+</pre>
+
+
+<pre class="example">
+(defun <font color="#0000CC">tree*</font> (&amp;rest items)
+  (if (null items)
+      nil
+      (let* ((end (length items))
+             (result nil))
+        (labels ((push-element (element)
+                   (if (member (type-of element) '(array cons string))
+                       (push (reverse (list* element)) result)
+                       (push element result))))
+          (dotimes (index end)
+            (if (eq (nth index items) '*unbound*)
+                (push '*unbound* result)
+                (let ((item (nth index items)))
+                  (case (type-of item)
+                    (nil    (push item result))
+                    (cons   (let ((end (length item)))
+                              (when (not (consp (last item))) (incf end))
+                              (dotimes (index end)
+                                (if (eq (nth index item) '*unbound*)
+                                    (push '*unbound* result)
+                                    (push-element (nth index item))))))
+                    (array  (let ((end (length item)))
+                              (dotimes (index end)
+                                (if (eq (aref item index) '*unbound*)
+                                    (push '*unbound* result)
+                                    (push-element (aref item index))))))
+                    (string (let ((end (length item)))
+                              (dotimes (index end)
+                                (push (char item index) result))))
+                    (t      (push item result))))))
+          (reverse result)))))
+</pre>
+
+
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="array-star"></a>
+
+<hr>
+
+<h2>array*</h2>
+
+<hr>
+
+<pre class="example">
+(defun <font color="#0000CC">array*</font> (&amp;rest items)
+  (if (null items)
+      (make-array 0)
+      (let* ((end (length items))
+             (result (make-array end)))
+        (labels ((vector-element (element index)
+                   (setf (aref result index)
+                         (if (member (type-of element) '(cons string array))
+                             (array* element)
+                             element))))
+          (dotimes (index end)
+            (if (eq (nth index items) '*unbound*)
+                (setf (aref result index) '*unbound*)
+                (let ((item (nth index items)))
+                  (case (type-of item)
+                    (cons  (let ((end (length item)))
+                             (dotimes (index end)
+                               (if (eq (nth index item) '*unbound*)
+                                   (strcat-element <font color="#880000">"*UNBOUND*"</font>)
+                                   (strcat-element (nth index item))))))
+                    (array (let ((end (length item)))
+                             (dotimes (index end)
+                               (if (eq (aref item index) '*unbound*)
+                                   (strcat-element <font color="#880000">"*UNBOUND*"</font>)
+                                   (strcat-element (aref item index))))))
+                    (t     (strcat-element item))))))
+          result))))
+</pre>
+
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

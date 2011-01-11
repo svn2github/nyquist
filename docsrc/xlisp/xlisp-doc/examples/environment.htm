@@ -1,0 +1,1001 @@
+<html><head>
+
+<title>Environment</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Environment</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#unbound">*unbound*</a></nobr></li>
+<li><nobr><a href="#lexical-environment">Lexical Environment</a></nobr></li>
+<ul>
+<li><nobr><a href="#getenv">getenv</a> - [Macro]</nobr></li>
+<li><nobr><a href="#eval-env">eval-env</a> - [Macro]</nobr></li>
+</ul>
+<li><nobr><a href="#lboundp">lboundp</a> - [Macro] - has this symbol a lexical variable value bound to it?</nobr></li>
+<ul>
+<li><nobr><a href="#valuep">valuep</a> - [Macro] - has this symbol a valid variable value bound to it?</nobr></li>
+</ul>
+<li><nobr><a href="#lfboundp">lfboundp</a> - [Macro] - has this symbol a lexical function value bound to it?</nobr></li>
+<li><nobr><a href="#lsymbol-value">lsymbol-value</a> - [Macro] - get the lexical variable value</nobr></li>
+<li><nobr><a href="#lsymbol-function">lsymbol-function</a> - [Macro] - get the lexical <a href="../reference/flet.htm">flet</a>, <a href="../reference/labels.htm">labels</a>, or <a href="../reference/macrolet.htm">macrolet</a> function value</nobr></li>
+<li><nobr><a href="#lmacroexpand-1">lmacroexpand-1</a> - [Macro] - expand the first level of a a <a href="../reference/macrolet.htm">macrolet</a> form</nobr></li>
+<li><nobr><a href="#known-problems">Known Problems</a></nobr></li>
+</ol>
+
+<a name="unbound"></a>
+
+<hr>
+
+<h2>*unbound*</h2>
+
+<hr>
+
+<p>A tricky problem with XLISP is that the symbol
+<a href="../reference/global-unbound.htm">*unbound*</a> can be bound as a
+value to any Lisp symbol, also to a lexical parameter variable if passed
+as a value to a Lisp function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">test</font> (x)
+  (print x))
+
+(test '*unbound*)  =&gt; <font color="#880000">error: unbound variable</font>
+</pre>
+
+<p>The problem here is that the symbol
+<a href="../reference/global-unbound.htm">*unbound*</a> has been bound to
+the parameter variable 'x'</nobr>, so the expression <nobr>(print x)</nobr>
+instead of printing &quot;*UNBOUND*&quot; now causes an 'unbound variable'
+error. How can</nobr> I test from inside of a function if the lexical
+parameter variable 'x' is bound to the symbol
+<a href="../reference/global-unbound.htm">*unbound*</a>? Unfortunately there
+is no standard Lisp way to solve this problem.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="obarray"></a>
+
+<hr>
+
+<h2>*obarray*</h2>
+
+<hr>
+
+<p>A symbol in the *obarray* is protected from garbage collection.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lexical-environment"></a>
+
+<hr>
+
+<h2>Lexical Environment</h2>
+
+<hr>
+
+<p>Lisp parameter variables together with local variables bound with
+<a href="../reference/let.htm">let</a> and
+<a href="../reference/let-star.htm">let*</a> and functions defined by
+<a href="../reference/flet.htm">flet</a> and
+<a href="../reference/labels.htm">labels</a> are not interned in the
+<a href="../reference/global-obarray.htm">*obarray*</a>, instead they are
+stored in the local lexical environment, maintained via an internal
+association list. <nobr>The key</nobr> for reading this list is the
+<a href="../reference/global-evalhook.htm">*evalhook*</a> variable and the
+<a href="../reference/evalhook.htm">evalhook</a> function.</p>
+
+<p>Here are two Nyquist macros from 'evalenv.lsp':</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">getenv</font> ()        <font color="#008844">; return the current environment</font>
+  '(progv '(*evalhook*) (list #'(lambda (exp env) env))
+     (eval nil)))
+
+(defmacro <font color="#0000CC">eval-env</font> (arg)   <font color="#008844">; evaluate in the current environment</font>
+  `(evalhook ,arg nil nil (getenv)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="getenv"></a>
+
+<hr>
+
+<h2>getenv</h2>
+
+<hr>
+
+<p>The 'getenv' macro returns the association list of the current lexical
+environment:</p>
+
+<pre class="example">
+(let ((<font color="#AA5500">v1</font> 1)          <font color="#008844">; first variable</font>
+      (<font color="#AA5500">v2</font> 2))         <font color="#008844">; second variable</font>
+  (flet ((<font color="#0000CC">f1</font> (a) a)   <font color="#008844">; first function</font>
+         (<font color="#0000CC">f2</font> (b) b))  <font color="#008844">; second function</font>
+    (getenv)))
+
+=&gt; ((((<font color="#AA5500">V2</font> . <font color="#444444">1</font>) (<font color="#AA5500">V1</font> . <font color="#444444">2</font>))) ((<font color="#0000CC">F2</font> . <font color="#444444">#&lt;Closure...&gt;</font>) (<font color="#0000CC">F1</font> . <font color="#444444">#&lt;Closure...&gt;</font>)))
+</pre>
+
+<p>The asymmetric layout is produced by
+<a href="../reference/print.htm">print</a>, the real structure of the
+lexical environment is a <a href="../reference/cons.htm">cons</a> of two
+association lists:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">print-env</font> ()
+  (let ((env (gensym)))
+    `(let ((,env (getenv)))
+       (format t <font color="#880000">"(~s . ~s)~%"</font> (car ,env) (cdr ,env)))))
+</pre>
+
+<p><b>Note:</b> You could also use
+<a href="lists.htm#print-cons">print-cons</a> instead of
+<a href="../reference/format.htm">format</a> to print really all the
+details of the list, but <a href="../reference/format.htm">format</a> is
+enough for the examples here.</p>
+
+<pre class="example">
+(let ((<font color="#AA5500">v1</font> 1)          <font color="#008844">; first variable</font>
+      (<font color="#AA5500">v2</font> 2))         <font color="#008844">; second variable</font>
+  (flet ((<font color="#0000CC">f1</font> (a) a)   <font color="#008844">; first function</font>
+         (<font color="#0000CC">f2</font> (b) b))  <font color="#008844">; second function</font>
+    (print-env)))
+
+((((<font color="#AA5500">V2</font> . <font color="#444444">2</font>) (<font color="#AA5500">V1</font> . <font color="#444444">1</font>))) . (((<font color="#0000CC">F2</font> . <font color="#444444">#&lt;Closure...&gt;</font>) (<font color="#0000CC">F1</font> . <font color="#444444">#&lt;Closure...&gt;</font>))))
+</pre>
+
+<p>The basic <nobr>layout is</nobr>:</p>
+
+<pre class="example">
+((((<font color="#AA5500">V2</font> . value) (<font color="#AA5500">V1</font> . value))) . (((<font color="#0000CC">F2</font> . value) (<font color="#0000CC">F1</font> . value))))
+
+<font color="#444444">((&lt;----- <font color="#AA5500">variable-list</font> -----&gt;) . (&lt;----- <font color="#0000CC">function-list</font> -----&gt;))</font>
+
+(car (getenv))  =&gt; (<font color="#AA5500">variable-list</font>)
+(cdr (getenv))  =&gt; (<font color="#0000CC">function-list</font>)
+</pre>
+
+<p>The different levels of bindings are maintained via multiple
+sublists:</p>
+
+<pre class="example">
+(let ((<font color="#AA5500">v1</font> 1))             <font color="#008844">; first level variable</font>
+  (let ((<font color="#AA5500">v2</font> 2))           <font color="#008844">; second level variable</font>
+    (flet ((<font color="#0000CC">f1</font> (a) a))    <font color="#008844">; first level function</font>
+      (flet ((<font color="#0000CC">f2</font> (b) b))  <font color="#008844">; second level function</font>
+        (print-env)))))
+
+((((<font color="#AA5500">V2</font> . value)) ((<font color="#AA5500">V1</font> . value))) . (((<font color="#0000CC">F2</font> . value)) ((<font color="#0000CC">F1</font> . value))))
+
+<font color="#444444">(((&lt;--<font color="#AA5500">level2</font>--&gt;) (&lt;--<font color="#AA5500">level1</font>--&gt;)) . ((&lt;--<font color="#0000CC">level2</font>--&gt;) (&lt;--<font color="#0000CC">level1</font>--&gt;)))</font>
+<font color="#444444">((&lt;------ <font color="#AA5500">variable-list</font> ------&gt;) . (&lt;------ <font color="#0000CC">function-list</font> ------&gt;))</font>
+</pre>
+
+<p>Variables appear always in the variable list, functions always in the
+function list:</p>
+
+<pre class="example">
+(let ((<font color="#AA5500">v1</font> 1))             <font color="#008844">; first level variable</font>
+  (flet ((<font color="#0000CC">f1</font> (a) a))      <font color="#008844">; first level function</font>
+    (let ((<font color="#AA5500">v2</font> 2))         <font color="#008844">; second level variable</font>
+      (flet ((<font color="#0000CC">f2</font> (b) b))  <font color="#008844">; second level function</font>
+        (print-env)))))
+
+((((<font color="#AA5500">V2</font> . value)) ((<font color="#AA5500">V1</font> . value))) . (((<font color="#0000CC">F2</font> . value)) ((<font color="#0000CC">F1</font> . value))))
+
+<font color="#444444">(((&lt;--<font color="#AA5500">level2</font>--&gt;) (&lt;--<font color="#AA5500">level1</font>--&gt;)) . ((&lt;--<font color="#0000CC">level2</font>--&gt;) (&lt;--<font color="#0000CC">level1</font>--&gt;)))</font>
+<font color="#444444">((&lt;------ <font color="#AA5500">variable-list</font> ------&gt;) . (&lt;------ <font color="#0000CC">function-list</font> ------&gt;))</font>
+</pre>
+
+<p>The <nobr>inner-most</nobr> bindings always appear at the front of the
+lists:</p>
+
+<pre class="example">
+(let ((<font color="#AA5500">v1</font> 1))             <font color="#008844">; first level variable</font>
+  (let ((<font color="#AA5500">v2</font> 2))           <font color="#008844">; second level variable</font>
+    (flet ((<font color="#0000CC">f1</font> (a) a))    <font color="#008844">; first level function</font>
+      (flet ((<font color="#0000CC">f2</font> (b) b))  <font color="#008844">; second level function</font>
+        (let ((<font color="#AA5500">v3</font> 3))     <font color="#008844">; third level variable</font>
+          (print-env))))))
+
+((((<font color="#AA5500">V3</font> . value)) ((<font color="#AA5500">V2</font> . value)) ((<font color="#AA5500">V1</font> . value))) . (((<font color="#0000CC">F2</font> . value)) ((<font color="#0000CC">F1</font> . value))))
+
+<font color="#444444">(((&lt;--<font color="#AA5500">level3</font>--&gt;) (&lt;--<font color="#AA5500">level2</font>--&gt;) (&lt;--<font color="#AA5500">level1</font>--&gt;)) . ((&lt;--<font color="#0000CC">level2</font>--&gt;) (&lt;--<font color="#0000CC">level1</font>--&gt;)))</font>
+<font color="#444444">((&lt;------------- <font color="#AA5500">variable-list</font> --------------&gt;) . (&lt;------ <font color="#0000CC">function-list</font> ------&gt;))</font>
+</pre>
+
+<p>There may appear several variable bindings in the same sublist:</p>
+
+<pre class="example">
+(let ((<font color="#AA5500">v1</font> 1) (<font color="#AA5500">v2</font> 2))      <font color="#008844">; first level variables</font>
+  (flet ((<font color="#0000CC">f1</font> (a) a)       <font color="#008844">; first level functions</font>
+         (<font color="#0000CC">f2</font> (b) b))
+    (let ((<font color="#AA5500">v3</font> 3))         <font color="#008844">; second level variable</font>
+      (print-env))))
+
+((((V3 . value)) ((V2 . value) (V1 . value))) . (((F2 . value) (F1 . value))))
+
+<font color="#444444">(((&lt;--<font color="#AA5500">level2</font>--&gt;) (&lt;--------<font color="#AA5500">level1</font>---------&gt;)) . ((&lt;---------<font color="#0000CC">level1</font>--------&gt;)))</font>
+<font color="#444444">((&lt;------------ <font color="#AA5500">variable-list</font> -------------&gt;) . (&lt;----- <font color="#0000CC">function-list</font> -----&gt;))</font>
+</pre>
+
+<p>The basic principle is always the same:</p>
+
+<pre class="example">
+(((<font color="#AA5500">level n</font> <font color="#008844">...</font>) <font color="#008844">...</font> (<font color="#AA5500">level 1 variables</font>)) . ((<font color="#0000CC">level n</font> <font color="#008844">...</font>) <font color="#008844">...</font> (<font color="#0000CC">level 1 functions</font>)))
+
+(car (getenv))  =&gt; ((<font color="#AA5500">level n</font> <font color="#008844">...</font>) (<font color="#AA5500">level n-1</font> <font color="#008844">...</font>) <font color="#008844">...</font> (<font color="#AA5500">level 1 variables</font>))
+(cdr (getenv))  =&gt; ((<font color="#0000CC">level n</font> <font color="#008844">...</font>) (<font color="#0000CC">level n-1</font> <font color="#008844">...</font>) <font color="#008844">...</font> (<font color="#0000CC">level 1 functions</font>))
+</pre>
+
+<p>Also the function parameter variables appear in the the lexical
+environment association list:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">test</font> (<font color="#AA0000">parameter-var</font>)
+  (let ((<font color="#AA5500">local-var</font> 'value))
+    (print-env)))
+
+((((<font color="#AA5500">LOCAL-VAR</font> . value)) ((<font color="#AA0000">PARAMETER-VAR</font> . value))) . NIL)  <font color="#008844">; NIL = no functions</font>
+
+<font color="#444444">(((&lt;-----<font color="#AA5500">level2</font>------&gt;) (&lt;-------<font color="#AA5500">level1</font>--------&gt;)) . NIL)</font>
+<font color="#444444">((&lt;--------------- <font color="#AA5500">variable-list</font> ---------------&gt;) . NIL)</font>
+</pre>
+
+<p>The variables bound by <a href="../reference/let.htm">let</a> appear
+before the function's parameter variables, that's why
+<a href="../reference/let.htm">let</a> bindings 'shadow' parameter variables
+with the same name. <nobr>The 'test'</nobr> function name does not appear in
+the environment list because the function name was
+<a href="../reference/intern.htm">intern</a>ed in the
+<a href="../reference/global-obarray.htm">*obarray*</a> by
+<a href="../reference/defun.htm">defun</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="eval-env"></a>
+
+<hr>
+
+<h2>eval-env</h2>
+
+<hr>
+
+<p>This still doen't work:</p>
+
+<pre class="example">
+(setq x 'global)        ; define a global variable 'x'
+
+(defun print-x ()       ; define a function PRINT-X in the global environment
+  (print (getenv))      ; always prints ((NIL)), also with EVAL-ENV or EVALHOOK
+  (print x))            ; always prints GLOBAL, also with EVAL-ENV or EVALHOOK
+
+(let ((x 'local))       ; create a lexical variable 'x'
+  (print-x))            ; evaluate PRINT-X
+=&gt; GLOBAL               ; value from the environment, where PRINT-X was defined
+
+(let ((x 'local))       ; create a lexical variable 'x'
+  (eval-env (print-x))  ; evaluate PRINT-X in the current environment
+=&gt; GLOBAL  ;wrong       ; value from the environment, where PRINT-X was called
+
+(let ((x 'local))       ; create a lexical variable 'x'
+  (eval-env (funcall 'print-x))  ; evaluate PRINT-X in the current environment
+=&gt; GLOBAL  ;wrong       ; value from the environment, where PRINT-X was called
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lboundp"></a>
+
+<hr>
+
+<h2>lboundp</h2>
+
+<hr>
+
+<p>The 'lboundp' function tests if a valid variable value is bound to a
+symbol in the current lexical environment:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>lboundp</b> <i>symbol</i>)</dt>
+<dd><i>symbol</i> - a quoted lisp symbol<br>
+returns - <a href="../reference/t.htm">&nbsp;T&nbsp;</a> if a lexical
+variable value is bound to the symbol, <a href="../reference/nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">lboundp</font> (symbol)
+  (cond ((not (or (symbolp symbol)
+                  (and (consp symbol)
+                       (eq 'quote (car symbol))
+                       (symbolp (cadr symbol)))))
+         (error <font color="#880000">"bad argument type"</font> symbol))
+        ((and (consp symbol) (cddr symbol))
+         (error <font color="#880000">"too many arguments"</font>))
+        (t (let ((a-cons (gensym)) (level (gensym)) (binding (gensym)))
+             `(let ((,a-cons (dolist (,level (car (getenv)) nil)
+                               (let ((,binding (assoc ,symbol ,level)))
+                                 (when ,binding (return ,binding))))))
+                (and ,a-cons (not (eq (cdr ,a-cons) '<font color="#AA5500">*unbound*</font>))))))))
+</pre>
+
+<p>The XLISP <a href="../reference/boundp.htm">boundp</a> function only
+can test global variables, interned in the
+<a href="../reference/global-obarray.htm">*obarray*</a>, so it cannot be
+used to test if a symbol has a variable value bound to it in the lexical
+environment:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">test</font> (x)    <font color="#008844">; bad example</font>
+  (if (boundp 'x)  <font color="#AA0000">; &lt;- global test</font>
+      (print x)
+      (print '*unbound*)))
+
+(test 'hello!)     =&gt; *UNBOUND*  <font color="#AA0000">; bad result</font>
+(test 123)         =&gt; *UNBOUND*  <font color="#AA0000">; bad result</font>
+
+(setq x t)         =&gt; T          <font color="#008844">; create a global variable 'x'</font>
+
+(test 'hello!)     =&gt; 'HELLO!    <font color="#008844">; OK</font>
+(test 123)         =&gt; 123        <font color="#008844">; OK</font>
+(test '*unbound*)  =&gt; <font color="#AA0000">error: unbound variable - X  ; bad result</font>
+</pre>
+
+<p>Here the same example with 'lboundp':</p>
+
+<pre class="example">
+(defun <font color="#0000CC">test</font> (x)     <font color="#008844">; good example</font>
+  (if (lboundp 'x)  <font color="#008844">; &lt;- local test</font>
+      (print x)
+      (print '*unbound*)))
+
+(test 'hello!)     =&gt; 'HELLO!    <font color="#008844">; OK</font>
+(test 123)         =&gt; 123        <font color="#008844">; OK</font>
+(test '*unbound*)  =&gt; *UNBOUND*  <font color="#008844">; OK</font>
+</pre>
+
+<p>The 'lboundp' function cannot test symbol values at the
+<nobr>top-level</nobr>, because there is no lexical environment:</p>
+
+<pre class="example">
+(setq x t)    =&gt; T   <font color="#008844">; create a global variable 'x'</font>
+(lboundp 'x)  =&gt; NIL <font color="#AA0000">; lexical test fails</font>
+(boundp 'x)   =&gt; T   <font color="#008844">; global test succeeds</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="valuep"></a>
+
+<hr>
+
+<h2>valuep</h2>
+
+<hr>
+
+<p>The 'valuep' function tests if a valid variable value is bound to a
+symbol at any level:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">valuep</font> (symbol)
+  (cond ((not (or (symbolp symbol)
+                  (and (consp symbol)
+                       (eq 'quote (car symbol))
+                       (symbolp (cadr symbol)))))
+         (error <font color="#880000">"bad argument type"</font> ,symbol))
+        ((and (consp symbol) (cddr symbol))
+         (error <font color="#880000">"too many arguments"</font>))
+        (t (let ((a-cons (gensym)) (level (gensym)) (binding (gensym)))
+             `(let ((,a-cons (dolist (,level (car (getenv)) nil)
+                               (let ((,binding (assoc ,symbol ,level)))
+                                 (when ,binding (return ,binding))))))
+                (if ,a-cons
+                    (not (eq (cdr ,a-cons) '<font color="#AA5500">*unbound*</font>))
+                    (boundp ,symbol)))))))
+</pre>
+
+<p>It's tricky to test if a symbol has a valid variable value bound to
+it because if the symbol is bound to
+<a href="../reference/global-unbound.htm">*unbound*</a> in a lexical
+environment, it still shadows a symbol with the same name in the
+<a href="../reference/global-obarray.htm">*obarray*</a>, making a possibly
+existing global variable inaccessible, like shown in the examples
+below.</p>
+
+<p><b>Note:</b> The lexical environment must be tested first, because this
+is the way how XLISP searches for symbol bindings.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(when (valuep 'x) x)  =&gt; NIL  <font color="#008844">; no global binding of 'x' found</font>
+(setq x 'ok)          =&gt; OK   <font color="#008844">; create a global variable 'x'</font>
+(when (valuep 'x) x)  =&gt; OK   <font color="#008844">; global binding of 'x' found</font>
+
+(let ((x 'local))             <font color="#008844">; create a lexical variable 'x'</font>
+  (when (valuep 'x) x))       <font color="#008844">; try to access the lexical variable</font>
+=&gt; LOCAL                      <font color="#008844">; lexical binding of 'x' found</font>
+</pre>
+
+<p>XLISP problems with
+<a href="../reference/global-unbound.htm">*unbound*</a>
+lexical variables:</p>
+
+<pre class="example">
+(setq x 'ok)          =&gt; OK   <font color="#008844">; create a global variable 'x'</font>
+(when (valuep 'x) x)  =&gt; OK   <font color="#008844">; global binding of 'x' found</font>
+
+(let ((x '*unbound*))         <font color="#008844">; create an unbound lexical variable 'x'</font>
+  (when (valuep 'x) x))       <font color="#008844">; try to access the global variable</font>
+=&gt; <font color="#AA0000">NIL                        ; global binding of 'x' NOT found</font>
+
+(let ((x '*unbound*))         <font color="#008844">; create an unbound lexical variable 'x'</font>
+  x)                          <font color="#008844">; try to access the global variable</font>
+<font color="#AA0000">error: unbound variable - X</font>
+</pre>
+
+<p>The 'valuep' function recognizes if a global variable value is shadowed
+by an <a href="../reference/global-unbound.htm">*unbound*</a> lexical
+variable and returns NIL if the global variable is inaccessible..</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lfboundp"></a>
+
+<hr>
+
+<h2>lfboundp</h2>
+
+<hr>
+
+<p>The 'lfboundp' function tests if a valid function value is bound to a
+symbol in the current lexical environment:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>lfboundp</b> <i>symbol</i>)</dt>
+<dd><i>symbol</i> - a quoted lisp symbol<br>
+returns - <a href="../reference/t.htm">&nbsp;T&nbsp;</a> if a lexical
+function value is bound to the symbol, <a href="../reference/nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">lfboundp</font> (symbol)
+  (cond ((not (or (symbolp symbol)
+                  (and (consp symbol)
+                       (eq 'quote (car symbol))
+                       (symbolp (cadr symbol)))))
+         (error <font color="#880000">"bad argument type"</font> symbol))
+        ((and (consp symbol) (cddr symbol))
+         (error <font color="#880000">"too many arguments"</font>))
+        (t (let ((a-cons (gensym)) (level (gensym)) (binding (gensym)))
+             `(let ((,a-cons (dolist (,level (cdr (getenv)) nil)
+                               (let ((,binding (assoc ,symbol ,level)))
+                                 (when ,binding (return ,binding))))))
+                (and ,a-cons (not (eq (cdr ,a-cons) '<font color="#AA5500">*unbound*</font>))))))))
+</pre>
+
+<p>The XLISP <a href="../reference/fboundp.htm">fboundp</a> function only
+works with symbols interned in the
+<a href="../reference/global-obarray.htm">*obarray*</a>, so it cannot be
+used to test if a symbol has a function value bound to it in the lexical
+environment:</p>
+
+<pre class="example">
+(flet ((my-function (x) 'hello))
+  (fboundp 'my-function))   <font color="#AA0000">; &lt;- global test</font>
+=&gt; NIL
+
+(flet ((my-function (x) 'hello))
+  (lfboundp 'my-function))  <font color="#008844">; &lt;- local test</font>
+=&gt; T
+</pre>
+
+<p>The 'lfboundp' function cannot test symbol function values at the
+<nobr>top-level</nobr>, because there is no lexical environment:</p>
+
+<pre class="example">
+(lfboundp 'car)  =&gt; NIL <font color="#AA0000">; lexical test fails</font>
+(fboundp 'car)   =&gt; T   <font color="#008844">; global test succeeds</font>
+</pre>
+
+<p>Problems with <a href="../reference/global-unbound.htm">*unbound*</a>
+lexical functions are less likely then with
+<a href="../reference/global-unbound.htm">*unbound*</a> parameter
+variables, because there is no <nobr>buit-in</nobr> way to bind a lexical
+function to <a href="../reference/global-unbound.htm">*unbound*</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr><a href="predicates.htm#subrp">suprp</a> - is this a built-in function?</nobr></li>
+<li><nobr><a href="predicates.htm#fsubrp">fsubrp</a> - is this a built-in special form?</nobr></li>
+<li><nobr><a href="predicates.htm#closurep">closurep</a> - is this a user-defined function or macro?</nobr></li>
+<li><nobr><a href="predicates.htm#functionp">functionp</a> - is this a build-in or a user-defined function?</nobr></li>
+<li><nobr><a href="predicates.htm#macrop">macrop</a> - is this a user-defined macro?</nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lsymbol-value"></a>
+
+<hr>
+
+<h2>lsymbol-value</h2>
+
+<hr>
+
+<p>The function 'lsymbol-value' returns a variable value from the lexical
+environment:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">lsymbol-value</font> (symbol)
+  (cond ((not (or (symbolp symbol)
+                  (and (consp symbol)
+                       (eq 'quote (car symbol))
+                       (symbolp (cadr symbol)))))
+         (error <font color="#880000">"bad argument type"</font> symbol))
+        ((and (consp ,symbol) (cddr symbol))
+         (error <font color="#880000">"too many arguments"</font>))
+        (t (let ((a-cons (gensym)) (level (gensym)) (binding (gensym)))
+             `(let ((,a-cons (dolist (,level (car (getenv)) nil)
+                               (let ((,binding (assoc ,symbol ,level)))
+                                 (when ,binding (return ,binding))))))
+                (when ,a-cons
+                    (if (eq (cdr ,a-cons) '<font color="#AA5500">*unbound*</font>)
+                        '*unbound*
+                        (cdr ,a-cons))))))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lsymbol-function"></a>
+
+<hr>
+
+<h2>lsymbol-function</h2>
+
+<hr>
+
+<p>The function 'lsymbol-function' returns a function value from the lexical
+environment:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">lsymbol-function</font> (symbol)
+  (cond ((not (or (symbolp symbol)
+                  (and (consp symbol)
+                       (eq 'quote (car symbol))
+                       (symbolp (cadr symbol)))))
+         (error <font color="#880000">"bad argument type"</font> symbol))
+        ((and (consp symbol) (cddr symbol))
+         (error <font color="#880000">"too many arguments"</font>))
+        (t (let ((a-cons (gensym)) (level (gensym)) (binding (gensym)))
+             `(let ((,a-cons (dolist (,level (cdr (getenv)) nil)
+                               (let ((,binding (assoc ,symbol ,level)))
+                                 (when ,binding (return ,binding))))))
+                (when ,a-cons
+                  (if (eq (cdr ,a-cons) '<font color="#AA5500">*unbound*</font>)
+                      '*unbound*
+                      (cdr ,a-cons))))))))
+</pre>
+
+<p>The XLISP function
+<nobr><a href="../reference/symbol-function.htm">symbol-function</a></nobr>
+only works with symbols interned in the
+<a href="../reference/global-obarray.htm">*obarray*</a>, so it cannot return
+a function value, bound to a symbol in the lexical environment:</p>
+
+<pre class="example">
+(flet ((my-function (x) 'hello))
+  (symbol-function 'my-function))  <font color="#AA0000">; &lt;- searches the *obarray*</font>
+=&gt; <font color="#AA0000">error: unbound function - MY-FUNCTION</font>
+
+(flet ((my-function (x) 'hello))
+  (lsymbol-function 'my-function)) <font color="#008844">; &lt;- searches the lexical environment</font>
+=&gt; #&lt;Closure-MY-FUNCTION...&gt;
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lmacroexpand-1"></a>
+
+<hr>
+
+<h2>lmacroexpand-1</h2>
+
+<hr>
+
+<pre class="example">
+(defmacro <font color="#0000CC">with-static-env</font> (&rest body)
+  (let ((env (gensym)) (rval (gensym)))
+    `(let ((,env (getenv)))  <font color="#008844">; environment snapshot</font>
+       (progv '(*evalhook*)
+              '((lambda (exp env)
+                 (labels ((,rval (exp env) <font color="#008844">; recursive eval</font>
+                            (format t "exp: ~a env: ~a ,env: ~a~%" exp env ,env)
+                            (evalhook exp #',rval NIL ,env)))
+                   (format t "exp: ~a env: ~a ,env: ~a~%" exp env ,env)
+                   (evalhook exp #',rval NIL ,env))))
+         ,@body))))
+</pre>
+
+<pre class="example">
+(defmacro <font color="#0000CC">with-dynamic-env</font> (&rest body)
+  (let ((env (gensym)) (rval (gensym)))
+    `(let ((,env (getenv)))  <font color="#008844">; environment snapshot</font>
+       (progv '(*evalhook*)
+              '((lambda (exp env)
+                 (labels ((,rval (exp env) <font color="#008844">; recursive eval</font>
+                            (format t "inner exp: ~a env: ~a~%" exp env)
+                            (evalhook exp #',rval NIL env)))
+                   (format t "outer exp: ~a env: ~a~%" exp env)
+                   (evalhook exp #',rval NIL env))))
+         ,@body))))
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">display-env</font> (env &amp;optional (exp nil exp-p))
+  (flet ((display-bindings (name bindings)
+    (format t <font color="#880000">" ~a bindings: ~s~%"</font> name bindings)
+    (let ((frame-counter 1))
+      (dolist (frame bindings)
+        (format t <font color="#880000">"  ~a frame ~a: ~a~%"</font> name frame-counter frame)
+        (let ((binding-counter 1))
+          (dolist (binding frame)
+            (when (consp binding)
+              (format t <font color="#880000">"   ~a ~a: ~s - value: ~s~%"</font>
+                  name binding-counter (car binding) (cdr binding))
+              (incf binding-counter))))
+        (incf frame-counter)))))
+    (when exp-p (format t <font color="#880000">"eval: ~s~%"</font> exp))
+    (format t <font color="#880000">"environment: ~s~%"</font> env)
+    (display-bindings <font color="#880000">"variable"</font> (car env))
+    (display-bindings <font color="#880000">"function"</font> (cdr env))))
+
+(defmacro <font color="#0000CC">debug:env</font> ()
+  '(progv '(*evalhook*) '(nil)
+     (display-env (getenv))))
+
+(defmacro <font color="#0000CC">debug:env</font> ()
+  '(progv '(*evalhook*) '((lambda (exp env)
+                            (display-env env)))
+     (eval nil)))
+
+(defmacro <font color="#0000CC">debug:env</font> (&rest body)
+  (when *evalhook*
+    (format t "DEBUG:ENV ")
+    (format t "*evalhook* was already modified~%"))
+  (if (null body)
+      '(progv '(<font color="#AA5500">*evalhook*</font>) '((lambda (exp env)
+                                (display-env env)))
+         (eval nil))
+      (let ((init (gensym)) (rval (gensym)))
+        `(let ((,init (getenv)))  <font color="#008844">; environment snapshot</font>
+           (progv '(<font color="#AA5500">*evalhook*</font>)
+                  '((lambda (exp env)
+                     (labels ((,rval (exp env) <font color="#008844">; recursive eval</font>
+                                (display-env env exp)
+                                (evalhook exp #',rval nil env)))
+                       (display-env ,init exp)
+                       (evalhook exp #',rval nil ,init))))
+             ,@body)))))
+
+(defmacro <font color="#0000CC">with-evalhook</font> (&amp;rest body)
+  (let ((init (gensym)) (rval (gensym)) (hook (gensym)) debug)
+    `(let ((,init (getenv)))  <font color="#008844">; environment snapshot</font>
+       (progv '(<font color="#AA5500">*evalhook*</font>)
+              '((lambda (exp env)
+                 (labels ((,rval (exp env)  <font color="#008844">; recursive eval</font>
+                            ,(print *evalhook*)
+                            ,(when T `(funcall ,*evalhook* exp env))
+
+                            (evalhook exp #',rval nil env)))
+                   (evalhook exp #',rval nil ,init))))
+         ,@body))))
+
+(defmacro <font color="#0000CC">with-current-environment</font> (&amp;rest body)
+  (when <font color="#AA5500">*evalhook*</font> (error <font color="#880000">"*evalhook* already modified"</font>))
+  (let ((init (gensym)) (rval (gensym)) debug)
+    (when (eq :debug (car body)) (setq debug t body (cdr body)))
+    `(let ((,init (getenv)))  <font color="#008844">; environment snapshot</font>
+       (progv '(<font color="#AA5500">*evalhook*</font>)
+              '((lambda (exp env)
+                 (labels ((,rval (exp env)  <font color="#008844">; recursive eval</font>
+                            <font color="#008844">;; append environment from snapshot</font>
+                            (setq env (cons (append (car env) (car ,init))
+                                            (append (cdr env) (cdr ,init))))
+                            ,(when debug '(display-env env exp))
+                            (evalhook exp #',rval nil env)))
+                   <font color="#008844">;; start with environment snapshot</font>
+                   ,(when debug `(display-env ,init exp))
+                   (evalhook exp #',rval nil ,init))))
+         ,@body))))
+
+(defmacro <font color="#0000CC">with-env</font> (&amp;rest body)
+  (let ((init (gensym)) (rval (gensym)))
+    `(let ((,init (getenv)))  <font color="#008844">; environment snapshot</font>
+       (progv '(*evalhook*)
+              '((lambda (exp env)
+                 (labels ((,rval (exp env) <font color="#008844">; recursive eval</font>
+                            (display-env env exp)
+                            (evalhook exp #',rval nil env)))
+                   (display-env ,init exp)
+                   (evalhook exp #',rval nil ,init))))
+         ,@body))))
+</pre>
+
+<pre class="example">
+(with-current-environment
+  (debug:env
+    body))
+
+(progv '(*evalhook)
+       '((lambda (exp env)
+           (labels ((rval (exp env)
+                      (append-current-environment)
+                      (debug:env ...)
+                      (evalhook exp #'rval nil env)))
+             (evalhook exp #'rval nil init)))))
+
+(debug:env
+  (with-current-environment
+    body))
+
+(progv '(*evalhook)
+       '((lambda (exp env)
+           (labels ((rval (exp env)
+</pre>
+
+<pre class="example">
+(defmacro <font color="#0000CC">with-current-environment</font> (&amp;rest body)
+  (when <font color="#AA5500">*evalhook*</font> (error <font color="#880000">"*evalhook* already modified"</font>))
+  (let ((debug nil) (init (gensym)) (rval (gensym)))
+    (when (eq :debug (car body)) (setq debug t body (cdr body)))
+    `(let ((,init (getenv)))  <font color="#008844">; environment snapshot</font>
+       (progv '(<font color="#AA5500">*evalhook*</font>)
+              '((lambda (exp env)
+                 (labels ((,rval (exp env)  <font color="#008844">; recursive eval</font>
+                            ,(cond (debug
+                                    `(setq env
+                                       (cons (append (car env) (car ,init))
+                                             (append (cdr env) (cdr ,init))))
+                                    '(display-env env exp)
+                                    `(evalhook exp #',rval nil env))
+                                   (t
+                                    `(evalhook exp #',rval nil
+                                       (cons (append (car env) (car ,init))
+                                             (append (cdr env) (cdr ,init))))))))
+                   ,(when debug `(display-env ,init exp))
+                   (evalhook exp #',rval nil ,init))))
+         ,@body))))
+</pre>
+
+<pre class="example">
+(setq *rvalhook* nil)
+
+(defmacro <font color="#0000CC">with-current-environment</font> (&amp;rest body)
+  (let ((init (gensym)))
+    `(let ((,init (getenv)))
+       (rval-env #'(lambda (exp env)
+                     (cons exp (cons (append (car env) (car ,init))
+                                     (append (cdr env) (cdr ,init)))))
+                 ,@body))))
+
+(defmacro debug:env (&amp;rest body)
+  (rval-env #'(lambda (exp env)
+                (display-env env exp)
+                (cons exp env))
+            ,@body))
+
+(defmacro <font color="#0000CC">run-rvalhooks</font> ()
+  (let ((func (gensym)) (result (gensym)))
+    `(dolist (,func <font color="#AA5500">*rvalhook*</font>)
+       (format t "func: ~a~%" ,func)
+       (format t "exp: ~a~%" exp)
+       (format t "env: ~a~%" env)
+       (let ((,result (eval (list ,func 'exp 'env) )))
+         (format t "result: ~a~%" ,result)
+         (format t "exp: ~a~%" exp)
+         (format t "car: ~a~%" (car ,result))
+         (format t "env: ~a~%" env)
+         (format t "cdr: ~a~%" (cdr ,result))
+         (setq exp (car ,result) env (cdr ,result)) 
+  ))))
+
+(defmacro <font color="#0000CC">rval-env</font> (function &amp;rest body)
+  (format t "function: ~a~%" function)
+  (format t "body: ~a~%" body)
+  (or <font color="#AA5500">*evalhook*</font> (setq <font color="#AA5500">*rvalhook*</font> nil))
+  (format t "*rvalhook*: ~a~%" *rvalhook*)
+  (if <font color="#AA5500">*rvalhook*</font>
+      `(prog2
+         (push ,function <font color="#AA5500">*rvalhook*</font>)
+         (progn ,@body)
+         (setq <font color="#AA5500">*rvalhook*</font> (remove ,function <font color="#AA5500">*rvalhook*</font>)))
+      (let ((rval (gensym)) (func (gensym)) (result (gensym)))
+        `(prog2
+           (push ,function <font color="#AA5500">*rvalhook*</font>)
+           (progv '(<font color="#AA5500">*evalhook*</font>)
+                  `((lambda (exp env)
+                      (print 'hallo)
+                      (labels ((,rval (exp env)
+                                 (run-rvalhooks)
+                                 (evalhook exp #',rval nil env)))
+                        ; (run-rvalhooks)
+                        (evalhook exp #',rval nil env))))
+             ,@body)
+           (setq <font color="#AA5500">*rvalhook*</font> (remove ,function <font color="#AA5500">*rvalhook*</font>))))))
+</pre>
+
+<p>*rvalhook* must be a list of functions, each taking two arguments 'exp'
+[the Lisp expressions to evaluate] and 'env' [the environment], returning
+a cons of the format <nobr>(exp . env)</nobr>.</p>
+
+<p>In case of an error, the
+<a href="../reference/global-evalhook.htm">*evalhook*</a> variable is
+automatically reset by the XLISP
+<nobr><a href="../reference/top-level.htm">top-level</a></nobr> function.
+This means that if <a href="../reference/global-evalhook.htm">*evalhook*</a>
+is <a href="../reference/nil.htm">NIL</a> and *rvalhook* is
+<nobr>non-<a href="../reference/nil.htm">NIL</a></nobr>, then *rvalhook* is
+invalid and must also be reset to <a href="../reference/nil.htm">NIL</a>
+before pushing the next function <nobr>on it</nobr>.</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">lmacroexpand-1</font> (form)
+  (if (not (and (consp form)
+                (eq 'quote (car form))
+                (symbolp (caadr form))))
+      form  <font color="#008844">; if the form isn't '(symbol ... )</font>
+      (let ((a-cons (gensym)) (l-expr (gensym)))
+        `(let ((,a-cons (assoc ',(caadr form) (cadr (getenv)))))
+           (if (null ,a-cons)  <font color="#008844">; (caadr form) = macro-name</font>
+               ,form  <font color="#008844">; if no lexical binding was found</font>
+               (let ((,l-expr (get-lambda-expression (cdr ,a-cons))))
+                 (if (eq 'macro (car ,l-expr)) <font color="#008844">; if l-expr is a macro</font>
+                     (with-current-environment
+                       <font color="#008844">;; create an *unbound* macro in the *obarray*</font>
+                       (eval (append '(defmacro *unbound*) (cdr ,l-expr)))
+                       <font color="#008844">;; expand the macro in the current environment</font>
+                       (eval (list 'macroexpand-1  <font color="#008844">; (cdadr form) =</font>
+                                   (list 'quote    <font color="#008844">; macro-arguments as list</font>
+                                         (cons '*unbound* ',(cdadr form))))))
+                     ,form)))))))  <font color="#008844">; if l-expr is not a macro</font>
+</pre>
+
+<pre class="example">
+(let ((x 1))
+  (macrolet ((test (arg)
+               `(progn
+                  (print ,arg)
+                  (print ,(eval x)))))
+    (lmacroexpand-1 '(test 'hallo))))
+=&gt;
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="known-problems"></a>
+
+<hr>
+
+<h2>Known Problems</h2>
+
+<hr>
+
+<p>A lexical variable with the symbol
+<a href="../reference/global-unbound.htm">*unbound*</a> as a variable value
+bound to it will continue to shadow a global variable with the same name,
+even if the the lexical variable is 'unbound':</p>
+
+<pre class="example">
+(setq x t)  =&gt; T        <font color="#008844">; create a global variable 'x'</font>
+
+(let ((x '*unbound*))   <font color="#008844">; create an unbound lexical variable 'x'</font>
+  (print x))            <font color="#008844">; try to print the global variable</font>
+<font color="#AA0000">error: unbound variable - X</font>
+</pre>
+
+<p>Tested with <nobr>Nyquist 3.03</nobr> in <nobr>December 2010</nobr>.</p>
+
+<p><b>Nyquist Bug:</b> let* causes infinite recursion problems with either
+progv, evalhook, or *evalhook* [still needs more investigation], so this
+doesnt work:</p>
+
+<pre class="example">
+(let* ((init (getenv)))
+  (progv '(*evalhook*)
+         '((lambda (exp env)
+             (labels ((rval (exp env)
+                        (print init)  <font color="#AA0000">; &lt;- causes infinite recursion</font>
+                        (evalhook exp #'rval nil env)))
+               (evalhook exp #'rval nil init))))
+    (eval nil)))
+=&gt; <font color="#AA0000">infinite recursion</font>
+</pre>
+
+while exactly the same form using let instead of let* works:
+
+<pre class="example">
+(let ((init (getenv)))
+  (progv '(*evalhook*)
+         '((lambda (exp env)
+             (labels ((rval (exp env)
+                        (print init)  <font color="#008844">; &lt;- no infinite recursion</font>
+                        (evalhook exp #'rval nil env)))
+               (evalhook exp #'rval nil init))))
+    (eval nil)))
+(NIL)  <font color="#008844">; PRINT output</font>
+=&gt; NIL
+</pre>
+
+<p>Bug tested with <nobr>Nyquist 3.03</nobr> in <nobr>December 2010</nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

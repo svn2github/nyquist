@@ -1,0 +1,104 @@
+<html><head><title>XLISP cdaar ... cdddr</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cdaar ... cdddr</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>cdaar</b> <i>expr</i>)<br>
+(<b>cdadr</b> <i>expr</i>)<br>
+(<b>cddar</b> <i>expr</i>)<br>
+(<b>cdddr</b> <i>expr</i>)</dt>
+<dd><i>expr</i> - a list or list expression<br>
+returns - the result of the last <a href="cdr.htm">cdr</a>
+function</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'cdaar', 'cdadr', 'cddar' and 'cdddr' functions go through the list
+expression and perform a sequence of <nobr><a href="car.htm">car</a> or
+<a href="cdr.htm">cdr</a></nobr> operations. <nobr>The sequence</nobr> of
+operations is performed from right to left. So 'cddar' does a
+<a href="car.htm">car</a> on the expression, followed by a
+<nobr> a<a href="cdr.htm">cdr</a></nobr>, followed by <nobr>another
+<a href="cdr.htm">cdr</a></nobr>. <nobr>If at</nobr> any point the list
+<nobr>is <a href="nil.htm">NIL</a></nobr>, then
+<a href="nil.htm">NIL</a> is returned. <nobr>If at</nobr> any point a
+<a href="car.htm">car</a> operation is performed on an atom [as
+opposed to a list] an error is signalled:</p>
+
+<pre class="example">
+<font color="#AA0000">error: bad argument</font>
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq mylist '(((11A 11B) (12A 12B) (13A 13B))
+               ((21A 21B) (22A 22B) (23A 23B))
+               ((31A 31B) (32A 32B) (33A 33B))
+               ((41A 41B) (42A 42B) (43A 43B))))
+
+(cdaar mylist)  =&gt; (11B)
+(cdadr mylist)  =&gt; ((22A 22B) (23A 23B))
+(cddar mylist)  =&gt; ((13A 13B))
+(cdddr mylist)  =&gt; (((41A 41B) (42A 42B) (43A 43B)))
+</pre>
+
+<p><b>Note:</b> The '<nobr>c...r</nobr>' functions are part of the
+historical Lisp functions. You may find it easier to work with the modern
+lisp functions like <a href="nth.htm">nth</a> and
+<a href="nthcdr.htm">nthcdr</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#list-functions">List Functions</a></nobr></li>
+<li><nobr>Tutorials &rarr; Lisp Hints &rarr; <a href="../tutorials/lisp-hints.htm#list-accessors">List Accessors</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

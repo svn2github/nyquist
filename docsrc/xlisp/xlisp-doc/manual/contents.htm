@@ -1,0 +1,858 @@
+<html><head><title>Table of Contents</title></head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+Contents |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Table of Contents</h1>
+
+<hr>
+
+<ol>
+<li><nobr>Manuals</nobr></li>
+<ul>
+<li><nobr><a href="#xlisp-2-0-manual">XLISP 2.0 Manual</a> - by David Betz</nobr></li>
+<li><nobr><a href="#xlisp-opbject-system">XLISP Object System</a> - by David Betz</nobr></li>
+<li><nobr><a href="../reference/profile.htm">XLISP Profiling</a> - by Roger B. Dannenberg</nobr></li>
+</ul>
+<li><nobr>Reference</nobr></li>
+<ul>
+<li><nobr><a href="#symbols">Symbols</a></nobr></li>
+<li><nobr>Functions</nobr></li>
+<ul>
+<li><nobr><a href="#evaluation-functions">Evaluation</a></nobr></li>
+<li><nobr><a href="#symbol-functions">Symbol Functions</a></nobr></li>
+<li><nobr><a href="#array-functions">Arrays</a></nobr></li>
+<li><nobr><a href="#list-functions">Lists</a></nobr></li>
+<li><nobr><a href="#predicate-functions">Predicates</a></nobr></li>
+<li><nobr><a href="#control-constructs">Control Constructs</a></nobr></li>
+<li><nobr><a href="#debugging-and-error-handling">Debugging and Error Handling</a></nobr></li>
+<li><nobr><a href="#arithmetic-functions">Numbers</a></nobr></li>
+<li><nobr><a href="#string-functions">Strings</a></nobr></li>
+<li><nobr><a href="#character-functions">Characters</a></nobr></li>
+<li><nobr><a href="#input-output-functions">Input/Output</a></nobr></li>
+<li><nobr><a href="#file-io-functions">File I/O</a></nobr></li>
+<li><nobr><a href="#string-stream-functions">String Streams</a></nobr></li>
+<li><nobr><a href="#system-functions">System</a></nobr></li>
+</ul>
+</ul>
+</ol>
+
+<a name="xlisp-2-0-manual"></a>
+
+<hr>
+
+<h2>XLISP 2.0 Manual</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a href="xlisp.htm">XLISP 2.0 Manual</a></nobr></li>
+<ol>
+<li><nobr><a name="1" href="xlisp.htm#introduction">Introduction</a></nobr></li>
+<li><nobr><a name="2" href="xlisp.htm#a-note-from-the-author">A Note From The Author</a></nobr></li>
+<li><nobr><a name="3" href="xlisp.htm#command-loop">Command Loop</a></nobr></li>
+<li><nobr><a name="4" href="xlisp.htm#break-loop">Break Loop</a></nobr></li>
+<li><nobr><a name="5" href="xlisp.htm#data-types">Data Types</a></nobr></li>
+<li><nobr><a name="6" href="xlisp.htm#the-evaluator">The Evaluator</a></nobr></li>
+<li><nobr><a name="7" href="xlisp.htm#lexical-conventions">Lexical Conventions</a></nobr></li>
+<li><nobr><a name="8" href="xlisp.htm#the-readtable">Readtable</a></nobr></li>
+<ul>
+<li><nobr>Read Table Entries</nobr></li>
+<ul>
+<li><nobr><a href="xlisp.htm#constituent">:constituent</a> - indicating a symbol constituent</nobr></li>
+<li><nobr><a href="xlisp.htm#white-space">:white-space</a> - indicating a whitespace character</nobr></li>
+<li><nobr><a href="xlisp.htm#tmacro">:tmacro</a> - terminating readmacro</nobr></li>
+<li><nobr><a href="xlisp.htm#nmacro">:nmacro</a> - terminating non-readmacro</nobr></li>
+<li><nobr><a href="xlisp.htm#sescape">:sescape</a> - single escape character '\'</nobr></li>
+<li><nobr><a href="xlisp.htm#mescape">:mescape</a> - multiple escape character '|'</nobr></li>
+</ul>
+<li><nobr>Read Macros</nobr></li>
+<ul>
+<li><nobr><a href="xlisp.htm#quote">&nbsp;'&nbsp;</a> - read macro for <a href="../reference/quote.htm">quote</a></nobr></li>
+<li><nobr><a href="xlisp.htm#function">&nbsp;#'&nbsp;</a> - read macro for <a href="../reference/function.htm">function</a></nobr></li>
+<li><nobr><a href="xlisp.htm#array">&nbsp;#()&nbsp;</a> - read macro for arrays</nobr></li>
+<li><nobr><a href="xlisp.htm#hexadecimal">&nbsp;#x&nbsp;</a> - read macro for hexadecimal numbers</nobr></li>
+<li><nobr><a href="xlisp.htm#octal">&nbsp;#o&nbsp;</a> - read macro for octal numbers</nobr></li>
+<li><nobr><a href="xlisp.htm#binary">&nbsp;#b&nbsp;</a> - read macro for binary numbers</nobr></li>
+<li><nobr><a href="xlisp.htm#character">&nbsp;#\&nbsp;</a> - read macro for character values</nobr></li>
+<li><nobr><a href="xlisp.htm#comment">#|...|#</a> - read macro for comments</nobr></li>
+<li><nobr><a href="xlisp.htm#uninterned">&nbsp;#:&nbsp;</a> - read macro for uninterned symbols</nobr></li>
+<li><nobr><a href="xlisp.htm#backquote">&nbsp;`&nbsp;</a> - read macro for <a href="../reference/backquote.htm">backquote</a></nobr></li>
+<li><nobr><a href="xlisp.htm#comma">&nbsp;,&nbsp;</a> - read macro for <a href="../reference/backquote.htm">comma</a></nobr></li>
+<li><nobr><a href="xlisp.htm#comma-at">&nbsp;,@&nbsp;</a> - read macro for <a href="../reference/backquote.htm">comma-at</a></nobr></li>
+</ul>
+<li><nobr>Characters Names</nobr></li>
+<ul>
+<li><nobr><a href="xlisp.htm#tmacro">#\Tab</a> - a 'horizontal tab' character</nobr></li>
+<li><nobr><a href="xlisp.htm#tmacro">#\Newline</a> - a 'newline' character</nobr></li>
+<li><nobr><a href="xlisp.htm#tmacro">#\Space</a> - a 'space' character</nobr></li>
+</ul>
+</ul>
+<li><nobr><a name="9" href="xlisp.htm#lambda-lists">Lambda Lists</a></nobr></li>
+<ul>
+<li><nobr><a href="xlisp.htm#arguments">Arguments</a></nobr></li>
+<ul>
+<li><nobr><a href="xlisp.htm#required-arguments">Required Arguments</a></nobr></li>
+<li><nobr><a href="xlisp.htm#optional-arguments">Optional Arguments</a></nobr></li>
+<li><nobr><a href="xlisp.htm#rest-argument">Rest Arguments</a></nobr></li>
+<li><nobr><a href="xlisp.htm#keyword-arguments">Keyword Arguments</a></nobr></li>
+<li><nobr><a href="xlisp.htm#auxiliary-variables">Auxiliary Variables</a></nobr></li>
+</ul>
+<li><nobr><a href="xlisp.htm#lambda-list-syntax">Lambda List Syntax</a></nobr></li>
+</ul>
+</ol>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="xlisp-opbject-system"></a>
+
+<hr>
+
+<h2>XLISP Object System</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a name="10" href="objects.htm">XLISP Object System</a></nobr></li>
+<ul>
+<li><nobr><a href="objects.htm#1">Definitions</a></nobr></li>
+<ul>
+<li><nobr><a href="objects.htm#selector-def">selector</a> - a symbol used to select an appropriate method</nobr></li>
+<li><nobr><a href="objects.htm#message-def">message</a> - a selector and a list of actual arguments</nobr></li>
+<li><nobr><a href="objects.htm#method-def">method</a> - the code that implements a message</nobr></li>
+<li><nobr><a href="objects.htm#object-def">object</a> - the top of the class hierarchy</nobr></li>
+<li><nobr><a href="objects.htm#class-def">class</a> - the class of all object classes</nobr></li>
+</ul>
+<li><nobr><a href="objects.htm#2">The 'send' Function</a></nobr></li>
+<li><nobr><a href="objects.htm#3">The 'self' Symbol</a></nobr></li>
+<li><nobr><a href="objects.htm#4">The 'send-super' Function</a></nobr></li>
+<li><nobr><a href="objects.htm#5">The 'Object' Class</a></nobr></li>
+<ul>
+<li><nobr><a href="objects.htm#object">object</a> - the top of the class hierarchy</nobr></li>
+<ul>
+<li><nobr><a href="objects.htm#object-show">:show</a> - show an object's instance variables</nobr></li>
+<li><nobr><a href="objects.htm#object-class">:class</a> - return the class of an object</nobr></li>
+<li><nobr><a href="objects.htm#object-isnew">:isnew</a> - the default object initialization routine</nobr></li>
+<li><nobr><a href="objects.htm#send-super">send-super</a> - send superclass a message</nobr></li>
+</ul>
+</ul>
+<li><nobr><a href="objects.htm#6">The 'Class' Class</a></nobr></li>
+<ul>
+<li><nobr><a href="objects.htm#class">class</a> - class of all object classes</nobr></li>
+<ul>
+<li><nobr><a href="objects.htm#class-new">:new</a> - create a new instance of a class</nobr></li>
+<li><nobr><a href="objects.htm#class-isnew">:isnew</a> - initialize a new class</nobr></li>
+<li><nobr><a href="objects.htm#class-answer">:answer</a> - add a message to a class</nobr></li>
+</ul>
+</ul>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="symbols"></a>
+
+<hr>
+
+<h2>Symbols</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a href="../reference/self.htm">self</a> - the current object within a method context</nobr></li>
+<li><nobr><a href="../reference/global-obarray.htm">*obarray*</a> - the object hash table</nobr></li>
+<li><nobr><a href="../reference/global-standard-input.htm">*standard-input*</a> - the standard input stream</nobr></li>
+<li><nobr><a href="../reference/global-standard-output.htm">*standard-output*</a> - the standard output stream</nobr></li>
+<li><nobr><a href="../reference/global-error-output.htm">*error-output*</a> - the error output stream</nobr></li>
+<li><nobr><a href="../reference/global-trace-output.htm">*trace-output*</a> - the trace output stream</nobr></li>
+<li><nobr><a href="../reference/global-debug-io.htm">*debug-io*</a> - the debug i/o stream</nobr></li>
+<li><nobr><a href="../reference/global-breakenable.htm">*breakenable*</a> - flag controlling entering break loop on errors</nobr></li>
+<li><nobr><a href="../reference/global-tracelist.htm">*tracelist*</a> - list of names of functions to trace</nobr></li>
+<li><nobr><a href="../reference/global-tracenable.htm">*tracenable*</a> - enable trace back printout on errors</nobr></li>
+<li><nobr><a href="../reference/global-tracelimit.htm">*tracelimit*</a> - number of levels of trace back information</nobr></li>
+<li><nobr><a href="../reference/global-evalhook.htm">*evalhook*</a> - user substitute for the evaluator function</nobr></li>
+<li><nobr><a href="../reference/global-applyhook.htm">*applyhook*</a> - [not yet implemented]</nobr></li>
+<li><nobr><a href="../reference/global-readtable.htm">*readtable*</a> - the current readtable</nobr></li>
+<li><nobr><a href="../reference/global-unbound.htm">*unbound*</a> - indicator for unbound symbols</nobr></li>
+<li><nobr><a href="../reference/global-gc-flag.htm">*gc-flag*</a> - controls the printing of 'gc' messages</nobr></li>
+<li><nobr><a href="../reference/global-gc-hook.htm">*gc-hook*</a> - function to call after garbage collection</nobr></li>
+<li><nobr><a href="../reference/global-integer-format.htm">*integer-format*</a> - format for printing integers</nobr></li>
+<li><nobr><a href="../reference/global-float-format.htm">*float-format*</a> - format for printing floats</nobr></li>
+<li><nobr><a href="../reference/global-print-case.htm">*print-case*</a> - symbol output case</nobr></li>
+<li><nobr><a href="../reference/global-file-separator.htm">*file-separator*</a> - the operating system's file sparator character</nobr></li>
+</ul>
+
+<ul>
+<li><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;+&nbsp;</a> - the most recent input expression</nobr></li>
+<li><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;++&nbsp;</a> - the next to the last input expression</nobr></li>
+<li><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;+++&nbsp;</a> - the second to the last input expression</nobr></li>
+<li><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;*&nbsp;</a> - the result of the previously evaluated expression</nobr></li>
+<li><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;**&nbsp;</a> - the result of the next to the last evaluated expression</nobr></li>
+<li><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;***&nbsp;</a> - the result of the second to the last evaluated expression</nobr></li>
+<li><nobr><a href="../manual/xlisp.htm#command-loop">&nbsp;-&nbsp;</a> - the expression currently being evaluated</nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="evaluation-functions"></a>
+
+<hr>
+
+<h2>Evaluation Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a href="../reference/eval.htm">eval</a> - evaluate an XLISP expression</nobr></li>
+<li><nobr><a href="../reference/apply.htm">apply</a> - apply a function to a list of arguments</nobr></li>
+<li><nobr><a href="../reference/funcall.htm">funcall</a> - call a function with arguments</nobr></li>
+<li><nobr><a href="../reference/quote.htm">quote</a> - return an expression unevaluated</nobr></li>
+<li><nobr><a href="../reference/function.htm">function</a> - get the functional interpretation</nobr></li>
+<li><nobr><a href="../reference/backquote.htm">backquote</a> - fill in a template</nobr></li>
+<li><nobr><a href="../reference/lambda.htm">lambda</a> - make a function closure</nobr></li>
+<li><nobr><a href="../reference/get-lambda-expression.htm">get-lambda-expression</a> - get the lambda expression</nobr></li>
+<li><nobr><a href="../reference/macroexpand.htm">macroexpand</a> - recursively expand macro calls</nobr></li>
+<li><nobr><a href="../reference/macroexpand-1.htm">macroexpand-1</a> - expand a macro call</nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="symbol-functions"></a>
+
+<hr>
+
+<h2>Symbol Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Constructors</nobr></li>
+<ul>
+<li><nobr><a href="../reference/defun.htm">defun</a> - define a function</nobr></li>
+<li><nobr><a href="../reference/defmacro.htm">defmacro</a> - define a macro</nobr></li>
+<li><nobr><a href="../reference/gensym.htm">gensym</a> - generate a symbol</nobr></li>
+<li><nobr><a href="../reference/intern.htm">intern</a> - make an interned symbol</nobr></li>
+<li><nobr><a href="../reference/make-symbol.htm">make-symbol</a> - make an uninterned symbol</nobr></li>
+</ul>
+<li><nobr>Accessors</nobr></li>
+<ul>
+<li><nobr><a href="../reference/symbol-name.htm">symbol-name</a> - get the print name of a symbol</nobr></li>
+<li><nobr><a href="../reference/symbol-value.htm">symbol-value</a> - get the value of a symbol</nobr></li>
+<li><nobr><a href="../reference/symbol-function.htm">symbol-function</a> - get the functional value of a symbol</nobr></li>
+<li><nobr><a href="../reference/symbol-plist.htm">symbol-plist</a> - get the property list of a symbol</nobr></li>
+</ul>
+<li><nobr>Assignment</nobr></li>
+<ul>
+<li><nobr><a href="../reference/set.htm">set</a> - set the value of a symbol</nobr></li>
+<li><nobr><a href="../reference/setq.htm">setq</a> - set the [quoted] value of a symbol</nobr></li>
+<li><nobr><a href="../reference/psetq.htm">psetq</a> - parallel version of setq</nobr></li>
+<li><nobr><a href="../reference/setf.htm">setf</a> - set the value of a field</nobr></li>
+</ul>
+<li><nobr>Utilities</nobr></li>
+<ul>
+<li><nobr><a href="../reference/incf.htm">incf</a> - increment a variable</nobr></li>
+<li><nobr><a href="../reference/decf.htm">decf</a> - decrement a variable</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="array-functions"></a>
+
+<hr>
+
+<h2>Array Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Constructors</nobr></li>
+<ul>
+<li><nobr><a href="../reference/make-array.htm">make-array</a> - make a new array</nobr></li>
+<li><nobr><a href="../reference/vector.htm">vector</a> - make an initialized vector</nobr></li>
+</ul>
+<li><nobr>Acessors</nobr></li>
+<ul>
+<li><nobr><a href="../reference/aref.htm">aref</a> - get the nth element of an array</nobr></li>
+</ul>
+<li><nobr>Predicate</nobr></li>
+<ul>
+<li><nobr><a href="../reference/arrayp.htm">arrayp</a> - is this an array?</nobr></li>
+</ul>
+<li><nobr>Utilities</nobr></li>
+<ul>
+<li><nobr><a href="../reference/length.htm">length</a> - find the length of a list, vector or string</nobr></li>
+<li><nobr><a href="../reference/hash.htm">hash</a> - compute the hash index for a symbol</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="list-functions"></a>
+
+<hr>
+
+<h2>List Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Constructors</nobr></li>
+<ul>
+<li><nobr><a href="../reference/cons.htm">cons</a> - construct a new list node</nobr></li>
+<li><nobr><a href="../reference/list.htm">list</a> - create a list of values</nobr></li>
+</ul>
+<li><nobr>Accessors</nobr></li>
+<ul>
+<li><nobr><a href="../reference/car.htm">car</a> - return the car of a list node</nobr></li>
+<li><nobr><a href="../reference/caar.htm">caar, cadr</a> - </nobr></li>
+<li><nobr><a href="../reference/caaar.htm">caaar...caddr</a> - </nobr></li>
+<li><nobr><a href="../reference/caaaar.htm">caaaar...cadddr</a> - </nobr></li>
+<li><nobr><a href="../reference/cdr.htm">cdr</a> - return the cdr of a list node</nobr></li>
+<li><nobr><a href="../reference/cddr.htm">cdar, cddr</a> - </nobr></li>
+<li><nobr><a href="../reference/cdddr.htm">cdaar...cdddr</a> - </nobr></li>
+<li><nobr><a href="../reference/cddddr.htm">cdaaar...cddddr</a> - </nobr></li>
+<li><nobr><a href="../reference/first.htm">first</a> - get the first element of a list</nobr></li>
+<li><nobr><a href="../reference/second.htm">second</a> - get the second element of a list</nobr></li>
+<li><nobr><a href="../reference/third.htm">third</a> - get the third element of a list</nobr></li>
+<li><nobr><a href="../reference/fourth.htm">fourth</a> - get the fourth element of a list</nobr></li>
+<li><nobr><a href="../reference/rest.htm">rest</a> - get the rest of the list except the first element</nobr></li>
+<li><nobr><a href="../reference/last.htm">last</a> - return the last list node of a list</nobr></li>
+<li><nobr><a href="../reference/nth.htm">nth</a> - return the nth element of a list</nobr></li>
+<li><nobr><a href="../reference/nthcdr.htm">nthcdr</a> - return the nth cdr of a list</nobr></li>
+</ul>
+<li><nobr>Predicates</nobr></li>
+<ul>
+<li><nobr><a href="../reference/consp.htm">consp</a> - is this a non-empty list?</nobr></li>
+<li><nobr><a href="../reference/listp.htm">listp</a> - is this an empty or non-empty list?</nobr></li>
+<li><nobr><a href="../reference/null.htm">null</a> - is this an empty list?</nobr></li>
+</ul>
+<li><nobr>List Functions</nobr></li>
+<ul>
+<li><nobr><a href="../reference/append.htm">append</a> - append lists</nobr></li>
+<li><nobr><a href="../reference/reverse.htm">reverse</a> - reverse a list</nobr></li>
+<li><nobr><a href="../reference/member.htm">member</a> - find an expression in a list</nobr></li>
+<li><nobr><a href="../reference/length.htm">length</a> - find the length of a list, vector or string</nobr></li>
+<li><nobr><a href="../reference/subst.htm">subst</a> - substitute expressions</nobr></li>
+</ul>
+<li><nobr>Association Lists</nobr></li>
+<ul>
+<li><nobr><a href="../reference/assoc.htm">assoc</a> - find an expression in an a-list</nobr></li>
+<li><nobr><a href="../reference/sublis.htm">sublis</a> - substitute with an a-list</nobr></li>
+</ul>
+<li><nobr>Property Lists</nobr></li>
+<ul>
+<li><nobr><a href="../reference/get.htm">get</a> - get the value of a property</nobr></li>
+<li><nobr><a href="../reference/putprop.htm">putprop</a> - put a property onto a property list</nobr></li>
+<li><nobr><a href="../reference/remprop.htm">remprop</a> - remove a property from a property list</nobr></li>
+</ul>
+<li><nobr>Mapping</nobr></li>
+<ul>
+<li><nobr><a href="../reference/mapc.htm">mapc</a> - apply function to successive cars</nobr></li>
+<li><nobr><a href="../reference/mapcar.htm">mapcar</a> - apply function to successive cars</nobr></li>
+<li><nobr><a href="../reference/mapl.htm">mapl</a> - apply function to successive cdrs</nobr></li>
+<li><nobr><a href="../reference/maplist.htm">maplist</a> - apply function to successive cdrs</nobr></li>
+</ul>
+<li><nobr>Lists as Stack</nobr></li>
+<ul>
+<li><nobr><a href="../reference/push.htm">push</a> - push a value to the front of a list</nobr></li>
+<li><nobr><a href="../reference/pop.htm">pop</a> - pop a value from the front of a list</nobr></li>
+</ul>
+<li><nobr>Lists as Sets</nobr></li>
+<ul>
+<li><nobr><a href="../reference/union.htm">union</a> - compute the union of two lists</nobr></li>
+<li><nobr><a href="../reference/intersection.htm">intersection</a> - compute the intersection of two lists</nobr></li>
+<li><nobr><a href="../reference/set-difference.htm">set-difference</a> - compute the set-difference of two lists</nobr></li>
+<li><nobr><a href="../reference/subsetp.htm">subsetp</a> - test if a list is a subset of another list</nobr></li>
+</ul>
+<li><nobr>Non-destructive List Functions</nobr></li>
+<ul>
+<li><nobr><a href="../reference/remove.htm">remove</a> - remove elements from a list</nobr></li>
+<li><nobr><a href="../reference/remove-if.htm">remove-if</a> - remove elements that pass test</nobr></li>
+<li><nobr><a href="../reference/remove-if-not.htm">remove-if-not</a> - remove elements that fail test</nobr></li>
+</ul>
+<li><nobr>Destructive List Functions</nobr></li>
+<ul>
+<li><nobr><a href="../reference/rplaca.htm">rplaca</a> - replace the car of a list node</nobr></li>
+<li><nobr><a href="../reference/rplacd.htm">rplacd</a> - replace the cdr of a list node</nobr></li>
+<li><nobr><a href="../reference/nconc.htm">nconc</a> - destructively concatenate lists</nobr></li>
+<li><nobr><a href="../reference/delete.htm">delete</a> - delete elements from a list</nobr></li>
+<li><nobr><a href="../reference/delete-if.htm">delete-if</a> - delete elements that pass test</nobr></li>
+<li><nobr><a href="../reference/delete-if-not.htm">delete-if-not</a> - delete elements that fail test</nobr></li>
+<li><nobr><a href="../reference/sort.htm">sort</a> - sort a list</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="predicate-functions"></a>
+
+<hr>
+
+<h2>Predicate Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Predicates</nobr></li>
+<ul>
+<li><nobr><a href="../reference/atom.htm">atom</a> - is this an atom?</nobr></li>
+<li><nobr><a href="../reference/symbolp.htm">symbolp</a> - is this a symbol?</nobr></li>
+<ul>
+<li><nobr><a href="../reference/boundp.htm">boundp</a> - is a variable value bound to this symbol?</nobr></li>
+<li><nobr><a href="../reference/fboundp.htm">fboundp</a> - is a function value bound to this symbol?</nobr></li>
+</ul>
+<li><nobr><a href="../reference/keywordp.htm">keywordp</a> - is this a keyword?</nobr></li>
+<li><nobr><a href="../reference/numberp.htm">numberp</a> - is this a number?</nobr></li>
+<ul>
+<li><nobr><a href="../reference/plusp.htm">plusp</a> - is this number positive?</nobr></li>
+<li><nobr><a href="../reference/minusp.htm">minusp</a> - is this number negative?</nobr></li>
+<li><nobr><a href="../reference/zerop.htm">zerop</a> - is this number zero?</nobr></li>
+<li><nobr><a href="../reference/integerp.htm">integerp</a> - is this number an integer?</nobr></li>
+<ul>
+<li><nobr><a href="../reference/evenp.htm">evenp</a> - is this integer even?</nobr></li>
+<li><nobr><a href="../reference/oddp.htm">oddp</a> - is this integer odd?</nobr></li>
+</ul>
+<li><nobr><a href="../reference/floatp.htm">floatp</a> - is this number a float?</nobr></li>
+</ul>
+<li><nobr><a href="../reference/null.htm">null</a> - is this an empty list?</nobr></li>
+<li><nobr><a href="../reference/consp.htm">consp</a> - is this a non-empty list?</nobr></li>
+<li><nobr><a href="../reference/listp.htm">listp</a> - is this a list?</nobr></li>
+<ul>
+<li><nobr><a href="../reference/endp.htm">endp</a> - is this the end of a list?</nobr></li>
+</ul>
+<li><nobr><a href="../reference/stringp.htm">stringp</a> - is this a string?</nobr></li>
+<li><nobr><a href="../reference/characterp.htm">characterp</a> - is this a character?</nobr></li>
+<ul>
+<li><nobr><a href="../reference/upper-case-p.htm">upper-case-p</a> - is this an upper case character?</nobr></li>
+<li><nobr><a href="../reference/lower-case-p.htm">lower-case-p</a> - is this a lower case character?</nobr></li>
+<li><nobr><a href="../reference/both-case-p.htm">both-case-p</a> - is this an alphabetic [either case] character?</nobr></li>
+<li><nobr><a href="../reference/digit-char-p.htm">digit-char-p</a> - is this a digit character?</nobr></li>
+<li><nobr><a href="../reference/alphanumericp.htm">alphanumericp</a> - is this an alphabetic or a digit character?</nobr></li>
+</ul>
+<li><nobr><a href="../reference/arrayp.htm">arrayp</a> - is this an array?</nobr></li>
+<li><nobr><a href="../reference/streamp.htm">streamp</a> - is this a stream?</nobr></li>
+<li><nobr><a href="../reference/filep.htm">filep</a> - is this a file?</nobr></li>
+<li><nobr><a href="../reference/objectp.htm">objectp</a> - is this an object?</nobr></li>
+<li><nobr><a href="../reference/soundp.htm">soundp</a> - is this a Nyquist sound?</nobr></li>
+<li><nobr><a href="../reference/bigendianp.htm">bigendianp</a> - is this a bigendian machine?</nobr></li>
+</ul>
+<li><nobr>Comparison</nobr></li>
+<ul>
+<li><nobr><a href="../reference/eq.htm">eq</a> - are the expressions identical?</nobr></li>
+<li><nobr><a href="../reference/eql.htm">eql</a> - are the expressions identical?</nobr></li>
+<li><nobr><a href="../reference/equal.htm">equal</a> - are the expressions equal?</nobr></li>
+</ul>
+<li><nobr>Boolean</nobr></li>
+<ul>
+<li><nobr><a href="../reference/not.htm">not</a> - is this false?</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="control-constructs"></a>
+
+<hr>
+
+<h2>Control Constructs</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Logical</nobr></li>
+<ul>
+<li><nobr><a href="../reference/and.htm">and</a> - the logical AND of a list of expressions</nobr></li>
+<li><nobr><a href="../reference/or.htm">or</a> - the logical OR of a list of expressions</nobr></li>
+</ul>
+<li><nobr>Conditional</nobr></li>
+<ul>
+<li><nobr><a href="../reference/if.htm">if</a> - evaluate expressions conditionally</nobr></li>
+<li><nobr><a href="../reference/when.htm">when</a> - evaluate only when a condition is true</nobr></li>
+<li><nobr><a href="../reference/unless.htm">unless</a> - evaluate only when a condition is false</nobr></li>
+<li><nobr><a href="../reference/cond.htm">cond</a> - evaluate conditionally</nobr></li>
+<li><nobr><a href="../reference/case.htm">case</a> - select by case</nobr></li>
+</ul>
+<li><nobr>Binding</nobr></li>
+<ul>
+<li><nobr><a href="../reference/let.htm">let</a> - create local bindings</nobr></li>
+<li><nobr><a href="../reference/let-star.htm">let*</a> - let with sequential binding</nobr></li>
+<li><nobr><a href="../reference/flet.htm">flet</a> - create local functions</nobr></li>
+<li><nobr><a href="../reference/labels.htm">labels</a> - flet with recursive functions</nobr></li>
+<li><nobr><a href="../reference/macrolet.htm">macrolet</a> - create local macros</nobr></li>
+</ul>
+<li><nobr>Non-local Exits</nobr></li>
+<ul>
+<li><nobr><a href="../reference/catch.htm">catch, throw</a> - evaluate expressions and catch throws</nobr></li>
+<li><nobr><a href="../reference/unwind-protect.htm">unwind-protect</a> - protect evaluation of an expression</nobr></li>
+</ul>
+<li><nobr>Looping Constructs</nobr></li>
+<ul>
+<li><nobr><a href="../reference/loop.htm">loop</a> - basic looping form</nobr></li>
+<li><nobr><a href="../reference/do.htm">do</a> - loop while the termination test is NIL</nobr></li>
+<li><nobr><a href="../reference/do-star.htm">do*</a> - 'do' loop with sequential binding</nobr></li>
+<li><nobr><a href="../reference/dolist.htm">dolist</a> - loop through a list</nobr></li>
+<li><nobr><a href="../reference/dotimes.htm">dotimes</a> - loop from zero to n-1</nobr></li>
+<li><nobr><a href="../reference/while.htm">while</a> - standard 'while' loop</nobr></li>
+</ul>
+<li><nobr>The Program Feature</nobr></li>
+<ul>
+<li><nobr><a href="../reference/prog.htm">prog</a> - the program feature</nobr></li>
+<li><nobr><a href="../reference/prog-star.htm">prog*</a> - 'prog' with sequential binding</nobr></li>
+<li><nobr><a href="../reference/block.htm">block</a> - named block</nobr></li>
+<li><nobr><a href="../reference/return.htm">return</a> - cause a prog construct to return a value</nobr></li>
+<li><nobr><a href="../reference/return-from.htm">return-from</a> - return from a named block</nobr></li>
+<li><nobr><a href="../reference/tagbody.htm">tagbody</a> - block with labels</nobr></li>
+<li><nobr><a href="../reference/go.htm">go</a> - go to a tag within a tagbody or prog</nobr></li>
+<li><nobr><a href="../reference/progv.htm">progv</a> - dynamically bind symbols</nobr></li>
+<li><nobr><a href="../reference/prog1.htm">prog1</a> - return the value of the first expression</nobr></li>
+<li><nobr><a href="../reference/prog2.htm">prog2</a> - return the value of the second expression</nobr></li>
+<li><nobr><a href="../reference/progn.htm">progn</a> - return the value of the last expression</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="debugging-and-error-handling"></a>
+
+<hr>
+
+<h2>Debugging and Error Handling</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a href="../reference/trace.htm">trace</a> - add a function to the trace list</nobr></li>
+<li><nobr><a href="../reference/untrace.htm">untrace</a> - remove a function from the trace list</nobr></li>
+<li><nobr><a href="../reference/error.htm">error</a> - signal a non-correctable error</nobr></li>
+<li><nobr><a href="../reference/cerror.htm">cerror</a> - signal a correctable error</nobr></li>
+<li><nobr><a href="../reference/break.htm">break</a> - enter a break loop</nobr></li>
+<li><nobr><a href="../reference/clean-up.htm">clean-up</a> - clean-up after an error</nobr></li>
+<li><nobr><a href="../reference/top-level.htm">top-level</a> - clean-up after an error and return to the top level</nobr></li>
+<li><nobr><a href="../reference/continue.htm">continue</a> - continue from a correctable error</nobr></li>
+<li><nobr><a href="../reference/errset.htm">errset</a> - trap errors</nobr></li>
+<li><nobr><a href="../reference/baktrace.htm">baktrace</a> - print n levels of trace back information</nobr></li>
+<li><nobr><a href="../reference/evalhook.htm">evalhook</a> - evaluate with hooks</nobr></li>
+<li><nobr><a href="../reference/profile.htm">profile</a> - turn profiling on or off</nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="arithmetic-functions"></a>
+
+<hr>
+
+<h2>Arithmetic Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Integer and Floating Point - error if not a number</nobr></li>
+<ul>
+<li><nobr><a href="../reference/truncate.htm">truncate</a> - truncates a floating point number to an integer</nobr></li>
+<li><nobr><a href="../reference/float.htm">float</a> - converts an integer to a floating point number</nobr></li>
+<li><nobr><a href="../reference/addition.htm">&nbsp;+&nbsp;</a> - add one or several numbers</nobr></li>
+<li><nobr><a href="../reference/subtraction.htm">&nbsp;&minus;&nbsp;</a> - negate a single number or subtract one or several numbers</nobr></li>
+<li><nobr><a href="../reference/multiplication.htm">&nbsp;*&nbsp;</a> - multiply one or several numbers</nobr></li>
+<li><nobr><a href="../reference/division.htm">&nbsp;/&nbsp;</a> - get the reciprocal of a single number or divide several numbers</nobr></li>
+<li><nobr><a href="../reference/increment.htm">1+</a> - increment a number by one</nobr></li>
+<li><nobr><a href="../reference/decrement.htm">1&minus;</a> - decrement a number by one</nobr></li>
+<li><nobr><a href="../reference/min.htm">min</a> - the smallest of one or several numbers</nobr></li>
+<li><nobr><a href="../reference/max.htm">max</a> - the largest of one or several numbers</nobr></li>
+<li><nobr><a href="../reference/abs.htm">abs</a> - the absolute value of a number</nobr></li>
+<li><nobr><a href="../reference/asin.htm">asin</a> - compute the arcsine of a number</nobr></li>
+<li><nobr><a href="../reference/acos.htm">acos</a> - compute the arccosine of a number</nobr></li>
+<li><nobr><a href="../reference/atan.htm">atan</a> - compute the arctangent of a number</nobr></li>
+<li><nobr><a href="../reference/power.htm">power</a> - compute 'x' to the 'y' power</nobr></li>
+<li><nobr><a href="../reference/interpolate.htm">interpolate</a> - compute the 'y' coordinate corresponding to 'x'</nobr></li>
+</ul>
+<li>Comparison - error if not a number</li>
+<ul>
+<li><nobr><a href="../reference/number-lessp.htm">&nbsp;&lt;&nbsp;</a> - test for less than</nobr></li>
+<li><nobr><a href="../reference/number-not-greaterp.htm">&nbsp;&lt;=&nbsp;</a> - test for less than or equal to</nobr></li>
+<li><nobr><a href="../reference/number-equal.htm">&nbsp;=&nbsp;</a> - test for equal to</nobr></li>
+<li><nobr><a href="../reference/number-not-equal.htm">&nbsp;/=&nbsp;</a> - test for not equal to</nobr></li>
+<li><nobr><a href="../reference/number-not-lessp.htm">&nbsp;&gt;=&nbsp;</a> - test for greater than or equal to</nobr></li>
+<li><nobr><a href="../reference/number-greaterp.htm">&nbsp;&gt;&nbsp;</a> - test for greater than</nobr></li>
+</ul>
+<li><nobr>Floating Point - error if not a floating point number</nobr></li>
+<ul>
+<li><nobr><a href="../reference/sin.htm">sin</a> - compute the sine of a floating-point number</nobr></li>
+<li><nobr><a href="../reference/cos.htm">cos</a> - compute the cosine of a floating-point number</nobr></li>
+<li><nobr><a href="../reference/tan.htm">tan</a> - compute the tangent of a floating-point number</nobr></li>
+<li><nobr><a href="../reference/expt.htm">expt</a> - compute x to the y power</nobr></li>
+<li><nobr><a href="../reference/exp.htm">exp</a> - compute e to the x power</nobr></li>
+<li><nobr><a href="../reference/log.htm">exp</a> - compute the natural logarithm of a floating-point number</nobr></li>
+<li><nobr><a href="../reference/sqrt.htm">sqrt</a> - compute the square root of a floating-point number</nobr></li>
+</ul>
+<li><nobr>Integer - error if not an integer number</nobr></li>
+<ul>
+<li><nobr><a href="../reference/gcd.htm">gcd</a> - compute the greatest common divisor</nobr></li>
+<li><nobr><a href="../reference/logand.htm">logand</a> - compute the bitwise 'and' of one or several numbers</nobr></li>
+<li><nobr><a href="../reference/logior.htm">logior</a> - compute the bitwise 'inclusive or' of one or several numbers</nobr></li>
+<li><nobr><a href="../reference/logxor.htm">logxor</a> - compute the bitwise 'exclusive or' of one or several numbers</nobr></li>
+<li><nobr><a href="../reference/lognot.htm">lognot</a> - compute the bitwise 'not' of an number</nobr></li>
+<li><nobr><a href="../reference/rem.htm">rem</a> - remainder of one or several integer numbers</nobr></li>
+</ul>
+<li><nobr>Random Numbers</nobr></li>
+<ul>
+<li><nobr><a href="../reference/random.htm">random</a> - compute an integer random number between 0 and n-1 inclusive</nobr></li>
+<li><nobr><a href="../reference/rrandom.htm">rrandom</a> - compute a floating point random number between 0 and 1 inclusive</nobr></li>
+<li><nobr><a href="../reference/real-random.htm">real-random</a> - compute a floating point random number in an arbitrary range</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="string-functions"></a>
+
+<hr>
+
+<h2>String Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>String Functions</nobr></li>
+<ul>
+<li><nobr><a href="../reference/string.htm">string</a> - make a string from a character or an integer ASCII value</nobr></li>
+<li><nobr><a href="../reference/strcat.htm">strcat</a> - concatenate strings</nobr></li>
+<li><nobr><a href="../reference/subseq.htm">subseq</a> - extract a substring</nobr></li>
+<li><nobr><a href="../reference/length.htm">length</a> - find the length of a list, vector or string</nobr></li>
+<li><nobr><a href="../reference/string-search.htm">string-search</a> - search for a pattern in a string</nobr></li>
+</ul>
+<li><nobr>Trimming</nobr></li>
+<ul>
+<li><nobr><a href="../reference/string-trim.htm">string-trim</a> - trim both ends of a string</nobr></li>
+<li><nobr><a href="../reference/string-left-trim.htm">string-left-trim</a> - trim the left end of a string</nobr></li>
+<li><nobr><a href="../reference/string-right-trim.htm">string-right-trim</a> - trim the right end of a string</nobr></li>
+</ul>
+<li><nobr>Case Conversion</nobr></li>
+<ul>
+<li><nobr><a href="../reference/string-upcase.htm">string-upcase</a> - convert a string to uppercase</nobr></li>
+<li><nobr><a href="../reference/string-downcase.htm">string-downcase</a> - convert a string to lowercase</nobr></li>
+<li><nobr><a href="../reference/nstring-upcase.htm">nstring-upcase</a> - convert a part of a string to uppercase</nobr></li>
+<li><nobr><a href="../reference/nstring-downcase.htm">nstring-downcase</a> - convert a part of a string to lowercase</nobr></li>
+</ul>
+<li><nobr>Case-sensitive Comparison</nobr></li>
+<ul>
+<li><nobr><a href="../reference/string-lessp-s.htm">string&lt;</a> - test for less than in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-not-greaterp-s.htm">string&lt;=</a> - test for less than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-equal-s.htm">string=</a> - test for equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-not-equal-s.htm">string/=</a> - test for not equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-not-lessp-s.htm">string&gt;=</a> - test for greater than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/string-greaterp-s.htm">string&gt;</a> - test for greater than in ASCII ordering</nobr></li>
+</ul>
+<li><nobr>Case-insensitive Comparison</nobr></li>
+<ul>
+<li><nobr><a href="../reference/string-lessp-i.htm">string-lessp</a> - is this less than in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/string-not-greaterp-i.htm">string-not-greaterp</a> - is this not greater than in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/string-equal-i.htm">string-equal</a> - is this equal in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/string-not-equal-i.htm">string-not-equal</a> - is this not equal in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/string-not-lessp-i.htm">string-not-lessp</a> - is this not less than in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/string-greaterp-i.htm">string-greaterp</a> - is this greater than in ASCII ordering?</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="character-functions"></a>
+
+<hr>
+
+<h2>Character Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Character Functions</nobr></li>
+<ul>
+<li><nobr><a href="../reference/char.htm">char</a> - extract a character from a string</nobr></li>
+<li><nobr><a href="../reference/char-code.htm">char-code</a> - get the ASCII code of a character</nobr></li>
+<li><nobr><a href="../reference/code-char.htm">code-char</a> - get the character with a specified ASCII code</nobr></li>
+<li><nobr><a href="../reference/digit-char.htm">digit-char</a> - convert a digit weight to a digit</nobr></li>
+<li><nobr><a href="../reference/char-int.htm">char-int</a> - convert a character to an integer</nobr></li>
+<li><nobr><a href="../reference/int-char.htm">int-char</a> - convert an integer to a character</nobr></li>
+</ul>
+<li><nobr>General Predicate - all data types</nobr></li>
+<ul>
+<li><nobr><a href="../reference/characterp.htm">characterp</a> - is this a character?</nobr></li>
+</ul>
+<li><nobr>Character Predicates - error if not a character</nobr></li>
+<ul>
+<li><nobr><a href="../reference/upper-case-p.htm">upper-case-p</a> - is this an upper case character?</nobr></li>
+<li><nobr><a href="../reference/lower-case-p.htm">lower-case-p</a> - is this a lower case character?</nobr></li>
+<li><nobr><a href="../reference/both-case-p.htm">both-case-p</a> - is this an alphabetic [either case] character?</nobr></li>
+<li><nobr><a href="../reference/digit-char-p.htm">digit-char-p</a> - is this a digit character?</nobr></li>
+<li><nobr><a href="../reference/alphanumericp.htm">alphanumericp</a> - is this an alphabetic or a digit character?</nobr></li>
+</ul>
+<li><nobr>Case Conversion</nobr></li>
+<ul>
+<li><nobr><a href="../reference/char-upcase.htm">char-upcase</a> - convert a character to upper case</nobr></li>
+<li><nobr><a href="../reference/char-downcase.htm">char-downcase</a> - convert a character to lower case</nobr></li>
+</ul>
+<li><nobr>Case-sensitive Comparison</nobr></li>
+<ul>
+<li><nobr><a href="../reference/char-lessp-s.htm">char&lt;</a> - test for less than in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-not-greaterp-s.htm">char&lt;=</a> - test for less than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-equal-s.htm">char=</a> - test for equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-not-equal-s.htm">char/=</a> - test for not equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-not-lessp-s.htm">char&gt;=</a> - test for greater than or equal to in ASCII ordering</nobr></li>
+<li><nobr><a href="../reference/char-greaterp-s.htm">char&gt;</a> - test for greater than in ASCII ordering</nobr></li>
+</ul>
+<li><nobr>Case-insensitive Comparison</nobr></li>
+<ul>
+<li><nobr><a href="../reference/char-lessp-i.htm">char-lessp</a> - is this less than in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-not-greaterp-i.htm">char-not-greaterp</a> - is this not greater than in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-equal-i.htm">char-equal</a> - is this equal in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-not-equal-i.htm">char-not-equal</a> - is this not equal in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-not-lessp-i.htm">char-not-lessp</a> - is this not less than in ASCII ordering?</nobr></li>
+<li><nobr><a href="../reference/char-greaterp-i.htm">char-greaterp</a> - is this greater than in ASCII ordering?</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="input-output-functions"></a>
+
+<hr>
+
+<h2>Input/Output Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a href="../reference/get-key.htm">get-key</a> - get a single key stroke from the keyboard</nobr></li>
+<li><nobr><a href="../reference/read.htm">read</a> - read an expression</nobr></li>
+<li><nobr><a href="../reference/print.htm">print</a> - print an expression on a new line</nobr></li>
+<li><nobr><a href="../reference/prin1.htm">prin1</a> - print an expression</nobr></li>
+<li><nobr><a href="../reference/princ.htm">princ</a> - print an expression without quoting</nobr></li>
+<li><nobr><a href="../reference/pprint.htm">pprint</a> - pretty print an expression</nobr></li>
+<li><nobr><a href="../reference/terpri.htm">terpri</a> - terminate the current print line</nobr></li>
+<li><nobr><a href="../reference/flatsize.htm">flatsize</a> - length of printed representation using prin1</nobr></li>
+<li><nobr><a href="../reference/flatc.htm">flatc</a> - length of printed representation using princ</nobr></li>
+<li><nobr><a href="../reference/format.htm">format</a> - do formated output</nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="file-io-functions"></a>
+
+<hr>
+
+<h2>File I/O Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr>Character I/O</nobr></li>
+<ul>
+<li><nobr><a href="../reference/open.htm">open</a> - open a character file stream</nobr></li>
+<li><nobr><a href="../reference/peek-char.htm">peek-char</a> - peek at the next character</nobr></li>
+<li><nobr><a href="../reference/read-char.htm">read-char</a> - read a character from a stream</nobr></li>
+<li><nobr><a href="../reference/read-line.htm">read-line</a> - read a line from a stream</nobr></li>
+<li><nobr><a href="../reference/write-char.htm">write-char</a> - write a character to a stream</nobr></li>
+</ul>
+<li><nobr>Binary I/O</nobr></li>
+<ul>
+<li><nobr><a href="../reference/bigendianp.htm">bigendianp</a> - is this a bigendian machine?</nobr></li>
+<li><nobr><a href="../reference/open-binary.htm">open-binary</a> - open a binary file stream</nobr></li>
+<li><nobr>Bytes</nobr></li>
+<ul>
+<li><nobr><a href="../reference/read-byte.htm">read-byte</a> - read a byte from a stream</nobr></li>
+<li><nobr><a href="../reference/write-byte.htm">write-byte</a> - write a byte to a stream</nobr></li>
+</ul>
+<li><nobr>Integer Numbers</nobr></li>
+<ul>
+<li><nobr><a href="../reference/read-int.htm">read-int</a> - read a binary integer number from a stream</nobr></li>
+<li><nobr><a href="../reference/write-int.htm">write-int</a> - write a binary integer number to a stream</nobr></li>
+</ul>
+<li><nobr>Floating Point Numbers</nobr></li>
+<ul>
+<li><nobr><a href="../reference/read-float.htm">read-float</a> - read a binary floating point number from a stream</nobr></li>
+<li><nobr><a href="../reference/write-float.htm">write-float</a> - write a binary floating point number to a stream</nobr></li>
+</ul>
+</ul>
+<li><nobr>Character and Bibary I/O</nobr></li>
+<ul>
+<li><nobr><a href="../reference/close.htm">close</a> - close a file stream</nobr></li>
+</ul>
+<li><nobr>Operating System</nobr></li>
+<ul>
+<li><nobr><a href="../reference/setdir.htm">setdir</a> - set the current directory</nobr></li>
+<li><nobr><a href="../reference/listdir.htm">listdir</a> - get a directory listing </nobr></li>
+<li><nobr><a href="../reference/get-temp-path.htm">get-temp-path</a> - get a path where a temporary file can be created</nobr></li>
+<li><nobr><a href="../reference/get-user.htm">get-user</a> - get the current user name</nobr></li>
+<li><nobr><a href="../reference/find-in-xlisp-path.htm">find-in-xlisp-path</a> - search the XLISP path for a filename</nobr></li>
+</ul>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="string-stream-functions"></a>
+
+<hr>
+
+<h2>String Stream Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a href="../reference/make-string-input-stream.htm">make-string-input-stream</a> - create an unnamed stream from a string expression</nobr></li>
+<li><nobr><a href="../reference/make-string-output-stream.htm">make-string-output-stream</a> - create and return an unnamed output stream</nobr></li>
+<li><nobr><a href="../reference/get-output-stream-string.htm">get-output-stream-string</a> - empty a stream and return the data as a string</nobr></li>
+<li><nobr><a href="../reference/get-output-stream-list.htm">get-output-stream-list</a> - empty a stream and return the data as a list</nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="system-functions"></a>
+
+<hr>
+
+<h2>System Functions</h2>
+
+<hr>
+
+<ul>
+<li><nobr><a href="../reference/load.htm">load</a> - load a source file</nobr></li>
+<li><nobr><a href="../reference/save.htm">save</a> - save workspace to a file</nobr></li>
+<li><nobr><a href="../reference/restore.htm">restore</a> - restore workspace from a file</nobr></li>
+<li><nobr><a href="../reference/dribble.htm">dribble</a> - create a file with a transcript of a session</nobr></li>
+<li><nobr><a href="../reference/gc.htm">gc</a> - force garbage collection</nobr></li>
+<li><nobr><a href="../reference/expand.htm">expand</a> - expand memory by adding segments</nobr></li>
+<li><nobr><a href="../reference/alloc.htm">alloc</a> - change number of nodes to allocate in each segment</nobr></li>
+<li><nobr><a href="../reference/info.htm">info</a> - show information about memory usage</nobr></li>
+<li><nobr><a href="../reference/room.htm">room</a> - show memory allocation statistics</nobr></li>
+<li><nobr><a href="../reference/type-of.htm">type-of</a> - returns the type of the expression</nobr></li>
+<li><nobr><a href="../reference/peek.htm">peek</a> - peek at a location in memory</nobr></li>
+<li><nobr><a href="../reference/poke.htm">poke</a> - poke a value into memory</nobr></li>
+<li><nobr><a href="../reference/bigendianp.htm">bigendianp</a> - is this a big-endian machine?</nobr></li>
+<li><nobr><a href="../reference/address-of.htm">address-of</a> - get the address of an xlisp node</nobr></li>
+<li><nobr><a href="../reference/get-env.htm">get-env</a> - get the value of an environment variable</nobr></li>
+<li><nobr><a href="../reference/system.htm">system</a> - execute a command of the operating system</nobr></li>
+<li><nobr><a href="../reference/quit.htm">quit</a> - exit XLISP</nobr></li>
+<li><nobr><a href="../reference/exit.htm">exit</a> - exit XLISP</nobr></li>
+<li><nobr><a href="../reference/setup-console.htm">setup-console</a> - set default console attributes</nobr></li>
+<li><nobr><a href="../reference/echoenabled.htm">echoenabled</a> - turn console input echo on or off</nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+Contents |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

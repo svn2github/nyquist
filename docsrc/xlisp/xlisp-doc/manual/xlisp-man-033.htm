@@ -1,0 +1,356 @@
+<html><head><title>XLISP: An Object-oriented Lisp</title></head>
+
+<style type="text/css">
+  pre.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+  td.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+</style>
+
+<body>
+
+<a href="../start.htm">XLISP</a> &gt;
+<a href="xlisp-man-index.htm">XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="contents.htm#34">Contents</a>&nbsp; -&nbsp;
+<a href="../reference/reference-index.htm">Reference</a>&nbsp; -&nbsp;
+<a href="xlisp-man-032.htm">Previous</a> |
+<a href="xlisp-man-index.htm">Next</a>
+
+<hr>
+
+<h1>33&nbsp; Nyquist Functions</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#predicate-functions">Predicate Functions</a></nobr></li>
+<ul>
+<li><nobr><a href="#filep">filep</a> - is this a file ?</nobr></li>
+</ul>
+<li><nobr><a href="#arithmetic-functions">Arithmetic Functions</a></nobr></li>
+<ul>
+<li><nobr><a href="#rrandom">rrandom</a> - compute a random real number between 0 and 1 inclusive</li>
+</ul>
+<li><nobr><a href="#string-functions">String Functions</a></nobr></li>
+<ul>
+<li><nobr><a href="#string-search">string-search</a> - search for pattern in string</nobr></li>
+</ul>
+<li><nobr><a href="#file-io-functions">File I/O Functions</a></nobr></li>
+<ul>
+<li><nobr><a href="#open-binary">open-binary</a> - open a binary file stream</nobr></li>
+<li><nobr><a href="#setdir">setdir</a> - set current directory</nobr></li>
+<li><nobr><a href="#listdir">listdir</a> - get a directory listing</nobr></li>
+<li><nobr><a href="#get-temp-path">get-temp-path</a> - get a path where a temporary file can be created</nobr></li>
+<li><nobr><a href="#read-int">read-int</a> - read a binary integer from a stream</nobr></li>
+<li><nobr><a href="#write-int">write-int</a> - write a binary integer to a stream</nobr></li>
+<li><nobr><a href="#read-float">read-float</a> - read a binary floating-point number from a stream</nobr></li>
+<li><nobr><a href="#write-float">write-float</a> - write a binary floating-point number to a stream</nobr></li>
+</ul>
+<li><nobr><a href="#system-functions">System Functions</a></nobr></li>
+<ul>
+<li><nobr><a href="#info">info</a> - show information about memory usage</nobr></li>
+<li><nobr><a href="#bigendiap">bigendiap</a> - is this a big-endian machine ?</nobr></li>
+<li><nobr><a href="#setup-console">setup-console</a> - set default console attributes</nobr></li>
+<li><nobr><a href="#echoenabled">echoenabled</a> - turn console input echoing on or off</nobr></li>
+</ul>
+<li><nobr><a name="11" href="#profiling">Profiling</a></nobr></li>
+<ul>
+<li><nobr><a href="#profile">profile</a> - turn profiling on or off</nobr></li>
+</ul>
+</ol>
+
+<p><b>Note:</b> if you're interested in *all* functions added by Nyquist to
+the XLISP language, I suggest you download the Nyquist manual from:</p>
+
+<ul>
+<li><a href="http://www.cs.cmu.edu/~music/music.software.html"
+>http://www.cs.cmu.edu/~music/music.software.html</a></li>
+</ul>
+
+<p>The following is a list of all Nyquist functions I have found in the
+XLISP section of the <nobr>Nyquist 2.36</nobr> manual but I cannot even
+guarantee that the list is complete. I'm willing to add more functions here
+if you find that some are missing but the best information source is the
+Nyquist manual itself. Roger is always a step ahead and I do not want to
+spread obsolete or wrong information.</p>
+
+<a name="predicate-functions"></a>
+
+<hr>
+
+<h2>Predicate Functions</h2>
+
+<hr>
+
+<a name="filep"></a>
+
+<dl>
+
+<dt>(filep <i>expr</i>) - is this a <nobr>file ?</nobr></dt>
+<dd><i>expr</i> - the expression to check<br>
+returns - T if the value is an object, NIL otherwise</dd>
+
+</dl>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="debugging-functions"></a>
+
+<hr>
+
+<h2>Arithmetic Functions</h2>
+
+<hr>
+
+<a name="rrandom"></a>
+
+<dl>
+
+<dt>(rrandom) - compute a random real number between 0 and 1 inclusive</dt>
+<dd>returns - a random floating point number</dd>
+
+</dl>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="string-functions"></a>
+
+<hr>
+
+<h2>String Functions</h2>
+
+<hr>
+
+<a name="string-search"></a>
+
+<dl>
+
+<dt>(string-search <i>pat</i> <i>str</i> &amp;key :start :end)
+- search for pattern in string</dt><dd>
+<i>pat</i> - a string to search for<br>
+<i>str</i> - the string to be searched<br>
+:start - the starting offset in str<br>
+:end -  the ending offset + 1<br>
+returns - index of <i>pat</i> in <i>str</i> or NIL if not found</dd>
+
+</dl>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="file-io-functions"></a>
+
+<hr>
+
+<h2>File I/O Functions</h2>
+
+<hr>
+
+<a name="open-binary"></a>
+
+<p><b>Note:</b> Files are ordinarily opened as text. Binary files [such
+as standard MIDI files] must be opened with 'open-binary' on non-unix
+systems.</p>
+
+<dl>
+
+<dt>(open-binary <i>fname</i> &amp;key :direction) -  open a binary file stream</dt>
+<dd><i>fname</i> - the file name string or symbol<br>
+:direction - :input or :output [default is :input]<br>
+returns - a stream</dd>
+
+<a name="setdir"></a><br>
+
+<dt>(setdir <i>path</i>) - set current directory</dt>
+<dd><i>path</i> - the path of the new directory<br>
+returns - the resulting full path, e.g. (setdir ".") gets the current 
+working directory, or NIL if an error occurs</dd>
+
+<a name="listdir"></a><br>
+
+<dt>(listdir <i>path</i>) - get a directory listing</dt>
+<dd><i>path</i> - the path of the directory to be listed<br>
+returns -  list of filenames in the directory</dd>
+
+<a name="get-temp-path"></a><br>
+
+<dt>(get-temp-path) - get a path where a temporary file can be created</dt>
+<dd>returns - the resulting full path as a string</dd>
+
+</dl>
+
+<p><b>Note:</b> Under Windows, the 'get-temp-path' function is based on
+environment variables. If XLISP is running as a sub-process to Java, the
+environment may not exist, in which case the default result is the
+unfortunate choice 'c:\windows\'.</p>
+
+<dl>
+
+<a name="read-int"></a>
+
+<dt>(read-int [<i>stream</i> [<i>length</i>]]) - read a binary integer from a stream</dt>
+<dd><i>stream</i> - the input stream [default is standard input]<br>
+<i>length</i> - the length of the integer in bytes [default is 4]<br>
+returns - the integer</dd>
+
+<a name="write-int"></a><br>
+
+<dt>(write-int <i>ch</i> [<i>stream</i> [<i>length</i>]]) - write a binary integer to a stream</dt>
+<dd><i>ch</i> - the character to write<br>
+<i>stream</i> - the output stream [default is standard output]<br>
+<i>length</i> - the length of the integer in bytes [default is 4]<br>
+returns - the integer</dd>
+
+<a name="read-float"></a><br>
+
+<dt>(read-float [<i>stream</i> [<i>length</i>]]) - read a binary
+floating-point number from a stream</dt>
+<dd><i>stream</i> - the input stream (default is standard input)<br>
+<i>length</i> - the length of the float in bytes [default is 4,
+legal values are -4, -8, 4, and 8]<br>
+returns - the float</dd>
+
+<a name="write-float"></a><br>
+
+<dt>(write-float <i>ch</i> [<i>stream</i> [<i>length</i>]]) - write a binary floating-point number to a stream</dt>
+<dd><i>ch</i> - the character to write<br>
+<i>stream</i> - the output stream [default is standard output]<br>
+<i>length</i> - the length of the float in bytes [default is 4,
+legal values are -4, -8, 4, and 8]<br>
+returns - the float</dd>
+
+</dl>
+
+<p><b>Note:</b> Integers and floats are assumed to be big-endian [high-order
+byte first] and signed, regardless of the platform. To read little-endian
+format, use a negative number for the length, e.g. '-4' indicates a 4-bytes,
+low-order byte first. The file should be opened in binary mode.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="system-functions"></a>
+
+<hr>
+
+<h2>System Functions</h2>
+
+<hr>
+
+<p><b>Note:</b> in Nyquist, the XLISP
+<a href="../reference/load.htm">load</a> function first tries to
+load a file from the current directory. A '.lsp' extension is added if there
+is not already an alphanumeric extension following a period. If that fails,
+XLISP searches the path, which is obtained from the XLISPPATH environment
+variable in Unix and HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH under
+Win32. [The Macintosh version has no search path.]</p>
+
+<a name="info"></a>
+
+<dl>
+<dt>(info) - show information about memory usage.</dt>
+<dd>returns - NIL</dd>
+</dl>
+
+<a name="bigendiap"></a>
+
+<dl>
+<dt>(bigendiap) - is this a big-endian <nobr>machine ?</nobr></dt>
+<dd>returns - T if this a big-endian architecture, storing the high-order
+byte of an integer at the lowest byte address of the integer, otherwise
+NIL.</dd>
+</dl>
+
+<p><b>Note:</b> Under Windows, Nyquist normally starts up in a medium-sized
+console window with black text and a white background, with a window title
+of "Nyquist." This is normally accomplished by calling 'setup-console' in
+'system.lsp'. In Nyquist, you can avoid this behavior by setting
+*setup-console* to NIL in your 'init.lsp' file. If 'setup-console' is not
+called, Nyquist uses standard input and output as is. This is what you want
+if you are running Nyquist inside of emacs, for example.</p>
+
+<a name="setup-console"></a>
+
+<dl>
+<dt>(setup-console) - set default console attributes</dt>
+<dd>returns - NIL</dd>
+</dl>
+
+<p><b>Note:</b> The 'echoenabled' function is only implemented under Linux
+and <nobr>Mac OS X.</nobr> If Nyquist I/O is redirected through pipes, the
+Windows version does not echo the input, but the Linux and Mac versions do.
+You can turn off echoing with this function. Under windows it is defined to
+do nothing.</p>
+
+<a name="echoenabled"></a>
+
+<dl>
+<dt>(echoenabled <i>flag</i>) - turn console input echoing on or off</dt>
+<dd><i>flag</i> - T to enable echo, NIL to disable<br>
+returns - NIL</dd>
+</dl>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</a></nobr></p>
+
+<a name="profiling"></a>
+
+<hr>
+
+<h1>Profiling</h1>
+
+<hr>
+
+<p>The Xlisp 2.0 release has been extended with a profiling facility, which
+counts how many times and where
+<a href="../reference/eval.htm">eval</a> is executed. A separate
+count is maintained for each named function, closure, or macro, and a count
+indicates an <a href="../reference/eval.htm">eval</a> in the
+immediately [lexically] enclosing named function, closure, or macro. Thus,
+the count gives an indication of the amount of time spent in a function, not
+counting nested function calls.</p>
+
+<p>The list of all functions executed is maintained on the global *profile*
+variable. These functions in turn have *profile* properties, which maintain
+the counts. The profile system merely increments counters and puts symbols
+on the *profile* list. It is up to the user to initialize data and gather
+results. Profiling is turned on or off with the 'profile' function.</p>
+
+<a name="profile"></a>
+
+<dl>
+<dt>(profile <i>flag</i>) - turn profiling on or off</dt>
+<dd><i>flag</i> - NIL turns profiling off, otherwise on<br>
+returns - the previous state of profiling</dd>
+</dl>
+
+<p>Unfortunately, methods cannot be profiled with this facility.</p>
+
+<p>[Nyquist sources: xlsys.c, xleval.c]</p>
+
+<p>&nbsp;&nbsp;<a href="#top">Back to Top</a></p>
+
+<hr>
+
+<a href="../start.htm">XLISP</a> &gt;
+<a href="xlisp-man-index.htm">XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="contents.htm#34">Contents</a>&nbsp; -&nbsp;
+<a href="../reference/reference-index.htm">Reference</a>&nbsp; -&nbsp;
+<a href="xlisp-man-032.htm">Previous</a> |
+<a href="xlisp-man-index.htm">Next</a>
+
+</body></html>

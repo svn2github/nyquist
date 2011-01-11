@@ -1,0 +1,89 @@
+<html><head><title>XLISP gensym</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>gensym</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(gensym [<i>tag</i>])</dt>
+<dd><i>tag</i> - an optional integer or string<br>
+returns - the new symbol</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'gensym' function generates and returns a symbol. The default symbol
+form is as a character 'G' followed by a number, 'Gn'. The default numbering
+starts at '1'. You can change what the generated symbol looks like. By
+calling 'gensym' with a string 'tag', the default string is set to the
+string parameter. If 'tag' is an integer number, the current number is
+set to the integer parameter.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(gensym)             <font color="#008844">; first time =&gt; G1</font>
+(gensym 100)         <font color="#008844">; returns G100</font>
+(gensym "MYGENSYM")  <font color="#008844">; returns MYGENSYM101</font>
+(gensym 0)           <font color="#008844">; returns MYGENSYM0</font>
+(gensym)             <font color="#008844">; returns MYGENSYM1</font>
+(gensym "G")         <font color="#008844">; \</font>
+(gensym 0)           <font color="#008844">; /  put it back to 'normal'</font>
+(gensym)             <font color="#008844">; just like first time =&gt; G1</font>
+</pre>
+
+<p><b>Note:</b> It takes 2 calls to 'gensym' to set both portions of the
+'gensym' symbol.</p>
+
+<p><b>Note:</b> Although it is possible to call 'gensym' with numbers in the string
+like &quot;AB1&quot;, this does generate an odd sequence. What will happen is you will
+get a sequence of symbols like:</p>
+
+<pre class="example">
+... AB18 AB19 AB110 AB111 ...
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-013.htm#gensym">gensym</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

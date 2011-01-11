@@ -1,0 +1,539 @@
+<html><head>
+
+<title>Shell Utilities</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Shell Utilities</h1>
+
+<hr>
+
+<ul>
+<li><nobr><a href="#cd">cd</a> - display and change directories</nobr></li>
+<li><nobr><a href="#ls">ls</a> - display files and sub-directories</nobr></li>
+<li><nobr><a href="#hd">hd</a> - hexdump a file</nobr></li>
+</ul>
+
+<p>Nyquist is not a system programming language, so Nyquist/XLISP cannot
+create or remove files and directories, and the <a
+href="../reference/system.htm">system</a> function does not work on Windows.
+<nobr>But sometimes</nobr> it helps to know the name of the current working
+directory, the name of the directory where the soundfiles are stored, or the
+names of files and <nobr>sub-directories</nobr>.</p>
+
+<a name="cd"></a>
+
+<hr>
+
+<h2>cd</h2>
+
+<hr>
+
+<p>The 'cd' function displays or changes the current working directory, it
+also displays the name of the *<nobr>default-sf-dir</nobr>* directory, where
+Nyquist stores its sound files:</p>
+
+<pre class="example">
+&gt; (cd)
+;; *default-sf-dir*  = /tmp/
+;; working directory = /home/edgar
+NIL
+
+&gt; (cd "test")
+;; directory changed to "test"
+;; *default-sf-dir*  = /tmp/
+;; working directory = /home/edgar/test
+T
+
+&gt; (cd "..")
+;; directory changed to "edgar"
+;; *default-sf-dir*  = /tmp/
+;; working directory = /home/edgar
+T
+
+&gt; (cd "foo")
+;; directory not changed, "foo" not found
+;; *default-sf-dir*  = /tmp/
+;; working directory = /home/edgar
+NIL
+
+&gt; (cd 123)
+;; directory not changed, 123 is not a string
+;; *default-sf-dir*  = /tmp/
+;; working directory = /home/edgar
+NIL
+</pre>
+
+<p>The 'cd' function is intended for interactive use, in program code it's
+better to use the Nyquist <a href="../reference/setdir.htm">setdir</a>
+function.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">cd</font> (&amp;optional dirname)
+  (let ((old-dir (setdir <font color="#880000">"."</font>))
+        (new-dir (when (stringp dirname) (setdir dirname))))
+    (when dirname
+      (if new-dir
+          (when (string/= old-dir new-dir)
+            (let ((string-end (length new-dir))
+                  (subseq-start 0))
+              (dotimes (index string-end)
+                (when (char= (char new-dir index) <font color="#AA5500">*file-separator*</font>)
+                  (setq subseq-start index)))
+              (incf subseq-start)
+              (format t <font color="#880000">";; directory changed to ~s~%"</font>
+                        (if (&lt; subseq-start string-end)
+                            (subseq new-dir subseq-start)
+                            (string <font color="#AA5500">*file-separator*</font>)))))
+          (format t <font color="#880000">";; directory not changed, ~s ~a~%"</font> dirname
+            (if (stringp dirname) <font color="#880000">"not found" "is not a string"</font>))))
+    (format t <font color="#880000">";; *default-sf-dir*  = ~a~%"</font> <font color="#AA5500">*default-sf-dir*</font>)
+    (format t <font color="#880000">";; working directory = ~a~%"</font> (setdir <font color="#880000">"."</font>))
+    (when new-dir t)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="ls"></a>
+
+<hr>
+
+<h2>ls</h2>
+
+<hr>
+
+<p>The 'ls' function lists files and directories:</p>
+
+<pre class="example">
+&gt; (ls)
+;;; /home/edgar/Downloads/nyquist/svn/nyquist
+;;  advantages.txt  cmt/               comp-ide.bat       convert.dsp
+;;  convert.dsw     demos/             doc/               docsrc/
+;;  fft/            ffts/              files.txt          howtorelease.txt
+;;  jny             jnyqide.bat        jnyqide/           lib/
+;;  liblo/          license.txt        lpc/               macosxproject/
+;;  macproject/     Makefile           misc/              nylsf/
+;;  nyqide/         nyqsrc/            nyqstk/            nyquist.dsp
+;;  nyquist.dsw     nyquist.sln        nyquist.vcproj     nyqwin.dsp
+;;  nyqwin.vcproj   portaudio-oldv19/  portaudio/         portaudio_test/
+;;  Readme.txt      release.bat        releasenyqide.bat  releasenyqwin.bat
+;;  runtime/        snd/               sys/               test/
+;;  todo.txt        tran/              xlisp/             
+47
+</pre>
+
+<p>The algorithm to find the number of colums is
+<nobr>trial-and-error</nobr>, for example it starts with one column:</p>
+
+<pre class="example">
+<font color="#008844">&lt;- maximum-width -&gt;|</font>
+item-1 
+item-2
+item-3
+item-4
+item-5
+</pre>
+
+<p>When no line was longer than the <nobr>maximum-width</nobr> the
+layout is saved and a new test is started with two columns:</p>
+
+<pre class="example">
+<font color="#008844">&lt;- maximum-width -&gt;|</font>
+item-1  item-2
+item-3  item-4
+item-5
+</pre>
+
+<p>When no line was longer than the <nobr>maximum-width</nobr> the
+layout is saved and a new test is started with three columns:</p>
+
+<pre class="example">
+<font color="#008844">&lt;- maximum-width -&gt;|</font>
+item-1  item-2  item-3
+</pre>
+
+<p>As soon as a line becomes longer than the <nobr>maximum-width</nobr>, the
+test is aborted and the saved layout from the previous run is used.</p>
+
+<p>The main reason why arrays are used instead of lists is that we need
+access to predefined numbers. With lists we always first need to test if an
+element exists because <nobr>non-existent</nobr> list elements are NIL and
+not numbers:</p>
+
+<pre class="example">
+(&lt; (nth 3 '(1 2)) 0)  =&gt; <font color="#AA0000">error: bad argument type - NIL</font>
+</pre>
+
+<p>It's also no good idea to use <a href="../reference/setf.htm">setf</a>
+with <nobr>non-existent</nobr> list elements:</p>
+
+<pre class="example">
+(setf (nth 2 nil) 'value)  =&gt; VALUE
+(nth 2 nil)                =&gt; <font color="#AA0000">error: bad argument type - NIL</font>
+</pre>
+
+<p><b>Caution:</b> The XLISP <a href="../reference/setf.htm">setf</a>
+special form does not signal an error if values are assigned to
+<nobr>non-existent</nobr> places.</p>
+
+<p>We use the Common Lisp 'incf' macro because the Nyquist
+<a href="../reference/incf.htm">incf</a> macro has no 'increment'
+argument:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">cl:incf</font> (place &amp;optional (increment 1))
+  `(setf ,place (+ ,place ,increment)))
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">ls</font> (&amp;rest args)
+  (let* ((dirname   (if (stringp (car args))
+                        (prog1 (car args) (setq args (cdr args)))
+                        (setdir ".")))
+         (show-all (car args))
+         (raw-list (listdir dirname)))
+    (cond ((null raw-list)
+           (format t <font color="#880000">";; directory ~s not found~%"</font> dirname))
+          ((&lt;= (length raw-list) 2)
+           (format t <font color="#880000">";;; ~a~%"</font> dirname)
+           (format t <font color="#880000">";; [directory is empty]~%"</font>) 0)
+          (t
+           (format t <font color="#880000">";;; ~a~%"</font> dirname)
+           (let ((file-separator (string <font color="#AA5500">*file-separator*</font>))
+                 (dir-list nil))
+             (dolist (item raw-list)
+               (when (or show-all (not (ls:hidden-p item)))
+                 (if (listdir (strcat dirname file-separator item))
+                     (push (strcat item <font color="#880000">"/"</font>) dir-list)
+                     (push item dir-list))))
+             (ls:list-items (sort dir-list #'string-lessp)))))))
+
+(setq <font color="#AA5500">*ls-hidden-start*</font> (list <font color="#880000">"." "#"</font>))
+(setq <font color="#AA5500">*ls-hidden-end*</font> (list <font color="#880000">"~" "#"</font>))
+
+(defun <font color="#0000CC">ls:hidden-p</font> (string)
+  (let ((string-length (length string)))
+    (or (dolist (item <font color="#AA5500">*ls-hidden-start*</font> nil)
+          (let ((subseq-end (length item)))
+            (when (and (&gt;= string-length subseq-end)
+                       (string= item (subseq string 0 subseq-end)))
+              (return t))))
+        (dolist (item <font color="#AA5500">*ls-hidden-end*</font> nil)
+          (let ((subseq-start (- string-length (length item))))
+            (when (and (&lt;= 0 subseq-start)
+                       (string= item (subseq string subseq-start)))
+              (return t)))))))
+
+(defmacro <font color="#0000CC">ls:reset-array</font> (array)
+  (let ((index (gensym)))
+    `(dotimes (,index (length ,array))
+       (setf (aref ,array ,index) 0))))
+
+(defmacro <font color="#0000CC">ls:copy-array</font> (from-array to-array end)
+  (let ((index (gensym)))
+    `(dotimes (,index ,end)
+       (setf (aref ,to-array ,index)
+             (aref ,from-array ,index)))))
+
+(defun <font color="#0000CC">ls:fill-string</font> (length)
+  (let ((string <font color="#880000">""</font>))
+    (dotimes (i length)
+      (setq string (strcat string <font color="#880000">" "</font>)))
+    string))
+
+(defun <font color="#0000CC">ls:list-items</font> (item-list &amp;optional (terminal-width 80))
+  (let* ((separator 2)
+         (width (- terminal-width 4))
+         (width-max (+ width separator))
+         (num-items (length item-list))
+         (num-columns 1)     <font color="#008844">; number of columns</font>
+         (item-array   (make-array num-items))
+         (length-array (make-array num-items))
+         (length-min width)  <font color="#008844">; shortest item</font>
+         (length-max 0)      <font color="#008844">; longest item</font>
+         (length-all 0)      <font color="#008844">; all items + separators</font>
+         <font color="#008844">;; the maximum possible number of columns is</font>
+         <font color="#008844">;; width-max / (1 char + separator)</font>
+         (max-columns (/ width-max (1+ separator)))
+         (column-array (make-array max-columns)))
+
+    <font color="#008844">;; initialize the column-array</font>
+    (ls:reset-array column-array)
+
+    <font color="#008844">;; copy the items from the list into the item-array</font>
+    (let ((item-index 0))
+      (dolist (item item-list)
+        (setf (aref item-array item-index) item)
+        (incf item-index)))
+
+    <font color="#008844">;; find the length of all items and store them in the length-array</font>
+    (dotimes (item-index num-items)
+      (let ((length-item (length (aref item-array item-index))))
+        (setf (aref length-array item-index) length-item
+              length-all (+ length-all length-item separator)
+              length-min (min length-min length-item)
+              length-max (max length-max length-item))))
+
+    <font color="#008844">;; find the number and widths of the columns</font>
+    (cond ((&lt;= length-all width-max)
+           <font color="#008844">;; if all items together fit into a single line</font>
+           (setq num-columns num-items)
+           (ls:copy-array length-array column-array num-items))
+          ((and (&gt; num-items 1)
+                (&lt;= (+ length-min length-max separator) width))
+           <font color="#008844">;; if there is more than one item and the</font>
+           <font color="#008844">;; longest + shortest item + separator fit into one line</font>
+           <font color="#008844">;; we start with two columns, one column is the fallback</font>
+           (incf num-columns)
+           <font color="#008844">;; the test-array must be 1+ because we need 1 failure-run</font>
+           (do ((test-array (make-array (1+ max-columns)))
+                (item-index 0 0))
+               ((progn
+                  (ls:reset-array test-array)
+                  <font color="#008844">;; loop until there are no more items in the list</font>
+                  (do ((line-length 0 0))
+                      ((&gt;= item-index num-items))
+                    <font color="#008844">;; compute a complete line</font>
+                    (dotimes (column-index num-columns)
+                      <font color="#008844">;; loop through all columns in the test-array</font>
+                      (when (and (&lt; item-index num-items)
+                                 (&lt; (aref test-array column-index)
+                                    (aref length-array item-index)))  
+                        <font color="#008844">;; if there are still items in the list and the</font>
+                        <font color="#008844">;; item is wider than the column, update the array</font>
+                        (setf (aref test-array column-index)
+                              (aref length-array item-index)))
+                      <font color="#008844">;; compute the line-length from the value in the array</font>
+                      (cl:incf line-length
+                               (+ (aref test-array column-index) separator))
+                      (incf item-index))
+                    <font color="#008844">;; analyze the result from computing the line</font>
+                    (cond ((&gt; line-length width-max)
+                           <font color="#008844">;; if the line is too long, abort completely, use</font>
+                           <font color="#008844">;; the column-array values from the previous run</font>
+                           (decf num-columns)
+                           (return t))  <font color="#008844">; abort both 'do' loops</font>
+                          ((&gt;= item-index num-items)
+                           <font color="#008844">;; if no items is left and no line was too long</font>
+                           <font color="#008844">;; first save the test-array in the column-array</font>
+                           (ls:copy-array test-array column-array num-columns)
+                           <font color="#008844">;; then try again with one more column</font>
+                           (incf num-columns)))))))))
+
+    <font color="#008844">;; print the items on the screen</font>
+    (do ((item-index 0)
+         (last-item (1- num-items))
+         (last-column (1- num-columns))
+         (line <font color="#880000">";;  " ";;  "</font>))
+        ((&gt;= item-index num-items))
+      (dotimes (column-index num-columns)
+        <font color="#008844">;; loop through all columns</font>
+        (when (&lt; item-index num-items)
+          <font color="#008844">;; if there are still items in the list</font>
+          (setq line
+                (if (and (&lt; column-index last-column)
+                         (&lt; item-index last-item))
+                    <font color="#008844">;; if not the last column and not the last item</font>
+                    (strcat line (aref item-array item-index)
+                      <font color="#008844">;; add a fill-string</font>
+                      (let ((column (aref column-array column-index))
+                            (item   (aref length-array item-index)))
+                        (ls:fill-string (+ (- column item) separator))))
+                    <font color="#008844">;; if the last column or the last item</font>
+                    (strcat line (aref item-array item-index))))
+          (incf item-index)))
+      <font color="#008844">;; display the line on the screen</font>
+      (format t <font color="#880000">"~a~%"</font> line))
+
+    <font color="#008844">;; return the number of items listed on the screen</font>
+    num-items))
+</pre>
+
+<p><b>Note:</b> The code works, but this section is still too much mess.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="hd"></a>
+
+<hr>
+
+<h2>hd</h2>
+
+<hr>
+
+<p>The 'hd' function prints the hexdump of a file on the screen:</p>
+
+<pre class="example">
+&gt; (hd "/tmp/edgar-temp.wav")
+0000000000  52 49 46 46 ac 58 01 00  57 41 56 45 66 6d 74 20  RIFF.X..WAVEfmt 
+0000000016  10 00 00 00 01 00 01 00  44 ac 00 00 88 58 01 00  ........D....X..
+0000000032  02 00 10 00 64 61 74 61  88 58 01 00 00 00 4a 04  ....data.X....J.
+0000000048  93 08 da 0c 1b 11 57 15  8b 19 b7 1d d7 21 ec 25  ......W......!.%
+0000000064  f3 29 eb 2d d3 31 a9 35  6c 39 1a 3d b3 40 35 44  .).-.1.5l9.=.@5D
+0000000080  9e 47 ee 4a 24 4e 3d 51  3a 54 19 57 d9 59 78 5c  .G.J$N=Q:T.W.Yx\
+0000000096  f7 5e 54 61 8f 63 a6 65  99 67 67 69 10 6b 92 6c  .^Ta.c.e.ggi.k.l
+0000000112  ee 6d 23 6f 31 70 16 71  d3 71 68 72 d4 72 17 73  .m#o1p.q.qhr.r.s
+0000000128  31 73 23 73 eb 72 8a 72  01 72 4f 71 75 70 73 6f  1s#s.r.r.rOqupso
+0000000144  49 6e f8 6c 80 6b e2 69  1f 68 36 66 29 64 f8 61  In.l.k.i.h6f)d.a
+0000000160  a5 5f 2f 5d 98 5a e2 57  0b 55 17 52 05 4f d8 4b  ._/].Z.W.U.R.O.K
+0000000176  8f 48 2c 45 b1 41 1f 3e  76 3a b9 36 e8 32 05 2f  .H,E.A.>v:.6.2./
+0000000192  11 2b 0e 27 fe 22 e0 1e  b8 1a 86 16 4c 12 0c 0e  .+.'."......L...
+0000000208  c7 09 7e 05 33 01 e9 fc  9f f8 57 f4 14 f0 d6 eb  ..~.3.....W.....
+0000000224  a0 e7 72 e3 4e df 36 db  2b d7 2f d3 42 cf 67 cb  ..r.N.6.+./.B.g.
+0000000240  9f c7 ea c3 4b c0 c3 bc  53 b9 fb b5 be b2 9d af  ....K...S.......
+;; type "q" to quit or press Return to continue... 
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">hd</font> (filename &amp;key (start 0) end)
+  (cond
+    ((not (stringp filename))
+     (format t <font color="#880000">";; not a string ~s~%"</font> filename))
+    ((listdir filename)
+     (format t <font color="#880000">";; not a file ~s~%"</font> string))
+    ((or (not (integerp start)) (minusp start))
+     (format t <font color="#880000">";; not a non-negative integer ~s~%"</font> start))
+    ((and end (or (not (integerp end)) (minusp end)))
+     (format t <font color="#880000">";; not a non-negative integer ~s~%"</font> end))
+    ((and end (&gt;= start end))
+     (format t <font color="#880000">";; :start ~s is greater then :end ~s~%"</font> start end))
+    (t (let ((file-stream (open-binary filename)))
+         (if (null file-stream)
+             (format t <font color="#880000">";; file not found ~s~%"</font> filename)
+             (unwind-protect
+               (hd:dump file-stream start end)
+               (when file-stream (close file-stream))))))))
+
+(defun <font color="#0000CC">hd:dump</font> (file-stream start end)
+  (let ((file-position (hd:skip file-stream start))
+        (break (+ start 255))
+        (end-of-file nil)
+        (end-of-dump nil))
+    (if (&lt; file-position start)
+        (setq end-of-file t)
+        (flet ((read-eight-bytes (start-position)
+                 (let (byte-list)
+                   (dotimes (offset 8)
+                     (let* ((position (+ start-position offset))
+                            (read-p (and (&lt;= start position)
+                                         (or (null end)
+                                             (&gt;= end position))))
+                            (byte (when read-p
+                                    (read-byte file-stream))))
+                       (push byte byte-list)
+                       (when byte (incf file-position))
+                       (when (and read-p (null byte))
+                         (setq end-of-file t))))
+                   (reverse byte-list))))
+          (read-line)
+          (do ((line-start (* (/ start 16) 16) (+ line-start 16)))
+              ((or end-of-file end-of-dump))
+            (let* ((number  (hd:line-number line-start))
+                   (list-1  (read-eight-bytes line-start))
+                   (list-2  (read-eight-bytes (+ line-start 8)))
+                   (bytes-1 (hd:byte-string list-1))
+                   (bytes-2 (hd:byte-string list-2))
+                   (chars   (hd:char-string (append list-1 list-2))))
+              (format t <font color="#880000">"~a  ~a  ~a  ~a~%"</font> number bytes-1 bytes-2 chars)
+              (when (and end (&gt; file-position end))
+                (setq end-of-dump t))
+              (when (&gt; file-position break)
+                (format t <font color="#880000">";; type \"q\" to quit or press Return to continue... "</font>)
+                (if (string-equal "q" (read-line))
+                    (setq end-of-dump t)
+                    (setq break (+ break 256))))))))
+    (when (and end (&gt;= file-position end))
+      (format t <font color="#880000">";; reached specified :end at byte number ~a~%"</font> end))
+    (when end-of-file
+      (format t <font color="#880000">";; end of file at byte number ~a~%"</font> file-position))))
+
+(defun <font color="#0000CC">hd:line-number</font> (integer)
+  (progv '(<font color="#AA5500">*integer-format*</font>) '(<font color="#880000">"%.10d"</font>)
+    (format nil <font color="#880000">"~s"</font> integer)))
+
+(defun <font color="#0000CC">hd:byte-string</font> (byte-list)
+  (let ((string <font color="#880000">""</font>))
+    (dolist (byte byte-list)
+      (setq string (strcat string (if byte
+                                      (progv '(<font color="#AA5500">*integer-format*</font>) '(<font color="#880000">"%.2x"</font>)
+                                        (format nil <font color="#880000">"~s "</font> byte))
+                                      <font color="#880000">"   "</font>))))
+    (subseq string 0 (1- (length string)))))
+
+(defun <font color="#0000CC">hd:char-string</font> (byte-list)
+  (let ((string <font color="#880000">""</font>))
+    (dolist (byte byte-list)
+      (setq string (strcat string (if byte
+                                      (if (&lt;= 32 byte 126)
+                                          (string byte)
+                                          <font color="#880000">"."</font>)
+                                      <font color="#880000">" "</font>))))
+    string))
+
+(defun <font color="#0000CC">hd:skip</font> (file-stream offset)
+  (if (= offset 0)
+      offset
+      (let ((count 0))
+          (format t <font color="#880000">";; skipping ~a bytes...~%"</font> offset)
+          (dotimes (ignore offset)
+            (if (read-byte file-stream)
+                (incf count)
+                (return)))
+        count)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

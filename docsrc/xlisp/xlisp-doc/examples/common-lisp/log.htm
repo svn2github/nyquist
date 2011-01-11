@@ -1,0 +1,95 @@
+<html><head>
+
+<title>cl:log</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:log</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>log</b></nobr> function does the same as the
+Nyquist/XLISP <a href="../../reference/log.htm">log</a> function, but also
+accepts integer numbers and has an optional 'base' argument:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>log</b> <i>number</i> [<i>base</i>])</dt>
+<dd><i>number</i> - an integer or floating-point number<br>
+<i>base</i> - an integer or floating-point number<br>
+returns - the the logarithm of <i>number</i> in base <i>base</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:log</font> (number &amp;optional base)
+  (if base
+      (if (zerop base)
+          0.0
+          (/ (log (float number)) (log (float base))))
+      (log (float number))))
+</pre>
+
+<p>The '<nobr>cl:log</nobr>' function returns the logarithm of 'number' in
+base 'base'. <nobr>If 'base'</nobr> is not supplied its value <nobr>is
+'e'</nobr>, the base of the natural logarithms. <nobr>If the</nobr> 'base'
+argument is zero, then 'cl:log' returns zero. <nobr>The result</nobr> is
+always a <nobr>floating-point</nobr> number.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

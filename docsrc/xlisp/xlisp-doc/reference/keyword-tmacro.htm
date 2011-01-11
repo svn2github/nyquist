@@ -1,0 +1,107 @@
+<html><head><title>XLISP :tmacro</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>:tmacro</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>keyword</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlread.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(:tmacro . <i>function</i>)</dt>
+<dd><i>function</i> - a function</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>':tmacro' is an entry that is used in the
+<a href="global-readtable.htm">*readtable*</a> system variable that contains
+XLISP's data structures relating to the processing of characters from the
+user [or files] and read-macro expansions. The existance of the ':tmacro'
+keyword means that the specified character is the start of a terminal read
+macro. For ':tmacro', the form of the
+<a href="global-readtable.htm">*readtable*</a> entry is a dotted pair
+like:</p>
+
+<pre class="example">
+(:tmacro . <font color="#008844"><i>function</i></font>)
+</pre>
+
+<p>The 'function' can be a built-in read-macro function or a user defined
+lambda expression. The 'function' takes two parameters, an input stream
+specification, and an integer that is the character value. The 'function'
+should return <a href="nil.htm">NIL</a> if the character is
+'white-space' or a value <a href="cons.htm">cons</a>ed with
+<a href="nil.htm">NIL</a> to return the value. The 'function'
+will probably read additional characters from the input stream.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun look-at (table)                <font color="#008844">; define a function to look in a table</font>
+  (dotimes (ch 127)                   <font color="#008844">; and print out any :TMACRO entries</font>
+    (prog ((entry (aref table ch)))
+      (if (and (consp entry)
+               (equal (car entry) ':TMACRO))
+          (princ (int-char ch)))))
+  (terpri))
+
+(look-at *readtable*)                 <font color="#008844">;  prints "'(),;`</font>
+</pre>
+
+<p><b>Note:</b> The system defines that the following are ':tmacro'
+characters:</p>
+
+<pre>
+   \  "  `  ,  ( )  ;
+</pre>
+
+<p>[backslash, double quote, backquote, comma, opening parenthesis, closing
+parenthesis, semicolon.]</p>
+
+<p><b>Caution:</b> If you experiment with
+<nobr><a href="global-readtable.htm">*readtable*</a> ,</nobr> it is useful
+to save the old value in a variable, so that you can restore the system
+state.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-008.htm#tmacro">:tmacro</a>
+keyword in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

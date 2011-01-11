@@ -1,0 +1,83 @@
+<html><head><title>XLISP :isnew</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>:isa</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>message selector</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<a href="send.htm">send</a> <i>object</i> :isa <i>class</i>) - test if object inherits from class</dt>
+<dd>returns - <a href="../reference/t.htm">&nbsp;T&nbsp;</a> if object
+is an instance of class or a subclass of class, otherwise
+<a href="../reference/nil.htm">NIL</a><br><br></dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The ':isa' message selector tests if an object inherits from a class.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq a-class (send class :new '(state)))   <font color="#008844">; create a new class A-CLASS with STATE</font>
+
+(send a-class :answer :isnew '()            <font color="#008844">; set up initialization</font>
+                             '((setq state nil) self))
+
+(send a-class :answer :set-it '(value)      <font color="#008844">; create :SET-IT message</font>
+                              '((setq state value)))
+
+(setq an-obj (send a-class :new))           <font color="#008844">; create AN-OBJ out of A-CLASS</font>
+
+(send an-obj :show)                         <font color="#008844">; returns object - STATE = NIL</font>
+
+(send an-obj :set-it 5)                     <font color="#008844">; STATE is set to 5</font>
+(send an-obj :show)                         <font color="#008844">; returns object - STATE = 5</font>
+
+(SEND an-obj :ISNEW)                        <font color="#008844">; re-initialize AN-OBJ</font>
+(send an-obj :show)                         <font color="#008844">; returns object - STATE = NIL</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

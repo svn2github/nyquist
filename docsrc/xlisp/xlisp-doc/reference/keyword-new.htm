@@ -1,0 +1,86 @@
+<html><head><title>XLISP :new</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>:new</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>message selector</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(send <i>class</i> :new <i>args</i>)</dt>
+<dd><i>class</i> - an existing XLISP class except for <a href="class.htm">class</a><br>
+<i>args</i> - the initializing arguments for the new instance<br>
+returns - the new class object</dd>
+</dl>
+
+<dl>
+<dt>(send class :new <i>ivars</i> [<i>cvars</i> [<i>superclass</i>]])</dt>
+<dd><i>ivars</i> - list of instance variables for new class<br>
+<i>cvars</i> - list of class variable symbols for new class<br>
+<i>superclass</i> - superclass for new object, the default is <a href="object.htm">object</a><br>
+returns - the new class object</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The ':new' message selector exhibits two different behaviors. When you
+are creating an instance of a <a href="class.htm">class</a> you
+only need the ':new' message [consisting of the message selector and any
+data]. When you are creating a new <a href="class.htm">class</a>
+with ':new', you need to specify instance variables and optionally the
+<a href="class.htm">class</a> variables and superclass.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq new-class (send class :new '(state)))      <font color="#008844">; create NEW-CLASS with STATE</font>
+(setq new-obj (send new-class :new))             <font color="#008844">; create NEW-OBJ of NEW-CLASS</font>
+(send new-obj :show)                             <font color="#008844">; shows the object</font>
+
+(setq sub-class (send class :new '(sub-state)    <font color="#008844">; create SUB-CLASS of NEW-CLASS</font>
+                                 '() new-class))
+(send sub-class :show)                           <font color="#008844">; show the SUB-CLASS</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-010.htm#class-new">:new</a>
+message selector in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

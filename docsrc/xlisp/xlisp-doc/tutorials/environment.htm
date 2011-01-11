@@ -1,0 +1,530 @@
+<html><head>
+
+<title>Environment</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Environment</h1>
+
+<hr>
+
+<a name="global-and-lexical-binding"></a>
+
+<hr>
+
+<h2>Global and Lexical Binding</h2>
+
+<hr>
+
+<p>From the XLISP perspective, there are two kinds of bindings:</p>
+
+<ol>
+
+<li><p>Global bindings are bindings to symbols in the *obarray*.</p></li>
+
+<li><p>Lexical bindings are bindings in a local association list</p></li>
+
+</ol>
+
+<p>There is a third kind of binding, 'dynamical binding', used by progv.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lexical-scope"></a>
+
+<hr>
+
+<h2>Lexical Scope</h2>
+
+<hr>
+
+<p>Have you ever wondered why this doesn't work:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">print-x</font> ()
+  (print x))  <font color="#008844">; unbound variable X</font>
+
+(let ((x 'hello))
+  (print-x))
+<font color="#AA0000">error: unbound variable - X</font>
+</pre>
+
+<p>The answer is twofold:</p>
+
+<ol>
+
+<li><p>The '<nobr>print-x</nobr>' function is defined at the global
+<nobr>top-level</nobr>, where no lexical environment exists.</p></li>
+
+<li><p>The '<nobr>print-x</nobr>' function is called inside a
+<a href="../reference/let.htm">let</a> form, where a lexical variable
+binding for 'x' exists, but '<nobr>print-x</nobr>' is evaluated at the
+global <nobr>top-level</nobr>, where it was defined, so
+'<nobr>print-x</nobr>' cannot see the lexical
+<a href="../reference/let.htm">let</a> binding <nobr>of 'x'</nobr> and
+signals an '<nobr>unbound variable</nobr>' error.</p></li>
+
+</ol>
+
+<p>Here is a version that seems to work:</p>
+
+<pre class="example">
+(let ((x 'hello))
+
+  (defun <font color="#0000CC">print-x</font> ()
+    (print x))
+
+  (print-x))
+HELLO
+</pre>
+
+<ol>
+
+<li><p>The '<nobr>print-x</nobr>' function is defined inside a
+<a href="../reference/let.htm">let</a> form.</p></li>
+
+<li><p>The '<nobr>print-x</nobr>' function is called inside the same
+<a href="../reference/let.htm">let</a> form as where it was defined, so
+'<nobr>print-x</nobr>' prints the lexical
+<a href="../reference/let.htm">let</a> binding
+<nobr>of 'x'</nobr>.</p></li>
+
+</ol>
+
+<p>But here again a version that does not behave as wanted:</p>
+
+<pre class="example">
+(let ((x 'lexical))
+  (defun <font color="#0000CC">print-x</font> ()
+    (print x)))
+
+(let ((x 'hello))
+  (print-x))
+LEXICAL
+</pre>
+
+<ol>
+
+<li><p>The '<nobr>print-x</nobr>' function is defined inside a
+<a href="../reference/let.htm">let</a> form.</p></li>
+
+<li><p>The '<nobr>print-x</nobr>' function is called inside a different
+<a href="../reference/let.htm">let</a> form as where it was defined, so
+'<nobr>print-x</nobr>' prints the lexical
+<a href="../reference/let.htm">let</a> binding <nobr>of 'x'</nobr> from
+the place where it was defined.</p></li>
+
+</ol>
+
+<p>Somehow it seems to be important where a function was defined.</p>
+
+<a name="closures"></a>
+
+<hr>
+
+<h2>Closures</h2>
+
+<hr>
+
+<p>Here a Lisp function, defined inside a
+<a href="../reference/let.htm">let</a> form:</p>
+
+<pre class="example">
+(let ((a 'A) (b 'B) (c 'C))
+
+  (defun <font color="#0000CC">print-abc</font> ()
+    (format t <font color="#880000">";; a = ~s, b = ~s, c = ~s~%"</font> a b c))
+
+  )  <font color="#008844">; end of LET</font>
+</pre>
+
+<p>Now '<nobr>print-abc</nobr>' is called outside the
+<a href="../reference/let.htm">let</a> form:</p>
+
+<pre class="example">
+&gt; (print-abc)
+;; a = A, b = B, c = C
+NIL
+</pre>
+
+<p>The lexical <a href="../reference/let.htm">let</a> variables 'a', 'b',
+and 'c' have become a permanent part of the '<nobr>print-abc</nobr>'
+function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="lisp-objects"></a>
+
+<hr>
+
+<h2>Lisp Objects</h2>
+
+<hr>
+
+<p>The following examples are based on <nobr>Chapter 13</nobr> of 'Paradigms
+of Artificial Intelligence Programming' by Peter Norvig. <nobr>The
+code</nobr> has been ported from <nobr>Common Lisp</nobr> to XLISP, all
+examples have been tested with <nobr>Nyquist 3.03</nobr> in <nobr>December
+2010</nobr>.</p>
+
+<p>The function '<nobr>new-account</nobr>' creates account objects, which
+are implemented as closures encapsulating three variables 'name', 'balance',
+and '<nobr>interest-rate</nobr>'. <nobr> An account</nobr> object also
+encapsulates functions to handle five messages ':withdraw', ':deposit',
+':balance', ':name', and ':interest', to which the object can respond:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">new-account</font> (name &amp;optional (balance 0.0) (interest-rate 0.06))
+  #'(lambda (message)
+      (case message
+        (:withdraw #'(lambda (amount)
+                       (if (&lt;= amount balance)
+                           (setq balance (- balance amount))
+                           'insufficient-funds)))
+        (:deposit  #'(lambda (amount)
+                       (setq balance (+ balance amount))))
+        (:balance  #'(lambda () balance))
+        (:name     #'(lambda () name))
+        (:interest #'(lambda ()
+                       (setq balance (+ balance (* interest-rate balance))))))))
+</pre>
+
+<p>An account object can only do one thing, receive a message and return the
+appropriate function to execute that message. This function is called the
+'method' that implements the message.</p>
+
+<p>The function '<nobr>get-method</nobr>' finds the method that implements a
+message for a given object:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">get-method</font> (object message)
+  (funcall object message))
+</pre>
+
+<p>The function '<nobr>send-message</nobr>' gets the method and applies it
+to a list of arguments:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">send-message</font> (object message &amp;rest args)
+  (apply (get-method object message) args))
+</pre>
+
+<p>Here are some examples how it works:</p>
+
+<pre class="example">
+&gt; (setq a1 (new-account "My Name" 1000.0))
+#&lt;Closure...&gt;
+
+&gt; (send-message a1 :name)
+"My Name"
+
+&gt; (send-message a1 :balance)
+1000.0
+
+&gt; (send-message a1 :withdraw 500.0)
+500
+
+&gt; (send-message a1 :deposit 123.45)
+623.45
+
+&gt; (send-message a1 :balance)
+623.45
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="generic-functions"></a>
+
+<hr>
+
+<h2>Generic Functions</h2>
+
+<hr>
+
+<p>The '<nobr>send-message</nobr>' syntax is awkward, as it is different
+from normal Lisp function calling syntax, and it doesn't fit in with the
+other Lisp tools.</p>
+
+<p>For example if we want <nobr>to say</nobr>:</p>
+
+<pre class="example">
+(mapcar :balance accounts)
+</pre>
+
+<p>with '<nobr>send-message</nobr>' we would have to write:</p>
+
+<pre class="example">
+(mapcar #'(lambda (acc)
+            (send-message acc :balance))
+        accounts)
+</pre>
+
+<p>We could fix this problem by defining a generic function 'withdraw' like
+this:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">withdraw</font> (object &amp;rest args)
+  (apply (get-method object :withdraw) args))
+</pre>
+
+<p>Now we can write:</p>
+
+<pre class="example">
+(withdraw account x)
+</pre>
+
+<p>instead of:</p>
+
+<pre class="example">
+(send-message account :withdraw x)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="classes"></a>
+
+<hr>
+
+<h2>Classes</h2>
+
+<hr>
+
+<p>The macro '<nobr>define-class</nobr>' defines a class with its associated
+message handling methods. <nobr>It also</nobr> defines a generic function
+for each message. Finally, it allows the programmer to make a distinction
+between instance variables, associated with each object, and class
+variables, associated with a class and shared by all members of the
+class.</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">define-class</font> (class ivars cvars &amp;rest methods)
+  `(let ,cvars
+     (mapcar #'ensure-generic-function ',(mapcar #'first methods))
+     (defun ,class ,ivars
+       #'(lambda (message)
+           (case message
+             ,@(mapcar #'make-clause methods))))))
+</pre>
+
+<p>The '<nobr>make-clause</nobr>' function translates a message from
+'<nobr>define-class</nobr>' into a
+<a href="../reference/case.htm">case</a> clause.</p>
+
+<pre class="example">
+(defun <font color="#0000CC">make-clause</font> (clause)
+  `(,(car clause) #'(lambda ,(cadr clause) ,@(cddr clause))))
+</pre>
+
+<p>The '<nobr>ensure-generic-function</nobr>' function defines a dispatch
+function for a message, unless it already has been defined <nobr>as
+one</nobr>:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">ensure-generic-function</font> (message)
+  (unless (generic-function-p message)
+    (let ((fn #'(lambda (object &amp;rest args)
+                  (apply (get-method object message) args))))
+      (setf (symbol-function message) fn)
+      (putprop message fn 'generic-function))))
+</pre>
+
+<p>The '<nobr>generic-function-p</nobr>' function tests if a function has
+been defined as a generic function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">generic-function-p</font> (name)
+  (and (fboundp name)
+       (eq (get name 'generic-function) (symbol-function name))))
+</pre>
+
+<p>Now we can define the 'account' class with '<nobr>define-class</nobr>'.
+We make '<nobr>interest-rate</nobr>' a class variable, shared by all
+accounts:</p>
+
+<pre class="example">
+(define-class <font color="#0066CC">account</font> (name &amp;optional (balance 0.0)) ((interest-rate 0.06))
+  (withdraw (amount)
+    (if (&lt;= amount balance)
+        (setq balance (- balance amount))
+        'insufficient-funds))
+  (deposit (amount)
+    (setq balance (+ balance amount)))
+  (balance ()
+    balance)
+  (name ()
+    name)
+  (interest ()
+    (setq balance (+ balance (* interest-rate balance)))))
+</pre>
+
+<p>Macroexpansion:</p>
+
+<pre class="example">
+(let ((interest-rate 0.06))
+  (mapcar (function ensure-generic-function)
+          (quote (withdraw deposit balance name interest)))
+  (defun account (name &amp;optional (balance 0))
+    (function (lambda (message)
+      (case message
+        (withdraw (function (lambda (amount)
+                              (if (&lt;= amount balance)
+                                  (setq balance (- balance amount))
+                                  (quote insufficient-funds)))))
+        (deposit  (function (lambda (amount)
+                              (setq balance (+ balance amount)))))
+        (balance  (function (lambda nil balance)))
+        (name     (function (lambda nil name)))
+        (interest (function (lambda nil
+                              (setq balance (+ balance (* interest-rate balance)))))))))))
+</pre>
+
+<p>Here is how it works:</p>
+
+<pre class="example">
+&gt; (setq a2 (account "my-name" 2000.0)
+#&lt;Closure...&gt;
+
+&gt; (balance a2)
+2000
+
+&gt; (deposit a2 42.0)
+2042
+
+&gt; (interest a2)
+2164.52
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="delegation"></a>
+
+<hr>
+
+<h2>Delegation</h2>
+
+<hr>
+
+<p>Here is a '<nobr>password-account</nobr>' class with two
+message clauses:</p>
+
+<pre class="example">
+(define-class <font color="#0066CC">password-account</font> (password acc) ()
+  (change-password (pass new-pass)
+    (if (equal pass password)
+        (setq password new-pass)
+        'wrong-password))
+  (t (pass &amp;rest args)
+    (if (equal pass password)
+        (if args
+            (apply message (cons acc args))
+            (funcall message acc))
+        'wrong-password)))
+</pre>
+
+<p>The definition of '<nobr>password-account</nobr>' depends on some
+internal details of '<nobr>define-class</nobr>'. <nobr>It uses</nobr> 't' as
+a <nobr>catch-all</nobr> clause to <a href="../reference/case.htm">case</a>
+and uses the dispatch variable 'message'. Usually it is not a good idea to
+rely on details of other code, so this will be changed below.</p>
+
+<p>Here is how '<nobr>password-account</nobr>' works:</p>
+
+<pre class="example">
+&gt; (setq a3 (password-account "secret" a2))
+#&lt;Closure...&gt;
+
+&gt; (balance a3 "secret")
+2164.52
+
+&gt; (withdraw a3 "guess" 2000.0)
+WRONG-PASSWORD
+
+&gt; (withdraw a3 "secret" 2000.0)
+164.52
+</pre>
+
+<p>Here is a '<nobr>limited-account</nobr>' class, where only a limited
+amount of money can be withdrawn at any time:</p>
+
+<pre class="example">
+(define-class <font color="#0066CC">limited-account</font> (limit acc) ()
+  (withdraw (amount)
+    (if (&lt;= amount limit)
+        (withdraw acc amount)
+        'over-limit))
+  (t (&amp;rest args)
+    (if args
+        (apply message (cons acc args))
+        (funcall message acc))))
+</pre>
+
+<p>The 'withdraw' message is redefined to check if the account limit is
+exceeded, while the 't' clause passes all other messages unchanged:</p>
+
+<pre class="example">
+&gt; (setq a4 (password-account "pass"
+             (limited-account 100.0
+               (account "limited" 500.0)))
+#&lt;Closure...&gt;
+
+
+
+
+
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

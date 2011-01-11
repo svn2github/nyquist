@@ -1,0 +1,113 @@
+<html><head>
+
+<title>cl:values-list</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:values-list</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>values-list</b></nobr> function returns the elements of a
+list unevaluated as multiple values:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>values-list</b> <i>list</i>)</dt>
+<dd><i>list</i> - a list of values<br>
+returns - the elements of the list as multiple values</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:values-list</font> (list)
+  (or (listp list) (error <font color="#880000">"not a list"</font> list))
+  (or (null list) (consp (last list)) (error <font color="#880000">"not a proper list"</font> list))
+  (setq <font color="#AA5500">*rslt*</font> list
+        <font color="#AA5500">cl:*multiple-values*</font> t)
+  (first list))
+</pre>
+
+<p>The unevaluated first value from the list is returned as the primary
+return value, and the list is assigned to the Nyquist
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable. <nobr>If
+an</nobr> an empty list is given, <a href="../../reference/nil.htm">NIL</a>
+is returned and the <a href="../../reference/global-rslt.htm">*rslt*</a>
+variable is set <nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>.
+<nobr>An error</nobr> is signalled if the 'list' argument is not a list or
+if the list does not end
+<nobr>with <a href="../../reference/nil.htm">NIL</a></nobr>.</p>
+
+<p><nobr>The
+<a href="global-multiple-values.htm">cl:*multiple-values*</a></nobr>
+variable is set <nobr>to
+<a href="../../reference/t.htm">&nbsp;T&nbsp;</a></nobr> to indicate that
+multiple values are returned.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(cl:values-list nil)         =&gt; NIL  <font color="#008844">; *rslt* = NIL</font>
+(cl:values-list '(1))        =&gt; 1    <font color="#008844">; *rslt* = (1)</font>
+(cl:values-list '(1 2))      =&gt; 1    <font color="#008844">; *rslt* = (1 2)</font>
+(cl:values-list '(1 2 3))    =&gt; 1    <font color="#008844">; *rslt* = (1 2 3)</font>
+(cl:values-list '(1 2 . 3))  =&gt; <font color="#AA0000">error: not a proper list - (1 2 . 3)</font>
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

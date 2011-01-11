@@ -1,0 +1,113 @@
+<html><head><title>XLISP class</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>class</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>object</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;class</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>'class' is the built-in object class that is used to build other classes.
+Classes are, essentially, the template for defining
+<a href="object.htm">object</a> instances.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq myclass (send class :new '(var)))  <font color="#008844">; create MYCLASS with VAR</font>
+
+(send myclass :answer :isnew '()         <font color="#008844">; set up initialization</font>
+  '((setq var nil) self))
+
+(send myclass :answer :set-it '(value)   <font color="#008844">; create :SET-IT message</font>
+  '((setq var value)))    
+
+(setq my-obj (send myclass :new))        <font color="#008844">; create MY-OBJ of MYCLASS</font>
+(send my-obj :set-it 5)                  <font color="#008844">; VAR is set to 5</font>
+</pre>
+
+<p><b>Class definition:</b> The internal definition of the 'class' object
+instance looks like:</p>
+
+<pre class="example">
+Object is #&lt;Object: #23fe2&gt;, Class is #&lt;Object: #23fe2&gt;
+  MESSAGES = ((:ANSWER . #&lt;Subr-: #23e48&gt;) 
+              (:ISNEW . #&lt;Subr-: #23e84&gt;) 
+              (:NEW . #&lt;Subr-: #23ea2&gt;))
+  IVARS = (MESSAGES IVARS CVARS CVALS SUPERCLASS IVARCNT IVARTOTAL)
+  CVARS = NIL
+  CVALS = NIL
+  SUPERCLASS = #&lt;Object: #23fd8&gt;
+  IVARCNT = 7
+  IVARTOTAL = 7
+#&lt;Object: #23fe2&gt;
+</pre>
+
+<p>The class of 'class' is 'class', itself. The superclass of 'class' is
+<a href="object.htm">object</a>. Remember that the location
+information [like #23fe2] varies from system to system, yours will probably
+look different.</p>
+
+<p><b>Built-in methods:</b> The built in methods in XLISP include:</p>
+
+<ul>
+<li><nobr><a href="keyword-answer.htm">:answer</a> - add a method to an <a href="object.htm">object</a></nobr></li>
+<li><nobr><a href="keyword-class.htm">:class</a> - return the <a href="object.htm">object</a>'s class</nobr></li>
+<li><nobr><a href="keyword-isnew.htm">:isnew</a> - run initialization code on <a href="object.htm">object</a></nobr></li>
+<li><nobr><a href="keyword-new.htm">:new</a> - create a new <a href="object.htm">object</a> [instance or class]</nobr></li>
+<li><nobr><a href="keyword-show.htm">:show</a> - show the internal state of the <a href="object.htm">object</a></nobr></li>
+</ul>
+
+<p><b>Message Structure:</b> The normal XLISP convention for a 'message' is
+to have a valid symbol preceeded by a colon like
+<a href="keyword-isnew.htm">:isnew</a> or ':my-message'. However, it
+is possible to define a 'message' that is a symbol without a colon, but
+this makes the code less readable.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-010.htm#class">class</a>
+object in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

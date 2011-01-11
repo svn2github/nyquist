@@ -1,0 +1,92 @@
+<html><head>
+
+<title>cl:exp</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:exp</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>exp</b></nobr> function does the same as the
+Nyquist/XLISP <a href="../../reference/exp.htm">exp</a> function, but
+also accepts integer numbers as argument:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>exp</b> <i>power</i>)</dt>
+<dd><i>power</i> - an integer or floating-point number<br>
+returns - the result of <nobr>'e' [2.7128]</nobr> to the power of <i>power</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:exp</font> (x)
+  (exp (float x)))
+</pre>
+
+<p>See <a href="../../reference/defun.htm">defun</a>,
+<a href="../../reference/exp.htm">exp</a>,
+<a href="../../reference/float.htm">float</a>.</p>
+
+<p>The <nobr>cl:<b>exp</b></nobr> function computes <nobr>'e'
+[2.7128]</nobr> raised to the specified 'power' and returns the result as a
+<nobr>floating-point</nobr> number.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

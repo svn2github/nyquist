@@ -1,0 +1,84 @@
+<html><head><title>XLISP quote</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>quote</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(quote <i>expr</i>)</dt>
+<dl><i>expr</i> - an expression<br>
+returns - the unevaluated expression</dl>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'quote' function returns the 'expr' unevaluated.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+my-var                    <font color="#008844">; error: unbound variable</font>
+(quote my-var)            <font color="#008844">; returns MY-VAR</font>
+my-var                    <font color="#008844">; still error: unbound variable</font>
+(set (quote my-var) 111)  <font color="#008844">; give MY-VAR a value, make it exist</font>
+my-var                    <font color="#008844">; returns 111</font>
+(quote my-var)            <font color="#008844">; returns MY-VAR</font>
+
+<font color="#008844">;; Same as above but using the ' read macro for quote</font>
+
+new-var                   <font color="#008844">; error: unbound variable</font>
+'new-var                  <font color="#008844">; returns NEW-VAR</font>
+new-var                   <font color="#008844">; still error: unbound variable</font>
+(setq new-var 222)        <font color="#008844">; give NEW-VAR a value, make it exist</font>
+new-var                   <font color="#008844">; returns 222</font>
+'new-var                  <font color="#008844">; returns NEW-VAR</font>
+</pre>
+
+<p><b>Read macro:</b> XLISP supports the
+<nobr><a href="../manual/xlisp-man-008.htm#quote">read macro</a></nobr>
+of a single quote as a short-hand method of writing the 'quote' function.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-012.htm#quote">quote</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

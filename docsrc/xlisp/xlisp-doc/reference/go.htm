@@ -1,0 +1,106 @@
+<html><head><title>XLISP go</title></head>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>go</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(go <i>tag-symbol</i>)</dt>
+<dd><i>tag-symbol</i> - a symbol<br>
+returns - never returns a value</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'go' special form allows 'goto' style branching within 'block' constructs
+<nobr>[<a href="do.htm">do</a> ,</nobr>
+<nobr><a href="do-star.htm">do*</a> ,</nobr>
+<nobr><a href="dolist.htm">dolist</a> ,</nobr>
+<nobr><a href="dotimes.htm">dotimes</a> ,</nobr>
+<nobr><a href="tagbody.htm">tagbody</a> ,</nobr>
+<nobr><a href="loop.htm">loop</a> ,</nobr>
+<a href="prog.htm">prog</a> and
+<a href="prog-star.htm">prog*</a>]. The
+'tag-symbol' is the 'label' and must exist somewhere within the 'block'
+that the 'go' occurs within. Otherwise an error will be generated:</p>
+
+<pre class="example">
+<font color="#AA0000">error: no target for GO</font>
+</pre>
+
+<p>'go' never returns a value. If the 'tag-symbol' exists, then
+the execution will continue immediately after the'tag-symbol'.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun foo (i j)                   <font color="#008844">; define FOO</font>
+  (prog ()                         <font color="#008844">; with a PROG</font>
+         (print "begin")
+   start (print j)                 <font color="#008844">; tag - START</font>
+         (setq j (1- j))
+         (if (eql i j) (GO start)  <font color="#008844">; 2-way branch</font>
+                       (GO end))
+         (print "hello")           <font color="#008844">; won't ever be reached</font>
+   end   (print "done")            <font color="#008844">; tag - END</font>
+         (return 42)))
+
+(foo 1 2)                          <font color="#008844">; prints  "begin" 2 1 "done"</font>
+                                   <font color="#008844">;   returns 42</font>
+
+(foo 2 1)                          <font color="#008844">; prints  "begin" 1 "done"</font>
+                                   <font color="#008844">;   returns 42</font>
+</pre>
+
+<p><b>Note:</b> Although 'go' will accept a 'tag-symbol' that is not a
+symbol, it will not find this improper 'tag-symbol'. An error will be
+generated:</p>
+
+<pre class="example">
+<font color="#AA0000">error: no target for GO</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-021.htm#go">go</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

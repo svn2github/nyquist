@@ -1,0 +1,105 @@
+<html><head><title>XLISP *tracenable*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*tracenable*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlinit.c, xldbug.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*tracenable*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>The *tracenable* system variable controls whether or not the
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a></nobr>
+prints any back trace information on entry to the
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a></nobr>. If
+*tracenable* is <nobr><a href="nil.htm">NIL</a> ,</nobr> then
+there will be no information printed on entry to the
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a>.</nobr>
+If *tracenable* is <nobr>non-<a href="nil.htm">NIL</a> ,</nobr>
+then information will be printed. The 'init.lsp' initialization file sets
+*tracenable* usually to <nobr><a href="nil.htm">NIL</a> ,</nobr>
+which suppresses the printing.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun foo (x) (fee x))   <font color="#008844">; define FOO</font>
+(defun fee (y) (break))   <font color="#008844">; define FEE</font>
+(setq *tracenable* T)     <font color="#008844">; enable the back trace</font>
+(setq *tracelimit* NIL)   <font color="#008844">; show all the entries</font>
+
+(foo 5)                   <font color="#008844">; break: **BREAK**</font>
+                          <font color="#008844">; prints  Function:#&lt;Subr-BREAK...&gt;</font>
+                          <font color="#008844">;         Function:#&lt;Closure-FEE...&gt;</font>
+                          <font color="#008844">;         Arguments:</font>
+                          <font color="#008844">;           5</font>
+                          <font color="#008844">;         Function:#&lt;Closure-FOO...&gt;</font>
+                          <font color="#008844">;         Arguments:</font>
+                          <font color="#008844">;           5</font>
+
+(clean-up)                <font color="#008844">; from break loop</font>
+(setq *tracelimit* 2)     <font color="#008844">; show only 2 entries</font>
+
+(foo 5)                   <font color="#008844">; break: **BREAK**</font>
+                          <font color="#008844">; prints  Function:#&lt;Subr-BREAK...&gt;</font>
+                          <font color="#008844">;         Function:#&lt;Closure-FEE...&gt;</font>
+                          <font color="#008844">;         Arguments:</font>
+                          <font color="#008844">;           5</font>
+
+(clean-up)                <font color="#008844">; from break loop</font>
+</pre>
+
+<p><b>Note:</b> *tracenable* and
+<a href="global-tracelimit.htm">*tracelimit*</a> system variables have to do
+with back trace information at entry to a
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a></nobr>
+and are not related to the
+<a href="trace.htm">trace</a> and
+<a href="untrace.htm">untrace</a> functions.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#tracenable">*tracenable*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,88 @@
+<html><head><title>XLISP poke</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>poke</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlsys.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(poke <i>address expr</i>)</dt>
+<dd><i>address</i> - an integer expression<br>
+<i>expr</i> - an integer expression<br>
+returns - the value</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'poke' function writes the 'expr' at the internal memory value at the
+specified 'address'. The returned value is 'expr'. Be very careful with this
+function.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq var 0)                        <font color="#008844">; set up VAR with 0</font>
+(address-of var)                    <font color="#008844">; returns 123224</font>
+(address-of 'var)                   <font color="#008844">; returns 161922</font>
+(peek (address-of var))             <font color="#008844">; returns 83951616</font>
+(peek (1+ (address-of var)))        <font color="#008844">; returns 16777216</font>
+(peek (+ 2 (address-of var)))       <font color="#008844">; returns 0  &lt;-- value of VAR</font>
+(setq var 14)                       <font color="#008844">; change the value to 14</font>
+(peek (+ 2 (address-of var)))       <font color="#008844">; returns 14</font>
+(poke (+ 2 (address-of var)) 1023)  <font color="#008844">; POKE the value to 1023</font>
+(print var)                         <font color="#008844">; prints  1023</font>
+</pre>
+
+<p><b>Caution:</b> Be careful when modifying the internal state of XLISP. If
+you have modified it, it would be a good idea to exit XLISP and re-enter
+before doing any work you really want to retain.</p>
+
+<p><b>Caution:</b> It is possible to <a href="peek.htm">peek</a>
+and 'poke' not just XLISP's memory put other parts of your computer's
+memory. Be very careful when doing this. Also, in some computers, just
+looking at a memory location can cause things to happen, I/O locations fall
+in this category.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-031.htm#poke">poke</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

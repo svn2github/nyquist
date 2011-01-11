@@ -1,0 +1,95 @@
+<html><head><title>XLISP consp</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>consp</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(consp <i>expr</i>)</dt>
+<dd><i>expr</i> - the expression to check<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the value is a
+cons, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p> The 'consp' predicate checks if the 'expr' is a non-empty list.
+<a href="t.htm">&nbsp;T&nbsp;</a> is returned if 'expr' is a
+list, <a href="nil.htm">NIL</a> is returned otherwise. Note that
+if the 'expr' is <nobr><a href="nil.htm">NIL</a> ,</nobr>
+<a href="nil.htm">NIL</a> is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(consp '(a b))                  <font color="#008844">; returns T - list</font>
+(consp '(a . b))                <font color="#008844">; returns T - dotted pair list</font>
+(consp #'defvar)                <font color="#008844">; returns NIL - closure - macro</font>
+(consp (lambda (x) (print x)))  <font color="#008844">; returns NIL - closure - lambda</font>
+(consp NIL)                     <font color="#008844">; returns NIL - NIL</font>
+(consp #(1 2 3))                <font color="#008844">; returns NIL - array</font>
+(consp *standard-output*)       <font color="#008844">; returns NIL - stream</font>
+(consp 1.2)                     <font color="#008844">; returns NIL - float</font>
+(consp #'quote)                 <font color="#008844">; returns NIL - fsubr</font>
+(consp 1)                       <font color="#008844">; returns NIL - integer</font>
+(consp object)                  <font color="#008844">; returns NIL - object</font>
+(consp "str")                   <font color="#008844">; returns NIL - string</font>
+(consp #'car)                   <font color="#008844">; returns NIL - subr</font>
+(consp 'a)                      <font color="#008844">; returns NIL - symbol</font>
+</pre>
+
+<p><b>Note:</b> When applied to 'consp',
+<nobr><a href="nil.htm">NIL</a> ,</nobr> the empty list, returns
+a <a href="nil.htm">NIL</a>. <a href="global-obarray.html">NIL</a>
+or '() is used in many places as a list-class or atom-class expression. Both
+<a href="atom.htm">atom</a>
+and <nobr><a href="listp.htm">listp</a> ,</nobr> when applied to
+<nobr><a href="nil.htm">NIL</a> ,</nobr> return
+<a href="t.htm">&nbsp;T&nbsp;</a>. If you wish to check for a
+list where an empty list is still considered a valid list, use the
+<a href="listp.htm">listp</a> predicate.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-018.htm#consp">consp</a>
+predicate function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

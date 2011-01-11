@@ -1,0 +1,79 @@
+<html><head><title>XLISP *gc-flag*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*gc-flag*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xldmem.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*gc-flag*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>*gc-flag* is a system variable that controls the printing of a garbage
+collection message. If *gc-flag* is
+<nobr><a href="nil.htm">NIL</a> ,</nobr>
+no garbage collection messages will be printed. If *gc-flag* is
+non-<nobr><a href="nil.htm">NIL</a> ,</nobr> a garbage collection
+message will be printed whenever a <a href="gc.htm">gc</a> takes
+place. The default value for *gc-flag* is
+<a href="nil.htm">NIL</a>. The message will be of the form:</p>
+
+<pre class="example">
+[ gc: total 4000, 2497 free ]
+</pre>
+
+
+<h2>Examples</h2>
+
+<pre class="example">
+*gc-flag*           <font color="#008844">; returns NIL</font>
+(gc)                <font color="#008844">; returns NIL</font>
+(setq *gc-flag* T)  <font color="#008844">; set up for message</font>
+(gc)                <font color="#008844">; prints a gc message</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#gc-flag">*gc-flag*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

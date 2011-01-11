@@ -1,0 +1,76 @@
+<html><head><title>XLISP upper-case-p</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>upper-case-p</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(upper-case-p <i>char</i>)</dt>
+<dd><i>char</i> - a character expression<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the character
+is upper case, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'upper-case-p' predicate function checks if the 'char' expression is
+an upper case character. If 'char' is upper case a
+<a href="t.htm">&nbsp;T&nbsp;</a> is returned, otherwise a
+<a href="nil.htm">NIL</a> is returned. Upper case characters are
+'A' [<a href="../misc/ascii-table.htm">ASCII</a> decimal <nobr>value
+65]</nobr> through 'Z' [<a href="../misc/ascii-table.htm">ASCII</a>
+decimal <nobr>value 90].</nobr></p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(upper-case-p #\A)   <font color="#008844">; returns T</font>
+(upper-case-p #\a)   <font color="#008844">; returns NIL</font>
+(upper-case-p #\1)   <font color="#008844">; returns NIL</font>
+(upper-case-p #\[)   <font color="#008844">; returns NIL</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-026.htm#upper-case-p">upper-case-p</a>
+predicate function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

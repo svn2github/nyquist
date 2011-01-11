@@ -1,0 +1,142 @@
+<html><head><title>XLISP evalhook</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>evalhook</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c, xleval.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(evalhook<i> expr eval-expr apply-expr</i> [<i>env</i>])</dt>
+<dd><i>expr</i> - an expression to evaluate<br>
+<i>eval-expr</i> - an expression for the evaluation routine<br>
+<i>apply-expr</i> - an expression for
+<a href="apply.htm">apply</a> [not used]<br>
+<i>env</i> - an environment expression, default is
+<a href="nil.htm">NIL</a><br>
+returns - the result of evaluating the expression</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'evalhook' function is a function that performs evaluation.
+The routine specified by 'eval-expr' is called with the 'expr' and 'env'
+parameters. If 'eval-expr' is
+<nobr><a href="nil.htm">NIL</a> ,</nobr> then the normal system
+evaluator is called. The 'apply-hook' is a dummy parameter that is not used
+in the current XLISP system. The 'expr' contains the expression to be
+evaluated. If the 'env' argument to 'evalhook' is not specified,
+<a href="nil.htm">NIL</a> is used, which specifies to use the
+current global environment. The 'env', if specified, is a structure composed
+of dotted pairs constructed of the symbol and its value which have the
+form:</p>
+
+<pre class="example">
+(((<font color="#008844"><i>sym1</i></font> . <font color="#008844"><i>val1</i></font>) (<font color="#008844"><i>sym2</i></font> . <font color="#008844"><i>val2</i></font>) ... )))
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq a 100)                       <font color="#008844">; set up global values</font>
+(setq b 200)
+
+(evalhook '(+ a b) NIL NIL)        <font color="#008844">; returns 300 - no 'env' was given</font>
+
+(evalhook '(+ a b) NIL NIL         <font color="#008844">; eval with a=1 and b=2</font>
+          '((((a . 1)(b . 2)))))   <font color="#008844">;   returns 3</font>
+
+(defun myeval (exp env)            <font color="#008844">; define MYEVAL routine</font>
+  (princ "exp: ") (print exp)
+  (princ "env: ") (print env)
+  (evalhook exp #'myeval NIL env))
+
+(defun foo (a) (+ a a))            <font color="#008844">; create simple function</font>
+(setq *evalhook* #'myeval)         <font color="#008844">; and install MYEVAL as hook</font>
+
+(foo 1)                            <font color="#008844">; prints exp: (FOO 1) env:NIL</font>
+                                   <font color="#008844">;        exp: 1       env:NIL</font>
+                                   <font color="#008844">;        exp: (+ A A) env:((((A . 1))))</font>
+                                   <font color="#008844">;        exp: A       env:((((A . 1))))</font>
+                                   <font color="#008844">;        exp: A       env:((((A . 1))))</font>
+                                   <font color="#008844">; returns 2</font>
+
+(top-level)                        <font color="#008844">; to clean up *evalhook*</font>
+</pre>
+
+<p><b>Note:</b> The 'evalhook' function and
+<a href="global-evalhook.htm">*evalhook*</a> system variable are very useful
+in the construction of debugging facilities within XLISP. The
+<a href="trace.htm">trace</a> and
+<a href="untrace.htm">untrace</a> functions use 'evalhook' and
+<a href="global-evalhook.htm">*evalhook*</a> to implement their
+functionality. The other useful aspect of 'evalhook' and
+<a href="global-evalhook.htm">*evalhook*</a> is to help in understanding
+how XLISP works to see the expressions, their environment and how they
+are evaluated.</p>
+
+<p><b>Caution:</b> Be careful when using
+<a href="global-evalhook.htm">*evalhook*</a> and 'evalhook'.
+If you put in a bad definition into
+<nobr><a href="global-evalhook.htm">*evalhook*</a> ,</nobr> you might not
+be able to do anything and will need to exit XLISP.</p>
+
+<p><b>Unusual behaviour:</b> The 'evalhook' function and
+<a href="global-evalhook.htm">*evalhook*</a> system variable, by their
+nature, cause some unusual things to happen. After you have set
+<a href="global-evalhook.htm">*evalhook*</a> to some
+non-<a href="nil.htm">NIL</a> value, your function will be
+called. However, when you are all done and set
+<a href="global-evalhook.htm">*evalhook*</a> to
+<a href="nil.htm">NIL</a> or some other new routine, it will
+never be set. This is because the 'xevalhook' function [in the 'xlbfun.c'
+source file] saves the old value of
+<a href="global-evalhook.htm">*evalhook*</a> before calling your routine,
+and then restores it after the evaluation. The mechanism to reset
+<a href="global-evalhook.htm">*evalhook*</a> is to execute the
+<a href="top-level.htm">top-level</a> function, which sets
+<a href="global-evalhook.htm">*evalhook*</a> to
+<a href="nil.htm">NIL</a>.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-022.htm#evalhook">evalhook</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

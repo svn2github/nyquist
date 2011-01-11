@@ -1,0 +1,96 @@
+<html><head><title>XLISP send</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>send</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(send object message [args])</dt>
+<dd><i>object</i> - an <a href="object.htm">object</a><br>
+<i>message</i> - message selector for <i>object</i><br>
+<i>arg</i> - parameter sent to <i>object</i> method<br>
+returns - the <i>object</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'send' function is the mechanism used to send a 'message' to an
+<a href="object.htm">object</a>. The 'message' is the message
+selector symbol that is used to select a particular action [method] from
+the <a href="object.htm">object</a>.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq myclass (send class :new '(var)))              <font color="#008844">; create MYCLASS with VAR</font>
+
+(send myclass :answer :isnew '()                     <font color="#008844">; set up initialization</font>
+                             '((setq var nil) self))
+
+(send myclass :answer :set-it '(value)               <font color="#008844">; create :SET-IT message</font>
+                              '((setq var value)))
+  
+(setq my-obj (send myclass :new))                    <font color="#008844">; create MY-OBJ of MYCLASS</font>
+(send my-obj :set-it 5)                              <font color="#008844">; VAR is set to 5</font>
+</pre>
+
+<p><b>Built-in methods:</b> The built in methods in XLISP include:</p>
+
+<ul>
+<li><nobr><a href="keyword-answer.htm">:answer</a> - add a method to an object</nobr></li>
+<li><nobr><a href="keyword-class.htm">:class</a> - return the object's <a href="class.htm">class</a></nobr></li>
+<li><nobr><a href="keyword-isnew.htm">:isnew</a> - run initialization code on object</nobr></li>
+<li><nobr><a href="keyword-new.htm">:new</a> - create a new object [instance or <a href="class.htm">class</a>]</nobr></li>
+<li><nobr><a href="keyword-show.htm">:show</a> - show the internal state of the object</nobr></li>
+</ul>
+
+<p><b>Message structure:</b> The normal XLISP convention for a 'message' is
+to have a valid symbol preceeded by a colon like
+<a href="keyword-isnew.htm">:isnew</a> or ':my-message'. However, it is
+possible to define a 'message' that is a symbol without a colon, but this
+makes the code less readable.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-010.htm#10-2">send</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

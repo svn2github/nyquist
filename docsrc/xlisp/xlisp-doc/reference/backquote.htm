@@ -1,0 +1,170 @@
+<html><head><title>XLISP backquote</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>backquote</h1>
+
+<hr>
+
+<p>backquote:</p>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c, xlread.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>comma, comma-at:</p>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>reader expansion</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c, xlread.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>backquote</b> expr)</dt>
+<dd><i>expr</i> - an expression which is not evaluated except for 'comma' and 'comma-at' portions<br>
+<i>returns</i> - a copy of the template with 'comma' and 'comma-at' expressions expanded</dd>
+</dl>
+
+<dl>
+<dt>(<b>comma</b> <i>expr</i>)</dt>
+<dd><i>expr</i> - an expression which is evaluated within a backquoted expression</dd>
+</dl>
+
+<dl>
+<dt>(<b>comma-at</b> <i>expr</i>)</dt>
+<dd><i>expr</i> - an expression which is evaluated within a backquoted expression</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'backquote' special form returns 'expr' unevaluated, like
+<a href="quote.htm">quote</a>. The difference is that portions of the
+expression may be evaluated when they are preceeded by a 'comma' or
+'<nobr>comma-at</nobr>'.</p>
+
+<ul>
+
+<li><p><b>comma</b> will evaluate the portion of the expression the comma
+preceeds. <nobr>If the</nobr> portion is an atom or a list, it is placed as
+is within the expression.</p></li>
+
+<li><p><nobr><b>comma-at</b></nobr> will evaluate the portion of the
+expression that the <nobr>'comma-at</nobr>' preceeds. <nobr>The
+portion</nobr> needs to be a list. <nobr>The list</nobr> is spliced into the
+expression. <nobr>If the</nobr> portion is not a list,
+'<nobr>comma-at</nobr>' will splice in nothing.</p></li>
+
+</ul>
+
+<p>XLISP supports the following read macros:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button" align="right"><nobr><code>`<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</nobr></td>
+  <td class="button" align="right"><nobr><code>(backquote <font color="#0000CC">expression</font>)</code></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button" align="right"><nobr><code>,<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</nobr></td>
+  <td class="button" align="right"><nobr><code>(comma <font color="#0000CC">expression</font>)</code></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button" align="right"><nobr><code>,@<font color="#0000CC">expression</font></code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</nobr></td>
+  <td class="button" align="right"><nobr><code>(comma-at <font color="#0000CC">expression</font>)</code></nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq box 'stuff-inside)  =&gt; STUFF-INSIDE  <font color="#008844">; BOX contains STUFF-INSIDE</font>
+(print box)               =&gt; STUFF-INSIDE
+
+'(i have the box)   &equiv; (quote (i have the box))                 =&gt; (I HAVE THE BOX)
+`(i have the box)   &equiv; (backquote (i have the box))             =&gt; (I HAVE THE BOX)
+`(i have the ,box)  &equiv; (backquote (i have the (comma box)))     =&gt; (I HAVE THE STUFF-INSIDE)
+`(i have the ,@box) &equiv; (backquote (I have the (comma-at box)))  =&gt; (I HAVE THE)  <font color="#008844">; STUFF-INSIDE is not a list</font>
+
+(setq automobile '(a van))  =&gt; (A VAN)  <font color="#008844">; AUTOMOBILE is a VAN</font>
+(print automobile)          =&gt; (A VAN)
+
+'(I have automobile)   &equiv; (quote (I have automobile))                 =&gt; (I HAVE AUTOMOBILE)
+`(I have automobile)   &equiv; (backquote (I have automobile))             =&gt; (I HAVE AUTOMOBILE)
+`(I have ,automobile)  &equiv; (backquote (I have (comma automobile)))     =&gt; (I HAVE (A VAN))
+`(I have ,@automobile) &equiv; (backquote (I have (comma-at automobile)))  =&gt; (I HAVE A VAN)
+</pre>
+
+<p>Common errors:</p>
+
+<pre class="example">
+`(,@(i am a list))   =&gt; <font color="#AA0000">error: bad function - I</font>
+`(,@'(i am a list))  =&gt; (I AM A LIST)
+</pre>
+
+<p><b>Note:</b> 'backquote', 'comma', and 'comma-at' are very useful in
+defining macros via <a href="defmacro.htm">defmacro</a>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#evaluation-functions">Evaluation Functions</a></nobr></li>
+<li><nobr>XLISP 2.0 Manual &rarr; <a href="../manual/xlisp.htm#the-readtable">Readtable</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

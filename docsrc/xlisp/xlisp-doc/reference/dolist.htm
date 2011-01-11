@@ -1,0 +1,111 @@
+<html><head><title>XLISP dolist</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>dolist</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(dolist (<i>symbol list-expr</i> [<i>result</i>]) [<i>expr</i> ... ])</dt>
+<dd><i>symbol</i> - a symbol<br>
+<i>list-expr</i> - a list expression<br>
+<i>result</i> - an optional expression for the returned result<br>
+<i>expr</i> - expressions comprising the body of the loop which may
+contain <a href="return.htm">return</a>s,
+<a href="go.htm">go</a>s or tags for
+<a href="go.htm">go</a><br>
+returns - the return value of the result expression or
+<a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p> The 'dolist' special form is basically a list-oriented 'for' looping
+construct that contains a loop 'symbol', a 'list-expr' to draw values from,
+an optional 'return' value and a block of code [expressions] to evaluate.
+The sequence of execution is:</p>
+
+<pre>
+  <i>symbol</i>    := CAR of <i>list-expr</i>
+  temp-list := CDR of <i>list-expr</i>
+  while  temp-list is not empty
+    loop code execution
+    <i>symbol</i>    := CAR of temp-list
+    temp-list := CDR of temp-list
+  end-while
+  return <i>result</i>
+</pre>
+
+<p>The main loop 'symbol' will take on successive values from 'list-expr'.
+The 'dolist' form will go through and create and initialize the 'symbol'.
+After execution of the loop 'exprs', the 'symbol' is set to the next value
+in the 'list-expr'. This continues until the 'list-expr' has been exhausted.
+The value of the 'result' expression is evaluated and returned. If no
+'result' is specified, <a href="nil.htm">NIL</a> is returned.
+When the 'dolist' is finished execution, the 'symbol' that was defined will
+no longer exist or retain its value. If the 'list-expr' is an empty list,
+then no loop execution takes place and the 'result' is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+  (dolist (i () "done")        <font color="#008844">; DOLIST with I loop variable</font>
+          (print "here"))      <font color="#008844">;   an empty list</font>
+                               <font color="#008844">;   and a return value</font>
+                               <font color="#008844">;   returns "done"</font>
+
+  (dolist (x '(a b c) "fini")  <font color="#008844">; DOLIST with X loop variable</font>
+          (princ x))           <font color="#008844">;   a list with (A B C)</font>
+                               <font color="#008844">;   and a return value</font>
+                               <font color="#008844">;   prints  ABC   returns "fini"</font>
+
+  (dolist (y '(1 2 3))         <font color="#008844">; DOLIST with Y loop variable</font>
+          (princ (* y y)))     <font color="#008844">;   a list with (1 2 3)</font>
+                               <font color="#008844">;   and no return value</font>
+                               <font color="#008844">;   prints  149   returns NIL</font>
+                               <font color="#008844">;   returns "met in the middle"</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-020.htm#dolist">dolist</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

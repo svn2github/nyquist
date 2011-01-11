@@ -1,0 +1,161 @@
+<html><head><title>XLISP error</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>error, cerror</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c, xldbug.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>error</b> <i>err-msg</i> [<i>arg</i>])</dt>
+<dd><i>err-msg</i> - a string expression for the error message<br>
+<i>arg</i> - an optional argument expression, printed after the error message<br>
+returns - never returns</dd>
+</dl>
+
+<dl>
+<dt>(<b>cerror</b> <i>cont-msg err-msg</i> [<i>arg</i>])</dt>
+<dd><i>cont-msg</i> - a string expression for the <a href="continue.htm">continue</a> message<br>
+<i>err-msg</i> - a string expression for the error message<br>
+<i>arg</i> - an optional argument expression, printed after the error message<br>
+returns - <a href="nil.htm">NIL</a> when continued from the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The 'error' function allows the generation of a
+<nobr>non-correctable</nobr> error. <nobr>A non-correctable</nobr> error
+requires evaluation of a <nobr><a href="clean-up.htm">clean-up</a></nobr> or
+<nobr><a href="top-level.htm">top-level</a></nobr> function from within the
+XLISP <nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>
+to return to normal execution. <nobr>The form</nobr> of the message
+generated is:</p>
+
+<pre class="example">
+<font color="#AA0000">error:</font> <font color="#0000CC">err-msg</font> <font color="#AA0000">-</font> <font color="#0000CC">arg</font>
+</pre>
+
+<p>If a <a href="continue.htm">continue</a> function is evaluated within the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>, then a
+an error message is generated:</p>
+
+<pre class="example">
+<font color="#AA0000">error: this error can't be continued</font>
+</pre>
+
+<p>There is no return from the 'error' function.</p>
+
+<p>The 'cerror' function allows the generation of a correctable error.
+<nobr>A correctable</nobr> error can be corrected by some action
+within the XLISP <nobr><a href="../manual/xlisp.htm#break-loop">Break
+Loop</a></nobr>. <nobr>The form</nobr> of the message generated is:</p>
+
+<pre class="example">
+<font color="#AA0000">error:</font> <font color="#0000CC">err-msg</font> <font color="#AA0000">-</font> <font color="#0000CC">arg</font>
+<font color="#AA0000">if continued:</font> <font color="#0000CC">cont-msg</font>
+</pre>
+
+<p>In the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>,
+forms can be evaluated to correct the error. <nobr>If a</nobr>
+<a href="continue.htm">continue</a> function is evaluated within the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>, then
+<a href="nil.htm">NIL</a> is returned from 'cerror'. <nobr>If desired</nobr>, the
+<nobr><a href="clean-up.htm">clean-up</a></nobr> and
+<nobr><a href="top-level.htm">top-level</a></nobr> forms may be evaluated
+to abort out of the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>.</p>
+
+<p><div class="box">
+
+<p><b>Note:</b> The <a href="global-breakenable.htm">*breakenable*</a>
+variable needs to be <nobr>non-<a href="nil.htm">NIL</a></nobr> for 'error',
+'cerror' and system errors to be caught by the Nyquist/XLISP
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>.</p>
+
+</div></p>
+
+<h2>Examples</h2>
+
+<p>Example of a <nobr>non-correctable</nobr> error:</p>
+
+<pre class="example">
+&gt; (error "invalid argument" "arg")
+<font color="#AA0000">error: invalid argument - "arg"</font>
+
+1&gt; (continue)   <font color="#008844">; the 1 before the &gt; indicates a break loop</font>
+<font color="#AA0000">error: this error can't be continued</font>
+
+1&gt; (clean-up)
+[ back to previous break level ]
+
+&gt;               <font color="#008844">; no break loop any longer</font>
+</pre>
+
+<p>Example of system generated correctable error:</p>
+
+<pre class="example">
+&gt; (symbol-value 'f)
+<font color="#AA0000">error: unbound variable - F</font>
+<font color="#AA0000">if continued: try evaluating symbol again</font>
+
+1&gt; (setq f 123)   <font color="#008844">; the 1 before the &gt; indicates a break loop</font>
+123               <font color="#008844">; return value of (setq f 123)</font>
+
+1&gt; (continue)
+123               <font color="#008844">; return value of (symbol-value 'f)</font>
+
+&gt;                 <font color="#008844">; no break loop any longer</font>
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#debugging-and-error-handling">Debugging and Error Handling</a></nobr></li>
+<li><nobr>XLISP 2.0 Manual &rarr; <a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></li>
+<li><nobr>Tutorials &rarr; Nyquist &rarr; <a href="../tutorials/nyquist.htm#debugger-shortcuts">Debugger Shortcuts</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

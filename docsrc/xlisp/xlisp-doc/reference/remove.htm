@@ -1,0 +1,100 @@
+<html><head><title>XLISP remove</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>remove</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(remove <i>expr list-expr</i> [{:test | :test-not} <i>test</i>])</dt>
+<dd><i>expr</i> - the expression to remove, an atom or list<br>
+<i>list-expr</i> - the list to remove from<br>
+<i>test</i> - optional test function, default is
+<a href="eql.htm">eql</a><br>
+returns - a copy of <i>list-expr</i> with matching expressions removed</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'remove' function searches through 'list-expr' for 'expr'. If 'expr'
+is found, 'remove' returns the list with the 'expr' deleted. All occurances
+of 'expr' are deleted. If 'expr' is not found, then the 'list-expr' is
+returned unaltered. You may specify your own test with the ':test' and
+':test-not' keywords followed by the test you which to perform. Note that
+this operation is non-destructive, it does not modify or affect 'list-expr'
+directly, it creates a modified copy.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq mylist '(a b c d it e f))       <font color="#008844">; set up a list</font>
+(remove 'it mylist)                   <font color="#008844">; returns (A B C D E F)</font>
+(print mylist)                        <font color="#008844">; prints (A B C D IT E F)</font>
+                                      <font color="#008844">;   note that MYLIST is not affected</font>
+
+(setq mylist '(a b c b d b))          <font color="#008844">; change list to include duplicates</font>
+(remove 'b mylist)                    <font color="#008844">; returns (A C D)</font>
+
+(setq alist '( (a) (b) (it) (c)))     <font color="#008844">; set up another list</font>
+(remove '(it) alist)                  <font color="#008844">; returns ((A) (B) (IT) (C))</font>
+                                      <font color="#008844">;   the EQ test doesn't work for lists</font>
+(remove '(it) alist :test 'equal)     <font color="#008844">; returns ((A) (B) (C))</font>
+
+(setq slist '( "a" "b" "it" "c"))     <font color="#008844">; set up yet another list</font>
+(remove "it" slist)                   <font color="#008844">; returns ("a" "b" "c")</font>
+(remove "it" slist :test-not 'equal)  <font color="#008844">; returns ("it")</font>
+                                      <font color="#008844">;   REMOVE takes away everything but IT</font>
+</pre>
+
+<p><b>Note:</b> The 'remove' function can work with a list or string as the
+'expr'. However, the default <a href="eql.htm">eql</a> test does
+not work with lists or strings, only symbols and numbers. To make this work,
+you need to use the ':test' keyword along with
+<a href="equal.htm">equal</a> for 'test'.</p>
+
+<p><b>Common Lisp:</b> XLISP does not support the ':from-end', ':start',
+':end', ':count' and ':key' keywords which Common Lisp does.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#remove">remove</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

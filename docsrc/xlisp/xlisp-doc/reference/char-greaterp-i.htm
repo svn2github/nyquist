@@ -1,0 +1,91 @@
+<html><head><title>XLISP char-greaterp</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>char-greaterp</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>char-greaterp</b> <i>char1 charN</i> ... )</dt>
+<dd><i>char1</i> - a character expression<br>
+<i>charN</i> - character expression(s) to compare<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a>
+if the characters are of monotonically decreasing
+<a href="../misc/ascii-table.htm">ASCII</a> value,
+<a href="nil.htm">NIL</a> otherwise<br>
+<b>Note:</b> case is not significant with this function</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>The '<nobr>char-greaterp</nobr>' function tests if all the character
+arguments are monotonically decreasing.
+<nobr><a href="t.htm">&nbsp;T&nbsp;</a> is</nobr> returned if the arguments
+are of monotonically decreasing <a href="../misc/ascii-table.htm">ASCII</a>
+value, <a href="nil.htm">NIL</a> otherwise. <nobr>In the</nobr> case of two
+arguments, this has the effect of testing if 'char1' is greater than
+'char2'. This test is case insensitive, the character '#\a' is considered to
+be the same <a href="../misc/ascii-table.htm">ASCII</a> value as the
+<nobr>character '#\A'.</nobr></p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(char-greaterp #\a #\b)      =&gt; NIL
+(char-greaterp #\b #\a)      =&gt; T
+(char-greaterp #\c #\b #\a)  =&gt; T
+(char-greaterp #\a #\a)      =&gt; NIL
+(char-greaterp #\c #\a #\b)  =&gt; NIL
+(char-greaterp #\A #\a)      =&gt; NIL
+(char-greaterp #\a #\A)      =&gt; NIL
+</pre>
+
+<p>See also:</p>
+
+<ul>
+<li><nobr>Contents &rarr; <a href="../manual/contents.htm#character-functions">Character Functions</a></nobr></li>
+</ul>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

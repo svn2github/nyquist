@@ -1,0 +1,127 @@
+<html><head>
+
+<title>bsh</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>bsh</h1>
+
+<hr>
+
+<p>The 'bsh' functio performs an '<nobr>binary shift</nobr>' operation:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>bsh</b> <i>integer count</i>)</dt>
+<dd><i>integer</i> - an integer expression<br>
+<i>count</i> - an integer expression<br>
+returns - the <i>number</i> shifted by <i>count</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">bsh</font> (integer count)
+  (or (integerp integer) (error <font color="#880000">"not an integer"</font> integer))
+  (or (integerp count)   (error <font color="#880000">"not an integer"</font> count))
+  (if (zerop count)
+      integer
+      (let ((digits (or (dolist (bits '(16 32 64 128) nil)
+                          (let ((fixnum (round (expt 2.0 (1- bits)))))
+                            (and (plusp (1- fixnum))
+                                 (minusp fixnum)
+                                 (return bits))))
+                        (error <font color="#880000">"integer limit not found"</font>)))
+            (list nil)
+            (string "#b"))
+        (dotimes (x digits)
+          (let ((digit (logand (round (expt 2.0 x)) integer)))
+            (push (if (zerop digit) "0" "1") list)))
+        (dotimes (x digits)
+          (let ((digit (if (&lt; -1 count digits) (nth count list) "0")))
+            (setq string (strcat string digit))
+            (incf count)))
+        (eval (read (make-string-input-stream string))))))
+</pre>
+
+<p>The 'bsh' function performs a binary shift operation on the 'integer'
+argument. <nobr>The bits</nobr> of the 'integer' argument is shifted to the
+left by 'count' positions if 'count' is positive, or to the right by 'count'
+positions if 'count' is negative. <nobr>The missing</nobr> bits are filled
+with zeros.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(bsh 16  1)  =&gt;
+(bsh 16  0)  =&gt;
+(bsh 16 -1)  =&gt;
+</pre>
+
+<pre class="example">
+(defun <font color="#0000CC">debug:bsh</font> (integer count)
+  (let ((shifted (bsh integer count)))
+    (format t <font color="#880000">"integer: ~a~%"</font> (bin-string integer :all))
+    (format t <font color="#880000">"shifted: ~a~%"</font> (bin-string shifted :all))
+    shifted))
+</pre>
+
+<p>See <nobr><a href="../binary.htm">Binary Integer Numbers</a></nobr> for
+the '<nobr>bin-string</nobr>' function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

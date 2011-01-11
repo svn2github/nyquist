@@ -1,0 +1,78 @@
+<html><head><title>XLISP numberp</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>numberp</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(numberp <i>expr</i>)</dt>
+<dd><i>expr</i> - the expression to check<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the expression
+is a number, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'numberp' predicate function checks if an 'expr' is a number.
+<a href="t.htm">&nbsp;T&nbsp;</a> is returned if 'expr' is an
+integer or floating point number, <a href="nil.htm">NIL</a> is
+returned otherwise.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(numberp 1)         <font color="#008844">; returns T - integer</font>
+(numberp 1.2)       <font color="#008844">; returns T - float</font>
+(numberp '1)        <font color="#008844">; returns T - still an integer</font>
+(numberp #x034)     <font color="#008844">; returns T - the readmacro produces an integer</font>
+
+(numberp 'a)        <font color="#008844">; returns NIL - symbol</font>
+(numberp #\a)       <font color="#008844">; returns NIL - character</font>
+(numberp NIL)       <font color="#008844">; returns NIL - NIL</font>
+(numberp #(0 1 2))  <font color="#008844">; returns NIL - array</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-018.htm#numberp">numberp</a>
+predicate function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

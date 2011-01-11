@@ -1,0 +1,102 @@
+<html><head><title>XLISP funcall</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>funcall</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(funcall <i>function</i> [<i>arg1</i> ... ])</dt>
+<dd><i>function</i> - the function or symbol to be called<br>
+<i>argN</i> - an argument to be passed to <i>function</i><br>
+returns - the result of calling the function with the arguments</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'funcall' function calls a function with a series of arguments.
+It returns the result from calling the function with the arguments.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(funcall '+ 1 2 3 4)                 <font color="#008844">; returns 10</font>
+(funcall #'+ 1 2 3 4)                <font color="#008844">; returns 10</font>
+(funcall '+ '1 '2 '3)                <font color="#008844">; returns 6</font>
+
+(setq sys-add (function +))          <font color="#008844">; returns #&lt;Subr-+: #22c32&gt;</font>
+(setq a 99)
+(funcall sys-add 1 a)                <font color="#008844">; 100</font>
+(funcall sys-add 1 'a)               <font color="#008844">; error: bad argument type</font>
+                                     <font color="#008844">;   you can't add a symbol, only it's value</font>
+
+(setq a 2)                           <font color="#008844">; set A</font>
+(setq b 3)                           <font color="#008844">; and B values</font>
+(funcall (if (&lt; a b) (function +)    <font color="#008844">; 'function' can be computed</font>
+                     (function -))
+         a b)                        <font color="#008844">; returns 5</font>
+
+(defun add-to-list (arg list)        <font color="#008844">; add a list or an atom</font>
+   (funcall (if (atom arg) 'cons     <font color="#008844">;   to the front of a list</font>
+                           'append)
+            arg list))
+(add-to-list 'a '(b c))              <font color="#008844">; returns (A B C)</font>
+(add-to-list '(a b) '(b c))          <font color="#008844">; returns (A B B C)</font>
+</pre>
+
+<h2>Notes</h2>
+
+<p>In XLISP, a '<nobr>special form</nobr>' of type FSUBR is not a function.
+This means that 'funcall' only works with functions of type SUBR
+<nobr>[built-in</nobr> function] or CLOSURE [function defined by
+<a href="defun.htm">defun</a>, <a href="flet.htm">flet</a>,
+<a href="labels.htm">labels</a>, or <a href="lambda.htm">lambda</a>], but
+with special forms of <nobr>type FSUBR</nobr> a 'bad function' error is
+signalled. Here is an example how to work around this behaviour:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">funcall*</font> (function &amp;rest args)
+  (if (eq (type-of function) 'fsubr)
+      (eval (cons function args))
+      (apply function args)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

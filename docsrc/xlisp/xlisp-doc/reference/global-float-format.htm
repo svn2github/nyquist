@@ -1,0 +1,179 @@
+<html><head><title>XLISP *float-format*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*float-format*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlprin.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*float-format*</dt>
+<dd>returns - the print format for <nobr>floating-point</nobr> numbers</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p> *float-format* is a system variable that allows a user to specify how
+floating point numbers are to be printed by XLISP. The value of
+*float-format* should be set to one of the string expressions
+&quot;%e&quot;, &quot;%f&quot; or &quot;%g&quot;. These format strings are
+similar to C-language floating point specifications:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;&quot;%e&quot;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-<code>&nbsp;</code></nobr></td>
+  <td width="100%">exponential. The number is converted to decimal notation
+    of the form:
+
+<pre class="example">
+[-]<font color="#0000CC"><i>m</i></font>.<font color="#0000CC"><i>nnnnnn</i></font>E[+-]<font color="#0000CC"><i>xx</i></font>
+</pre>
+
+    There is one leading digit. There are 6 digits after the decimal
+    point.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;&quot;%f&quot;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-<code>&nbsp;</code></nobr></td>
+  <td width="100%">decimal. The number is converted to decimal notation of
+    the form:
+
+<pre class="example">
+[-]<font color="#0000CC"><i>mmmmmm</i></font>.<font color="#0000CC"><i>nnnnnn</i></font>
+</pre>
+
+    There are as many digits before the decimal point as necessary. There
+    are 6 digits after the decimal point.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;&quot;%g&quot;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-<code>&nbsp;</code></nobr></td>
+  <td width="100%">shortest. The number is converted to either the form of
+    &quot;%e&quot; or &quot;%f&quot;, whichever produces the shortest output
+    string. Non-significant zeroes are not printed.</td>
+</tr>
+</tbody></table></p>
+
+<p> The default value for *float-format* is the string "%g".</p>
+
+<p>There are several additional flags and options available:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;+</code></nobr></td>
+  <td><nobr>&nbsp;<code>&nbsp;</code>-<code>&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>always print the sign</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code><i>space</i></code></nobr></td>
+  <td><nobr>&nbsp;<code>&nbsp;</code>-<code>&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>print a space instead of a + sign</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;#</code></nobr></td>
+  <td><nobr>&nbsp;<code>&nbsp;</code>-<code>&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>always print the dot, do not remove zeros after the dot</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr><code>&nbsp;.<i>n</i></code></nobr></td>
+  <td><nobr>&nbsp;<code>&nbsp;</code>-<code>&nbsp;</code></nobr></td>
+  <td width="100%"><nobr>number of digits after the dot</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>The flags and options must be written between the &quot;%&quot; and the
+formatting letter, as shown in the examples below.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq *float-format* "%e")       <font color="#008844">; exponential notation</font>
+(print 1.0)                      =&gt; 1.000000e+00
+(print -9e99)                    =&gt; -9.000000e+99
+
+(setq *float-format* "%f")       <font color="#008844">; decimal notation</font>
+(print 1.0)                      =&gt; 1.000000
+(print 1.0e4)                    =&gt; 10000.000000
+(print -999.99e-99)              =&gt; -0.000000</font>
+
+(setq *float-format* "%g")       <font color="#008844">; shortest notation</font>
+(print 1.0)                      =&gt; 1
+(print 1.0e7)                    =&gt; 1e+07
+(print -999.999e99)              =&gt; -9.99999e+101
+
+(setq *float-format* "%+g")      <font color="#008844">; always print the sign</font>
+(print  1.1)                     =&gt; +1.1
+(print -1.1)                     =&gt; -1.1
+
+(setq *float-format* "% g")      <font color="#008844">; print a space instead of the + sign</font>
+(print  1.1)                     =&gt;  1.1
+(print -1.1)                     =&gt; -1.1
+
+(setq *float-format* "%#.10g")   <font color="#008844">; ten digits after the dot</font>
+(print 1.0)                      =&gt; 1.000000000
+(print 1.0e7)                    =&gt; 10000000.00
+(print -999.9999999e99)          =&gt; -9.999999999e+101
+
+(setq *float-format* "%+#.10g")  <font color="#008844">; ten digits after the dot plus sign</font>
+(print  1.2345)                  =&gt; +1.234500000
+(print -1.2345)                  =&gt; -1.234500000
+
+(setq *float-format* "%%")       <font color="#008844">; bad format</font>
+(print 1.0)                      =&gt; %%
+
+(setq *float-format* "%g")       <font color="#008844">; reset to shortest notation</font>
+</pre>
+
+<p><b>Note:</b> The string in the <nobr>*float-format*</nobr> variable is
+the format specifier for the the underlying 'sprintf'
+<nobr>C-function</nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

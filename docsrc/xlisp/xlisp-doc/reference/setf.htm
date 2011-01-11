@@ -1,0 +1,273 @@
+<html><head><title>XLISP setf</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>setf</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(setf [<i>place1 expr1</i> ... ])</dt>
+<dd><i>placeN</i> - a field specifier which may be one of:<br>
+<dl><dd><i>symbol</i> - set value of a symbol<br>
+(<a href="car.htm">car</a> <i>expr</i>) - set <a href="caar.html">car</a> of a cons node<br>
+(<a href="cdr.htm">cdr</a> <i>expr</i>) - set <a href="cddr.html">cdr</a> of a cons node<br>
+(<a href="nth.htm">nth</a> <i>n expr</i>) - set <a href="or.html">nth</a> car of a list<br>
+(<a href="aref.htm">aref</a> <i>expr n</i>) - set nth element of an array<br>
+(<a href="get.htm">get</a> <i>symbol property</i>) - set value of a property<br>
+(<a href="symbol-value.htm">symbol-value</a> <i>symbol</i>) - set value of a symbol<br>
+(symbol-function <i>symbol</i>) - set functional value of a symbol<br>
+(<a href="symbol-plist.htm">symbol-plist</a> <i>symbol</i>) - set property list of a symbol</dd></dl>
+<i>exprN</i> - an expression, which will be the new value<br>
+returns - the new value</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'setf' special form evaluates the field 'placeN' and sets 'exprN' as
+it's value. This is a generalized tool that allows you to set the value of
+the various data types of the system. 'setf' returns the value from 'exprN'
+as it's result. The specific action of 'setf' depends on the 'placeN' field.
+A more detailed explanation follows below the examples.</p>
+
+<h2>Examples</h2>
+
+
+<pre class="example">
+<font color="#008844">:; setf symbols</font>
+
+(setf a 123)                          <font color="#008844">; set a symbol A to value 123</font>
+</pre>
+
+<pre class="example">
+<font color="#008844">;; setf symbol-values</font>
+
+(setq x 'y)                           <font color="#008844">; make symbol X with value Y</font>
+(setf (symbol-value x) 'z)            <font color="#008844">; set symbol that X contains (Y) to value Z</font>
+</pre>
+
+<pre class="example">
+<font color="#008844">;; setf list elements</font>
+
+(setq mylist '(a b c d))              <font color="#008844">; MYLIST with value (A B C D)</font>
+
+(setf (car mylist) 'x)                <font color="#008844">; change CAR of MYLIST to X</font>
+                                      <font color="#008844">;   MYLIST now is (X B C D)</font>
+
+(setf (cdr mylist) '(y z da-end))     <font color="#008844">; change CDR of MYLIST to (Y Z DA-END)</font>
+                                      <font color="#008844">;   MYLIST now is (X Y Z DA-END)</font>
+
+(setf (nth 3 mylist) 'here-i-am)      <font color="#008844">; change 3rd of MYLIST to HERE-I-AM</font>
+                                      <font color="#008844">;   MYLIST now is (X Y Z HERE-I-AM)</font>
+</pre>
+
+<pre class="example">
+<font color="#008844">;; setf arrays</font>
+
+(setq myarray (make-array 5))         <font color="#008844">; make MYARRAY</font>
+(aref myarray 2)                      <font color="#008844">; get value of element 2 = NIL</font>
+(setf (aref myarray 2) 'new-value)    <font color="#008844">; set value of element 2 to value NEW-VALUE</font>
+(print myarray)                       <font color="#008844">; prints #(NIL NIL NEW-VALUE NIL NIL)</font>
+</pre>
+
+<pre class="example">
+<font color="#008844">;; setf properties</font>
+
+(setq person 'joe-bob)                <font color="#008844">; make PERSON with value JOE-BOB</font>
+(putprop person 'critic 'profession)  <font color="#008844">; set PROFESSION property to value CRITIC</font>
+(setf (get person 'profession)        <font color="#008844">; change PROFESSION to value TEXAS-CRITIC</font>
+(setf (get person 'home) 'texas)      <font color="#008844">; add property HOME with value TEXAS</font>
+                
+(symbol-plist person)                 <font color="#008844">; returns property list:</font>
+                                      <font color="#008844">;   (HOME TEXAS</font>
+                                      <font color="#008844">;    PROFESSION TEXAS-CRITIC)</font>
+
+(setf (symbol-plist person)           <font color="#008844">; change the property list</font>
+      '(home on-the-range
+        profession movie-critic))
+
+(get person 'profession)              <font color="#008844">; now returns MOVIE-CRITIC</font>
+(get person 'home)                    <font color="#008844">; now returns ON-THE-RANGE</font>
+</pre>
+
+<h2>Operations</h2>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf <i>sym exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the value of 'symbol' to the value of 'exprN'.
+    This is equivalent to <nobr>(<a href="setq.htm">setq</a>
+    <i>sym exprN</i>)</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf (<a href="car.htm">car</a> <i>expr</i>) <i>exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the  first element of the 'expr' list to 'exprN'.
+    'expr' must be a list. This is equivalent to
+    <nobr>(<a href="rplaca.htm">rplaca</a> <i>expr exprN</i>)</nobr>
+    except that 'setf' will return 'exprN' as the value.</td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf (<a href="cdr.htm">cdr</a> <i>expr</i>) <i>exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the tail of the 'expr' list to 'exprN'. 'expr' must
+    be a list. This is equivalent to
+    <nobr>(<a href="rplacd.htm">rplacd</a> <i>expr exprN</i>)</nobr>
+    except that 'setf' will return 'exprN' as the value.</td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf (<a href="nth.htm">nth</a> <i>n expr</i>) <i>exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the <a href="nth.htm">nth</a> element of
+    the 'expr' list to 'exprN'. 'expr' must be a list. This allows you to
+    set an arbitrary element of a list to an arbitrary value. Note that the
+    list is numbered from the 0th element <nobr>(0, 1, 2, 3,
+    ...).</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf (<a href="aref.htm">aref</a> <i>expr n</i>) <i>exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the nth element of the 'expr' array to 'exprN'.
+    'expr' must be an array. This allows you to set an arbitrary element of
+    an array to an arbitrary value. Note that the list is numbered from the
+    0th element <nobr>(0, 1, 2, 3, ...).</nobr> Note also that this is the
+    intended way to set the value of an array element.</td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf (<a href="get.htm">get</a> <i>sym prop</i>) <i>exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the 'property' of 'symbol' to the value 'exprN'.
+    If 'symbol' does not have the 'property', one will be created. This is
+    equivalent to <nobr>(<a href="putprop.htm">putprop</a> <i>sym
+    exprN prop</i>)</nobr>.</td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf (<a href="symbol-value.htm">symbol-value</a> <i>sym</i>) <i>exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the symbol's value to contain 'exprN'. 'symbol' is
+    an expression that must evaluate to a valid symbol, it doesn't have to
+    exist before the 'setf' function is applied, it just has to be a valid
+    symbol. This is equivalent to <nobr>(<a
+    href="set.htm">set</a> <i>symbol exprN</i>).</nobr></td>
+</tr>
+<tr>
+  <td style="height:10px"></td>
+</tr>
+<tr>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>(setf (<a href="symbol-plist.htm">symbol-plist</a> <i>sym</i>) <i>exprN</i>)</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">Sets the property list of 'symbol' to 'exprN'. This
+    allows you to change or destroy the entire property list of a 'symbol'
+    at one time.</td>
+</tr>
+</tbody></table></p>
+
+<p>See the
+<a href="../manual/xlisp-man-013.htm#setf">setf</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

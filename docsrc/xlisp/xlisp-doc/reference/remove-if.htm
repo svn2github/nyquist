@@ -1,0 +1,80 @@
+<html><head><title>XLISP remove-if</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>remove-if</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(remove-if <i>test list-expr</i>)</dt>
+<dd><i>test</i> - the test function to be performed<br>
+<i>list-expr</i> - the list to remove from<br>
+returns - copy of list with matching elements removed</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'remove-if' function searches through 'list-expr' and removes any
+elements that pass the 'test'. Note that this operation is non-destructive,
+it does not modify or affect 'list-expr' directly, it creates a modified
+copy.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq mylist '(1 2 3 4 5 6 7 8))   <font color="#008844">; set up a list</font>
+(remove-if 'oddp mylist)           <font color="#008844">; returns (2 4 6 8)</font>
+(remove-if 'evenp mylist)          <font color="#008844">; returns (1 3 5 7)</font>
+(print mylist)                     <font color="#008844">; prints (1 2 3 4 5 6 7 8)</font>
+                                   <font color="#008844">;   note that MYLIST is not affected</font>
+
+(setq mylist '(a nil b nil c))     <font color="#008844">; set up a list</font>
+(remove-if 'null mylist)           <font color="#008844">; returns (A B C)</font>
+</pre>
+
+<p><b>Common Lisp:</b> XLISP does not support the ':from-end', ':start',
+':end', ':count' and ':key' keywords which Common Lisp does.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#remove-if">remove-if</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

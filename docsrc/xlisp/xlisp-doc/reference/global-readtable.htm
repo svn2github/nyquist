@@ -1,0 +1,166 @@
+<html><head><title>XLISP *readtable*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*readtable*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlread.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*readtable*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p> The *readtable* is a system variable that contains XLISP's data
+structures relating to the processing of characters from the user (or files)
+and read-macro expansions. The table is 128 entries [0..127] for each of the
+7-bit <a href="../misc/ascii-table.htm">ASCII</a> characters that
+XLISP can read. Each entry in the *readtable* array must be one of
+<nobr><a href="nil.htm">NIL</a> ,</nobr>
+<nobr><a href="keyword-constituent.htm">:constituent</a> ,</nobr>
+<nobr><a href="keyword-white-space.htm">:white-space</a> ,</nobr>
+<nobr><a href="keyword-sescape.htm">:sescape</a> ,</nobr>
+<nobr><a href="keyword-mescape.htm">:mescape</a> ,</nobr> a
+<a href="keyword-tmacro.htm">:tmacro</a> dotted pair or a
+<a href="keyword-nmacro.htm">:nmacro</a> dotted pair with the meaning
+of:</p>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;NIL</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>the character is invalid</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="nil.htm">nil</a>]</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>:CONSTITUENT</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>the character is valid, as is</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="keyword-constituent.htm">:constituent</a>]</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>:WHITE-SPACE</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>the character may be skipped over</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="keyword-white-space.htm">:white-space</a>]</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>:SESCAPE</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>the single escape character '\'</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="keyword-sescape.htm">:sescape</a>]</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>:MESCAPE</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>the multiple escape character '|'</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="keyword-mescape.htm">:mescape</a>]</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>(:TMACRO . <i>fun</i>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>a terminating readmacro</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="keyword-tmacro.htm">:tmacro</a>]</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>(:NMACRO . <i>fun</i>)</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr>a non-terminating readmacro</nobr></td>
+  <td width="100%"><nobr>&nbsp;&nbsp; [see
+    <a href="keyword-nmacro.htm">:nmacro</a>]</nobr></td>
+</tr>
+</tbody></table></p>
+
+
+<p>In the case of <a href="keyword-nmacro.htm">:nmacro</a> and
+<nobr><a href="keyword-tmacro.htm">:tmacro</a> ,</nobr> the form of the
+*readtable* entry is a list like:</p>
+
+<pre class="example">
+(:tmacro . <font color="#008844"><i>function</i></font>)
+(:nmacro . <font color="#008844"><i>function</i></font>)
+</pre>
+
+<p>The 'function' can be a built-in read-macro function or a user defined
+<a href="lambda.htm">lambda</a> expression. The 'function' takes two
+parameters, an input stream specification, and an integer that is the
+character value. The 'function' should return
+<a href="nil.htm">NIL</a> if the character is 'white-space' or a
+value <a href="cons.htm">cons</a>ed with
+<a href="nil.htm">NIL</a> to return the value.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+*readtable*             <font color="#008844">; returns the current table</font>
+
+<font color="#008844">;; define a function to look in a table and</font>
+<font color="#008844">;; print out any entries with a function</font>
+
+(defun look-at (table)
+  (dotimes (ch 127)
+    (prog ((entry (aref table ch)))
+      (case entry
+        (nil          nil)
+        (:constituent nil)
+        (:white-space nil)
+        (:sescape     nil)
+        (:mescape     nil)
+        (t (princ (int-char ch))))))
+  (terpri))
+
+(look-at *readtable*)   <font color="#008844">; prints "#'(),;`</font>
+</pre>
+
+<p><b>Caution:</b> If you experiment with *readtable*, it is useful to save
+the old value in a variable, so that you can restore the system state.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#readtable">*readtable*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

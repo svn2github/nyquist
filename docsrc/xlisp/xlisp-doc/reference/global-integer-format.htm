@@ -1,0 +1,129 @@
+<html><head><title>XLISP *integer-format*</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>*integer-format*</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>system variable</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlprin.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;*integer-format*</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>*integer-format* is a system variable that allows a user to specify how
+integer numbers are to be printed by XLISP. The value of *integer-format*
+should be set to one of the string expressions &quot;%ld&quot;,
+&quot;%lo&quot; or &quot;%lx&quot; [the character after the percent
+character is the lower-case 'L' character]. These format strings are similar
+to C-language floating point specifications:</p>
+
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr><code>&quot;%ld&quot;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>decimal</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&quot;%lu&quot;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>unsigned decimal</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&quot;%lo&quot;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>unsigned octal</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&quot;%lx&quot;</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>unsigned hexadecimal</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>The default value for *integer-format* is the string "%ld".</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+*integer-format*               <font color="#008844">; returns "%ld"</font>
+
+(setq *integer-format* "%ld")  <font color="#008844">; signed decimal</font>
+(print 1)                      <font color="#008844">; prints 1</font>
+(print 1234)                   <font color="#008844">; prints 1234</font>
+(print -1)                     <font color="#008844">; prints -1</font>
+(print -1234)                  <font color="#008844">; prints -1234</font>
+
+(setq *integer-format* "%lo")  <font color="#008844">; octal notation</font>
+(print 1)                      <font color="#008844">; prints 1</font>
+(print 1234)                   <font color="#008844">; prints 2322</font>
+(print -1)                     <font color="#008844">; prints 37777777777</font>
+(print -1234)                  <font color="#008844">; prints 37777775456</font>
+
+(setq *integer-format* "%lx")  <font color="#008844">; hexadecimal notation</font>
+(print 1)                      <font color="#008844">; prints 1</font>
+(print -1)                     <font color="#008844">; prints ffffffff</font>
+(print 1234)                   <font color="#008844">; prints 4d2</font>
+(print -1234)                  <font color="#008844">; prints fffffb2e</font>
+
+(setq *integer-format* "%u")   <font color="#008844">; unsigned decimal</font>
+(print 1)                      <font color="#008844">; prints 1</font>
+(print 1234)                   <font color="#008844">; prints 1234</font>
+(print -1)                     <font color="#008844">; prints 4294967295</font>
+(print -1234)                  <font color="#008844">; prints 4294966062</font>
+
+(setq *integer-format* "hi")   <font color="#008844">; a bad notation</font>
+(print 1)                      <font color="#008844">; prints hi</font>
+(print 9999)                   <font color="#008844">; prints hi</font>
+
+(setq *integer-format* "%ld")  <font color="#008844">; reset to original "%ld"</font>
+</pre>
+
+<p><b>Note:</b> There can be other characters put in the string, but in
+general, this will not produce particularly desirable behaviour. There is no
+error checking performed on the format string.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-011.htm#integer-format">*integer-format*</a>
+system variable in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

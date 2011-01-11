@@ -1,0 +1,92 @@
+<html><head><title>XLISP write-byte</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>write-byte</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(write-byte <i>expr</i> [<i>dest</i>])</dt>
+<dd><i>expr</i> - an integer expression<br>
+<i>dest</i> - an optional destination, must be a file pointer or stream,
+default is <a href="global-standard-output.htm">*standard-output*</a><br>
+returns - the byte as an integer</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'write-byte' function writes the 'expr' as a single byte to the
+specified 'destination'. Only the 'expr' byte is written. The 'expr' must be
+an integer expression. The 'expr' is returned as the result. The
+'destination' may be a file pointer or a stream. If there is no
+'destination', <a href="global-standard-output.htm">*standard-output*</a> is the
+default.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(write-byte 67)                          <font color="#008844">; prints C  returns 67</font>
+
+(setq fp (open "t" :direction :output))  <font color="#008844">; create file</font>
+(write-byte 65 fp)                       <font color="#008844">; returns 65</font>
+(write-byte 66 fp)                       <font color="#008844">; returns 66</font>
+(write-byte 10 fp)                       <font color="#008844">; returns 10</font>
+(close fp)                               <font color="#008844">; returns NIL</font>
+
+(read (open "t" :direction :input))      <font color="#008844">; returns AB</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp specifies that print operations with a
+'destination' of <a href="nil.htm">NIL</a> will go to
+<a href="global-standard-output.htm">*standard-output*</a>. XLISP does not send the
+output to <a href="global-standard-output.htm">*standard-output*</a> with a
+'destination' of <a href="nil.htm">NIL</a>. Common Lisp also
+specifies that a 'destination' of
+<a href="t.htm">&nbsp;T&nbsp;</a> will be sent to
+*terminal-io*, which is not defined in XLISP by default. XLISP does not
+allow <a href="t.htm">&nbsp;T&nbsp;</a> as a valid argument
+for 'destination'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-029.htm#write-byte">write-byte</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

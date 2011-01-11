@@ -1,0 +1,76 @@
+<html><head><title>XLISP sin</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>sin</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(sin <i>expr</i>)</dt>
+<dd><i>expr</i> - floating point number or expression<br>
+returns - the sine of the number</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'sin' function returns the sine of the 'expr'. The 'expr' is in
+radians.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(sin 0.0)             <font color="#008844">; returns 0</font>
+(sin .5)              <font color="#008844">; returns 0.479426</font>
+(sin 1.0)             <font color="#008844">; returns 0.841471</font>
+(sin (/ 3.14159 2))   <font color="#008844">; returns 1</font>
+(sin 3.14159)         <font color="#008844">; returns 2.65359e-06</font>
+(sin 0)               <font color="#008844">; error: bad integer operation</font>
+(sin 1.)              <font color="#008844">; error: bad integer operation</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common LISP allows for integer numbers, which
+XLISP does not support for 'sin'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-023.htm#sin">sin</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

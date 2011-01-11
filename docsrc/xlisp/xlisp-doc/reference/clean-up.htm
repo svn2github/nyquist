@@ -1,0 +1,90 @@
+<html><head><title>XLISP clean-up</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>clean-up</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c, xldbug.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(clean-up)</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'clean-up' function aborts one level of the
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a>.</nobr> This
+is valid for <nobr><a href="break.htm">break</a>s ,</nobr>
+<a href="error.htm">error</a>s and
+<a href="cerror.htm">cerror</a>s [continuable errors].
+If 'clean-up' is evaluated while not in a
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a> ,</nobr>
+an error is generated:
+
+<pre class="example">
+<font color="#AA0000">error: not in a break loop</font>
+</pre>
+
+<p>This error does not cause XLISP to go into a
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a>.</nobr>
+'clean-up' never actually returns a value.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(clean-up)     <font color="#008844">; [back to previous break level]</font>
+(break "out")  <font color="#008844">; break: out</font>
+(clean-up)     <font color="#008844">; to exit out of break loop</font>
+</pre>
+
+<p><b>Note:</b> With Nyquist, no error is generated if 'clean-up' is
+invoked when not in a
+<nobr><a href="../manual/xlisp-man-004.htm">break loop</a>.</nobr></p>
+
+<p><b>Keystroke equivalent:</b> In the IBM PC and MS-DOS versions of XLISP,
+a 'Ctrl-g' key sequence has the same effect as doing a (clean-up). On a
+Macintosh, this can be accomplished by a pull-down menu or a
+'Command-g'. <nobr>[I haven't</nobr> tested this with Nyquist].</p>
+
+<p>See the
+<a href="../manual/xlisp-man-022.htm#clean-up">clean-up</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,131 @@
+<html><head>
+
+<title>Evaluation</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Evaluation</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#with-errset">with-errset</a> - evaluate expressions without entering the <nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr></nobr></li>
+<li><nobr><a href="#apply-star.htm">apply*</a> and <a href="#funcall-star.htm">funcall*</a> - work also with macros and special forms</nobr></li>
+</ol>
+
+<a name="with-errset"></a>
+
+<hr>
+
+<h2>with-errset</h2>
+
+<hr>
+
+<p>Evaluate an expression without entering the
+<nobr><a href="../manual/xlisp.htm#break-loop">Break Loop</a></nobr>
+on <a href="../reference/error.htm">error</a>
+<nobr>or <a href="../reference/cerror.htm">cerror</a></nobr>:</p>
+
+<pre class="example">
+(defmacro <font color="#0000CC">with-errset</font> (expr &amp;optional (print-flag nil))
+  `(progv '(<font color="#AA5500">*breakenable*</font>) '(nil)
+     (errset ,expr ,print-flag)))
+</pre>
+
+<p>See <a href="../reference/defmacro.htm">defmacro</a>,
+<a href="../reference/errset.htm">errset</a>,
+<a href="../reference/nil.htm">nil</a>,
+<a href="../reference/lambda-keyword-optional.htm.htm">&amp;optional</a>,
+<a href="../reference/progv.htm">progv</a>.</p>
+
+<p><b>Note:</b> <a href="../reference/errset.htm">errset</a> does not
+protect against the <a href="../reference/break.htm">break</a> function.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="apply-star"></a><a name="funcall-star"></a>
+
+<hr>
+
+<h2>apply* and funcall*</h2>
+
+<hr>
+
+<p>In Lisp, macros and <nobr>special forms</nobr> are no functions. This
+means that <a href="../reference/apply.htm">apply</a> and
+<a href="../reference/funcall.htm">funcall</a> only work with functions of
+type SUBR <nobr>[built-in</nobr> function] or CLOSURE [functions defined by
+<a href="defun.htm">defun</a>, <a href="flet.htm">flet</a>,
+<a href="labels.htm">labels</a>, or <a href="lambda.htm">lambda</a>], but
+with macros and <nobr>special forms</nobr> a '<nobr>bad function</nobr>'
+error is signalled. Here are two examples how to work around this
+behaviour:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">apply*</font> (function args)
+  (eval (cons function args)))
+
+(defun <font color="#0000CC">funcall*</font> (function args)
+  (eval (cons function args)))
+</pre>
+
+<p><b>Warning:</b> These functions can produce unwanted
+<nobr>side-effects</nobr> because macros and <nobr>special forms</nobr> do
+not need to conform to functional evaluation rules. Use them on your own
+risk.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>
+

@@ -1,0 +1,459 @@
+<html><head>
+
+<title>Characters and Strings</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>POSIX Character Classes</h1>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#posix-character-classes">POSIX Character Classes</a></nobr></li>
+<li><nobr><a href="#internal-functions">Internal Functions</a></nobr></li>
+<li><nobr><a href="#user-functions">User Functions</a></nobr></li>
+</ol>
+
+<hr>
+
+<h2>POSIX Character Classes</h2>
+
+<hr>
+
+<p>The functions on this page implement tests for the standard POSIX
+character classes, where all functions return the tested character if the
+test succeeds, or <a href="../reference/nil.htm">NIL</a></nobr> if the test
+fails.</p>
+
+<p>The <nobr>built-in</nobr> XLISP character test functions
+<a href="../reference/upper-case-p.htm">upper-case-p</a>,
+<a href="../reference/lower-case-p.htm">lower-case-p</a>,
+<a href="../reference/both-case-p.htm">both-case-p</a>,
+<a href="../reference/alphanumericp.htm">alphanumericp</a>, return the
+boolean values <a href="../reference/t.htm">&nbsp;T&nbsp;</a> or
+<a href="../reference/nil.htm">NIL</a> instead of the tested character,
+while <a href="../reference/digit-char-p.htm">digit-char-p</a> returns an
+integer <nobr>or <a href="../reference/nil.htm">NIL</a></nobr>, what is
+handy if you want to convert arbitrary Lisp symbols into numbers without
+producing an error, but all this is impractical for writing a string
+parser.</p>
+
+<p><nobr>The <a href="#internal-functions">Internal Functions</a></nobr>
+do not check if the argument is a character and therefore are faster than
+the <nobr><a href="#user-functions">User Functions</a></nobr>. Also note
+that XLISP is limited to ASCII characters, so there is no way to find out if
+an unicode character is upper- or lowercase if the character code is greater
+than <nobr>ASCII 127</nobr>.</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td colspan="3"><nobr><b>POSIX</b></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><b>Internal</b></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><b>User Function</b></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>alnum</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-alnum-p">char:alnum-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#alnum-character-p">alnum-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>alphanumeric = [a-z], [A-Z], [0-9]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>alpha</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-alpha-p">char:alpha-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#alpha-character-p">alpha-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>alphabetic = [a-z], [A-Z]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>blank</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-blank-p">char:blank-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#blank-character-p">blank-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>space and horizontal-tab</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>cntrl</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-cntrl-p">char:cntrl-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#cntrl-character-p">cntrl-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>code-chars 0-31 and 127</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>digit</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-digit-p">char:digit-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#digit-character-p">digit-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>decimal = [0-9]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>graph</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-graph-p">char:graph-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#graph-character-p">graph-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>graphical = alnum + punct</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>lower</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-lower-p">char:lower-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#lower-character-p">lower-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>lowercase = [a-z]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>print</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-print-p">char:print-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#print-character-p">print-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>printable = alnum + punct + space</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>punct</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-punct-p">char:punct-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#punct-character-p">punct-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>punctuation marks</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>space</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-space-p">char:space-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#space-character-p">space-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>characters producing whitespace</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>upper</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-upper-p">char:upper-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#upper-character-p">upper-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>uppercase = [A-Z]</nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td><nobr>[:</nobr></td>
+  <td align="center"><nobr>xdigit</nobr></td>
+  <td><nobr>:]</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#char-xdigit-p">char:xdigit-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td><nobr><a href="#xdigit-character-p">xdigit-character-p</a></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>hexadecimal = [0-9], [a-f], [A-F]</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>The main difference is:</p>
+
+<pre class="example">
+&gt; (char:alnum-p 'nonsense-value)
+<font color="#AA0000">error: bad argument type - NONSENSE-VALUE</font>
+
+&gt; (alnum-character-p 'nonsense-value)
+NIL
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="internal-functions"></a>
+
+<hr>
+
+<h2>Internal Functions</h2>
+
+<hr>
+
+<p>The internal functions are based on <nobr>built-in</nobr> XLISP
+functions, there are no external dependencies.</p>
+
+<a name="char-alnum-p"></a>
+
+<pre class="example">
+<font color="#008844">;; alphanumeric characters = a-z, A-z, 0-9</font>
+
+(defun <font color="#0000CC">char:alnum-p</font> (char)
+  (and (alphanumericp char)
+       char))
+<a name="char-alpha-p"></a>
+<font color="#008844">;; alphabetic characters = a-z, A-Z</font>
+
+(defun <font color="#0000CC">char:alpha-p</font> (char)
+  (and (both-char-p char)
+       char))
+<a name="char-blank-p"></a>
+<font color="#008844">;; blanks = space and horizontal-tab</font>
+
+(defun <font color="#0000CC">char:blank-p</font> (char)
+  (and (or (char= char #\Space)
+           (char= char #\Tab))
+       char))
+<a name="char-cntrl-p"></a>
+<font color="#008844">;; control characters = code-chars 0-31 and 127</font>
+
+(defun <font color="#0000CC">char:cntrl-p</font> (char)
+  (let ((code (char-code char)))
+    (and (or (&lt;= 0 code 31)
+             (= code 127))
+         char)))
+<a name="char-digit-p"></a>
+<font color="#008844">;; decimal digits = 0-9</font>
+
+(defun <font color="#0000CC">char:digit-p</font> (char)
+  (and (digit-char-p char)
+       char))
+<a name="char-graph-p"></a>
+<font color="#008844">;; graphical characters = alnum + punct</font>
+
+(defun <font color="#0000CC">char:graph-p</font> (char)
+  (and (&lt;= 33 (char-code char) 126)
+       char))
+<a name="char-lower-p"></a>
+<font color="#008844">;; lowercase characters = a-z</font>
+
+(defun <font color="#0000CC">char:lower-p</font> (char)
+  (and (lower-case-p char)
+       char))
+<a name="char-print-p"></a>
+<font color="#008844">;; printable characters = alnum + punct + space</font>
+
+(defun <font color="#0000CC">char:print-p</font> (char)
+  (and (&lt;= 32 (char-code char) 126)
+       char))
+<a name="char-punct-p"></a>
+<font color="#008844">;; punctuation marks</font>
+
+(defun <font color="#0000CC">char:punct-p</font> (char)
+  (let ((code (char-code char)))
+    (and (or (&lt;=  33 code  47)   <font color="#008844">;  ! " # $ % &amp; ' ( ) * + , - . /</font>
+             (&lt;=  58 code  64)   <font color="#008844">;  : ; &lt; = &gt; ? @</font>
+             (&lt;=  91 code  96)   <font color="#008844">;  [ \ ] ^ _ `</font>
+             (&lt;= 123 code 126))  <font color="#008844">;  { | } ~</font>
+         char)))
+<a name="char-space-p"></a>
+<font color="#008844">;; characters producing whitespace</font>
+<font color="#008844">;;</font>
+<font color="#008844">;;  9 = horizontal tab   10 = line feed         11 = vertical tab</font>
+<font color="#008844">;; 12 = form feed        13 = carriage return   32 = space</font>
+
+(defun <font color="#0000CC">char:space-p</font> (char)
+  (and (member (char-code char) '(9 10 11 12 13 32))
+       char))
+<a name="char-upper-p"></a>
+<font color="#008844">;; uppercase characters = A-Z</font>
+
+(defun <font color="#0000CC">char:upper-p</font> (char)
+  (and (upper-case-p char)
+       char))
+<a name="char-xdigit-p"></a>
+<font color="#008844">;; hexadecimal digits = 0-9, a-f, A-F</font>
+
+(defun <font color="#0000CC">char:xdigit-p</font> (char)
+  (and (or (digit-char-p char)
+           (let ((code (char-code char)))
+             (or (&lt;= 65 code  70)     <font color="#008844">; A-Z</font>
+                 (&lt;= 97 code 102))))  <font color="#008844">; a-z</font>
+       char))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="user-functions"></a>
+
+<hr>
+
+<h2>User Functions</h2>
+
+<hr>
+
+<p>The user functions are based on the
+<nobr><a href="#internal-functions">Internal Functions</a></nobr> above.
+There are no other dependencies.</p>
+
+<a name="alnum-character-p"></a>
+
+<pre class="example">
+<font color="#008844">;; alphanumeric characters = a-z, A-z, 0-9</font>
+
+(defun <font color="#0000CC">alnum-character-p</font> (char)
+  (and (characterp char)
+       (char:alnum-p char)))
+<a name="alpha-character-p"></a>
+<font color="#008844">;; alphabetic characters = a-z, A-Z</font>
+
+(defun <font color="#0000CC">alpha-character-p</font> (char)
+  (and (characterp char)
+       (char:alpha-p char)))
+<a name="blank-character-p"></a>
+<font color="#008844">;; blanks = space and horizontal-tab</font>
+
+(defun <font color="#0000CC">blank-character-p</font> (char)
+  (and (characterp char)
+       (char:blank-p char)))
+<a name="cntrl-character-p"></a>
+<font color="#008844">;; control characters = code-chars 0-31 and 127</font>
+
+(defun <font color="#0000CC">cntrl-character-p</font> (char)
+  (and (characterp char)
+       (char:cntrl-p char)))
+<a name="digit-character-p"></a>
+<font color="#008844">;; decimal digits = 0-9</font>
+
+(defun <font color="#0000CC">digit-character-p</font> (char)
+  (and (characterp char)
+       (char:digit-p char)))
+<a name="graph-character-p"></a>
+<font color="#008844">;; graphical characters = alnum + punct</font>
+
+(defun <font color="#0000CC">graph-character-p</font> (char)
+  (and (characterp char)
+       (char:graph-p char)))
+<a name="lower-character-p"></a>
+<font color="#008844">;; lowercase characters = a-z</font>
+
+(defun <font color="#0000CC">lower-character-p</font> (char)
+  (and (characterp char)
+       (char:lower-p char)))
+<a name="print-character-p"></a>
+<font color="#008844">;; printable characters = alnum + punct + space</font>
+
+(defun <font color="#0000CC">print-character-p</font> (char)
+  (and (characterp char)
+       (char:print-p char)))
+<a name="punct-character-p"></a>
+<font color="#008844">;; punctuation marks</font>
+
+(defun <font color="#0000CC">punct-character-p</font> (char)
+  (and (characterp char)
+       (char:punct-p char)))
+<a name="space-character-p"></a>
+<font color="#008844">;; characters producing whitespace</font>
+
+(defun <font color="#0000CC">space-character-p</font> (char)
+  (and (characterp char)
+       (char:space-p char)))
+<a name="upper-character-p"></a>
+<font color="#008844">;; uppercase characters = A-Z</font>
+
+(defun <font color="#0000CC">upper-character-p</font> (char)
+  (and (characterp char)
+       (char:upper-p char)))
+<a name="xdigit-character-p"></a>
+<font color="#008844">;; hexadecimal digits = 0-9, a-f, A-F</font>
+
+(defun <font color="#0000CC">xdigit-character-p</font> (char)
+  (and (characterp char)
+       (char:xdigit-p char)))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

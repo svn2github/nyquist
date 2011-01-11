@@ -1,0 +1,99 @@
+<html><head><title>XLISP eql</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>eql</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c, xlsubr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt>(eql expr1 expr2)</dt>
+<dd><i>expr1</i> - the first expression to compare<br>
+<i>expr2</i> - the second expression to compare<br>
+returns - <a href="t.htm">&nbsp;T&nbsp;</a> if the expressions have the
+same symbolic or numerical value, <a href="nil.htm">NIL</a> otherwise</dd>
+</dl>
+
+</div></p>
+
+<h2>Description</h2>
+
+<p>Two expressions are 'eql':</p>
+
+<ul>
+
+<li><p>If the expressions <nobr>are <a href="eq.htm">eq</a></nobr>.</p></li>
+
+<li><p>If two numbers of the same type
+<nobr>are <a href="number-equal.htm">&nbsp;=&nbsp;</a></nobr>.</p></li>
+
+<li><p>If two characters
+<nobr>are <a href="char-equal-s.htm">char=</a></nobr>.</p></li>
+
+</ul>
+
+<p>In all other cases 'eql' <nobr>returns <a href="nil.htm">NIL</a></nobr>.
+Note that arrays, lists, and strings are only 'eql' if they
+<nobr>are <a href="eq.htm">eq</a></nobr>.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(eql 'a 'a)          =&gt; T
+(eql 1 1)            =&gt; T
+(eql 1 1.0)          =&gt; NIL
+(eql 1.0 1.0)        =&gt; T
+(eql "a" "a")        =&gt; NIL
+(eql '(a b) '(a b))  =&gt; NIL
+(eql 'a 34)          =&gt; NIL
+
+(setq a '(a b))      <font color="#008844">; set value of A to (A B)</font>
+(setq b a)           <font color="#008844">; set B to point to A's value</font>
+(setq c '(a b))      <font color="#008844">; set value of C to different (A B)</font>
+(eql a b)            =&gt; T
+(eql a c)            =&gt; NIL
+</pre>
+
+<p>See also <a href="eq.htm">eq</a>, <a href="equal.htm">equal</a>,
+<nobr><a href="../examples/common-lisp/equalp.htm">cl:equalp</a></nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

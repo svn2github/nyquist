@@ -1,0 +1,96 @@
+<html><head><title>XLISP :isnew</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>:isnew</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>message selector</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlobj.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(send <i>object</i> :isnew <i>args</i>)</dt>
+<dd><i>object</i> - an existing object<br>
+<i>args</i> - the arguments to be passed to the init code<br>
+returns - the object</dd>
+</dl>
+
+<dl>
+<dt>(send <i>class</i> :isnew <i>ivars</i> [<i>cvars</i> [<i>superclass</i>]])</dt>
+<dd><i>class</i> - an existing XLISP class<br>
+<i>ivars</i> - list of instance variables for the new class<br>
+<i>cvars</i> - list of class variable symbols for the new class<br>
+<i>superclass</i> - superclass for the new object, default is
+<a href="object.htm">object</a><br>
+returns - the new class object</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The ':isnew' message selector causes an instance to run its
+initialization method. If an ':isnew' message is sent to a class, the class
+definition and state will be reset as specified in the arguments of the
+message.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq a-class (send class :new '(state)))   <font color="#008844">; create a new class A-CLASS with STATE</font>
+
+(send a-class :answer :isnew '()            <font color="#008844">; set up initialization</font>
+                             '((setq state nil) self))
+
+(send a-class :answer :set-it '(value)      <font color="#008844">; create :SET-IT message</font>
+                              '((setq state value)))
+
+(setq an-obj (send a-class :new))           <font color="#008844">; create AN-OBJ out of A-CLASS</font>
+
+(send an-obj :show)                         <font color="#008844">; returns object - STATE = NIL</font>
+
+(send an-obj :set-it 5)                     <font color="#008844">; STATE is set to 5</font>
+(send an-obj :show)                         <font color="#008844">; returns object - STATE = 5</font>
+
+(SEND an-obj :ISNEW)                        <font color="#008844">; re-initialize AN-OBJ</font>
+(send an-obj :show)                         <font color="#008844">; returns object - STATE = NIL</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-010.htm#object-isnew">:isnew</a>
+message selector in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

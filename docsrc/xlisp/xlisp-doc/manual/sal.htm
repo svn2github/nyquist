@@ -1,0 +1,160 @@
+<html><head>
+
+<title>SAL</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="xlisp-man-index.htm">XLISP</a>
+
+<hr>
+
+<h1>SAL</h1>
+
+<hr>
+
+<h2>Data Types</h2>
+
+<hr>
+
+<p>Data types used in SAL and XLISP:</p>
+
+<p><table cellpadding="0" cellspacing="2"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td colspan="2"></td>
+  <td align="center" colspan="2">SAL</td>
+  <td align="center" colspan="2">XLISP</td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>integer:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>1</code></nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>1</code></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>float:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>1.0</code></nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>1.0</code></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>string:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>"hello"</code></nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>"hello"</code></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>symbol:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code><font color="#0000CC">name</font></code></nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code><font color="#0000CC">name</font></code></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>keyword:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code><font color="#0000CC">symbol</font>:</code></nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>:<font color="#0000CC">symbol</font></code></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>list:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>{<font color="#0000CC">item-1 item-2</font> ...}</code></nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>(<font color="#0000CC">item-1 item-2</font> ...)</code></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>array:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code><font color="#0000CC">array</font>[<font color="#0000CC">index</font>]</code></nobr></td>
+  <td align="center" class="button" colspan="2"><nobr><code>(aref <font color="#0000CC">array index</font>)</code></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td align="right"><nobr>boolean:</nobr></td>
+  <td><nobr>&nbsp;</nobr></td>
+  <td align="center" class="button"><nobr><code><font color="#008844">#t</font></code></nobr></td>
+  <td align="center" class="button"><nobr><code><font color="#AA0000">#f</font></code></nobr></td>
+  <td align="center" class="button"><nobr><code>&nbsp;<font color="#008844">t</font>&nbsp;</code></nobr></td>
+  <td align="center" class="button"><nobr><code><font color="#AA0000">nil</font></code></nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>Data types with different concepts:</p>
+
+<p>SAL:</p>
+
+<ul>
+<li>expressions - evaluated to produce a return value</li>
+<li>statements - evaluated for side-effects</li>
+</ul>
+
+<p>XLISP:</p>
+
+<ul>
+<li>character - a single ASCII character</li>
+<li>object - the XLISP object system</li>
+<li>stream - data type of unknown length</li>
+<li>subr - built-in function</li>
+<li>fsubr - special form</li>
+<li>closure - user defined function</li>
+</ul>
+
+<p>A function to print the Lisp code, produced by the SAL compiler, to the
+screen:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">test</font> (string)
+  (if (not (stringp string))
+      (error "not a string" string)
+      (pprint (third (second (sal-compile string nil nil "&lt;console&gt;"))))))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<br>
+
+</body></html>

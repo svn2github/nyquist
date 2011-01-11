@@ -1,0 +1,84 @@
+<html><head><title>XLISP make-string-input-stream</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>make-string-input-stream</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(make-string-input-stream <i>string</i> [<i>start-pos</i> [<i>end-pos</i>]])</dt>
+<dd><i>string</i> - a string expression<br>
+<i>start-pos</i> - an optional numeric expression, default value is '0' [the first character of the string]<br>
+<i>end-pos</i> - an optional numeric expression, default value is the length of the string<br>
+returns - an unnamed stream that reads from the string</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'make-string-input-stream' function creates an unnamed stream from
+the 'string' expression. The stream can then be used as any other stream
+object. The optional 'start-pos' expression specifies the starting offset of
+the 'string' expression. A 'start-pos' of '0' will start with the beginning
+of the 'string'. The optional 'end-pos' expression specifies the ending
+offset of the 'string' expression. A 'end-pos' of 4 will make the fourth
+character the last in the stream. If the function is successful, it returns
+the unnamed stream object. If the string is empty, an unnamed stream is
+still returned. Error conditions include 'start-pos' and 'end-pos' being out
+of bounds.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(make-string-input-stream "abcdefgh")           <font color="#008844">; returns #&lt;Unnamed-Stream: #277e2&gt;</font>
+(read (make-string-input-stream "123456"))      <font color="#008844">; returns 123456</font>
+(read (make-string-input-stream "123456" 1))    <font color="#008844">; returns 23456</font>
+(read (make-string-input-stream "123456" 1 3))  <font color="#008844">; returns 23</font>
+(read (make-string-input-stream "123" 0))       <font color="#008844">; returns 123</font>
+(read (make-string-input-stream "123" 0 3))     <font color="#008844">; returns 123</font>
+(read (make-string-input-stream "123" 2 1))     <font color="#008844">; returns NIL</font>
+(read (make-string-input-stream "123" 0 4))     <font color="#008844">; error: string index out of bounds - 4</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-030.htm#make-string-input-stream">make-string-input-stream</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

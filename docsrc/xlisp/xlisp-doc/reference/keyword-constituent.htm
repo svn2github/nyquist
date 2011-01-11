@@ -1,0 +1,95 @@
+<html><head><title>XLISP :constituent</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>:constituent</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>keyword</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlread.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>&nbsp;:constituent</dt>
+</dl>
+
+<h2>Description</h2>
+
+<p>':constituent' is an entry that is used in the
+<a href="global-readtable.htm">*readtable*</a> system variable that
+contains XLISP's data structures relating to the processing of characters
+from the user [or files] and read-macro expansions. The existance of the
+':constituent' keyword means that the specified character is to be used, as
+is, with no further processing. The system defines that the following
+characters are ':constituent' characters:</p>
+
+<pre class="example">
+0123456789
+!$%&amp;*+-./:&lt;=&gt;?@[]^_{}~
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun look-at (table)               <font color="#008844">; define a function to</font>
+  (dotimes (ch 127)                  <font color="#008844">;   look in a table</font>
+    (prog ((entry (aref table ch)))  <font color="#008844">;   and print out any</font>
+      (case entry                    <font color="#008844">;   entries with a function</font>
+        (:CONSTITUENT
+          (princ (int-char ch)))
+        (T NIL))))
+  (terpri))
+
+(look-at *readtable*)                <font color="#008844">; prints  !$%&amp;*+-./0123456789</font>
+                                     <font color="#008844">;         :&lt;=&gt;?@ABCDEFGHIJKLM</font>
+                                     <font color="#008844">;         NOPQRSTUVWXYZ[]^_ab</font>
+                                     <font color="#008844">;         cdefghijklmnopqrstu</font>
+                                     <font color="#008844">;         vwxyz{}~</font>
+</pre>
+
+<p><b>Caution:</b> If you experiment with
+<nobr><a href="global-readtable.htm">*readtable*</a> ,</nobr> it is useful to
+save the old value in a variable, so that you can restore the system
+state.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-008.htm#constituent">:constituent</a>
+keyword in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

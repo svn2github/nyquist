@@ -1,0 +1,103 @@
+<html><head>
+
+<title>floor</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>floor</h1>
+
+<hr>
+
+<p>The 'floor' function
+<a href="../../reference/truncate.htm">truncate</a>s an integer or
+<nobr>floating-point</nobr> number toward negative infinity:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(<b>floor</b> <i>number</i>)</dt>
+<dd><i>number</i> - an integer or <nobr>floating-point</nobr> expression<br>
+returns - the integer result of truncating <i>number</i></dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">floor</font> (number)
+  (let ((trunc (truncate number)))
+    (if (or (plusp number) (= number trunc))
+        trunc
+        (1- trunc))))
+</pre>
+
+<p>The 'floor' function computes an integer number that has been truncated
+toward negative infinity. <nobr>That is</nobr>, the result represents the
+largest mathematical integer that is not larger than the number given as
+argument.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(floor 3)    =&gt; 3      (floor -3)    =&gt; -3
+(floor 3.0)  =&gt; 3      (floor -3.0)  =&gt; -3
+(floor 3.1)  =&gt; 3      (floor -3.1)  =&gt; -4
+(floor 3.5)  =&gt; 3      (floor -3.5)  =&gt; -4
+(floor 3.9)  =&gt; 3      (floor -3.9)  =&gt; -4
+(floor 4.0)  =&gt; 4      (floor -4.0)  =&gt; -4
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

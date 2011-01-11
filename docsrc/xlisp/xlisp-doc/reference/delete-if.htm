@@ -1,0 +1,110 @@
+<html><head><title>XLISP delete-if</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>delete-if</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(delete-if <i>test list</i>)</dt>
+<dd><i>test</i> - the test function to be performed<br>
+<i>list</i> - the list to delete from<br>
+returns - the list with matching elements deleted</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'delete-if' function destructively modifies the 'list' by removing
+the elements of the list that pass the 'test'. The destructive aspect of
+this operation means that the actual symbol value is used in the
+list-modifying operations, not a copy.</p>
+
+<p>'list' must evaluate to a valid list. An atom for 'list' will result in
+an error:</p>
+
+<pre class="example">
+<font color="#AA0000">error: bad argument type</font>
+</pre>
+
+<p>Having <a href="nil.htm">NIL</a> for 'list' will return a
+<a href="nil.htm">NIL</a> as the result.</p>
+
+<h2>Examples</h2>
+
+<p><b>Caution:</b> there's a bug:</p>
+
+<pre class="example">
+(setq mylist '(1 2 3 4 5 6 7 8))         <font color="#008844">; set up a list starting of numbers</font>
+(delete-if 'oddp mylist)                 <font color="#008844">; returns (2 4 6)</font>
+(print mylist)                           <font color="#008844">; prints  (1 2 4 6)</font> <font color="#AA0000">&lt;-BUG!</font>
+
+(setq mylist '(1 2 3 4 5 6 7 8))         <font color="#008844">; set up the same list again</font>
+(setq mylist (delete-if 'oddp mylist))   <font color="#008844">; returns (2 4 6)</font>
+(print mylist)                           <font color="#008844">; prints  (2 4 6)</font> <font color="#009900">&lt;-OK</font>
+
+(setq mylist '(1 2 3 4 5 6 7 8))         <font color="#008844">; ... again ...</font>
+(delete-if 'evenp mylist)                <font color="#008844">; returns (1 3 5 7)</font>
+(print mylist)                           <font color="#008844">; prints  (1 3 5 7)</font> <font color="#009900">&lt;-OK</font>
+
+(setq mylist '(1 2 3 4 5 6 7 8))         <font color="#008844">; ... and again ...</font>
+(setq mylist (delete-if 'evenp mylist))  <font color="#008844">; returns (1 3 5 7)</font>
+(print mylist)                           <font color="#008844">; prints  (1 3 5 7)</font> <font color="#009900">&lt;-OK</font>
+</pre>
+
+<p><b>Bug:</b> 'delete-if' will return the proper value, but it does not
+always properly modify the symbol containing the value. This seems to be
+true if the first element of the 'list' passes the test [and should be
+deleted]. It's always better to use 'delete-if' together with
+<a href="setq.htm">setq</a> or
+<a href="setf.htm">setf</a> as shown in <nobr>example 2</nobr>
+<nobr>and 4.</nobr></p>
+
+<p><b>Note:</b> This bug can be reproduced with Nyquist 2.36 [in June 2007],
+so please take care.</p>
+
+<p><b>Common Lisp:</b> XLISP does not support the ':from-end', ':start',
+':end', ':count' and ':key' keywords which Common LISP does.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-017.htm#delete-if">delete-if</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

@@ -1,0 +1,79 @@
+<html><head><title>XLISP make-string-output-stream</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>make-string-output-stream</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(make-string-output-stream)</dt>
+<dd>returns - an unnamed output stream</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'make-string-output-stream' function creates and returns an unnamed
+output stream. The stream can then be used as any other stream object.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(make-string-output-stream)             <font color="#008844">; returns #&lt;Unnamed-Stream: #2d9c0&gt;</font>
+
+(setq out (make-string-output-stream))  <font color="#008844">; returns #&lt;Unnamed-Stream: #2d95c&gt;</font>
+
+(format out "fee fi fo fum ")           <font color="#008844">; \</font>
+(format out "I smell the blood of ")    <font color="#008844">;  fill up output stream</font>
+(format out "Elmer Fudd")               <font color="#008844">; /</font>
+(get-output-stream-string out)          <font color="#008844">; returns "fee fi fo fum I smell the blood of Elmer Fudd"</font>
+
+(format out "~%now what")               <font color="#008844">; add more to output stream</font>
+(get-output-stream-string out)          <font color="#008844">; returns "\nnow what"</font>
+
+(format out "hello")                    <font color="#008844">; add more to output stream</font>
+(read out)                              <font color="#008844">; returns HELLO</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-030.htm#make-string-output-stream">make-string-output-stream</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

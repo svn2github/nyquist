@@ -1,0 +1,88 @@
+<html><head><title>XLISP rem</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>rem</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(rem <i>expr1</i> ... )</dt>
+<dd><i>exprN</i> - integer number or expression<br>
+returns - the result of the remainder operation</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'rem' function takes the first pair of expressions and determines
+what is the remainder from dividing the first by the second expression. If
+there are no other arguments, this value is returned. If there are
+additional arguments, the remainder of the first pair is applied to the next
+and then the next and so on. In other words:</p>
+
+<pre class="example">
+(REM A B C D)
+</pre>
+
+<p>is equivalent to:</p>
+
+<pre class="example">
+(REM (REM (REM A B) C) D)
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(rem 1)        <font color="#008844">; returns 1</font>
+(rem 1 2)      <font color="#008844">; returns 1</font>
+(rem 13 8)     <font color="#008844">; returns 5</font>
+(rem 13 8 3)   <font color="#008844">; returns 2</font>
+(rem 13.5 8)   <font color="#008844">; error: bad floating point operation</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp only allows two arguments. XLISP supports
+an arbitrary number of arguments. Also, Common Lisp allows for floating
+point expressions where XLISP does not support this.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-023.htm#rem">rem</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

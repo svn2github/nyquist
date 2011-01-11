@@ -1,0 +1,82 @@
+<html><head><title>XLISP symbol-value</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>symbol-value</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlbfun.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(symbol-value <i>symbol</i>)</dt>
+<dd><i>symbol</i> - an expression that evaluates to a symbol name<br>
+returns - the symbol's value</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'symbol-value' function takes the 'symbol' expression and returns
+the current value of the 'symbol'.</p>
+
+<p>If the 'symbol' had not existed, then it will be created and
+<a href="intern.htm">intern</a>ed into the system symbol table
+<nobr><a href="global-obarray.htm">*obarray*</a> ,</nobr> but with it's
+value unbound and an empty property list. In this case of a previously
+non-existant 'symbol', since it has no bound value, the 'symbol-value'
+function will still report an error due to an unbound variable.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(setq myvar 55)                   <font color="#008844">; set MYVAR to value 55</font>
+(symbol-value 'myvar)             <font color="#008844">; returns 55</font>
+(symbol-value 'floop)             <font color="#008844">; error: unbound variable</font>
+
+(setq my-symbol 'a)               <font color="#008844">; set MY-SYMBOL to A</font>
+
+(setq a '(contents of symbol a))  <font color="#008844">; set A to value (CONTENTS OF SYMBOL A)</font>
+
+(symbol-value my-symbol)          <font color="#008844">; returns (CONTENTS OF SYMBOL A)</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-013.htm#symbol-value">symbol-value</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

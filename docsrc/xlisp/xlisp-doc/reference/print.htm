@@ -1,0 +1,95 @@
+<html><head><title>XLISP print</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>print</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c, xlprin.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(print <i>expr</i> [<i>dest</i>])</dt>
+<dd><i>expr</i> - an expression<br>
+<i>dest</i> - an optional destination, must be a file pointer or
+stream, default is <a href="global-standard-output.htm">*standard-output*</a><br>
+returns - the expression</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'print' function prints the 'expr' to the specified 'destination'.
+The 'expr' is printed followed by a 'newline' character. If 'expr' is a
+string, it will be printed with quotes around the string. The 'expr' is
+returned as the result. The 'destination' may be a file pointer or a stream.
+If there is no 'destination',
+<a href="global-standard-output.htm">*standard-output*</a> is the default.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(print 'a)                              <font color="#008844">; prints A     with #\Newline</font>
+(print '(a b))                          <font color="#008844">; prints (A B) with #\Newline</font>
+(print 99)                              <font color="#008844">; prints 99    with #\Newline</font>
+(print "hi")                            <font color="#008844">; prints "hi"  with #\Newline</font>
+
+(setq f (open "f" :direction :output))  <font color="#008844">; create file</font>
+(print "hi" f)                          <font color="#008844">; returns "hi"</font>
+(print 727 f)                           <font color="#008844">; returns 727</font>
+(print "ho" f)                          <font color="#008844">; returns "ho"</font>
+(close f)                               <font color="#008844">; file contains "hi"#\Newline</font>
+                                        <font color="#008844">;               727#\Newline</font>
+                                        <font color="#008844">;               "ho"#\Newline</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp specifies that 'pprint' with a
+'destination' of <a href="nil.htm">NIL</a> will go to
+<a href="global-standard-output.htm">*standard-output*</a>. XLISP does not send the
+output to <a href="global-standard-output.htm">*standard-output*</a> with a
+'destination' of <a href="nil.htm">NIL</a>. Common Lisp also
+specifies that a 'destination' of
+<a href="t.htm">&nbsp;T&nbsp;</a> will be sent to
+*terminal-io*, which is not defined in XLISP by default. XLISP does not
+allow <a href="t.htm">&nbsp;T&nbsp;</a> as a valid argument
+for 'destination'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-027.htm#print">print</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

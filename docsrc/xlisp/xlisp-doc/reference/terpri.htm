@@ -1,0 +1,90 @@
+<html><head><title>XLISP terpri</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>terpri</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlfio.c, xlprin.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(terpri [<i>dest</i>])</dt>
+<dd><i>dest</i> - an optional destination, must be a file pointer or
+stream, default is <a href="global-standard-output.htm">*standard-output*</a><br>
+returns - <a href="nil.htm">NIL</a></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'terpri' function prints a new-line to the specified 'destination'
+This will terminate the current print line for 'destination'.
+<a href="nil.htm">NIL</a> is always returned as the result. The
+'destination' may be a file pointer or a stream. If there is no
+'destination', <a href="global-standard-output.htm">*standard-output*</a> is the
+default.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(terpri)                                 <font color="#008844">; prints  #\Newline</font>
+
+(setq f (open "pr" :direction :output))  <font color="#008844">; create a file</font>
+(princ "hi" f)                           <font color="#008844">; returns "hi"</font>
+(princ 727 f)                            <font color="#008844">; returns 727</font>
+(princ "ho" f)                           <font color="#008844">; returns "ho"</font>
+(terpri f)                               <font color="#008844">; returns NIL</font>
+(close f)                                <font color="#008844">; file contains hi727ho#\Newline</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp specifies that print operations with a
+'destination' of <a href="nil.htm">NIL</a> will go to
+<a href="global-standard-output.htm">*standard-output*</a>. XLISP does not send the
+output to <a href="global-standard-output.htm">*standard-output*</a> with a
+'destination' of <a href="nil.htm">NIL</a>. Common Lisp also
+specifies that a 'destination' of
+<a href="t.htm">&nbsp;T&nbsp;</a> will be sent to
+*terminal-io*, which is not defined in XLISP by default. XLISP does not
+allow <a href="t.htm">&nbsp;T&nbsp;</a> as a valid argument
+for 'destination'.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-027.htm#terpri">terpri</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

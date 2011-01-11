@@ -1,0 +1,81 @@
+<html><head><title>XLISP second</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>second</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlinit.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(second <i>expr</i>)</dt>
+<dd><i>expr</i> - a list or list expression<br>
+returns - the second element of <i>expr</i></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'second' function returns the second element of a list or list
+expression. If the list is
+<nobr><a href="nil.htm">NIL</a> ,</nobr>
+<a href="nil.htm">NIL</a> is returned.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(second '(1 2 3))              <font color="#008844">; returns 2</font>
+(second NIL)                   <font color="#008844">; returns NIL</font>
+
+(setq carol '(a b c))          <font color="#008844">; set up variable CAROL</font>
+(first carol)                  <font color="#008844">; returns A</font>
+(second carol)                 <font color="#008844">; returns B</font>
+(rest carol)                   <font color="#008844">; returns (B C)</font>
+
+(setq children '(amanda ben))  <font color="#008844">; set up variable CHILDREN</font>
+(second children)              <font color="#008844">; returns BEN</font>
+</pre>
+
+<p><b>Note:</b> This function is set to the same code as the
+<a href="caar.htm">cadr</a> function.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#second">second</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

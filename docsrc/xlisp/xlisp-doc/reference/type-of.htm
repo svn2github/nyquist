@@ -1,0 +1,103 @@
+<html><head><title>XLISP type-of</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>type-of</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlsys.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(type-of <i>expr</i>)</dt>
+<dd><i>expr</i> - an expression to check<br>
+returns - the type of the expression</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'type-of' function returns the type of the expression.</p>
+
+<ul>
+<li><nobr>SYMBOL - for symbols</nobr></li>
+<li><nobr>OBJECT - for objects</nobr></li>
+<li><nobr>CONS - for conses</nobr></li>
+<li><nobr>SUBR - for built-in functions</nobr></li>
+<li><nobr>FSUBR - for special forms</nobr></li>
+<li><nobr>CLOSURE - for defined functions</nobr></li>
+<li><nobr>STRING - for strings</nobr></li>
+<li><nobr>FIXNUM - for integers</nobr></li>
+<li><nobr>FLONUM - for floating point numbers</nobr></li>
+<li><nobr>CHARACTER - for characters</nobr></li>
+<li><nobr>FILE-STREAM - for file pointers</nobr></li>
+<li><nobr>UNNAMED-STREAM - for unnamed streams</nobr></li>
+<li><nobr>ARRAY - for arrays</nobr></li>
+</ul>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(type-of NIL)                             <font color="#008844">; returns NIL</font>
+(type-of '#(1 2 3))                       <font color="#008844">; returns ARRAY</font>
+(type-of (lambda (x) (print x)))          <font color="#008844">; returns CLOSURE</font>
+(type-of '(a b))                          <font color="#008844">; returns CONS</font>
+(type-of #'savefun)                       <font color="#008844">; returns CLOSURE</font>
+(type-of '(a . b))                        <font color="#008844">; returns CONS</font>
+(type-of *standard-output*)               <font color="#008844">; returns FILE-STREAM</font>
+(type-of 1.2)                             <font color="#008844">; returns FLONUM</font>
+(type-of #'do)                            <font color="#008844">; returns FSUBR</font>
+(type-of 1)                               <font color="#008844">; returns FIXNUM</font>
+(type-of object)                          <font color="#008844">; returns OBJECT</font>
+(type-of "str")                           <font color="#008844">; returns STRING</font>
+(type-of #'car)                           <font color="#008844">; returns SUBR</font>
+(type-of 'a)                              <font color="#008844">; returns SYMBOL</font>
+(type-of #\a)                             <font color="#008844">; returns CHARACTER</font>
+(type-of (make-string-input-stream "a"))  <font color="#008844">; returns UNNAMED-STREAM</font>
+</pre>
+
+<p><b>Common Lisp:</b> The XLISP and Common Lisp 'type-of' functions are
+basically the same. Differences between the two can occur in what the types
+are called [like CHARACTER in XLISP and STANDARD-CHAR in Common Lisp]. Also,
+Common Lisp can give additional information. For strings, it returns a list
+of the form (SIMPLE-STRING 32) where the number 32 is the string size.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-031.htm#type-of">type-of</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

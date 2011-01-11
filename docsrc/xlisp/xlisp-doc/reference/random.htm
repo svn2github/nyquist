@@ -1,0 +1,86 @@
+<html><head><title>XLISP random</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>random</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlmath.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(random <i>expr</i>)</dt>
+<dd><i>expr</i> - integer number or expression<br>
+returns - a random number between 0 and <nobr><i>expr</i> - 1.</nobr></dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'random' function generates and returns a random number between 0 and
+<nobr>'expr' - 1.</nobr> If 'expr' is negative, the number range is forced
+to be positive.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(random 100)      <font color="#008844">; returns 7</font>
+(random 100)      <font color="#008844">; returns 49</font>
+(random 100)      <font color="#008844">; returns 73</font>
+(random -100)     <font color="#008844">; returns 58</font>
+(random 100.01)   <font color="#008844">; error: bad floating point operation</font>
+</pre>
+
+<p><b>Common Lisp:</b> Common Lisp allows an optional 'state' parameter,
+which is not supported in XLISP. Also, Common LISP allows floating point
+numbers, which XLISP does not support.</p>
+
+<p><b>Note:</b> This function is an extension of the XLISP system. It is
+provided in the 'msstuff.c' source code file. If your XLISP system is built
+for an IBM PC and compatibles, this function will work. If your system is
+built on UNIX or some other operating system, it will need the code in the
+corresponding 'stuff.c' file.</p>
+
+<p><b>Nyquist:</b> As far as I know the Nyquist 'random' function works on
+all systems. See also the Nyquist
+<a href="xlisp-man-033.htm#rrandom">rrandom</a> function.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-023.htm#random">random</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

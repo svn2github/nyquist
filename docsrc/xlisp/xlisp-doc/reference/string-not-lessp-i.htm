@@ -1,0 +1,98 @@
+<html><head><title>XLISP string-not-lessp</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>string-not-lessp</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>predicate function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlstr.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(string-not-lessp <i>string1 string2</i> [<i>key offset</i>] ... )</dt>
+<dd><i>stringN</i> - a string expression<br>
+<i>key</i> - a keyword [one of :start1 :start2 :end1 :end2]<br>
+<i>offset</i> - an optional integer expression for a keyword<br>
+returns - a non-<a href="nil.htm">NIL</a> value if <i>string1</i>
+is greater than or equal to <i>string2</i> in
+<a href="../misc/ascii-table.htm">ASCII</a> ordering,
+<a href="nil.htm">NIL</a> otherwise<br>
+<b>Note:</b> case is not significant with this function</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'string-not-lessp' [string-not-less-than] predicate function
+takes two string arguments. A non-<a href="nil.htm">NIL</a> value
+is returned if 'string1' is greater than or equal to 'string2' in
+<a href="../misc/ascii-table.htm">ASCII</a> ordering, otherwise
+<a href="nil.htm">NIL</a> is returned. The
+non-<a href="nil.htm">NIL</a> value returned is the integer index
+of the first character of 'string1' which is
+<a href="char-lessp-i.htm">char-not-lessp</a> [char-not-less-than] the
+corresponding character of 'string2'. This test is not case sensitive, the
+character '#\a' is considered to be the same as '#\A'.</p>
+
+<p>The keyword arguments allow for accessing substrings within 'string1' and
+'string2'. The keyword arguments each require a keyword ':start1', ':end1',
+':start2' or ':end2' and a single integer expression as a pair with the
+keyword first and the integer second. The pairs may be in any order. The
+':startN' keywords specify the starting offset of the substring. A value of
+0 starts the string at the beginning [no offset]. The ':endN' keywords
+specify the ending offset of the substring. A value of 3 ends the string
+after the 3rd character [an offset of 3 characters].</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(string-not-lessp "a" "b")                <font color="#008844">; returns NIL</font>
+(string-not-lessp "a" "a")                <font color="#008844">; returns 1</font>
+(string-not-lessp "a" "A")                <font color="#008844">; returns 1</font>
+(string-not-lessp "A" "a")                <font color="#008844">; returns 1</font>
+(string-not-lessp "abc" "abc ")           <font color="#008844">; returns NIL</font>
+(string-not-lessp "1234qr" "123456")      <font color="#008844">; returns 4</font>
+
+(string-not-lessp "J Smith" "K Jones" :start1 1 :start2 1)  <font color="#008844">; strip off the first chars </font>
+                                                            <font color="#008844">; returns 2</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-025.htm#string-not-lessp">string-not-lessp</a>
+predicate function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

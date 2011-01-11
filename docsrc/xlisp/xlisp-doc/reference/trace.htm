@@ -1,0 +1,93 @@
+<html><head><title>XLISP trace</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>trace</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(trace <i>function</i> ... )</dt>
+<dd><i>function</i> - an unquoted function<br>
+returns - the trace list</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'trace' special form allows the tracing of user or system functions.
+'trace' returns a list containing the current set of functions that are
+being traced. The 'function' does not have to be currently defined, it can
+be created as part of the execution. The trace output consists of entry and
+exit information.</p>
+
+<p>At entry and exit of a traced 'function', lines will be printed of the
+form:</p>
+
+<pre class="example">
+Entering: <font color="#008844"><i>function</i></font>, Argument list: <font color="#008844"><i>arg-list</i></font>
+Exiting: <font color="#008844"><i>function</i></font>, Value: <font color="#008844"><i>return-value</i></font>
+</pre>
+
+<p>A list of all currently traced functions can be found in the
+<a href="global-tracelist.htm">*tracelist*</a> system variable.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(defun foo (x) (print (car x)))  <font color="#008844">; define FOO</font>
+(trace 'foo)                     <font color="#008844">; returns (FOO)</font>
+(trace 'car)                     <font color="#008844">; returns (CAR FOO)</font>
+
+(foo '(a))                       <font color="#008844">; Entering: FOO, Argument list: ((A))</font>
+                                 <font color="#008844">;  Entering: CAR, Argument list: ((A))</font>
+                                 <font color="#008844">;  Exiting: CAR, Value: A</font>
+                                 <font color="#008844">; A</font>
+                                 <font color="#008844">; Exiting: FOO, Value: A</font>
+                                 <font color="#008844">; returns A</font>
+</pre>
+
+<p><b>Common Lisp:</b> The XLISP 'trace' function does not support any
+keyword options, which Common Lisp allows.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-022.htm#trace">trace</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

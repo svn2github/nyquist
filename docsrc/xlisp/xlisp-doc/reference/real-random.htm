@@ -1,0 +1,82 @@
+<html><head><title>XLISP real-random</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>real-random</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>Lisp function (closure)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>misc.lsp</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<p><div class="box">
+
+<dl>
+<dt><nobr>(<b>real-random</b> <i>from to</i>)</nobr></dt>
+<dd><i>from</i>, <i>to</i> - the limits as integer or floating point numbers<br>
+returns - a random floating point number between <i>from</i> and <i>to</i></dd>
+</dl>
+
+</div></p>
+
+<p>In Nyquist, '<nobr>real-random</nobr>' is implemented as a Lisp
+function:</p>
+
+<pre class="example">
+(defun <font color="#0000CC">real-random</font> (from to)
+  (+ (* (rrandom) (- to from)) from))
+</pre>
+
+<h2>Description</h2>
+
+<p>The '<nobr>real-random</nobr>' function returns a random floating point
+number between 'from' and 'to'. <nobr>See also</nobr> <a
+href="rrandom.htm">rrandom</a>, which is <nobr>equivalent to:</nobr>
+
+<pre class="example">
+(real-random 0 1))
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+
+</pre>
+
+<p>See also <a href="rrandom.htm">rrandom</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

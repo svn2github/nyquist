@@ -1,0 +1,2055 @@
+<html><head>
+
+<title>Lisp Hints</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>Lisp Hints</h1>
+
+<hr>
+
+<p>The original document was written by <nobr>Geoffrey J. Gordon</nobr>
+[<nobr>ggordon@cs.cmu.edu</nobr>], <nobr>Friday, February 5, 1993</nobr>,
+<nobr>for <a href="http://www.cons.org/cmucl/">CMUCL</a></nobr>.</p>
+
+<p>Modified by:</p>
+
+<ul>
+
+<li><nobr>Bruno Haible for <a href="http://www.gnu.org/software/clisp/">CLISP</a>.</nobr></li>
+
+<li><nobr>Tom Almy in 1995 for <a href="http://almy.us/xlisp.html">XLISP Plus</a></nobr>.</li>
+
+<li><nobr>Edgar M. Franke [edgar-rft@web.de] in 2010 for 
+<a href="http://www.cs.cmu.edu/~music/music.software.html">Nyquist</a></nobr>.</li>
+
+</ul>
+
+<p>All examples tested with <nobr>Nyquist 3.03</nobr> in <nobr>November
+2010</nobr>.</p>
+
+<hr>
+
+<h2>Table of Contents</h2>
+
+<hr>
+
+<ol>
+<li><nobr><a href="#1">Symbols</a></nobr></li>
+<li><nobr><a href="#2">Numbers</a></nobr></li>
+<li><nobr><a href="#3">Conses</a></nobr></li>
+<li><nobr><a href="#4">Lists</a></nobr></li>
+<li><nobr><a href="#5">Functions</a></nobr></li>
+<li><nobr><a href="#6">Printing</a></nobr></li>
+<li><nobr><a href="#7">Forms and the Top-Level Loop</a></nobr></li>
+<li><nobr><a href="#8">Special Forms</a></nobr></li>
+<li><nobr><a href="#9">Binding</a></nobr></li>
+<li><nobr><a href="#10">Dynamic Scoping</a></nobr></li>
+<li><nobr><a href="#11">Arrays</a></nobr></li>
+<li><nobr><a href="#12">Strings</a></nobr></li>
+<li><nobr><a href="#13">Setf</a></nobr></li>
+<li><nobr><a href="#14">Booleans and Conditionals</a></nobr></li>
+<li><nobr><a href="#15">Iteration</a></nobr></li>
+<li><nobr><a href="#16">Non-local Exits</a></nobr></li>
+<li><nobr><a href="#17">Funcall, Apply, and Mapcar</a></nobr></li>
+<li><nobr><a href="#18">Lambda</a></nobr></li>
+<li><nobr><a href="#19">Sorting</a></nobr></li>
+<li><nobr><a href="#20">Equality</a></nobr></li>
+<li><nobr><a href="#21">Some Useful List Functions</a></nobr></li>
+</ol>
+
+<a name="1"></a>
+
+<hr>
+
+<h2>1&nbsp; Symbols</h2>
+
+<hr>
+
+<p>A symbol is just a sequence of characters. There are restrictions on what
+you can include in a symbol and what the first character can be, but as long
+as you stick to letters, digits, and hyphens, you'll be safe. [Except that
+if you use only digits and possibly an initial hyphen, Lisp will think you
+typed an integer rather than a symbol.] Some examples of symbols:</p>
+
+<pre class="example">
+a
+b
+c1
+foo
+bar
+baaz-quux-garply
+</pre>
+
+<p>Some things you can do with symbols follow. Things after a <nobr>'>'
+prompt</nobr> are what you type to the Lisp interpreter, while other things
+are what the Lisp interpreter prints back to you. The <nobr>semicolon
+';'</nobr> is Lisp's comment character. Everything from a ';' to the end of
+line is ignored.</p>
+
+<pre class="example">
+&gt; (setq a 5)        <font color="#008844">; store a number as the value of a symbol</font>
+5
+
+&gt; a                 <font color="#008844">; take the value of a symbol</font>
+5
+
+&gt; (let ((a 6))      <font color="#008844">; bind the value of a symbol temporarily to 6</font>
+    a)
+6
+
+&gt; a                 <font color="#008844">; the value returns to 5 once the let is finished</font>
+5
+
+&gt; (+ a 6)           <font color="#008844">; use the value of a symbol as an argument to a function</font>
+11
+
+&gt; b                 <font color="#008844">; try to take the value of a symbol which has no value</font>
+<font color="#AA0000">error: unbound variable - b</font>
+</pre>
+
+<p>There are two special symbols,
+<a href="../reference/t.htm">&nbsp;T&nbsp;</a>
+<nobr>and <a href="../reference/nil.htm">NIL</a></nobr>. <nobr>The
+value</nobr> of <a href="../reference/t.htm">&nbsp;T&nbsp;</a> is defined
+always to <nobr>be <a href="../reference/t.htm">&nbsp;T&nbsp;</a></nobr>,
+and the value of <a href="../reference/nil.htm">NIL</a></nobr> is defined
+always to <nobr>be <a href="../reference/nil.htm">NIL</a></nobr></nobr>.
+Lisp uses <a href="../reference/t.htm">&nbsp;T&nbsp;</a> and
+<a href="../reference/nil.htm">NIL</a></nobr> to represent true and false.
+<nobr>An example</nobr> of this use is in the if statement, described more
+fully later:</p>
+
+<pre class="example">
+&gt; (if t 5 6)
+5
+
+&gt; (if nil 5 6)
+6
+
+&gt; (if 4 5 6)
+5
+</pre>
+
+<p>The last example is odd but correct.
+<nobr><a href="../reference/nil.htm">NIL</a> means</nobr> false, and
+anything else means true. Unless we have a reason to do otherwise, we use
+<a href="../reference/t.htm">&nbsp;T&nbsp;</a> to mean true, just for the
+sake of clarity.</p>
+
+<p>Symbols like <a href="../reference/t.htm">&nbsp;T&nbsp;</a> and
+<a href="../reference/nil.htm">NIL</a> are called
+'<nobr>self-evaluating</nobr>' symbols, because they evaluate to themselves.
+There is a whole class of <nobr>self-evaluating</nobr> symbols called
+'keywords'. Any symbol whose name starts with a colon is a keyword. [See
+below for some uses for keywords.] Some examples:</p>
+
+<pre class="example">
+&gt; :this-is-a-keyword
+:THIS-IS-A-KEYWORD
+
+&gt; :so-is-this
+:SO-IS-THIS
+
+&gt; :me-too
+:ME-TOO
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="2"></a>
+
+<hr>
+
+<h2>2&nbsp; Numbers</h2>
+
+<hr>
+
+<p>An integer number [FIXNUM] is a sequence of digits optionally preceded by
+a plus <nobr>sign '+'</nobr> or a minus <nobr>sign '-'</nobr>. <nobr>A
+floating</nobr> point number [FLONUM] looks like an integer, except that it
+has a decimal point and optionally can be written in scientific notation.
+Here are some numbers:</p>
+
+<pre class="example">
+5
+17
+-34
++6
+3.1415
+1.722e-15
+</pre>
+
+<p>The standard arithmetic functions are all available:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>+</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/addition.htm">addition</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>-</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/subtraction.htm">subtraction</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>*</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/multiplication.htm">multiplication</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>/</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/division.htm">division</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>truncate</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/truncate.htm">truncate</a> a float to an integer</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>rem</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/rem.htm">remainder</a> of a division</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>sin</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/sin.htm">sine</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>cos</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/cos.htm">cosine</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>tan</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/tan.htm">tangent</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>sqrt</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr><a href="../reference/sqrt.htm">square root</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>exp</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>natural <a href="../reference/exp.htm">exponent</a></nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>expt</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>math <a href="../reference/expt.htm">exponent</a></nobr></td>
+</tr>
+</tbody></table></p>
+
+
+<p><nobr><a href="../reference/addition.htm">&nbsp;+&nbsp;</a> [addition]</nobr>,
+<nobr><a href="../reference/subtraction.htm">&nbsp;-&nbsp;</a> [subtraction]</nobr>,
+<nobr><a href="../reference/multiplication.htm">&nbsp;*&nbsp;</a> [multiplication]</nobr>,
+and <nobr><a href="../reference/division.htm">&nbsp;/&nbsp;</a> [division]</nobr>
+accept any number of arguments and return a number according to type
+contagion. This means that as long as only integer numbers are given as
+arguments the result will always be an integer number, but as soon as at
+least one of the arguments is a floating number then the result will be a
+floating point number. Here are some examples:</p>
+
+<pre class="example">
+&gt; (/ 3 2)               <font color="#008844">; integer division causes rounding error</font>
+1
+
+&gt; (/ 3 2.0)             <font color="#008844">; the 2.0 forces floating point computation</font>
+1.5
+
+&gt; (exp 1)               <font color="#008844">; e</font>
+2.71828
+
+&gt; (exp 3)               <font color="#008844">; e * e * e</font>
+20.0855
+
+&gt; (expt 3 4.2)          <font color="#008844">; exponent with a base other than e</font>
+100.904
+
+&gt; (+ 5 6 7 (* 8 9 10))  <font color="#008844">; the functions + - * / accept multiple arguments</font>
+738
+</pre>
+
+<p>In Nyquist the valid range of integer numbers is limited by the size of a
+C 'long' value on the machine on which Nyquist is running.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="3"></a>
+
+<hr>
+
+<h2>3&nbsp; Conses</h2>
+
+<hr>
+
+<p>A <a href="../reference/cons.htm">cons</a> is just a
+<nobr>two-field</nobr> record. <nobr>The fields</nobr> are called
+<a href="../reference/car.htm">car</a> and
+<a href="../reference/cdr.htm">cdr</a>, for historical reasons.
+<nobr>On the</nobr> first machine where Lisp was implemented, there
+were two assembly language instructions CAR and CDR which stood for
+'contents of address register' and 'contents of decrement register'.
+Conses were implemented using these two registers.</p>
+
+<p>Conses are created by the <a href="../reference/cons.htm">cons</a>
+function:</p>
+
+<pre class="example">
+&gt; (cons 4 5)            <font color="#008844">; Allocate a cons. Set the car to 4 and the cdr to 5</font>
+(4 . 5)
+
+&gt; (cons (cons 4 5) 6)
+((4 . 5) . 6)
+
+&gt; (car (cons 4 5))
+4
+
+&gt; (cdr (cons 4 5))
+5
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="4"></a>
+
+<hr>
+
+<h2>4&nbsp; Lists</h2>
+
+<hr>
+
+<p>You can build many structures out of conses. Perhaps the simplest is a
+linked list. <nobr>The <a href="../reference/car.htm">car</a></nobr>
+<nobr>[the <a href="../reference/first.htm">first</a></nobr> element] of
+each cons points to one of the elements of the list, and the
+<a href="../reference/cdr.htm">cdr</a> <nobr>[the
+<a href="../reference/rest.htm">rest</a></nobr> of the elements] points
+either to another cons or to <a href="../reference/nil.htm">NIL</a>.
+<nobr>You can</nobr> create such a linked list with the
+<a href="../reference/list.htm">list</a> function:</p>
+
+<pre class="example">
+&gt; (list 4 5 6)
+(4 5 6)
+</pre>
+
+<p>Notice that Lisp prints linked lists a special way. <nobr>It omits</nobr>
+some of the periods and parentheses. The rule is that if the
+<a href="../reference/cdr.htm">cdr</a> of a
+<a href="../reference/cons.htm">cons</a> is
+<a href="../reference/nil.htm">NIL</a>, Lisp doesn't bother to print the
+period or the <a href="../reference/nil.htm">NIL</a>, and if the
+<a href="../reference/cdr.htm">cdr</a> of
+<nobr><a href="../reference/cons.htm">cons</a> A</nobr> is
+<nobr><a href="../reference/cons.htm">cons</a> B</nobr>, then Lisp doesn't
+bother to print the period for
+<nobr><a href="../reference/cons.htm">cons</a> A</nobr> or the parentheses
+for <nobr><a href="../reference/cons.htm">cons</a> B. So:</nobr></p>
+
+<pre class="example">
+&gt; (cons 4 nil)
+(4)             <font color="#008844">; (4 . nil)</font>
+
+&gt; (cons 4 (cons 5 6))
+(4 5 . 6)       <font color="#008844">; (4 . (5 . 6))</font>
+
+&gt; (cons 4 (cons 5 (cons 6 nil)))
+(4 5 6)         <font color="#008844">; (4 . (5 . (6 . nil)))</font>
+</pre>
+
+<p>The last example is exactly equivalent to the call:</p>
+
+<pre class="example">
+(list 4 5 6)
+</pre>
+
+<p>Note that <a href="../reference/nil.htm">NIL</a> now means the list with
+no elements. <nobr>The <a href="../reference/cdr.htm">cdr</a></nobr> of
+<nobr>(a b)</nobr>, a list with <nobr>2 elements</nobr>, <nobr>is
+(b)</nobr>, a list with 1 element, and the
+<a href="../reference/cdr.htm">cdr</a> of (b), a list with <nobr>1
+element</nobr>, <nobr>is <a href="../reference/nil.htm">NIL</a></nobr>,
+which therefore must be a list with no elements.</p>
+
+<p><div class="box">
+
+<p>The <a href="../reference/car.htm">car</a> and
+<a href="../reference/cdr.htm">cdr</a> of
+<a href="../reference/nil.htm">NIL</a> are defined to
+<nobr>be <a href="../reference/nil.htm">NIL</a></nobr>.</p>
+
+</div></p>
+
+<p>If you store your list in a variable, you can make it act like a
+stack:</p>
+
+<pre class="example">
+&gt; (setq a nil)
+NIL             <font color="#008844">; A = ()</font>
+
+&gt; (push 4 a)
+(4)             <font color="#008844">; A = (4)</font>
+
+&gt; (push 5 a)
+(5 4)           <font color="#008844">; A = (5 4)</font>
+
+&gt; (pop a)
+5               <font color="#008844">; A = (4)</font>
+
+&gt; (pop a)
+4               <font color="#008844">; A = ()</font>
+
+&gt; (pop a)
+NIL             <font color="#008844">; A = ()</font>
+</pre>
+
+<p>See <a href="../reference/pop.htm">pop</a>,
+<a href="../reference/push.htm">push</a>,
+<a href="../reference/setq.htm">setq</a>.</p>
+
+<a name="list-accessors"></a>
+
+<p><b>List Accessors</b></p>
+
+<p>There are several different approaches to name the accessor
+functions for elements of conses and lists. <nobr>The 'traditional'</nobr>
+Lisp still uses function names like
+<a href="../reference/car.htm">car</a> and
+<a href="../reference/cdr.htm">cdr</a> while the 'modern' Lisp uses more
+descriptive names like <a href="../reference/first.htm">first</a> and <a
+href="../reference/rest.htm">rest</a>. This leads to the situation that in
+most Lisps today the list accessor functions are available under different
+names for the same functions:</p>
+
+<p><div class="box">
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td align="right"><nobr>modern</nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td align="left"><nobr>traditional</nobr></td>
+  <td></td>
+  <td>equivalent to</td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(1 2 3 4 5 6 7 8)</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/first.htm">first</a></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td align="left"><nobr><a href="../reference/car.htm">car</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nth.htm">nth</a> 0 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/second.htm">second</a></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td align="left"><nobr><a href="../reference/caar.htm">cadr</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nth.htm">nth</a> 1 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>2</td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/third.htm">third</a></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td align="left"><nobr><a href="../reference/caaar.htm">caddr</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nth.htm">nth</a> 2 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>3</td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/fourth.htm">fourth</a></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td align="left"><nobr><a href="../reference/caaaar.htm">cadddr</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nth.htm">nth</a> 3 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>4</td>
+</tr>
+<tr>
+  <td colspan="3"></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nth.htm">nth</a> 4 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>5</td>
+</tr>
+<tr>
+  <td colspan="3"></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>&nbsp;&nbsp;...</td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr>
+  <td colspan="4"></td>
+  <td>(<a href="../reference/nthcdr.htm">nthcdr</a> 0 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>(1 2 3 4 5 6 7 8)</td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/rest.htm">rest</a></nobr></td>
+  <td><nobr>&nbsp;&mdash;&nbsp;</nobr></td>
+  <td align="left"><nobr><a href="../reference/cdr.htm">cdr</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nthcdr.htm">nthcdr</a> 1 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>(2 3 4 5 6 7 8)</td>
+</tr>
+<tr>
+  <td colspan="2"></td>
+  <td align="left"><nobr><a href="../reference/caar.htm">cddr</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nthcdr.htm">nthcdr</a> 2 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>(3 4 5 6 7 8)</td>
+</tr>
+<tr>
+  <td colspan="2"></td>
+  <td align="left"><nobr><a href="../reference/cdddr.htm">cdddr</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nthcdr.htm">nthcdr</a> 3 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>(4 5 6 7 8)</td>
+</tr>
+<tr>
+  <td colspan="2"></td>
+  <td align="left"><nobr><a href="../reference/cddddr.htm">cddddr</a></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>(<a href="../reference/nthcdr.htm">nthcdr</a> 4 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>(5 6 7 8)</td>
+</tr>
+<tr>
+  <td colspan="4"></td>
+  <td>(<a href="../reference/nthcdr.htm">nthcdr</a> 5 ... )</td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>(6 7 8)</td>
+</tr>
+<tr>
+  <td colspan="3"></nobr></td>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td>&nbsp;&nbsp;...</td>
+</tr>
+<tr>
+  <td align="right"><nobr><a href="../reference/last.htm">last</a></nobr></td>
+  <td colspan="4"></td>
+  <td><nobr><code>&nbsp;&nbsp;</code>&rarr;&nbsp;&nbsp;</nobr></td>
+  <td>(8)</td>
+</tr>
+</tbody></table></p>
+
+</div></p>
+
+<p>The traditional <nobr>c..r-functions</nobr> are available in even more
+variations, see <a href="../reference/car.htm">car</a>,
+<a href="../reference/cdr.htm">cdr</a>,
+<nobr><a href="../reference/cddr.htm">cadr, cddr</a></nobr>,
+<nobr><a href="../reference/caaar.htm">caaar...caddr</a></nobr>,
+<nobr><a href="../reference/cdddr.htm">cdaar...cdddr</a></nobr>,
+<nobr><a href="../reference/caaaar.htm">caaaar...cadddr</a></nobr>,
+<nobr>and <a href="../reference/cddddr.htm">cdaaar...cddddr</a></nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="5"></a>
+
+<hr>
+
+<h2>5&nbsp; Functions</h2>
+
+<hr>
+
+<p>You saw one example of a function above. Here are some more:</p>
+
+<pre class="example">
+&gt; (+ 3 4 5 6)                 <font color="#008844">; this function takes any number of arguments</font>
+18
+
+&gt; (+ (+ 3 4) (+ (+ 4 5) 6))   <font color="#008844">; isn't prefix notation fun?</font>
+22
+
+&gt; (defun foo (x y)            <font color="#008844">; defining a function</font>
+    (+ x y 5))
+FOO
+
+&gt; (foo 5 0)                   <font color="#008844">; calling a function</font>
+10
+
+&gt; (defun fact (x)             <font color="#008844">; a recursive function</font>
+    (if (&gt; x 0)
+        (* x (fact (- x 1)))
+        1))
+FACT
+
+&gt; (fact 5)
+120
+
+&gt; (defun a (x)
+    (if (= x 0)
+        t
+        (b (- x))))           <font color="#008844">; mutually recursive functions</font>
+A
+
+&gt; (defun b (x)
+    (if (&gt; x 0)
+        (a (- x 1))
+        (a (+ x 1))))
+B
+
+&gt; (a 5)
+T
+
+&gt; (defun bar (x)              <font color="#008844">; A function with multiple statements</font>
+    (setq x (* x 3))          <font color="#008844">; in its body. It will return the value</font>
+    (setq x (/ x 2))          <font color="#008844">; returned by its final statement</font>
+    (+ x 4))
+BAR
+
+&gt; (bar 6)
+13
+</pre>
+
+<p>See <a href="../reference/addition.htm">&nbsp;+&nbsp;</a>,
+<a href="../reference/subtraction.htm">&nbsp;&minus;&nbsp;</a>,
+<a href="../reference/multiplication.htm">&nbsp;*&nbsp;</a>,
+<a href="../reference/division.htm">&nbsp;/&nbsp;</a>,
+<a href="../reference/number-equal.htm">&nbsp;=&nbsp;</a>,
+<a href="../reference/number-greaterp.htm">&nbsp;&gt;&nbsp;</a>,
+<a href="../reference/defun.htm">defun</a>,
+<a href="../reference/if.htm">&nbsp;if&nbsp;</a>,
+<a href="../reference/setq.htm">setq</a>. When we defined 'foo', we
+gave it two arguments, 'x' <nobr>and 'y'</nobr>. Now when we call 'foo', we
+are required to provide exactly two arguments. The first will become the
+value of 'x' for the duration of the call to 'foo', and the second will
+become the value of 'y' for the duration of the call. <nobr>In Lisp</nobr>,
+most variables are lexically scoped. <nobr>That is</nobr>, if 'foo' calls
+'bar' and 'bar' tries to reference 'x', then 'bar' will not get 'foo's value
+<nobr>for x</nobr>.</p>
+
+<p><div class="box">
+
+<p>The process of assigning a symbol a value for the duration of some
+lexical scope is called 'binding'.</p>
+
+</div></p>
+
+<p>You can specify optional arguments for your functions. Any argument
+after the symbol
+<a href="../reference/lambda-keyword-optional.htm">&amp;optional</a> is
+optional:</p>
+
+<pre class="example">
+&gt; (defun bar (x &amp;optional y)
+    (if y
+        x
+        0))
+BAR
+
+&gt; (defun baaz (&amp;optional (x 3) (z 10))
+    (+ x z))
+BAAZ
+
+&gt; (bar 5)
+0
+
+&gt; (bar 5 t)
+5
+
+&gt; (baaz 5)
+15
+
+&gt; (baaz 5 6)
+11
+
+&gt; (baaz)
+13
+</pre>
+
+<p>See <a href="../reference/addition.htm">&nbsp;+&nbsp;</a>,
+<a href="../reference/defun.htm">defun</a>,
+<a href="../reference/if.htm">&nbsp;if&nbsp;</a>.
+<nobr>It is</nobr> legal to call the function 'bar' with either one or two
+arguments. <nobr>If it</nobr> is called with one argument, 'x' will be bound
+to the value of that argument and 'y' will be bound <nobr>to
+<a href="../reference/nil.htm">NIL</a></nobr>. <nobr>If it</nobr> is called
+with two arguments, 'x' and 'y' will be bound to the values of the first and
+second argument, respectively.</p>
+
+<p>The function 'baaz' has two optional arguments. <nobr>It specifies</nobr> a
+default value for each of them. <nobr>If the</nobr> caller specifies only
+one argument, 'z' will be bound <nobr>to 10</nobr> instead of <nobr>to
+<a href="../reference/nil.htm">NIL</a></nobr>, and if the caller
+specifies no arguments, 'x' will be bound <nobr>to 3</nobr> and <nobr>'z' to
+10</nobr>.</p>
+
+<p>You can make your function accept any number of arguments by ending its
+argument list with an
+<a href="../reference/lambda-keyword-rest.htm">&amp;rest</a> parameter.
+Lisp will collect all arguments not otherwise accounted for into a list and
+bind the <a href="../reference/lambda-keyword-rest.htm">&amp;rest</a>
+parameter to that <nobr>list. So:</nobr></p>
+
+<pre class="example">
+&gt; (defun foo (x &rest y)
+    y)
+FOO
+
+&gt; (foo 3)
+NIL
+
+&gt; (foo 4 5 6)
+(5 6)
+</pre>
+
+<p>See <a href="../reference/defun.htm">defun</a>. Finally, you can give
+your function another kind of optional argument called a
+<a href="../reference/lambda-keyword-key.htm">&amp;key</a> 'keyword'
+argument. <nobr>The caller</nobr> can give these arguments in any order,
+because they're labelled with keywords:</p>
+
+<pre class="example">
+&gt; (defun foo (&key x y)
+    (cons x y))
+FOO
+
+&gt; (foo :x 5 :y 3)
+(5 . 3)
+
+&gt; (foo :y 3 :x 5)
+(5 . 3)
+
+&gt; (foo :y 3)
+(NIL . 3)
+
+&gt; (foo)
+(NIL)
+</pre>
+
+<p>See <a href="../reference/defun.htm">defun</a>.
+<nobr>An <a href="../reference/lambda-keyword-key.htm">&amp;key</a></nobr>
+parameter can have a default <nobr>value too:</nobr></p>
+
+<pre class="example">
+&gt; (defun foo (&key (x 5))
+    x)
+FOO
+
+&gt; (foo :x 7)
+7
+
+&gt; (foo)
+5
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="6"></a>
+
+<hr>
+
+<h2>6&nbsp; Printing</h2>
+
+<hr>
+
+<p>Some functions can cause output. The simplest one is
+<a href="../reference/print.htm">print</a>, which
+prints its argument and then <nobr>returns it:</nobr></p>
+
+<pre class="example">
+&gt; (print 3)
+3            <font color="#008844">; screen output</font>
+3            <font color="#008844">; return value</font>
+</pre>
+
+<p>The first 3 above was <a href="../reference/print.htm">print</a>ed, the
+second was returned.</p>
+
+<p>If you want more complicated output, you will need to use
+<a href="../reference/format.htm">format</a>.
+Here's an example:</p>
+
+<pre class="example">
+&gt; (format t "An atom: ~S~%and a list: ~S~%and an integer: ~A~%"
+          nil (list 5) 6)
+An atom: NIL          <font color="#008844">; screen output</font>
+and a list: (5)       <font color="#008844">; screen output</font>
+and an integer: 6     <font color="#008844">; screen output</font>
+NIL                   <font color="#008844">; return value</font>
+</pre>
+
+<p>See <a href="../reference/list.htm">list</a>. <nobr>The first</nobr>
+argument to <a href="../reference/format.htm">format</a> is either
+<a href="../reference/t.htm">&nbsp;T&nbsp;</a>,
+<a href="../reference/nil.htm">NIL</a>, or a stream.
+<nobr><a href="../reference/t.htm">&nbsp;T&nbsp;</a> specifies</nobr> output
+to the terminal. <nobr><a href="../reference/nil.htm">NIL</a> means</nobr>
+not to print anything but to return a string containing the output instead.
+Streams are general places for output <nobr>to go</nobr>. They can specify a
+file, or the terminal, or a printer device. This tutorial will not describe
+streams in any further detail.</p>
+
+<p>The second argument is a formatting template, which is a string
+optionally containing formatting directives. <nobr>All remaining</nobr>
+arguments may be referred to by the formatting directives. Lisp will replace
+the directives with some appropriate characters based on the arguments to
+which they refer and then print the resulting string.</p>
+
+<p>The format function always returns <a href="../reference/nil.htm">NIL</a>
+unless its first argument is <a href="../reference/nil.htm">NIL</a>, in
+which case it prints nothing and returns a string.</p>
+
+<p>There are several different directives available:</p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>~S</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">[standard] - accepts any Lisp object and replaces it by
+    the same printed representation which is produced by the
+    <a href="../reference/print.htm">print</a> function.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>~A</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">[aestethic] - tries to '<nobr>pretty-print</nobr>'
+    its argument.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>~%</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">[linebreak] - is always replaced by a linebreak character
+    or character sequence of the underlying operation system.</td>
+</tr>
+<tr>
+  <td><nobr><font size="-2">&nbsp;</font></nobr></td>
+</tr>
+<tr>
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td valign="top">
+    <table cellpadding="0" cellspacing="0" width="100%"><tbody>
+      <tr valign="top">
+        <td class="button"><nobr><code>~~</code></nobr></td>
+      </tr>
+    </tbody></table>
+  </td>
+  <td valign="top"><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%">[tilde] - is replaced by a single '~' character.</td>
+</tr>
+</tbody></table></p>
+
+<p>If the last character in a line in a
+<a href="../reference/format.htm">format</a> template is a tilde, then
+the linebreak is ignored and the template continues with the next
+<nobr>non-whitespace</nobr> character in the next line.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="7"></a>
+
+<hr>
+
+<h2>7&nbsp; Forms and the Top-Level Loop</h2>
+
+<hr>
+
+<p>The things which you type to the Lisp interpreter are called 'forms'.
+<nobr>The Lisp</nobr> interpreter repeatedly
+<a href="../reference/read.htm">read</a>s a form,
+<a href="../reference/eval.htm">eval</a>uates it, and
+<a href="../reference/print.htm">print</a>s the result. This procedure
+is therefore called the '<nobr>read-eval-print' loop</nobr>, or REPL for
+short.</p>
+
+<p>Some forms will cause errors. After an error, Lisp will put you into the
+debugger so you can try to figure out what caused the error.</p>
+
+<p>In general, a form is either an <a href="../reference/atom.htm">atom</a>,
+<nobr>[for example</nobr> a symbol, an integer, or a string] or <nobr>a
+<a href="../reference/list.htm">list</a></nobr>. <nobr>If the</nobr> form is
+an <a href="../reference/atom.htm">atom</a>, Lisp evaluates it immediately.
+Symbols evaluate to their value, integers and strings evaluate to
+themselves. <nobr>If the</nobr> form is a
+<a href="../reference/list.htm">list</a></nobr>, Lisp treats its first
+element as the name of a function. <nobr>It evaluates</nobr> the remaining
+elements recursively, and then calls the function with the values of the
+remaining elements as arguments. </p>
+
+<p>For example, if Lisp sees the form:</p>
+
+<pre class="example">
+(+ 3 4)
+</pre>
+
+<p>then it treats <a href="../reference/addition.htm">&nbsp;+&nbsp;</a> as
+the name of a function. <nobr>It then</nobr> evaluates 3 to <nobr>get
+3</nobr> and 4 to <nobr>get 4</nobr>, finally it calls <a
+href="../reference/addition.htm">&nbsp;+&nbsp;</a> with 3 and 4 as the
+arguments. <nobr>The <a href="../reference/addition.htm">&nbsp;+&nbsp;</a>
+function</nobr> <nobr>returns 7</nobr>, which Lisp prints.</p>
+
+<p><div class="box">
+
+<p><b>Nyquist:</b> <nobr>A description</nobr> of the debugger can be found
+in the <nobr><a href="../manual/xlisp.htm#break-loop">Break Command Loop</a></nobr>
+section and a detailed description of the evaluation process can be found in
+the <a href="../manual/xlisp.htm#the-evaluator">Evaluator</a> section of the XLISP
+manual.</p>
+
+</div></p>
+
+<p>The <nobr>top-level</nobr> loop provides some other conveniences.
+<nobr>One particularly</nobr> convenient convenience is the ability to talk
+about the results of previously typed forms. Lisp always saves its most
+recent three results, it stores them as the values of the symbols
+<a href="../manual/xlisp.htm#command-loop">&nbsp;*&nbsp;</a>,
+<a href="../manual/xlisp.htm#command-loop">&nbsp;**&nbsp;</a>,
+<nobr>and <a href="../manual/xlisp.htm#command-loop">&nbsp;***&nbsp;</a></nobr>.
+<nobr>For example:</nobr></p>
+
+<pre class="example">
+&gt; 3
+3
+
+&gt; 4
+4
+
+&gt; 5
+5
+
+&gt; ***
+3
+
+&gt; ***
+4
+
+&gt; ***
+5
+
+&gt; **
+4
+
+&gt; *
+4
+</pre>
+
+<p>See <a href="../manual/xlisp.htm#command-loop">&nbsp;*&nbsp;</a>,
+<a href="../manual/xlisp.htm#command-loop">&nbsp;**&nbsp;</a>,
+<a href="../manual/xlisp.htm#command-loop">&nbsp;***&nbsp;</a>,
+<a href="../manual/xlisp.htm#command-loop">&nbsp;+&nbsp;</a>,
+<a href="../manual/xlisp.htm#command-loop">&nbsp;++&nbsp;</a>,
+<a href="../manual/xlisp.htm#command-loop">&nbsp;+++&nbsp;</a>,
+<a href="../manual/xlisp.htm#command-loop">&nbsp;&minus;&nbsp;</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="8"></a>
+
+<hr>
+
+<h2>8&nbsp; Special Forms</h2>
+
+<hr>
+
+<p>There are a number of special forms which look like function calls but
+aren't. These include control constructs such as
+<a href="../reference/if.htm">&nbsp;if&nbsp;</a> statements and
+<a href="../reference/do.htm">do</a> loops, assignments like
+<a href="../reference/setq.htm">setq</a>,
+<a href="../reference/setf.htm">setf</a>,
+<a href="../reference/push.htm">push</a>, and
+<a href="../reference/pop.htm">pop</a>, definitions such as
+<a href="../reference/defun.htm">defun</a>, and binding constructs such
+<nobr>as <a href="../reference/let.htm">let</a></nobr>. <nobr>Not all</nobr>
+of these special forms have been mentioned yet, see below for examples.</p>
+
+<p>One useful special form is the <a href="../reference/quote.htm">quote</a>
+form. <nobr>The <a href="../reference/quote.htm">quote</a></nobr> function
+prevents its argument from being evaluated. <nobr>For example:</nobr></p>
+
+<pre class="example">
+&gt; (setq a 3)
+3
+
+&gt; a
+3
+
+&gt; (quote a)
+A
+
+&gt; 'a            <font color="#008844">; 'a is an abbreviation for (quote a)</font>
+A
+</pre>
+
+<p>Another similar special form is the
+<a href="../reference/function.htm">function</a> form, it causes its
+argument to be interpreted as a function rather than being evaluated.
+<nobr>For example:</nobr></p>
+
+<pre class="example">
+&gt; (setq + 3)
+3
+
+&gt; +
+3
+
+&gt; '+
++
+
+&gt; (function +)
+#&lt;Subr-+: #88b44d5e&gt;
+
+&gt; #'+                   <font color="#008844">; #'+ is an abbreviation for (function +)</font>
+#&lt;Subr-+: #88b44d5e&gt;
+</pre>
+
+<p>The <a href="../reference/function.htm">function</a> special form is
+useful when you want to pass a function as an argument to another function.
+<nobr>See below</nobr> for some examples of functions which take functions
+as arguments.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="9"></a>
+
+<hr>
+
+<h2>9&nbsp; Binding</h2>
+
+<hr>
+
+<p>Binding is lexically scoped assignment. <nobr>It happens</nobr> to the
+variables in a function's parameter list whenever the function is called.
+<nobr>The formal</nobr> parameters are bound to the actual parameters for
+the duration of the function call. <nobr>You can</nobr> bind variables
+anywhere in a program with the <a href="../reference/let.htm">let</a>
+special form, which looks <nobr>like this:</nobr></p>
+
+<pre class="example">
+(let ((<font color="#0000CC">variable-1 value-1</font>)
+      (<font color="#0000CC">variable-2 value-2</font>)
+       <font color="#008844">...</font> )
+  <font color="#0000CC">body</font>)
+</pre>
+
+<p>The <a href="../reference/let.htm">let</a> function binds
+'<nobr>variable-1</nobr>' to '<nobr>value-1</nobr>',
+'<nobr>variable-2</nobr>' to '<nobr>value-2</nobr>', and so forth.
+<nobr>Then it</nobr> executes the statements in its body. The body of a
+<a href="../reference/let.htm">let</a> follows exactly the same rules that
+a function body does. Some examples:</p>
+
+<pre class="example">
+&gt; (let ((a 3)) (+ a 1))
+4
+
+&gt; (let ((a 2)
+        (b 3)
+        (c 0))
+    (setq c (+ a b))
+    c)
+5
+
+&gt; (setq c 4)
+4
+
+&gt; (let ((c 5))
+    c)
+5
+
+&gt; c
+4
+</pre>
+
+<p>See <a href="../reference/addition.htm">&nbsp;+&nbsp;</a>,
+<a href="../reference/let.htm">let</a>,
+<a href="../reference/setq.htm">setq</a>. <nobr>Instead of:</nobr></p>
+
+<pre class="example">
+(let ((a nil)
+      (b nil))
+  <font color="#008844">...</font> )
+</pre>
+
+<p>you can write:</p>
+
+<pre class="example">
+(let (a b)
+  <font color="#008844">...</font> )
+</pre>
+
+<p>The '<nobr>value-1</nobr>', '<nobr>value-2</nobr>', etc. inside a
+<a href="../reference/let.htm">let</a> form cannot reference the variables
+'<nobr>variable-1</nobr>', '<nobr>variable-2</nobr>', etc. that the
+<a href="../reference/let.htm">let</a> form is binding. <nobr>For
+example:</nobr></p>
+
+<pre class="example">
+&gt; (let ((x 1)
+        (y (+ <font color="#AA0000">x</font> 1)))  <font color="#008844">; x is still unbound here</font>
+    y)
+<font color="#AA0000">error: unbound variable - x</font>
+</pre>
+
+<p>If the symbol 'x' already has a global value, stranger happenings will
+result:</p>
+
+<pre class="example">
+&gt; (setq x 7)
+7
+
+&gt; (let ((x 1)
+        (y (+ <font color="#AA0000">x</font> 1)))  <font color="#008844">; references to the global x</font>
+    y)
+8
+</pre>
+
+<p>The <a href="../reference/let-star.htm">let*</a> special form is just
+like <a href="../reference/let.htm">let</a> except that it allows values to
+reference variables defined earlier in the
+<a href="../reference/let-star.htm">let*</a> form.
+<nobr>For example:</nobr></p>
+
+<pre class="example">
+&gt; (setq x 7)
+7
+
+&gt; (let* ((x 1)
+         (y (+ x 1)))  <font color="#008844">; references to x in the line before</font>
+    y)
+2
+</pre>
+
+<p>The <a href="../reference/let-star.htm">let*</a> form:</p>
+
+<pre class="example">
+(let* ((x a)
+       (y b))
+  <font color="#008844">...</font> )
+</pre>
+
+<p>is equivalent to the following <a href="../reference/let.htm">let</a>
+construct:</p>
+
+<pre class="example">
+(let ((x a))
+  (let ((y b))
+    <font color="#008844">...</font> ))
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="10"></a>
+
+<hr>
+
+<h2>10&nbsp; Dynamic Scoping</h2>
+
+<hr>
+
+<p>The <a href="../reference/let.htm">let</a> and
+<a href="../reference/let-star.htm">let*</a> forms provide lexical scoping,
+which is what you expect if you're used to programming in C or Pascal.
+Dynamic scoping is what you get in BASIC. <nobr>If you</nobr> assign a value
+to a dynamically scoped variable, every mention of that variable returns
+that value until you assign another value to the same variable.</p>
+
+<p>In Lisp, dynamically scoped variables are called 'special' variables.
+<nobr>In Common Lisp</nobr> special variables are declared with the 'defvar'
+special form. <nobr>In Nyquist</nobr> there is no 'defvar' form.</p>
+
+<p><div class="box">
+
+<p>Nyquist has no 'dynamic' scoping in the <nobr>Common Lisp</nobr> sense.</p>
+
+</div></p>
+
+<p>In Nyquist every variable assigned with
+<a href="../reference/setq.htm">setq</a> or
+<a href="../reference/setf.htm">setf</a> at the <nobr>top-level</nobr>,
+outside of a function or a <a href="../reference/let.htm">let</a>
+binding, is a lexical scoped variable. Here is an example what this means:</p>
+
+<pre class="example">
+&gt; (setq *variable* 5)         <font color="#008844">; define a global variable</font>
+5
+
+&gt; (defun check-variable ()    <font color="#008844">; define a function in global scope,</font>
+    *variable*)               <font color="#008844">; returning the value of the variable</font>
+CHECK-VARIABLE
+
+&gt; (check-variable)            <font color="#008844">; the CHECK-VARIABLE function returns</font>
+5                             <font color="#008844">; the global value of the variable</font>
+
+&gt; (let ((*variable* 10))      <font color="#008844">; create a local binding for the variable</font>
+    (print (check-variable))  <font color="#008844">; call CHECK-VARIABLE and print the return value</font>
+    (print *variable*))       <font color="#008844">; print the local value of the variable</font>
+5   <font color="#008844">; return value of CHECK-VARIABLE</font>
+10  <font color="#008844">; variable value inside of LET</font>
+10
+</pre>
+
+<p>See <a href="../reference/defun.htm">defun</a>,
+<a href="../reference/let.htm">let</a>,
+<a href="../reference/print.htm">print</a>,
+<a href="../reference/setq.htm">setq</a>. Because the
+'<nobr>check-variable</nobr>' function was defined in global
+scope and therefore is lexically outside of the
+<a href="../reference/let.htm">let</a> form, the
+'<nobr>check-variable</nobr>' function returns the variable's global value
+<nobr>of 5</nobr>, even if called from inside the
+<a href="../reference/let.htm">let</a> form, where the variable has a
+<nobr>value of 10</nobr>.</p>
+
+<p><div class="box">
+
+<p><b>Important:</b> In Nyquist there is no way to change the scoping
+behaviour of variables, so you must be careful where you define your
+variables. With Nyquist it's generally a good idea to prefer local
+<a href="../reference/let.htm">let</a> bindings over global variables.</p>
+
+</div></p>
+
+<p>By convention, the name of a global Nyquist variable begins and ends with
+a <nobr>star *</nobr> to signal that the variable might behave differently
+than the programmer expects.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="11"></a>
+
+<hr>
+
+<h2>11&nbsp; Arrays</h2>
+
+<hr>
+
+<p>The function
+<nobr><a href="../reference/make-array.htm">make-array</a></nobr> makes a
+<nobr>1-dimensional</nobr> array.
+<nobr>The <a href="../reference/aref.htm">aref</a></nobr> function accesses
+its elements. <nobr>All elements</nobr> of an array are initially set
+<nobr>to <a href="../reference/nil.htm">NIL</a></nobr>.
+<nobr>For example:</nobr></p>
+
+<pre class="example">
+&gt; (make-array 4)        <font color="#008844">; 1-D array with 4 elements</font>
+#(NIL NIL NIL NIL)
+</pre>
+
+<p>Array indices always <nobr>start at 0</nobr>. <nobr>See
+<a href="#13">below</a></nobr> for how to set the elements of an array.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="12"></a>
+
+<hr>
+
+<h2>12&nbsp; Strings</h2>
+
+<hr>
+
+<p>A string is a sequence of characters between double quotes. Nyquist
+represents a string internally as a <nobr>variable-length</nobr> array of
+characters. <nobr>You can</nobr> write a string containing a double quote by
+preceding the quote with a backslash. <nobr>A double</nobr> backslash stands
+for a single backslash. <nobr>For example:</nobr></p>
+
+<p><table cellpadding="0" cellspacing="0"><tbody>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>"abcd"</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>has 4 characters</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>"\""</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>has 1 character, a quote</nobr></td>
+</tr>
+<tr>
+  <td height="2px"></td>
+</tr>
+<tr valign="top">
+  <td><nobr><code>&nbsp;&nbsp;</code></nobr></td>
+  <td class="button"><nobr><code>"\\"</code></nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;</nobr></td>
+  <td width="100%"><nobr>has 1 character, a backslash</nobr></td>
+</tr>
+</tbody></table></p>
+
+<p>Here are some functions for dealing with strings:</p>
+
+<pre class="example">
+&gt; (strcat "abcd" "efg")
+"abcdefg"                <font color="#008844">; STRCAT concatenates strings</font>
+
+&gt; (char "abc" 1)
+#\b                      <font color="#008844">; Lisp writes characters preceded by #\</font>
+
+&gt; (subseq "abc" 0 2)
+"ab"                     <font color="#008844">; SUBSEQ extracts substrings</font>
+</pre>
+
+<p>See <a href="../reference/char.htm">char</a>,
+<a href="../reference/strcat.htm">strcat</a>,
+<a href="../reference/subseq.htm">subseq</a>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="13"></a>
+
+<hr>
+
+<h2>13&nbsp; Setf</h2>
+
+<hr>
+
+<p>Certain forms in Lisp naturally define a memory location. For example, if
+the value of 'x' is a <a href="../reference/list.htm">list</a>, then
+<nobr>(<a href="../reference/nth.htm">nth</a> 4 x)</nobr> defines the fifth
+element of the <a href="../reference/list.htm">list</a>. <nobr>Or, if</nobr>
+the value of 'y' is a <nobr>one-dimensional</nobr>
+<a href="../reference/make-array.htm">array</a>,
+<nobr>(<a href="../reference/aref.htm">aref</a> y 2)</nobr> defines the
+third element of the <a href="../reference/make-array.htm">array</a>.</p>
+
+<p>The <a href="../reference/setf.htm">setf</a> special form uses its first
+argument to define a place in memory, evaluates its second argument, and
+stores the resulting value in the resulting memory location. <nobr>For
+example:</nobr></p>
+
+<pre class="example">
+&gt; (setq a (make-array 3))
+#(NIL NIL NIL)
+
+&gt; (aref a 1)
+NIL
+
+&gt; (setf (aref a 1) 3)         <font color="#008844">; store 3 in the second element of a</font>
+3
+
+&gt; a
+#(NIL 3 NIL)
+
+&gt; (aref a 1)                  <font color="#008844">; read the second element of a</font>
+3
+
+&gt; (setq b (list 1 2 3 4 5))
+(1 2 3 4 5)
+
+&gt; (nth 4 b)
+5
+
+&gt; (setf (nth 4 b) "five")     <font color="#008844">; store "five" in the fifth element of b</font>
+"five"
+
+&gt; b
+(1 2 3 4 "five")
+
+&gt; (nth 4 b)
+"five"
+</pre>
+
+<p>The <a href="../reference/setf.htm">setf</a> function is the only way to
+set the elements of a list or an array.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="14"></a>
+
+<hr>
+
+<h2>14&nbsp; Booleans and Conditionals</h2>
+
+<hr>
+
+<p>Lisp uses the <nobr>self-evaluating</nobr> symbol
+<a href="../reference/nil.htm">NIL</a> to mean false. Anything other than
+<nobr>self-evaluating</nobr> means true. Unless we have a reason not to,
+we usually use the <nobr>self-evaluating</nobr> symbol
+<a href="../reference/t.htm">&nbsp;T&nbsp;</a> to stand
+<nobr>for true</nobr>.</p>
+
+<p>Lisp provides a standard set of logical functions, for example
+<a href="../reference/and.htm">and</a>,
+<a href="../reference/or.htm">or</a>, and
+<a href="../reference/not.htm">not</a>.
+<nobr>The <a href="../reference/and.htm">and</a></nobr> and
+<a href="../reference/or.htm">or</a> connectives are
+<nobr>short-circuiting</nobr>, <a href="../reference/and.htm">and</a>
+will not evaluate any arguments to the right of the first one which
+evaluates <nobr>to <a href="../reference/nil.htm">NIL</a></nobr>, while
+<a href="../reference/or.htm">or</a> will not evaluate any arguments to the
+right of the first one which evaluates
+<nobr>to <a href="../reference/t.htm">&nbsp;T&nbsp;</a></nobr>.</p>
+
+<p>Lisp also provides several special forms for conditional execution. The
+simplest of these <nobr>is
+<a href="../reference/if.htm">&nbsp;if&nbsp;</a></nobr>. The first argument
+of <a href="../reference/if.htm">&nbsp;if&nbsp;</a> determines whether the
+second or third argument will be executed:</p>
+
+<pre class="example">
+&gt; (if t 5 6)
+5
+
+&gt; (if nil 5 6)
+6
+
+&gt; (if 4 5 6)
+5
+</pre>
+
+<p>If you need to put more than one statement in the 'then' or 'else' clause
+of an <a href="../reference/if.htm">&nbsp;if&nbsp;</a></nobr> statement,
+you can use the <a href="../reference/progn.htm">progn</a> special form.
+<a href="../reference/progn.htm">progn</a> executes each statement in its
+body, then returns the value of the <nobr>final one</nobr>:</p>
+
+<pre class="example">
+&gt; (setq a 7)
+7
+
+&gt; (setq b 0)
+0
+
+&gt; (setq c 5)
+5
+
+&gt; (if (&gt; a 5)
+    (progn
+      (setq a (+ b 7))
+      (setq b (+ c 8)))
+    (setq b 4))
+13
+</pre>
+
+<p>An <a href="../reference/if.htm">&nbsp;if&nbsp;</a> statement which lacks
+either a 'then' or an 'else' clause can be written using the
+<a href="../reference/when.htm">when</a> or
+<a href="../reference/unless.htm">unless</a> special form:</p>
+
+<pre class="example">
+&gt; (when t 3)
+3
+
+&gt; (when nil 3)
+NIL
+
+&gt; (unless t 3)
+NIL
+
+&gt; (unless nil 3)
+3
+</pre>
+
+<p><a href="../reference/when.htm">when</a> and
+<a href="../reference/unless.htm">unless</a>, unlike
+<a href="../reference/if.htm">&nbsp;if&nbsp;</a>, allow any number of
+statements in their bodies:</p>
+
+<pre class="example">
+(when x
+  a
+  b
+  c)
+</pre>
+
+<p>is equivalent to:</p>
+
+<pre class="example">
+(if x
+    (progn
+      a
+      b
+      c))
+</pre>
+
+<p>For example:</p>
+
+<pre class="example">
+&gt; (when t
+    (setq a 5)
+    (+ a 6))
+11
+</pre>
+
+<p>More complicated conditionals can be defined using the
+<a href="../reference/cond.htm">cond</a> special form.
+<nobr>A <a href="../reference/cond.htm">cond</a></nobr> form consists of
+the symbol cond followed by a number of
+<a href="../reference/cond.htm">cond</a> clauses, each of which is a list.
+<nobr>The first</nobr> element of a <a href="../reference/cond.htm">cond</a>
+clause is the condition, the remaining elements <nobr>[if any]</nobr> are
+the actions:</p>
+
+<pre class="example">
+(cond (<font color="#0000CC">condition-1 action-1</font>)
+      (<font color="#0000CC">condition-2 action-2</font>)
+        ...
+      (t <font color="#0000CC">default-action</font>))
+</pre>
+
+<p>The <a href="../reference/cond.htm">cond</a> form finds the first clause
+whose condition evaluates to true [does not evaluate <nobr>to
+<a href="../reference/nil.htm">NIL</a>]</nobr>. <nobr>It then</nobr>
+executes the corresponding action and returns the resulting value. None of
+the remaining conditions are evaluated, nor are any actions except the one
+corresponding to the selected condition. <nobr>For example</nobr>:</p>
+
+<pre class="example">
+&gt; (setq a 3)
+3
+
+&gt; (cond
+    ((evenp a) a)        <font color="#008844">; if a is even return a</font>
+    ((&gt; a 7) (/ a 2))    <font color="#008844">; else if a is bigger than 7 return a/2</font>
+    ((&lt; a 5) (- a 1))    <font color="#008844">; else if a is smaller than 5 return a-1</font>
+    (t 17))              <font color="#008844">; else return 17</font>
+2
+</pre>
+
+<p>If the action in the selected <a href="../reference/cond.htm">cond</a>
+clause is missing, then <a href="../reference/cond.htm">cond</a> returns
+what the condition <nobr>evaluated to:</nobr></p>
+
+<pre class="example">
+&gt; (cond ((+ 3 4)))
+7
+</pre>
+
+<p>The Lisp <a href="../reference/case.htm">case</a> form is like a C
+'switch' statement:</p>
+
+<pre class="example">
+&gt; (setq x 'b)
+B
+
+&gt; (case x
+    (a 5)
+    ((d e) 7)
+    ((b f) 3)
+    (t 9))
+3
+</pre>
+
+<p>The <a href="../reference/t.htm">&nbsp;T&nbsp;</a> clause at the end
+means that if 'x' is not 'a', '<nobr>d or e</nobr>', or
+'<nobr>b or f</nobr>', then the <a href="../reference/case.htm">case</a>
+form will <nobr>return 9</nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="15"></a>
+
+<hr>
+
+<h2>15&nbsp; Iteration</h2>
+
+<hr>
+
+<p>The simplest iteration construct in Lisp is
+<a href="../reference/loop.htm">loop</a>.
+<nobr>A <a href="../reference/loop.htm">loop</a></nobr> construct repeatedly
+executes its body until it hits a
+<a href="../reference/return.htm">return</a> special form.
+<nobr>For example</nobr>:</p>
+
+<pre class="example">
+&gt; (setq a 4)
+4
+
+&gt; (loop
+    (setq a (+ a 1))
+    (when (&gt; a 7) (return a)))
+8
+
+&gt; (loop
+    (setq a (- a 1))
+    (when (&lt; a 3) (return)))
+NIL
+</pre>
+
+<p>The next simplest is <a href="../reference/dolist.htm">dolist</a>.
+<nobr>It binds</nobr> a variable to the elements of a list in order and
+stops when it hits the end of <nobr>the list</nobr>:</p>
+
+<pre class="example">
+&gt; (dolist (x '(a b c))
+    (print x))
+A
+B
+C
+NIL
+</pre>
+
+<p><a href="../reference/dolist.htm">dolist</a> always
+<nobr>returns <a href="../reference/nil.htm">NIL</a></nobr>. Note that the
+value of 'x' in the above example was
+<nobr>never <a href="../reference/nil.htm">NIL</a></nobr>.
+<nobr>The <a href="../reference/nil.htm">NIL</a></nobr> below the C was the
+value that <a href="../reference/dolist.htm">dolist</a> returned, printed
+by the <nobr>read-eval-print</nobr> loop.</p>
+
+<p>The most flexible, but also most complicated iteration form is
+<nobr>called <a href="../reference/do.htm">do</a></nobr>.
+<nobr>A <a href="../reference/do.htm">do</a></nobr> form looks
+<nobr>like this</nobr>:</p>
+
+<pre class="example">
+&gt; (do ((x 1 (+ x 1))    <font color="#008844">; variable x, initial value 1, update with (+ x 1)</font>
+       (y 1 (* y 2)))   <font color="#008844">; variable y, initial value 1, update with (* y 2)</font>
+      ((&gt; x 5) y)       <font color="#008844">; terminate if (&gt; x 5), return the value of y</font>
+    (print y)
+    (print 'working))
+1
+WORKING
+2
+WORKING
+4
+WORKING
+8
+WORKING
+16
+WORKING
+32
+</pre>
+
+<p>The first part of a <a href="../reference/do.htm">do</a> form specifies
+what variables to bind, what their initial values are, and how to update
+them. <nobr>The second</nobr> part specifies a termination condition and a
+return value. The last part is the body. <nobr>A
+<a href="../reference/do.htm">do</a></nobr> form binds its variables to
+their initial values like
+<nobr>a <a href="../reference/let.htm">let</a></nobr>, then checks the
+termination condition. <nobr>As long</nobr> as the condition is false, it
+executes the body repeatedly. When the condition becomes true, it
+returns the value of the <nobr>return-value</nobr> form.</p>
+
+<p>The <a href="../reference/do-star.htm">do*</a> form is to
+<a href="../reference/do.htm">do</a> as
+<a href="../reference/let-star.htm">let*</a> is
+<nobr>to <a href="../reference/let.htm">let</a></nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="16"></a>
+
+<hr>
+
+<h2>16&nbsp; Non-local Exits</h2>
+
+<hr>
+
+<p>The <a href="../reference/return.htm">return</a> special form is an
+example of a nonlocal return. Another example is
+<nobr><a href="../reference/return-from.htm">return-from</a></nobr>, which
+returns a value from the surrounding function:</p>
+
+<pre class="example">
+&gt; (defun foo (x)
+    (return-from foo 3)
+    x)
+FOO
+
+&gt; (foo 17)
+3
+</pre>
+
+<p>Actually, the <nobr><a
+href="../reference/return-from.htm">return-from</a></nobr> form can return
+from any named block, it's just that functions are the only blocks which are
+named by default. <nobr>You can</nobr> create a named block with the
+<a href="../reference/block.htm">block</a> special form:</p>
+
+<pre class="example">
+&gt; (block foo
+    (return-from foo 7)
+    3)
+7
+</pre>
+
+<p>The <a href="../reference/return.htm">return</a> special form can return
+from any block <nobr>named <a href="../reference/nil.htm">NIL</a></nobr>.
+Loops are by default
+<nobr>named <a href="../reference/nil.htm">NIL</a></nobr>, but you can
+make your own
+<nobr><a href="../reference/nil.htm">NIL</a>-named blocks</nobr>:</p>
+
+<pre class="example">
+&gt; (block nil
+    (return 7)
+    3)
+7
+</pre>
+
+<p>Another form which causes a nonlocal exit is the
+<nobr><a href="../reference/error.htm">error</a> form</nobr>:</p>
+
+<pre class="example">
+&gt; (error "This is an error")
+<font color="#AA0000">error: This is an error</font>
+</pre>
+
+<p>The <a href="../reference/error.htm">error</a> form applies format to its
+arguments, then places you in the debugger.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="17"></a>
+
+<hr>
+
+<h2>17&nbsp; Funcall, Apply, and Mapcar</h2>
+
+<hr>
+
+<p>Earlier I promised to give some functions which take functions as
+arguments. Here they are:</p>
+
+<pre class="example">
+&gt; (funcall #'+ 3 4)
+7
+
+&gt; (apply #'+ 3 4 '(3 4))
+14
+
+&gt; (mapcar #'not '(t nil t nil t nil))
+(NIL T NIL T NIL T)
+</pre>
+
+<p><a href="../reference/funcall.htm">funcall</a> calls its first argument
+on its remaining arguments.</p>
+
+<p><a href="../reference/apply.htm">apply</a> is just like
+<a href="../reference/funcall.htm">funcall</a>, except that its final
+argument should be a list. <nobr>The elements</nobr> of that list are
+treated as if they were additional arguments to
+<nobr>a <a href="../reference/funcall.htm">funcall</a></nobr>.</p>
+
+<p>The first argument to <a href="../reference/mapcar.htm">mapcar</a> must
+be a function of one argument, <a href="../reference/mapcar.htm">mapcar</a>
+applies this function to each element of a list and collects the results in
+another list.</p>
+
+<p><a href="../reference/funcall.htm">funcall</a> and
+<a href="../reference/apply.htm">apply</a> are chiefly useful when their
+first argument is a variable. <nobr>For instance</nobr>, a search engine
+could take a heuristic function as a parameter and use
+<a href="../reference/funcall.htm">funcall</a> or
+<a href="../reference/apply.htm">apply</a> to call that function on a
+state description. <nobr>The sorting</nobr> functions described later use
+<a href="../reference/funcall.htm">funcall</a> to call their comparison
+functions.</p>
+
+<p><a href="../reference/mapcar.htm">mapcar</a>, along with nameless
+<a href="#18">lambda</a> functions, can replace many loops.</p>
+
+<p><div class="box">
+
+<p><b>Nyquist/XLISP:</b> <nobr>In XLISP</nobr>, a '<nobr>special
+form</nobr>' of type FSUBR is not a function. This means that
+<a href="../reference/apply.htm">apply</a>,
+<a href="../reference/funcall.htm">funcall</a> and
+<a href="../reference/mapcar.htm">mapcar</a> only work with functions
+of type SUBR [built-in function] or CLOSURE [function defined by
+<a href="../reference/defun.htm">defun</a>,
+<a href="../reference/flet.htm">flet</a>,
+<a href="../reference/labels.htm">labels</a>, or
+<a href="../reference/lambda.htm">lambda</a>], but with special forms
+of <nobr>type FSUBR</nobr> a 'bad argument type' error is signalled.</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="18"></a>
+
+<hr>
+
+<h2>18&nbsp; Lambda</h2>
+
+<hr>
+
+<p>If you just want to create a temporary function and don't want to
+bother giving it a name, <a href="../reference/lambda.htm">lambda</a> is
+what you need.</p>
+
+<pre class="example">
+&gt; #'(lambda (x)
+      (+ x 3))
+#&lt;Closure: #88b71ece&gt;
+
+&gt; (funcall * 5)
+8
+</pre>
+
+<p>The combination of <a href="../reference/lambda.htm">lambda</a> and
+<a href="../reference/mapcar.htm">mapcar</a> can replace many loops.
+<nobr>For example</nobr>, the following two forms are equivalent:</p>
+
+<pre class="example">
+&gt; (do ((x '(1 2 3 4 5) (cdr x))
+       (y nil))
+      ((null x) (reverse y))
+    (push (+ (car x) 2) y))
+(3 4 5 6 7)
+
+&gt; (mapcar #'(lambda (x) (+ x 2)) '(1 2 3 4 5))
+(3 4 5 6 7)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="19"></a>
+
+<hr>
+
+<h2>19&nbsp; Sorting</h2>
+
+<hr>
+
+<p>Lisp provides a primitive for
+<nobr>sorting, <a href="../reference/sort.htm">sort</a></nobr>:</p>
+
+<pre class="example">
+&gt; (sort '(2 1 5 4 6) #'&lt;)
+(1 2 4 5 6)
+
+&gt; (sort '(2 1 5 4 6) #'&gt;)
+(6 5 4 2 1)
+</pre>
+
+<p>The first argument to <a href="../reference/sort.htm">sort</a> is a list,
+the second is a comparison function. <nobr>Be careful</nobr>, because
+<a href="../reference/sort.htm">sort</a> is allowed to destroy its argument,
+so if the original sequence is important to you, make a copy before sorting
+<nobr>the list</nobr>.</p>
+
+<p><div class="box">
+
+<p><b>Bug:</b> In Nyquist 3.03 [November 2010] the XLISP
+<a href="../reference/sort.htm">sort</a> function has a bug, so it's better
+to store the return value of sort in the original variable <nobr>like
+this</nobr>:</p>
+
+<pre class="example">
+(setq a '(3 1 4 1 5 9 6 7))  =&gt; (3 1 4 1 5 9 6 7)
+(setq a (sort a '&lt;))         =&gt; (1 1 3 4 5 6 7 9)
+a                            =&gt; (1 1 3 4 5 6 7 9)
+</pre>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="20"></a>
+
+<hr>
+
+<h2>20&nbsp; Equality</h2>
+
+<hr>
+
+<p>Lisp has many different ideas of equality. Numerical equality is
+denoted by =. Two symbols are eq if and only if they are identical. Two
+copies of the same list are not eq, but they are equal.</p>
+
+<pre class="example">
+&gt; (eq 'a 'a)
+T
+
+&gt; (eq 'a 'b)
+NIL
+
+&gt; (= 3 4)
+T
+
+&gt; (eq '(a b c) '(a b c))
+NIL
+
+&gt; (equal '(a b c) '(a b c))
+T
+
+&gt; (eql 'a 'a)
+T
+
+&gt; (eql 3 3)
+T
+</pre>
+
+<p>The eql predicate is equivalent to eq for symbols and to = for numbers.</p>
+
+<p>The equal predicate is equivalent to eql for symbols and numbers. It is
+true for two conses if and only if their cars are equal and their cdrs are
+equal.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name="21"></a>
+
+<hr>
+
+<h2>21&nbsp; Some Useful List Functions</h2>
+
+<hr>
+
+<p>These functions all manipulate lists:</p>
+
+<pre class="example">
+&gt; (append '(1 2 3) '(4 5 6))    ;concatenate lists
+(1 2 3 4 5 6)
+
+&gt; (reverse '(1 2 3))            ;reverse the elements of a list
+(3 2 1)
+
+&gt; (member 'a '(b d a c))        ;set membership -- returns the first tail
+(A C)                           ;whose car is the desired element
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

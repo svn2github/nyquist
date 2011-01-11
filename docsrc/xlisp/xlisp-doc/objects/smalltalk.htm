@@ -1,0 +1,441 @@
+<html><head>
+
+<title>Smalltalk Object Model</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>The Smalltalk Object Model</h1>
+
+<hr>
+
+<p>This page is based on a document written by Glenn Hollowell:</p>
+
+<ul>
+<li><nobr><a href="http://www.objs.com/x3h7/smalltalk.htm"
+>http://www.objs.com/x3h7/smalltalk.htm</a></nobr></li>
+</ul>
+
+<p>The original document has been adapted for use with the <nobr>XLISP
+2.0</nobr> object system.</p>
+
+<hr>
+
+<h2>1&nbsp; Basic Concepts</h2>
+
+<hr>
+
+<p>Within the context of Smalltalk, objects are implemented in code through
+encapsulation and polymorphism.</p>
+
+<p>Encapsulation is the approach used in Smalltalk to bundle everything
+needed into an object to preserve the integrity of the enclosed data.
+<nobr>The code</nobr> within an object performs operations on the objects
+internal data. Operations in Smalltalk are performed as the result of a
+messages being sent to an object to execute a specific portion of its code,
+usually called <nobr>a 'method'</nobr>.</p>
+
+<p>Polymorphism is the way that the Smalltalk language allows methods of the
+same name to have predictable and meaningful results in related instances,
+yet perform the operations differently to achieve the results.</p> 
+
+<p>Polymorphism is typically implemented in Smalltalk through the
+abstraction of the common properties of a group of objects into classes and
+hierarchically subclassing shared properties using inheritance, along with
+specialization of the subclass to define the differences.</p>
+
+<p>Classes serve as templates because they define the instance variables for
+all the class instance variables and methods. <nobr>The instance</nobr> of a
+class is created by sending a
+<a href="../reference/keyword-new.htm">:new</a> message to the class which
+uniquely identifies the object instance and allocates space for its
+variables.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2&nbsp; Objects</h2>
+
+<hr>
+
+<p>An object is an encapsulated software component made up of memory and
+operations that creates a coherent programming entity. All objects are an
+instance of a class. Objects have public and private properties. An object's
+implementation details are private and are hidden from other objects.
+
+<ul>
+
+<li><p>An object's public properties are its messages that make up its
+interface.</p></li>
+
+<li><p>The object's private properties are its variables.</p></li>
+
+</ul>
+
+<p>Interaction with an object only occurs via these messages to its
+interface. <nobr>All object</nobr> instances of a given class have a common
+message interface.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.1&nbsp; Operations</h2>
+
+<hr>
+
+<p>An operation is the action taken by an object instance as result of a
+message being received through the object's interface. Messages requesting
+operations are addressed to specific recipient object instances, thus
+Smalltalk uses the 'classical' object model and the method to execute in
+response to a message is determined by searching the object's class
+hierarchy.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.2&nbsp; Requests</h2>
+
+<hr>
+
+<p>A request is act of sending a message to an object's interface with the
+expectation that the object will perform a known operation that is
+associated with the message.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.3&nbsp; Messages</h2>
+
+<hr>
+
+<p>A message is a request to an object instance to perform an operation. A
+message expression consists of a receiver, selector [message name], and
+potentially some arguments. <nobr>The selector</nobr> must be mapped to a
+method of the same name, encapsulated in the receiver object's class
+hierarchy. <nobr>The arguments</nobr>, if any, are used by the method to
+perform its operation.</p>
+
+<pre class="example">
+(send <font color="#0000CC">receiver :selector</font> [<font color="#0000CC">arguments</font>])
+</pre>
+
+<p>In Smalltalk there exist several message types, like unary, binary, and
+keyword messages. <nobr>In XLISP</nobr> there is only one message type, so
+the description of the Smalltalk message types has been omitted from this
+document.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.4&nbsp; Specification of Behavioral Semantics</h2>
+
+<hr>
+
+<p>Behavior is defined by methods specified in classes which are implemented
+as class instances and execution is triggered in those instances by message
+requests.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.5&nbsp; Methods</h2>
+
+<hr>
+
+<p>A method is the executable code rendered in the class and executed in the
+context of an object instance. It defines how to perform an operation in the
+object instance. It is made up of a message pattern that is used to match
+against incoming messages, temporary variables, and a sequence of
+instructions. A method execution is triggered when message is received that
+matches the methods' message pattern.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.6&nbsp; State</h2>
+
+<hr>
+
+<p>The state of an instance is represented by the values of its instance
+variables.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.7&nbsp; Object Lifetime</h2>
+
+<hr>
+
+<p>Object instances are created with the
+<a href="../reference/keyword-new.htm">:new</a> method. Each object
+instance is given a unique identifier called an object pointer or object
+reference.</p>
+
+<p><div class="box">
+
+<p>New classes are created by using the "subclass" method. The "new" and
+"subclass" methods are inheritedby almost all classes. Every instance object
+pointer is also associated with an object pointer of a class. Unlike the
+"new" and "subclass" methods, there are no specific methods that remove an
+object that is no longer useful. Smalltalk objects are deleted when they are
+no longer reachable (garbage collected).</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.8&nbsp; Behavior/State Grouping</h2>
+
+<hr>
+
+<p>Smalltalk uses the 'classical' object model.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.9&nbsp; Communication Model</h2>
+
+<hr>
+
+<p>All communications within Smalltalk occur through messages between
+objects and most Smalltalk implementations support a form of concurrency.
+For example, Smalltalk-80 provides for multiple independent processes, and
+semaphores provide the common mechanism for synchronizing the independent
+processes.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>2.10&nbsp; Events</h2>
+
+<hr>
+
+<p>No specific mechanisms for handling events are built into the
+Smalltalk language, but "event handling" logic is commonly implemented in
+Smalltalk applications through its normal messaging techniques.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>4&nbsp; Polymorphism</h2>
+
+<hr>
+
+<p>Polymorphism is the way that the Smalltalk language allows methods of
+same name to have predictable and meaningful results in related instances,
+yet perform the operations differently to achieve similar results.</p>
+
+<p>Smalltalk supports polymorphism by allowing methods defined in classes to
+be overridden with methods of the same name, but different logic, in a
+subsequent subclass. In addition, methods of the same name can be defined in
+a total different subclass hierarchy.</p>
+
+<p>In the class hierarchy below, all of the lowest level classes are defined
+to accept the message <nobr>'moveForward' (mFabstract)</nobr>, but several
+different versions are implemented as indicated by (MFn) in the diagram.
+<nobr>The message</nobr> sent to the instances of 'Bus' or 'Auto' uses the
+method defined in the 'Motorized' class. <nobr>The same</nobr> method is
+inherited by 'Train' and 'Motorcycle', but both have overridden the
+inherited method by defining a method with different logic using the same
+message pattern. <nobr>All the</nobr> others instances in the diagram have
+the 'moveForward' message pattern in their interface, but are not in the
+'Motorized' inheritance chain. <nobr>All of</nobr> the <nobr>'moveForward'
+(mFabstract)</nobr> methods function as you intuitively expect.</p>
+
+<pre class="example">
+                     Transport Mechanism  (mFabstract)
+       /---------------       |        -------------------\
+Animal Powered          Human Powered                  Motorized
+  /  (mF1)  \         /               \               /  (mF5)  \
+Buggy      Wagon  Land-based      Water-based    Public       Private
+                   /     \         / (mF4) \     /    \        /   \
+                 Bike  Skates  Row Boat  Canoe  Bus  Train  Auto  Motorcycle
+                (mF2)   (mF3)                        (mF6)          (mF7)
+</pre>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>5&nbsp; Encapsulation</h2>
+
+<hr>
+
+<p>The approach used in Smalltalk is to encapsulate all objects, whether a
+complex as a sorted list or as simple as a string, into a single programming
+entity that includes data and logic. Further, other objects can not invoke
+the encapsulated data or logic. In order to interact, other objects must
+send messages to an object's interface that will cause the object to perform
+a function that will have a known effect. See also entry under
+<nobr><a href="#2-3">2.3 Messages</a></nobr>.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>6&nbsp; Identity, Equality, Copy</h2>
+
+<hr>
+
+<p><div class="box">
+
+<p>Smalltalk provides unique identity for all objects. Objects can be tested
+for equivalence (Are the objects being compared the same object?) and
+equality (every object may implement its own definition of equality).</p>
+
+<p>Copying of objects can be performed as a deep copy (object's structure
+and the objects pointed to by its variables are copied) or shallow copy
+(objects pointed to by variables, their variables are not copied, but are
+shared with the original object).</p>
+
+</div></p>
+
+<p>XLISP does not provide <nobr>build-in</nobr> functions or methods to
+compare or to copy objects.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>7&nbsp; Types and Classes</h2>
+
+<hr>
+
+<p>Smalltalk does not have a separate notion of 'type' [message protocol
+shared by a group of objects] apart from 'class'.</p>
+
+<p>A class is a group of objects that represent the same type of entity and
+share the same methods. A class describes the implementation of a set of
+similar objects. Classes are themselves objects. All objects belong to some
+class and an object is an instance of the class of which it belongs.</p>
+
+<p><b>XLISP:</b> If an object is a member of a class can be tested by
+sending an <a href="../reference/keyword-isa.htm">:isa</a> message.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<a name=""></a>
+
+<hr>
+
+<h2>8&nbsp; Inheritance and Delegation</h2>
+
+<hr>
+
+<p>Smalltalk class relationships are defined in terms of inheritance. The
+properties of one class are be inherited from another class in a
+hierarchical structure beginning with the <nobr>upper-most</nobr>
+<nobr>class <a href="../reference/object.htm">object</a></nobr>. <nobr>In
+inheritance</nobr>, the inheriting class is called the 'subclass' and the
+class being inherited from is call the 'superclass'. <nobr>A subclass</nobr>
+inherits all of its superclass' variables and methods.</p>
+
+<p>Abstract classes are classes from which other classes are inherited
+(subclassed) only. Instances can be implemented any non-abstract class.</p>
+
+<p>Subclasses are specialization of their superclasses. A subclass may add
+variables, but it cannot delete those inherited from the superclass. A
+subclass may accept an inherited method or it may override the method by
+providing an new method with the same name (or message selector).</p>
+
+<p>Object instances are instances of a class. Smalltalk does not provide for
+delegation (defined as object instances being created from other object
+instances and not a class).</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="../reference/reference-index.htm">Reference</a>
+
+</body></html>

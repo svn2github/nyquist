@@ -1,0 +1,89 @@
+<html><head><title>XLISP return-from</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>return-from</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>special form (fsubr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xlcont.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(return-from <i>name</i> [<i>expr</i>])</dt>
+<dd><i>name</i> - an unevaluated symbol for the block name<br>
+<i>expr</i> - an expression<br>
+returns - never returns</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'return-from' special form allows the return of an arbitrary value at
+arbitrary times within a 'named-<a href="block.htm">block</a>'
+construct of the specified 'name'. The 'expr' will be returned by the
+<a href="block.htm">block</a> construct. A
+<a href="nil.htm">NIL</a> will be returned by the <a
+href="block.htm">block</a> construct if there is no 'expr'
+specified.</p>
+
+<p>If 'return-from' is used without being within a valid
+<a href="block.htm">block</a> construct, an error is generated:</p>
+
+<pre class="example">
+<font color="#AA0000">error: no target for RETURN</font>
+</pre>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(block out                        <font color="#008844">; outer BLOCK</font>
+  (print "outer")
+  (block in                       <font color="#008844">; inner BLOCK</font>
+    (print "inner")
+    (return-from out "all done")
+    (print "won't get here")))    <font color="#008844">; prints "outer"</font>
+                                  <font color="#008844">; prints "inner"</font>
+                                  <font color="#008844">; returns "all done"</font>
+
+(return-from nobody 9)            <font color="#008844">; error: no target for RETURN</font>
+</pre>
+
+<p>See the
+<a href="../manual/xlisp-man-021.htm#return-from">return-from</a>
+special form in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>

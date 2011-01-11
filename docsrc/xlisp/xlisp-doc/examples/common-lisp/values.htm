@@ -1,0 +1,160 @@
+<html><head>
+
+<title>cl:values</title>
+
+<style type="text/css">
+.example {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  width:auto;
+}
+.button {
+  color: #000000;
+  background-color: #F5F5F5;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 8px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre;
+}
+.box {
+  color: #000000;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border: #808080;
+  border-style: solid;
+  border-width: 1px;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>cl:values</h1>
+
+<hr>
+
+<p>The <nobr>cl:<b>values</b></nobr> function evaluates all given Lisp
+expressions and returns the results as multiple values:</p>
+
+<p><div class="box">
+
+<dl>
+<dt>(cl:<b>values</b> [<i>expr1</i> ...])</dt>
+<dd><i>exprN</i> - an arbitrary Lisp expression<br>
+returns - the results of evaluating the expressions, as multiple values</dd>
+</dl>
+
+</div></p>
+
+<pre class="example">
+(defun <font color="#0000CC">cl:values</font> (&amp;rest exprs)
+  (setq <font color="#AA5500">*rslt*</font> exprs
+        <font color="#AA5500">cl:*multiple-values*</font> t)
+  (first exprs))
+</pre>
+
+<p>The primary return value <nobr>[the result</nobr> from evaluating the
+first expression] is returned by the <nobr>cl:<b>values</b></nobr> function
+and a list with the results of evaluating all expressions is assigned to the
+Nyquist <a href="../../reference/global-rslt.htm">*rslt*</a> variable.
+<nobr>If no</nobr> expressions are given,
+<a href="..././reference/nil.htm">NIL</a> is returned and the
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable is set
+<nobr>to <a href="../../reference/nil.htm">NIL</a></nobr>.</p>
+
+<p><nobr>The
+<a href="global-multiple-values.htm">cl:*multiple-values*</a></nobr>
+variable is set
+<nobr>to <a href="../../reference/t.htm">&nbsp;T&nbsp;</a></nobr>
+to indicate that multiple values are returned.</p>
+
+<p>Examples:</p>
+
+<pre class="example">
+(cl:values 1 2 3)  =&gt; 1        <font color="#008844">; primary value</font>
+*rslt*             =&gt; (1 2 3)  <font color="#008844">; all values</font>
+
+(cl:values 'a 'b)  =&gt; A        <font color="#008844">; primary value</font>
+*rslt*             =&gt; (A B)    <font color="#008844">; all values</font>
+
+&gt; (cl:multiple-value-bind (a b c)
+      (cl:values 1 2 3)
+    (list a b c))
+(1 2 3)
+</pre>
+
+<p>See
+<nobr><a href="multiple-value-bind.htm">cl:multiple-value-bind</a></nobr>,
+<a href="../../reference/list.htm">list</a>,
+<a href="../../reference/global-rslt.htm">*rslt*</a>.</p>
+
+<p><div class="box">
+
+<p><b>Known Limitations</b></p>
+
+<p><b>1.</b> In Nyquist/XLISP, <nobr>cl:<b>values</b></nobr> cannot be
+used as argument to <a href="../../reference/setf.htm">setf</a>. <nobr>But
+this</nobr> is not a real problem, because the values are stored as a
+simple list in the <a href="../../reference/global-rslt.htm">*rslt*</a>
+variable, where they can be manipulated with any arbitrary Lisp
+functions, not only <nobr>with
+<a href="../../reference/setf.htm">setf</a></nobr>.</p>
+
+<p><b>2.</b> In <nobr>Common Lisp</nobr> there exists the option to return
+<nobr>'no value</nobr>' by calling the 'values' function with no arguments.
+<nobr>In Nyquist/XLISP</nobr> there is no <nobr>built-in</nobr> way to
+return '<nobr>no value</nobr>' from a function. <nobr>The symbol</nobr>
+<a href="../../reference/global-unbound.htm">*unbound*</a> cannot be used for
+this because in <nobr>Common Lisp</nobr>, if '<nobr>no value</nobr>' is
+assigned to a symbol as variable value, the new value will be
+<a href="../../reference/nil.htm">NIL</a> and not
+<a href="../../reference/global-unbound.htm">*unbound*</a>.</p>
+
+<p>In Nyquist/XLISP, the cl:<b>values</b> function, if called with no
+arguments, always returns <a href="../../reference/nil.htm">NIL</a>, and the
+<a href="../../reference/global-rslt.htm">*rslt*</a> variable will be
+set <nobr>to <a href="../../reference/nil.htm">NIL</a>, too:</nobr></p>
+
+<pre class="example">
+(cl:values)      =&gt; NIL    <font color="#008844">; primary value</font>
+*rslt*           =&gt; NIL    <font color="#008844">; all values</font>
+
+(cl:values nil)  =&gt; NIL    <font color="#008844">; primary value</font>
+*rslt*           =&gt; (NIL)  <font color="#008844">; all values</font>
+</pre>
+
+<p>Maybe this observation helps to write a '<nobr>no values</nobr>' test if
+anybody really <nobr>needs it</nobr>.</p>
+
+</div></p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to top</a></nobr></p>
+
+<hr>
+
+<a href="../../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../../manual/contents.htm">Contents</a> |
+<a href="../../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples.htm">Examples</a> |
+<a href="../../reference/reference-index.htm">Reference</a>
+
+</body></html>

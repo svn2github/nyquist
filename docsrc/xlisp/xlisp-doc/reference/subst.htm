@@ -1,0 +1,96 @@
+<html><head><title>XLISP subst</title>
+
+<link rel="stylesheet" type="text/css" href="reference.css">
+
+</head>
+
+<body>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+<hr>
+
+<h1>subst</h1>
+
+<hr>
+
+<p><table cellpadding="0" cellspacing="0" style="margin-left:10px"><tbody>
+<tr valign="top">
+  <td><nobr>Type:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>function (subr)</nobr></td>
+</tr>
+<tr valign="top">
+  <td><nobr>Source:</nobr></td>
+  <td><nobr>&nbsp;&nbsp;-&nbsp;&nbsp;</nobr></td>
+  <td width="100%"><nobr>xllist.c</nobr></td>
+</tr>
+</tbody></table></p>
+
+<h2>Syntax</h2>
+
+<dl>
+<dt>(subst <i>new-expr old-expr expr</i> [{:test | :test-not} <i>test</i>])</dt>
+<dd><i>old-expr</i> - the expression to search for<br>
+<i>new-expr</i> - the expression to replace <i>old-expr</i> with<br>
+<i>expr</i> - the expression to substitute within, an atom or list<br>
+<i>test</i> - optional test function, default is <a href="eql.htm">eql</a><br>
+returns - the expression with substitutions</dd>
+</dl>
+
+<h2>Description</h2>
+
+<p>The 'subst' function searches through an 'expr' and replaces each of the
+'old-expr' elements with the 'new-expr'. The 'expr' with the substitutions,
+if any, is returned. You may specify your own test with the ':test' and
+':test-not' keywords followed by the 'test' you wish to perform.</p>
+
+<h2>Examples</h2>
+
+<pre class="example">
+(subst 'new 'old '(old mid dif))           <font color="#008844">; returns (NEW MID DIF)</font>
+(subst '(a) 'old '(old mid dif))           <font color="#008844">; returns ((A) MID DIF)</font>
+(subst "a" 'old '(old mid dif))            <font color="#008844">; returns ("a" MID DIF)</font>
+
+(defun mytest (x y) (princ x) (princ " ")  <font color="#008844">; define a test function</font>
+                    (princ y) (terpri)     <font color="#008844">; that prints the arguments</font>
+                    T )                    <font color="#008844">; and always returns T</font>
+
+(subst 'a 'b '(a b c d) :test 'mytest)     <font color="#008844">; prints (A B C D) B   returns A</font>
+
+(subst 'a 'b '(a b) :test-not 'mytest)     <font color="#008844">; prints (A B) B</font>
+                                           <font color="#008844">;        A B</font>
+                                           <font color="#008844">;        (B) B</font>
+                                           <font color="#008844">;        B B</font>
+                                           <font color="#008844">;        NIL B    returns (A B)</font>
+</pre>
+
+<p><b>Note:</b> The 'subst' function can work with a list or string as the
+'expr' However, the default <a href="eql.htm">eql</a> test does
+not work with lists or strings, only symbols and numbers. To make this work,
+you need to use the ':test' keyword along with
+<a href="equal.htm">equal</a> for 'test'.</p>
+
+<p><b>Common Lisp:</b> Common Lisp supports the use of the ':key' keyword
+which specifies a function that is applied to each element of 'expr' before
+it is tested. XLISP does not support this.</p>
+
+<p>See the
+<a href="../manual/xlisp-man-016.htm#subst">subst</a>
+function in the <nobr>XLISP 2.0</nobr> manual.</p>
+
+<p><nobr>&nbsp;&nbsp;<a href="#top">Back to Top</nobr></a></p>
+
+<hr>
+
+<a href="../start.htm">Nyquist / XLISP 2.0</a>&nbsp; -&nbsp;
+<a href="../manual/contents.htm">Contents</a> |
+<a href="../tutorials/tutorials.htm">Tutorials</a> |
+<a href="../examples/examples.htm">Examples</a> |
+<a href="reference-index.htm">Reference</a>
+
+</body></html>
