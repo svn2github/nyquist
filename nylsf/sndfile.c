@@ -221,7 +221,7 @@ ErrorStruct SndfileErrors [] =
 	{	SFE_FLAC_INIT_DECODER	, "Error : problem while initialization of the flac decoder." },
 	{	SFE_FLAC_LOST_SYNC		, "Error : flac decoder lost sync." },
 	{	SFE_FLAC_BAD_SAMPLE_RATE, "Error : flac does not support this sample rate." },
-	{	SFE_FLAC_UNKOWN_ERROR	, "Error : unkown error in flac decoder." },
+	{	SFE_FLAC_UNKNOWN_ERROR	, "Error : unknown error in flac decoder." },
 
 	{	SFE_DWVW_BAD_BITWIDTH	, "Error : Bad bit width for DWVW encoding. Must be 12, 16 or 24." },
 	{	SFE_G72X_NOT_MONO		, "Error : G72x encoding does not support more than 1 channel." },
