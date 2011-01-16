@@ -170,7 +170,8 @@
       (dolist (x data)
         (cond ((and verbose (> counter 100000))
                (format t "make-hist ~A% done\n"
-                         (/ data-position (float (send stats :get-count))))
+                         (* 100
+                            (/ data-position (float (send stats :get-count)))))
                (setf counter 0)))
         ; increment the right bin -- allows different bin sizes but
         ; could use a binary search for the right bin
@@ -331,3 +332,97 @@
                      (/ (* var2 var2) (* n2 n2 (- n2 1)))))
          (dof (/ dof-num dof-den)))
     (list welchs-t dof)))
+
+;; Levene's test to assess the equality of variances in different samples
+;; based on Wikipedia article. This implementation is for 2 groups. If the
+;; 2 groups can be assumed to be normal (Gaussian), then the F-test should
+;; be considered.
+;;
+;; A variation on Levene's test is the Brown-Forsythe test, which uses
+;; medians instead of means. The optional parameter, brown-forsythe can
+;; be set to true to get a Browne-Forsythe test instead of Levene's test.
+;;
+;; The verbose flag defaults to t and prints some useful information
+;;
+;; The input to levenes-test is a pair of lists of samples. The return
+;; value is W (see Wikipedia for details)
+;;
+(defun levenes-test (y1 y2 &optional brown-forsythe (verbose t))
+  (let* ((n1 (float (length y1)))
+         (n2 (float (length y2)))
+         (n (+ n1 n2))
+         m1 m2 z1 z2 z.. z1. z2. stat (den 0) w)
+    ;; compute means or medians
+    (cond (brown-forsythe
+           (setf m1 (vector-median y1))
+           (setf m2 (vector-median y2)))
+          (t
+           (setf m1 (vector-mean y1))
+           (setf m2 (vector-mean y2))))
+    ;; compute zij (lists z1 and z2)
+    (dolist (y1j y1) (push (abs (- y1j m1)) z1))
+    (dolist (y2j y2) (push (abs (- y2j m2)) z2))
+
+    ;; compute zi. sums
+    (setf z1. (vector-sum-elements z1))
+    (setf z2. (vector-sum-elements z2))
+
+    ;; compute z..
+    (setf z.. (/ (+ z1. z2.) n))
+
+    ;; convert zi. variables from sums to means
+    (setf z1. (/ z1. n1))
+    (setf z2. (/ z2. n2))
+
+    ;; compute the big denominator term
+    (dolist (z1j z1)
+      (let ((diff (- z1j z1.)))
+        (setf den (+ den (* diff diff)))))
+    (dolist (z2j z2)
+      (let ((diff (- z2j z2.)))
+        (setf den (+ den (* diff diff)))))
+
+    ;; compute w
+    (setf w (* (- n 2) (/ (+ (* n1 (* (- z1. z..) (- z1. z..)))
+                             (* n2 (* (- z2. z..) (- z2. z..))))
+                          den)))
+    ;; print info if verbose
+    (cond (verbose
+           (format t "Summary of ~A test results:
+    Size of group 1: ~A, ~A: ~A
+    Size of group 2: ~A, ~A: ~A
+    W (result): ~A
+    The significance of W is tested against F(alpha, 1, ~A),
+    where alpha is the level of significance (usually 0.05 or
+    0.01), and ~A is N-2.~%"
+                   (if brown-forsythe "Brown-Forsythe" "Levene's")
+                   n1 (if brown-forsythe "Median" "Mean") m1
+                   n2 (if brown-forsythe "Median" "Mean") m2
+                   w
+                   (- n 2) (- n 2))))
+    w))
+
+
+;; a simple test for levenes-test
+;; this program uses distributions.lsp, which must be explicitly loaded
+;;
+(defun levenes-test-test ()
+  (let (y1 y2 y3)
+    ;; make some data with sigma 0.1 and 0.2
+    (dotimes (i 50)
+      (push (gaussian-dist 1.0 0.1) y1))
+    (dotimes (i 75)
+      (push (gaussian-dist 1.0 0.2) y2))
+    (dotimes (i 75)
+      (push (gaussian-dist 1.0 0.1) y3))
+    (format t "\nTHE FOLLOWING HAVE UNEQUAL VARIANCE\n")
+    (levenes-test y1 y2) ;; levene's test
+    (format t "\n")
+    (levenes-test y1 y2 t) ;; brown-forsythe test
+    (format t "\nTHE FOLLOWING HAVE EQUAL VARIANCE\n")
+    (levenes-test y1 y3) ;; levene's test
+    (format t "\n")
+    (levenes-test y1 y3 t) ;; brown-forsythe test
+    (format t "\n")
+    'done
+  ))

@@ -43,6 +43,15 @@
   (/ (vector-sum-elements x) (length x)))
 
 
+;; vector-median uses statistics.lsp -- you must load this explicitly
+;; before calling vector-median
+;;
+(defun vector-median (x)
+  (let ((stats (send statistics-class :new t)))
+    (dolist (e x) (send stats :point e))
+    (send stats :get-median)))
+
+
 (defun vector-offset (x c)
   (let (v)
     (dolist (e x)

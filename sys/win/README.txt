@@ -133,3 +133,11 @@ the path. If it is not, you will have to find your installation of
 Java and add the appropriate directory to the PATH variable,
 e.g. "C:\Program Files\Java\jdk1.6.0\bin."
 
+Right click on "My Computer" on the Windows desktop and select
+"Properties." Under the "Advanced" tap, press the "Environment
+Variables" button, and look for PATH under "System Variables." Make
+sure the Java bin directory is on the path. If it is not, you will
+have to find your installation of Java and add the appropriate
+directory to the PATH variable, e.g. "C:\Program
+Files\Java\jdk1.6.0\bin."
+

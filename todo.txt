@@ -1,3 +1,11 @@
+default sound file directory seems to be install directory -- bad idea
+on Windows 7
+
+preferences does not properly handle "\" in "set default sound file
+directory" under Windows
+
+Check if drums in browser tells you where to get and how/where to install.
+
 Nyquist should exit on (EXIT) without waiting for a return -- test on windows. Works on Mac.
 
 indentation is wrong after:
