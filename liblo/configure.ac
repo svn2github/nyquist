@@ -80,7 +80,7 @@ AC_CONFIG_FILES([
 	src/tools/Makefile
 	examples/Makefile
 	lo/Makefile
-#	lo/lo_endian.h
+        lo/lo_endian.h
 	liblo.pc
 	doc/Makefile
 	doc/reference.doxygen
