@@ -400,7 +400,7 @@ sf_flac_error_callback (const FLAC__SeekableStreamDecoder * UNUSED (decoder), FL
 			psf->error = SFE_FLAC_BAD_HEADER ;
 			break ;
 		default :
-			psf->error = SFE_FLAC_UNKOWN_ERROR ;
+			psf->error = SFE_FLAC_UNKNOWN_ERROR ;
 			break ;
 		} ;
 
