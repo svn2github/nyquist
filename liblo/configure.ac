@@ -17,6 +17,7 @@ AC_INIT([liblo], [0.26], [liblo-devel@lists.sourceforge.net])
 # age to 0.
 LO_SO_VERSION=7:0:0
 
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/address.c])
 AM_CONFIG_HEADER([config.h])
 
