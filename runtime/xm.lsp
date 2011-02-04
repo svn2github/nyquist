@@ -1762,14 +1762,26 @@ pattern argument (by default).
                                      from-time to-time))
                   (cdr score)))))
     
+
+;; Get the second element of params (the value field) and turn it
+;; into a numeric value if possible (by looking up a global variable
+;; binding). This allows scores to say C4 instead of 60.
+;;
+(defun get-numeric-value (params)
+  (let ((v (cadr params)))
+    (cond ((and (symbolp v) (boundp v) (numberp (symbol-value v)))
+           (setf v (symbol-value v))))
+    v))
+
           
 (defun params-transpose (params keyword amount)
   (cond ((null params) nil)
-        ((and (eq keyword (car params))
-              (numberp (cadr params)))
-         (cons (car params)
-               (cons (+ amount (cadr params))
-                     (cddr params))))
+        ((eq keyword (car params))
+         (let ((v (get-numeric-value params)))
+           (cond ((numberp v)
+                  (setf v (+ v amount))))
+           (cons (car params)
+                 (cons v (cddr params)))))
         (t (cons (car params)
                  (cons (cadr params)
                        (params-transpose (cddr params) keyword amount))))))
@@ -1789,11 +1801,12 @@ pattern argument (by default).
 
 (defun params-scale (params keyword amount)
   (cond ((null params) nil)
-        ((and (eq keyword (car params))
-              (numberp (cadr params)))
-         (cons (car params)
-               (cons (* amount (cadr params))
-                     (cddr params))))
+        ((eq keyword (car params))
+         (let ((v (get-numeric-value params)))
+           (cond ((numberp v)
+                  (setf v (* v amount))))
+           (cons (car params)
+                 (cons v (cddr params)))))
         (t (cons (car params)
                  (cons (cadr params)
                        (params-scale (cddr params) keyword amount))))))
