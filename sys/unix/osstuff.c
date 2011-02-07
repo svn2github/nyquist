@@ -683,25 +683,32 @@ LVAL xsystem()
 /* xsetdir -- set current directory of the process */
 LVAL xsetdir()
 {
-   char *dir = (char *)getstring(xlgastring());
-   int result;
-   LVAL cwd = NULL;
-   xllastarg();
-   result = chdir(dir);
-   if (result) {
-      /* perror("SETDIR"); -- Nyquist uses SETDIR to search for directories
-       * at startup, so failures are normal, and seeing error messages
-       * could be confusing, so don't print them. The NULL return indicates
-       * an error, but doesn't tell which one it is.
-       */
-      return NULL;
-   }
-   dir = getcwd(NULL, 1000);
-   if (dir) {
-       cwd = cvstring(dir);
-       free(dir);
+    char *dir = (char *)getstring(xlgastring());
+    int result;
+    LVAL cwd = NULL;
+    int verbose = TRUE;
+    if (moreargs()) {
+        verbose = (xlgetarg() != NIL);
     }
-   return cwd;
+    xllastarg();
+    result = chdir(dir);
+    if (result) {
+        /* perror("SETDIR"); -- Nyquist uses SETDIR to search for directories
+         * at startup, so failures are normal, and seeing error messages
+         * could be confusing, so don't print them. The NULL return indicates
+         * an error, but doesn't tell which one it is.
+         * But now, SETDIR has a second verbose parameter that is nil when
+         * searching for directories. -RBD
+         */
+        if (verbose) perror("Directory Setting Error");
+        return NULL;
+    }
+    dir = getcwd(NULL, 1000);
+    if (dir) {
+        cwd = cvstring(dir);
+        free(dir);
+    }
+    return cwd;
 }
 
 /* xget_temp_path -- get a path to create temp files */

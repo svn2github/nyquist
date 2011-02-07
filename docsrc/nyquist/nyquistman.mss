@@ -7588,7 +7588,9 @@ and a new score is returned.
 @c{[sal]}@*
 @altdef{@code{(score-apply @i(score) @i(function) :from-index @i(i) :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Replace
 each note in the score with the result of
- @code[(@i(function time dur expression))], where @i(time), @i(dur), 
+ @code[(@i(function time dur expression))] (in Lisp) or
+ @code[@i(function)(@i(time), @i(dur), @i(expression))] (in SAL), 
+where @i(time), @i(dur), 
 and @i(expression) are the time, duration, and expression of the note.
 If a range is indicated, only notes in the range are replaced.
 The original score is not modified, and a new score is returned.

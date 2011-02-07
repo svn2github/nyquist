@@ -14,8 +14,12 @@
 xsetdir - set current directory of the process */
 LVAL xsetdir() {
     TCHAR ssCurDir[MAX_PATH], szCurDir[MAX_PATH];
+    int verbose = TRUE;
 
     strcpy(ssCurDir, getstring(xlgastring()));
+    if (moreargs()) {
+        verbose = (xlgetarg() != NIL);
+    }
     xllastarg();
     if (SetCurrentDirectory(ssCurDir)) {
         if (GetCurrentDirectory(
@@ -27,7 +31,7 @@ LVAL xsetdir() {
             stdputstr("\n"); */
         }	
     }
-    stdputstr("Directory Setting Error\n");
+    if (verbose) stdputstr("Directory Setting Error\n");
 
     /* return nil on error*/
     return NIL;

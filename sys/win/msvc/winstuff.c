@@ -196,7 +196,7 @@ void start_input_thread()
 
 void osinit (char *banner) 
 {
-    printf(banner);
+    printf("%s\n", banner);
     if (_isatty( _fileno( stdin ) ) ){
         redirect_flag = 0;
 #ifdef DEBUG

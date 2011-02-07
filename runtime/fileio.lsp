@@ -13,16 +13,24 @@
        ;; needed
        (let ((current (setdir ".")))
          (setf *default-sf-dir*
-               (or (setdir "c:\\tmp\\")
-                   (setdir "c:\\temp\\")
-                   (setdir "d:\\tmp\\")
-                   (setdir "d:\\temp\\")
-                   (setdir "e:\\tmp\\")
-                   (setdir "e:\\temp\\")
+               (or (setdir "c:\\tmp\\" nil)
+                   (setdir "c:\\temp\\" nil)
+                   (setdir "d:\\tmp\\" nil)
+                   (setdir "d:\\temp\\" nil)
+                   (setdir "e:\\tmp\\" nil)
+                   (setdir "e:\\temp\\" nil)
 	           (get-temp-path)))
          (format t "Set *default-sf-dir* to \"~A\" in fileio.lsp~%" 
 		 *default-sf-dir*)
 	 (setdir current))))
+
+;; if the steps above fail, then *default-sf-dir* might be "" (especially
+;; on windows), and the current directory could be read-only on Vista and
+;; Windows 7. Therefore, the Nyquist IDE will subsequently call
+;; suggest-default-sf-dir with Java's idea of a valid temp directory.
+;; If *default-sf-dir* is the empty string (""), this will set the variable:
+(defun suggest-default-sf-dir (path)
+  (cond ((equal *default-sf-dir* "") (setf *default-sf-dir* path))))
 
 ;; s-save -- saves a file
 (setf NY:ALL 1000000000)	; 1GIG constant for maxlen

@@ -247,10 +247,9 @@ public class MainFrame extends JFrame {
     
     
     public void Prefs() {
-        System.out.println("Prefs");
-        // PreferencesDialog preferencesDialog = new PreferencesDialog(this);
+        // ignore if preferences is already open
+        if (preferencesDialog != null) return;
         preferencesDialog = new PreferencesDialog(this);
-        
         jDesktop.add(preferencesDialog);
         jDesktop.getDesktopManager().activateFrame(preferencesDialog);
     }
@@ -635,6 +634,16 @@ public class MainFrame extends JFrame {
         if (prefSFDirectory != null && prefSFDirectory.length() > 0) {
             String dirString = escape_backslashes(prefSFDirectory);
             setVariable("*default-sf-dir*", "\"" + dirString + "\"");
+        } else { // no preference, suggest Java temp dir. The Java temp dir
+            // will be used as *default-sf-dir* only if *default-sf-dir*
+            // was set to "", meaning previous methods to identify a temp
+            // directory failed to produce anything.
+            String tempdir = System.getProperty("java.io.tmpdir");
+            if (!(tempdir.endsWith("/") || tempdir.endsWith("\\")))
+                tempdir = tempdir + "/";
+            // flip backslash to slash to avoid quote problems
+            tempdir = "\"" + tempdir.replaceAll("\\\\", "/") + "\"";
+            callFunction("suggest-default-sf-dir", tempdir);
         }
         setBoolean("*sal-secondary-prompt*", false);
         sendInputLn(";; end preference data transfer");
@@ -1353,7 +1362,6 @@ public class MainFrame extends JFrame {
     // Window Browse command -- create a browse/demo window
     public void doWindowBrowse(ActionEvent e) {
         // place output frame at left, full height
-        //System.out.println("JMenuWindowBrowse");
         loadBrowserFrame();
     }
     
@@ -1470,9 +1478,7 @@ public class MainFrame extends JFrame {
     }
     
     public void loadBrowserFrame() {
-        //System.out.println("loadBrowserFrame -- starting");
         Browser frame = new Browser(this, nyquistThread);
-        //System.out.println("loadBrowserFrame -- new browser");
         
         // Validate frames that have preset sizes
         // Pack frames that have useful preferred size info, e.g. from their layout
@@ -1482,7 +1488,6 @@ public class MainFrame extends JFrame {
             frame.validate();
         }
         jDesktop.add(frame);
-        //System.out.println("frame.setVisible(true)");
     }
     
     public void loadEnvData(String data) {

@@ -23,6 +23,8 @@ import jnyqide.*;
 
 class PreferencesDialog extends JInternalFrame implements ActionListener {
     private MainFrame mainFrame;
+    private JScrollPane scrollPane;
+    private JPanel panel;
     private JButton defaultPrefs;  // "Restore Defaults"
     private JCheckBox startInSalMode; // "Start in SAL mode (not Lisp)"
     private JCheckBox salShowLisp; // "Show translation of SAL to Lisp"
@@ -54,10 +56,11 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                                     "11025", "8000" };
                                     
     protected JCheckBox makeCheckBox(String doc, boolean val) {
-        JPanel contentPane = (JPanel) getContentPane();
+        //JPanel contentPane = (JPanel) getContentPane();
         JCheckBox cb = new JCheckBox(doc, val);
         cb.setAlignmentX(Component.LEFT_ALIGNMENT);
-        contentPane.add(cb);
+        //contentPane.add(cb);
+        panel.add(cb);
         return cb;
     }
                                     
@@ -81,7 +84,8 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
 
                 enable = enableSound.isSelected();
                 mainFrame.callFunction(
-                        enable ? "sound-off" : "sound-on", "");
+                        enable ? "sound-on" : "sound-off", "");
+                mainFrame.prefEnableSound = enable;
                 
                 enable = autoNorm.isSelected();
                 mainFrame.callFunction(
@@ -150,7 +154,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                 System.out.println("startfd.getSelectedFile() -> " + file);
 
                 if (file != null) {
-                    String dir = file.toString();
+                    String dir = file.toString().replaceAll("\\\\", "/");
                     System.out.println("startfd.getSelectedFile: " + dir);
                     if (dir != null && dir.length() > 0) {
                         mainFrame.prefDirectory = dir;
@@ -162,7 +166,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                         
                 file = fd.getSelectedFile();
                 if (file != null) {
-                    String dir = file.toString();
+                    String dir = file.toString().replaceAll("\\\\", "/");
                     System.out.println("fd.getSelectedFile: " + dir);
                     if (dir != null && dir.length() > 0) {
                         mainFrame.prefSFDirectory = dir;
@@ -193,17 +197,24 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
             }
         });
 
+        panel = new JPanel();
+        scrollPane = new JScrollPane(panel);
         JPanel contentPane = (JPanel) getContentPane();
-        contentPane.setLayout(
-                new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+        //contentPane
+        panel.setLayout(
+                new BoxLayout(panel, BoxLayout.Y_AXIS));
                 
+        panel.add(new JLabel("Preferences are updated when you close this Preferences Window"));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+
         // button to restore default preferences
         defaultPrefs = new JButton("Restore Defaults");
         defaultPrefs.addActionListener(this);
         defaultPrefs.setAlignmentX(Component.LEFT_ALIGNMENT);
-        contentPane.add(defaultPrefs);
+        panel.add(defaultPrefs);
 
-        contentPane.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
         
         // Start in Sal mode (not Lisp)"
         startInSalMode = makeCheckBox("Start in SAL mode (not Lisp)", 
@@ -247,19 +258,19 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         onlineManual = makeCheckBox("Use online manual instead of local copy",
                                     mainFrame.prefOnlineManual);
 
-        contentPane.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Relative height of completion box (slider)
-        contentPane.add(new JLabel("Relative height of completion box", 
+        panel.add(new JLabel("Relative height of completion box", 
                                     JLabel.CENTER));
         completionListPercent = new JScrollBar(JScrollBar.HORIZONTAL,
                     (int) mainFrame.prefCompletionListPercent, 1, 0, 100);
-        contentPane.add(completionListPercent);
+        panel.add(completionListPercent);
 
-        contentPane.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Audio Sample Rate (editable combobox)
-        contentPane.add(new JLabel("Audio Sample Rate")); 
+        panel.add(new JLabel("Audio Sample Rate")); 
         audioRate = new JComboBox(audioRates);
         // Set correct selection
         for (int i = 0; i < audioRates.length; i++) {
@@ -273,19 +284,19 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         audioRate.setMaximumSize(
                 new Dimension(100, audioRate.getPreferredSize().height));
         currentAudioRate = mainFrame.prefAudioRate;
-        contentPane.add(audioRate);
+        panel.add(audioRate);
             
-        contentPane.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Control Rate (text field)
-        contentPane.add(new JLabel("Control Sample Rate")); 
+        panel.add(new JLabel("Control Sample Rate")); 
         controlRate = new JTextField(mainFrame.prefControlRate);
         controlRate.setAlignmentX(Component.LEFT_ALIGNMENT);
         controlRate.setMaximumSize(
                 new Dimension(100, controlRate.getPreferredSize().height));
-        contentPane.add(controlRate);
+        panel.add(controlRate);
 
-        contentPane.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Select Startup Directory (button)
         startfd = new JFileChooser("Select Initial Directory");
@@ -295,7 +306,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         initialDirectory = new JButton("Set Initial Directory");
         initialDirectory.addActionListener(this);
         initialDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
-        contentPane.add(initialDirectory);
+        panel.add(initialDirectory);
 
         // Select Sound File Output Directory (button)
         fd = new JFileChooser("Select Default Soundfile Directory");
@@ -305,9 +316,9 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         sfDirectory = new JButton("Set Default Soundfile Directory");
         sfDirectory.addActionListener(this);
         sfDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
-        contentPane.add(sfDirectory);
+        panel.add(sfDirectory);
         
-        contentPane.add(Box.createVerticalGlue());
+        panel.add(Box.createVerticalGlue());
                 
         /*
         * The Nyquist IDE has a preferences dialog with a couple of things you
@@ -321,7 +332,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         */
 
         pack();
-        Dimension size = new Dimension(400, 600);
+        Dimension size = new Dimension(400, 400);
         setSize(size);
         Point mfloc = mainFrame.getLocation();
         setLocation(mfloc.x + 25, mfloc.y + 25);

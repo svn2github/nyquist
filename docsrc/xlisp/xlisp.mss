@@ -3397,12 +3397,14 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{setdir(@i(path))} @c{[sal]}
+        @begin(fgroup)@xlcode{setdir(@i(path)[, @i(verbose)])} @c{[sal]}
 
-        @xlcode{(setdir@pragma(defn)@index(setdir)@index(change directory) @t(@i(path)))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep set current directory
+        @xlcode{(setdir@pragma(defn)@index(setdir)@index(change directory) @t(@i(path)) [@t(@i(verbose))])} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep set current directory
 @end(fgroup)
 @begin(pdescription)
             @i<path> @itemsep   the path of the new directory
+
+            @i<verbose> @itemsep print error message if current directory cannot be changed to @i(path)
 
             returns   @itemsep  the resulting full path, e.g. (setdir ".") gets the current working directory, or @xlcode(nil) if an error occurs
 
