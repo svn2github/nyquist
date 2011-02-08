@@ -466,7 +466,7 @@ LVAL xrdnohang(void);
 
 /* for extern.c */
 
-void inval_caches();
+void inval_caches(void);
 
 
 /* for xlbfun.c */
@@ -677,7 +677,7 @@ void xloutflush(LVAL fptr);
 void xlflush(void);
 void stdprint(LVAL expr);
 void stdputstr(char *str);
-void stdflush();
+void stdflush(void);
 void errprint(LVAL expr);
 void errputstr(char *str);
 void dbgprint(LVAL expr);
@@ -986,7 +986,7 @@ int osaputc(int ch, FILE *fp);
 void osoutflush(FILE *fp);
 int osbputc(int ch, FILE *fp);
 void ostputc(int ch);
-void ostoutflush();
+void ostoutflush(void);
 int osagetc(FILE *fp);
 int osbgetc(FILE *fp);
 int ostgetc(void);
@@ -994,14 +994,14 @@ void ossymbols(void);
 LVAL xlinfo(void);
 LVAL xsetdir(void);
 int osdir_list_start(char *path);
-char *osdir_list_next();
-void osdir_list_finish();
-LVAL xosc_enable();
-LVAL xget_temp_path();
-LVAL xfind_in_xlisp_path();
+char *osdir_list_next(void);
+void osdir_list_finish(void);
+LVAL xosc_enable(void);
+LVAL xget_temp_path(void);
+LVAL xfind_in_xlisp_path(void);
 
 /* These are now implemented in path.c   -dmazzoni */
-const char *return_xlisp_path();
+const char *return_xlisp_path(void);
 const char *find_in_xlisp_path(const char *fname);
 void set_xlisp_path(const char *p);
 

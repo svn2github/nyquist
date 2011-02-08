@@ -157,11 +157,11 @@ typedef struct {
  
 
 typedef struct snd_susp_struct {
-    void                (*fetch)();
-    void                (*keep_fetch)();
-    void                (*free)();
-    void                (*mark)();  /* marks LVAL nodes for GC */
-    void                (*print_tree)();    /* debugging */
+    void                (*fetch)(struct snd_susp_struct *, struct snd_susp_struct *);
+    void                (*keep_fetch)(struct snd_susp_struct *);
+    void                (*free)(struct snd_susp_struct *);
+    void                (*mark)(struct snd_susp_struct *);  /* marks LVAL nodes for GC */
+    void                (*print_tree)(struct snd_susp_struct *, int);    /* debugging */
     char *              name;       /* string name for debugging */
     long                toss_cnt;   /* return this many zeros, then compute */
     long                current;    /* current sample number */
@@ -200,7 +200,7 @@ typedef struct table_struct {
 #define UNKNOWN (-10-max_sample_block_len)
 
 typedef struct sound_struct {
-    sample_block_type   (*get_next)(/* struct sound_struct *snd, long *cnt */);
+    sample_block_type   (*get_next)(struct sound_struct *snd, long *cnt);
     time_type           time;   /* logical starting time */
     time_type           t0;     /* quantized time of first sample */
     long                stop;  /* stop (clipping) sample no. */
@@ -216,7 +216,7 @@ typedef struct sound_struct {
     long                prepend_cnt;    /* how many zeros to prepend */
     /* function to use as get_next after prepended zeros are generated: */
     sample_block_type   (*after_prepend)
-                        (/* struct sound_struct * snd, long * cnt */);
+                        (struct sound_struct * snd, long * cnt);
     table_type table;   /* pointer to table-ized version of this sound */
     long *extra;        /* used for extra state information, first word of extra
 			   state should be the length of the extra state 
@@ -242,14 +242,14 @@ double snd_set_latency(double latency);
 double compute_phase(double phase, double key, long n, double srate,
                      double new_srate, double freq, double *incr_ptr);
 
-boolean soundp();
+boolean soundp(LVAL);
 /* LISP: (SOUNDP ANY) */
 
 void snd_list_ref(snd_list_type list);
 void sound_unref(sound_type snd);
 void snd_list_unref(snd_list_type list);
 
-LVAL cvsound();
+LVAL cvsound(sound_type);
 extern LVAL a_sound;
 
 sample_block_type SND_get_next(sound_type snd, long * cnt);
@@ -257,9 +257,9 @@ sample_block_type SND_get_first(sound_type snd, long * cnt);
 sample_block_type SND_get_zeros(sound_type snd, long * cnt);
 sample_block_type SND_flush(sound_type snd, long * cnt);
 
-double hz_to_step();    /* LISP: (HZ-TO-STEP ANYNUM) */
+double hz_to_step(double);    /* LISP: (HZ-TO-STEP ANYNUM) */
 int interp_style(sound_type s, rate_type sr);
-void set_logical_stop_time(); /* LISP: (SND-SET-LOGICAL-STOP SOUND ANYNUM) */
+void set_logical_stop_time(sound_type sound, time_type when); /* LISP: (SND-SET-LOGICAL-STOP SOUND ANYNUM) */
 
 #define xlog(x) log(x)
 /* LISP: double (LOG FLONUM) */
@@ -312,12 +312,12 @@ void sound_print(LVAL snd_expr, long n);
     /* LISP: (SND-PRINT ANY FIXNUM) */
 void sound_play(LVAL snd_expr);
     /* LISP: (SND-PLAY ANY) */
-void stats();
+void stats(void);
     /* LISP: (STATS) */
 void sound_print_tree(sound_type snd);
     /* LISP: (SND-PRINT-TREE SOUND) */
     
-void mark_audio_time();
+void mark_audio_time(void);
 
 void sound_print_tree_1(sound_type snd, int n);
 
@@ -338,7 +338,7 @@ sound_type sound_zero(time_type t0, rate_type sr);
 
 #define susp_print_tree(s, n) (*((s)->print_tree))(s, n)
 
-double step_to_hz();
+double step_to_hz(double);
     /* LISP: (STEP-TO-HZ ANYNUM) */
 
 /* macros for access to samples within a suspension */
