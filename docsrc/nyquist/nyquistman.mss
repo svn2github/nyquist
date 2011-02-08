@@ -1031,7 +1031,7 @@ interpreted as a function from logical (local score) time to physical
  convert from a logical (local) time to real (global) time.  Most often,
 you will call @code[local-to-global(0)].  Several transformation operators
 operate on @code[*warp*], including @i(at) (@code(@@)), @i(stretch) (@code(~)),
-and @code(warp).
+and @code(warp). See also @code[get-duration()] and @code[get-warp()].
 
  @codef(*loud*@pragma(defn)@index(*loud*))@\Loudness, expressed in decibels.  The default
 (nominal) loudness is 0.0 dB (no change).  Do not access @code(*loud*)
