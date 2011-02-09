@@ -41,14 +41,17 @@ public class CodePane extends JScrollPane
     public boolean isSal;
     int caretLine;  // holds current line number
     int caretColumn; // holds current column
+    int fontSize; // the font size
     JLabel statusBar;
     
     final int TIMER_DELAY = 1000; // ms
     
-    public CodePane(Dimension preferredSize, MainFrame mf, JLabel sb) {
+    public CodePane(Dimension preferredSize, MainFrame mf, JLabel sb, 
+                    int fontSz) {
         super();
         blinkLoc = 0;
         blinkOn = false; // initialize
+        fontSize = fontSz;
         mainFrame = mf;
         statusBar = sb;
         isSal = false;
@@ -123,6 +126,7 @@ public class CodePane extends JScrollPane
         
 
         if (preferredSize != null) setPreferredSize(preferredSize);
+
     }
     
     
@@ -630,6 +634,7 @@ public class CodePane extends JScrollPane
                     // System.out.println("calling TextColor");
                     codePane.evenParens = TextColor.format(codePane, 0);
                     // System.out.println("returned from TextColor");
+                    codePane.updateFontSize(fontSize);
                 }
             });
     }
@@ -651,4 +656,16 @@ public class CodePane extends JScrollPane
         blinkOn = true;
         blinkLoc = loc;
     }
+
+    public void updateFontSize(int size) {
+        final MutableAttributeSet attributeSet = new SimpleAttributeSet();
+        StyleConstants.setFontSize(attributeSet, size);
+        doc.setCharacterAttributes(0, 1000000, attributeSet, false);
+    }
+
+    public void setFontSize(int size) { 
+        fontSize = size; 
+        updateFontSize(size);
+    }
+
 }

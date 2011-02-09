@@ -47,14 +47,16 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                        // "Relative height of completion box"
     private JComboBox audioRate; // "Audio Sample Rate"
     private JTextField controlRate; // "Control Sample Rate"
+    private JComboBox fontSize; // "Font Size"
     private JButton sfDirectory; // "Set Default Sound File Directory"
     private JButton initialDirectory; // "Set Initial Directory"
     private JFileChooser startfd;
     private JFileChooser fd;
-    private String currentAudioRate;
     private String[] audioRates = { "96000", "48000", "44100", "22050", "16000",
                                     "11025", "8000" };
-                                    
+    private String currentFontSize;
+    private String[] fontSizes = { "6", "7", "8", "9", "10", "11", "12", "14", 
+                                   "16", "18", "20", "24", "28", "32", "36" };
     protected JCheckBox makeCheckBox(String doc, boolean val) {
         //JPanel contentPane = (JPanel) getContentPane();
         JCheckBox cb = new JCheckBox(doc, val);
@@ -132,22 +134,26 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                 }
                 
                 String rateString = (String) audioRate.getSelectedItem();
-                audioRate.setSize(50, 20);
-                int rate = validate(currentAudioRate);
-                if (rate > 0 && !audioRate.equals(mainFrame.prefAudioRate)) {
-                    mainFrame.callFunction("set-sound-srate", 
-                                           String.valueOf(rate));
+                //audioRate.setSize(50, 20);
+                int rate = validate(rateString);
+                if (rate > 0 && !rateString.equals(mainFrame.prefAudioRate)) {
+                    mainFrame.callFunction("set-sound-srate", rateString);
                     mainFrame.prefAudioRate = rateString;
                 }
 
                 rateString = controlRate.getText();
 		rate = validate(rateString);
-                if (rate > 0 && 
-                    !controlRate.equals(mainFrame.prefControlRate)) {
-                    mainFrame.callFunction("set-control-srate ", 
-                                           String.valueOf(rate));
+                if (rate > 0 && !rateString.equals(mainFrame.prefControlRate)) {
+                    mainFrame.callFunction("set-control-srate ", rateString);
                     mainFrame.prefControlRate = rateString;
 		}
+
+                String fontString = (String) fontSize.getSelectedItem();
+                int size = validate(fontString);
+                if (size > 0 && !fontString.equals(mainFrame.prefFontSize)) {
+                    mainFrame.prefFontSize = fontString;
+                    mainFrame.setFontSize(size);
+                }
 
                 File file = startfd.getSelectedFile();
 
@@ -283,7 +289,6 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         audioRate.setAlignmentX(Component.LEFT_ALIGNMENT);
         audioRate.setMaximumSize(
                 new Dimension(100, audioRate.getPreferredSize().height));
-        currentAudioRate = mainFrame.prefAudioRate;
         panel.add(audioRate);
             
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -295,6 +300,24 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         controlRate.setMaximumSize(
                 new Dimension(100, controlRate.getPreferredSize().height));
         panel.add(controlRate);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // Font Size (editable combobox)
+        panel.add(new JLabel("Font Size")); 
+        fontSize = new JComboBox(fontSizes);
+        // Set correct selection
+        for (int i = 0; i < fontSizes.length; i++) {
+            if (mainFrame.prefFontSize.equals(fontSizes[i])) {
+                fontSize.setSelectedIndex(i);
+                break;
+            }
+        }
+        fontSize.setEditable(true);
+        fontSize.setAlignmentX(Component.LEFT_ALIGNMENT);
+        fontSize.setMaximumSize(
+                new Dimension(100, fontSize.getPreferredSize().height));
+        panel.add(fontSize);
 
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -395,6 +418,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                     (int) (mainFrame.prefCompletionListPercentDefault + 0.5));
             audioRate.setSelectedItem(mainFrame.prefAudioRateDefault);
             controlRate.setText(mainFrame.prefControlRateDefault);
+            fontSize.setSelectedItem(mainFrame.prefFontSizeDefault);
             startfd.setSelectedFile(null);
             fd.setSelectedFile(null);
         }

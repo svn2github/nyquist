@@ -43,8 +43,8 @@ public class NyquistFile extends JInternalFrame
     // BWP: Constructors now take a MainFrame object to associate
     //      the document window with the parent window for Find
     //      and Find/Replace operations
-    public NyquistFile(MainFrame parent) { // BWP
-        this(null, parent);                // BWP
+    public NyquistFile(MainFrame parent, int fontSize) { // BWP
+        this(null, parent, fontSize);                    // BWP
         modified = true;
         setTitle(getTitle()+"*");
     }
@@ -77,7 +77,7 @@ public class NyquistFile extends JInternalFrame
     }
 
     
-    public NyquistFile(File f, MainFrame parent) {
+    public NyquistFile(File f, MainFrame parent, int fontSize) {
         super();
 
         setTitle(f != null ? f.getName() : "Untitled");
@@ -177,7 +177,7 @@ public class NyquistFile extends JInternalFrame
         thisFile.setJMenuBar(myMenuBar);
 	/* BWP END */ // end menu stuff
 
-        filePane = new CodePane(null, null, statusBar);
+        filePane = new CodePane(null, null, statusBar, fontSize);
         pane = filePane.pane;
         System.out.println("NyquistFile creation, this " + this + " pane = " + pane);
         doc = filePane.doc;

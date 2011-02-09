@@ -104,6 +104,7 @@ public class MainFrame extends JFrame {
     public static final double prefCompletionListPercentDefault = 60.0;
     public static final String prefAudioRateDefault = "44100";
     public static final String prefControlRateDefault = "2205";
+    public static final String prefFontSizeDefault = "12";
 
     public static boolean prefStartInSalMode = prefStartInSalModeDefault;
     public static boolean prefSalShowLisp = prefSalShowLispDefault;
@@ -122,6 +123,7 @@ public class MainFrame extends JFrame {
                                  prefCompletionListPercentDefault;
     public static String prefAudioRate = prefAudioRateDefault;
     public static String prefControlRate = prefControlRateDefault;
+    public static String prefFontSize = prefFontSizeDefault;
     public static String prefDirectory = "";
     public static String prefSFDirectory = "";
 
@@ -342,6 +344,7 @@ public class MainFrame extends JFrame {
                                                     prefCompletionListPercent);
         prefAudioRate = prefs.get("audio-rate", prefAudioRate);
         prefControlRate = prefs.get("control-rate", prefControlRate);
+        prefFontSize = prefs.get("font-size", prefFontSize);
         prefDirectory = prefs.get("initial-directory", prefDirectory);
         prefSFDirectory = prefs.get("default-sf-directory", prefSFDirectory);
         prefsHaveBeenSet = false;
@@ -527,7 +530,8 @@ public class MainFrame extends JFrame {
         jListOutputPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     
-        jScrollPane = new CodePane(new Dimension(400, 200), this, statusBar);
+        jScrollPane = new CodePane(new Dimension(400, 200), this, statusBar,
+                                   Integer.parseInt(prefFontSize));
         
         // Top panel for command entry, plot, and toolbar
         JPanel jCommands = new JPanel( new BorderLayout() );
@@ -628,6 +632,7 @@ public class MainFrame extends JFrame {
         setBoolean("*gc-flag*", prefPrintGC);
         callFunction("set-sound-srate", prefAudioRate);
         callFunction("set-control-srate", prefControlRate);
+        setFontSize(Integer.parseInt(prefFontSize));
         if (prefDirectory != null && prefDirectory.length() > 0) {
             changeDirectory(prefDirectory);
         }
@@ -725,6 +730,7 @@ public class MainFrame extends JFrame {
                             prefCompletionListPercent);
             prefs.put("audio-rate", prefAudioRate);
             prefs.put("control-rate", prefControlRate);
+            prefs.put("font-size", prefFontSize);
             prefs.put("initial-directory", prefDirectory);
             prefs.put("default-sf-directory", prefSFDirectory);
             prefsHaveBeenSet = false;
@@ -782,8 +788,7 @@ public class MainFrame extends JFrame {
     }
     
     
-    public void doFileNew(ActionEvent e) {
-        final NyquistFile file = new NyquistFile(this);
+    public void prepareNewNyquistFile(final NyquistFile file) {
         jDesktop.add(file);
         jDesktop.getDesktopManager().activateFrame(file);
         jDesktop.setSelectedFrame(file);
@@ -816,6 +821,14 @@ public class MainFrame extends JFrame {
                 }
             }
         );
+    }
+
+
+    public void doFileNew(ActionEvent e) {
+
+        final NyquistFile file = 
+                new NyquistFile(this, Integer.parseInt(prefFontSize));
+        prepareNewNyquistFile(file);
     }
     
     public String fileDirectory(File file) {
@@ -887,42 +900,9 @@ public class MainFrame extends JFrame {
         }
         // Didn't find it. Open it in a new frame.
         final NyquistFile file =
-            new NyquistFile(fileToOpen, this);
-        jDesktop.add(file);
-        jDesktop.getDesktopManager().activateFrame(file);
-        jDesktop.setSelectedFrame(file);
+            new NyquistFile(fileToOpen, this, Integer.parseInt(prefFontSize));
         changeDirectory(fileDirectory(fileToOpen));
-        // file.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        file.addInternalFrameListener(
-            new InternalFrameListener() {
-                public void internalFrameClosing(InternalFrameEvent e) {
-                    System.out.println("File internalFrameListener: " + e);
-                    //System.out.println("FrameClosing");
-                    int r = JOptionPane.OK_OPTION;
-                    if (file.modified) {
-                        r = JOptionPane.showConfirmDialog(file,
-                                "Really close without saving?",
-                                "alert", JOptionPane.OK_CANCEL_OPTION);
-                    }
-                    if (r == JOptionPane.OK_OPTION) {
-                        file.dispose();
-                    }
-                }
-                public void internalFrameDeactivated(InternalFrameEvent e) {
-                }
-                public void internalFrameOpened(InternalFrameEvent e) {
-                }
-                public void internalFrameClosed(InternalFrameEvent e) {
-                    //System.out.println("FrameClosed");
-                }
-                public void internalFrameIconified(InternalFrameEvent e) {
-                }
-                public void internalFrameDeiconified(InternalFrameEvent e) {
-                }
-                public void internalFrameActivated(InternalFrameEvent e) {
-                }
-            }
-        );
+        prepareNewNyquistFile(file);
     }
 
     public void doFileSave(ActionEvent e) {
@@ -1501,5 +1481,20 @@ public class MainFrame extends JFrame {
             eqEditor.loadEqData(data);
         }
     }
+
+    public void setFontSize(int s) {
+        JInternalFrame[] frames = jDesktop.getAllFrames();
+        int i;
+        for (i = 0; i < frames.length; i++) {
+            if (frames[i] instanceof NyquistFile) {
+                NyquistFile nyquistFile = (NyquistFile) frames[i];
+                CodePane pane = nyquistFile.filePane;
+                pane.setFontSize(s);
+            }
+        }
+        jScrollPane.setFontSize(s);
+        jOutputArea.setFont(new Font("Courier", Font.PLAIN, s));
+    }
+
 }
 
