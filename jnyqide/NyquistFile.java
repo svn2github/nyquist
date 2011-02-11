@@ -512,6 +512,21 @@ public class NyquistFile extends JInternalFrame
                 return saveAs(currentDir);
             else {
                 try {
+                    long length = file.length();
+                    long newLength = doc.getLength();
+                    System.out.println("existing " + length + " new " + newLength);
+                    String msg = null;
+                    if (length > 0 && newLength == 0) {
+                        msg = "Replace existing file with an empty document?";
+                    } else if (length >= newLength * 2) {
+                        msg = "Replace file with new document that is less than 1/2 the existing size?";
+                    }
+                    if (msg != null) {
+                        int n = JOptionPane.showConfirmDialog(this, msg, "WARNING",
+                                                              JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if (n == JOptionPane.NO_OPTION) return false;
+                    }
+
                     FileOutputStream saveFileStream = 
                         new FileOutputStream(file);
 

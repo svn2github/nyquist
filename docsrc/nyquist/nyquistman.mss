@@ -4919,7 +4919,7 @@ sound file with a header (not a raw sound file).
 @codef{soundfilename(@pragma(defn)@index(soundfilename)@i(name))} @c{[sal]}@*
 @altdef{@code[(soundfilename @i(name))] @c{[lisp]}}@\Converts a string @i(name) to a soundfile name.  If @i(name) begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from @code(*default-sf-dir*) is prepended to @i(name).  The @code(s-plot), @code(s-read), and @code(s-save) functions all use @code(soundfilename) translate filenames.
 
-@codef{s-plot(@pragma(defn)@index(s-plot)@i(sound) 
+@codef{s-plot(@pragma(defn)@index(s-plot)@index(plot)@i(sound) 
  [, @i(dur), @i(n)])} @c{[sal]}@*
 @altdef{@code{(s-plot @i(sound) 
  [@i(dur) @i(n)])} @c{[lisp]}}@\Plots sound in a window.  This function was designed to run a @code(plot) program on a Unix workstation, but now is
