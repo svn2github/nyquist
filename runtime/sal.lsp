@@ -198,14 +198,15 @@
 
 (defparameter *sal-print-list* t)
 
-(defun sal-printer (x &key (stream *standard-output*) (add-space t))
+(defun sal-printer (x &key (stream *standard-output*) (add-space t)
+                           (in-list nil))
   (let ((*print-case* ':downcase))
     (cond ((and (consp x) *sal-print-list*)
 	   (write-char #\{ stream)
 	   (do ((items x (cdr items)))
                ((null items))
 	      (sal-printer (car items) :stream stream
-                                       :add-space (cdr items))
+                                       :add-space (cdr items) :in-list t)
 	      (cond ((cdr items)
                      (cond ((not (consp (cdr items)))
                             (princ "<list not well-formed> " stream)
@@ -214,6 +215,7 @@
 	   (write-char #\} stream))
 	  ((not x)     (princ "#f" stream) )
 	  ((eq x t)    (princ "#t" stream))
+          (in-list     (prin1 x stream))
 	  (t           (princ x stream)))
     (if add-space (write-char #\space stream))))
 

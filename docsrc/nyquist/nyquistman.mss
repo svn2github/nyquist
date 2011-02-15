@@ -428,8 +428,10 @@ The Emacs editor is free GNU software and will help you balance parentheses if y
 
 The NyquistIDE also runs Nyquist as a subprocess and has
 built-in Lisp and SAL editors. If your editor does not help you balance parentheses, you may find yourself counting parens and searching for unbalanced 
-expressions. If you are confused or desperate, try the @code(:print t)
-option of the @code(load) command. By looking at the expressions printed,
+expressions. If you are confused or desperate and using Lisp syntax,
+try the 
+@code(:print t)
+option of the @code(load) function. By looking at the expressions printed,
 you should be able to tell where the last unbalanced expression starts.
 Alternatively, type @code[(file-sexprs)] and type the lisp file name at
 the prompt. This function will read and print 
@@ -4749,7 +4751,9 @@ samples have been computed but the sound is still playing.
 or an array of sounds, and writes the result to the given @i(filename).  A
 @code(FLONUM) is returned giving the maximum absolute value of all samples
 written. (This is useful for normalizing sounds and detecting sample
-overflow.) If @i(play) is not @code(NIL), the sound will be output through the computer's audio output system. (@i(:play) is not implemented on all systems; if it is implemented, and @i(filename) is @code(NIL), then this will play the file without also writing a file.)
+overflow.) If @i(play) is not @code(NIL), the sound will be output
+through the computer's audio output system. (@i(play:) @c{[sal]}
+or @i(:play) @c{[lisp]} is not implemented on all systems; if it is implemented, and @i(filename) is @code(NIL), then this will play the file without also writing a file.)
 The latency (length of audio buffering) used to play the sound is 0.3s by default, but see @code(snd-set-latency).
 If
 a multichannel sound (array) is written, the channels are up-sampled to the
@@ -4822,7 +4826,7 @@ SGI and Macintosh machines:@\@code(snd-head-AIFF), @code(snd-mode-pcm), @code(16
  @i(filename). The global @code(*default-sf-dir*) applies. If a header is
 detected, the header is used to determine the format
 of the file, and header information overrides format information provided by
-keywords (except for @code(:time-offset) and @code(:dur)). 
+keywords (except for @code(time-offset:) and @code(dur:)). 
 @begin(example)
 s-read("mysound.snd", srate: 44100)
 @end(example)
@@ -6412,7 +6416,7 @@ case, the value returned is either the next item of the pattern, or the
 symbol @code(+eop+) if the end of a period has been reached. What 
 determines a period? This is up to the specific pattern class, so see the
 documentation for specifics. You can override the ``natural'' period
-using the keyword @code(:for), e.g.
+using the keyword @code(for:), e.g.
 @begin(example)
 set pitch-source = make-cycle(list(c4, d4, e4, f4), for: 3)
 print next(pitch-source, t)
@@ -6437,16 +6441,16 @@ before the top-level @code(cycle-3) advances to the next pattern.
 Before describing specific pattern classes, there are several optional
 parameters that apply in the creating of any pattern object. These are:
 @begin(description, leftmargin +2 in, indent -2 in)
-@code(:for)@\The length of a period. This overrides the default 
+@code(for:)@\The length of a period. This overrides the default 
 by providing a numerical length. The value of this optional 
 parameter may be a pattern that generates a sequence of integers
 that determine the length of each successive period. A period 
 length may not be negative, but it may be zero.
 
-@code(:name)@\A pattern object may be given a name. This is useful 
-if the @code(:trace) option is used.
+@code(name:)@\A pattern object may be given a name. This is useful 
+if the @code(trace:) option is used.
 
-@code(:trace)@\If non-null, this optional parameter causes information
+@code(trace:)@\If non-null, this optional parameter causes information
 about the pattern to be printed each time an item is generated 
 from the pattern.
 
@@ -6516,7 +6520,7 @@ made, and a new list is generated every period.
 @subsection(palindrome)
 The @code(palindrome-class) repeatedly traverses a list forwards and then 
 backwards. For example, two periods of @code[make-palindrome({a b c})] 
-would be @code[(A B C C B A) (A B C C B A)]. The @code(:elide)
+would be @code[(A B C C B A) (A B C C B A)]. The @code(elide:)
 keyword parameter controls whether the first and/or last elements are
 repeated:
 @begin(example)
@@ -6553,10 +6557,10 @@ any item is repeated. For example, two periods of @code[make-heap({a b c})]
  might be @code[(C A B) (B A C)]. Normally, repetitions can occur 
 even if all list elements are distinct. This happens when the last element
 of a period is chosen first in the next period. To avoid repetitions, the
-@code(:max) keyword argument can be set to 1. The @code(:max) keyword only
+@code(max:) keyword argument can be set to 1. The @code(max:) keyword only
 controls repetitions from the end of one period to the beginning of the next.
 If the list contains more than one copy of the same value, it may be repeated
-within a period regardless of the value of @code(:max).
+within a period regardless of the value of @code(max:).
 
 @begin(fndefs)
 @codef{make-heap(@pragma(defn)@index(make-heap)@index(heap pattern)@index(pattern, heap)@i(items), for: @i(for), max: @i(max), name: @i(name), trace: @i(trace))} @c{[sal]}@*
@@ -6591,9 +6595,9 @@ The @code(copier-class) makes copies of periods from a sub-pattern.
 For example, three periods 
 of @code[make-copier(make-cycle({a b c}, for: 1), repeat: 2, merge: t)]
 would be @code[(A A) (B B) (C C)]. Note that entire periods (not
-individual items) are repeated, so in this example the @code(:for) 
+individual items) are repeated, so in this example the @code(for:) 
 keyword was used to force periods to be of length one so that 
-each item is repeated by the @code(:repeat) count.
+each item is repeated by the @code(repeat:) count.
 
 @codef{make-copier(@pragma(defn)@index(make-copier)@index(copier 
 pattern)@index(pattern, copier)@i(sub-pattern), repeat: @i(repeat), merge: @i(merge), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
@@ -6602,13 +6606,13 @@ from @i(sub-pattern) and repeat it @i(repeat) times. If @i(merge) is false
 (the default), each repetition of a period from @i(sub-pattern) results
 in a period by default. If @i(merge) is true (non-null), then all
  @i(repeat) repetitions of the period are merged into one result
-period by default. If the @code(:for) keyword is used, the same items
+period by default. If the @code(for:) keyword is used, the same items
 are generated, but the items are grouped into periods determined by
-the @code(:for) parameter. If the @code(:for) parameter is a pattern,
+the @code(for:) parameter. If the @code(for:) parameter is a pattern,
 it is evaluated every result period. The @i(repeat) and @i(merge) values 
 may be patterns that return a repeat count and a boolean value, respectively. 
 If so, these patterns are evaluated initially and after each @i(repeat)
- copies are made (independent of the @code(:for) keyword parameter, if any).
+ copies are made (independent of the @code(for:) keyword parameter, if any).
 The @i(repeat) value returned by a pattern can also be negative. A negative
 number indicates how many periods of @i(sub-pattern) to skip. After skipping
 these patterns, new @i(repeat) and @i(merge) values are generated.
@@ -6679,16 +6683,16 @@ The default output period length is 1.
 
 @subsection(length)
 The @code(length-class) generates periods of a specified length from 
-another pattern. This is similar to using the @code(:for) keyword, but
-for many patterns, the @code(:for) parameter alters the points at which
+another pattern. This is similar to using the @code(for:) keyword, but
+for many patterns, the @code(for:) parameter alters the points at which
 other patterns are generated. For example, if the palindrome pattern
-has an @code(:elide) pattern parameter, the value will be computed every
-period. If there is also a @code(:for) parameter with a value of 2, then
-@code(:elide) will be recomputed every 2 items. In contrast, if the 
-palindrome (without a @code(:for) parameter) is embedded in a @i(length)
+has an @code(elide:) pattern parameter, the value will be computed every
+period. If there is also a @code(for:) parameter with a value of 2, then
+@code(elide:) will be recomputed every 2 items. In contrast, if the 
+palindrome (without a @code(for:) parameter) is embedded in a @i(length)
 pattern with a lenght of 2, then the periods will all be of length 2, but
 the items will come from default periods of the palindrome, and therefore
-the @code(:elide) values will be recomputed at the beginnings of 
+the @code(elide:) values will be recomputed at the beginnings of 
 default palindrome periods.
 
 @begin(fndefs)
@@ -6699,7 +6703,7 @@ name: @i(name), trace: @i(trace))} @c{[sal]}@*
 @code(length-class) that regroups items generated by a
 @i(pattern) according to pattern lengths given by @i(length-pattern).
 Note that @i(length-pattern) is not optional: There is no default
-pattern length and no @code(:for) keyword.
+pattern length and no @code(for:) keyword.
 @end(fndefs)
 
 @subsection(window)
@@ -6722,7 +6726,7 @@ window)@pragma(defn)@index(make-window)@i(pattern), @i(length-pattern),
 and where the period advances by the number of items given by
 @i(skip-pattern).
 Note that @i(length-pattern) is not optional: There is no default
-pattern length and no @code(:for) keyword.
+pattern length and no @code(for:) keyword.
 @end(fndefs)
 
 
@@ -6739,7 +6743,7 @@ objects, and these become the actual generated items.
 By default, all future states are weighted equally, but weights
 may be associated with future states. A Markov model must be
 initialized with
-a sequence of past states using the @code(:past) keyword. 
+a sequence of past states using the @code(past:) keyword. 
 The most common form of Markov model is a "first
 order Markov model" in which the future item depends only upon one
 past item. However, higher order models where the future items depend on
@@ -6785,7 +6789,7 @@ also map symbols to patterns, for example
 @code[list(quote(a), make-cycle({57 69}), quote(b), make-random({59 71}))]. The
 next item of the pattern is is generated each time the Markov model generates
 the corresponding state.  Finally, the @i(produces) keyword can be 
-@code(:eval), which means to evaluate the Markov model state. This could 
+@code(eval:), which means to evaluate the Markov model state. This could 
 be useful if states are Nyquist global variables such as 
 @code(C4, CS4, D4, ]..., which evaluate to numerical 
 values (60, 61, 62, ...).
@@ -7174,7 +7178,7 @@ using @code(timed-seq) (see Section @ref(timed-seq-sec)).
 The form of a call to @code(score-gen) is simply:
 @begin(fndefs)
 @codef[score-gen(@pragma(defn)@index(score-gen)@i(k1:) @i(e1), @i(k2:) @i(e2), @r(...))] @c{[sal]}@*
-@altdef{@code[(score-gen @i(k1:) @i(e1) @i(k2:) @i(e2) @r(...))] @c{[lisp]}}@\where the @i(k)'s 
+@altdef{@code[(score-gen @i(:k1) @i(e1) @i(:k2) @i(e2) @r(...))] @c{[lisp]}}@\where the @i(k)'s 
 are keywords and the @i(e)'s are 
 expressions. A score is generated by evaluating the expressions once for 
 each note and constructing a list of keyword-value pairs. A number
@@ -7184,12 +7188,14 @@ questions below.
 @end(fndefs)
 
 @i(How many notes will be generated?) The keyword 
-parameter @code(:score-len) specifies an upper bound on the number
-of notes. The keyword @code(:score-dur) specifies an upper bound
+parameter @code(score-len:) specifies an upper bound on the number
+of notes. (Note: in LISP syntax, keywords
+are always @i(preceded) by colons, so you would write
+@code(:score-len) instead.) The keyword @code(score-dur:) specifies an upper bound
 on the starting time of the last note in the score. (To be more
-precise, the @code(:score-dur) bound is reached when the 
+precise, the @code(score-dur:) bound is reached when the 
 default starting time of the next note is greater than or equal
-to the @code(:score-dur) value. This definition is necessary because
+to the @code(score-dur:) value. This definition is necessary because
 note times are not strictly increasing.) When either bound
 is reached, score generation ends. At least one of these two
 parameters must be specified or an error is raised. These keyword
@@ -7197,7 +7203,7 @@ parameters are evaluated just once and are not copied into the
 parameter lists of generated notes.
 
 @i(What is the duration of generated notes?) The 
-keyword @code(:dur) defaults to 1 and specifies the nominal duration
+keyword @code(dur:) defaults to 1 and specifies the nominal duration
 in seconds. Since the generated note list is compatible with 
 @code(timed-seq), the starting time and duration (to be precise, the
 @i(stretch factor)) are not passed as parameters to the notes. Instead,
@@ -7205,10 +7211,10 @@ they control the Nyquist environment in which the note will be evaluated.
 
 @i(What is the start time of a note?) The default start time of the
 first note is zero. Given a note, the default start time of the next note is 
-the start time plus the inter-onset time, which is given by the @code(:ioi)
-parameter. If no @code(:ioi) parameter is specified, the inter-onset time
-defaults to the duration, given by @code(:dur). In all cases, the default
-start time of a note can be overridden by the keyword parameter @code(:time).
+the start time plus the inter-onset time, which is given by the @code(ioi:)
+parameter. If no @code(ioi:) parameter is specified, the inter-onset time
+defaults to the duration, given by @code(dur:). In all cases, the default
+start time of a note can be overridden by the keyword parameter @code(time:).
 
 @i(When does the score begin and end?) The behavior @code[SCORE-BEGIN-END] 
 contains the beginning and ending of the
@@ -7217,19 +7223,19 @@ their begin times can be aligned.) When @code(timed-seq) is used to
 synthesize a score, the @code(SCORE-BEGIN-END) marker is
 not evaluated. The @code(score-gen) macro inserts a ``note'' of the form
 @code[(0 0 (SCORE-BEGIN-END @i(begin-time) @i(end-time)))] 
-at the time given by the @code(:begin) keyword, with @i(begin-time) and 
-@i(end-time) determined by the @code(:begin) and @code(:end) 
-keyword parameters, respectively. If the @i(:begin) keyword is not 
-provided, the score begins at zero. If the @code(:end) keyword
+at the time given by the @code(begin:) keyword, with @i(begin-time) and 
+@i(end-time) determined by the @code(begin:) and @code(end:) 
+keyword parameters, respectively. If the @i(begin:) keyword is not 
+provided, the score begins at zero. If the @code(end:) keyword
 is not provided, the score ends at the default start time
 of what would be the next note after the last note in the score 
-(as described in the previous paragraph). Note: if @code(:time) is used to 
+(as described in the previous paragraph). Note: if @code(time:) is used to 
 compute note starting times, and these times are not increasing, it is
-strongly advised to use @code(:end) to specify an end time for the score,
+strongly advised to use @code(end:) to specify an end time for the score,
 because the default end time may be anywhere in the middle of the 
 generated sequence.
 
-@i(What function is called to synthesize the note?) The @code(:name) 
+@i(What function is called to synthesize the note?) The @code(name:) 
 parameter names the function. Like other parameters, the value can be any
 expression, including something like @code[next(fn-name-pattern)],
 allowing function names to be recomputed for each note. The default value 
@@ -7245,27 +7251,27 @@ computation is: @code(sg:time) first, then @code(sg:ioi) and @code(sg:dur),
 so for example, an expression to compute @code(sg:dur) can 
 depend on @code(sg:ioi).
 
-@i(Can parameters depend on each other?) The keyword @code(:pre) 
+@i(Can parameters depend on each other?) The keyword @code(pre:) 
 introduces an expression that is evaluated before each note, and 
-@code(:post) provides an expression to be evaluated after each note. 
-The @code(:pre) expression can assign one or more global variables 
+@code(post:) provides an expression to be evaluated after each note. 
+The @code(pre:) expression can assign one or more global variables 
 which are then used in one or more expressions for parameters.
 
 @i(How do I debug @code(score-gen) expressions?) You can set the 
-@code(:trace) parameter to true (@code(t)) to enable a print statement
+@code(trace:) parameter to true (@code(t)) to enable a print statement
 for each generated note.
 
 @i(How can I save scores generated by @code(score-gen) that I like?) If the
-keyword parameter @code(:save) is set to a symbol, the global variable
+keyword parameter @code(save:) is set to a symbol, the global variable
 named by the symbol is set to the value of the generated sequence. Of 
 course, the value returned by @code(score-gen) is just an ordinary list that
 can be saved like any other value.
 
 In summary, the following keywords have special interpretations 
 in @code(score-gen): 
-@code(:begin), @code(:end), @code(:time), @code(:dur), @code(:name), 
-@code(:ioi), @code(:trace),
-@code(:save), @code(:score-len), @code(:score-dur), @code(:pre), @code(:post).
+@code(begin:), @code(end:), @code(time:), @code(dur:), @code(name:), 
+@code(ioi:), @code(trace:),
+@code(save:), @code(score-len:), @code(score-dur:), @code(pre:), @code(post:).
  All other keyword
 parameters are expressions that are evaluated once for each note
 and become the parameters of the notes.
@@ -7359,15 +7365,17 @@ other manipulations. Functions are also provided to extract
 ranges of notes, notes that match criteria, and to combine scores.
 Most of these functions (listed below in detail)
 share a set of keyword parameters that optionally limit the range over which 
-the transformation operates. The @code(:from-index) and @code(:to-index) 
+the transformation operates. The @code(from-index:) and @code(to-index:) 
 parameters specify the index of the first note and the index of the
 last note to be changed. If these numbers are negative, they are offsets 
 from the end of the score, e.g. -1 denotes the last note of the score. The
-@code(:from-time) and @code(:to-time) indicate a range of starting times
+@code(from-time:) and @code(to-time:) indicate a range of starting times
 of notes that will be affected by the manipulation. Only notes whose time
 is greater than or equal to the @i(from-time) and @i(strictly less than)
  the @i(to-time) are modified. If both index and time ranges are specified,
-only notes that satisfy @i(both) constraints are selected.
+only notes that satisfy @i(both) constraints are selected. (Note: in
+LISP syntax, colons @i(precede) the keyword, so use
+@code(:from-index), @code(:to-index), @code(:from-time), and @code(:to-time).)
 
 @begin(fndefs)
 @codef[score-sorted(@pragma(defn)@index(score-sorted)@i(score))] @c{[sal]}@*
@@ -7408,7 +7416,7 @@ are null, the score is not changed. If a range
 of notes is specified, times are scaled within that range, and 
 notes after the range are shifted so that the stretched region does not
 create a "hole" or overlap with notes that follow. If the range begins
-or ends with a time (via @code(:from-time) and @code(:to-time)), time
+or ends with a time (via @code(from-time:) and @code(to-time:)), time
 stretching
 takes place over the indicated time interval independent of whether 
 any notes are present or where they start. In other words, the 
@@ -7498,7 +7506,7 @@ of three parameters that is applied to the start time, duration, and the
 expression of the note. Alternatively, @i(predicate) may be @code(t), 
 indicating that all notes in range are to be selected. 
 The selected notes along with the existing score begin and end markers, are combined to form a new score. Alternatively, if
-the @code(:reject) parameter is non-null, the notes @i(not) selected form
+the @code(reject:) parameter is non-null, the notes @i(not) selected form
  the new score (in other words the selected notes are rejected or removed to
  form the new score). The original score is not modified, and a
  new score is returned.
@@ -7533,7 +7541,7 @@ and end time, just return the score. The orignal score is not modified.
 @altdef{@code[(score-filter-length @i(score) @i(cutoff))] @c{[lisp]}}@\Remove notes that extend beyond the @i(cutoff) time. This
 is similar to @code(score-select), but the here, events are removed when
 their nominal ending time (start time plus duration) exceeds the @i(cutoff),
-whereas the @code(:to-time) parameter is compared to the note's start time.
+whereas the @code(to-time:) parameter is compared to the note's start time.
 The original score is not modified, and a new score is returned.
 
 @codef{score-repeat(@pragma(defn)@index(score-repeat)@i(score), @i(n))} @c{[sal]}@*
@@ -7661,10 +7669,10 @@ to @code(score-write-smf), described below.
 [@i(programs)])} @c{[sal]}@*
 @altdef{@code[(score-write-smf @i(score) @i(filename) @i(programs))] @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
 with notes in @i(score). In this function,
-@i(every) event in the score with a @code(:pitch) attribute, regardless of the
+@i(every) event in the score with a @code(pitch:) attribute, regardless of the
 ``instrument'' (or function name), generates a
-MIDI note, using the @code(:chan) attribute for the channel (default 0) and
-the @code(:vel) attribute for velocity (default 100). There is no facility
+MIDI note, using the @code(chan:) attribute for the channel (default 0) and
+the @code(vel:) attribute for velocity (default 100). There is no facility
 (in the current implementation) to issue control changes, but to allow
 different instruments, MIDI programs may be set in two ways. The simplest is
 to associate programs with channels using
@@ -7672,8 +7680,8 @@ the optional @i[programs] parameter, which is simply a list of up to 16 MIDI
 program numbers. Corresponding program change commands are added to the 
 beginning of the MIDI file. If @i[programs] has less than 16 elements, program
 change commands are only sent on the first @i[n] channels. The second way to 
-issue MIDI program changes is to add a @code(:program) keyword parameter to 
-a note in the score. Typically, the note will have a @code(:pitch) of 
+issue MIDI program changes is to add a @code(program:) keyword parameter to 
+a note in the score. Typically, the note will have a @code(pitch:) of 
 @code(nil) so that no actual MIDI note-on message is generated. If program 
 changes and notes have the same starting times, their relative playback
 order is undefined, and the note may be cut off by an immediately 
@@ -7892,12 +7900,12 @@ compress-ratio, and to downward expand everything below expand-ratio
 by expand-ratio.  Thresholds are in dB and ratios are dB-per-dB.
 0dB corresponds to a peak amplitude of 1.0 or rms amplitude of 0.7
 If the input goes above 0dB, the output can optionally be limited
-by setting @code(:limit) (a keyword parameter) to @code(T). 
+by setting @code(limit:) (a keyword parameter) to @code(T). 
 This effectively changes 
-the compression ratio to infinity at 0dB.  If @code(:limit) is @code(nil)
+the compression ratio to infinity at 0dB.  If @code(limit:) is @code(nil)
 (the default), then the compression-ratio continues to apply above 0dB.
 
-Another keyword parameter, @code(:transition), sets the amount below the
+Another keyword parameter, @code(transition:), sets the amount below the
 thresholds (in dB) that a smooth transition starts. The default is 0,
 meaning that there is no smooth transition. The smooth transition is a
 2nd-order polynomial that matches the slopes of the straight-line compression
