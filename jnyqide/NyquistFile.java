@@ -518,7 +518,7 @@ public class NyquistFile extends JInternalFrame
                     String msg = null;
                     if (length > 0 && newLength == 0) {
                         msg = "Replace existing file with an empty document?";
-                    } else if (length >= newLength * 2) {
+                    } else if (length > newLength * 2) {
                         msg = "Replace file with new document that is less than 1/2 the existing size?";
                     }
                     if (msg != null) {
