@@ -462,6 +462,8 @@
 ;; function called in sal programs to exit the sal read-compile-run-print loop
 (defun sal-exit () (setf *sal-exit* t))
 
+(setf *sal-call-stack* nil)
+
 ;; read-eval-print loop for sal commands
 (defun sal ()
   (progv '(*breakenable* *tracenable* *sal-exit* *sal-mode*)
