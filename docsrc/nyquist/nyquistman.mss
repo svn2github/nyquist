@@ -792,7 +792,9 @@ brass sounds@index(brass sound), tuba sound @index(tuba) (@code(demos/mateos/tub
 
 Rhythmic patterns (@code(demos/rhythm_tutorial.htm)@index(demos, rhythmic pattern)
 
-Drum Samples and Drum Machine (@code(demos/plight/drum.lsp)@index(demos, drum machine)@index(drum samples)@index(drum machine).
+Drum Samples and Drum Machine
+(@code(demos/plight/drum.lsp)@index(demos, drum machine)@index(drum
+samples)@index(drum machine). (See Section @ref(drum-machine-sec)).
 @end(itemize)
 
 @chapter(The NyquistIDE Program)
@@ -3893,7 +3895,7 @@ a piece-wise exponential envelope with breakpoints at (0, 1), (@i(t@-[1]),
 @label(pwev-sec)
 @codef{pwev(@pragma(defn)@index(pwev)@i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @i(t@-[3]), @i(t@-[3]), @r(...) @i(t@-[n]), @i(l@-[n]))} @c{[sal]}@*
 @altdef{@code[(pwev @i(l@-[1]) @i(t@-[2]) @i(l@-[2]) @i(t@-[3]) @i(t@-[3]) @r(...) @i(t@-[n]) @i(l@-[n]))] @c{[lisp]}}@\Creates
-a piece-wise exponential envelope with breakpoints at (0, l@-[1]), (@i(t@-[2]), @i(l@-[2])), etc., ending with (@i(t@-[n], @i(l@-[n])).  Otherwise, the behavior is like that of @code(pwe).  
+a piece-wise exponential envelope with breakpoints at (0, @i(l@-[1])), (@i(t@-[2]), @i(l@-[2])), etc., ending with (@i(t@-[n]), @i(l@-[n])).  Otherwise, the behavior is like that of @code(pwe).  
 
 @codef{pwev-list(@pragma(defn)@index(pwev-list)@i(breakpoints))} @c{[sal]}@*
 @altdef{@code[(pwev-list @i(breakpoints))] @c{[lisp]}}@\A version of @code(pwev) that takes a single list of breakpoints as its argument.  See @code(pwl-list) above for the rationale.
@@ -8280,6 +8282,7 @@ in meters.
 @end(fndefs)
 
 @section(Drum Machine)
+@label(drum-machine-sec)@index(drum machine)
 
 The drum machine software in @code(demos/plight) deserves further explanation. 
 to use the software, load the code by evaluating:
