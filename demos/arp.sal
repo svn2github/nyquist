@@ -1,0 +1,99 @@
+;; arpeggiation examples
+;; Roger B. Dannenberg
+
+;; An arpeggiator is a function that plays sequences of pitches in a pattern
+;; The typical patterns are very much like the palindrome pattern generator
+;; in Nyquist, so this example shows how to make arpeggiation patterns.
+
+;; A simple arpeggiation of a major-7th chord
+;;
+define function arp1()
+  begin
+    with pat = make-palindrome(list(c4, e4, g4, b4))
+    exec score-play(score-gen(score-len: 17, ioi: 0.2, pitch: next(pat)))
+  end
+
+;; This will play the simple arpeggio:
+;exec arp1()
+
+;; We can make an upward only arpeggiator using the cycle pattern:
+;;
+define function arp2()
+  begin
+    with pat = make-cycle(list(c4, e4, g4, b4))
+    exec score-play(score-gen(score-len: 17, ioi: 0.2, pitch: next(pat)))
+  end
+
+;; This will play it:
+;exec arp2()
+
+;; Arpeggios might sound a bit nicer with some legato or overlap, which
+;; is easy to do by changing the duration (dur:) parameter:
+;;
+define function arp3()
+  begin
+    with pat = make-cycle(list(c4, e4, g4, b4))
+    exec score-play(score-gen(score-len: 17, ioi: 0.2, dur: 0.4, 
+                              pitch: next(pat)))
+  end
+
+;; This will play it:
+;exec arp3()
+
+;; It might be more useful to add some parameters. They are:
+;;
+;; pitches -- a list of pitches to arpeggiate
+;; reps -- how many notes to generate
+;; ioi -- inter-onset interval
+;; dur -- a keyword parameter (optional), an ioi multiplier. Use 1
+;;        to make the duration equal the ioi, use 2 for double the ioi
+;; instr -- a keyword parameter (must be quoted), naming an instrument
+;;
+;; Any parameter may be a pattern.
+;; Returns a score
+;;
+define function arp4(pitches, len, ioi, dur: 1, instr: quote(note))
+  begin
+    with n = next(len),
+         pat = make-cycle(next(pitches))
+    return score-gen(score-len: n, ioi: next(ioi), dur: next(dur), 
+                     name: next(instr), pitch: next(pat))
+  end
+
+;; Since arp4 returns a score, you can play it like this:
+; exec score-play(arp4(list(c4, e4, g4, b4, c5), 20, 0.15, 3))
+
+;; This will play the simple arpeggio:
+;exec arp4()
+
+;; Note: it might be nice to extend the parameters to let the user select
+;; the arpeggiation style (up, down, up-down, up-down with elision), but
+;; these can be specified just by writing out the full pattern, e.g. to
+;; get up-down with elision, write list(c4, e4, g4, b4, c5, b4, g4, e4),
+;; so I won't add that feature.
+
+;; Makeing sequences of arpeggios
+
+;; First define some pitch patterns:
+define variable c7 = list(c4, e4, g4, bf4, c5, bf4, g4, e4),
+                bf7 = list(bf3, d4, f4, af4, bf4, af4, f4, d4),
+                af7 = list(af3, c4, ef4, gf4, af4, gf4, ef4, c4),
+                g7 = list(g3, b3, d4, f4, g4, f4, d4, b3)
+
+;; now call arp4 to make some scores and splice them together
+
+define function arp-seq()
+  begin
+    with score = nil
+    loop
+      for pitches in list(c7, bf7, af7, g7, c7)
+      for len in list(16, 16, 16, 16, 33)
+      set score = score-append(score, arp4(pitches, len, 0.13, 3))
+    end
+    return score
+  end
+
+;; make the score and play it
+exec score-play(arp-seq())
+
+

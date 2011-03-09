@@ -762,8 +762,10 @@ different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
 
 @section(More Examples)
 More examples can be found in the directory @code(demos), part of the standard
-Nyquist release. In this directory, you will find the following and more:
+Nyquist release. The file @code(demos/examples_home.htm) is an index to all the demo descriptions. In this directory, you will find the following and more:
 @begin(itemize)
+How to make arpeggios (@code(demos/arpeggiator.htm) and @code(arp.sal)@index(arpeggiator)
+
 Gong sounds by additive synthesis@index(additive synthesis, gongs)
 (@code(demos/pmorales/b1.lsp) and @code(demos/mateos/gong.lsp)@index(Gong sounds)@index(demos, gong sound)
 
