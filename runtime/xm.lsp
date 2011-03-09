@@ -1375,7 +1375,9 @@ pattern argument (by default).
     `(let (sg:seq (sg:start ,score-begin) sg:ioi 
            (sg:score-len ,score-len) (sg:score-dur ,score-dur)
            (sg:count 0) (sg:save ,save) 
-           (sg:begin ,score-begin) (sg:end ,score-end))
+           (sg:begin ,score-begin) (sg:end ,score-end) sg:det-end)
+       ;; sg:det-end is a flag that tells us to determine the end time
+       (cond ((null sg:end) (setf sg:end 0 sg:det-end t)))
        ;; make sure at least one of score-len, score-dur is present
        (loop
          (cond ((or (and sg:score-len (<= sg:score-len sg:count))
@@ -1392,17 +1394,19 @@ pattern argument (by default).
                 (format t "get-seq trace at ~A stretch ~A: ~A~%" 
                           sg:start sg:dur (car sg:seq))))
          (incf sg:count)
-         (setf sg:start ,next-expr))
+         (setf sg:start ,next-expr)
+         ;; end time of score will be max over start times of the next note
+         ;; this bases the score duration on ioi's rather than durs. But
+         ;; if user specified sg:end, sg:det-end is false and we do not
+         ;; try to compute sg:end.
+         (cond ((and sg:det-end (> sg:start sg:end))
+                (setf sg:end sg:start))))
        (setf sg:seq (reverse sg:seq))
        ;; avoid sorting a sorted list -- XLisp's quicksort can overflow the
        ;; stack if the list is sorted because (apparently) the pivot points
        ;; are not random.
        (cond ((not (score-sorted sg:seq))
               (setf sg:seq (bigsort sg:seq #'event-before))))
-       (cond ((and sg:seq (null sg:end))
-              (setf sg:end (event-end (car (last sg:seq)))))
-             ((null sg:end)
-              (setf sg:end 0)))
        (push (list 0 0 (list 'SCORE-BEGIN-END ,score-begin sg:end)) sg:seq)
        (cond (sg:save (set sg:save sg:seq)))
        sg:seq)))
