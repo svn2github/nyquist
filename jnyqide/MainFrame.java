@@ -84,6 +84,9 @@ public class MainFrame extends JFrame {
     public String replacePattern = "";
     boolean packFrame = false;
     EnvelopeFrame envelopeEditor;
+    /* BEGIN UPIC */
+    UPICFrame upicEditor;
+    /* END UPIC */
     Jslide eqEditor;
     public Preferences prefs;
     public static final boolean prefStartInSalModeDefault = true;
@@ -420,7 +423,9 @@ public class MainFrame extends JFrame {
         menuAddItem(jMenuWindow, "Browse", 'b', null, menuButtonListener);
         menuAddItem(jMenuWindow, "EQ", 'q', null, menuButtonListener);
         menuAddItem(jMenuWindow, "Envelope Edit", 'e', null, menuButtonListener);
-
+        /* BEGIN UPIC */
+        menuAddItem(jMenuWindow, "UPIC Edit", 'u', null, menuButtonListener);
+        /* END UPIC */
         buttonInit("Info", "Print Lisp memory status", menuButtonListener);
         buttonInit("Break", "Break/interrupt Lisp interpreter",
            menuButtonListener);
@@ -689,6 +694,9 @@ public class MainFrame extends JFrame {
         else if (cmd == "Browse") doWindowBrowse(e);
         else if (cmd == "EQ") doWindowEQ(e);
         else if (cmd == "EnvEdit" || cmd == "Envelope Edit") doWindowEnvelope(e);
+        /* BEGIN UPIC */
+        else if (cmd == "UPIC Edit") doWindowUPIC(e);
+        /* END UPIC */
         else if (cmd == "Info") doProcessInfo(e);
         else if (cmd == "Break") doProcessBreak(e);
         else if (cmd == "Up") doProcessUp(e);
@@ -836,7 +844,6 @@ public class MainFrame extends JFrame {
         String name = file.getName();
         return path.substring(0, path.length() - name.length());
     }
-    
     
     
     //File | Exit action performed
@@ -1070,6 +1077,12 @@ public class MainFrame extends JFrame {
     public void disconnectEq() { // no more equalizer panel, so kill pointer
         eqEditor = null;
     }
+
+    /* BEGIN UPIC */
+    public void disconnectUPIC() { // no more upicFrame, so kill pointer
+        upicEditor = null;
+    }
+    /* END UPIC */
     
     public boolean workspaceWarning(String description) { // return true if OK to proceed
         if (workspaceLoaded) return true;
@@ -1129,6 +1142,27 @@ public class MainFrame extends JFrame {
         jDesktop.getDesktopManager().activateFrame(envelopeFrame);
         jDesktop.setSelectedFrame(envelopeFrame);
     }
+
+    /* BEGIN UPIC */
+    public void doWindowUPIC(ActionEvent e)
+    {
+        // only one editor instance allowed
+        if (upicEditor != null) {
+            JOptionPane.showMessageDialog(this,
+                        "UPIC editor is already open.",
+                        "alert", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        // open a UPIC window
+        final UPICFrame upicFrame = 
+                new UPICFrame(this, jScrollPane.pane);
+        upicEditor = upicFrame;
+        upicFrame.validate();
+        jDesktop.add(upicFrame);
+        jDesktop.getDesktopManager().activateFrame(upicFrame);
+        jDesktop.setSelectedFrame(upicFrame);
+    }
+    /* END UPIC */
     
     public void doWindowEQ(ActionEvent e) {
           /* Code added by Rivera Create a slider object that is the graphic equalizer
@@ -1379,7 +1413,7 @@ public class MainFrame extends JFrame {
     
     // tell nyquist to load a file
     public void loadFile(File file) {
-        changeDirectory(escape_backslashes(fileDirectory(file)));
+        changeDirectory(fileDirectory(file));
         String path = escape_backslashes(file.getAbsolutePath());
         // if we're in lisp, pop out of any debug/break prompts before loading
         // don't do this is we're in sal because it will exit Sal - not good
@@ -1474,8 +1508,13 @@ public class MainFrame extends JFrame {
         if (envelopeEditor != null) {
             envelopeEditor.loadEnvData(data);
         }
+        /* BEGIN UPIC */
+        /* if (upicEditor != null) {
+            upicEditor.loadEnvData(data);
+        } */
+        /* END UPIC */
     }
-    
+
     public void loadEqData(String data) {
         if (eqEditor != null) {
             eqEditor.loadEqData(data);

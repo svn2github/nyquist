@@ -86,8 +86,8 @@ public class NyquistFile extends JInternalFrame
 
         myParent = parent;
 
-		int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-		// Menu Bar for top of Document Windows
+        int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        // Menu Bar for top of Document Windows
         JMenuBar myMenuBar = new JMenuBar();
 
         // File Menu
