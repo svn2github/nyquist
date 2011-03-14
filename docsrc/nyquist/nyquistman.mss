@@ -59,7 +59,7 @@
 @begin(titlebox)
 @blankspace(0.5 inch)
 @majorheading(Nyquist Reference Manual)
-@b(Version 3.04)
+@b(Version 3.05)
 @blankspace(0.3 inch)
 @b(Copyright 2011 by Roger B. Dannenberg)
 @value(date)
@@ -1067,7 +1067,7 @@ define function upic-env()
 To make a custom envelope function named @code(upic-smooth) with a 0.2
  second attack and a 0.3 second decay, you could write:
 @begin(example)
-define function upic-env()
+define function upic-smooth()
   return env(0.2, 0.01, 0.3, 1, 1, 1)
 @end(example)
 

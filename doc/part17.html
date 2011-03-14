@@ -1,7 +1,7 @@
 <a href = "part16.html">Previous Section</a> | <a href = "part18.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
 <html><head><title>Appendix 2: Open Sound Control and Nyquist</title></head>
-<a name = "191"><h2>Appendix 2: Open Sound Control and Nyquist</h2></a><a name="index1241">
+<a name = "192"><h2>Appendix 2: Open Sound Control and Nyquist</h2></a><a name="index1247">
 
 Open Sound Control (OSC) is a simple protocol for communicating music
 control parameters between software applications and across
@@ -16,11 +16,11 @@ Note: Open Sound Control must be enabled by calling
 installation instructions in <code>sys/win/README.txt</code> regarding
 <code>SystemRoot</code>.
 <p>
-To control something in (near) real-time, you need to access a slider value as if it a signal, or more properly, a Nyquist <code>SOUND</code> type. The function <code>snd-slider</code>, described in Section <a href = "part8.html#95">"Creating Sounds"</a>, takes a slider number and returns a <code>SOUND</code> type representing the current value of the slider. To fully understand this function, you need to know something about how Nyquist is actually computing sounds.
+To control something in (near) real-time, you need to access a slider value as if it a signal, or more properly, a Nyquist <code>SOUND</code> type. The function <code>snd-slider</code>, described in Section <a href = "part8.html#96">"Creating Sounds"</a>, takes a slider number and returns a <code>SOUND</code> type representing the current value of the slider. To fully understand this function, you need to know something about how Nyquist is actually computing sounds.
 <p>
 Sounds are normally computed on demand. So the result returned by <code>snd-slider</code> does not immediately compute any samples. Samples are only computed when something tries to use this signal. At that time, the slider value is read. Normally, if the slider is used to control a sound, you will hear changes in the sound pretty soon after the slider value changes. However, one thing that can interfere with this is that <code>SOUND</code> samples are computed in blocks of about 1000 samples. When the slider value is read, the same value is used to fill a block of 1000 samples, so even if the sample rate is 44,100 Hz, the effective slider sample rate is 44,100/1000, or 44.1 Hz. If you give the slider a very low sample rate, say 1000, then slider value changes will only be noticed by Nyquist approximately once per second. For this reason, you should normally use the audio sample rate (typically 44,100 Hz) for the rate of the <code>snd-slider</code> output <code>SOUND</code>. (Yes, this is terribly wasteful to represent each slider value with 1000 samples, but Nyquist was not designed for low-latency computation, and this is an expedient work-around.)
 <p>
-In addition to reading sliders as continually changing <code>SOUND</code>s, you can get the slider value as a Lisp <code>FLONUM</code> (a floating point number) using <code>get-slider-value</code>, described in Section <a href = "part8.html#95">"Creating Sounds"</a>. This might be useful if you are computing a sequence of many notes (or other sound events) and want to apply the current slider value to the whole note or sound event.
+In addition to reading sliders as continually changing <code>SOUND</code>s, you can get the slider value as a Lisp <code>FLONUM</code> (a floating point number) using <code>get-slider-value</code>, described in Section <a href = "part8.html#96">"Creating Sounds"</a>. This might be useful if you are computing a sequence of many notes (or other sound events) and want to apply the current slider value to the whole note or sound event.
 <p>
 Note that if you store the value returned by <code>snd-slider</code> in a variable, you will capture the history of the slider changes. This will take a lot of memory, so be careful.
 <p>
@@ -34,12 +34,12 @@ The <code>snd-slider</code> function has some parameters that may be unfamiliar.
 <p>
 The <i>srate</i> parameter is the sample rate to return. This should normally be the audio sample rate you are working with, which is typically <code>*default-sound-srate*</code>.
 <p>
-<a name = "192"><h3>Sending Open Sound Control Messages</h3></a>
+<a name = "193"><h3>Sending Open Sound Control Messages</h3></a>
 A variety of programs support OSC. The only OSC message interpreted by Nyquist has an address of <code>/slider</code>, and two parameters: an integer slider number and a float value, nominally from 0.0 to 1.0. 
 <p>
 Two small programs are included in the Nyquist distribution for sending OSC messages. (Both can be found in the same directory as the nyquist executable.) The first one, <code>osc-test-client</code> sends a sequence of messages that just cause slider 0 to ramp slowly up and down. If you run this on a command line, you can use "?" or "h" to get help information. There is an interactive mode that lets you send each OSC message by typing RETURN.
 <p>
-<a name = "193"><h3>The ser-to-osc Program</h3></a>
+<a name = "194"><h3>The ser-to-osc Program</h3></a>
 The second program is <code>ser-to-osc</code>, a program that reads serial input (for example from a PIC-based microcontroller) and sends OSC messages. Run this command-line program from a shell (a terminal window under OS X or Linux; use the CMD program under Windows). You must name the serial input device on the command line, e.g. under OS X, you might run:
 <blockquote>
 <code>./ser-to-osc /dev/tty.usbserial-0000103D</code><br>

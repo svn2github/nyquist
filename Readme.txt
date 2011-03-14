@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.04
-6 Jan 2011
+README file for Nyquist Version 3.05
+13 Mar 2011
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -18,6 +18,12 @@ other versions of Unix. For details, see one of these files:
 
 IMPLEMENTATION STATUS
 =====================
+
+Version 3.05 provides:
+    New "UPIC Editor" window in NyquistIDE
+    Fix to escape backslashes in default windows directory
+    Fix to other problems with Preferences
+    Arpeggiator example in nyquist/demos
 
 Version 3.04 provides:
     Updates to libraries, including liblo and PortAudio

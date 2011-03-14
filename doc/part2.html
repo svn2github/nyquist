@@ -23,7 +23,7 @@ Let me know if you have problems with
 any of these machines.
 <p>
 To use Nyquist, you should have a basic knowledge of Lisp.  An excellent text
-by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#201">"XLISP: An Object-oriented Lisp"</a> is
+by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#202">"XLISP: An Object-oriented Lisp"</a> is
 the reference manual for XLISP, of which Nyquist is a superset. Starting with
 Version 3, Nyquist supports a variant of SAL, which is also available in 
 Common Music. Since there are some differences, one should generally call this
@@ -103,8 +103,10 @@ The Emacs editor is free GNU software and will help you balance parentheses if y
 <p>
 The NyquistIDE also runs Nyquist as a subprocess and has
 built-in Lisp and SAL editors. If your editor does not help you balance parentheses, you may find yourself counting parens and searching for unbalanced 
-expressions. If you are confused or desperate, try the <code>:print t</code>
-option of the <code>load</code> command. By looking at the expressions printed,
+expressions. If you are confused or desperate and using Lisp syntax,
+try the 
+<code>:print t</code>
+option of the <code>load</code> function. By looking at the expressions printed,
 you should be able to tell where the last unbalanced expression starts.
 Alternatively, type <code>(file-sexprs)</code> and type the lisp file name at
 the prompt. This function will read and print 
@@ -123,7 +125,7 @@ get a Lisp prompt (<code>&gt; </code>). Commands can be entered manually by typi
 We will begin with some simple Nyquist programs. Throughout the manual,
 we will assume SAL mode and give examples in SAL, but it should be
 emphasized that all of these examples can be performed using Lisp
-syntax. See Section <a href = "part7.html#72">"Interoperability of SAL and XLISP"</a> on the relationship between
+syntax. See Section <a href = "part7.html#73">"Interoperability of SAL and XLISP"</a> on the relationship between
 SAL and Lisp.
 <p>
 Detailed explanations of the functions used in these examples will be
@@ -296,7 +298,7 @@ play seq(seq(env-note(c4), env-note(d4)) ~ 0.25,
 In addition to <i>stretch</i>, there are a number of transformations supported
  by Nyquist,
 and transformations of abstract behaviors is perhaps <i>the</i> fundamental
-idea behind Nyquist.  Chapter <a href = "part4.html#23">"Behavioral Abstraction"</a> is devoted to
+idea behind Nyquist.  Chapter <a href = "part4.html#24">"Behavioral Abstraction"</a> is devoted to
 explaining this concept, and further elaboration can be found elsewhere
  <a href = "http://www.cs.cmu.edu/~rbd/bib-arctic.html#icmcfugue">(Dannenberg and Frayley 1989)</a>.
 <p>
@@ -458,28 +460,30 @@ different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
 <p>
 <a name = "15"><h3>More Examples</h3></a>
 More examples can be found in the directory <code>demos</code>, part of the standard
-Nyquist release. In this directory, you will find the following and more:
+Nyquist release. The file <code>demos/examples_home.htm</code> is an index to all the demo descriptions. In this directory, you will find the following and more:
 <ul>
 <li>
-Gong sounds by additive synthesis<a name="index68">
-(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code><a name="index69"><a name="index70">
+How to make arpeggios (<code>demos/arpeggiator.htm</code> and <code>arp.sal</code><a name="index68">
+<li>Gong sounds by additive synthesis<a name="index69">
+(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code><a name="index70"><a name="index71">
 <li>Risset's spectral analysis of a chord
-(<code>demos/pmorales/b2.lsp</code>)<a name="index71"><a name="index72">
+(<code>demos/pmorales/b2.lsp</code>)<a name="index72"><a name="index73">
 <li>Bell sounds 
-(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index73"><a name="index74">
+(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index74"><a name="index75">
 <li>Drum sounds by Risset
-(<code>demos/pmorales/b8.lsp</code><a name="index75"><a name="index76">
-<li>Shepard tones (<code>demos/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index77"><a name="index78">
+(<code>demos/pmorales/b8.lsp</code><a name="index76"><a name="index77">
+<li>Shepard tones (<code>demos/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index78"><a name="index79">
 <li>Random signals (<code>demos/pmorales/c1.lsp</code>)
 <li>Buzz with formant filters 
-(<code>demos/pmorales/buzz.lsp</code><a name="index79"><a name="index80">
+(<code>demos/pmorales/buzz.lsp</code><a name="index80"><a name="index81">
 <li>Computing samples directly in Lisp (using Karplus-Strong and physical modelling
 as examples)
-(<code>demos/pmorales/d1.lsp</code><a name="index81"><a name="index82"><a name="index83"><a name="index84"><a name="index85"><a name="index86">
-<li>FM Synthesis examples, including bell<a name="index87">, wood drum<a name="index88">,
-brass sounds<a name="index89">, tuba sound <a name="index90"> (<code>demos/mateos/tuba.lsp</code> and clarinet sounds<a name="index91"> (<code>demos/pmorales/e2.lsp</code><a name="index92">
-<li>Rhythmic patterns (<code>demos/rhythm_tutorial.htm</code><a name="index93">
-<li>Drum Samples and Drum Machine (<code>demos/plight/drum.lsp</code><a name="index94"><a name="index95"><a name="index96">.
+(<code>demos/pmorales/d1.lsp</code><a name="index82"><a name="index83"><a name="index84"><a name="index85"><a name="index86"><a name="index87">
+<li>FM Synthesis examples, including bell<a name="index88">, wood drum<a name="index89">,
+brass sounds<a name="index90">, tuba sound <a name="index91"> (<code>demos/mateos/tuba.lsp</code> and clarinet sounds<a name="index92"> (<code>demos/pmorales/e2.lsp</code><a name="index93">
+<li>Rhythmic patterns (<code>demos/rhythm_tutorial.htm</code><a name="index94">
+<li>Drum Samples and Drum Machine
+(<code>demos/plight/drum.lsp</code><a name="index95"><a name="index96"><a name="index97">. (See Section <a href = "part15.html#174">"Drum Machine"</a>).
 </ul>
 <p>
 <hr>

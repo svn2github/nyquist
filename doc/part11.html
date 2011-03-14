@@ -2,14 +2,14 @@
 <body bgcolor="ffffff">
 <a href = "part10.html">Previous Section</a> | <a href = "part12.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "103"><h2>MIDI, Adagio, and Sequences</h2></a>
+<a name = "104"><h2>MIDI, Adagio, and Sequences</h2></a>
 
-<a name="index812"><a name="index813">
+<a name="index817"><a name="index818">
 Nyquist includes facilities to read and write MIDI files as well as an ASCII 
 text-based score representation language, Adagio. XLISP and Nyquist can be
-used to generate MIDI files using compositional algorithms. (See also Section <a href = "part14.html#135">"Xmusic and Algorithmic Composition"</a>.)
+used to generate MIDI files using compositional algorithms. (See also Section <a href = "part14.html#136">"Xmusic and Algorithmic Composition"</a>.)
 A tutorial on using the Adadio representation and MIDI can be found in 
-<code>demos/midi_tutorial.htm</code><a name="index814">. The Adagio language is
+<code>demos/midi_tutorial.htm</code><a name="index819">. The Adagio language is
 described below. Adagio was originally developed as part of the CMU MIDI
 Toolkit, which included a program to record and play MIDI using the 
 Adagio representation. Some of the MIDI features of Adagio may not be
@@ -22,23 +22,23 @@ systems. The <code>demos/midi_tutorial.htm</code> examples show how to get the m
 precise control when generating MIDI data. Adagio is most useful as a
 text-based score entry language, and it is certainly more compact 
 than Lisp expressions for MIDI-like data. The Xmusic library 
-(Chapter <a href = "part14.html#135">"Xmusic and Algorithmic Composition"</a>) is best for algorithmic generation of music
+(Chapter <a href = "part14.html#136">"Xmusic and Algorithmic Composition"</a>) is best for algorithmic generation of music
 and score manipulation. There are functions to convert between the
 Adagio, MIDI sequence data, and Xmusic score representations.
 <p>
 
-Adagio <a name="index815"> is an easy-to-use, non-procedural notation
+Adagio <a name="index820"> is an easy-to-use, non-procedural notation
 for scores.   In Adagio, text commands are used to specify each
 note.  If you are new to Adagio, you may want to glance at the
-examples in Section <a href = "#117">"Examples"</a> starting on page
-<a href = "#117">"Examples"</a> before reading any further.
+examples in Section <a href = "#118">"Examples"</a> starting on page
+<a href = "#118">"Examples"</a> before reading any further.
 <p>
-A note is described in Adagio by a set of attributes<a name="index816">, and
+A note is described in Adagio by a set of attributes<a name="index821">, and
 any attribute not specified is "inherited" from the previous line.
 Attributes may appear in any order and must be separated by one or more
 blanks.  An attribute may not contain any blanks.  The attributes are:
-time<a name="index817">, pitch<a name="index818">, loudness<a name="index819">,
-voice<a name="index820"> number, duration<a name="index821">, and articulation<a name="index822">.
+time<a name="index822">, pitch<a name="index823">, loudness<a name="index824">,
+voice<a name="index825"> number, duration<a name="index826">, and articulation<a name="index827">.
 <p>
 Adagio has been used to program a variety of hardware and software
 synthesizers, and the Adagio compiler can be easily adapted to new
@@ -54,9 +54,9 @@ be described below.
 Besides notes, there are several other types of commands:
 <ol>
 <li>
-An asterisk<a name="index823"> (<code>*</code>) in column one (or immediately after a comma,
+An asterisk<a name="index828"> (<code>*</code>) in column one (or immediately after a comma,
 semicolon, or space) indicates that the rest of the line is a
-comment<a name="index824">.  The line is ignored by Adagio, and is therefore a
+comment<a name="index829">.  The line is ignored by Adagio, and is therefore a
 good way to insert text to be read by people.  Here are some examples:
 <pre>
 * This is a comment.
@@ -64,11 +64,11 @@ T150 G4  * This is a comment too!
 T150 G4  ;* So is this.
 </pre>
 
-<li>An empty command (a blank<a name="index825"> line, for example) is ignored as if it
-were a comment<a name="index826"> <a href = "foot.html#foot6">(Footnote 6)</a> .
-<li>An exclamation point<a name="index827"><a name="index828"> (!) in column one (or
+<li>An empty command (a blank<a name="index830"> line, for example) is ignored as if it
+were a comment<a name="index831"> <a href = "foot.html#foot6">(Footnote 6)</a> .
+<li>An exclamation point<a name="index832"><a name="index833"> (!) in column one (or
 immediately after a comma or semicolon) indicates a special
-command<a name="index829">.  A special command does not generate a note.
+command<a name="index834">.  A special command does not generate a note.
 Special commands follow the "!" with no intervening spaces and extend to the end of the line, for example:
 <pre>
 !TEMPO 100
@@ -82,75 +82,75 @@ A command that specifies control changes without specifying
 a pitch will not produce a note.
 </ol>
 <p>
-Adagio is insensitive to case<a name="index830">,
+Adagio is insensitive to case<a name="index835">,
 thus "A" is equivalent to "a", and you
 can mix upper and lower case letters freely.
 <p>
-<a name = "104"><h3>Specifying Attributes</h3></a>
+<a name = "105"><h3>Specifying Attributes</h3></a>
 A note is indicated by a set of attributes.  Attributes are indicated by a string of characters with no intervening spaces because spaces separate  attributes.  The attributes are described below.
 <p>
 The default unit of time is  a centisecond
-(100^(th)'s), but this can be changed to a millisecond (1000^(th)'s) using the <code>!MSEC</code> command and reset to centiseconds with <code>!CSEC</code>  (see Section <a href = "#119">"Time Units and Resolution"</a>).  In the descriptions below, the term "time unit" will be used to mean whichever convention is currently in effect.
+(100^(th)'s), but this can be changed to a millisecond (1000^(th)'s) using the <code>!MSEC</code> command and reset to centiseconds with <code>!CSEC</code>  (see Section <a href = "#120">"Time Units and Resolution"</a>).  In the descriptions below, the term "time unit" will be used to mean whichever convention is currently in effect.
 <p>
-<a name = "105"><h4>Time</h4></a>The time<a name="index831"> attribute specifies when to start the note.  A time is
-specified by a "T<a name="index832">" followed by a number representing time units
+<a name = "106"><h4>Time</h4></a>The time<a name="index836"> attribute specifies when to start the note.  A time is
+specified by a "T<a name="index837">" followed by a number representing time units
  or by a duration (durations are described below).  Examples:
 <pre>
 T150	** 1.5 sec (or .15 sec)
 TQ3	** 3 quarter note's duration
 </pre>
 
-If no time is specified, the default time<a name="index833"> is the sum of
+If no time is specified, the default time<a name="index838"> is the sum of
 the time and duration attributes of the previous note.  (But see Section
-<a href = "#108">"Next Time"</a>.) Time is measured relative to the time of the
-most recent Tempo<a name="index834"> or Rate<a name="index835"> command.  (See the
+<a href = "#109">"Next Time"</a>.) Time is measured relative to the time of the
+most recent Tempo<a name="index839"> or Rate<a name="index840"> command.  (See the
 examples in Section
-<a href = "#117">"Examples"</a> for some clarification of this point.)
+<a href = "#118">"Examples"</a> for some clarification of this point.)
 <p>
-<a name = "106"><h4>Pitch</h4></a>The pitch<a name="index836"> attribute specifies what frequency to produce.
-Standard scale pitches are named by name, using <code>S</code> for sharp<a name="index837">,
- <code>F</code> for flat<a name="index838">,
-and (optionally) <code>N</code> for natural<a name="index839">.
+<a name = "107"><h4>Pitch</h4></a>The pitch<a name="index841"> attribute specifies what frequency to produce.
+Standard scale pitches are named by name, using <code>S</code> for sharp<a name="index842">,
+ <code>F</code> for flat<a name="index843">,
+and (optionally) <code>N</code> for natural<a name="index844">.
 For example, <code>C</code> and <code>CN</code> represent the same pitch, as do <code>FS</code> and <code>GF</code> (F sharp and G flat).  Note that there are no bar lines, and accidentals to not carry forward to any other notes as in common practice notation.
 <p>
-Octaves<a name="index840"> are specified by
+Octaves<a name="index845"> are specified by
 number. <code>C4</code> is middle C, and <code>B3</code> is a half step lower.  <code>F5</code> is the top line of
-the treble clef, etc.  (Adagio octave numbering follows the ISO standard, but note that this is not universal.  In particular, Yamaha refers to middle C as C3.)  Accidentals<a name="index841"><a name="index842"><a name="index843"> can go before or after
+the treble clef, etc.  (Adagio octave numbering follows the ISO standard, but note that this is not universal.  In particular, Yamaha refers to middle C as C3.)  Accidentals<a name="index846"><a name="index847"><a name="index848"> can go before or after
 the octave number, so  <code>FS3</code> and <code>F3S</code> have the same meaning.  
 <p>
 An alternate
-notation for pitch is <code>P</code><i>n</i>, where <i>n</i> is an integer representing the pitch.<a name="index844">
-Middle C<a name="index845"> (C4) is equivalent to <code>P60</code>, <code>CS4</code> is <code>P61</code>, etc.  
+notation for pitch is <code>P</code><i>n</i>, where <i>n</i> is an integer representing the pitch.<a name="index849">
+Middle C<a name="index850"> (C4) is equivalent to <code>P60</code>, <code>CS4</code> is <code>P61</code>, etc.  
 <p>
-If you do not specify an octave<a name="index846">,
+If you do not specify an octave<a name="index851">,
 Adagio will choose one for you.  This
 is done by picking the octave that will make the current pitch as close
 to the previous pitch as possible.  In the case of augmented fourths
  or diminished fifths, there are two equally good choices.  Adagio
 chooses the lower octave.
 <p>
-<a name = "107"><h4>Duration</h4></a>Duration<a name="index847"> is specified by a letter indicating a number of
+<a name = "108"><h4>Duration</h4></a>Duration<a name="index852"> is specified by a letter indicating a number of
 beats, followed by one or several modifiers.  The basic duration codes are:
 <blockquote>
-<code>W</code><a name="index848"> (whole<a name="index849">, 4 beats), <br>
+<code>W</code><a name="index853"> (whole<a name="index854">, 4 beats), <br>
 
-<code>H</code><a name="index850"> (half<a name="index851">, 2 beats), <br>
+<code>H</code><a name="index855"> (half<a name="index856">, 2 beats), <br>
 
-<code>Q</code><a name="index852"> (quarter<a name="index853">, 1 beat), <br>
+<code>Q</code><a name="index857"> (quarter<a name="index858">, 1 beat), <br>
 
-<code>I</code><a name="index854"> (eighth<a name="index855">, 1/2 beat), <br>
+<code>I</code><a name="index859"> (eighth<a name="index860">, 1/2 beat), <br>
 
-<code>S</code><a name="index856"> (sixteenth<a name="index857">, 1/4 beat), <br>
+<code>S</code><a name="index861"> (sixteenth<a name="index862">, 1/4 beat), <br>
 
-<code>%</code><a name="index858"> (thirtysecond<a name="index859">, 1/8 beat), and<br>
+<code>%</code><a name="index863"> (thirtysecond<a name="index864">, 1/8 beat), and<br>
 
-<code>^</code><a name="index860"> (sixtyfourth<a name="index861">, 1/16 beat). <br>
+<code>^</code><a name="index865"> (sixtyfourth<a name="index866">, 1/16 beat). <br>
 
 </blockquote>
 Note that <code>E</code> is a pitch, so eighth-notes use the duration code <code>I</code>.
 The default tempo is 100 beats per
-minute (see Section <a href = "#114">"Tempo"</a>).  These codes may be followed by a  <code>T</code>
-(triplet<a name="index862"><a name="index863">), indicating a duration of 2/3 the normal.  A dot<a name="index864"><a name="index865"> (<code>.</code>) after a
+minute (see Section <a href = "#115">"Tempo"</a>).  These codes may be followed by a  <code>T</code>
+(triplet<a name="index867"><a name="index868">), indicating a duration of 2/3 the normal.  A dot<a name="index869"><a name="index870"> (<code>.</code>) after a
 duration code extends it by half to 3/2 the normal.  An integer
 after a note multiplies its duration by the indicated value (the result is
 still just one note).  Finally, a slash followed by an integer divides
@@ -171,9 +171,9 @@ the duration by the integer.  Like all attributes, duration attributes may not h
 <code>Q3/7</code>3/7 beats<br>
 
 </blockquote>
-A duration may be noted by <code>U</code><i>n</i><a name="index866">, where <i>n</i> is an integer
+A duration may be noted by <code>U</code><i>n</i><a name="index871">, where <i>n</i> is an integer
 indicating 100^(th)'s of a second 
-(or 1000^(th)'s), see Section <a href = "#119">"Time Units and Resolution"</a>.
+(or 1000^(th)'s), see Section <a href = "#120">"Time Units and Resolution"</a>.
 For example, <code>U25</code> is twenty-five time units.
 <p>
 Durations may be combined using a plus sign:
@@ -184,9 +184,9 @@ Q+U10	    ** a quarter plus 10 time units
 </pre>
 
 <p>
-<a name = "108"><h4>Next Time</h4></a>
+<a name = "109"><h4>Next Time</h4></a>
 
-The time of the next<a name="index867"><a name="index868"> command (the next command in the Adagio
+The time of the next<a name="index872"><a name="index873"> command (the next command in the Adagio
 program text) is
 normally the time of the current note command
 plus the duration of the current note.
@@ -203,10 +203,10 @@ NQT	** start the next note 2/3 beat after the current one
 NU10+Q  ** start after 0.1 seconds plus a quarter
 </pre>
 
-A comma has an effect similar to  <code>N0</code> and is explained in Section <a href = "#120">"Multiple Notes Per Line"</a>.  Articulation effects such as <i>staccato</i> can be produced using <code>N</code>, but it is more convenient to use the articulation attribute described in Section <a href = "#110">"Articulation"</a>.
+A comma has an effect similar to  <code>N0</code> and is explained in Section <a href = "#121">"Multiple Notes Per Line"</a>.  Articulation effects such as <i>staccato</i> can be produced using <code>N</code>, but it is more convenient to use the articulation attribute described in Section <a href = "#111">"Articulation"</a>.
 <p>
-<a name = "109"><h4>Rest</h4></a>
-Rests<a name="index869"><a name="index870"> are obtained by including the field <code>R</code> in a
+<a name = "110"><h4>Rest</h4></a>
+Rests<a name="index874"><a name="index875"> are obtained by including the field <code>R</code> in a
 note command.  The effect of an <code>R</code> field is to omit the note that would
 otherwise occur as the result of the current note command.  In all other
 respects, the command is processed just like any other line.  This means that
@@ -219,19 +219,19 @@ R H	** a half (two beat) rest
 RH	** illegal, R must be separated from H by space(s)
 </pre>
 
-Because some synthesizers (e.g. a DX7<a name="index871">) cannot change programs
-<a name="index872">
+Because some synthesizers (e.g. a DX7<a name="index876">) cannot change programs
+<a name="index877">
 (presets) rapidly, it may be desirable to change programs in
 a rest so that the synthesizer will be ready to play by
-the end of the rest.  See Section <a href = "#113">"Timbre (MIDI Program)"</a> for an example.
+the end of the rest.  See Section <a href = "#114">"Timbre (MIDI Program)"</a> for an example.
 <p>
-<a name = "110"><h4>Articulation</h4></a>
+<a name = "111"><h4>Articulation</h4></a>
 
-Articulation<a name="index873"><a name="index874"><a name="index875"> in Adagio refers to the
+Articulation<a name="index878"><a name="index879"><a name="index880"> in Adagio refers to the
 percentage of time a note is on relative to the indicated duration.  For
 example, to play a note <i>staccato</i>, you would normally play the note about
 half of its indicated duration.  In Adagio, articulation is indicated by
-<code>#</code><a name="index876"> followed by an integer number indicating a percentage.  The
+<code>#</code><a name="index881"> followed by an integer number indicating a percentage.  The
 articulation attribute does not affect the time of the next command.  This
 example plays two <i>staccato</i> quarter notes:
 <pre>
@@ -254,12 +254,12 @@ At one beat per second (tempo 60), these three notes will start at times 0, 1, a
 </small>
 
 <p>
-<a name = "111"><h4>Loudness</h4></a>Loudness<a name="index877"><a name="index878"> is indicated by an <code>L</code>
-followed by a dynamic marking from the following: <code>PPP</code><a name="index879"><a name="index880">,
-<code>PP</code><a name="index881"><a name="index882">, <code>P</code><a name="index883"><a name="index884">, <code>MP</code><a name="index885"><a name="index886">, <code>MF</code><a name="index887"><a name="index888">, <code>F</code><a name="index889"><a name="index890">,
-<code>FF</code><a name="index891"><a name="index892">, <code>FFF</code><a name="index893"><a name="index894">.  Alternatively, a number from 1 to 127 may be
+<a name = "112"><h4>Loudness</h4></a>Loudness<a name="index882"><a name="index883"> is indicated by an <code>L</code>
+followed by a dynamic marking from the following: <code>PPP</code><a name="index884"><a name="index885">,
+<code>PP</code><a name="index886"><a name="index887">, <code>P</code><a name="index888"><a name="index889">, <code>MP</code><a name="index890"><a name="index891">, <code>MF</code><a name="index892"><a name="index893">, <code>F</code><a name="index894"><a name="index895">,
+<code>FF</code><a name="index896"><a name="index897">, <code>FFF</code><a name="index898"><a name="index899">.  Alternatively, a number from 1 to 127 may be
 used.  The loudness attribute is the MIDI note velocity.  (Note that a MIDI velocity of 0 means "note-off," so the minimum loudness is 1.)  The
-dynamic<a name="index895">
+dynamic<a name="index900">
 markings are translated into numbers as follows:
 <blockquote>
 
@@ -274,7 +274,7 @@ markings are translated into numbers as follows:
 
 </blockquote>
 <p>
-<a name = "112"><h4>Voice</h4></a>The voice<a name="index896"><a name="index897"> attribute tells which of the 16 MIDI channels to use
+<a name = "113"><h4>Voice</h4></a>The voice<a name="index901"><a name="index902"> attribute tells which of the 16 MIDI channels to use
 for the note.  The voice attribute consists of a <code>V</code> followed by
 an integer from 1 (the default) to 16.  
 <small>
@@ -287,9 +287,9 @@ will actually be heard.
 </small>
 
 <p>
-<a name = "113"><h4>Timbre (MIDI Program)</h4></a>
+<a name = "114"><h4>Timbre (MIDI Program)</h4></a>
 
-A MIDI program<a name="index898"><a name="index899"> (synthesizer preset<a name="index900">) can be
+A MIDI program<a name="index903"><a name="index904"> (synthesizer preset<a name="index905">) can be
 selected using the attribute <code>Z</code><i>n</i>, where <i>n</i>
 is the program number (from 1 to 128).
 Notice that in MIDI, changing the program on a given channel will affect
@@ -315,9 +315,9 @@ the timbre will not be inherited by notes on a different channel;
 to change the timbre on multiple voices (channels), you must explicitly
 notate each change.
 <p>
-<a name = "114"><h4>Tempo</h4></a>
+<a name = "115"><h4>Tempo</h4></a>
 
-The length of a beat may be changed using a Tempo<a name="index901"> command<a name="index902">:
+The length of a beat may be changed using a Tempo<a name="index906"> command<a name="index907">:
 <pre>
 !TEMPO <i>n</i>
 </pre>
@@ -326,12 +326,12 @@ where <i>n</i> indicates beats per minute.  The exclamation mark tells Adagio th
 this is a special command line rather than a note definition.  A special
 command takes the place of a note specification.
 No other attributes should be written on a line with a special command.
-The <code>!TEMPO</code> command is associated with a time, computed as if the <code>!TEMPO</code> command were a note.  The time<a name="index903"> attribute (<code>T</code>) of all
+The <code>!TEMPO</code> command is associated with a time, computed as if the <code>!TEMPO</code> command were a note.  The time<a name="index908"> attribute (<code>T</code>) of all
 succeeding notes is now measured relative to the time of the <code>!TEMPO</code> command.  The new tempo starts at the <code>!TEMPO</code> command time and
 affects all succeeding notes.  
 Durations specified in time units (for example <code>U58</code>, <code>N15</code>) are not affected by the <code>!TEMPO</code> command, and numerical times (for example  <code>T851</code>) are computed relative to the time of the last <code>!TEMPO</code> command.
 <p>
-The <code>!TEMPO</code> command is fairly clever about default durations<a name="index904">.  If the last duration specified before the <code>!TEMPO</code> command is
+The <code>!TEMPO</code> command is fairly clever about default durations<a name="index909">.  If the last duration specified before the <code>!TEMPO</code> command is
 symbolic (using one of <code>^</code>,<code>%</code>, <code>S</code>, <code>I</code>, <code>Q</code>, <code>H</code>, or <code>W</code> ), then the default duration for the
 node after the <code>!TEMPO</code> command will be modified according to the tempo change.
 Consider the following tempo change:
@@ -348,8 +348,8 @@ the first note, but at 120 beats per minute, the second note will last
 only 1 second.  If the duration had been specified <code>U200</code> (also a
 duration of 2 seconds), the second note would also last 2 seconds because the <code>!TEMPO</code> command does not affect times or durations specified numerically in time units.  If the duration is the sum of a symbolic and a numeric specification, the inherited duration after a <code>!TEMPO</code> command is undefined.
 <p>
-<a name = "115"><h4>Rate</h4></a>
-The <code>!RATE</code><a name="index905"><a name="index906"> command scales all times including those specified in
+<a name = "116"><h4>Rate</h4></a>
+The <code>!RATE</code><a name="index910"><a name="index911"> command scales all times including those specified in
 hundredths of seconds.  A rate of 100 means no change, 200 means twice as
 fast, and 50 means half as fast.  For example, to make a piece play 10%
 faster, you can add the following command at the beginning of the score:
@@ -370,12 +370,12 @@ command.
 <p>
 Two <code>!RATE</code> commands do not combine, so a <code>!RATE</code> command only affects the rate until the next <code>!RATE</code> command.
 <p>
-Although  <code>!TEMPO</code> and <code>!RATE</code> can occur in the middle of a note (using <code>N</code>, <code>T</code>, etc.) they do not affect a note already specified.   This property allows multiple tempi to exist simultaneously (see Section <a href = "#122">"Multiple Tempi"</a>).
+Although  <code>!TEMPO</code> and <code>!RATE</code> can occur in the middle of a note (using <code>N</code>, <code>T</code>, etc.) they do not affect a note already specified.   This property allows multiple tempi to exist simultaneously (see Section <a href = "#123">"Multiple Tempi"</a>).
 <p>
-<a name = "116"><h3>Default Attributes</h3></a>
+<a name = "117"><h3>Default Attributes</h3></a>
 
 If an attribute is omitted, the previous one is used by
-default<a name="index907"> (with the exception of the time attribute).  The
+default<a name="index912"> (with the exception of the time attribute).  The
 default values for the first note, which are inherited by succeeding notes
 until something else is specified, are given below in Adagio notation:
 <blockquote>
@@ -410,7 +410,7 @@ If a special (<code>!</code>) command or nothing is specified, e.g. a blank line
 </ol>
 Another way to say this is "Special commands and commands with rests (<code>R</code>) do not play notes.  Otherwise, play a note if a pitch is specified or if no control is specified."
 <p>
-<a name = "117"><h3>Examples</h3></a>
+<a name = "118"><h3>Examples</h3></a>
 
 The following plays the first two bars of "Happy Birthday".  Note that
 Adagio knows nothing of bar lines, so the fact that the first note occurs
@@ -433,7 +433,7 @@ Adagio will provide reasonable default
 values of 1 and 100, respectively.
 <p>
 The following example plays the first four bars of  an exercise  from
-Bartok<a name="index908">'s Mikrokosmos<a name="index909"> (Vol.  1, No.  12).
+Bartok<a name="index913">'s Mikrokosmos<a name="index914"> (Vol.  1, No.  12).
 An extra quarter note is inserted at the beginning of each voice in order to
 allow time to change MIDI programs.  The right hand part is played on voice
 (MIDI channel) 1 and the left hand part on voice 2.  Notice the
@@ -533,7 +533,7 @@ be two measures into the piece.  Therefore, the next note
 <code>(D4</code>) will begin measure 3.  The <code>D3</code> that begins the last
 group of notes has a <code>T0</code> attribute, so it will also start at measure
 3.  Notice how the <code>!TEMPO</code> command can serve to divide a piece into
-sections<a name="index910">.
+sections<a name="index915">.
 <p>
 The last example will show yet another way to express the same piece of
 music using the "Next" attribute.  Only the first bar of music is
@@ -560,12 +560,12 @@ forces the second line to start at the same time as the first line of each
 pair.  Because of the large intervals, octave numbers (3 and 4) are
 necessary to override the default octave for these pitches.
 <p>
-<a name = "118"><h3>Advanced Features</h3></a>
+<a name = "119"><h3>Advanced Features</h3></a>
 Beyond the simple notation described above, Adagio supports a number of 
 features.  (See also the next chapter.)
 <p>
-<a name = "119"><h4>Time Units and Resolution</h4></a>
-<a name="index911"><a name="index912">
+<a name = "120"><h4>Time Units and Resolution</h4></a>
+<a name="index916"><a name="index917">
 The default time unit is 10ms (ten milliseconds or one centisecond or
 100^(th) of a second), but it is
 possible to change the basic unit to 1ms, or 1000^(th) of a second.
@@ -573,18 +573,18 @@ The time unit can be specified by:
 <blockquote>
 
 
-<tt>!CSEC</tt><a name="index913">centisecond time units = 100^(th) <br>
+<tt>!CSEC</tt><a name="index918">centisecond time units = 100^(th) <br>
 
-<tt>!MSEC</tt><a name="index914">millisecond time units = 1000^(th)<br>
+<tt>!MSEC</tt><a name="index919">millisecond time units = 1000^(th)<br>
 
 </blockquote>
 The time unit remains in effect until the next <code>!CSEC</code> or <code>!MSEC</code> command.
 <p>
-<a name = "120"><h4>Multiple Notes Per Line</h4></a>
+<a name = "121"><h4>Multiple Notes Per Line</h4></a>
 
-<a name="index915">
-Notes can be separated by commas<a name="index916"><a name="index917"> or
-semicolons<a name="index918"><a name="index919"> as well as by starting a new line.  A comma is
+<a name="index920">
+Notes can be separated by commas<a name="index921"><a name="index922"> or
+semicolons<a name="index923"><a name="index924"> as well as by starting a new line.  A comma is
 equivalent to typing  <code>N0</code> and starting a new line.  In other words, the next note after a comma will start at the same time as the note before the comma.   In general, <i>use commas to separate the notes of a chord.</i>
 <p>
 A semicolon is equivalent to starting a new line.  In general, <i>use semicolons to group notes in a melody</i>.  Here is yet another rendition of the Bartok:
@@ -621,8 +621,8 @@ R
 </pre>
 
 <p>
-<a name = "121"><h4>Control Change Commands</h4></a>
-<a name="index920"><a name="index921">
+<a name = "122"><h4>Control Change Commands</h4></a>
+<a name="index925"><a name="index926">
 Any control change can be specified using
 the syntax "<tt>~<i>n</i>(<i>v</i>)</tt>", where <i>n</i> is the controller number (0 - 127), and 
 <i>v</i> is the value.  In addition, Adagio has some special syntax for
@@ -632,17 +632,17 @@ special message format and status bytes):
 
 						<br>
 
-KPortamento switch<a name="index922"><a name="index923"><br>
+KPortamento switch<a name="index927"><a name="index928"><br>
 
-MModulation wheel<a name="index924"><a name="index925"><br>
+MModulation wheel<a name="index929"><a name="index930"><br>
 
-OAftertouch<a name="index926"><a name="index927"><br>
+OAftertouch<a name="index931"><a name="index932"><br>
 
-XVolume<a name="index928"><a name="index929"><br>
+XVolume<a name="index933"><a name="index934"><br>
  
-YPitch bend<a name="index930"><a name="index931"><br>
+YPitch bend<a name="index935"><a name="index936"><br>
 
-ZProgram Change<a name="index932"><a name="index933"><br>
+ZProgram Change<a name="index937"><a name="index938"><br>
  
 </blockquote>
 The letter listed beside each control function is the Adagio command
@@ -670,11 +670,11 @@ Y70 N10; Y60 N10; Y50 N10
 </pre>
 
 <p>
-See Section <a href = "#116">"Default Attributes"</a> on page <a href = "#116">"Default Attributes"</a> for rules on whether or not a command will play a note.
+See Section <a href = "#117">"Default Attributes"</a> on page <a href = "#117">"Default Attributes"</a> for rules on whether or not a command will play a note.
 <p>
-<a name = "122"><h4>Multiple Tempi</h4></a><a name="index934">
+<a name = "123"><h4>Multiple Tempi</h4></a><a name="index939">
 
-<a name="index935">
+<a name="index940">
 Writing a piece with multiple tempi requires no new commands; you
 just have to be clever in the use of Tempo and Time.  The following
 plays a 7 note diatonic scale on voice 1, and a 12 note chromatic
@@ -703,15 +703,15 @@ is played on each voice.  A little arithmetic will show that 7 notes
 at tempo 70 and 12 notes at tempo 120 each take 6 seconds, so the
 final notes (<code>C5</code>) of each scale will happen at the same time.
  
-<a name = "123"><h4>MIDI Synchronization</h4></a>
-<a name="index936"><a name="index937"><a name="index938"><a name="index939">
+<a name = "124"><h4>MIDI Synchronization</h4></a>
+<a name="index941"><a name="index942"><a name="index943"><a name="index944">
 <p>
 The Adagio program (but not Nyquist) can synchronize with external devices using MIDI real time messages. Thus, Adagio has a <code>!CLOCK</code> command. This command is currently of no use to Nyquist users but is documented here for completeness (it's part of the language syntax even if it does not do anything). 
 <p>
 Since Adagio supports multiple tempi, and Midi clock is
 based on beats, it is necessary to be explicit in the score about where the
 clock should start and what is the duration of a quarter note.  The
-<code>!CLOCK</code> command<a name="index940"> in Adagio turns on a 24 pulse-per-quarter (PPQ) clock at
+<code>!CLOCK</code> command<a name="index945"> in Adagio turns on a 24 pulse-per-quarter (PPQ) clock at
 the current tempo and time:
 <pre>
 !TEMPO 100
@@ -730,7 +730,7 @@ requested time.
 </small>
 
 <p>
-<a name = "124"><h4>System Exclusive Messages</h4></a> 
+<a name = "125"><h4>System Exclusive Messages</h4></a> 
 
 Adagio  has a definition facility that makes it possible to send system
 exclusive parameters.  Often, there are parameters on Midi
@@ -741,7 +741,7 @@ the macro is used to set the LFO rate for a B-flat whole note in the score.
 The macro definition is given in hexadecimal, except <tt>v</tt> is replaced by 
 the channel (voice) and <tt>%1</tt> is replaced by the first parameter.
 A macro is invoked by writing "~" followed by the macro name and a
-list of parameters<a name="index941">:
+list of parameters<a name="index946">:
 <pre>
 !DEF LFO F0 43 0v 01 09 %1 F7
 Bf5 W ~LFO(25)
@@ -794,9 +794,9 @@ G4 ~bend(7567) N40
 ~lfospeed(30) N35
 <p>
 </pre>
-<a name = "125"><h4>Control Ramps</h4></a>
+<a name = "126"><h4>Control Ramps</h4></a>
 
-The <tt>!RAMP</tt> command<a name="index942"> can specify a smooth control change from one
+The <tt>!RAMP</tt> command<a name="index947"> can specify a smooth control change from one
 value to another.  It consists of a specification of the starting and
 ending values of some control change, a duration specifying how often
 to send a new value, and a duration specifying the total length of the ramp.
@@ -838,8 +838,8 @@ following example.  The <tt>noteon</tt> macro starts a note, and <tt>noteoff</tt
 </small>
 
 <p>
-<a name = "126"><h4>The !End Command</h4></a>
-<a name="index943"><a name="index944">
+<a name = "127"><h4>The !End Command</h4></a>
+<a name="index948"><a name="index949">
 The special command  <code>!END</code> marks the end of a score.  Everything beyond that
 is ignored, for example:
 <pre>
@@ -850,14 +850,14 @@ since the score has ended, this text will be ignored
 </pre>
 
 <p>
-<a name = "127"><h4>Calling C Routines</h4></a>
+<a name = "128"><h4>Calling C Routines</h4></a>
 
 It is possible to call C routines from within Adagio scores when using
 specially linked versions, but this feature is disabled in Nyquist. The
 syntax is described here for completeness.
 <p>
-The <code>!CALL</code> command<a name="index945"><a name="index946"> calls a C routine that can in turn invoke a
-complex sequence of operations.  Below is a call to a trill<a name="index947"> routine,
+The <code>!CALL</code> command<a name="index950"><a name="index951"> calls a C routine that can in turn invoke a
+complex sequence of operations.  Below is a call to a trill<a name="index952"> routine,
 which is a standard routine in Adagio.  The parameters are the base
 pitch of the trill, the total duration of the trill, the interval in semitones, the
 duration of each note of the trill, and the loudness.  Notice
@@ -877,11 +877,11 @@ encoding of "a" in ASCII.
 <p>
 The <code>!CALL</code> may be followed by a limited set of attributes.  These are time (<tt>T</tt>), voice (<tt>V</tt>), and next time (<tt>N</tt>).  The <code>!CALL</code> is made at the current time if no time is specified, and the time of the next adagio command is the time of the  <code>!CALL</code> unless a next time is specified.  In other words, the default is <tt>N0</tt>.
 <p>
-<a name = "128"><h4>Setting C Variables</h4></a>
+<a name = "129"><h4>Setting C Variables</h4></a>
 In addition to calling C routines, there is another way in which scores
 can communicate with C.  As with <code>!CALL</code>, specific C code must be linked before these commands can be used, and this is not supported in Nyquist.  
-The  <code>!SETI</code> command<a name="index948"><a name="index949"> sets an integer variable
-to a value, and the <code>!SETV</code> command<a name="index950"><a name="index951"> sets an element of an integer array.  
+The  <code>!SETI</code> command<a name="index953"><a name="index954"> sets an integer variable
+to a value, and the <code>!SETV</code> command<a name="index955"><a name="index956"> sets an element of an integer array.  
 For example, the next line sets the variable <tt>delay</tt> to 200 and sets
 <tt>transposition[5]</tt> to -4 at time 200:
 <pre>

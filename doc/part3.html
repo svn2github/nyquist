@@ -21,51 +21,51 @@ setting to determine the height of the completion list relative to the height of
 window.
 <p>
 <a name = "18"><h3>The Button Bar</h3></a>
-<a name="index97">
+<a name="index98">
 There are a number of buttons with frequently-used operations. These are:
 <ul>
 <li>
-Info - <a name="index98">Print information about Nyquist memory
+Info - <a name="index99">Print information about Nyquist memory
 utilization, including
 the number of free cons cells, the number of garbage collections,
 the total number of cons cells, the total amount of sample buffer memory,
 and the amount of memory in free sample buffers.
-<li>Break - <a name="index99">Send a break character to XLISP. This
+<li>Break - <a name="index100">Send a break character to XLISP. This
 can be used to enter the debugger (the break loop) while a program is 
 running. Resume by typing <code>(co)</code>.
-<li>SAL/Lisp - <a name="index100"><a name="index101">Switch modes.
+<li>SAL/Lisp - <a name="index101"><a name="index102">Switch modes.
 The button names the mode (SAL or Lisp) you will switch to, not the 
 current mode. For example, if you are in Lisp mode and want to type
 a SAL command, click the SAL button first.
-<li>Top - <a name="index102">Enters <code>(top)</code> into Nyquist.
+<li>Top - <a name="index103">Enters <code>(top)</code> into Nyquist.
 If the XLISP prompt is <code>1&gt;</code> or 
 some other integer followed by "<code>&gt;</code>", clicking the Top button
 will exit the debug loop and return to the top-level prompt.
-<li>Replay - <a name="index103">Enters <code>(r)</code> into Nyquist.
+<li>Replay - <a name="index104">Enters <code>(r)</code> into Nyquist.
 This command replays the last computed sound.
-<li>F2-F12 - <a name="index104">Enters <code>(f2)</code> etc. into Nyquist.
+<li>F2-F12 - <a name="index105">Enters <code>(f2)</code> etc. into Nyquist.
 These commands are not built-in, and allow users to define their own
 custom actions.
-<li>Browse - <a name="index105">Equivalent to the Window:Browse
+<li>Browse - <a name="index106">Equivalent to the Window:Browse
 menu item. (See Section <a href = "#20">"Browser"</a>.)
-<li>EQ - <a name="index106">Equivalent to the Window:EQ menu item.
+<li>EQ - <a name="index107">Equivalent to the Window:EQ menu item.
 (See Section <a href = "#22">"Equalizer Editor"</a>.)
-<li>EnvEdit - <a name="index107">Equivalent to the Window:Envelope Edit 
+<li>EnvEdit - <a name="index108">Equivalent to the Window:Envelope Edit 
 menu item. (See Section <a href = "#21">"Envelope Editor"</a>.)
-<li>NewFile - <a name="index108">Equivalent to the File:New menu
+<li>NewFile - <a name="index109">Equivalent to the File:New menu
 item. Opens a new file editing window for creating and
 loading a Lisp or SAL program file.
-<li>OpenFile - <a name="index109">Equivalent to the File:Open menu
+<li>OpenFile - <a name="index110">Equivalent to the File:Open menu
 item. Opens an existing Lisp or SAL program file for editing and loading.
-<li>SaveFile - <a name="index110">Equivalent to the File:Save menu
+<li>SaveFile - <a name="index111">Equivalent to the File:Save menu
 item (found on the editing window's menu bar). Saves the contents
 of an editing window to its associated file.
-<li>Load - <a name="index111">Equivalent to the File:Load menu
+<li>Load - <a name="index112">Equivalent to the File:Load menu
 item (found on the editing window's menu bar). Performs a Save operation,
 then sends a command to Nyquist that loads the file as a program.
-<li>Mark - <a name="index112">Sends a Control-A to Nyquist. While
+<li>Mark - <a name="index113">Sends a Control-A to Nyquist. While
 playing a sound, this displays and records the approximate time in the
-audio stream. (See Section <a href = "part8.html#93">"Sound File Input and Output"</a> for more detail.)
+audio stream. (See Section <a href = "part8.html#94">"Sound File Input and Output"</a> for more detail.)
 <li></ul><a name = "19"><h3>Command Completion</h3></a>
 To help with programming, NyquistIDE maintains a command-completion window.
 As you type the first letters of function names, NyquistIDE lists matching
@@ -86,7 +86,7 @@ this should be fixed in the future.
 <p>
 <a name = "20"><h3>Browser</h3></a>
 
-<a name="index113"><a name="index114">
+<a name="index114"><a name="index115">
 If you click on the Browse button or use the Window:Browse menu command, 
 NyquistIDE will display a browser window that is pre-loaded with a number of
  Nyquist commands to create sounds. You can adjust parameters, audition
@@ -106,9 +106,9 @@ your choice.
 <p>
 <a name = "21"><h3>Envelope Editor</h3></a>
 
-<a name="index115">
 <a name="index116">
 <a name="index117">
+<a name="index118">
 The envelope editor allows you graphically to design and edit piece-wise
 linear and exponential envelopes. The editor maintains a list of envelopes
 and you select the one to edit or delete using the drop down list in the 
@@ -126,9 +126,9 @@ can create the envelope within a Nyquist SAL program by writing
 the expression <code>fast-attack()</code>.
 <p>
 These edited envelopes are saved to a file named <code>workspace.lsp</code> 
- <a name="index118"> in
+ <a name="index119"> in
 the current directory. The workspace is Nyquist's mechanism for saving
-data of all kinds (see Section <a href = "part14.html#158">"Workspaces"</a>). The normal way to
+data of all kinds (see Section <a href = "part14.html#159">"Workspaces"</a>). The normal way to
 work with workspaces is to (1) load the workspace, i.e.
  <code>load "workspace"</code>, as soon as you start Nyquist; (2) invoke
 the envelope editor to change values in the workspace; and (3) save the
@@ -160,12 +160,106 @@ process. Normally, there is no need to use this because the editor
 automatically loads data when you open it.
 <p>
 <a name = "22"><h3>Equalizer Editor</h3></a>
-<a name="index119"><a name="index120">
+<a name="index120"><a name="index121">
 The Equalizer Editor provides a graphical EQ interface for creating and
 adjusting equalizers. Unlike the envelope editor, where you can type
 any envelope name, equalizers are named <code>eq-0</code>, <code>eq-1</code>, etc.,
 and you select the equalizer to edit using a pull-down menu. The <code>Set</code>
 button should be use to record changes. 
+<p>
+<a name = "23"><h3>UPIC Editor</h3></a>
+<a name="index122"><a name="index123"><a name="index124">The 
+UPIC Editor is inspired by the UPIC system by Iannis Xenakis at the Centre
+d'Edudes de Mathematique et Automatique Musicales (CEMaMu). The UPIC Editor
+is accessed by the "Upic Edit" menu item in the "Window" menu of the 
+NyquistIDE. Once opened, you can draw pitch contours in the main panel by
+pressing the left mouse button and dragging with the mouse down. Contours
+represent tones in a frequency vs. time coordinate system. Any contour can be
+deleted by right-clicking (or shift-clicking on an Apple computer) to 
+select the contour (indicated by the color red), and typing the Delete key.
+<p>
+A collection of contours can be saved to a file and later retrieved using the 
+items in the File menu (use the File menu in the UPIC Editor window, not in 
+the main NyquistIDE window.) The file is a SAL program in a special format
+that can be parsed by the UPIC Editor. The file can also be loaded
+into Nyquist using the File:Load menu item, or by executing a load command
+in Nyquist.
+<p>
+The panel at the top of the editor offers control over various parameters.
+The Name box is a Nyquist variable name. This name takes effect when you
+save a file from the UPIC Editor. The variable name is stored in the
+file so that when a UPIC Editor-generated file
+is loaded into Nyquist, the data is assigned to this variable name. 
+The data is
+a list of contours, where each contour specifies a waveform, an envelope,
+and a list of time-frequency coordinates.
+<p>
+The next item in the panel is the Waveform box. The Waveform box names a 
+waveform for a contour. Default waveforms are sinusoid, triangle, and 
+sawtooth, but you can type in your own names. The currently selected 
+waveform is stored with the contour when it is created (entered by
+drawing). You cannot change or edit the waveform name associated with
+a contour once the contour is created, but you can always delete the
+contour and replace it. The Envelope box names an envelope for a 
+contour. The envelope names a Nyquist function. The default, <code>upic-env</code>
+is a trapezoid shape with an onset time and offset time of 10ms. As with
+waveforms, the envelope is stored with each contour when the contour is
+created and cannot be edited.
+<p>
+The Stop Time box gives the duration of the drawing area in seconds. 
+The Min Freq box gives the minimum frequency (at the bottom of the 
+drawing area), and the Max Freq box gives the maximum frequency (at the
+top of the drawing area). The vertical frequency axis can use a linear
+scale corresponding to frequency in Hertz or a logarithmic scale
+corresponding to semitones. The "linear" checkbox selects the linear
+scale. When <i>any</i> of these parameters (described in this paragraph and 
+delimited by the border labeled "Range" on the control panel) is changed,
+you must press the Update Range button for the change to take effect.
+<p>
+The Background menu lets you display a grid that indicates pitch locations.
+The "C's" item draws a line at C in every visible octave. E.g. middle C 
+is about 260 Hz, so a reference line will be drawn near 260 Hz. 
+Lines will be drawn around 130 Hz (an octave below middle C), and around
+520 Hz (an octave above middle C), etc. The "GrandStaff" menu item
+draws reference lines for each line of the grand staff commonly used
+for piano music. The pitches are G2, B2, D3, F3, A3, E4, G4, B4, D5, and 
+F5. Finally, you can load a picture using the 
+Background:Load Picture... menu item. Then, the Background:Show Picture
+menu item toggles whether the picture is displayed or not. This feature
+allows you to trace an image. (For example, see the Sonic Self-Portrait
+at <code>http://www.cs.cmu.edu/~rbd</code>.) You may wish to use an image editor
+to lighten the image so that superimposed contours will be more visible.
+<p>
+Each change to the Range data, background choice, and each entry of a 
+contour is an action that you can undo or redo with the Undo and Redo 
+buttons.
+<p>
+To convert UPIC data into sound, first load <code>upic.sal</code> and load
+a file generated by the UPIC Editor. Now, suppose the variable name
+used is <code>upicdata</code>. You can play the data by writing
+<pre>
+play upic(upicdata)
+</pre>
+
+If you created your own names for waveforms or envelopes, you must be
+sure that these exist before calling the <code>upic</code> function. Each 
+waveform must be the name of a variable which is set to a Nyquist
+wave table. (See Section <a href = "part2.html#9">"Waveforms"</a> for information on how
+to create a wave table.) Also, each envelope must name a function with
+no parameters that will return an amplitude envelope. The following is
+the built-in definition for <code>upic-env</code>:
+<pre>
+define function upic-env()
+  return env(0.01, 0.01, 0.01, 1, 1, 1)
+</pre>
+
+To make a custom envelope function named <code>upic-smooth</code> with a 0.2
+ second attack and a 0.3 second decay, you could write:
+<pre>
+define function upic-smooth()
+  return env(0.2, 0.01, 0.3, 1, 1, 1)
+</pre>
+
 <p>
 <hr>
 <a href = "part2.html">Previous Section</a> | <a href = "part4.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
