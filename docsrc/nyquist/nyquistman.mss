@@ -765,10 +765,10 @@ different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
 More examples can be found in the directory @code(demos), part of the standard
 Nyquist release. The file @code(demos/examples_home.htm) is an index to all the demo descriptions. In this directory, you will find the following and more:
 @begin(itemize)
-How to make arpeggios (@code(demos/arpeggiator.htm) and @code(arp.sal)@index(arpeggiator)
+How to make arpeggios (@code(demos/arpeggiator.htm) and @code(arp.sal))@index(arpeggiator)
 
 Gong sounds by additive synthesis@index(additive synthesis, gongs)
-(@code(demos/pmorales/b1.lsp) and @code(demos/mateos/gong.lsp)@index(Gong sounds)@index(demos, gong sound)
+(@code(demos/pmorales/b1.lsp) and @code(demos/mateos/gong.lsp))@index(Gong sounds)@index(demos, gong sound)
 
 Risset's spectral analysis of a chord
 (@code(demos/pmorales/b2.lsp))@index(Risset)@index(demos, spectral analysis of a chord)
@@ -784,19 +784,19 @@ Shepard tones (@code(demos/shepard.lsp) and @code(demos/pmorales/b9.lsp))@index(
 Random signals (@code(demos/pmorales/c1.lsp))
 
 Buzz with formant filters 
-(@code(demos/pmorales/buzz.lsp)@index(vocal sound)@index(demos, formants)
+(@code(demos/pmorales/buzz.lsp))@index(vocal sound)@index(demos, formants)
 
 Computing samples directly in Lisp (using Karplus-Strong and physical modelling
 as examples)
-(@code(demos/pmorales/d1.lsp)@index(demos, sample-by-sample)@index(DSP in Lisp)@index(Lisp DSP)@index(Karplus-Strong synthesis)@index(physical model)@index(flute sound)
+(@code(demos/pmorales/d1.lsp))@index(demos, sample-by-sample)@index(DSP in Lisp)@index(Lisp DSP)@index(Karplus-Strong synthesis)@index(physical model)@index(flute sound)
 
 FM Synthesis examples, including bell@index(bell sound), wood drum@index(wood drum sound),
-brass sounds@index(brass sound), tuba sound @index(tuba) (@code(demos/mateos/tuba.lsp) and clarinet sounds@index(clarinet sound) (@code(demos/pmorales/e2.lsp)@index(demos, FM synthesis)
+brass sounds@index(brass sound), tuba sound @index(tuba) (@code(demos/mateos/tuba.lsp) and clarinet sounds@index(clarinet sound) (@code(demos/pmorales/e2.lsp))@index(demos, FM synthesis)
 
-Rhythmic patterns (@code(demos/rhythm_tutorial.htm)@index(demos, rhythmic pattern)
+Rhythmic patterns (@code(demos/rhythm_tutorial.htm))@index(demos, rhythmic pattern)
 
 Drum Samples and Drum Machine
-(@code(demos/plight/drum.lsp)@index(demos, drum machine)@index(drum
+(@code(demos/plight/drum.lsp))@index(demos, drum machine)@index(drum
 samples)@index(drum machine). (See Section @ref(drum-machine-sec)).
 @end(itemize)
 
@@ -4523,7 +4523,8 @@ The @i(minstep), a @code(FLONUM), is the minimum frequency considered (in steps)
 a ``stereo'' signal,
 i.e. an array of two @code(SOUND)s, both at the same sample rate, which is 
 approximately the sample rate of @i(sound) divided by @i(stepsize). 
-The first @code(SOUND) consists of frequency estimates. The second sound consists
+The first @code(SOUND) consists of frequency estimates (in units of
+steps, i.e. middle C = 60). The second sound consists
 of values that measure the confidence or reliability of the frequency estimate.
 A small value (less than 0.1) indicates fairly high confidence. A larger value
 indicates lower confidence. This number can also be thought of as a ratio of 

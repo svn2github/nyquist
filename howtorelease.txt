@@ -53,20 +53,21 @@ Check for and delete editor backup files in:
       runtime
       lib
 
+copy the documentation from d:/rbd/nyquist to AFS, or
+    scp /Users/rbd/nyquist/doc/* rbd@linux.gp.cs.cmu.edu:www/doc/nyquist/
+
 ON WINDOWS
 
 Run releasenyqide.bat to create release directory.
 Run Inno Setup 5/Inno Setup Compiler
 Select C:\Users\rbd\nyquist\sys\win\nyqrelide.iss
+Update the version number in the code and save it
 Select Build:Compile
 
 move sys\win\setup\setupnyqiderun.exe setupnyqiderunNNN.exe
   , using the version number for NNN
 
-Visit https://frs.sourceforge.net/webupload and upload setupnyqiderun.exe
-
-copy the documentation from d:/rbd/nyquist to AFS, or
-    scp /Volumes/rbd/nyquist/doc/* rbd@linux.gp.cs.cmu.edu:www/doc/nyquist/
+Visit https://frs.sourceforge.net/webupload and upload setupnyqiderunNNN.exe
 
 FOR THE MAC
 

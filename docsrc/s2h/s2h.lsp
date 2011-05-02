@@ -1,5 +1,14 @@
 ; s2h -- scribe to html
 
+; @begin(fgroup)@xlcode{write-char(@i(ch)[, @i(stream)])} @c{[sal]}
+; @xlcode{(write-char@pragma(defn)@index(write-char) @t(@i(ch))
+; [@t(@i(stream))])} @c{[lisp]}  @itemsep write a character to a stream
+;
+; HTML: write-char(ch[, stream])
+;       (write-cahr ch [stream])
+; HINT: write-char ch[stream]
+
+
 ; MajorHeading = H1
 ; Chapter, Unnumbered, Appendix = H2
 ; Section = Heading = H3
@@ -1465,6 +1474,9 @@ ret
 
 (defun codef-complete ()
 ;  (write-char #\) *codef-file*)
+   (setf ccd (or (string-search "write-char" *codef-capture*)
+                 (string-search "sound-warp" *codef-capture*)))
+   (if ccd (display "codef-complete" *codef-capture*))
    (let (index)
      ;; remove [lisp] and [sal] and everything after it
      (if (setf index (string-search "[lisp]" *codef-capture*))
@@ -1487,11 +1499,13 @@ ret
 	      (setf *codef-capture* 
 		    (strcat (subseq *codef-capture* 0 index) " "
 			    (subseq *codef-capture* index))))))
+     (if ccd (display "codef-complete 2" *codef-capture*))
      ;; trim blanks after open bracket/comma and before close paren
      (while (setf index (string-search "[, " *codef-capture*))
        (setf index (+ 2 index))
        (setf *codef-capture* (strcat (subseq *codef-capture* 0 index)
                                      (subseq *codef-capture* (1+ index)))))
+     (if ccd (display "codef-complete 3" *codef-capture*))
      (while (setf index (string-search " )" *codef-capture*))
        (setf *codef-capture* (strcat (subseq *codef-capture* 0 index)
                                      (subseq *codef-capture* (1+ index)))))

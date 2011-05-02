@@ -160,7 +160,7 @@ at time beh)
 part8.html#index547
 at-abs time beh)
 part8.html#index549
-atan expr[expr2])
+atan expr [expr2])
 part19.html#index1479
 atom expr)
 part19.html#index1379
@@ -200,7 +200,7 @@ bowed step bowpress-env)
 part8.html#index496
 bowed-freq step bowpress-env freq-env)
 part8.html#index498
-break [bmsg[arg]])
+break [bmsg [arg]])
 part19.html#index1445
 build-harmonic n table-size)
 part8.html#index334
@@ -216,7 +216,7 @@ cauchy-dist tau [low high])
 part14.html#index1064
 cdr expr)
 part19.html#index1342
-cerror cmsg emsg[arg])
+cerror cmsg emsg [arg])
 part19.html#index1444
 char string index)
 part19.html#index1521
@@ -372,7 +372,7 @@ eql expr1 expr2)
 part19.html#index1403
 equal expr1 expr2)
 part19.html#index1404
-error emsg[arg])
+error emsg [arg])
 part19.html#index1443
 errset expr [pflag])
 part19.html#index1449
@@ -532,7 +532,7 @@ hz-to-step freq)
 part8.html#index290
 hzosc hz [table phase])
 part8.html#index358
-if texpr expr1[expr2])
+if texpr expr1 [expr2])
 part19.html#index1409
 incf symbol)
 part13.html#index985
@@ -658,7 +658,7 @@ make-product x y :for for :name name :trace trace)
 part14.html#index1034
 make-random items :for for :name name :trace trace)
 part14.html#index1013
-make-string-input-stream str[start[end]])
+make-string-input-stream str [start [end]])
 part19.html#index1588
 make-string-output-stream) )
 part19.html#index1589
@@ -764,7 +764,7 @@ peak expression maxlen)
 part8.html#index687
 peek addrs)
 part19.html#index1606
-peek-char [flag[stream]])
+peek-char [flag [stream]])
 part19.html#index1578
 phaser snd)
 part15.html#index1184
@@ -808,13 +808,13 @@ pop lis)
 part13.html#index990
 power x y)
 part13.html#index1001
-pprint expr[stream])
+pprint expr [stream])
 part19.html#index1550
 prcrev sound decay mix)
 part8.html#index462
-prin1 expr[stream])
+prin1 expr [stream])
 part19.html#index1548
-princ expr[stream])
+princ expr [stream])
 part19.html#index1549
 print expr [stream])
 part19.html#index1547
@@ -884,15 +884,15 @@ ramp [duration])
 part11.html#index947
 random n)
 part19.html#index1473
-read [stream[eof[rflag]]])
+read [stream [eof [rflag]]])
 part19.html#index1546
 read-byte [stream])
 part19.html#index1585
 read-char [stream])
 part19.html#index1576
-read-float [stream[length]])
+read-float [stream [length]])
 part19.html#index1582
-read-int [stream[length]])
+read-int [stream [length]])
 part19.html#index1580
 read-line [stream])
 part19.html#index1584
@@ -922,7 +922,7 @@ restore fname)
 part19.html#index1598
 return [expr])
 part19.html#index1431
-return-from name[value])
+return-from name [value])
 part19.html#index1432
 reverb snd time)
 part15.html#index1207
@@ -1068,7 +1068,7 @@ set-pitch-names )
 part8.html#index298
 set-sound-srate rate)
 part8.html#index296
-setdir path[verbose])
+setdir path [verbose])
 part19.html#index1562
 setf [place expr] ...)
 part19.html#index1321
@@ -1420,7 +1420,7 @@ stringp expr)
 part19.html#index1389
 sublis alist expr :test test :test-not test-not)
 part19.html#index1369
-subseq string start[end])
+subseq string start [end])
 part19.html#index1507
 subsetp a b)
 part14.html#index1156
@@ -1454,7 +1454,7 @@ terpri [stream])
 part19.html#index1551
 third expr)
 part19.html#index1348
-throw sym[expr])
+throw sym [expr])
 part19.html#index1419
 timed-seq score)
 part8.html#index587
@@ -1506,13 +1506,13 @@ while test expr1 expr2 ...)
 part13.html#index991
 widen snd amt)
 part15.html#index1220
-write-byte byte[stream])
+write-byte byte [stream])
 part19.html#index1586
-write-char ch[stream])
+write-char ch [stream])
 part19.html#index1579
-write-float ch[stream[length]])
+write-float ch [stream [length]])
 part19.html#index1583
-write-int ch[stream[length]])
+write-int ch [stream [length]])
 part19.html#index1581
 yin sound minstep maxstep stepsize)
 part8.html#index539

@@ -1301,7 +1301,7 @@ returns  -   the value of the first expression whose predicate is not
                          expression that does not evaluate to <code>nil</code>)
 
 <br>
-<br><dt>        <code>if(<i>texpr</i>, <i>expr1</i>[, <i>expr2</i>])</code> [SAL]<br>
+<br><dt>        <code>if(<i>texpr</i>, <i>expr1</i> [, <i>expr2</i>])</code> [SAL]<br>
         <code>(if<a name="index1409"> <tt><i>texpr</i></tt> <tt><i>expr1</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP]  - evaluate expressions conditionally
 
 <dd>
@@ -1391,7 +1391,7 @@ returns  -   the value of the first expression whose predicate is not
             <i>expr</i> -     expressions to evaluate<br>
             returns  -   the value of the last expression the throw expression<br>
 
-<br><dt>        <code>throw(<i>sym</i>[, <i>expr</i>])</code> [SAL]<br>
+<br><dt>        <code>throw(<i>sym</i> [, <i>expr</i>])</code> [SAL]<br>
         <code>(throw<a name="index1419"> <tt><i>sym</i></tt> [<tt><i>expr</i></tt>])</code> [LISP]  - throw to a catch
 
 <dd>
@@ -1491,7 +1491,7 @@ returns  -   the value of the first expression whose predicate is not
             <i>expr</i>  -    the value (defaults to <code>nil</code>)<br>
             returns   -  never returns<br>
 
-<br><dt>        <code>return-from(<i>name</i>[, <i>value</i>])</code> [SAL]<br>
+<br><dt>        <code>return-from(<i>name</i> [, <i>value</i>])</code> [SAL]<br>
         <code>(return-from<a name="index1432"> <tt><i>name</i></tt> [<tt><i>value</i></tt>])</code> [LISP]  - return from a named block
 
 <dd>
@@ -1562,7 +1562,7 @@ returns  -   the value of the first expression whose predicate is not
             <i>sym</i>   -    the function to remove (quoted)<br>
             returns   -  the trace list<br>
 
-<br><dt>        <code>error(<i>emsg</i>[, <i>arg</i>])</code> [SAL]<br>
+<br><dt>        <code>error(<i>emsg</i> [, <i>arg</i>])</code> [SAL]<br>
         <code>(error<a name="index1443"> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  - signal a non-correctable error
 
 <dd>
@@ -1570,7 +1570,7 @@ returns  -   the value of the first expression whose predicate is not
             <i>arg</i>   -    the argument expression (printed after the message)<br>
             returns   -  never returns<br>
 
-<br><dt>        <code>cerror(<i>cmsg</i>, <i>emsg</i>[, <i>arg</i>])</code> [SAL]<br>
+<br><dt>        <code>cerror(<i>cmsg</i>, <i>emsg</i> [, <i>arg</i>])</code> [SAL]<br>
         <code>(cerror<a name="index1444"> <tt><i>cmsg</i></tt> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  - signal a correctable error
 
 <dd>
@@ -1579,7 +1579,7 @@ returns  -   the value of the first expression whose predicate is not
             <i>arg</i>   -    the argument expression (printed after the message)<br>
             returns   -  <code>nil</code> when continued from the break loop<br>
 
-<br><dt>        <code>break([<i>bmsg</i>[, <i>arg</i>]])</code> [SAL]<br>
+<br><dt>        <code>break([<i>bmsg</i> [, <i>arg</i>]])</code> [SAL]<br>
         <code>(break<a name="index1445"> [<tt><i>bmsg</i></tt> [<tt><i>arg</i></tt>]])</code> [LISP]  - enter a break loop
 
 <dd>
@@ -1745,7 +1745,7 @@ returns  -   the value of the first expression whose predicate is not
             <i>expr</i>  -    the floating point number<br>
             returns   -  the tangent of the number<br>
 
-<br><dt>        <code>atan(<i>expr</i>[, <i>expr2</i>])</code> [SAL]<br>
+<br><dt>        <code>atan(<i>expr</i> [, <i>expr2</i>])</code> [SAL]<br>
         <code>(atan<a name="index1479"> <tt><i>expr</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP] <a href = "foot.html#foot10">(Footnote 10)</a>   - compute the arctangent
 
 <dd>
@@ -1910,7 +1910,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             <i>expr</i> -     the strings to concatenate<br>
             returns  -   the result of concatenating the strings<br>
 
-<br><dt>        <code>subseq(<i>string</i>, <i>start</i>[, <i>end</i>])</code> [SAL]<br>
+<br><dt>        <code>subseq(<i>string</i>, <i>start</i> [, <i>end</i>])</code> [SAL]<br>
         <code>(subseq<a name="index1507"> <tt><i>string</i></tt> <tt><i>start</i></tt> [<tt><i>end</i></tt>])</code> [LISP]  - extract a substring
 
 <dd>
@@ -2156,7 +2156,7 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
 <a name = "233"><h3>Input/Output Functions</h3></a><a name="index1545">
 <dl>
 <dt>
-        <code>read([<i>stream</i>[, <i>eof</i>[, <i>rflag</i>]]])</code> [SAL]<br>
+        <code>read([<i>stream</i> [, <i>eof</i> [, <i>rflag</i>]]])</code> [SAL]<br>
         <code>(read<a name="index1546"> [<tt><i>stream</i></tt> [<tt><i>eof</i></tt> [<tt><i>rflag</i></tt>]]])</code> [LISP]  - read an expression
 
 <dd>
@@ -2171,7 +2171,7 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
             <i>stream</i> -   the output stream (default is standard output)<br>
             returns    - the expression<br>
 
-<br><dt>        <code>prin1(<i>expr</i>[, <i>stream</i>])</code> [SAL]<br>
+<br><dt>        <code>prin1(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
         <code>(prin1<a name="index1548"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression
 
 <dd>
@@ -2179,7 +2179,7 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
             <i>stream</i> -   the output stream (default is standard output)<br>
             returns    - the expression<br>
 
-<br><dt>        <code>princ(<i>expr</i>[, <i>stream</i>])</code> [SAL]<br>
+<br><dt>        <code>princ(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
         <code>(princ<a name="index1549"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression without quoting
 
 <dd>
@@ -2187,7 +2187,7 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
             <i>stream</i> -   the output stream (default is standard output)<br>
             returns   -  the expression<br>
 
-<br><dt>        <code>pprint(<i>expr</i>[, <i>stream</i>])</code> [SAL]<br>
+<br><dt>        <code>pprint(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
         <code>(pprint<a name="index1550"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - pretty print an expression
 
 <dd>
@@ -2283,7 +2283,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             <i>stream</i> -   the stream<br>
             returns    - <code>nil</code><br>
 
-<br><dt>        <code>setdir(<i>path</i>[, <i>verbose</i>])</code> [SAL]<br>
+<br><dt>        <code>setdir(<i>path</i> [, <i>verbose</i>])</code> [SAL]<br>
         <code>(setdir<a name="index1562"><a name="index1563"> <tt><i>path</i></tt> [<tt><i>verbose</i></tt>])</code> [LISP] <a href = "foot.html#foot12">(Footnote 12)</a>  - set current directory
 
 <dd>
@@ -2325,7 +2325,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             <i>stream</i> -   the input stream (default is standard input)<br>
             returns   -  the character<br>
 
-<br><dt>        <code>peek-char([<i>flag</i>[, <i>stream</i>]])</code> [SAL]<br>
+<br><dt>        <code>peek-char([<i>flag</i> [, <i>stream</i>]])</code> [SAL]<br>
         <code>(peek-char<a name="index1578"> [<tt><i>flag</i></tt> [<tt><i>stream</i></tt>]])</code> [LISP]  - peek at the next character
 
 <dd>
@@ -2333,7 +2333,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             <i>stream</i> -    the input stream (default is standard input)<br>
             returns   -  the character (integer)<br>
 
-<br><dt>        <code>write-char(<i>ch</i>[, <i>stream</i>])</code> [SAL]<br>
+<br><dt>        <code>write-char(<i>ch</i>  [, <i>stream</i>])</code> [SAL]<br>
         <code>(write-char<a name="index1579"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - write a character to a stream
 
 <dd>
@@ -2341,7 +2341,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             <i>stream</i> -   the output stream (default is standard output)<br>
             returns   -  the character<br>
 
-<br><dt>        <code>read-int([<i>stream</i>[, <i>length</i>]])</code> [SAL]<br>
+<br><dt>        <code>read-int([<i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
         <code>(read-int<a name="index1580"> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - read a binary integer from a stream
 
 <dd>
@@ -2353,7 +2353,7 @@ signed, regardless of the platform. To read little-endian format, use a
 negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.<br>
 
-<br><dt>        <code>write-int(<i>ch</i>[, <i>stream</i>[, <i>length</i>]])</code> [SAL]<br>
+<br><dt>        <code>write-int(<i>ch</i> [, <i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
         <code>(write-int<a name="index1581"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - write a binary integer to a stream
 
 <dd>
@@ -2366,7 +2366,7 @@ signed, regardless of the platform. To write in little-endian format, use a
 negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.<br>
 
-<br><dt>        <code>read-float([<i>stream</i>[, <i>length</i>]])</code> [SAL]<br>
+<br><dt>        <code>read-float([<i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
         <code>(read-float<a name="index1582"> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - read a binary floating-point number from a stream
 
 <dd>
@@ -2378,7 +2378,7 @@ signed, regardless of the platform. To read little-endian format, use a
 negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.<br>
 
-<br><dt>        <code>write-float(<i>ch</i>[, <i>stream</i>[, <i>length</i>]])</code> [SAL]<br>
+<br><dt>        <code>write-float(<i>ch</i> [, <i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
         <code>(write-float<a name="index1583"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - write a binary floating-point number to a stream
 
 <dd>
@@ -2405,7 +2405,7 @@ byte first. The file should be opened in binary mode.<br>
             <i>stream</i> -   the input stream (default is standard input)<br>
             returns    - the byte (integer)<br>
 
-<br><dt>        <code>write-byte(<i>byte</i>[, <i>stream</i>])</code> [SAL]<br>
+<br><dt>        <code>write-byte(<i>byte</i> [, <i>stream</i>])</code> [SAL]<br>
         <code>(write-byte<a name="index1586"> <tt><i>byte</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - write a byte to a stream
 
 <dd>
@@ -2427,7 +2427,7 @@ An unnamed input stream is setup with the
 <dl>
 <dt>
 <br><dt>
-        <code>make-string-input-stream(<i>str</i>[, <i>start</i>[, <i>end</i>]])</code> [SAL]<br>
+        <code>make-string-input-stream(<i>str</i> [, <i>start</i> [, <i>end</i>]])</code> [SAL]<br>
         <code>(make-string-input-stream<a name="index1588"> <tt><i>str</i></tt> [<tt><i>start</i></tt> [<tt><i>end</i></tt>]])</code> [LISP]
 
 <dd>

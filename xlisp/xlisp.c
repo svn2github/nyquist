@@ -76,6 +76,7 @@ long random() {
 
 /* xlrand - return next random number in sequence */
 long xlrand (long range) {
+    if (range == 0) return 0;
 #ifdef USE_RAND
     return rand() % range;
 #endif
