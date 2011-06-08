@@ -423,6 +423,7 @@ public class MainFrame extends JFrame {
         menuAddItem(jMenuWindow, "Browse", 'b', null, menuButtonListener);
         menuAddItem(jMenuWindow, "EQ", 'q', null, menuButtonListener);
         menuAddItem(jMenuWindow, "Envelope Edit", 'e', null, menuButtonListener);
+        menuAddItem(jMenuWindow, "Nyquistlator", 'y', null, menuButtonListener);
         /* BEGIN UPIC */
         menuAddItem(jMenuWindow, "UPIC Edit", 'u', null, menuButtonListener);
         /* END UPIC */
@@ -447,6 +448,7 @@ public class MainFrame extends JFrame {
         buttonInit("EQ", "Equalizer Control Panel", menuButtonListener);
         buttonInit("EnvEdit", "Open Graphical Envelope Editor", 
                    menuButtonListener);
+        buttonInit("Nyquistlator", "Nyquistlator", menuButtonListener);
         // buttonNew.setIcon(image1);
         buttonInit("New File", "New File", menuButtonListener);
         // buttonOpen.setIcon(image1);
@@ -694,6 +696,7 @@ public class MainFrame extends JFrame {
         else if (cmd == "Browse") doWindowBrowse(e);
         else if (cmd == "EQ") doWindowEQ(e);
         else if (cmd == "EnvEdit" || cmd == "Envelope Edit") doWindowEnvelope(e);
+        else if (cmd == "Nyquistlator") doNyquistlator(e);
         /* BEGIN UPIC */
         else if (cmd == "UPIC Edit") doWindowUPIC(e);
         /* END UPIC */
@@ -1141,6 +1144,21 @@ public class MainFrame extends JFrame {
         jDesktop.add(envelopeFrame);
         jDesktop.getDesktopManager().activateFrame(envelopeFrame);
         jDesktop.setSelectedFrame(envelopeFrame);
+    }
+    
+    public void doNyquistlator(ActionEvent e)
+    {
+    	Nyquistlator nqltr = new Nyquistlator(this);
+        //nqltr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        nqltr.setVisible(true);
+        nqltr.setClosable(true);
+        nqltr.setMaximizable(true);
+        nqltr.setIconifiable(true);
+        
+    	nqltr.validate();
+    	jDesktop.add(nqltr);
+        jDesktop.getDesktopManager().activateFrame(nqltr);
+        jDesktop.setSelectedFrame(nqltr);
     }
 
     /* BEGIN UPIC */

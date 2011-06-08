@@ -5741,7 +5741,34 @@ modulation.  You should use @code(partial) instead (see Section
 @codef[snd-sine(@pragma(defn)@index(snd-sine)@i(t0), @i(hz), @i(sr), @i(d))] @c{[sal]}@*
 @altdef{@code[(snd-sine @i(t0) @i(hz) @i(sr) @i(d))] @c{[lisp]}}@\This is a
 special case of @code(snd-osc) that always generates a sinusoid with initial
-phase of 0 degrees.  You should use @code(sine) instead (see Section @ref(sine-sec)).
+phase of 0 degrees.  You should use @code(sine) instead (see Section
+@ref(sine-sec)).
+
+@codef[snd-sampler(@pragma(defn)@index(snd-sampler)@i(s), @i(step),
+@i(start), @i(sr), @i(hz), @i(t0), @i(fm), @i(npoints))] @c{[sal]}@*
+@altdef{@code[(snd-sampler @i(s) @i(step) @i(start) @i(sr) @i(hz)
+@i(t0) @i(fm) @i(npoints))] @c{[lisp]}}@\Returns a sound constructed
+by reading a sample from beginning to end and then splicing on copies
+of the same sound from a loop point to the end.  
+The sound @i(s) is the source sound to be looped, and @i(step) (a
+FLONUM) is the nominal fundamental frequency (in steps, not Hz) of
+@i(s). The @i(start) (a FLONUM) is the time in seconds at which to
+start the loop, @i(sr) (a FLONUM) is the desired sample rate of the
+output, @i(hz) is the nominal fundamental frequency of the output,
+@i(t0) (a FLONUM) is the starting time of the output, and @i(fm) (a
+SOUND) is frequency modulation that is added to @i(hz) to determine
+the output fundamental frequency. The parameter @i(npoints) (a FIXNUM)
+specifies how many points should be used for sample
+interpolation.  Currently this parameter defaults to 2 and only 2-point
+(linear) interpolation is implemented.  It is an error to modulate
+such that the frequency is negative. Note also that the loop point may
+be fractional. This function implements a typical sampling synthesis
+algorithm, looping and resampling the input according to the ratio
+between the desired fundamental frequency (which is the sum of @i(hz)
+and @i(fm)) and the nominal fundamental of the looped sound (which is
+assumed to be given by @i(step)). You should use @code(sampler)
+instead (see Section @ref(sampler-sec)).
+
 
 @codef[snd-siosc(@pragma(defn)@index(snd-siosc)@i(tables), @i(sr), @i(hz), @i(t0),
 @i(fm))] @c{[sal]}@*
@@ -7340,12 +7367,12 @@ allowing function names to be recomputed for each note. The default value
 is @code(note).
 
 @i(Can I make parameters depend upon the starting time or the duration
-of the note?) Parameter expressions can use the variable @code(sg:time) 
+of the note?) Parameter expressions can use the variable @code(sg:start) 
 to access the start time of the note, @code(sg:ioi) to access the 
 inter-onset time, and @code(sg:dur) to access the 
 duration (stretch factor) of the note. Also, @code(sg:count) counts how 
 many notes have been computed so far, starting at 0. The order of 
-computation is: @code(sg:time) first, then @code(sg:ioi) and @code(sg:dur),
+computation is: @code(sg:start) first, then @code(sg:ioi) and @code(sg:dur),
 so for example, an expression to compute @code(sg:dur) can 
 depend on @code(sg:ioi).
 
