@@ -1629,12 +1629,23 @@ pattern argument (by default).
 
 ;; SCORE-SORT -- sort a score into time order
 ;;
+;; If begin-end exists, preserve it. If not, compute
+;; it from the sorted score.
+;;
 (defun score-sort (score &optional (copy-flag t)) 
-  (setf score (score-must-have-begin-end score))
-  (let ((begin-end (car score)))
-    (setf score (cdr score))
-    (if copy-flag (setf score (append score nil)))
-    (cons begin-end (bigsort score #'event-before))))
+  (let* ((score1 (score-must-have-begin-end score))
+         (begin-end (car score1))
+         ;; if begin-end already existed, then it will
+         ;; be the first of score. Otherwise, one must
+         ;; have been generated above by score-must-have-begin-end
+         ;; in which case we should create it again after sorting.
+         (needs-begin-end (not (eq begin-end (first score)))))
+    (setf score1 (cdr score1)) ;; don't include begin-end in sort.
+    (if copy-flag (setf score1 (append score1 nil)))
+    (setf score1 (bigsort score1 #'event-before))
+    (if needs-begin-end (score-must-have-begin-end score1)
+                        (cons begin-end score1))
+  ))
   
 
 ;; PUSH-SORT -- insert an event in (reverse) sorted order

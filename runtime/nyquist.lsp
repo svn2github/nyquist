@@ -1699,8 +1699,8 @@ loop
 
 ;;; operations on sounds
 
-(defun diff (x &optional y)
-  (cond (y (sum x (prod -1 y)))
+(defun diff (x &rest y)
+  (cond (y (sum x (prod -1 (car y))))
         (t (prod -1 x))))
 
 ; compare-shape is a shape table -- origin 1.

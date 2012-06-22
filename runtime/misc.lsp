@@ -133,8 +133,11 @@
     (cond (*loadingfiles*
            (setf fullpath (car *loadingfiles*))
            (dotimes (i (length fullpath))
-             (cond ((equal (char fullpath i) *file-separator*)
+             ;; search for "/" (and on windows, also "\") in path:
+             (cond ((or (equal (char fullpath i) *file-separator*)
+                        (equal (char fullpath i) #\/))
                     (setf n i))))
+           ;; trim off filename (after last separator char in path
            (setf fullpath (subseq fullpath 0 (1+ n)))
 
 ;;         REMOVED SUPPORT FOR MAC OS-9 AND BELOW -RBD

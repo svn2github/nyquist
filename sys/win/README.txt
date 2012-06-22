@@ -125,13 +125,7 @@ will not start from the Windows Start menu. You can try running the
 nyquist/jnyqide.bat program from a Windows shell. If that fails, and
 you see an error similar to "java is not recognized as in internal or
 external command error", the problem may be that paths are not set up
-properly to allow the Windows shell to find java. Right click on "My
-Computer" on the Windows desktop and select "Properties." Under the
-"Advanced" tab, press the "Environment Variables" button, and look for
-PATH under "System Variables." Make sure the Java bin directory is on
-the path. If it is not, you will have to find your installation of
-Java and add the appropriate directory to the PATH variable,
-e.g. "C:\Program Files\Java\jdk1.6.0\bin."
+properly to allow the Windows shell to find java. 
 
 Right click on "My Computer" on the Windows desktop and select
 "Properties." Under the "Advanced" tap, press the "Environment
@@ -141,3 +135,4 @@ have to find your installation of Java and add the appropriate
 directory to the PATH variable, e.g. "C:\Program
 Files\Java\jdk1.6.0\bin."
 
+You might have to reboot for these changes to take effect.

@@ -227,16 +227,33 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         AddMenuItem(fileMenu, "Revert", "revertUpicData", -1);
         AddMenuItem(fileMenu, "Clear", "clearUpicData", -1);
 
+        JMenu editMenu = new JMenu("Edit");
+        AddMenuItem(editMenu, "Undo", "undo",
+                    java.awt.event.KeyEvent.VK_Z);
+        AddMenuItem(editMenu, "Redo", "redo",
+                    java.awt.event.KeyEvent.VK_Z, true);
+        AddMenuItem(editMenu, "Duplicate", "duplicate",
+                    java.awt.event.KeyEvent.VK_C);
+        AddMenuItem(editMenu, "Stretch", "stretch",
+                    java.awt.event.KeyEvent.VK_T);
+        AddMenuItem(editMenu, "Align Beginning", "align-beginning",
+                    java.awt.event.KeyEvent.VK_B);
+        AddMenuItem(editMenu, "Align Ending", "align-ending",
+                    java.awt.event.KeyEvent.VK_E);
+        AddMenuItem(editMenu, "Thin Data", "thin",
+                    java.awt.event.KeyEvent.VK_H);
+
         JMenu backgroundMenu = new JMenu("Background");
         AddMenuItem(backgroundMenu, "C's", "showCs", 
-                    java.awt.event.KeyEvent.VK_C, false, true);
+                    java.awt.event.KeyEvent.VK_F, false, true);
         AddMenuItem(backgroundMenu, "Grand Staff", "showGrandStaff", 
                     java.awt.event.KeyEvent.VK_G, false, true);
         AddMenuItem(backgroundMenu, "Show Picture", "showPicture",
-                    java.awt.event.KeyEvent.VK_V, false, true);
+                    java.awt.event.KeyEvent.VK_P, false, true);
         AddMenuItem(backgroundMenu, "Load Picture...", "loadPicture", -1);
 
         menuBar.add(fileMenu);
+        menuBar.add(editMenu);
         menuBar.add(backgroundMenu);
         setJMenuBar(menuBar);
 
@@ -604,8 +621,19 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         } else if (cmd.equals("saveUpicDataAs")) saveUpicDataAs();
         else if (cmd.equals("openUpicData")) openUpicData();
         else if (cmd.equals("clearUpicData")) clearUpicData(false);
+
+        // Edit Menu options
+        else if (cmd.equals("duplicate")) canvas.duplicateCmd();
+        else if (cmd.equals("stretch")) canvas.stretchCmd();
+        else if (cmd.equals("align-beginning")) canvas.alignBeginningCmd();
+        else if (cmd.equals("align-ending")) canvas.alignEndingCmd();
+        else if (cmd.equals("thin")) canvas.thinCmd();
+        
+
         else if (cmd.equals("envNameSelected")) envNameSelected();
         else if (cmd.equals("waveformNameSelected")) waveformNameSelected();
+
+        // Background Menu options
         else if (cmd.equals("showCs")) {
             showCs = ((JCheckBoxMenuItem) e.getSource()).getState();
             canvas.history.save(canvas);
@@ -705,7 +733,7 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
                 String envelope = sc.next();
                 addToComboBox(envName, envelope);
                 System.out.println("waveform " + waveform + " env " + envelope);
-                canvas.startNewCurve();
+                canvas.startNewCurve(waveform, envelope);
                 next = sc.next();
                 while (!next.equals("}")) {
                     // System.out.println("time " + next);
@@ -757,23 +785,7 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         }
     }
 
-        /*        data = data.toLowerCase();
-        //System.out.println("openUpicData: data |" + data + "| len " + data.length());
-        envName.removeAllItems(); // clear and reload combo box
-        while (data.length() > 0) {
-            int eolx = data.indexOf("\n");
-            if (eolx < 0) return; // shouldn't happen, but bail if it does
-            String line = data.substring(0, eolx);
-            //System.out.println("openUpicData: line " + line);
-            data = data.substring(eolx + 1);
-            String name = line.substring(0, line.indexOf(' '));
-            System.out.println("openUpicData: name " + name);
-            String env = line.substring(name.length() + 1);
-            System.out.println("openUpicData: env " + env);
-            if (name.length() > 0) envColl.put(name, env);
-            envName.addItem(name);
-            } */
-    
+
     private class State {
         public double maxT;
         public double minHz;
@@ -854,12 +866,104 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         public String envelope;
         public ArrayList<Double> times;
         public ArrayList<Double> freqs;
+        public boolean selected;
 
         public Curve(String wave, String env) {
             waveform = wave; 
             envelope = env;
+            selected = false;
             times = new ArrayList<Double>();
             freqs = new ArrayList<Double>();
+        }
+
+        public Curve(Curve c, int displacement) {
+            waveform = c.waveform;
+            envelope = c.envelope;
+            selected = c.selected;
+            times = (ArrayList<Double>) (c.times.clone());
+            freqs = (ArrayList<Double>) (c.freqs.clone());
+            displace(displacement, displacement);
+        }
+
+        public void displace(int x, int y) {
+            for (int i = 0; i < times.size(); i++) {
+                times.set(i, canvas.x2time(canvas.time2x(times.get(i)) + x));
+                freqs.set(i, canvas.y2hz(canvas.hz2y(freqs.get(i)) + y));
+            }
+        }
+
+
+        // A general stretch operation. Create new curve between start
+        // and end, or if end is zero, begin at start and stretch by amount
+        public Curve stretch(double start, double end, double amount) {
+            Curve c = new Curve(this, 0);
+            if (times.size() < 1) return c;
+            if (times.size() < 2) {
+                times.set(0, start);
+                return c;
+            }
+            double oldStart = times.get(0);
+            if (amount == 0) {
+                double oldEnd = times.get(times.size() - 1);
+                if (oldEnd - oldStart < 0.0000001) return c;
+                amount = (end - start) / (oldEnd - oldStart);
+            }
+            for (int i = 0; i < times.size(); i++) {
+                c.times.set(i, start + (times.get(i) - oldStart) * amount);
+            }
+            return c;
+        }
+
+
+        public int distance(int x, int y) {
+            int dist = 10000;
+            for (int i = 0; i < times.size(); i++) {
+                int d = Math.abs(canvas.time2x(times.get(i)) - x) +
+                        Math.abs(canvas.hz2y(freqs.get(i)) - y);
+                if (d < dist) dist = d;
+            }
+            return dist;
+        }
+
+        public void insertInOrder(double time, double amp) {
+            int i = times.size();
+            while (i > 0 && time < times.get(i - 1)) {
+                i--;
+            }
+            addPoint(i, time, amp);
+        }
+
+
+        private void addPoint(int i, double absT, double absA) {
+            times.add(i, absT);
+            freqs.add(i, Math.max(absA, 0.0));
+        }
+
+
+        // remove any duplicate points that map to the same pixel
+        public Curve thin() {
+            Curve c = new Curve(this, 0);
+            int j = 0;
+            int x = -1000; // x,y coordinates of previous point
+            int y = -1000;
+            for (int i = 0; i < times.size(); i++) {
+                int x2 = canvas.time2x(times.get(i));
+                int y2 = canvas.hz2y(freqs.get(i));
+                if ((x != x2) || (y != y2)) { // different, so keep it
+                    c.times.set(j, times.get(i));
+                    c.freqs.set(j, freqs.get(i));
+                    x = x2;
+                    y = y2;
+                    j++;
+                }
+            }
+            // clear the left-over points. removeRange is protected, so
+            // remove items one-at-a-time
+            while (c.times.size() > j) {
+                c.times.remove(c.times.size() - 1);
+                c.freqs.remove(c.freqs.size() - 1);
+            }
+            return c;
         }
     }
     
@@ -871,7 +975,6 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         private int currentTime;
         public BufferedImage image = null;
         public boolean selectCheck = false;
-        public int selection;
         public History history;
 
         public boolean mouseDown = false; // used to detect version for undo
@@ -880,10 +983,12 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         //  Vectors to store the absolute parameters of the points in the 
         // envelope.
         public ArrayList<Curve> curves = new ArrayList<Curve>();
-        public int selectedCurve;
         private int left, top, width, height;
 
         private BufferedImage background;
+
+        private int dragx, dragy;
+        private boolean is_dragging;
 
         // Constructor
         public PiecewiseCanvas() {
@@ -891,10 +996,8 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
             addMouseListener(this);
             addMouseMotionListener(this);
             addKeyListener(this);
-            selection = -1;
             history = new History();
             history.save(this);
-            selectedCurve = -1;
             background = null;
         }
         
@@ -1002,17 +1105,6 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         private int clipY(int y) {
             return Math.max(BOTTOM_BORDER, Math.min(top + height, y)); }
     
-        //        public String getExpression() {
-        //            String env;
-        //        
-        //            /*if (type == PWL_TYPE) env = (valueType ? "pwlv" : "pwl");
-        //            else env = (valueType ? "pwev" : "pwe");*/
-        //
-        //            env = "pwlv";
-        //
-        //            return outputEnv(env, true, 0.0, // getMinT(), 
-        //                             getMaxT(), getMinHz(), getMaxHz());
-        //        }
     
         //draw the canvas image
         public void paint(Graphics g) {
@@ -1081,9 +1173,8 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         //connect adjacent points in the envelope by lines
         private void connectTheDots(Graphics2D g) {
             cacheSize();
-            for (int j = 0; j < curves.size(); j++) {
-                g.setColor(selectedCurve == j ? Color.red : Color.blue);
-                Curve c = curves.get(j);
+            for (Curve c : curves) {
+                g.setColor(c.selected ? Color.red : Color.blue);
                 if (c.times.size() > 0) {
                     //connect the points in the envelope
                     double t1 = c.times.get(0);
@@ -1117,7 +1208,6 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
                 showCs = state.cs;
                 showGrandStaff = state.gs;
                 showPicture = state.picture;
-                selection = -1;
                 repaint();
             }
         }
@@ -1126,36 +1216,56 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         public void mousePressed(MouseEvent e) {
             requestFocus();
             cacheSize();
+            dragx = e.getX();
+            dragy = e.getY();
             // check for curve selection
-            if (e.getButton() == MouseEvent.BUTTON3) {
-                for (int x = 0; x < curves.size(); x++) {
-                    Curve c = curves.get(x);
-                    for (int y = 0; y < c.times.size(); y++) {
-                        if (Math.abs(time2x(c.times.get(y)) - e.getX()) <= 8 && 
-                            Math.abs(hz2y(c.freqs.get(y)) - e.getY()) <= 8) {
-                            selectedCurve = x;
-                            repaint();
-                            System.out.println("Selected curve " + x);
-                            System.out.println("e.getX(): " + e.getX()+ 
-                                               ", e.getY: " + e.getY());
-                            System.out.println("c.times.get(y): " + 
-                                               c.times.get(y) + 
-                                               ", c.freqs.get(y): " + 
-                                               c.freqs.get(y));
-                            return;
-                        }
+            // if (e.getButton() == MouseEvent.BUTTON3) { -- was button3
+            if (e.isShiftDown()) { // selection is by using shift key
+                int closest = 1000;
+                Curve selection = null;
+                for (Curve c : curves) {
+                    int dist = c.distance(dragx, dragy);
+                    if (dist < closest) {
+                        closest = dist;
+                        selection = c;
                     }
                 }
+                if (selection != null && closest < 8) {
+                    selection.selected = !selection.selected;
+                    repaint();
+                    is_dragging = false;
+                    return;
+                }
                 
-                selectedCurve = -1;
-                repaint();
                 System.out.println("No curve selected");
+                repaint();
+                is_dragging = true;
                 return;
             }
 
-            // not button3, so start a new curve
+            // if we click on a selection, start dragging selections
+            for (Curve c : curves) {
+                if (c.selected && c.distance(dragx, dragy) < 8) {
+                    is_dragging = true;
+                    mouseDown = true;
+                    break; // we are going to drag some selections
+                }
+            }
+            if (is_dragging) { // continuing from the break just above...
+                // make copies of selections so undo will work
+                for (int i = 0; i < curves.size(); i++) {
+                    Curve c = curves.get(i);
+                    if (c.selected) {
+                        curves.set(i, new Curve(c, 0));
+                    }
+                }
+                return;
+            }
+
+            // start new curve
             startNewCurve();
             mouseDown = true;
+            changed = true;
             System.out.println("mouseDown true\n");
             this.requestFocus();
             currentTime = e.getX();
@@ -1168,9 +1278,26 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         public void mouseDragged(MouseEvent e) {
             // if this is not the left button drawing event, return
             if (!mouseDown) return;
-            currentTime = clipX(e.getX());
-            currentHz = clipY(e.getY());
+            int x = e.getX();
+            int y = e.getY();
 
+            if (is_dragging && ((x != dragx) || (y != dragy))) {
+                // move selections
+                for (Curve c : curves) {
+                    if (c.selected) {
+                        c.displace(x - dragx, y - dragy);
+                        changed = true;
+                    }
+                }
+                dragx = x;
+                dragy = y;
+                if (changed) setModified();
+                repaint();
+                return;
+            }
+
+            currentTime = clipX(x);
+            currentHz = clipY(y);
             if (currentTime <= left + width && currentTime >= left && 
                 currentHz >= top && currentHz <= top + height) {
 
@@ -1180,20 +1307,179 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
         }
 
         
-        public void startNewCurve() {
-            curves.add(new Curve((String) waveformName.getSelectedItem(),
-                                 (String) envName.getSelectedItem()));
-        }
-
         public void mouseReleased(MouseEvent e) {
             requestFocus(); // otherwise, delete key may not work
+            if (e.isShiftDown() && is_dragging) {
+                int x = e.getX();
+                int y = e.getY();
+                // if no movement and curve was not selected, then deselect all
+                if (dragx == x && dragy == y) {
+                    for (Curve c : curves) {
+                        c.selected = false;
+                    }
+                    is_dragging = false;
+                    repaint();
+                    return;
+                }
+
+                for (Curve c : curves) {
+                    for (int j = 0; j < c.times.size(); j++) {
+                        int px = time2x(c.times.get(j));
+                        int py = hz2y(c.freqs.get(j));
+                        if (dragx < px && px < x && dragy < py && py < y) {
+                            c.selected = true;
+                            break; // go to next curve
+                        }
+                    }
+                }
+                is_dragging = false;
+                repaint();
+                return;
+            }
             if (e.getButton() != MouseEvent.BUTTON1)
                 return;
+
             if (changed) {
-                history.save(this);
                 changed = false;
+                // if curve has only one point, delete it. You must drag to
+                // enter a new curve.
+                int last = curves.size() - 1;
+                if (curves.get(last).times.size() <= 1) {
+                    curves.remove(last);
+                } else {
+                    history.save(this);
+                }
             }
             mouseDown = false;
+            is_dragging = false;
+        }
+
+
+        public void duplicateCmd() {
+            int len = curves.size();
+            System.out.println("Before, " + len + " curves");
+            for (int i = 0; i < len; i++) {
+                Curve c = curves.get(i);
+                if (c.selected) { // copy the curve with offset
+                    System.out.println("copying curve " + c);
+                    curves.add(new Curve(c, 10));
+                    c.selected = false;
+                }
+            }
+            System.out.println("After, " + curves.size() + " curves");
+            setModified();
+            canvas.history.save(canvas);
+            repaint();
+        }
+
+
+        public void stretchCmd() {
+            String input = JOptionPane.showInputDialog("Enter stretch factor");
+            double amt;
+            try {
+                amt = Double.parseDouble(input);
+            } catch(NumberFormatException exception) {
+                amt = 1.0;
+            }
+            // find earliest time:
+            double start = 100000;
+            for (Curve c : curves) {
+                if (c.selected && c.times.size() > 0 && 
+                    c.times.get(0) < start) {
+                    start = c.times.get(0);
+                }
+            }
+            // now start is the earliest time of any selected curve
+            for (int i = 0; i < curves.size(); i++) {
+                Curve c = curves.get(i);
+                if (c.selected) { // copy the curve and stretch
+                    curves.set(i, c.stretch(start, 0, amt));
+                }
+            }
+            setModified();
+            canvas.history.save(canvas);
+            repaint();
+        }
+
+
+        // stretch each selected curve to start at the same time
+        public void alignBeginningCmd() {
+            // start time will be the median of all start times
+            ArrayList<Double> times = new ArrayList<Double>();
+            for (Curve c : curves) {
+                if (c.selected && c.times.size() > 0) {
+                    times.add(c.times.get(0));
+                }
+            }
+            if (times.size() < 2) return; // nothing to align
+            Collections.sort(times);
+            // if even number of elements, choose the earlier of the middle 2
+            double median = times.get((times.size() - 1) / 2);
+            for (int i = 0; i < curves.size(); i++) {
+                Curve c = curves.get(i);
+                if (c.selected && c.times.size() > 0) {
+                    double end = c.times.get(c.times.size() - 1);
+                    curves.set(i, c.stretch(median, end, 0));
+                }
+            }
+            setModified();
+            canvas.history.save(canvas);
+            repaint();
+        }
+
+
+        // stretch each selected curve to start at the same time
+        public void alignEndingCmd() {
+            // end time will be the median of all end times
+            ArrayList<Double> times = new ArrayList<Double>();
+            for (Curve c : curves) {
+                if (c.selected && c.times.size() > 0) {
+                    times.add(c.times.get(c.times.size() - 1));
+                }
+            }
+            if (times.size() < 2) return; // nothing to align
+            Collections.sort(times);
+            // if even number of elements, choose the earlier of the middle 2
+            double median = times.get((times.size() - 1) / 2);
+            for (int i = 0; i < curves.size(); i++) {
+                Curve c = curves.get(i);
+                if (c.selected && c.times.size() > 0) {
+                    double begin = c.times.get(0);
+                    curves.set(i, c.stretch(begin, median, 0));
+                }
+            }
+            setModified();
+            canvas.history.save(canvas);
+            repaint();
+        }
+
+
+        public void thinCmd() {
+            int j = 0;
+            for (int i = 0; i < curves.size(); i++) {
+                Curve c = curves.get(i);
+                c.thin();
+                if (c.times.size() >= 2) {
+                    curves.set(j++, c);
+                }
+            }
+            while (curves.size() > j) {
+                curves.remove(curves.size() - 1);
+            }
+            setModified();
+            canvas.history.save(canvas);
+            repaint();
+        }
+            
+
+        public void startNewCurve(String waveform, String env) {
+            curves.add(new Curve(waveform, env));
+        }
+            
+
+        public void startNewCurve() {
+            startNewCurve((String) waveformName.getSelectedItem(),
+                          (String) envName.getSelectedItem());
         }
 
 
@@ -1235,179 +1521,27 @@ public class UPICFrame extends JInternalFrame implements ActionListener {
             return (int) Math.round((mx - hz) * height / r) + top;
         }
         
-        private void addPoint(int i, double absT, double absA) {
-            addPoint(curves.size() - 1, i, absT, absA);
-        }
-
-        private void addPoint(int curve, int i, double absT, double absA) {
-            //System.out.println("addPoint: " + i + " " + absT + " " + absA);
-            Curve c = curves.get(curve);
-            c.times.add(i, absT);
-            c.freqs.add(i, Math.max(absA, 0.0));
-            //System.out.println("addPoint time: " + absT + ", text " + form.format(absT));
-            selection = i;
-            changed = true;
-            setModified();
-        }
-
 
         //insert the time and amplitude in the vectors in time sorted order
         private void insertInOrder(double time, double amp) {
             Curve c = curves.get(curves.size() - 1);
-            int i = c.times.size();
-            while (i > 0 && time < c.times.get(i - 1)) {
-                i--;
-            }
-            addPoint(i, time, amp);
+            c.insertInOrder(time, amp);
+            changed = true;
+            setModified();
         }
 
             
-        // Check if mouse click corresponds to existing envelope point
-        //    return index of point or -1 if no point is close
-    //        private int getSelection(int x, int y) {
-    //            int cutoff = 7;
-    //            int bestDist = cutoff * 2;
-    //            int bestIndex = -1;
-    //            if (times == null) return bestIndex;
-    //            for (int i = 0; i < times.get(curCurve).size(); i++) {
-    //                int xi = time2x(times.get(curCurve).get(i));
-    //                int yi = hz2y(freqs.get(curCurve).get(i));
-    //                int dx = Math.abs(x - xi);
-    //                int dy = Math.abs(y - yi);
-    //                if (dx < cutoff && dy < cutoff && dx + dy < bestDist) {
-    //                    bestDist = dx + dy;
-    //                    bestIndex = i;
-    //                }
-    //            }
-    //            selection = bestIndex;
-    //            return bestIndex;
-    //        }
-        
-    //Check if mouse click corresponds with existing envelope point (to select point)
-    //    private boolean checkSelection(int time, int amp) {
-    //            int i = getSelection(time, amp);
-    //            if (i < 0) return false;
-    //            repaint();
-    //            return true;
-    //        }
-
-    //output the envelope as a string
-        //    public String outputEnv(String envType, boolean valueType, double minTime, double maxTime, double minHertz, double maxHertz) {
-        //        String outputStr = "(sim";
-        //        
-        //        for (int j = 0; j < times.size() - 1; j++) {
-        //            int start = 0;
-        //            outputStr += " (osc-tri (" + envType;
-        //            
-        //            if (valueType) { // insert initial value
-        //                if (within(times.get(j).get(0), 0.0, EPSILON)) {
-        //                    outputStr += " " + form.format(freqs.get(j).get(0));
-        //                    start = 1;
-        //                } else
-        //                    outputStr += " " + form.format(impliedAmp());
-        //                }    
-        //        
-        //            for (int i = start; i < freqs.get(j).size(); i++) {
-        //                    double time = times.get(j).get(i);
-        //                    double amp  = freqs.get(j).get(i);
-        //
-        //                    if (time == 1)
-        //                        break;
-        //        
-        //                    outputStr += " " + form.format(time) + " " + form.format(amp);
-        //            }
-        //            
-        //                if (valueType) { // we're already ending with a value
-        //                    if (within(times.get(j).lastElement(), maxTime, EPSILON)) {
-        //                        // we're done because we output at maxTime
-        //                    } else
-        //                        outputStr += " " + form.format(maxTime) + " " + form.format(impliedAmp());
-        //                } else
-        //                    outputStr += " " + form.format(maxTime);
-        //            
-        //                outputStr += "))";
-        //        }
-        //        outputStr += ")";
-        //        return outputStr;
-        //    }
-    
-        // parse envelope from string and prepare to edit
-    //    public void setEnv(String envData) {
-    //
-    //        System.out.println("\nCALLED setEnv\n");
-    //        
-    //       // System.out.println("setEnv: envData " + envData.substring(0, 100) + " ... " + envData.substring(envData.length()-5));
-    //        if (envData == null) return; // just in case
-    //        //check if envelope exists in collection
-    //        //boolean nameIsEnv = false;
-    //
-    //        // trim the open and close parens from envData
-    //        int startx = envData.indexOf("(") + 5;
-    //        // if no open paren, startx will be 0
-    //         int endx = envData.lastIndexOf(")");
-    //        if (endx < 0) endx = envData.length();
-    //        envData = envData.substring(startx, endx);
-    //
-    //        int x = 0;
-    //        while (envData.indexOf("(") > -1) {
-    //            String strCurve = envData.substring(envData.indexOf("(")+10, envData.indexOf(")"));
-    //            envData = envData.substring(envData.indexOf(")")+2);
-    //
-    //            StringTokenizer st = new StringTokenizer(strCurve);
-    //            String type = st.nextToken();
-    //            System.out.println("setEnv: type " + type);
-    //
-    //            valueType = type.endsWith("v");
-    //
-    //            if (times.size() <= x) {
-    //                times.add(new Vector<Double>());
-    //                freqs.add(new Vector<Double>());
-    //            }
-    //
-    //            times.get(x).removeAllElements();
-    //            freqs.get(x).removeAllElements();
-    //            int i = 0;
-    //            // pretend mouse is down to avoid making each point undo-able
-    //            boolean save = mouseDown;
-    //            mouseDown = false;
-    //            double time, amp;
-    //            if (valueType) { // first element is value
-    //                amp = new Double(st.nextToken().trim());
-    //                addPoint(x, i++, 0.0, amp);
-    //            }
-    //            while (st.countTokens() >= 2) {
-    //                String token1 = st.nextToken().trim();
-    //                time = new Double(token1);
-    //                String token2 = st.nextToken().trim();
-    //                amp = new Double(token2);
-    //                addPoint(x, i++, time, amp);
-    //                /*System.out.println("time " + token1 + " amp " + token2 + 
-    //                  " size " + times.get(x).size());*/
-    //            }
-    //            
-    //            mouseDown = save; // restore the mouseDown state
-    //            if (!valueType) { // last element is time
-    //                maxT.setText(st.nextToken());
-    //            }
-    //            
-    //            x++;
-    //        }
-    //        
-    //        times.add(new Vector<Double>());
-    //        freqs.add(new Vector<Double>());
-    //        curCurve = x;
-    //        System.out.println("curCurve: " + curCurve);
-    //        
-    //        modified = false;
-    //        repaint();
-    //    }
-
-
     public void keyPressed(KeyEvent event) {
         System.out.println("key event detected");
         if (event.getKeyCode() == KeyEvent.VK_DELETE) {
-            curves.remove(selectedCurve);
-            selectedCurve = -1;
+            int i =  0;
+            while (i < curves.size()) {
+                if (curves.get(i).selected) {
+                    curves.remove(i);
+                } else {
+                    i++;
+                }
+            }
             canvas.history.save(canvas);
             System.out.println("curve should be deleted");
             repaint();
