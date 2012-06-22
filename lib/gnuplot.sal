@@ -1,0 +1,143 @@
+;; interface to gnuplot
+
+variable *gp-outf*, *gp-data*, *gp-xlabel*, *gp-ylabel*, *gp-driver*,
+         *gp-output*, *gp-command*, *gp-curve*, *gp-sep*, *gp-title*,
+         *gp-style*, *label*, *gpx*, *gpy*
+
+function gp-init(filename, driver: "aqua", output: nil, xlabel: nil, 
+                 ylabel: nil, title: nil , style: nil, xrange: nil, yrange: nil)
+  begin
+    set *gp-outf* = open(filename, direction: :output),
+        *gp-data* = nil,
+        *gp-xlabel* = xlabel,
+        *gp-ylabel* = ylabel,
+        *gp-driver* = driver,
+        *gp-command* = "plot",
+        *gp-sep* = "",
+        *gp-output* = output,
+        *gp-title* = title,
+        *gp-style* = style
+    if xrange then
+      set xrange = format(nil, " [~A:~A]", first(xrange), second(xrange))
+    else set xrange = ""
+    if yrange then
+      begin
+        if string=(xrange, "") then set xrange = " []"
+        set yrange = format(nil, " [~A:~A]", first(yrange), second(yrange))
+      end
+    else set yrange = ""
+    set *gp-command* = strcat("plot", xrange, yrange)    
+  end
+
+
+function gp-newcurve(title: "", color: nil , label: nil , x: nil , y: nil )
+  begin
+    set *label* = label
+    set *gpx* = x
+    set *gpy* = y
+    if *label* then
+      begin
+        exec format(*gp-outf*, "set label \"~A\"", *label*)
+        exec format(*gp-outf*, " ")
+        exec format(*gp-outf*, "at  ~A", *gpx*)
+        exec format(*gp-outf*, " , ")
+        exec format(*gp-outf*, "~A~%", *gpy*)
+      end
+    set *gp-curve* = nil                          
+    if *gp-style* = :histogram then
+      set *gp-command* = strcat(*gp-command*, *gp-sep*, " '-' w boxes title \"",
+                                  title, "\" lt -1")
+    else if *gp-style* = :scatter then
+      set *gp-command* = strcat(*gp-command*, *gp-sep*, " '-' title \"", 
+                                  title, "\"")            
+    else
+      set *gp-command* = strcat(*gp-command*, *gp-sep*, " '-' w l title \"", 
+                                  title, "\"")            
+    set *gp-sep* = ","
+    if color  then
+      set *gp-command* = strcat(*gp-command* ," lc rgbcolor \"", color, "\"")
+  end
+
+
+function gp-point(x, y)
+  set *gp-curve* @= list(x, y)
+
+
+function gp-endcurve()
+  begin
+    ;display "gp-endcurve", *gp-curve*, *gp-data*
+    set *gp-curve* = reverse(*gp-curve*),
+        *gp-data* @= *gp-curve*
+  end
+
+
+function gp-endplot()
+  begin
+    set *gp-data* = reverse(*gp-data*)
+    exec format(*gp-outf*, "set term ~A~%", *gp-driver*)
+    if *gp-output* then
+      exec format(*gp-outf*, "set output \"~A\"~%", *gp-output*)
+    if *gp-xlabel* then
+      exec format(*gp-outf*, "set xlabel \"~A\"~%", *gp-xlabel*)
+    if *gp-ylabel* then
+      exec format(*gp-outf*, "set ylabel \"~A\"~%", *gp-ylabel*)
+    if *gp-title* then
+      exec format(*gp-outf*, "set title \"~A\"~%", *gp-title*)
+   
+    
+    if *gp-style* = :histogram then
+      begin
+        exec format(*gp-outf*, "set style data histograms ~%" )
+        exec format(*gp-outf*, "set style fill solid 0.2 border -1 ~%" )
+      end   
+    exec format(*gp-outf*, "~A~%", *gp-command*)
+    loop
+      for curve in *gp-data*
+      loop
+        for pair in curve
+        exec format(*gp-outf*, "~A ~A~%", first(pair), second(pair))
+        
+      end
+      exec format(*gp-outf*, "e~%")
+    end
+    exec close(*gp-outf*)                                              
+  end
+  
+;; gptest -- exercise some features
+function gptest()
+  begin
+    exec gp-init("testplot.txt", xlabel: "Time", ylabel: "Tempo", 
+                 title: "This Is a Test")
+    exec gp-newcurve(title: "curve-1", color: "black"  )
+    loop
+      for i from 0 below 50
+      exec gp-point(i, 90 + real-random(-4, 4) + 10 * sin(i / 30.0))
+    end
+    exec gp-endcurve()
+
+    exec gp-newcurve(title: "smooth" , label: "test label" , x: 30 , y: 90 ) ; default color
+    loop
+      for i from 0 below 50
+      exec gp-point(i, 90 + 10 * sin(i / 30.0))
+    end
+    exec gp-endcurve()
+
+    exec gp-endplot()
+  end
+
+;; gphist-test -- exercise some features and make a histogram
+function gphist-test()
+  begin
+    exec gp-init("testhist.txt", xlabel: "delta", ylabel: "N", 
+                 title: "This Is a Histogram Example", style: :histogram,
+                 ; note: bars are "fat", so increase the range to avoid clipping
+                 xrange: {-10.5 10.5},
+                 yrange: {0 1.5})
+    exec gp-newcurve()
+    loop 
+      for i from -10 to 10
+      exec gp-point(i, cos(i / 10.0) + 0.13)
+    end
+    exec gp-endcurve()
+    exec gp-endplot()
+  end
