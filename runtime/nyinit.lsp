@@ -10,6 +10,7 @@
 (load "seqfnint.lsp" :verbose NIL)
 
 (load "dspprims.lsp" :verbose NIL)
+(load "velocity.lsp" :verbose NIL) ; linear-to-vel etc
 (load "nyquist.lsp" :verbose NIL)
 (load "follow.lsp" :verbose NIL)
 

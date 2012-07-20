@@ -342,9 +342,11 @@
 
 ; convenient biquad: normalize a0, and use zero initial conditions.
 (defun nyq:biquad (x b0 b1 b2 a0 a1 a2)
+  (if (< a0 1.0)
+      (error (format t "a0 < 1 (unstable parameter) in biquad~%")))
   (let ((a0r (/ 1.0 a0)))
     (snd-biquad x (* a0r b0) (* a0r b1) (* a0r b2) 
-                             (* a0r a1) (* a0r a2) 0 0)))
+                  (* a0r a1) (* a0r a2) 0 0)))
 
 
 (defun biquad (x b0 b1 b2 a0 a1 a2)
@@ -364,6 +366,9 @@
 
 ;; NYQ:LOWPASS2 -- operates on single channel
 (defun nyq:lowpass2 (x hz q)
+  (if (or (> hz (* 0.5 (snd-srate x)))
+          (< hz 0))
+      (error "cutoff frequency out of range" hz))
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (cw (cos w))
          (sw (sin w))
@@ -381,6 +386,9 @@
   (multichan-expand #'nyq:highpass2 x hz q))
 
 (defun nyq:highpass2 (x hz q)
+  (if (or (> hz (* 0.5 (snd-srate x)))
+          (< hz 0))
+      (error "cutoff frequency out of range" hz))
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (cw (cos w))
          (sw (sin w))
