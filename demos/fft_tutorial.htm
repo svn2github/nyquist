@@ -126,28 +126,52 @@ samples and a skip of 32 samples (zero overlap):
 &nbsp;&nbsp;&nbsp; (display &quot;fft-test&quot; (send fft-iter :next))))</pre>
 
 <p>Running this prints an array of nearly-zero values except for the 9th element (index
-8), which is -1. The layout is as follows: 
+8), which is -16. (In an ideal world, all other values would be
+exactly zero, but because numerical computation has limited
+precision, you may see some ugly values like -1.15578e-15. The "e-15"
+part means 10-to-the-minus-15 power, or 0.000000000000001, which is at
+least pretty close to zero.) The layout is as follows (remember that
+the Fourier Transform analyzes a signal as the sum of sines and cosines):
 
 <ul>
-  <li>the DC component goes in array element 0</li>
-  <li>the Cosine part is in elements 2i - 1</li>
-  <li>the Sine part is in elements 2i</li>
-  <li>the Nyquist frequency component is in the last element</li>
+  <li>the DC component goes in array element 0. The <i>DC component</i> is
+  just the coefficient for the zero-frequency cosine component. Since
+  cosine at zero frequency is equal to 1 everywhere, this is just the
+  sum of all the samples. In electrical terms, alternating current
+  (AC) averages to zero, and any non-zero average is the direct current
+  (DC) part. Note that sine of zero is zero, so there is no
+  zero-frequency sine term.</li>
+  <li>the Cosine part is in elements 2i - 1. <i>Cosine part</i> means
+  the real coefficients of the cosines at various frequencies. </li> 
+  <li>the Sine part is in elements 2i. <i>Sine part</i> means the real
+  coefficients of the sines at various frequencies.</li>
+  <li>the Nyquist frequency component is in the last element. The
+  <i>Nyquist frequency component</i> is the coefficient for the cosine
+  component at half the sampling rate (which is also called the
+  Nyquist frequency). Note that at the Nyquist frequency, samples of
+  sine would be taken at the angles of 0 and PI, where sine is zero,
+  so there is no Nyquist frequency sine term.</li>
 </ul>
 The output should look like this:
 <pre>
 > (load "fft1.lsp")
 ;loading "fft1.lsp"
-;[ gc: total 20640, 3360 free; samples 12 KB, 7KB free ]
-;fft-test : (SEND FFT-ITER :NEXT) = #(1.53076e-017 0 0 0 0 0 0 -3.06152e-017
-; -1 0 0 0 0 0 0 3.06152e-017
-; 0 0 0 0 0 0 0 -3.06152e-017
-; 8.9407e-008 0 0 0 0 0 0 1.53076e-017)
+;fft-test : (SEND FFT-ITER :NEXT) =
+; #(4.89859e-16 0 0 0 0 0 0 2.38419e-07
+; -16 0 0 0 0 0 0 4.89859e-16
+; -0 0 0 0 0 0 0 -2.38419e-07
+; 0 0 0 0 0 0 0 4.89859e-16)
 ;T
 ;>
 </pre>
-<p>Thus, the element at index 8 is the 4th Sine component, indicating a 4th harmonic as
-expected. </p>
+<p>Thus, the element at index 8 is the 4th Sine component, indicating
+  a 4th harmonic as expected. Why is the number -16 rather than -32 or -1?
+  This is just how the FFT is defined. And why -16 rather than
+  +16. Again, if you look closely at the definition, you'll find a
+  minus sign either in front of the sine term or in the complex
+  exponential. While these may not seem to be exactly coefficients of
+  sines and cosines, the FFT and IFFT are carefully defined to be
+  inverses of one another.</p> 
 
 <h2>Simple Inverse FFT Example</h2>
 
