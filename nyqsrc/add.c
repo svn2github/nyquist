@@ -59,17 +59,9 @@ factor, ADD will create a rescaling of the operand.
 /* #define GC_DEBUG 1 */
 
 
-void add_s1_s2_nn_fetch(add_susp_type, snd_list_type);
-void add_s1_nn_fetch(add_susp_type, snd_list_type);
-void add_s2_nn_fetch(add_susp_type, snd_list_type);
-void add_zero_fill_nn_fetch(add_susp_type, snd_list_type);
-void add_free();
-
-
-void add_s1_s2_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_s1_s2_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -238,7 +230,7 @@ D           nyquist_printf("add_s1_s2_nn_fetch: add_s2_nn_fetch installed\n");
             if (cnt == 0) {
 D		nyquist_printf("add[%p,%p]: calling add_s2_nn_fetch\n",
                        susp->s1, susp->s2);
-                add_s2_nn_fetch(susp, snd_list);
+                add_s2_nn_fetch(a_susp, snd_list);
             }
         }
         else if (susp->terminate_bits & 2) {
@@ -251,7 +243,7 @@ D           stdputstr("add_s1_s2_nn_fetch: add_s1_nn_fetch installed\n");
             if (cnt == 0) {
 D		nyquist_printf("add[%p,%p]: calling add_s1_nn_fetch\n",
                        susp->s1, susp->s2);
-                add_s1_nn_fetch(susp, snd_list);
+                add_s1_nn_fetch(a_susp, snd_list);
             }
         }
         
@@ -267,10 +259,9 @@ D		nyquist_printf("add[%p,%p]: calling add_s1_nn_fetch\n",
  * They should probably be made into one routine, but for now,
  * any changes to one should be made to the other.
  */
-void add_s1_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_s1_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     /* expansion of add_s_nn_fetch(snd_list,s1,s2,1); follows: */
     int togo, s2_start=0;
     int n;
@@ -314,7 +305,7 @@ B       if (togo == 0) stdputstr("togo is zero at checkpoint 2\n");
             susp->s1 = NULL;
             susp->susp.fetch = add_s2_nn_fetch;
 D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
-            add_s2_nn_fetch(susp, snd_list);
+            add_s2_nn_fetch(a_susp, snd_list);
         } else if (susp->s2 && susp->susp.current < s2_start) {
             /* s2 not started and s1 stops */
             /* go to zero-fill state */
@@ -322,7 +313,7 @@ D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
             susp->s1 = NULL;
             susp->susp.fetch = add_zero_fill_nn_fetch;
 B           stdputstr("add_s_nn_fetch: zero_fill installed\n");
-            add_zero_fill_nn_fetch(susp, snd_list);
+            add_zero_fill_nn_fetch(a_susp, snd_list);
         } else if (susp->s2) {
 D	    stdputstr("add_s_nn_fetch: unexpected condition\n");
             EXIT(1);
@@ -493,10 +484,9 @@ D    {
 }
 
 
-void add_s2_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_s2_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int togo, s1_start=0;
     int n;
     sample_block_type out;
@@ -537,7 +527,7 @@ D   nyquist_printf("add_s2_nn_fetch(susp %p, snd_list %p)\n",
             susp->s2 = NULL;
             susp->susp.fetch = add_s1_nn_fetch;
 D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
-            add_s1_nn_fetch(susp, snd_list);
+            add_s1_nn_fetch(a_susp, snd_list);
         } else if (susp->s1 && susp->susp.current < s1_start) {
             /* s1 not started and s2 stops */
             /* go to zero-fill state */
@@ -545,7 +535,7 @@ D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
             susp->s2 = NULL;
             susp->susp.fetch = add_zero_fill_nn_fetch;
 D            stdputstr("add_s_nn_fetch: zero_fill installed\n");
-            add_zero_fill_nn_fetch(susp, snd_list);
+            add_zero_fill_nn_fetch(a_susp, snd_list);
         } else if (susp->s1) {
 D	    stdputstr("add_s_nn_fetch: unexpected condition\n");
             EXIT(1);
@@ -566,9 +556,9 @@ D	nyquist_printf("add_s_nn_fetch: special return, susp %p\n", susp);
            log_stop_cnt is max of s1 and s2 stop times */
         (susp->logical_stop_bits & 2)) {
         int to_stop;
-D       nyquist_printf("add_s2_nn_fetch: susp->susp.log_stop_cnt %d\n",
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.log_stop_cnt %ld\n",
                        susp->susp.log_stop_cnt);
-D       nyquist_printf("add_s2_nn_fetch: susp->susp.current %d\n", 
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.current %ld\n", 
                        susp->susp.current);
         to_stop = susp->susp.log_stop_cnt - susp->susp.current;
         // to_stop can be less than zero if we've been adding in sounds with
@@ -745,10 +735,9 @@ D        stdputstr("add_s_nn_fetch: susp->logically_stopped\n");
 
 
 
-void add_zero_fill_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_zero_fill_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int togo, s_start=0;
 
 #ifdef GC_DEBUG
@@ -789,16 +778,18 @@ D       stdputstr("add_zero_fill_nn_fetch: add_s2_nn_fetch installed\n");
 } /* add_zero_fill_nn_fetch */
 
 
-void add_free(add_susp_type susp)
+void add_free(snd_susp_type a_susp)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->s2);
     ffree_generic(susp, sizeof(add_susp_node), "add_free");
 }
 
 
-void add_mark(add_susp_type susp)
+void add_mark(snd_susp_type a_susp)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
 /*    nyquist_printf("add_mark(%p)\n", susp);*/
 /*    nyquist_printf("marking s1@%p in add@%p\n", susp->s1, susp);*/
     sound_xlmark(susp->s1);
@@ -808,8 +799,9 @@ void add_mark(add_susp_type susp)
 }
 
 
-void add_print_tree(add_susp_type susp, int n)
+void add_print_tree(snd_susp_type a_susp, int n)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     indent(n);
     nyquist_printf("logically_stopped %d logical_stop_bits %d terminate_bits %d\n", 
            susp->logically_stopped, susp->logical_stop_bits, susp->terminate_bits);

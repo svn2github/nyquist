@@ -53,6 +53,14 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_ss 5
 #define INTERP_si 6
 #define INTERP_sr 7
+#define INTERP_in 8
+#define INTERP_is 9
+#define INTERP_ii 10
+#define INTERP_ir 11
+#define INTERP_rn 12
+#define INTERP_rs 13
+#define INTERP_ri 14
+#define INTERP_rr 15
 
 #define INTERP_nnn 0
 #define INTERP_nns 1
@@ -108,7 +116,69 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_nrrr 63
 #define INTERP_srrr 127
 
-#define INTERP_nnnnnn 0 
+#define INTERP_nnnnnn 0
+#define INTERP_nnnnns 1
+#define INTERP_nnnnsn 4
+#define INTERP_nnnnss 5
+#define INTERP_nnnsnn 16
+#define INTERP_nnnsns 17
+#define INTERP_nnnssn 20
+#define INTERP_nnnsss 21
+#define INTERP_nnsnnn 64
+#define INTERP_nnsnns 65
+#define INTERP_nnsnsn 68
+#define INTERP_nnsnss 69
+#define INTERP_nnssnn 80
+#define INTERP_nnssns 81
+#define INTERP_nnsssn 84
+#define INTERP_nnssss 85
+#define INTERP_nsnnnn 256
+#define INTERP_nsnnns 257
+#define INTERP_nsnnsn 260
+#define INTERP_nsnnss 261
+#define INTERP_nsnsnn 272
+#define INTERP_nsnsns 273
+#define INTERP_nsnssn 276
+#define INTERP_nsnsss 277
+#define INTERP_nssnnn 320
+#define INTERP_nssnns 321
+#define INTERP_nssnsn 324
+#define INTERP_nssnss 325
+#define INTERP_nsssnn 336
+#define INTERP_nsssns 337
+#define INTERP_nssssn 340
+#define INTERP_nsssss 341
+#define INTERP_snnnnn 1024
+#define INTERP_snnnns 1025
+#define INTERP_snnnsn 1028
+#define INTERP_snnnss 1029
+#define INTERP_snnsnn 1040
+#define INTERP_snnsns 1041
+#define INTERP_snnssn 1044
+#define INTERP_snnsss 1045
+#define INTERP_snsnnn 1088
+#define INTERP_snsnns 1089
+#define INTERP_snsnsn 1092
+#define INTERP_snsnss 1093
+#define INTERP_snssnn 1104
+#define INTERP_snssns 1105
+#define INTERP_snsssn 1108
+#define INTERP_snssss 1109
+#define INTERP_ssnnnn 1280
+#define INTERP_ssnnns 1281
+#define INTERP_ssnnsn 1284
+#define INTERP_ssnnss 1285
+#define INTERP_ssnsnn 1296
+#define INTERP_ssnsns 1297
+#define INTERP_ssnssn 1300
+#define INTERP_ssnsss 1301
+#define INTERP_sssnnn 1344
+#define INTERP_sssnns 1345
+#define INTERP_sssnsn 1348
+#define INTERP_sssnss 1349
+#define INTERP_ssssnn 1360
+#define INTERP_ssssns 1361
+#define INTERP_sssssn 1364
 #define INTERP_ssssss 1365
 
 #define INTERP_nnnnnnnn 0
@@ -141,6 +211,11 @@ typedef double promoted_sample_type;
 #define max_sample_block_len 1020
 /* #define max_sample_block_len 4 */
 
+/* longest allowed sample is basically 2^31 but a bit lower to 
+   allow for rounding */
+#define MAX_SND_LEN (MAX_STOP - max_sample_block_len * 2)
+
+
 /* Defines needed for xlisp */
 #define getsound(x)     ((sound_type) getinst(x))
 #define xlgasound()     (testarg(typearg(soundp)))
@@ -156,18 +231,21 @@ typedef struct {
 } sample_block_node, *sample_block_type;
  
 
+/* forward declaration for circular type dependencies */
+typedef struct snd_list_struct *snd_list_type;
+
 typedef struct snd_susp_struct {
-    void                (*fetch)(struct snd_susp_struct *, struct snd_susp_struct *);
-    void                (*keep_fetch)(struct snd_susp_struct *);
-    void                (*free)(struct snd_susp_struct *);
-    void                (*mark)(struct snd_susp_struct *);  /* marks LVAL nodes for GC */
-    void                (*print_tree)(struct snd_susp_struct *, int);    /* debugging */
-    char *              name;       /* string name for debugging */
-    long                toss_cnt;   /* return this many zeros, then compute */
-    long                current;    /* current sample number */
-    double              sr;         /* sample rate */
-    time_type           t0;         /* starting time */
-    long                log_stop_cnt;   /* logical stop count */
+    void  (*fetch)(struct snd_susp_struct *, snd_list_type snd_list);
+    void  (*keep_fetch)(struct snd_susp_struct *, snd_list_type snd_list);
+    void  (*free)(struct snd_susp_struct *);
+    void  (*mark)(struct snd_susp_struct *);  /* marks LVAL nodes for GC */
+    void  (*print_tree)(struct snd_susp_struct *, int);    /* debugging */
+    char *name;        /* string name for debugging */
+    long  toss_cnt;    /* return this many zeros, then compute */
+    long  current;     /* current sample number */
+    double sr;         /* sample rate */
+    time_type t0;      /* starting time */
+    long log_stop_cnt; /* logical stop count */
     /* other susp dependent stuff will be here... */
 } snd_susp_node, *snd_susp_type;
 
@@ -177,11 +255,11 @@ typedef struct snd_list_struct {
     union {
         struct snd_list_struct  *next;
         snd_susp_type           susp;
-    }                   u;
-    short               refcnt;
-    short               block_len;
-    boolean             logically_stopped;
-} snd_list_node, *snd_list_type;
+    }       u;
+    short   refcnt;
+    short   block_len;
+    boolean logically_stopped;
+} snd_list_node; /* , *snd_list_type; -- defined above */
 
 extern snd_list_type list_watch; //DBY
 
