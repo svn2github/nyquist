@@ -3332,7 +3332,26 @@ These are all safe and recommended for ordinary use.
 
 @begin(fndefs)
 @codef[db-to-linear(@pragma(defn)@index(db-to-linear)@i(x))] @c{[sal]}@*
-@altdef{@code[(db-to-linear @i(x))] @c{[lisp]}}@\Returns the conversion of @i(x) from decibels to linear.  0dB is converted to 1.  20dB represents a linear factor of 10. If @i(x) is a sound, each sample is converted and a sound is returned.  If @i(x) is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  @p(Note:) With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Sample rates, start times, etc. are taken from @i(x).
+@altdef{@code[(db-to-linear @i(x))] @c{[lisp]}}@\Returns the
+conversion of @i(x) from decibels to linear.  0dB is converted to 1.
+20dB represents a linear factor of 10. If @i(x) is a sound, each
+sample is converted and a sound is returned.  If @i(x) is a
+multichannel sound, each channel is converted and a multichannel sound
+(array) is returned.  @p(Note:) With sounds, conversion is only
+performed on actual samples, not on the implicit zeros before the
+beginning and after the termination of the sound.  Sample rates, start
+times, etc. are taken from @i(x). 
+
+@codef{db-to-vel(@pragma(defn)@index(db-to-vel)@i(x) [, @i(float)])} @c{[sal]}@*
+@altdef{@code{(db-to-vel @i(x) [@i(float)])} @c{[lisp]}}@\Returns the 
+conversion of @i(x) from decibels to MIDI velocity using a rule that
+maps -60 dB to 1 and 0 dB to 127. The MIDI velocity varies linearly 
+with the square root of amplitude. The default value of @i(float) is
+@code(nil) and the result is a @code(FIXNUM) clipped to fall in the
+legal range of 1-127, but if a non-@code(nil) value
+is provided, the result is a @code(FLONUM) that is not 
+rounded or clipped. The input parameter must be a @code(FIXNUM) or
+@code(FLONUM). Sounds are not allowed.
 
 @codef[follow(@pragma(defn)@index(follow)@index(envelope follower)@index(compressor)@index(limiter)@i(sound), @i(floor), @i(risetime), @i(falltime), @i(lookahead))] @c{[sal]}@*
 @altdef{@code[(follow @i(sound) @i(floor) @i(risetime) @i(falltime) @i(lookahead))] @c{[lisp]}}@\An envelope follower intended as a commponent for compressor and limiter functions. The basic goal of this function is to generate a smooth signal 
@@ -3389,6 +3408,17 @@ such that a fall from unity to @i(floor) takes @i(falltime).
 
 @codef[linear-to-db(@pragma(defn)@index(linear-to-db)@i(x))] @c{[sal]}@*
 @altdef{@code[(linear-to-db @i(x))] @c{[lisp]}}@\Returns the conversion of @i(x) from linear to decibels.  1 is converted to 0.  0 is converted to -INF (a special IEEE floating point value.)  A factor of 10 represents a 20dB change.  If @i(x) is a sound,  each sample is converted and a sound is returned.  If @i(x) is a multichannel sound, each channel is converted and a multichannel sound (array) is returned.  @p(Note:) With sounds, conversion is only performed on actual samples, not on the implicit zeros before the beginning and after the termination of the sound.  Start times, sample rates, etc. are taken from @i(x).
+
+@codef{linear-to-vel(@pragma(defn)@index(linear-to-vel)@i(x) [, @i(float)])} @c{[sal]}@*
+@altdef{@code{(linear-to-vel @i(x) [@i(float)])} @c{[lisp]}}@\Returns the 
+conversion of @i(x) from linear amplitude to MIDI velocity using a rule that
+maps -60 dB to 1 and 0 dB to 127. The MIDI velocity varies linearly 
+with the square root of amplitude. The default value of @i(float) is
+@code(nil) and the result is a @code(FIXNUM) clipped to fall in the
+legal range of 1-127, but if a non-@code(nil) value
+is provided, the result is a @code(FLONUM) that is not 
+rounded or clipped. The input parameter must be a @code(FIXNUM) or
+@code(FLONUM). Sounds are not allowed.
 
 @codef[log(@index(log function)@pragma(defn)@index(log)@i(x))] @c{[sal]}@*
 @altdef{@code[(log @i(x))] @c{[lisp]}}@\Calculates the natural log of @i(x) (a @code(FLONUM)). (See @code(s-log) for a version that operates on signals.)
@@ -3482,6 +3512,21 @@ manipulate slider values.
 @altdef{@code[(snd-set-latency @i(latency))] @c{[lisp]}}@\Set the latency requested when Nyquist plays sound to
  @i(latency), a @code(FLONUM). The previous value is returned. The default is 0.3 seconds. To avoid glitches, the latency should be 
 greater than the time required for garbage collection and message printing and any other system activity external to Nyquist.
+
+@codef[vel-to-db(@pragma(defn)@index(vel-to-db)@i(x))] @c{[sal]}@*
+@altdef{@code[(vel-to-db @i(x))] @c{[lisp]}}@\Returns the conversion
+of @i(x) from MIDI velocity to decibels using a rule that maps MIDI
+velocity 1 to -60 dB and 127 to 0 dB. The amplitude is proportional to
+the square of MIDI velocity. The input @i(x) can be a @code(FIXNUM) or
+@code(FLONUM) but not a sound. The result is a @code[FLONUM].
+
+@code[vel-to-linear(@pragma(defn)@index(vel-to-linear)@i(x))]
+@c{[sal]}@* @altdef{@code[(vel-to-linear @i(x))] @c{[lisp]}}@\Returns
+the conversion of @i(x) from MIDI velocity to decibels using a rule
+that maps MIDI 
+velocity 1 to -60 dB and 127 to 0 dB. The amplitude is proportional to
+the square of MIDI velocity. The input @i(x) can be a @code(FIXNUM) or
+@code(FLONUM) but not a sound. The result is a @code[FLONUM].
 @end(fndefs)
 
 @section(Behaviors)@index(Behaviors)
@@ -5227,7 +5272,18 @@ or peak values of blocks of samples. Each output sample is an average or
 peak of @i(blocksize) (a fixnum) adjacent samples from the input @i(sound). 
 After each average or peak is taken, the input is advanced by @i(stepsize), 
 a fixnum which may be greater or less than @i(blocksize).  The output 
-sample rate is the @i(sound) (input) sample rate divided by @i(stepsize). 
+sample rate is the @i(sound) (input) sample rate divided by
+@i(stepsize). The duration of the output is the same (approximately,
+due to rounding) as that of @i(sound). Notice however, that the
+features of the input will appear earlier in the output by half the
+window size. For example, a sharp peak in the input will result in a
+smoothed peak (using @code(OP-AVERAGE)) one half @i(blocksize)
+earlier. You can correct for this shift by inserting one half
+@i(blocksize) of silence before @i(sound),
+e.g. if @code(s) has a sample rate of 44100 Hz, then
+@code[snd-avg(seq(s-rest(0.01), cue(s)), 882, 441, OP-AVERAGE)] will
+shift @code(s) by 0.01 s to compensate for the shift introduced by a
+smoothing window of size 0.02 s (882/44100).
 This function is useful for computing low-sample-rate rms or peak 
 amplitude signals for input to @code(snd-gate) or @code(snd-follow).  
 To select the operation, @i(operation) should be one of @code(OP-AVERAGE) 
