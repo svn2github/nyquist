@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2004 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -32,9 +32,9 @@ static void hexdump (void *data, int len) ;
 
 int
 psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
-{	static char lsf_name [] = PACKAGE "-" VERSION ;
-	static char bracket_name [] = " (" PACKAGE "-" VERSION ")" ;
-	int		k, str_len, len_remaining, str_flags ;
+{	char	new_str [128] ;
+	size_t	len_remaining, str_len ;
+	int		k, str_flags ;
 
 	if (str == NULL)
 		return SFE_STR_BAD_STRING ;
@@ -42,28 +42,33 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 	str_len = strlen (str) ;
 
 	/* A few extra checks for write mode. */
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((psf->str_flags & SF_STR_ALLOW_START) == 0)
 			return SFE_STR_NO_SUPPORT ;
-		if ((psf->str_flags & SF_STR_ALLOW_END) == 0)
+		if (psf->have_written && (psf->str_flags & SF_STR_ALLOW_END) == 0)
 			return SFE_STR_NO_SUPPORT ;
 		/* Only allow zero length strings for software. */
 		if (str_type != SF_STR_SOFTWARE && str_len == 0)
 			return SFE_STR_BAD_STRING ;
 		} ;
 
+	/* Find the next free slot in table. */
+	for (k = 0 ; k < SF_MAX_STRINGS ; k++)
+	{	/* If we find a matching entry clear it. */
+		if (psf->strings [k].type == str_type)
+			psf->strings [k].type = -1 ;
+
+		if (psf->strings [k].type == 0)
+			break ;
+		} ;
+
 	/* Determine flags */
 	str_flags = SF_STR_LOCATE_START ;
-	if (psf->have_written)
+	if (psf->file.mode == SFM_RDWR || psf->have_written)
 	{	if ((psf->str_flags & SF_STR_ALLOW_END) == 0)
 			return SFE_STR_NO_ADD_END ;
 		str_flags = SF_STR_LOCATE_END ;
 		} ;
-
-	/* Find next free slot in table. */
-	for (k = 0 ; k < SF_MAX_STRINGS ; k++)
-		if (psf->strings [k].type == 0)
-			break ;
 
 	/* More sanity checking. */
 	if (k >= SF_MAX_STRINGS)
@@ -83,69 +88,67 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 	if (k == 0)
 		psf->str_end = psf->str_storage ;
 
-
-#if STRINGS_DEBUG
-	psf_log_printf (psf, "str_storage          : %X\n", (int) psf->str_storage) ;
-	psf_log_printf (psf, "str_end              : %X\n", (int) psf->str_end) ;
-	psf_log_printf (psf, "sizeof (str_storage) : %d\n", SIGNED_SIZEOF (psf->str_storage)) ;
-#endif
-
-	len_remaining = SIGNED_SIZEOF (psf->str_storage) - (psf->str_end - psf->str_storage) ;
-
-	if (len_remaining < str_len + 2)
-		return SFE_STR_MAX_DATA ;
-
 	switch (str_type)
 	{	case SF_STR_SOFTWARE :
 				/* In write mode, want to append libsndfile-version to string. */
-				if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
-				{	psf->strings [k].type = str_type ;
-					psf->strings [k].str = psf->str_end ;
-					psf->strings [k].flags = str_flags ;
-
-					memcpy (psf->str_end, str, str_len + 1) ;
-					psf->str_end += str_len ;
-
-					/*
-					** If the supplied string does not already contain a
-					** libsndfile-X.Y.Z component, then add it.
-					*/
-					if (strstr (str, PACKAGE) == NULL && len_remaining > (int) (strlen (bracket_name) + str_len + 2))
-					{	if (strlen (str) == 0)
-							strncat (psf->str_end, lsf_name, len_remaining) ;
+				if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
+				{	if (strstr (str, PACKAGE) == NULL)
+					{	/*
+						** If the supplied string does not already contain a
+						** libsndfile-X.Y.Z component, then add it.
+						*/
+						if (strlen (str) == 0)
+							snprintf (new_str, sizeof (new_str), "%s-%s", PACKAGE, VERSION) ;
 						else
-							strncat (psf->str_end, bracket_name, len_remaining) ;
-						psf->str_end += strlen (psf->str_end) ;
-						} ;
+							snprintf (new_str, sizeof (new_str), "%s (%s-%s)", str, PACKAGE, VERSION) ;
+						}
+					else
+						snprintf (new_str, sizeof (new_str), "%s", str) ;
 
-					/* Plus one to catch string terminator. */
-					psf->str_end += 1 ;
-					break ;
+					str = new_str ;
 					} ;
-
-				/* Fall though if not write mode. */
+				break ;
 
 		case SF_STR_TITLE :
 		case SF_STR_COPYRIGHT :
 		case SF_STR_ARTIST :
 		case SF_STR_COMMENT :
 		case SF_STR_DATE :
-				psf->strings [k].type = str_type ;
-				psf->strings [k].str = psf->str_end ;
-				psf->strings [k].flags = str_flags ;
-
-				/* Plus one to catch string terminator. */
-				memcpy (psf->str_end, str, str_len + 1) ;
-				psf->str_end += str_len + 1 ;
+		case SF_STR_ALBUM :
+		case SF_STR_LICENSE :
+		case SF_STR_TRACKNUMBER :
+		case SF_STR_GENRE :
 				break ;
 
 		default :
+			psf_log_printf (psf, "%s : SFE_STR_BAD_TYPE\n", __func__) ;
 			return SFE_STR_BAD_TYPE ;
 		} ;
 
-	psf->str_flags |= (psf->have_written) ? SF_STR_LOCATE_END : SF_STR_LOCATE_START ;
+	str_len = strlen (str) ;
+
+	len_remaining = SIGNED_SIZEOF (psf->str_storage) - (psf->str_end - psf->str_storage) ;
+
+	if (len_remaining < str_len + 2)
+		return SFE_STR_MAX_DATA ;
+
+	psf->strings [k].type = str_type ;
+	psf->strings [k].str = psf->str_end ;
+	psf->strings [k].flags = str_flags ;
+
+	memcpy (psf->str_end, str, str_len + 1) ;
+	/* Plus one to catch string terminator. */
+	psf->str_end += str_len + 1 ;
+
+	psf->str_flags |= str_flags ;
 
 #if STRINGS_DEBUG
+	psf_log_printf (psf, "str_storage          : %X\n", (int) psf->str_storage) ;
+	psf_log_printf (psf, "str_end              : %X\n", (int) psf->str_end) ;
+	psf_log_printf (psf, "sizeof (str_storage) : %d\n", SIGNED_SIZEOF (psf->str_storage)) ;
+	psf_log_printf (psf, "used                 : %d\n", (int ) (psf->str_end - psf->str_storage)) ;
+	psf_log_printf (psf, "remaining            : %d\n", SIGNED_SIZEOF (psf->str_storage) - (psf->str_end - psf->str_storage)) ;
+
 	hexdump (psf->str_storage, 300) ;
 #endif
 
@@ -154,7 +157,7 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 
 int
 psf_set_string (SF_PRIVATE *psf, int str_type, const char *str)
-{	if (psf->mode == SFM_READ)
+{	if (psf->file.mode == SFM_READ)
 		return SFE_STR_NOT_WRITE ;
 
 	return psf_store_string (psf, str_type, str) ;
@@ -170,6 +173,20 @@ psf_get_string (SF_PRIVATE *psf, int str_type)
 
 	return NULL ;
 } /* psf_get_string */
+
+int
+psf_location_string_count (const SF_PRIVATE * psf, int location)
+{	int k, count = 0 ;
+
+	for (k = 0 ; k < SF_MAX_STRINGS ; k++)
+		if (psf->strings [k].type > 0 && psf->strings [k].flags & location)
+			count ++ ;
+
+	return count ;
+} /* psf_location_string_count */
+
+/*==============================================================================
+*/
 
 #if STRINGS_DEBUG
 
@@ -187,7 +204,7 @@ hexdump (void *data, int len)
 			printf ("%02X ", ptr [k] & 0xFF) ;
 		printf ("   ") ;
 		for (k = 0 ; k < 16 ; k++)
-			printf ("%c", isprint (ptr [k]) ? ptr [k] : '.') ;
+			printf ("%c", psf_isprint (ptr [k]) ? ptr [k] : '.') ;
 		puts ("") ;
 		ptr += 16 ;
 		len -= 16 ;
@@ -195,10 +212,3 @@ hexdump (void *data, int len)
 } /* hexdump */
 
 #endif
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: 04393aa1-9389-46fe-baf2-58a7bd544fd6
-*/

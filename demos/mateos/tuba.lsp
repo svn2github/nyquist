@@ -87,8 +87,8 @@
   (autonorm-off)
   (play
    (seq
-    (dm-tuba 70 )
-    (stretch 5 (dm-tuba 70))
-    (loud -10 (dm-tuba 70))
-    (transpose -10 (stretch 3 (dm-tuba 70))))))
+    (dmhm-tuba 70 )
+    (stretch 5 (dmhm-tuba 70))
+    (loud -10 (dmhm-tuba 70))
+    (transpose -10 (stretch 3 (dmhm-tuba 70))))))
 

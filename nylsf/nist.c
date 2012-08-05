@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2004 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -54,19 +54,19 @@ int
 nist_open	(SF_PRIVATE *psf)
 {	int error ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = nist_read_header (psf)))
 			return error ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (psf->is_pipe)
 			return SFE_NO_PIPE_WRITE ;
 
-		if ((psf->sf.format & SF_FORMAT_TYPEMASK) != SF_FORMAT_NIST)
+		if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_NIST)
 			return	SFE_BAD_OPEN_FORMAT ;
 
-		psf->endian = psf->sf.format & SF_FORMAT_ENDMASK ;
+		psf->endian = SF_ENDIAN (psf->sf.format) ;
 		if (psf->endian == 0 || psf->endian == SF_ENDIAN_CPU)
 			psf->endian = (CPU_IS_BIG_ENDIAN) ? SF_ENDIAN_BIG : SF_ENDIAN_LITTLE ;
 
@@ -81,7 +81,7 @@ nist_open	(SF_PRIVATE *psf)
 
 	psf->container_close = nist_close ;
 
-	switch (psf->sf.format & SF_FORMAT_SUBMASK)
+	switch (SF_CODEC (psf->sf.format))
 	{	case SF_FORMAT_PCM_S8 :
 				error = pcm_init (psf) ;
 				break ;
@@ -119,11 +119,10 @@ static char bad_header [] =
 	static int
 nist_read_header (SF_PRIVATE *psf)
 {	char	*psf_header ;
-	int		bitwidth = 0, bytes = 0, count, encoding ;
+	int		bitwidth = 0, count, encoding ;
+	unsigned bytes = 0 ;
 	char 	str [64], *cptr ;
 	long	samples ;
-
-	psf->sf.format = SF_FORMAT_NIST ;
 
 	psf_header = psf->u.cbuf ;
 
@@ -164,7 +163,9 @@ nist_read_header (SF_PRIVATE *psf)
 	{	sscanf (cptr, "sample_coding -s%d %63s", &count, str) ;
 
 		if (strcmp (str, "pcm") == 0)
+		{	/* Correct this later when we find out the bitwidth. */
 			encoding = SF_FORMAT_PCM_U8 ;
+			}
 		else if (strcmp (str, "alaw") == 0)
 			encoding = SF_FORMAT_ALAW ;
 		else if ((strcmp (str, "ulaw") == 0) || (strcmp (str, "mu-law") == 0))
@@ -175,37 +176,41 @@ nist_read_header (SF_PRIVATE *psf)
 			} ;
 		} ;
 
-	if ((cptr = strstr (psf_header, "channel_count -i ")))
+	if ((cptr = strstr (psf_header, "channel_count -i ")) != NULL)
 		sscanf (cptr, "channel_count -i %d", &(psf->sf.channels)) ;
 
-	if ((cptr = strstr (psf_header, "sample_rate -i ")))
+	if ((cptr = strstr (psf_header, "sample_rate -i ")) != NULL)
 		sscanf (cptr, "sample_rate -i %d", &(psf->sf.samplerate)) ;
 
-	if ((cptr = strstr (psf_header, "sample_count -i ")))
-	{	sscanf (psf_header, "sample_count -i %ld", &samples) ;
+	if ((cptr = strstr (psf_header, "sample_count -i ")) != NULL)
+	{	sscanf (cptr, "sample_count -i %ld", &samples) ;
 		psf->sf.frames = samples ;
 		} ;
 
-	if ((cptr = strstr (psf_header, "sample_n_bytes -i ")))
+	if ((cptr = strstr (psf_header, "sample_n_bytes -i ")) != NULL)
 		sscanf (cptr, "sample_n_bytes -i %d", &(psf->bytewidth)) ;
 
 	/* Default endian-ness (for 8 bit, u-law, A-law. */
 	psf->endian = (CPU_IS_BIG_ENDIAN) ? SF_ENDIAN_BIG : SF_ENDIAN_LITTLE ;
 
 	/* This is where we figure out endian-ness. */
-	if ((cptr = strstr (psf_header, "sample_byte_format -s")))
-	{	sscanf (cptr, "sample_byte_format -s%d %8s", &bytes, str) ;
+	if ((cptr = strstr (psf_header, "sample_byte_format -s"))
+		&& sscanf (cptr, "sample_byte_format -s%u %8s", &bytes, str) == 2)
+	{
+		if (bytes != strlen (str))
+			psf_log_printf (psf, "Weird sample_byte_format : strlen '%s' != %d\n", str, bytes) ;
+
 		if (bytes > 1)
 		{	if (psf->bytewidth == 0)
 				psf->bytewidth = bytes ;
-			else if (psf->bytewidth != bytes)
+			else if (psf->bytewidth - bytes != 0)
 			{	psf_log_printf (psf, "psf->bytewidth (%d) != bytes (%d)\n", psf->bytewidth, bytes) ;
 				return SFE_NIST_BAD_ENCODING ;
 				} ;
 
-			if (strstr (str, "01") == str)
+			if (strcmp (str, "01") == 0)
 				psf->endian = SF_ENDIAN_LITTLE ;
-			else if (strstr (str, "10"))
+			else if (strcmp (str, "10") == 0)
 				psf->endian = SF_ENDIAN_BIG ;
 			else
 			{	psf_log_printf (psf, "Weird endian-ness : %s\n", str) ;
@@ -255,13 +260,26 @@ nist_read_header (SF_PRIVATE *psf)
 	else
 		return SFE_UNIMPLEMENTED ;
 
+	/* Sanitize psf->sf.format. */
+	switch (SF_CODEC (psf->sf.format))
+	{	case SF_FORMAT_ULAW :
+		case SF_FORMAT_ALAW :
+		case SF_FORMAT_PCM_U8 :
+			/* Blank out endian bits. */
+			psf->sf.format = SF_FORMAT_NIST | SF_CODEC (psf->sf.format) ;
+			break ;
+
+		default :
+			break ;
+		} ;
+
 	return 0 ;
 } /* nist_read_header */
 
 static int
 nist_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		nist_write_header (psf, SF_TRUE) ;
 
 	return 0 ;
@@ -307,7 +325,7 @@ nist_write_header (SF_PRIVATE *psf, int calc_length)
 	psf_asciiheader_printf (psf, "channel_count -i %d\n", psf->sf.channels) ;
 	psf_asciiheader_printf (psf, "sample_rate -i %d\n", psf->sf.samplerate) ;
 
-	switch (psf->sf.format & SF_FORMAT_SUBMASK)
+	switch (SF_CODEC (psf->sf.format))
 	{	case SF_FORMAT_PCM_S8 :
 				psf_asciiheader_printf (psf, "sample_coding -s3 pcm\n") ;
 				psf_asciiheader_printf (psf, "sample_n_bytes -i 1\n"
@@ -357,11 +375,3 @@ nist_write_header (SF_PRIVATE *psf, int calc_length)
 	return psf->error ;
 } /* nist_write_header */
 
-
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: b45ed85d-9e22-4ad9-b78c-4b58b67152a8
-*/

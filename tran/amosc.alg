@@ -16,18 +16,14 @@
 (ALWAYS-SCALE amod)
 (TERMINATE (MIN amod))
 (LOGICAL-STOP (MIN amod))
-(INNER-LOOP "
-            long table_index = (long) phase;
+(INNER-LOOP "long table_index = (long) phase;
             double x1 = (double) (table_ptr[table_index]);
             output = (sample_type) (x1 + (phase - table_index) * 
                           (table_ptr[table_index + 1] - x1)) * amod;
             phase += ph_incr;
-            while (phase > table_len) phase -= table_len;
-")
+            while (phase > table_len) phase -= table_len;")
 (CONSTANT "ph_incr" "table_len" "table_ptr" "the_table")
-
 (SAMPLE-RATE "sr")
-(FINALIZATION "    table_unref(susp->the_table);
-")
+(FINALIZATION "    table_unref(susp->the_table);\n")
 )
 

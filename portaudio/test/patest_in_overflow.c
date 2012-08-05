@@ -11,7 +11,7 @@
 	@author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: patest_in_overflow.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest_in_overflow.c 1368 2008-03-01 00:38:27Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -140,6 +140,10 @@ int main(void)
     if( err != paNoError ) goto error;
 
     inputParameters.device = Pa_GetDefaultInputDevice();  /* default input device */
+    if (inputParameters.device == paNoDevice) {
+      fprintf(stderr,"Error: No default input device.\n");
+      goto error;
+    }
     inputParameters.channelCount = 1;                      /* mono output */
     inputParameters.sampleFormat = paFloat32;              /* 32 bit floating point output */
     inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;

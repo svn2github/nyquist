@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2004-2006 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2004-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -80,16 +80,16 @@ int
 avr_open	(SF_PRIVATE *psf)
 {	int		error = 0 ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = avr_read_header (psf)))
 			return error ;
 		} ;
 
-	if ((psf->sf.format & SF_FORMAT_TYPEMASK) != SF_FORMAT_AVR)
+	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_AVR)
 		return	SFE_BAD_OPEN_FORMAT ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
-	{	psf->endian = psf->sf.format & SF_FORMAT_ENDMASK ;
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
+	{	psf->endian = SF_ENDIAN (psf->sf.format) ;
 		psf->endian = SF_ENDIAN_BIG ;
 
 		if (avr_write_header (psf, SF_FALSE))
@@ -215,7 +215,7 @@ avr_write_header (SF_PRIVATE *psf, int calc_length)
 	psf_binheader_writef (psf, "Emz22", TWOBIT_MARKER, make_size_t (8),
 			psf->sf.channels == 2 ? 0xFFFF : 0, psf->bytewidth * 8) ;
 
-	sign = ((psf->sf.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_U8) ? 0 : 0xFFFF ;
+	sign = ((SF_CODEC (psf->sf.format)) == SF_FORMAT_PCM_U8) ? 0 : 0xFFFF ;
 
 	psf_binheader_writef (psf, "E222", sign, 0, 0xFFFF) ;
 	psf_binheader_writef (psf, "E4444", psf->sf.samplerate, psf->sf.frames, 0, 0) ;
@@ -239,16 +239,9 @@ avr_write_header (SF_PRIVATE *psf, int calc_length)
 static int
 avr_close (SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		avr_write_header (psf, SF_TRUE) ;
 
 	return 0 ;
 } /* avr_close */
 
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch
-** revision control system.
-**
-** arch-tag: 0823d454-f39a-4a28-a776-607f1ef33b52
-*/

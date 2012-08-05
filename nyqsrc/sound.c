@@ -1616,9 +1616,9 @@ static unsigned char *sound_xlrestore(FILE *fp)
 
 /* sound_xlmark -- mark LVAL nodes reachable from this sound */
 /**/
-void sound_xlmark(s)
-sound_type s;
+void sound_xlmark(void *a_sound)
 {
+    sound_type s = (sound_type) a_sound;
     snd_list_type snd_list;
     long counter = 0;
 #ifdef TRACESNDGC

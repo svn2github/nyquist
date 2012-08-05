@@ -62,5 +62,6 @@
 (defun vox-1 ()  (timed-seq  (sdl:normalize-score-duration (sdl->score voz-1))))
 (defun vox-2 ()  (timed-seq  (sdl:normalize-score-duration (sdl->score voz-2 *my-time-labels*))))
 
-(play (sim (vox-1) (vox-2)))
-I
+(autonorm-off)
+(play (scale 0.4 (sim (vox-1) (vox-2))))
+

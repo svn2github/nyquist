@@ -95,6 +95,39 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_sri 30
 #define INTERP_srr 31
 
+#define INTERP_inn 32
+#define INTERP_ins 33
+#define INTERP_ini 34
+#define INTERP_inr 35
+#define INTERP_isn 36
+#define INTERP_iss 37
+#define INTERP_isi 38
+#define INTERP_isr 39
+#define INTERP_iin 40
+#define INTERP_iis 41
+#define INTERP_iii 42
+#define INTERP_iir 43
+#define INTERP_irn 44
+#define INTERP_irs 45
+#define INTERP_iri 46
+#define INTERP_irr 47
+#define INTERP_rnn 48
+#define INTERP_rns 49
+#define INTERP_rni 50
+#define INTERP_rnr 51
+#define INTERP_rsn 52
+#define INTERP_rss 53
+#define INTERP_rsi 54
+#define INTERP_rsr 55
+#define INTERP_rin 56
+#define INTERP_ris 57
+#define INTERP_rii 58
+#define INTERP_rir 59
+#define INTERP_rrn 60
+#define INTERP_rrs 61
+#define INTERP_rri 62
+#define INTERP_rrr 63
+
 #define INTERP_nnnn 0
 #define INTERP_nnns 1
 #define INTERP_nnsn 4
@@ -103,6 +136,7 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_nsns 17
 #define INTERP_nssn 20
 #define INTERP_nsss 21
+#define INTERP_nrrr 63
 #define INTERP_snnn 64
 #define INTERP_snns 65
 #define INTERP_snsn 68
@@ -113,8 +147,9 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_ssss 85
 #define INTERP_niii 42
 #define INTERP_siii 106
-#define INTERP_nrrr 63
 #define INTERP_srrr 127
+#define INTERP_iiii 170
+#define INTERP_rrrr 255
 
 #define INTERP_nnnnnn 0
 #define INTERP_nnnnns 1
@@ -180,6 +215,8 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_ssssns 1361
 #define INTERP_sssssn 1364
 #define INTERP_ssssss 1365
+#define INTERP_iiiiii 2730
+#define INTERP_rrrrrr 4095
 
 #define INTERP_nnnnnnnn 0
 #define INTERP_ssssssss 21845
@@ -385,7 +422,7 @@ long sound_nth_block(sound_type snd, long n);
 
 sound_type sound_copy(sound_type snd); 
     /* LISP: (SND-COPY SOUND) */
-void sound_xlmark(sound_type s);
+void sound_xlmark(void *a_sound);
 void sound_print(LVAL snd_expr, long n);
     /* LISP: (SND-PRINT ANY FIXNUM) */
 void sound_play(LVAL snd_expr);

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2005 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -21,10 +21,10 @@
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
+#include	<math.h>
 
 #include	"sndfile.h"
 #include	"sfendian.h"
-#include	"float_cast.h"
 #include	"common.h"
 #include	"wav_w64.h"
 
@@ -137,15 +137,14 @@ wav_w64_msadpcm_init	(SF_PRIVATE *psf, int blockalign, int samplesperblock)
 		return SFE_INTERNAL ;
 		} ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 		samplesperblock = 2 + 2 * (blockalign - 7 * psf->sf.channels) / psf->sf.channels ;
 
 	pmssize = sizeof (MSADPCM_PRIVATE) + blockalign + 3 * psf->sf.channels * samplesperblock ;
 
-	if (! (psf->codec_data = malloc (pmssize)))
+	if (! (psf->codec_data = calloc (1, pmssize)))
 		return SFE_MALLOC_FAILED ;
 	pms = (MSADPCM_PRIVATE*) psf->codec_data ;
-	memset (pms, 0, pmssize) ;
 
 	pms->samples	= pms->dummydata ;
 	pms->block		= (unsigned char*) (pms->dummydata + psf->sf.channels * samplesperblock) ;
@@ -154,7 +153,12 @@ wav_w64_msadpcm_init	(SF_PRIVATE *psf, int blockalign, int samplesperblock)
 	pms->blocksize	= blockalign ;
 	pms->samplesperblock = samplesperblock ;
 
-	if (psf->mode == SFM_READ)
+	if (pms->blocksize == 0)
+	{	psf_log_printf (psf, "*** Error : pms->blocksize should not be zero.\n") ;
+		return SFE_INTERNAL ;
+		} ;
+
+	if (psf->file.mode == SFM_READ)
 	{	pms->dataremaining	 = psf->datalength ;
 
 		if (psf->datalength % pms->blocksize)
@@ -164,7 +168,9 @@ wav_w64_msadpcm_init	(SF_PRIVATE *psf, int blockalign, int samplesperblock)
 
 		count = 2 * (pms->blocksize - 6 * pms->channels) / pms->channels ;
 		if (pms->samplesperblock != count)
-			psf_log_printf (psf, "*** Warning : samplesperblock shoud be %d.\n", count) ;
+		{	psf_log_printf (psf, "*** Error : samplesperblock should be %d.\n", count) ;
+			return SFE_INTERNAL ;
+			} ;
 
 		psf->sf.frames = (psf->datalength / pms->blocksize) * pms->samplesperblock ;
 
@@ -178,7 +184,7 @@ wav_w64_msadpcm_init	(SF_PRIVATE *psf, int blockalign, int samplesperblock)
 		psf->read_double	= msadpcm_read_d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	pms->samples = pms->dummydata ;
 
 		pms->samplecount = 0 ;
@@ -757,7 +763,7 @@ msadpcm_close	(SF_PRIVATE *psf)
 
 	pms = (MSADPCM_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	/*  Now we know static int for certain the length of the file we can
 		**  re-write the header.
 		*/
@@ -825,10 +831,4 @@ choose_predictor (unsigned int channels, short *data, int *block_pred, int *idel
 
 	return ;
 } /* choose_predictor */
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: a98908a3-5305-4935-872b-77d6a86c330f
-*/
+

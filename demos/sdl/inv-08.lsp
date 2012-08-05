@@ -173,8 +173,10 @@ f5 (e5 1) d5 c5 d5 c5 :bb4 a4 :bb4 a4 g4 (f4 2)
 	    (PWL-POINT :din 1)
 	    (PWL-POINT :rel 2)(PWL-POINT :reson 3500) (:c2 3.4) (PWL-POINT :rel 4)(:f2 4)))
 
-
+(autonorm-off)
 (play
- (sum
-  (scale 1 (timed-seq (sdl->score voz-1)))
-  (timed-seq (sdl->score voz-2)))) 
+  (scale 0.5
+    (sim
+      (scale 1 (timed-seq (sdl->score voz-1)))
+      (timed-seq (sdl->score voz-2)))))
+ 

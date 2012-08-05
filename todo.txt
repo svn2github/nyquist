@@ -1,3 +1,172 @@
+ny with optimized code 1,268,704 bytes
+ny without optimized code 1,149,760
+
+ny without optimized tran code: 1240000 bytes
+-rw-r--r--  1 rbd  rbd  105430 Jul 22 19:45 resonvv.c
+-rw-r--r--  1 rbd  rbd   55972 Jul 22 19:45 aresonvv.c
+-rw-r--r--  1 rbd  rbd   28434 Jul 22 19:45 eqbandvvv.c
+-rw-r--r--  1 rbd  rbd   24172 Jul 22 19:45 alpassvv.c
+-rw-r--r--  1 rbd  rbd   21308 Jul 22 19:45 tapv.c
+-rw-r--r--  1 rbd  rbd   20462 Jul 22 19:45 tapf.c
+-rw-r--r--  1 rbd  rbd   20432 Jul 22 19:45 siosc.c
+-rw-r--r--  1 rbd  rbd   19431 Jul 22 19:45 fmfbv.c
+-rw-r--r--  1 rbd  rbd   18466 Jul 22 19:45 aresonvc.c
+-rw-r--r--  1 rbd  rbd   18449 Jul 22 19:45 resoncv.c
+-rw-r--r--  1 rbd  rbd   18409 Jul 22 19:45 resonvc.c
+-rw-r--r--  1 rbd  rbd   17215 Jul 22 19:45 buzz.c
+-rw-r--r--  1 rbd  rbd   16767 Jul 22 19:45 aresoncv.c
+-rw-r--r--  1 rbd  rbd   16388 Jul 22 19:45 sampler.c
+-rw-r--r--  1 rbd  rbd   15991 Jul 22 19:45 tonev.c
+-rw-r--r--  1 rbd  rbd   15804 Jul 22 19:45 atonev.c
+-rw-r--r--  1 rbd  rbd   15701 Jul 22 19:45 fmosc.c
+-rw-r--r--  1 rbd  rbd   14901 Jul 22 19:45 instrsaxfreq.c
+-rw-r--r--  1 rbd  rbd   13688 Jul 22 19:45 instrsaxall.c
+-rw-r--r--  1 rbd  rbd   13542 Jul 22 19:45 upsample.c
+-rw-r--r--  1 rbd  rbd   13416 Jul 22 19:45 alpassvc.c
+-rw-r--r--  1 rbd  rbd   12197 Jul 22 19:45 gate.c
+-rw-r--r--  1 rbd  rbd   10527 Jul 22 19:45 instrclarall.c
+-rw-r--r--  1 rbd  rbd   10243 Jul 22 19:45 instrfluteall.c
+-rw-r--r--  1 rbd  rbd   10113 Jul 22 19:45 follow.c
+-rw-r--r--  1 rbd  rbd   10104 Jul 22 19:45 instrbowedfreq.c
+-rw-r--r--  1 rbd  rbd   10076 Jul 22 19:45 instrclarfreq.c
+-rw-r--r--  1 rbd  rbd   10065 Jul 22 19:45 biquadfilt.c
+-rw-r--r--  1 rbd  rbd   10030 Jul 22 19:45 instrflutefreq.c
+-rw-r--r--  1 rbd  rbd    9962 Jul 22 19:45 alpasscv.c
+-rw-r--r--  1 rbd  rbd    9914 Jul 22 19:45 chase.c
+-rw-r--r--  1 rbd  rbd    9824 Jul 22 19:45 reson.c
+-rw-r--r--  1 rbd  rbd    9545 Jul 22 19:45 lpreson.c
+-rw-r--r--  1 rbd  rbd    9529 Jul 22 19:45 delaycv.c
+-rw-r--r--  1 rbd  rbd    9453 Jul 22 19:45 oneshot.c
+-rw-r--r--  1 rbd  rbd    9386 Jul 22 19:45 ifft.c
+-rw-r--r--  1 rbd  rbd    9355 Jul 22 19:45 partial.c
+-rw-r--r--  1 rbd  rbd    9199 Jul 22 19:45 atone.c
+-rw-r--r--  1 rbd  rbd    9172 Jul 22 19:45 stkchorus.c
+-rw-r--r--  1 rbd  rbd    9161 Jul 22 19:45 stkpitshift.c
+-rw-r--r--  1 rbd  rbd    8999 Jul 22 19:45 stkrev.c
+-rw-r--r--  1 rbd  rbd    8706 Jul 22 19:45 clip.c
+-rw-r--r--  1 rbd  rbd    8658 Jul 22 19:45 offset.c
+-rw-r--r--  1 rbd  rbd    8092 Jul 22 19:45 allpoles.c
+-rw-r--r--  1 rbd  rbd    7545 Jul 22 19:45 pluck.c
+-rw-r--r--  1 rbd  rbd    7489 Jul 22 19:45 instrsax.c
+-rw-r--r--  1 rbd  rbd    7118 Jul 22 19:45 prod.c
+-rw-r--r--  1 rbd  rbd    7087 Jul 22 19:45 shape.c
+-rw-r--r--  1 rbd  rbd    7032 Jul 22 19:45 areson.c
+-rw-r--r--  1 rbd  rbd    7004 Jul 22 19:45 coterm.c
+-rw-r--r--  1 rbd  rbd    6950 Jul 22 19:45 amosc.c
+-rw-r--r--  1 rbd  rbd    6889 Jul 22 19:45 maxv.c
+-rw-r--r--  1 rbd  rbd    6269 Jul 22 19:45 integrate.c
+-rw-r--r--  1 rbd  rbd    6052 Jul 22 19:45 tone.c
+-rw-r--r--  1 rbd  rbd    6023 Jul 22 19:45 slope.c
+-rw-r--r--  1 rbd  rbd    5840 Jul 22 19:45 alpass.c
+-rw-r--r--  1 rbd  rbd    5837 Jul 22 19:45 quantize.c
+-rw-r--r--  1 rbd  rbd    5748 Jul 22 19:45 scale.c
+-rw-r--r--  1 rbd  rbd    5734 Jul 22 19:45 delaycc.c
+-rw-r--r--  1 rbd  rbd    5728 Jul 22 19:45 sqrt.c
+-rw-r--r--  1 rbd  rbd    5727 Jul 22 19:45 instrbanded.c
+-rw-r--r--  1 rbd  rbd    5694 Jul 22 19:45 abs.c
+-rw-r--r--  1 rbd  rbd    5649 Jul 22 19:45 log.c
+-rw-r--r--  1 rbd  rbd    5622 Jul 22 19:45 recip.c
+-rw-r--r--  1 rbd  rbd    5545 Jul 22 19:45 instrclar.c
+-rw-r--r--  1 rbd  rbd    5541 Jul 22 19:45 instrbow.c
+-rw-r--r--  1 rbd  rbd    5502 Jul 22 19:45 exp.c
+-rw-r--r--  1 rbd  rbd    5500 Jul 22 19:45 congen.c
+-rw-r--r--  1 rbd  rbd    5475 Jul 22 19:45 instrflute.c
+-rw-r--r--  1 rbd  rbd    5220 Jul 22 19:45 fromarraystream.c
+-rw-r--r--  1 rbd  rbd    4932 Jul 22 19:45 pwl.c
+-rw-r--r--  1 rbd  rbd    3895 Jul 22 19:45 fmfb.c
+-rw-r--r--  1 rbd  rbd    3703 Jul 22 19:45 osc.c
+-rw-r--r--  1 rbd  rbd    3486 Jul 22 19:45 fromobject.c
+-rw-r--r--  1 rbd  rbd    3285 Jul 22 19:45 instrmandolin.c
+-rw-r--r--  1 rbd  rbd    3242 Jul 22 19:45 sine.c
+-rw-r--r--  1 rbd  rbd    3176 Jul 22 19:45 instrmodalbar.c
+-rw-r--r--  1 rbd  rbd    3012 Jul 22 19:45 instrsitar.c
+-rw-r--r--  1 rbd  rbd    2726 Jul 22 19:45 const.c
+-rw-r--r--  1 rbd  rbd    2639 Jul 22 19:45 white.c
+
+ny with optimized tran code: 
+-rw-r--r--  1 rbd  rbd  235380 Jul 30 15:00 alpassvv.c DONE
+-rw-r--r--  1 rbd  rbd  105430 Jul 30 15:00 resonvv.c DONE
+-rw-r--r--  1 rbd  rbd   60517 Jul 30 15:00 instrsaxfreq.c DONE
+-rw-r--r--  1 rbd  rbd   55972 Jul 30 15:00 aresonvv.c DONE
+-rw-r--r--  1 rbd  rbd   44324 Jul 30 15:00 alpassvc.c DONE
+-rw-r--r--  1 rbd  rbd   39646 Jul 30 15:00 instrsaxall.c DONE
+-rw-r--r--  1 rbd  rbd   31126 Jul 30 15:00 alpasscv.c DONE
+-rw-r--r--  1 rbd  rbd   29447 Jul 30 15:00 delaycv.c DONE
+-rw-r--r--  1 rbd  rbd   28434 Jul 30 15:00 eqbandvvv.c DONE
+-rw-r--r--  1 rbd  rbd   27360 Jul 30 15:00 instrclarall.c DONE
+-rw-r--r--  1 rbd  rbd   26601 Jul 30 15:00 instrfluteall.c DONE
+-rw-r--r--  1 rbd  rbd   23451 Jul 30 15:00 lpreson.c DONE
+-rw-r--r--  1 rbd  rbd   23416 Jul 30 15:00 maxv.c DONE
+-rw-r--r--  1 rbd  rbd   22871 Jul 30 15:00 coterm.c DONE
+-rw-r--r--  1 rbd  rbd   21308 Jul 30 15:00 tapv.c DONE
+-rw-r--r--  1 rbd  rbd   20462 Jul 30 15:00 tapf.c DONE
+-rw-r--r--  1 rbd  rbd   20432 Jul 30 15:00 siosc.c DONE
+-rw-r--r--  1 rbd  rbd   19805 Jul 30 15:00 instrbowedfreq.c DONE
+-rw-r--r--  1 rbd  rbd   19585 Jul 30 15:00 instrclarfreq.c DONE
+-rw-r--r--  1 rbd  rbd   19567 Jul 30 15:00 instrflutefreq.c DONE
+-rw-r--r--  1 rbd  rbd   19431 Jul 30 15:00 fmfbv.c DONE
+-rw-r--r--  1 rbd  rbd   19366 Jul 30 15:00 allpoles.c DONE
+-rw-r--r--  1 rbd  rbd   18466 Jul 30 15:00 aresonvc.c DONE
+-rw-r--r--  1 rbd  rbd   18449 Jul 30 15:00 resoncv.c DONE
+-rw-r--r--  1 rbd  rbd   18409 Jul 30 15:00 resonvc.c DONE
+-rw-r--r--  1 rbd  rbd   17215 Jul 30 15:00 buzz.c DONE
+-rw-r--r--  1 rbd  rbd   17160 Jul 30 15:00 partial.c DONE
+-rw-r--r--  1 rbd  rbd   16767 Jul 30 15:00 aresoncv.c DONE
+-rw-r--r--  1 rbd  rbd   16558 Jul 30 15:00 stkpitshift.c  DONE
+-rw-r--r--  1 rbd  rbd   16545 Jul 30 15:00 stkchorus.c DONE
+-rw-r--r--  1 rbd  rbd   16388 Jul 30 15:00 sampler.c DONE
+-rw-r--r--  1 rbd  rbd   16336 Jul 30 15:00 stkrev.c DONE
+-rw-r--r--  1 rbd  rbd   15991 Jul 30 15:00 tonev.c DONE
+-rw-r--r--  1 rbd  rbd   15804 Jul 30 15:00 atonev.c DONE
+-rw-r--r--  1 rbd  rbd   15771 Jul 30 15:00 amosc.c DONE
+-rw-r--r--  1 rbd  rbd   15701 Jul 30 15:00 fmosc.c DONE
+-rw-r--r--  1 rbd  rbd   15116 Jul 30 15:00 prod.c DONE
+-rw-r--r--  1 rbd  rbd   13790 Jul 30 15:00 instrsax.c DONE
+-rw-r--r--  1 rbd  rbd   13542 Jul 30 15:00 upsample.c DONE
+-rw-r--r--  1 rbd  rbd   12644 Jul 30 15:00 instrbanded.c DONE
+-rw-r--r--  1 rbd  rbd   12374 Jul 30 15:00 instrbow.c DONE
+-rw-r--r--  1 rbd  rbd   12200 Jul 30 15:00 instrclar.c DONE
+-rw-r--r--  1 rbd  rbd   12197 Jul 30 15:00 gate.c DONE
+-rw-r--r--  1 rbd  rbd   12138 Jul 30 15:00 instrflute.c DONE
+-rw-r--r--  1 rbd  rbd   10113 Jul 30 15:00 follow.c DONE
+-rw-r--r--  1 rbd  rbd   10065 Jul 30 15:00 biquadfilt.c DONE
+-rw-r--r--  1 rbd  rbd    9914 Jul 30 15:00 chase.c DONE
+-rw-r--r--  1 rbd  rbd    9824 Jul 30 15:00 reson.c DONE
+-rw-r--r--  1 rbd  rbd    9453 Jul 30 15:00 oneshot.c DONE
+-rw-r--r--  1 rbd  rbd    9386 Jul 30 15:00 ifft.c DONE
+-rw-r--r--  1 rbd  rbd    9199 Jul 30 15:00 atone.c DONE
+-rw-r--r--  1 rbd  rbd    8706 Jul 30 15:00 clip.c DONE
+-rw-r--r--  1 rbd  rbd    8658 Jul 30 15:00 offset.c DONE
+-rw-r--r--  1 rbd  rbd    7545 Jul 30 15:00 pluck.c DONE
+-rw-r--r--  1 rbd  rbd    7087 Jul 30 15:00 shape.c DONE
+-rw-r--r--  1 rbd  rbd    7032 Jul 30 15:00 areson.c DONE
+-rw-r--r--  1 rbd  rbd    6269 Jul 30 15:00 integrate.c DONE
+-rw-r--r--  1 rbd  rbd    6052 Jul 30 15:00 tone.c DONE
+-rw-r--r--  1 rbd  rbd    6023 Jul 30 15:00 slope.c DONE
+-rw-r--r--  1 rbd  rbd    5840 Jul 30 15:00 alpass.c DONE
+-rw-r--r--  1 rbd  rbd    5837 Jul 30 15:00 quantize.c DONE
+-rw-r--r--  1 rbd  rbd    5748 Jul 30 15:00 scale.c DONE
+-rw-r--r--  1 rbd  rbd    5734 Jul 30 15:00 delaycc.c DONE
+-rw-r--r--  1 rbd  rbd    5728 Jul 30 15:00 sqrt.c DONE
+-rw-r--r--  1 rbd  rbd    5694 Jul 30 15:00 abs.c DONE 
+-rw-r--r--  1 rbd  rbd    5649 Jul 30 15:00 log.c DONE 
+-rw-r--r--  1 rbd  rbd    5622 Jul 30 15:00 recip.c DONE 
+-rw-r--r--  1 rbd  rbd    5502 Jul 30 15:00 exp.c DONE 
+-rw-r--r--  1 rbd  rbd    5500 Jul 30 15:00 congen.c DONE 
+-rw-r--r--  1 rbd  rbd    5220 Jul 30 15:00 fromarraystream.c DONE 
+-rw-r--r--  1 rbd  rbd    4932 Jul 30 15:00 pwl.c DONE 
+-rw-r--r--  1 rbd  rbd    3895 Jul 30 15:00 fmfb.c DONE 
+-rw-r--r--  1 rbd  rbd    3703 Jul 30 15:00 osc.c DONE 
+-rw-r--r--  1 rbd  rbd    3486 Jul 30 15:00 fromobject.c DONE 
+-rw-r--r--  1 rbd  rbd    3285 Jul 30 15:00 instrmandolin.c DONE 
+-rw-r--r--  1 rbd  rbd    3242 Jul 30 15:00 sine.c DONE 
+-rw-r--r--  1 rbd  rbd    3176 Jul 30 15:00 instrmodalbar.c DONE 
+-rw-r--r--  1 rbd  rbd    3012 Jul 30 15:00 instrsitar.c DONE 
+-rw-r--r--  1 rbd  rbd    2726 Jul 30 15:00 const.c DONE 
+-rw-r--r--  1 rbd  rbd    2639 Jul 30 15:00 white.c DONE 
+
+
+
 default sound file directory seems to be install directory -- bad idea
 on Windows 7
 

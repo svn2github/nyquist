@@ -63,8 +63,6 @@ define function arp4(pitches, len, ioi, dur: 1, instr: quote(note))
 ;; Since arp4 returns a score, you can play it like this:
 ; exec score-play(arp4(list(c4, e4, g4, b4, c5), 20, 0.15, 3))
 
-;; This will play the simple arpeggio:
-;exec arp4()
 
 ;; Note: it might be nice to extend the parameters to let the user select
 ;; the arpeggiation style (up, down, up-down, up-down with elision), but

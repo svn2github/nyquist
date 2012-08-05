@@ -29,13 +29,14 @@
     (20 (progn (clarinet-example-3) (print "Clarinet Demo 3")))
     (21 (progn (clarinet-example-4) (print "Clarinet Demo 4")))
     (22 (progn (clarinet-example-5) (print "Clarinet Demo 5")))
-    (23 (progn (sax-example-1) (print "Sax Demo 1")))
-    (24 (progn (sax-example-2) (print "Sax Demo 2")))
-    (t (error "number ranges from 1 to 24"))))
+    (23 (progn (clarinet-example-6) (print "Clarinet Example 6")))
+    (24 (progn (sax-example-1) (print "Sax Demo 1")))
+    (25 (progn (sax-example-2) (print "Sax Demo 2")))
+    (t (error "number ranges from 1 to 25"))))
     
 
 (defun all-stk-demos ()
-  (dotimes (i 24) (makedemo (1+ i))))
+  (dotimes (i 25) (makedemo (1+ i))))
 
 
 
@@ -101,35 +102,44 @@
 
 
 (defun nrev-demo ()
-  (play (seq (timed-seq my-score)
-	     (nrev (timed-seq my-score) 4.0 0.25))))
+  (autonorm-off)
+  (play (scale 0.25
+         (seq (timed-seq my-score)
+	      (nrev (timed-seq my-score) 4.0 0.25))))
+  (autonorm-on))
 
 ;(nrev-demo)
 
 (defun jcrev-demo ()
-  (play (seq (timed-seq my-score)
-	     (jcrev (timed-seq my-score) 4.0 0.25))))
+  (autonorm-off)
+  (play (scale 0.2
+         (seq (timed-seq my-score)
+	      (jcrev (timed-seq my-score) 4.0 0.25))))
+  (autonorm-on))
 
 ;(jcrev-demo)
 
 (defun prcrev-demo ()
-  (play (seq (timed-seq my-score)
-	     (prcrev (timed-seq my-score) 4.0 0.25))))
+  (play (scale 0.25
+         (seq (timed-seq my-score)
+	      (prcrev (timed-seq my-score) 4.0 0.25)))))
 
 ;(prcrev-demo)
 
 
 (defun stkchorus-demo ()
-  (play (seq (timed-seq my-score)
-	     (stkchorus (timed-seq my-score) 0.1 0.2 0.5))))
+  (play (scale 0.25
+         (seq (timed-seq my-score)
+	      (stkchorus (timed-seq my-score) 0.1 0.2 0.5)))))
 
 ;(stkchorus-demo)
 
 (defun pitshift-demo ()
-  (play (seq (timed-seq my-score)
-             (pitshift (timed-seq my-score) 2.0 0.9)
-             (pitshift (timed-seq my-score) 0.4 0.7)
-	     (pitshift (timed-seq my-score) 6.0 0.7))))
+  (play (scale 0.25
+         (seq (timed-seq my-score)
+              (pitshift (timed-seq my-score) 2.0 0.9)
+              (pitshift (timed-seq my-score) 0.4 0.7)
+	      (pitshift (timed-seq my-score) 6.0 0.7)))))
 
 ;(pitshift-demo)
 
@@ -183,11 +193,14 @@
 ;(bowed-demo 0.4)
    
 (defun bowed-freq-demo ()
-  (play (bowed-freq c3 (bow-env 10) (env2 5 10))))
+  (autonorm-off)
+  (play (bowed-freq c3 (bow-env 10) (env2 5 10)))
+  (autonorm-on))
 
 ;(bowed-freq-demo)
  
 (defun mandolin-demo ()
+  (autonorm-off)
   (play (seq (mandolin c4 1.0)
              (mandolin c4 1.0 2.0)
 	     (mandolin c4 1.0 3.0)
@@ -216,7 +229,8 @@
 	     (mandolin c4 1.0 50.0)
 	     (mandolin c4 1.0 55.0)
 	     (mandolin c4 1.0 60.0)
-	     (mandolin c4 1.0 65.0))))
+	     (mandolin c4 1.0 65.0)))
+  (autonorm-on))
 
 ;(mandolin-demo)
 
@@ -233,11 +247,13 @@
 ;(wg-uniform-bar-demo)
 
 (defun wg-tuned-bar-demo ()
+  (autonorm-off)
   (play (seq (wg-tuned-bar c4 (wg-env 0.2))
 	     (wg-tuned-bar g3 (wg-env 0.2))
 	     (wg-tuned-bar c4 (wg-env 0.2))
 	     (wg-tuned-bar e4 (wg-env 0.2))
-	     (wg-tuned-bar g4 (wg-env 0.2)))))
+	     (wg-tuned-bar g4 (wg-env 0.2))))
+  (autonorm-on))
 
 ;(wg-tuned-bar-demo)
 
@@ -251,10 +267,12 @@
 ;(wg-glass-harm-demo)
 
 (defun wg-tibetan-bowl-demo ()
+  (autonorm-off)
   (play (seq (wg-tibetan-bowl c4 (wg-env 0.2))
 	     (wg-tibetan-bowl ef4 (wg-env 0.2))
 	     (wg-tibetan-bowl fs4 (wg-env 0.2))
-	     (wg-tibetan-bowl a4 (wg-env 2.0)))))
+	     (wg-tibetan-bowl a4 (wg-env 2.0))))
+  (autonorm-on))
 
 ;(wg-tibetan-bowl-demo)
 
@@ -266,6 +284,7 @@
 	(modalbar prst g4 1.0)))
 
 (defun modalbar-demo ()
+  (autonorm-off)
   (play (seq (modalbar-demo-1 'MARIMBA)
 	     (modalbar-demo-1 'VIBRAPHONE)
 	     (modalbar-demo-1 'AGOGO)
@@ -274,7 +293,8 @@
 	     (modalbar-demo-1 'WOOD2)
 	     (modalbar-demo-1 'BEATS)
 	     (modalbar-demo-1 'TWO-FIXED)
-	     (modalbar-demo-1 'CLUMP))))
+	     (modalbar-demo-1 'CLUMP)))
+  (autonorm-on))
 
 ;(modalbar-demo)
 
@@ -291,7 +311,9 @@
 
 ;; simple clarinet sound
 (defun clarinet-example-1 ()
-  (play (clarinet bf3 (stk-breath-env 1 0.2 0.1))))
+  (autonorm-off)
+  (play (clarinet bf3 (stk-breath-env 1 0.2 0.1)))
+  (autonorm-on))
 
 ;; clarinet sound with frequency sweep (glissando)
 (defun clarinet-example-2 ()
@@ -328,16 +350,19 @@
 
 
 (defun sax-example-1 ()
-  (scale 0.5
+  (autonorm-off)
+  (play (scale 0.5
    (timed-seq '(
 		(0.0 1 (sax g3 (stk-breath-env 2 0.2 0.2)))
 		(2.0 1 (sax-freq c4  (stk-breath-env 4 0.6 0.6) 
                                  (scale 100 (mult (pwl 0 0.95 4 1.3 4)))))
-               )))
+               ))))
+  (autonorm-on)
 )
 
 (defun sax-example-2 ()
-  (scale 0.5
+  (autonorm-off)
+  (play (scale 0.5
     (timed-seq
      '(
        (0.0 1 (sax-freq
@@ -360,6 +385,8 @@
                 (eight-sixteenths-env)
 		(freqenv 1 ef4 (list 0 ef4 0.125 cs4 0.25 b3 0.375 bf3 
 				     0.625 gf3 0.75 af3 0.875 bf4))))))))
+  (autonorm-on)
+)
 
 (defun eight-sixteenths-env ()
     (mult (envbreaks 1 (list 0.125 0.25 0.375 0.5 0.625 0.75 0.875))

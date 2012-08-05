@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2006 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -21,10 +21,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "sndfile.h"
 #include "sfendian.h"
-#include "float_cast.h"
 #include "common.h"
 #include "wav_w64.h"
 #include "GSM610/gsm.h"
@@ -84,7 +84,7 @@ gsm610_init	(SF_PRIVATE *psf)
 		return SFE_INTERNAL ;
 		} ;
 
-	if (psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_RDWR)
 		return SFE_BAD_MODE_RW ;
 
 	psf->sf.seekable = SF_FALSE ;
@@ -105,7 +105,7 @@ Need separate gsm_data structs for encode and decode.
 	if ((pgsm610->gsm_data = gsm_create ()) == NULL)
 		return SFE_MALLOC_FAILED ;
 
-	switch (psf->sf.format & SF_FORMAT_TYPEMASK)
+	switch (SF_CONTAINER (psf->sf.format))
 	{	case SF_FORMAT_WAV :
 		case SF_FORMAT_WAVEX :
 		case SF_FORMAT_W64 :
@@ -132,7 +132,7 @@ Need separate gsm_data structs for encode and decode.
 			break ;
 		} ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	if (psf->datalength % pgsm610->blocksize == 0)
 			pgsm610->blocks = psf->datalength / pgsm610->blocksize ;
 		else if (psf->datalength % pgsm610->blocksize == 1 && pgsm610->blocksize == GSM610_BLOCKSIZE)
@@ -152,6 +152,8 @@ Need separate gsm_data structs for encode and decode.
 
 		psf->sf.frames = pgsm610->samplesperblock * pgsm610->blocks ;
 
+		psf_fseek (psf, psf->dataoffset, SEEK_SET) ;
+
 		pgsm610->decode_block (psf, pgsm610) ;	/* Read first block. */
 
 		psf->read_short		= gsm610_read_s ;
@@ -160,7 +162,7 @@ Need separate gsm_data structs for encode and decode.
 		psf->read_double	= gsm610_read_d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	pgsm610->blockcount = 0 ;
 		pgsm610->samplecount = 0 ;
 
@@ -200,12 +202,12 @@ gsm610_wav_decode_block	(SF_PRIVATE *psf, GSM610_PRIVATE *pgsm610)
 		psf_log_printf (psf, "*** Warning : short read (%d != %d).\n", k, WAV_W64_GSM610_BLOCKSIZE) ;
 
 	if (gsm_decode (pgsm610->gsm_data, pgsm610->block, pgsm610->samples) < 0)
-	{	psf_log_printf (psf, "Error from gsm_decode() on frame : %d\n", pgsm610->blockcount) ;
+	{	psf_log_printf (psf, "Error from WAV gsm_decode() on frame : %d\n", pgsm610->blockcount) ;
 		return 0 ;
 		} ;
 
 	if (gsm_decode (pgsm610->gsm_data, pgsm610->block + (WAV_W64_GSM610_BLOCKSIZE + 1) / 2, pgsm610->samples + WAV_W64_GSM610_SAMPLES / 2) < 0)
-	{	psf_log_printf (psf, "Error from gsm_decode() on frame : %d.5\n", pgsm610->blockcount) ;
+	{	psf_log_printf (psf, "Error from WAV gsm_decode() on frame : %d.5\n", pgsm610->blockcount) ;
 		return 0 ;
 		} ;
 
@@ -228,7 +230,7 @@ gsm610_decode_block	(SF_PRIVATE *psf, GSM610_PRIVATE *pgsm610)
 		psf_log_printf (psf, "*** Warning : short read (%d != %d).\n", k, GSM610_BLOCKSIZE) ;
 
 	if (gsm_decode (pgsm610->gsm_data, pgsm610->block, pgsm610->samples) < 0)
-	{	psf_log_printf (psf, "Error from gsm_decode() on frame : %d\n", pgsm610->blockcount) ;
+	{	psf_log_printf (psf, "Error from standard gsm_decode() on frame : %d\n", pgsm610->blockcount) ;
 		return 0 ;
 		} ;
 
@@ -367,11 +369,9 @@ gsm610_read_d	(SF_PRIVATE *psf, double *ptr, sf_count_t len)
 } /* gsm610_read_d */
 
 static sf_count_t
-gsm610_seek	(SF_PRIVATE *psf, int mode, sf_count_t offset)
+gsm610_seek	(SF_PRIVATE *psf, int UNUSED (mode), sf_count_t offset)
 {	GSM610_PRIVATE *pgsm610 ;
 	int			newblock, newsample ;
-
-	mode = mode ;
 
 	if (psf->codec_data == NULL)
 		return 0 ;
@@ -389,8 +389,8 @@ gsm610_seek	(SF_PRIVATE *psf, int mode, sf_count_t offset)
 		pgsm610->blockcount = 0 ;
 
 		gsm_init (pgsm610->gsm_data) ;
-		if ((psf->sf.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
-				(psf->sf.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_W64)
+		if ((SF_CONTAINER (psf->sf.format)) == SF_FORMAT_WAV ||
+				(SF_CONTAINER (psf->sf.format)) == SF_FORMAT_W64)
 			gsm_option (pgsm610->gsm_data, GSM_OPT_WAV49, &true_flag) ;
 
 		pgsm610->decode_block (psf, pgsm610) ;
@@ -406,7 +406,7 @@ gsm610_seek	(SF_PRIVATE *psf, int mode, sf_count_t offset)
 	newblock	= offset / pgsm610->samplesperblock ;
 	newsample	= offset % pgsm610->samplesperblock ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	if (psf->read_current != newblock * pgsm610->samplesperblock + newsample)
 		{	psf_fseek (psf, psf->dataoffset + newblock * pgsm610->samplesperblock, SEEK_SET) ;
 			pgsm610->blockcount = newblock ;
@@ -604,7 +604,7 @@ gsm610_close	(SF_PRIVATE *psf)
 
 	pgsm610 = (GSM610_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	/*	If a block has been partially assembled, write it out
 		**	as the final block.
 		*/
@@ -619,10 +619,3 @@ gsm610_close	(SF_PRIVATE *psf)
 	return 0 ;
 } /* gsm610_close */
 
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: 8575187d-af4f-4acf-b9dd-6ff705628345
-*/

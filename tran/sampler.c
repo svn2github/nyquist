@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "sampler.h"
 
-void sampler_free();
+void sampler_free(snd_susp_type a_susp);
 
 
 typedef struct sampler_susp_struct {
@@ -39,8 +39,9 @@ typedef struct sampler_susp_struct {
 } sampler_susp_node, *sampler_susp_type;
 
 
-void sampler_s_fetch(register sampler_susp_type susp, snd_list_type snd_list)
+void sampler_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    sampler_susp_type susp = (sampler_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -112,7 +113,7 @@ void sampler_s_fetch(register sampler_susp_type susp, snd_list_type snd_list)
 	if (n) do { /* the inner sample computation loop */
 	    long table_index;
             double x1;
-table_index = (long) phase_reg;
+            table_index = (long) phase_reg;
             x1 = table_ptr_reg[table_index];
             *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
                           (table_ptr_reg[table_index + 1] - x1));
@@ -146,8 +147,9 @@ table_index = (long) phase_reg;
 } /* sampler_s_fetch */
 
 
-void sampler_i_fetch(register sampler_susp_type susp, snd_list_type snd_list)
+void sampler_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    sampler_susp_type susp = (sampler_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -233,7 +235,7 @@ void sampler_i_fetch(register sampler_susp_type susp, snd_list_type snd_list)
 		susp_check_term_log_samples_break(s_fm, s_fm_ptr, s_fm_cnt, s_fm_x1_sample_reg);
 		s_fm_x1_sample_reg = susp_current_sample(s_fm, s_fm_ptr);
 	    }
-table_index = (long) phase_reg;
+            table_index = (long) phase_reg;
             x1 = table_ptr_reg[table_index];
             *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
                           (table_ptr_reg[table_index + 1] - x1));
@@ -268,8 +270,9 @@ table_index = (long) phase_reg;
 } /* sampler_i_fetch */
 
 
-void sampler_r_fetch(register sampler_susp_type susp, snd_list_type snd_list)
+void sampler_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    sampler_susp_type susp = (sampler_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type s_fm_val;
     int togo;
@@ -355,7 +358,7 @@ void sampler_r_fetch(register sampler_susp_type susp, snd_list_type snd_list)
 	if (n) do { /* the inner sample computation loop */
 	    long table_index;
             double x1;
-table_index = (long) phase_reg;
+            table_index = (long) phase_reg;
             x1 = table_ptr_reg[table_index];
             *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
                           (table_ptr_reg[table_index + 1] - x1));
@@ -388,11 +391,9 @@ table_index = (long) phase_reg;
 } /* sampler_r_fetch */
 
 
-void sampler_toss_fetch(susp, snd_list)
-  register sampler_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void sampler_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    sampler_susp_type susp = (sampler_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -407,26 +408,29 @@ void sampler_toss_fetch(susp, snd_list)
     susp->s_fm_ptr += n;
     susp_took(s_fm_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void sampler_mark(sampler_susp_type susp)
+void sampler_mark(snd_susp_type a_susp)
 {
+    sampler_susp_type susp = (sampler_susp_type) a_susp;
     sound_xlmark(susp->s_fm);
 }
 
 
-void sampler_free(sampler_susp_type susp)
+void sampler_free(snd_susp_type a_susp)
 {
+    sampler_susp_type susp = (sampler_susp_type) a_susp;
     table_unref(susp->the_table);
     sound_unref(susp->s_fm);
     ffree_generic(susp, sizeof(sampler_susp_node), "sampler_free");
 }
 
 
-void sampler_print_tree(sampler_susp_type susp, int n)
+void sampler_print_tree(snd_susp_type a_susp, int n)
 {
+    sampler_susp_type susp = (sampler_susp_type) a_susp;
     indent(n);
     stdputstr("s_fm:");
     sound_print_tree_1(susp->s_fm, n);
@@ -453,12 +457,19 @@ sound_type snd_make_sampler(sound_type s, double step, double loop_start, rate_t
           index = 0;
           frac = 0;
       }
-      susp->table_ptr[round(susp->table_len)] = /* copy interpolated start to last entry */
+      /* copy interpolated start to last entry */
+      susp->table_ptr[round(susp->table_len)] =
           (sample_type) (susp->table_ptr[index] * (1.0 - frac) + 
                          susp->table_ptr[index + 1] * frac);};
     susp->phase = 0.0;
     susp->ph_incr = (s->sr / sr) * hz / step_to_hz(step);
     s_fm->scale = (sample_type) (s_fm->scale * (susp->ph_incr / hz));
+
+    /* make sure no sample rate is too high */
+    if (s_fm->sr > sr) {
+        sound_unref(s_fm);
+        snd_badsr();
+    }
 
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s_fm, sr);
@@ -478,8 +489,8 @@ sound_type snd_make_sampler(sound_type s, double step, double loop_start, rate_t
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = sampler_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = sampler_toss_fetch;
     }
 
     /* initialize susp state */

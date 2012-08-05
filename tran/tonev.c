@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "tonev.h"
 
-void tonev_free();
+void tonev_free(snd_susp_type a_susp);
 
 
 typedef struct tonev_susp_struct {
@@ -40,8 +40,9 @@ typedef struct tonev_susp_struct {
 } tonev_susp_node, *tonev_susp_type;
 
 
-void tonev_ns_fetch(register tonev_susp_type susp, snd_list_type snd_list)
+void tonev_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    tonev_susp_type susp = (tonev_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -149,8 +150,9 @@ void tonev_ns_fetch(register tonev_susp_type susp, snd_list_type snd_list)
 } /* tonev_ns_fetch */
 
 
-void tonev_ni_fetch(register tonev_susp_type susp, snd_list_type snd_list)
+void tonev_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    tonev_susp_type susp = (tonev_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -243,8 +245,8 @@ void tonev_ni_fetch(register tonev_susp_type susp, snd_list_type snd_list)
 		susp_check_term_samples_break(hz, hz_ptr, hz_cnt, hz_x1_sample_reg);
 		hz_x1_sample_reg = susp_current_sample(hz, hz_ptr);
 		b = 2.0 - cos(hz_x1_sample_reg);
-		c2_reg = susp->c2 = b - sqrt((b * b) - 1.0);
-		c1_reg = susp->c1 = (1.0 - c2_reg) * scale1_reg;
+		c2_reg = b - sqrt((b * b) - 1.0);
+		c1_reg = (1.0 - c2_reg) * scale1_reg;
 	    }
             *out_ptr_reg++ = (sample_type) (prev_reg = c1_reg * *s1_ptr_reg++ + c2_reg * prev_reg);
 	    hz_pHaSe_ReG += hz_pHaSe_iNcR_rEg;
@@ -277,8 +279,9 @@ void tonev_ni_fetch(register tonev_susp_type susp, snd_list_type snd_list)
 } /* tonev_ni_fetch */
 
 
-void tonev_nr_fetch(register tonev_susp_type susp, snd_list_type snd_list)
+void tonev_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    tonev_susp_type susp = (tonev_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type hz_val;
     int togo;
@@ -399,11 +402,9 @@ void tonev_nr_fetch(register tonev_susp_type susp, snd_list_type snd_list)
 } /* tonev_nr_fetch */
 
 
-void tonev_toss_fetch(susp, snd_list)
-  register tonev_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void tonev_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    tonev_susp_type susp = (tonev_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -426,27 +427,30 @@ void tonev_toss_fetch(susp, snd_list)
     susp->hz_ptr += n;
     susp_took(hz_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void tonev_mark(tonev_susp_type susp)
+void tonev_mark(snd_susp_type a_susp)
 {
+    tonev_susp_type susp = (tonev_susp_type) a_susp;
     sound_xlmark(susp->s1);
     sound_xlmark(susp->hz);
 }
 
 
-void tonev_free(tonev_susp_type susp)
+void tonev_free(snd_susp_type a_susp)
 {
+    tonev_susp_type susp = (tonev_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->hz);
     ffree_generic(susp, sizeof(tonev_susp_node), "tonev_free");
 }
 
 
-void tonev_print_tree(tonev_susp_type susp, int n)
+void tonev_print_tree(snd_susp_type a_susp, int n)
 {
+    tonev_susp_type susp = (tonev_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
@@ -472,6 +476,12 @@ sound_type snd_make_tonev(sound_type s1, sound_type hz)
     susp->prev = 0.0;
     hz->scale = (sample_type) (hz->scale * (PI2 / s1->sr));
 
+    /* make sure no sample rate is too high */
+    if (hz->sr > sr) {
+        sound_unref(hz);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s1, sr);
     interp_desc = (interp_desc << 2) + interp_style(hz, sr);
@@ -496,8 +506,8 @@ sound_type snd_make_tonev(sound_type s1, sound_type hz)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = tonev_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = tonev_toss_fetch;
     }
 
     /* initialize susp state */

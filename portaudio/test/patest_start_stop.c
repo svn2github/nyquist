@@ -6,7 +6,7 @@
 	@author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: patest_start_stop.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest_start_stop.c 1447 2010-01-24 12:35:36Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com/
@@ -121,6 +121,10 @@ int main(void)
     if( err != paNoError ) goto error;
 
     outputParameters.device = OUTPUT_DEVICE;
+    if (outputParameters.device == paNoDevice) {
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
+    }
     outputParameters.channelCount = 2;       /* stereo output */
     outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
@@ -139,6 +143,8 @@ int main(void)
 
     for( i=0; i<NUM_LOOPS; i++ )
     {
+        data.left_phase = data.right_phase = 0;
+
         err = Pa_StartStream( stream );
         if( err != paNoError ) goto error;
 

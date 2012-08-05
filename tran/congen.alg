@@ -8,10 +8,11 @@
 (CONSTANT "fall_factor" "rise_factor")
 (ALWAYS-SCALE sndin)
 (TERMINATE (MIN sndin))
-(INNER-LOOP "      sample_type current = sndin;
-    if (current > value) {
-        value = current - (current - value) * rise_factor;
-    } else {
-        value = current - (current - value) * fall_factor;
-    }
-    output = (sample_type) value;"))
+(INNER-LOOP "sample_type current = sndin;
+            if (current > value) {
+                value = current - (current - value) * rise_factor;
+            } else {
+                value = current - (current - value) * fall_factor;
+            }
+            output = (sample_type) value")
+)

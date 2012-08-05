@@ -1,4 +1,8 @@
-(load "misc/makefile.lsp")
-(setf sys-type 'linux)
-(makefile)
-(exit)
+(load "nyinit")
+;(load "test/fft")
+;(load "test/convolve")
+(print "TEST STARTING")
+(snd-samples (stretch 0.01 (lp (lfo 6) (osc c4))) 100)
+(print "TEST ENDING")
+
+

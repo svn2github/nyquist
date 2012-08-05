@@ -603,6 +603,7 @@ LVAL xcleanup(void)
 {
     xllastarg();
     xlcleanup();
+    /* compiler might (wrongly) complain there is no return value */
 }
 
 /* xtoplevel - special form 'top-level' */

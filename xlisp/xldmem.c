@@ -129,7 +129,7 @@ LVAL new_string(int size)
 }
 
 /* cvsymbol - convert a string to a symbol */
-LVAL cvsymbol(char *pname)
+LVAL cvsymbol(const char *pname)
 {
     /* pname points to a global buffer space. This is ok unless you have
      * a gc hook that writes things and therefore uses the buffer. Then

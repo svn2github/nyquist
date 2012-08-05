@@ -158,23 +158,18 @@ functions assume durations are always positive.")))
 (defun amosc (pitch modulation &optional (sound *table*) (phase 0.0))
   (let ((modulation-srate (snd-srate modulation))
     (hz (step-to-hz (+ pitch (get-transpose)))))
-    (cond ((> *SOUND-SRATE* modulation-srate)
-       (setf modulation (snd-up *SOUND-SRATE* modulation)))
-      ((< *SOUND-SRATE* modulation-srate)
-       (format t "Warning: down-sampling AM modulation in amosc~%")
-       (setf modulation (snd-down *SOUND-SRATE* modulation))))
     (cond ((> hz (/ *SOUND-SRATE* 2))
        (format t "Warning: amosc frequency (~A hz) will alias at current sample rate (~A hz).\n"
            hz *SOUND-SRATE*)))
     (scale-db (get-loud)
       (snd-amosc
-    (car sound)	; samples for table
-    (cadr sound)	; step represented by table
-    *SOUND-SRATE*	; output sample rate
-    hz		;  output hz
-    (local-to-global 0)	; starting time
-    modulation	; modulation
-    phase))))	; phase
+        (car sound)     ; samples for table
+        (cadr sound)    ; step represented by table
+        *SOUND-SRATE*   ; output sample rate
+        hz              ;  output hz
+        (local-to-global 0)	; starting time
+        modulation      ; modulation
+        phase))))       ; phase
 
 
 ;; FMOSC
@@ -186,21 +181,18 @@ functions assume durations are always positive.")))
 (defun fmosc (pitch modulation &optional (sound *table*) (phase 0.0))
   (let ((modulation-srate (snd-srate modulation))
         (hz (step-to-hz (+ pitch (get-transpose)))))
-    (cond ((< *SOUND-SRATE* modulation-srate)
-       (format t "Warning: down-sampling FM modulation in fmosc~%")
-       (setf modulation (snd-down *SOUND-SRATE* modulation))))
     (cond ((> hz (/ *SOUND-SRATE* 2))
        (format t "Warning: fmosc nominal frequency (~A hz) will alias at current sample rate (~A hz).\n"
            hz *SOUND-SRATE*)))
     (scale-db (get-loud)
       (snd-fmosc 
-        (car sound)		; samples for table
-        (cadr sound)		; step represented by table
-        *SOUND-SRATE*		; output sample rate
-        hz			;  output hz
-        (local-to-global 0)	; starting time
-        modulation		; modulation
-        phase))))		; phase
+        (car sound)         ; samples for table
+        (cadr sound)        ; step represented by table
+        *SOUND-SRATE*       ; output sample rate
+        hz                  ;  output hz
+        (local-to-global 0) ; starting time
+        modulation          ; modulation
+        phase))))           ; phase
 
 
 ;; FMFB
@@ -1358,22 +1350,14 @@ loop
 ; 
 (defun nyq:prod-2-sounds (s1 s2)
   (cond ((numberp s1)
-     (cond ((numberp s2)
-        (* s1 s2))
-           (t
-        (scale s1 s2))))
-    ((numberp s2)
-     (scale s2 s1))
-    (t
-     (let ((s1sr (snd-srate s1))
-           (s2sr (snd-srate s2)))
-;    (display "nyq:prod-2-sounds" s1sr s2sr)
-        (cond ((> s1sr s2sr)
-           (snd-prod s1 (snd-up s1sr s2)))
-          ((< s1sr s2sr)
-           (snd-prod (snd-up s2sr s1) s2))
-          (t
-           (snd-prod s1 s2)))))))
+         (cond ((numberp s2)
+                (* s1 s2))
+               (t
+                (scale s1 s2))))
+        ((numberp s2)
+         (scale s2 s1))
+        (t
+         (snd-prod s1 s2))))
 
 
 ;; RAMP -- linear ramp from 0 to x
@@ -1451,14 +1435,8 @@ loop
          (snd-maxv s1 (snd-const s2 (local-to-global 0.0)
                    (snd-srate s1) (get-duration 1.0))))
         (t
-         (let ((s1sr (snd-srate s1))
-               (s2sr (snd-srate s2)))
-            (cond ((> s1sr s2sr)
-                   (snd-maxv s1 (snd-up s1sr s2)))
-                  ((< s1sr s2sr)
-                   (snd-maxv (snd-up s2sr s1) s2))
-                  (t
-                   (snd-maxv s1 s2)))))))
+         (snd-maxv s1 s2))))
+
 
 (defun s-min (s1 s2)
   (setf s1 (nyq:coerce-to s1 s2))
@@ -1489,14 +1467,8 @@ loop
          (snd-minv s1 (snd-const s2 (local-to-global 0.0)
                    (snd-srate s1) (get-duration 1.0))))
        (t
-        (let ((s1sr (snd-srate s1))
-              (s2sr (snd-srate s2)))
-          (cond ((> s1sr s2sr)
-                 (snd-minv s1 (snd-up s1sr s2)))
-                ((< s1sr s2sr)
-                 (snd-minv (snd-up s2sr s1) s2))
-               (t
-                (snd-minv s1 s2)))))))
+        (snd-minv s1 s2))))
+
 
 (defun snd-minv (s1 s2)
   (scale -1.0 (snd-maxv (scale -1.0 s1) (scale -1.0 s2))))

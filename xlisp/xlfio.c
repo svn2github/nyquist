@@ -655,7 +655,7 @@ LVAL xformat(void)
             case '\n':
 			case '\r':
 				/* mac may read \r -- this should be ignored */
-				if (*fmt == '\r') *fmt++;  
+				if (*fmt == '\r') fmt++;  
                 while (*fmt && *fmt != '\n' && isspace(*fmt))
                     ++fmt;
                 break;
@@ -699,17 +699,17 @@ LOCAL LVAL getstroutput(LVAL stream)
 
 LVAL xlistdir(void)
 {
-    char *path;
+    const char *path;
     LVAL result = NULL;
     LVAL *tail;
-    /* get the path */
+    /* get the path, converting unsigned char * to char * */
     path = (char *)getstring(xlgetfname());
     /* try to start listing */
     if (osdir_list_start(path)) {
-        char *filename;
+        const char *filename;
         xlsave1(result);
         tail = &result;
-        while (filename = osdir_list_next()) {
+        while ((filename = osdir_list_next())) {
             *tail = cons(NIL, NIL);
             rplaca(*tail, cvstring(filename));
             tail = &cdr(*tail);

@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "atonev.h"
 
-void atonev_free();
+void atonev_free(snd_susp_type a_susp);
 
 
 typedef struct atonev_susp_struct {
@@ -38,8 +38,9 @@ typedef struct atonev_susp_struct {
 } atonev_susp_node, *atonev_susp_type;
 
 
-void atonev_ns_fetch(register atonev_susp_type susp, snd_list_type snd_list)
+void atonev_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    atonev_susp_type susp = (atonev_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -109,14 +110,14 @@ void atonev_ns_fetch(register atonev_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        double current;
+            double current;
 	    register double bb;
 	    bb = 2.0 - cos((hz_scale_reg * *hz_ptr_reg++));
 	    cc_reg = bb - sqrt((bb * bb) - 1.0);
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             prev_reg = cc_reg * (prev_reg + current);
             *out_ptr_reg++ = (sample_type) prev_reg;
-            prev_reg -= current;;
+            prev_reg -= current;
 	} while (--n); /* inner loop */
 
 	susp->prev = prev_reg;
@@ -146,8 +147,9 @@ current = *s1_ptr_reg++;
 } /* atonev_ns_fetch */
 
 
-void atonev_ni_fetch(register atonev_susp_type susp, snd_list_type snd_list)
+void atonev_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    atonev_susp_type susp = (atonev_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -225,7 +227,7 @@ void atonev_ni_fetch(register atonev_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        double current;
+            double current;
 	    if (hz_pHaSe_ReG >= 1.0) {
 /* fixup-depends hz */
 		register double bb; 
@@ -236,12 +238,12 @@ void atonev_ni_fetch(register atonev_susp_type susp, snd_list_type snd_list)
 		susp_check_term_samples_break(hz, hz_ptr, hz_cnt, hz_x1_sample_reg);
 		hz_x1_sample_reg = susp_current_sample(hz, hz_ptr);
 		bb = 2.0 - cos(hz_x1_sample_reg);
-		cc_reg = susp->cc = bb - sqrt((bb * bb) - 1.0);
+		cc_reg = bb - sqrt((bb * bb) - 1.0);
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             prev_reg = cc_reg * (prev_reg + current);
             *out_ptr_reg++ = (sample_type) prev_reg;
-            prev_reg -= current;;
+            prev_reg -= current;
 	    hz_pHaSe_ReG += hz_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -272,8 +274,9 @@ current = *s1_ptr_reg++;
 } /* atonev_ni_fetch */
 
 
-void atonev_nr_fetch(register atonev_susp_type susp, snd_list_type snd_list)
+void atonev_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    atonev_susp_type susp = (atonev_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type hz_val;
     int togo;
@@ -360,11 +363,11 @@ void atonev_nr_fetch(register atonev_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        double current;
-current = *s1_ptr_reg++;
+            double current;
+            current = *s1_ptr_reg++;
             prev_reg = cc_reg * (prev_reg + current);
             *out_ptr_reg++ = (sample_type) prev_reg;
-            prev_reg -= current;;
+            prev_reg -= current;
 	} while (--n); /* inner loop */
 
 	susp->prev = prev_reg;
@@ -393,11 +396,9 @@ current = *s1_ptr_reg++;
 } /* atonev_nr_fetch */
 
 
-void atonev_toss_fetch(susp, snd_list)
-  register atonev_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void atonev_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    atonev_susp_type susp = (atonev_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -420,27 +421,30 @@ void atonev_toss_fetch(susp, snd_list)
     susp->hz_ptr += n;
     susp_took(hz_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void atonev_mark(atonev_susp_type susp)
+void atonev_mark(snd_susp_type a_susp)
 {
+    atonev_susp_type susp = (atonev_susp_type) a_susp;
     sound_xlmark(susp->s1);
     sound_xlmark(susp->hz);
 }
 
 
-void atonev_free(atonev_susp_type susp)
+void atonev_free(snd_susp_type a_susp)
 {
+    atonev_susp_type susp = (atonev_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->hz);
     ffree_generic(susp, sizeof(atonev_susp_node), "atonev_free");
 }
 
 
-void atonev_print_tree(atonev_susp_type susp, int n)
+void atonev_print_tree(snd_susp_type a_susp, int n)
 {
+    atonev_susp_type susp = (atonev_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
@@ -471,6 +475,12 @@ sound_type snd_make_atonev(sound_type s1, sound_type hz)
     susp->prev = 0.0;
     hz->scale = (sample_type) (hz->scale * (PI2 / s1->sr));
 
+    /* make sure no sample rate is too high */
+    if (hz->sr > sr) {
+        sound_unref(hz);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s1, sr);
     interp_desc = (interp_desc << 2) + interp_style(hz, sr);
@@ -491,8 +501,8 @@ sound_type snd_make_atonev(sound_type s1, sound_type hz)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = atonev_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = atonev_toss_fetch;
     }
 
     /* initialize susp state */

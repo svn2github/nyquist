@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrmodalbar.h"
 
-void modalbar_free();
+void modalbar_free(snd_susp_type a_susp);
 
 
 typedef struct modalbar_susp_struct {
@@ -20,12 +20,12 @@ typedef struct modalbar_susp_struct {
     int temp_ret_value;
 } modalbar_susp_node, *modalbar_susp_type;
 
+#include "instr.h"
 
-	    #include "instr.h"
 
-
-void modalbar__fetch(register modalbar_susp_type susp, snd_list_type snd_list)
+void modalbar__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    modalbar_susp_type susp = (modalbar_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -55,8 +55,7 @@ void modalbar__fetch(register modalbar_susp_type susp, snd_list_type snd_list)
 	mymbar_reg = susp->mymbar;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-	    *out_ptr_reg++ = (sample_type) tick(mymbar_reg);
+            *out_ptr_reg++ = (sample_type) tick(mymbar_reg);
 	} while (--n); /* inner loop */
 
 	susp->mymbar = mymbar_reg;
@@ -74,15 +73,15 @@ void modalbar__fetch(register modalbar_susp_type susp, snd_list_type snd_list)
 } /* modalbar__fetch */
 
 
-void modalbar_free(modalbar_susp_type susp)
+void modalbar_free(snd_susp_type a_susp)
 {
-
-	    deleteInstrument(susp->mymbar);
+    modalbar_susp_type susp = (modalbar_susp_type) a_susp;
+    deleteInstrument(susp->mymbar);
     ffree_generic(susp, sizeof(modalbar_susp_node), "modalbar_free");
 }
 
 
-void modalbar_print_tree(modalbar_susp_type susp, int n)
+void modalbar_print_tree(snd_susp_type a_susp, int n)
 {
 }
 

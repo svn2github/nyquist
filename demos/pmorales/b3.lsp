@@ -34,7 +34,7 @@
        (at 12.0 (risset-bell 0.7 20.0 999.0))
        (at 14.0 (risset-bell 0.7 20.0 80.0))))
 
-(defun risset-bell-demo () (ss (m)))
+(defun risset-bell-demo () (ss (risset-bell-sequence)))
   
 
 

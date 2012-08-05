@@ -42,4 +42,6 @@
                    (at 5.5 (st-sac d4 2 1.0 11))
                    (at 5.51 (st-sac gs3 2 1.0 11)))))
 
-(defun st-sac-demo () (ss (st-sac-sequence)))
+(defun st-sac-demo ()
+  (autonorm-on) ;; don't use ss because it doesn't work with stereo
+  (play (st-sac-sequence)))

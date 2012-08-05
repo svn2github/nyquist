@@ -30,8 +30,8 @@ typedef struct add_susp_struct {
     long                        s1_prepend; /* offset to susp.current */
 } add_susp_node, *add_susp_type;
 
-sound_type snd_make_add();
-sound_type snd_add();
+sound_type snd_make_add(sound_type s1, sound_type s2);
+sound_type snd_add(sound_type s1, sound_type s2);
     /* LISP: (SND-ADD SOUND SOUND) */
 
 /* we export these for seq.c and multiseq.c */ 

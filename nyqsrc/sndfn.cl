@@ -1,4 +1,4 @@
-nyqsrc/sndfnint snd/snd.h   
+nyqsrc/sndfnint nylsf/sndfile.h nyqsrc/sndfmt.h
 	nyqsrc/sound.h nyqsrc/add.h   
 	nyqsrc/avg.h nyqsrc/compose.h   
 	nyqsrc/convolve.h nyqsrc/downsample.h   
@@ -10,7 +10,7 @@ nyqsrc/sndfnint snd/snd.h
 	nyqsrc/sndwrite.h nyqsrc/yin.h   
 	nyqsrc/nyq-osc-server.h nyqsrc/trigger.h   
 	nyqsrc/lpanal.h nyqsrc/phasevocoder.h   
-	nyqsrc/pvshell.h ~nyqsrc/sndheader.h   
+	nyqsrc/pvshell.h 
 	tran/abs.h tran/allpoles.h   
 	tran/alpass.h tran/alpasscv.h   
 	tran/alpassvv.h tran/amosc.h   

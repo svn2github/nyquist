@@ -212,5 +212,8 @@ typedef struct segment {
 } SEGMENT;
 
 /* initialize a type descriptor */
-extern xtype_desc create_desc(char *type_name, void (*fm)(void*), void (*pm)(void*, void*),
-                       void (*sm)(FILE*, void*), unsigned char * (*rm)(FILE*), void (*mm)(void*));
+extern xtype_desc create_desc(char *type_name, void (*fm)(void*), 
+                              void (*pm)(void*, void*),
+                              void (*sm)(FILE*, void*), 
+                              unsigned char * (*rm)(FILE*), 
+                              void (*mm)(void*));

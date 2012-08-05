@@ -184,6 +184,9 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
     }
     /* perform the fft: */
     m = round(log(len) / M_LN2); /* compute log-base-2(len) */
+    if (1 << m != len) {
+        xlfail("FFT len is not a power of two");
+    }
     if (!fftInit(m)) rffts(temp_fft, m, 1);
     else xlfail("FFT initialization error");
 

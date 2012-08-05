@@ -4082,7 +4082,11 @@ will have a duration of 1.0 because that is the termination time of the @code(pw
 @i(response))} @c{[sal]}@*
 @altdef{@code[(convolve @i(sound) @i(response))] @c{[lisp]}}@\Convolves two signals. The first can be any length, but the
 computation time per sample and the total space required are proportional to
-the length of @i(response).
+the length of @i(response). The start time, logical stop time, and sample 
+rate of the output match those of the input @i(sound). The physical stop 
+time of the result is the physical stop time of @i(sound) plus the duration 
+of the @i(response) so that the result sound includes the ``tail'' of the 
+filter response. The response is assumed to have the same sample rate as @i(sound). The samples are used as is without resampling.
 
 @label(feedback-delay-sec)
 @codef{feedback-delay(@pragma(defn)@index(feedback-delay)@index(delay)@index(echo)@i(sound), @i(delay), @i(feedback))} @c{[sal]}@*
@@ -5631,41 +5635,35 @@ botth @i(hz) (center frequency) and @i(bw) (bandwidth) are sounds.  Filter
 coefficients are updated at the next sample from either @i(hz) or @i(bw).  You should use @code(reson) instead (see Section
 @ref(reson-sec)).
 
-@codef[snd-stkchorus(@pragma(defn)@index(snd-stkchorus)@index(chorus)@index(effect, chorus)@index(STK chorus)@i(sound), @i(delay), @i(depth), @i(freq), @i(mix), 
-@i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-stkchorus @i(sound) @i(delay) @i(depth) @i(freq) @i(mix) @i(sr))] @c{[lisp]}}@\A chorus implemented in STK. The parameter @i(delay) is a @code(FIXNUM) 
+@codef[snd-stkchorus(@pragma(defn)@index(snd-stkchorus)@index(chorus)@index(effect, chorus)@index(STK chorus)@i(sound), @i(delay), @i(depth), @i(freq), @i(mix))] @c{[sal]}@*
+@altdef{@code[(snd-stkchorus @i(sound) @i(delay) @i(depth) @i(freq) @i(mix))] @c{[lisp]}}@\A chorus implemented in STK. The parameter @i(delay) is a @code(FIXNUM) 
 representing the median desired delay length in samples. A typical
 value is 6000. The @code(FLONUM) parameters @i(depth) and @i(freq) set the modulation
 depth (from 0 to 1) and modulation frequency (in Hz), @i(mix) sets the mixture
 of input sound and chorused sound, where a value of 0.0 means input sound 
 only (dry) and a value of 1.0 means chorused sound only (wet). 
-The parameter @i(sr) is the desired sample rate of the resulting sound@foot(This
-is probably a mistake since sample rate is implied by @i(sound). This parameter
-may be removed in a future release.) You should use @code(pitshift) instead
+You should use @code(pitshift) instead
 (see Section @ref(stkchorus-sec)).
 
-@codef[snd-stkpitshift(@pragma(defn)@index(snd-stkpitshift)@index(pitch shift)@index(effect, pitch shift)@index(STK pitch shift)@i(sound), @i(shift), @i(mix), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-stkpitshift @i(sound) @i(shift) @i(mix) @i(sr))] @c{[lisp]}}@\A 
+@codef[snd-stkpitshift(@pragma(defn)@index(snd-stkpitshift)@index(pitch shift)@index(effect, pitch shift)@index(STK pitch shift)@i(sound), @i(shift), @i(mix))] @c{[sal]}@*
+@altdef{@code[(snd-stkpitshift @i(sound) @i(shift) @i(mix))] @c{[lisp]}}@\A 
 pitch shifter implemented in STK. The @i(sound) is shifted in pitch by
 @i(shift), a @code(FLONUM) representing the shift factor. A value of 1.0 means
  no shift.  The parameter @i(mix) sets the mixture of input and shifted sounds.
 A value of 0.0 means input only (dry) and a value of 1.0 means shifted 
-sound only (wet). The @i(sr) is the desired sampling frequency.@foot(This
-is probably a mistake since sample rate is implied by @i(sound). This parameter
-may be removed in a future release.) You should use @code(pitshift) instead
+sound only (wet). You should use @code(pitshift) instead
 (see Section @ref(stkpitshift-sec)).
 
-@codef[snd-stkrev(@pragma(defn)@index(snd-stkrev)@index(reverb)@index(effect, reverberation)@index(STK reverb)@i(rev-type), @i(sound), @i(decay), @i(mix), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-stkrev @i(rev-type) @i(sound) @i(decay) @i(mix) @i(sr))] @c{[lisp]}}@\A reverb 
-implemented in STK. The parameter rev-type is a @code(FIXNUM) ranging from zero to 
+@codef[snd-stkrev(@pragma(defn)@index(snd-stkrev)@index(reverb)@index(effect, reverberation)@index(STK reverb)@i(rev-type), @i(sound), @i(decay), @i(mix))] @c{[sal]}@*
+@altdef{@code[(snd-stkrev @i(rev-type) @i(sound) @i(decay) @i(mix))] @c{[lisp]}}@\A reverb implemented in STK. The parameter rev-type is a 
+ @code(FIXNUM) ranging from zero to 
 two and selects the type of reverb. Zero selects NRev type, one selects JCRev, 
 and two selects PRCRev. The input @i(sound) is processed by the reverb with
 a @i(decay) time in seconds (a @code(FLONUM)). The @i(mix), a @code(FLONUM), 
 sets the 
 mixture of dry input and reverb output. A value of 0.0 means input only (dry)
 and a value of 1.0 means reverb only (wet). The sample rate 
-is @i(sr)@foot(This is probably a mistake since sample rate is implied 
-by @i(sound). This parameter may be removed in a future release.) You
+is that of @i(sound). You
 should use @code(nrev), @code(jcrev) or @code(prcrev) instead (see 
 Section @ref(stkrev-sec)).
 

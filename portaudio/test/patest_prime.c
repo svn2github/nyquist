@@ -5,7 +5,7 @@
 */
 
 /*
- * $Id: patest_prime.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest_prime.c 1371 2008-03-11 14:27:26Z bjornroche $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -141,13 +141,17 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
 static PaError DoTest( int flags )
 {
     PaStream *stream;
-    PaError    err;
+    PaError    err = paNoError;
     paTestData data;
     PaStreamParameters outputParameters;
 
     InitializeTestData( &data );       
 
     outputParameters.device = Pa_GetDefaultOutputDevice();
+    if (outputParameters.device == paNoDevice) {
+      fprintf(stderr,"Error: No default output device.\n");
+      goto error;
+    }
     outputParameters.channelCount = 2;
     outputParameters.hostApiSpecificStreamInfo = NULL;
     outputParameters.sampleFormat = paFloat32;

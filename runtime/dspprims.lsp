@@ -93,21 +93,8 @@
   (error "feedback-delay with variable delay is not implemented"))
 
 
-;; NYQ::DELAYCV -- coerce sample rates and call snd-delaycv
-;;
-(defun nyq:delaycv (the-snd delay feedback)
-  (display "delaycv" the-snd delay feedback)
-  (let ((the-snd-srate (snd-srate the-snd))
-        (feedback-srate (snd-srate feedback)))
-    (cond ((> the-snd-srate feedback-srate)
-           (setf feedback (snd-up the-snd-srate feedback)))
-          ((< the-snd-srate feedback-srate)
-           (format t "Warning: down-sampling feedback in feedback-delay/comb~%")
-           (setf feedback (snd-down the-snd-srate feedback))))
-    (snd-delaycv the-snd delay feedback)))
-
 (setf feedback-delay-implementations
-      (vector #'snd-delay #'snd-delay-error #'nyq:delaycv #'snd-delay-error))
+      (vector #'snd-delay #'snd-delay-error #'snd-delaycv #'snd-delay-error))
 
 
 ;; NYQ:FEEDBACK-DELAY -- single channel delay
@@ -130,29 +117,9 @@
     (defun snd-alpassvv (snd delay feedback min-hz)
       (error "snd-alpassvv (ALPASS with variable decay and feedback) is not implemented")))
       
-(defun snd-alpass-4 (snd delay feedback min-hz)
-    (snd-alpass snd delay feedback))
-    
 
-(defun snd-alpasscv-4 (the-snd delay feedback min-hz)
-    (display "snd-alpasscv-4" (snd-srate the-snd) (snd-srate feedback))
-    (let ((the-snd-srate (snd-srate the-snd))
-          (feedback-srate (snd-srate feedback)))
-      (cond ((> the-snd-srate feedback-srate)
-             (setf feedback (snd-up the-snd-srate feedback)))
-            ((< the-snd-srate feedback-srate)
-             (format t "Warning: down-sampling feedback in alpass~%")
-             (setf feedback (snd-down the-snd-srate feedback))))
-      ;(display "snd-alpasscv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
-      (snd-alpasscv the-snd delay feedback)))
-
-    
-(defun snd-alpassvv-4 (the-snd delay feedback min-hz)
-    ;(display "snd-alpassvv-4" (snd-srate the-snd) (snd-srate feedback))
-    (let ((the-snd-srate (snd-srate the-snd))
-          (delay-srate (snd-srate delay))
-          (feedback-srate (snd-srate feedback))
-          max-delay)
+(defun nyq:alpassvv (the-snd delay feedback min-hz)
+    (let (max-delay)
       (cond ((or (not (numberp min-hz))
                  (<= min-hz 0))
              (error "alpass needs numeric (>0) 4th parameter (min-hz) when delay is variable")))
@@ -164,23 +131,12 @@
                               (* max-delay 0.5)))
       ; now delay is between 0 and max-delay, so we won't crash nyquist when
       ; we call snd-alpassvv, which doesn't test for out-of-range data
-      (cond ((> the-snd-srate feedback-srate)
-             (setf feedback (snd-up the-snd-srate feedback)))
-            ((< the-snd-srate feedback-srate)
-             (format t "Warning: down-sampling feedback in alpass~%")
-             (setf feedback (snd-down the-snd-srate feedback))))
-      (cond ((> the-snd-srate delay-srate)
-             (setf delay (snd-up the-snd-srate delay)))
-            ((< the-snd-srate delay-srate)
-             (format t "Warning: down-sampling delay in alpass~%")
-             (setf delay (snd-down the-snd-srate delay))))
-      (display "snd-alpassvv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
       (snd-alpassvv the-snd delay feedback max-delay)))
 
-(setf alpass-implementations
-      (vector #'snd-alpass-4 #'snd-alpass-error
-              #'snd-alpasscv-4 #'snd-alpassvv-4))
 
+(setf alpass-implementations
+      (vector #'snd-alpass #'snd-alpass-error
+              #'snd-alpasscv #'nyq:alpassvv))
 
 
 ;; NYQ:ALPASS1 -- single channel alpass

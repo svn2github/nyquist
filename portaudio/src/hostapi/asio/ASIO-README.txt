@@ -2,7 +2,11 @@ ASIO-README.txt
 
 This document contains information to help you compile PortAudio with 
 ASIO support. If you find any omissions or errors in this document 
-please notify Ross Bencina <rossb@audiomulch.com>.
+please notify us on the PortAudio mailing list.
+
+NOTE: The Macintosh sections of this document are provided for historical
+reference. They refer to pre-OS X Macintosh. PortAudio no longer
+supports pre-OS X Macintosh. Steinberg does not support ASIO on Mac OS X.
 
 
 Building PortAudio with ASIO support
@@ -10,52 +14,43 @@ Building PortAudio with ASIO support
 
 To build PortAudio with ASIO support you need to compile and link with
 pa_asio.c, and files from the ASIO SDK (see below), along with the common 
-files from pa_common/ and platform specific files from pa_win/ (for Win32) 
-or pa_mac/ (for Macintosh).
+PortAudio files from src/common/ and platform specific files from 
+src/os/win/ (for Win32).
 
-If you are compiling with a non-Microsoft compiler on windows, also 
+If you are compiling with a non-Microsoft compiler on Windows, also 
 compile and link with iasiothiscallresolver.cpp (see below for 
 an explanation).
 
-For some platforms (MingW, possibly Mac), you may simply
+For some platforms (MingW, Cygwin/MingW), you may simply
 be able to type:
 
 ./configure --with-host_os=mingw --with-winapi=asio [--with-asiodir=/usr/local/asiosdk2]
 make
 
-./configure --with-host_os=darwin --with-winapi=asio [--with-asiodir=/usr/local/asiosdk2]
-make
+and life will be good. Make sure you update the above with the correct local
+path to the ASIO SDK.
 
-and life will be good.
+
+For Microsoft Visual C++ there is an build tutorial here:
+http://www.portaudio.com/trac/wiki/TutorialDir/Compile/WindowsASIOMSVC
+
 
 
 Obtaining the ASIO SDK
 ----------------------
 
 In order to build PortAudio with ASIO support, you need to download 
-the ASIO SDK (version 2.0) from Steinberg. Steinberg makes the ASIO 
+the ASIO SDK (version 2.0 or later) from Steinberg. Steinberg makes the ASIO 
 SDK available to anyone free of charge, however they do not permit its 
 source code to be distributed.
 
 NOTE: In some cases the ASIO SDK may require patching, see below 
 for further details.
 
-http://www.steinberg.net/en/ps/support/3rdparty/asio_sdk/
+http://www.steinberg.net/en/company/developer.html
 
 If the above link is broken search Google for:
 "download steinberg ASIO SDK"
-
-
-
-Building the ASIO SDK on Macintosh
-----------------------------------
-
-To build the ASIO SDK on Macintosh you need to compile and link with the 
-following files from the ASIO SDK:
-
-host/asiodrivers.cpp 
-host/mac/asioshlib.cpp 
-host/mac/codefragements.cpp
 
 
 
@@ -75,7 +70,7 @@ header files from the above directories.
 The ASIO SDK depends on the following COM API functions: 
 CoInitialize, CoUninitialize, CoCreateInstance, CLSIDFromString
 For compilation with MinGW you will need to link with -lole32, for
-Borland link with Import32.lib.
+Borland compilers link with Import32.lib.
 
 
 
@@ -100,12 +95,27 @@ If you use configure and make (see above), this should be handled
 automatically for you.
 
 For further information about the IASIO thiscall problem see this page:
-http://www.audiomulch.com/~rossb/code/calliasio
+http://www.rossbencina.com/code/iasio-thiscall-resolver
 
 
 
-Macintosh ASIO SDK Bug Patch
-----------------------------
+Building the ASIO SDK on (Pre-OS X) Macintosh
+---------------------------------------------
+
+To build the ASIO SDK on Macintosh you need to compile and link with the 
+following files from the ASIO SDK:
+
+host/asiodrivers.cpp 
+host/mac/asioshlib.cpp 
+host/mac/codefragements.cpp
+
+You may also need to adjust your include paths to support inclusion of 
+header files from the above directories.
+
+
+
+(Pre-OS X) Macintosh ASIO SDK Bug Patch
+---------------------------------------
 
 There is a bug in the ASIO SDK that causes the Macintosh version to 
 often fail during initialization. Below is a patch that you can apply.
@@ -134,4 +144,4 @@ bool CodeFragments::getFrontProcessDirectory(void *specs)
 }
 
 
----
+###

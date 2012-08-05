@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2005 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -23,10 +23,10 @@
 #include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 #include "sndfile.h"
 #include "sfendian.h"
-#include "float_cast.h"
 #include "common.h"
 
 /*------------------------------------------------------------------------------
@@ -108,18 +108,18 @@ paf_open	(SF_PRIVATE *psf)
 
  	psf->dataoffset = PAF_HEADER_LENGTH ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = paf_read_header (psf)))
 			return error ;
 		} ;
 
-	subformat = psf->sf.format & SF_FORMAT_SUBMASK ;
+	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
-	{	if ((psf->sf.format & SF_FORMAT_TYPEMASK) != SF_FORMAT_PAF)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
+	{	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_PAF)
 			return	SFE_BAD_OPEN_FORMAT ;
 
-		endian = psf->sf.format & SF_FORMAT_ENDMASK ;
+		endian = SF_ENDIAN (psf->sf.format) ;
 
 		/* PAF is by default big endian. */
 		psf->endian = SF_ENDIAN_BIG ;
@@ -163,6 +163,9 @@ paf_read_header	(SF_PRIVATE *psf)
 {	PAF_FMT		paf_fmt ;
 	int			marker ;
 
+	if (psf->filelength < PAF_HEADER_LENGTH)
+		return SFE_PAF_SHORT_HEADER ;
+
 	memset (&paf_fmt, 0, sizeof (paf_fmt)) ;
 	psf_binheader_readf (psf, "pm", 0, &marker) ;
 
@@ -199,8 +202,8 @@ paf_read_header	(SF_PRIVATE *psf)
 		psf->endian = SF_ENDIAN_BIG ;
 		} ;
 
-	if (psf->filelength < PAF_HEADER_LENGTH)
-		return SFE_PAF_SHORT_HEADER ;
+	if (paf_fmt.channels > SF_MAX_CHANNELS)
+		return SFE_PAF_BAD_CHANNELS ;
 
 	psf->datalength = psf->filelength - psf->dataoffset ;
 
@@ -273,7 +276,7 @@ paf_read_header	(SF_PRIVATE *psf)
 } /* paf_read_header */
 
 static int
-paf_write_header (SF_PRIVATE *psf, int calc_length)
+paf_write_header (SF_PRIVATE *psf, int UNUSED (calc_length))
 {	int			paf_format ;
 
 	/* PAF header already written so no need to re-write. */
@@ -282,12 +285,7 @@ paf_write_header (SF_PRIVATE *psf, int calc_length)
 
 	psf->dataoffset = PAF_HEADER_LENGTH ;
 
-	psf->dataoffset = PAF_HEADER_LENGTH ;
-
-	/* Prevent compiler warning. */
-	calc_length = calc_length ;
-
-	switch (psf->sf.format & SF_FORMAT_SUBMASK)
+	switch (SF_CODEC (psf->sf.format))
 	{	case SF_FORMAT_PCM_S8 :
 					paf_format = PAF_PCM_S8 ;
 					break ;
@@ -361,11 +359,10 @@ paf24_init (SF_PRIVATE *psf)
 	*/
 	psf->last_op = 0 ;
 
-	if (! (psf->codec_data = malloc (paf24size)))
+	if (! (psf->codec_data = calloc (1, paf24size)))
 		return SFE_MALLOC_FAILED ;
 
 	ppaf24 = (PAF24_PRIVATE*) psf->codec_data ;
-	memset (ppaf24, 0, paf24size) ;
 
 	ppaf24->channels	= psf->sf.channels ;
 	ppaf24->samples		= ppaf24->data ;
@@ -374,7 +371,7 @@ paf24_init (SF_PRIVATE *psf)
 	ppaf24->blocksize = PAF24_BLOCK_SIZE * ppaf24->channels ;
 	ppaf24->samplesperblock = PAF24_SAMPLES_PER_BLOCK ;
 
-	if (psf->mode == SFM_READ || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_READ || psf->file.mode == SFM_RDWR)
 	{	paf24_read_block (psf, ppaf24) ;	/* Read first block. */
 
 		psf->read_short		= paf24_read_s ;
@@ -383,7 +380,7 @@ paf24_init (SF_PRIVATE *psf)
 		psf->read_double	= paf24_read_d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	psf->write_short	= paf24_write_s ;
 		psf->write_int		= paf24_write_i ;
 		psf->write_float	= paf24_write_f ;
@@ -397,7 +394,7 @@ paf24_init (SF_PRIVATE *psf)
 	psf->datalength = psf->filelength - psf->dataoffset ;
 
 	if (psf->datalength % PAF24_BLOCK_SIZE)
-	{	if (psf->mode == SFM_READ)
+	{	if (psf->file.mode == SFM_READ)
 			psf_log_printf (psf, "*** Warning : file seems to be truncated.\n") ;
 		ppaf24->max_blocks = psf->datalength / ppaf24->blocksize + 1 ;
 		}
@@ -405,7 +402,7 @@ paf24_init (SF_PRIVATE *psf)
 		ppaf24->max_blocks = psf->datalength / ppaf24->blocksize ;
 
 	ppaf24->read_block = 0 ;
-	if (psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_RDWR)
 		ppaf24->write_block = ppaf24->max_blocks ;
 	else
 		ppaf24->write_block = 0 ;
@@ -477,7 +474,7 @@ paf24_close (SF_PRIVATE *psf)
 
 	ppaf24 = (PAF24_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (ppaf24->write_count > 0)
 			paf24_write_block (psf, ppaf24) ;
 		} ;
@@ -833,11 +830,3 @@ paf24_write_d (SF_PRIVATE *psf, const double *ptr, sf_count_t len)
 	return total ;
 } /* paf24_write_d */
 
-
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: 477a5308-451e-4bbd-bab4-fab6caa4e884
-*/

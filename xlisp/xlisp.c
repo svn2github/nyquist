@@ -282,7 +282,7 @@ void xlevsave(LVAL expr)
 }
 
 /* xlfatal - print a fatal error message and exit */
-void xlfatal(char *msg)
+void xlfatal(const char *msg)
 {
     oserror(msg);
     xlisp_wrapup();

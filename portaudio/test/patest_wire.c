@@ -13,7 +13,7 @@
 
 */
 /*
- * $Id: patest_wire.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest_wire.c 1368 2008-03-01 00:38:27Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -168,7 +168,7 @@ static int wireCallback( const void *inputBuffer, void *outputBuffer,
 int main(void);
 int main(void)
 {
-    PaError err;
+    PaError err = paNoError;
     WireConfig_t CONFIG;
     WireConfig_t *config = &CONFIG;
     int configIndex = 0;;
@@ -242,7 +242,7 @@ error:
 static PaError TestConfiguration( WireConfig_t *config )
 {
     int c;
-    PaError err;
+    PaError err = paNoError;
     PaStream *stream;
     PaStreamParameters inputParameters, outputParameters;
     
@@ -253,12 +253,20 @@ static PaError TestConfiguration( WireConfig_t *config )
     printf("framesPerCallback = %d\n", config->framesPerCallback );
 
     inputParameters.device = INPUT_DEVICE;              /* default input device */
+    if (inputParameters.device == paNoDevice) {
+        fprintf(stderr,"Error: No default input device.\n");
+        goto error;
+    }
     inputParameters.channelCount = config->numInputChannels;
     inputParameters.sampleFormat = INPUT_FORMAT | (config->isInputInterleaved ? 0 : paNonInterleaved);
     inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
     inputParameters.hostApiSpecificStreamInfo = NULL;
 
     outputParameters.device = OUTPUT_DEVICE;            /* default output device */
+    if (outputParameters.device == paNoDevice) {
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
+    }
     outputParameters.channelCount = config->numOutputChannels;
     outputParameters.sampleFormat = OUTPUT_FORMAT | (config->isOutputInterleaved ? 0 : paNonInterleaved);
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;

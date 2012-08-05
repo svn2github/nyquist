@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "congen.h"
 
-void congen_free();
+void congen_free(snd_susp_type a_susp);
 
 
 typedef struct congen_susp_struct {
@@ -25,8 +25,9 @@ typedef struct congen_susp_struct {
 } congen_susp_node, *congen_susp_type;
 
 
-void congen_s_fetch(register congen_susp_type susp, snd_list_type snd_list)
+void congen_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    congen_susp_type susp = (congen_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -67,13 +68,13 @@ void congen_s_fetch(register congen_susp_type susp, snd_list_type snd_list)
 	sndin_ptr_reg = susp->sndin_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-      sample_type current = (sndin_scale_reg * *sndin_ptr_reg++);
-    if (current > value_reg) {
-        value_reg = current - (current - value_reg) * rise_factor_reg;
-    } else {
-        value_reg = current - (current - value_reg) * fall_factor_reg;
-    }
-    *out_ptr_reg++ = (sample_type) value_reg;;
+            sample_type current = (sndin_scale_reg * *sndin_ptr_reg++);
+            if (current > value_reg) {
+                value_reg = current - (current - value_reg) * rise_factor_reg;
+            } else {
+                value_reg = current - (current - value_reg) * fall_factor_reg;
+            }
+            *out_ptr_reg++ = (sample_type) value_reg;
 	} while (--n); /* inner loop */
 
 	susp->value = value_reg;
@@ -94,11 +95,9 @@ void congen_s_fetch(register congen_susp_type susp, snd_list_type snd_list)
 } /* congen_s_fetch */
 
 
-void congen_toss_fetch(susp, snd_list)
-  register congen_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void congen_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    congen_susp_type susp = (congen_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -113,25 +112,28 @@ void congen_toss_fetch(susp, snd_list)
     susp->sndin_ptr += n;
     susp_took(sndin_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void congen_mark(congen_susp_type susp)
+void congen_mark(snd_susp_type a_susp)
 {
+    congen_susp_type susp = (congen_susp_type) a_susp;
     sound_xlmark(susp->sndin);
 }
 
 
-void congen_free(congen_susp_type susp)
+void congen_free(snd_susp_type a_susp)
 {
+    congen_susp_type susp = (congen_susp_type) a_susp;
     sound_unref(susp->sndin);
     ffree_generic(susp, sizeof(congen_susp_node), "congen_free");
 }
 
 
-void congen_print_tree(congen_susp_type susp, int n)
+void congen_print_tree(snd_susp_type a_susp, int n)
 {
+    congen_susp_type susp = (congen_susp_type) a_susp;
     indent(n);
     stdputstr("sndin:");
     sound_print_tree_1(susp->sndin, n);
@@ -143,7 +145,6 @@ sound_type snd_make_congen(sound_type sndin, double risetime, double falltime)
     register congen_susp_type susp;
     rate_type sr = sndin->sr;
     time_type t0 = sndin->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, congen_susp_node, "snd_make_congen");
@@ -159,8 +160,8 @@ sound_type snd_make_congen(sound_type sndin, double risetime, double falltime)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = congen_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = congen_toss_fetch;
     }
 
     /* initialize susp state */

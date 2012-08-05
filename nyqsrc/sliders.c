@@ -7,6 +7,7 @@
 
 #include "falloc.h"
 #include "cext.h"
+#include "nyq-osc-server.h"
 #include "sliders.h"
 #include "sndsliders.h"
 
@@ -34,7 +35,11 @@ LVAL xslider_read(void)
 
 LVAL xosc_enable(void)
 {
-    LVAL arg = xlgetarg();
+/* only need arg if OSC is defined, otherwise compiler complains */
+#ifdef OSC
+    LVAL arg = 
+#endif
+               xlgetarg();
     xllastarg();
 #ifdef OSC
     if (nosc_enabled == !null(arg)) {
@@ -63,8 +68,9 @@ typedef struct slider_susp_struct {
 } slider_susp_node, *slider_susp_type;
 
 
-void slider__fetch(register slider_susp_type susp, snd_list_type snd_list)
+void slider__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    slider_susp_type susp = (slider_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -116,13 +122,14 @@ void slider__fetch(register slider_susp_type susp, snd_list_type snd_list)
 } /* slider__fetch */
 
 
-void slider_free(slider_susp_type susp)
+void slider_free(snd_susp_type a_susp)
 {
+    slider_susp_type susp = (slider_susp_type) a_susp;
     ffree_generic(susp, sizeof(slider_susp_node), "slider_free");
 }
 
 
-void slider_print_tree(slider_susp_type susp, int n)
+void slider_print_tree(snd_susp_type susp, int n)
 {
 }
 

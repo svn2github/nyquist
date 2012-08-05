@@ -18,7 +18,7 @@
 /* Added by Erik de Castro Lopo */
 
 #if defined(_MSC_VER) && _MSC_VER >= 1500 
-// Visual C++ 2008 or beyond
+/* Visual C++ 2008 or beyond - RBD */
 #define inline __inline
 #endif
 
@@ -302,11 +302,4 @@ extern word gsm_FAC [8] ;
 #endif /* !NDEBUG */
 
 #endif	/* PRIVATE_H */
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch
-** revision control system.
-**
-** arch-tag: 8bc5fdf2-e8c8-4686-9bd7-a30b512bef0c
-*/
 

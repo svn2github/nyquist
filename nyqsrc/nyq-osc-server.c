@@ -27,6 +27,7 @@
 #include "xlisp.h"
 #include "sound.h" /* to get nosc_enabled */
 #include "lo/lo.h"
+#include "nyq-osc-server.h"
 #include "sliders.h"
 
 static lo_server the_server = NULL;

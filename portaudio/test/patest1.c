@@ -4,7 +4,7 @@
 	@author Ross Bencina <rossb@audiomulch.com>
 */
 /*
- * $Id: patest1.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest1.c 1368 2008-03-01 00:38:27Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -125,12 +125,20 @@ int main(int argc, char* argv[])
     err = Pa_Initialize();
 
     inputParameters.device = Pa_GetDefaultInputDevice();    /* default input device */
+    if (inputParameters.device == paNoDevice) {
+      fprintf(stderr,"Error: No input default device.\n");
+      goto done;
+    }
     inputParameters.channelCount = 2;                       /* stereo input */
     inputParameters.sampleFormat = paFloat32;               /* 32 bit floating point input */
     inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
     inputParameters.hostApiSpecificStreamInfo = NULL;
 
     outputParameters.device = Pa_GetDefaultOutputDevice();  /* default output device */
+    if (outputParameters.device == paNoDevice) {
+      fprintf(stderr,"Error: No default output device.\n");
+      goto done;
+    }
     outputParameters.channelCount = 2;                      /* stereo output */
     outputParameters.sampleFormat = paFloat32;              /* 32 bit floating point output */
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;

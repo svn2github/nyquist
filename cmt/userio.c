@@ -786,7 +786,7 @@ void readln(fp)
 *    Note that to handle the variable argument list, a number of different
 *    approaches are implemented.  The first part of the implementation selects
 *    one of 4 ways to build temp1, a formatted string.  The 4 ways arise from
-*    use or non-use of vsprintf, and use or non-use of ... in the arg list.
+*    use or non-use of vsnprintf, and use or non-use of ... in the arg list.
 *    After building temp1, non-Amiga systems write to stdout or stderr, 
 *    whereas AMIGA writes to a special console.  Why? Because the Amiga
 *    needs a new console so we can set up a signal upon character typein.
@@ -794,10 +794,10 @@ void readln(fp)
 
 #ifndef gprintf
 #define GPRINTF_MESSAGE_LEN 512
-#ifdef USE_VSPRINTF
+#ifdef HAVE_VSNPRINTF
 #ifdef DOTS_FOR_ARGS
 
-/* define with ... in arg list and use vsprintf to get temp1 */
+/* define with ... in arg list and use vsnprintf to get temp1 */
 public void gprintf(long where, char *format, ...)
 {
     char temp1[GPRINTF_MESSAGE_LEN];
@@ -807,12 +807,12 @@ public void gprintf(long where, char *format, ...)
     va_list ap;
 
     va_start(ap, format);
-    vsprintf(temp1, format, ap);
+    vsnprintf(temp1, GPRINTF_MESSAGE_LEN, format, ap);
     va_end(ap);
 
 #else /* !DOTS_FOR_ARGS */
 
-/* define with va_alist and use vsprintf to get temp1 */
+/* define with va_alist and use vsnprintf to get temp1 */
 public void gprintf(where, format, va_alist)
 long where;
 char *format;
@@ -823,19 +823,19 @@ va_dcl
 /* this is a syntax error - if you don't have to remove this, */
 /* then this whole section of code is unnecessary. */
     va_start(pvar);
-    vsprintf(temp1, format, pvar);
+    vsnprintf(temp1, GPRINTF_MESSAGE_LEN, format, pvar);
     va_end(pvar);
 
 #endif /* DOTS_FOR_ARGS */
 
-#else /* !USE_VSPRINTF */
+#else /* !HAVE_VSNPRINTF */
 #define MAX_GPRINTF_ARGS 10
 typedef struct gp_args_struct {
     long arg[MAX_GPRINTF_ARGS];
 } gp_args_node;
 
 #ifdef DOTS_FOR_ARGS
-/* use ... but not vsprintf */
+/* use ... but not vsnprintf */
 public void gprintf(long where, char *format, ...)
 {
     char temp1[GPRINTF_MESSAGE_LEN];
@@ -848,7 +848,7 @@ public void gprintf(long where, char *format, ...)
     args = va_arg(ap, gp_args_node);
     va_end(ap);
 #else /* !DOTS_FOR_ARGS */
-/* don't use ... and don't use vsprintf */
+/* don't use ... and don't use vsnprintf */
 public void gprintf(where, format, args)
   long where;
   char *format;
@@ -860,9 +860,9 @@ public void gprintf(where, format, args)
 #endif /* AMIGA*/
 #endif /* DOTS_FOR_ARGS */
 
-    sprintf(temp1, format, args);
+    snprintf(temp1, GPRINTF_MESSAGE_LEN, format, args);
 
-#endif /* USE_VSPRINTF */
+#endif /* HAVE_VSNPRINTF */
 
 /*
  * Now we've got formatted output in temp1.  Write it out.

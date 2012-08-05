@@ -58,7 +58,7 @@
 ;;
 ;; type (dmhm-gong-test) to play an example
 ;;
-(defun dmhm-gong-test
+(defun dmhm-gong-test ()
   (autonorm-off)
   (play (stretch 10 (dmhm-gong a3))))
 

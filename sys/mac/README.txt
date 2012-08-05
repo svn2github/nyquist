@@ -43,7 +43,9 @@ How To Build Nyquist on Mac OS X
 You need to install Xcode, Apple's free software development system
 for OS X.
 
-The project file is in nyquist/macosxproject/nyquist.xcodeproj
+Xcode 3
+-------
+The project file for Xcode v3 is in nyquist/macosxproject/nyquist.xcodeproj
 
 To build Nyquist or NyquistIDE:
  - Open nyquist.xcodeproj in Xcode
@@ -51,5 +53,12 @@ To build Nyquist or NyquistIDE:
  - Click on "build active target"
  - ny or NyquistIDE will be produced in MacOSXProject/build/
 
+Xcode 4
+-------
+The nyquist workspace for Xcode v4 is in nyquist/macosx.xcworkspace
 
-
+To build Nyquist or NyquistIDE:
+ - Open nyquist.wxworkspace in Xcode
+ - Set the active target to "Nyquist" or "NyquistIDE"
+ - Click on "build active target"
+ - ny or NyquistIDE will be produced in MacOSXProject/build/

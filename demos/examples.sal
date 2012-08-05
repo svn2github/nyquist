@@ -514,5 +514,66 @@ define function ex-all ()
     end
   end
 
+define function ex-global ()
+  begin
+    exec ex-all()
+    exec autonorm-on()
+    load "allewis/cell_aut.lsp"
+    exec cell-aut-demo()
+    load "arp.sal"
+    exec arp1()
+    exec arp2()
+    exec arp3()
+    exec score-play(arp4(list(c4, e4, b4, c5), 20, 0.15, 3))
+    exec score-play(arp-seq())
+    load "fft_demo.lsp"
+    exec fft-test()
+    exec ifft-test()
+    exec file-test()
+    exec hp-test()
+    exec mod-test()
+    exec mod-test-w()
+    exec mod-test-ww()
+    exec mod-test-wws()
+    load "lpcdemo.lsp"
+    exec ex-1()
+    exec ex-2()
+    exec ex-4()
+    exec ex-7()
+    exec ex-8()
+    exec ex-9()
+    exec ex-10()
+    exec ex-11()
+    exec ex-12()
+    exec ex-13()
+    exec ex-14()
+    exec ex-15()
+    exec ex-16()
+    load "mateos/gong.lsp"
+    exec dmhm-gong-test()
+    load "mateos/bell.lsp"
+    exec dmhm-bell-test()
+    load "mateos/organ.lsp"
+    exec dmhm-organ-test()
+    load "mateos/tuba.lsp"
+    exec dmhm-tuba-test()
+    load "osc-test.lsp"
+    play hzosc-osc()
+    play gran-osc()
+    play piano-osc()
+    load "plight/drum.lsp"
+    exec play-drum-example()
+    load "pmorales/all.lsp"
+    load "sdl/inv-08.lsp"
+    load "sdl/ej2.lsp"
+    load "shepard.lsp"
+    exec playscale(majorscale(60))
+    exec playparadoxscale(chromascale(60))
+    play sheptone-sweep(60, 60, 2, 72, 60, 12, 4)
+    load "stktest.lsp"
+    exec all-stk-demos()
+  end
 
 exec format(t, "\n\"exec ex-all()\" in SAL or (ex-all) in Lisp will compute and play all examples for testing purposes.\n")
+exec format(t, "\"exec ex-global\" in SAL or (ex-global) in Lisp will load and play all demos (good for testing, but not much indication of where sounds are coming from).\n")
+

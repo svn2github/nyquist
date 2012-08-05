@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2005 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -16,8 +16,11 @@
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
+#include	"sfconfig.h"
+
+#include	<math.h>
+
 #include	"sndfile.h"
-#include	"float_cast.h"
 #include	"common.h"
 
 static sf_count_t ulaw_read_ulaw2s (SF_PRIVATE *psf, short *ptr, sf_count_t len) ;
@@ -33,14 +36,14 @@ static sf_count_t ulaw_write_d2ulaw (SF_PRIVATE *psf, const double *ptr, sf_coun
 int
 ulaw_init (SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_READ || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_READ || psf->file.mode == SFM_RDWR)
 	{	psf->read_short		= ulaw_read_ulaw2s ;
 		psf->read_int		= ulaw_read_ulaw2i ;
 		psf->read_float		= ulaw_read_ulaw2f ;
 		psf->read_double	= ulaw_read_ulaw2d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	psf->write_short	= ulaw_write_s2ulaw ;
 		psf->write_int		= ulaw_write_i2ulaw ;
 		psf->write_float	= ulaw_write_f2ulaw ;
@@ -56,7 +59,7 @@ ulaw_init (SF_PRIVATE *psf)
 	else
 		psf->datalength = 0 ;
 
-	psf->sf.frames = psf->datalength / psf->blockwidth ;
+	psf->sf.frames = psf->blockwidth > 0 ? psf->datalength / psf->blockwidth : 0 ;
 
 	return 0 ;
 } /* ulaw_init */
@@ -1038,10 +1041,3 @@ ulaw_write_d2ulaw	(SF_PRIVATE *psf, const double *ptr, sf_count_t len)
 	return total ;
 } /* ulaw_write_d2ulaw */
 
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: 655cc790-f058-45e8-89c9-86967cccc37e
-*/

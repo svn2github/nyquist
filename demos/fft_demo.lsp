@@ -5,6 +5,8 @@
 ;; Please see fft_tutorial.htm for more in-depth comments and explanations.
 ;;
 
+(autonorm-on)
+
 (setf fft1-class (send class :new '(sound length skip)))
 
 (send fft1-class :answer :next '() '(

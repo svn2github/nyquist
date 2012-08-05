@@ -1,8 +1,8 @@
 (SAMPLER-ALG
 (NAME "sampler")
 (ARGUMENTS ("sound_type" "s") ("double" "step") ("double" "loop_start") 
-        ("rate_type" "sr") ("double" "hz") ("time_type" "t0") ("sound_type" "s_fm")
-        ("long" "npoints"))
+        ("rate_type" "sr") ("double" "hz") ("time_type" "t0") 
+        ("sound_type" "s_fm") ("long" "npoints"))
 (TABLE "s")
 (NOT-IN-INNER-LOOP "s")
 (STATE 
@@ -17,7 +17,8 @@
           index = 0;
           frac = 0;
       }
-      susp->table_ptr[round(susp->table_len)] = /* copy interpolated start to last entry */
+      /* copy interpolated start to last entry */
+      susp->table_ptr[round(susp->table_len)] =
           (sample_type) (susp->table_ptr[index] * (1.0 - frac) + 
                          susp->table_ptr[index + 1] * frac);}")
        ("double" "phase" "0.0")
@@ -25,7 +26,6 @@
     s_fm->scale = (sample_type) (s_fm->scale * (susp->ph_incr / hz))") )
 
 (ALWAYS-SCALE s_fm)
-(INLINE-INTERPOLATION T) ; so that modulation can be low frequency
 (STEP-FUNCTION s_fm)
 (TERMINATE (MIN s_fm))
 (LOGICAL-STOP (MIN s_fm))
@@ -41,9 +41,7 @@
             /* watch out for negative frequencies! */
             if (phase < 0) phase = 0")
 (CONSTANT "ph_incr" "table_len" "table_ptr" "loop_to")
-
 (SAMPLE-RATE "sr")
-(FINALIZATION "    table_unref(susp->the_table);
-")
+(FINALIZATION "    table_unref(susp->the_table);\n")
 )
 

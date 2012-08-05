@@ -13,10 +13,10 @@
 (LINEAR input)
 (TERMINATE (MIN input))
 (INNER-LOOP-LOCALS "register sample_type y, z;\n")
-(INNER-LOOP "	    y = *delayptr;
-        *delayptr++ = z = (sample_type) (feedback * y + input);
-        output = (sample_type) (y - feedback * z);
-        if (delayptr >= endptr) delayptr = susp->delaybuf;")
+(INNER-LOOP "y = *delayptr;
+            *delayptr++ = z = (sample_type) (feedback * y + input);
+            output = (sample_type) (y - feedback * z);
+            if (delayptr >= endptr) delayptr = susp->delaybuf")
 (FINALIZATION "free(susp->delaybuf);")
 )
 

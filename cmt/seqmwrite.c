@@ -167,9 +167,6 @@ private void smfw_dotrack(seq)
     unsigned long chunk_size;
 
     if (seq->runflag) {
-        if ((seq->timebase->virt_base == 0) &&
-          (seq->timebase->rate == STOPRATE)) 
-          /*we just set these last time through... do nothing*/;
         seq_stop(seq);
     }
     timebase_use(seq->timebase);

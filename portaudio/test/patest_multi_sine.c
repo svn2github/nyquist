@@ -4,7 +4,7 @@
 	@author Phil Burk  http://www.softsynth.com
 */
 /*
- * $Id: patest_multi_sine.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest_multi_sine.c 1368 2008-03-01 00:38:27Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -124,6 +124,10 @@ int test(short interleaved)
     short               n;
 
     outputParameters.device = Pa_GetDefaultOutputDevice();  /* Default output device, max channels. */
+    if (outputParameters.device == paNoDevice) {
+      fprintf(stderr,"Error: No default output device.\n");
+      return paInvalidDevice;
+    }
     pdi = Pa_GetDeviceInfo(outputParameters.device);
     outputParameters.channelCount = pdi->maxOutputChannels;
     if (outputParameters.channelCount > MAX_CHANNELS)

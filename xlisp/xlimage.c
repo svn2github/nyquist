@@ -34,7 +34,7 @@ LOCAL void readnode(int type, LVAL node);
 
 
 /* xlisave - save the memory image */
-int xlisave(char *fname)
+int xlisave(const char *fname)
 {
     char fullname[STRMAX+1];
     unsigned char *cp;
@@ -132,7 +132,7 @@ int xlisave(char *fname)
 }
 
 /* xlirestore - restore a saved memory image */
-int xlirestore(char *fname)
+int xlirestore(const char *fname)
 {
     extern FUNDEF funtab[];
     char fullname[STRMAX+1];

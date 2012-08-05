@@ -4,7 +4,7 @@
  * details.  THERE IS ABSOLUTELY NO WARRANTY FOR THIS SOFTWARE.
  */
 
-#include "config.h" // RBD
+#include "config.h" /* RBD */
 
 #include "gsm610_priv.h"
 
@@ -358,11 +358,4 @@ int gsm_decode (gsm s, gsm_byte * c, gsm_signal * target)
 
 	return 0;
 }
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: 6a9b6628-821c-4a96-84c1-485ebd35f170
-*/
 

@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "white.h"
 
-void white_free();
+void white_free(snd_susp_type a_susp);
 
 
 typedef struct white_susp_struct {
@@ -18,8 +18,9 @@ typedef struct white_susp_struct {
 } white_susp_node, *white_susp_type;
 
 
-void white__fetch(register white_susp_type susp, snd_list_type snd_list)
+void white__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    white_susp_type susp = (white_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -47,7 +48,7 @@ void white__fetch(register white_susp_type susp, snd_list_type snd_list)
 	n = togo;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) (rand() * rand_scale - 1.0);;
+            *out_ptr_reg++ = (sample_type) (rand() * rand_scale - 1.0);
 	} while (--n); /* inner loop */
 
 	out_ptr += togo;
@@ -64,13 +65,14 @@ void white__fetch(register white_susp_type susp, snd_list_type snd_list)
 } /* white__fetch */
 
 
-void white_free(white_susp_type susp)
+void white_free(snd_susp_type a_susp)
 {
+    white_susp_type susp = (white_susp_type) a_susp;
     ffree_generic(susp, sizeof(white_susp_node), "white_free");
 }
 
 
-void white_print_tree(white_susp_type susp, int n)
+void white_print_tree(snd_susp_type a_susp, int n)
 {
 }
 

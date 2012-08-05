@@ -53,10 +53,9 @@
 #include "cext.h"
 #include "userio.h"
 #include "exitpa.h"
+#include "nyq-osc-server.h"
 #include "sliders.h" /* define sliders -- not just for OSC */
-#if OSC
-#include "sound.h" /* define nosc_enabled */
-#endif
+#include "sound.h" /* define nosc_enabled and mark_sound_time */
 #define LBSIZE 200
 
 /* external variables */
@@ -107,7 +106,7 @@ const char os_sepchar = ':';
 
 
 /* osinit - initialize */
-void osinit(char *banner)
+void osinit(const char *banner)
 {	
     printf("%s\n",banner);
 
@@ -145,11 +144,11 @@ void osfinish(void)
 }
 
 /* oserror - print an error message */
-void oserror(char *msg) {printf("error: %s\n",msg);}
+void oserror(const char *msg) {printf("error: %s\n",msg);}
 
 
 /* osaopen - open an ascii file */
-FILE *osaopen(name,mode) char *name,*mode; {
+FILE *osaopen(name,mode) const char *name,*mode; {
     FILE *fp;
     fp = fopen(name,mode);
 #ifdef DEBUG_INPUT
@@ -165,7 +164,7 @@ FILE *osaopen(name,mode) char *name,*mode; {
 }
 
 /* osbopen - open a binary file */
-FILE *osbopen(name,mode) char *name,*mode;
+FILE *osbopen(name,mode) const char *name,*mode;
  {  char bmode[10];
     FILE *fp;
     strcpy(bmode,mode); strcat(bmode,"b");
@@ -559,7 +558,7 @@ void osflush(void)
 
 
 /* hidden_msg - process a "hidden message" 
-/*
+ *
  * NOTE: a "hidden message" is a sequence of characters starting
  * with '\016' and ending with '\021'. These are designed to allow
  * a graphical interface, namely jNyqIDE, to control sliders in
@@ -602,7 +601,6 @@ LOCAL void hidden_msg()
 void oscheck(void)
 {
     int ch;
-    int k, v, n;
     static int count = 0;
 		
 #if OSC
@@ -720,7 +718,7 @@ LVAL xget_temp_path()
 /* xget_user -- get a string identifying the user, for use in file names */
 LVAL xget_user()
 {
-    char *user = getenv("USER");
+    const char *user = getenv("USER");
     if (!user || !*user) {
         errputstr("Warning: could not get user ID, using 'nyquist'\n");
         user = "nyquist";
@@ -746,7 +744,7 @@ static int osdir_list_status = OSDIR_LIST_READY;
 static DIR *osdir_dir;
 
 /* osdir_list_start -- open a directory listing */
-int osdir_list_start(char *path)
+int osdir_list_start(const char *path)
 {    
     if (osdir_list_status != OSDIR_LIST_READY) {
         osdir_list_finish(); /* close current listing */
@@ -761,7 +759,7 @@ int osdir_list_start(char *path)
 
 
 /* osdir_list_next -- read the next entry from a directory */
-char *osdir_list_next()
+const char *osdir_list_next()
 {
     if (osdir_list_status != OSDIR_LIST_STARTED) {
         return NULL;

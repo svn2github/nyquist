@@ -134,8 +134,9 @@ static int portaudio_error(PaError err, char *problem)
 {
     char msgbuffer[256];
     if (err != paNoError) {
-        sprintf(msgbuffer, "%s, error %d, %s.", problem, (int) err, 
-                            Pa_GetErrorText(err));
+        snprintf(msgbuffer, sizeof(msgbuffer), 
+                 "%s, error %d, %s.", problem, (int) err, 
+                                Pa_GetErrorText(err));
         xlerrprint("warning", NULL, msgbuffer, s_unbound);
         return true;
     }
@@ -431,7 +432,7 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     sndfile = sf_open((const char *) filename, direction, sf_info); 
 
     if (!sndfile) {
-        sprintf(error, "snd_overwrite: cannot open file %s", filename);
+        snprintf(error, sizeof(error), "snd_overwrite: cannot open file %s", filename);
         xlabort(error);
     }
     /* use proper scale factor: 8000 vs 7FFF */
@@ -440,12 +441,12 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     frames = round(offset * sf_info->samplerate);
     rslt = sf_seek(sndfile, frames, SEEK_SET);
     if (rslt < 0) {
-        sprintf(error, "snd_overwrite: cannot seek to frame %lld of %s",
+        snprintf(error, sizeof(error), "snd_overwrite: cannot seek to frame %lld of %s",
                 frames, filename);
         xlabort(error);
     }
     if (sf_info->channels != channels) {
-        sprintf(error, "%s%d%s%d%s", 
+        snprintf(error, sizeof(error), "%s%d%s%d%s", 
                 "snd_overwrite: number of channels in sound (",
                 channels,
                 ") does not match\n    number of channels in file (",
@@ -455,7 +456,7 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     }
 
     if (sf_info->samplerate != srate) {
-        sprintf(error, "%s%ld%s%d%s",
+        snprintf(error, sizeof(error), "%s%ld%s%d%s",
                 "snd_overwrite: sample rate in sound (",
                 srate,
                 ") does not match\n    sample rate in file (",
@@ -566,7 +567,6 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
     sample_type threshold = 0.0F;
     /* jlh    cvtfn_type cvtfn; */
     *ntotal = 0;
-
     /* if snd_expr was simply a symbol, then s now points to
         a shared sound_node.  If we read samples from it, then
         the sound bound to the symbol will be destroyed, so

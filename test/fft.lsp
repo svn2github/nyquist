@@ -30,6 +30,18 @@
     (display "fft-ifft" (snd-length ifft-snd 200))
     (display "fft-ifft" (snd-samples ifft-snd 200)) ))
 
+(fft-test)
+(ifft-test)
+
+;; try non-power-of-two
+(defun fft-test2 ()
+  (let (fft-iter)
+    ;; signal will have 4 cycles in 32 points:
+    (setf fft-iter (make-fft1-iterator (short-sine 25 4) 25 25))
+    (display "fft-test2" (send fft-iter :next))))
+    
+;(fft-test2) -- should report error
+
 
 ; Test fft-test and ifft-test on a cosine using this redefinition:
 ;

@@ -7,11 +7,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "config.h" // RBD
+#include "config.h" /* RBD */
 
 #include "gsm610_priv.h"
-
-#include "gsm.h"
 
 /*
  *  4.2.4 .. 4.2.7 LPC ANALYSIS SECTION
@@ -333,11 +331,3 @@ void Gsm_LPC_Analysis (
 	Transformation_to_Log_Area_Ratios (LARc);
 	Quantization_and_coding		  (LARc);
 }
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: 63146664-a002-4e1e-8b7b-f0cc8a6a53da
-*/
-

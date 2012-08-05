@@ -79,7 +79,7 @@ extern FILE *read_by_xlisp;
 
 
 /* xlload - load a file of xlisp expressions */
-int xlload(char *fname, int vflag, int pflag)
+int xlload(const char *fname, int vflag, int pflag)
 {
     char fullname[STRMAX+1];
 #ifdef WINDOWS
@@ -111,7 +111,7 @@ int xlload(char *fname, int vflag, int pflag)
         }
     }
     if (strcmp(fullname, "*.*") == 0) {
-        char *name = getfilename(NULL, "lsp", "r", "Load file");
+        const char *name = getfilename(NULL, "lsp", "r", "Load file");
         if (name) {
             strcpy(fullname, name);
             strcpy(save_file_name, name);

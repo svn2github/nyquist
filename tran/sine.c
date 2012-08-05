@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "sine.h"
 
-void sine_free();
+void sine_free(snd_susp_type a_susp);
 
 
 typedef struct sine_susp_struct {
@@ -31,8 +31,9 @@ void sine_init()
 }
 
 
-void sine__fetch(register sine_susp_type susp, snd_list_type snd_list)
+void sine__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    sine_susp_type susp = (sine_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -64,9 +65,9 @@ void sine__fetch(register sine_susp_type susp, snd_list_type snd_list)
 	ph_incr_reg = susp->ph_incr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = sine_table[phase_reg >> SINE_TABLE_SHIFT];
+            *out_ptr_reg++ = sine_table[phase_reg >> SINE_TABLE_SHIFT];
             phase_reg += ph_incr_reg;
-            phase_reg &= SINE_TABLE_MASK;;
+            phase_reg &= SINE_TABLE_MASK;
 	} while (--n); /* inner loop */
 
 	susp->phase = (susp->phase + susp->ph_incr * togo) & SINE_TABLE_MASK;
@@ -84,13 +85,14 @@ void sine__fetch(register sine_susp_type susp, snd_list_type snd_list)
 } /* sine__fetch */
 
 
-void sine_free(sine_susp_type susp)
+void sine_free(snd_susp_type a_susp)
 {
+    sine_susp_type susp = (sine_susp_type) a_susp;
     ffree_generic(susp, sizeof(sine_susp_node), "sine_free");
 }
 
 
-void sine_print_tree(sine_susp_type susp, int n)
+void sine_print_tree(snd_susp_type a_susp, int n)
 {
 }
 

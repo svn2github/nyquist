@@ -283,7 +283,7 @@ to select the appropriate code at run time.  If there are N signal inputs,
 this will generate 2@+(N) versions of the code.  To avoid this code
 explosion, use the @code(ALWAYS-SCALE) attribute.
 
-@code[(INLINE-INTERPOLATION T)]@\specifies that sample rate interpolation
+@code[(INLINE-INTERPOLATION @i(flag))]@\controls when sample rate interpolation
 should be performed in-line in the inner loop. There are two forms of sample
 rate interpolation.  One is intended for use when the rate change is large
 and many points will be interpolated.  This form uses a divide instruction
@@ -291,10 +291,17 @@ and some setup at the low sample rate,
 but the inner loop overhead is just an add. The
 other form, intended for less drastic sample rate changes, performs
 interpolation with 2 multiplies and several adds per sample at the high
-sample rate.  Nyquist generates various inner loops and selects the
-appropriate one at run-time.  If @code(INLINE-INTERPOLATION) is not set,
-then much less code is generated and interpolation is performed as necessary
-by instantiating a separate signal processing operation.
+sample rate.  If inline interpolation is enabled, Nyquist generates various 
+inner loops and selects the appropriate one at run-time. (This can cause a
+combinatorial explosion if there are multiple sound arguments.) If inline
+interpolation is not enabled, much less code is generated and interpolation
+is performed as necessary
+by instantiating a separate signal processing operation. The value of @i(flag)
+is @code(YES) to generate inline interpolation, @code(NO) to disable
+inline interpolation, and @code(NIL) to take the default set by the 
+global variable @code(*INLINE-INTERPOLATION*). The default is also taken
+if no @i(INLINE-INTERPOLATION) attribute is specified.
+
 
 @code[(STEP-FUNCTION @i(name1) @i(name2) ...)]@\Normally all argument 
 signals are

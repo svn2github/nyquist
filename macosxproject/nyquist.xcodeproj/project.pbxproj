@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -29,7 +29,6 @@
 		3D17769C125CB593007B2152 /* NyquistWords.txt in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D7A6FD10A7A85F900098CAB /* NyquistWords.txt */; };
 		3D17769D125CB593007B2152 /* runtime in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = F510BCDA039F84FE01029006 /* runtime */; };
 		3D17769E125CB593007B2152 /* lib in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = F510BCA7039F84FD01029006 /* lib */; };
-		3D17769F125CB593007B2152 /* demos in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D7A6F830A7A6AB500098CAB /* demos */; };
 		3D1776A0125CB593007B2152 /* system.lsp in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D36DDF20796E60F0002CE69 /* system.lsp */; };
 		3D1776A1125CB5B3007B2152 /* Nyquist.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3D1472C70A799DFF00F00E71 /* Nyquist.icns */; };
 		3D3221540F53D42D00F074EF /* blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D3221400F53D42D00F074EF /* blob.c */; };
@@ -418,7 +417,6 @@
 				3D17769C125CB593007B2152 /* NyquistWords.txt in Copy Java Resources */,
 				3D17769D125CB593007B2152 /* runtime in Copy Java Resources */,
 				3D17769E125CB593007B2152 /* lib in Copy Java Resources */,
-				3D17769F125CB593007B2152 /* demos in Copy Java Resources */,
 				3D1776A0125CB593007B2152 /* system.lsp in Copy Java Resources */,
 			);
 			name = "Copy Java Resources";
@@ -563,7 +561,6 @@
 		3D7327B0125BF624009AAF15 /* NyquistIDE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NyquistIDE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D7327B2125BF624009AAF15 /* NyquistIDE-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NyquistIDE-Info.plist"; sourceTree = "<group>"; };
 		3D7327DE125BFB19009AAF15 /* JavaApplicationStub */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = JavaApplicationStub; path = /System/Library/Frameworks/JavaVM.framework/Versions/A/Resources/MacOS/JavaApplicationStub; sourceTree = "<absolute>"; };
-		3D7A6F830A7A6AB500098CAB /* demos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = demos; path = ../demos; sourceTree = SOURCE_ROOT; };
 		3D7A6FC90A7A851B00098CAB /* Trie.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = Trie.java; sourceTree = "<group>"; };
 		3D7A6FCA0A7A851B00098CAB /* WordList.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = WordList.java; sourceTree = "<group>"; };
 		3D7A6FD10A7A85F900098CAB /* NyquistWords.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = NyquistWords.txt; sourceTree = "<group>"; };
@@ -742,6 +739,7 @@
 		3DC916F70D4036F000DD66C0 /* fmfbv.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = fmfbv.c; sourceTree = "<group>"; };
 		3DC916F80D4036F000DD66C0 /* fmfbv.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fmfbv.h; sourceTree = "<group>"; };
 		3DE0D0680B319B30003EAC5F /* PopupListener.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = PopupListener.java; sourceTree = "<group>"; };
+		3DE2276515BC92D7006E65CB /* libportaudio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libportaudio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DE80D660F7EA825003761D2 /* pvshell.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pvshell.c; path = ../nyqsrc/pvshell.c; sourceTree = SOURCE_ROOT; };
 		3DE80D680F7EA840003761D2 /* phasevocoder.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = phasevocoder.c; path = ../nyqsrc/phasevocoder.c; sourceTree = SOURCE_ROOT; };
 		3DF21F3204FD526A0002CE69 /* args.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = args.h; sourceTree = "<group>"; };
@@ -1100,6 +1098,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DE2276215BC92D7006E65CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1111,7 +1116,6 @@
 				3D7327DE125BFB19009AAF15 /* JavaApplicationStub */,
 				3DE80D680F7EA840003761D2 /* phasevocoder.c */,
 				3DE80D660F7EA825003761D2 /* pvshell.c */,
-				3D7A6F830A7A6AB500098CAB /* demos */,
 				3D1472C70A799DFF00F00E71 /* Nyquist.icns */,
 				F5DA143903A1108C01029006 /* README */,
 				F510BDB903A0314301029006 /* Frameworks */,
@@ -1161,6 +1165,7 @@
 				3D3221700F53D4C300F074EF /* libliblo.a */,
 				3D7327B0125BF624009AAF15 /* NyquistIDE.app */,
 				3DA7D7C412B93C08008E62B1 /* intgen */,
+				3DE2276515BC92D7006E65CB /* libportaudio.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1951,6 +1956,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DE2276315BC92D7006E65CB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -2077,13 +2089,33 @@
 			productReference = 3DAB7F290B2E172300A51A49 /* ser-to-osc */;
 			productType = "com.apple.product-type.tool";
 		};
+		3DE2276415BC92D7006E65CB /* portaudio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DE2276615BC92D7006E65CB /* Build configuration list for PBXNativeTarget "portaudio" */;
+			buildPhases = (
+				3DE2276115BC92D7006E65CB /* Sources */,
+				3DE2276215BC92D7006E65CB /* Frameworks */,
+				3DE2276315BC92D7006E65CB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = portaudio;
+			productName = portaudio;
+			productReference = 3DE2276515BC92D7006E65CB /* libportaudio.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 3DEBDFD2095B177A001BCCB6 /* Build configuration list for PBXProject "nyquist" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -2104,6 +2136,7 @@
 				3D7327A5125BF5D8009AAF15 /* CompileJava */,
 				3D7327AF125BF624009AAF15 /* NyquistIDE */,
 				3DA7D7C312B93C08008E62B1 /* intgen */,
+				3DE2276415BC92D7006E65CB /* portaudio */,
 			);
 		};
 /* End PBXProject section */
@@ -2528,6 +2561,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DE2276115BC92D7006E65CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2569,14 +2609,11 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
 				PRODUCT_NAME = "osc-test-client";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = YES;
 			};
@@ -2586,13 +2623,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
 				PRODUCT_NAME = "osc-test-client";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = NO;
 			};
@@ -2601,12 +2635,9 @@
 		3D08175E0AD01DD00051B745 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
 				PRODUCT_NAME = "osc-test-client";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = NO;
 			};
@@ -2618,17 +2649,14 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = liblo;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../liblo/src ../liblo/osx";
 				ZERO_LINK = YES;
 			};
@@ -2639,16 +2667,13 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = liblo;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../liblo/src ../liblo/osx";
 				ZERO_LINK = NO;
 			};
@@ -2658,15 +2683,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = liblo;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../liblo/src ../liblo/osx";
 				ZERO_LINK = YES;
 			};
@@ -2675,18 +2697,14 @@
 		3D3533870F0BD6E00059CD05 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = ../sys/unix;
 				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
 				PRODUCT_NAME = libsndfile;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -2695,14 +2713,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = ../sys/unix;
 				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
 				PRODUCT_NAME = libsndfile;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -2710,13 +2725,10 @@
 		3D3533890F0BD6E00059CD05 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = ../sys/unix;
 				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
 				PRODUCT_NAME = libsndfile;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = YES;
 			};
 			name = Default;
@@ -2724,10 +2736,8 @@
 		3D5CD8300B5BC75600DF426B /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2745,10 +2755,8 @@
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/build/Development\"";
 				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = ny;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -2756,9 +2764,7 @@
 		3D5CD8310B5BC75600DF426B /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2775,10 +2781,8 @@
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/build/Development\"";
 				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = ny;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -2786,11 +2790,6 @@
 		3D5CD8320B5BC75600DF426B /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
@@ -2806,10 +2805,8 @@
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/build/Development\"";
 				OTHER_LDFLAGS = "-lsndfile";
-				PREBINDING = NO;
 				PRODUCT_NAME = ny;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include $(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
 			name = Default;
@@ -2829,7 +2826,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = CompileJava;
 				ZERO_LINK = NO;
 			};
@@ -2849,7 +2845,6 @@
 				ARCHS = i386;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2862,9 +2857,7 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = NyquistIDE;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Development;
 		};
@@ -2874,7 +2867,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -2886,9 +2878,7 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = NyquistIDE;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -2897,7 +2887,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -2909,9 +2898,7 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = NyquistIDE;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Default;
 		};
@@ -2921,11 +2908,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = intgen;
 			};
 			name = Development;
@@ -2936,10 +2921,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = intgen;
 				ZERO_LINK = NO;
 			};
@@ -2949,10 +2932,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = intgen;
 			};
 			name = Default;
@@ -2962,14 +2943,11 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
 				PRODUCT_NAME = "ser-to-osc";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = YES;
 			};
@@ -2979,13 +2957,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
 				PRODUCT_NAME = "ser-to-osc";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = NO;
 			};
@@ -2994,47 +2969,100 @@
 		3DAB7F2F0B2E175500A51A49 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
 				PRODUCT_NAME = "ser-to-osc";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				USER_HEADER_SEARCH_PATHS = "../liblo ../sys/unix ../cmt";
 				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		3DE2276715BC92D7006E65CB /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Development;
+		};
+		3DE2276815BC92D7006E65CB /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Deployment;
+		};
+		3DE2276915BC92D7006E65CB /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Default;
 		};
 		3DEBDFD3095B177A001BCCB6 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Development;
 		};
 		3DEBDFD4095B177A001BCCB6 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Deployment;
 		};
 		3DEBDFD5095B177A001BCCB6 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Default;
 		};
@@ -3117,6 +3145,16 @@
 				3DAB7F2D0B2E175500A51A49 /* Development */,
 				3DAB7F2E0B2E175500A51A49 /* Deployment */,
 				3DAB7F2F0B2E175500A51A49 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3DE2276615BC92D7006E65CB /* Build configuration list for PBXNativeTarget "portaudio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DE2276715BC92D7006E65CB /* Development */,
+				3DE2276815BC92D7006E65CB /* Deployment */,
+				3DE2276915BC92D7006E65CB /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

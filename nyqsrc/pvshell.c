@@ -81,9 +81,10 @@ long pvshell_test_g(pvshell_type susp)
  *  sounds, x and y are doubles, and h implemented via a function 
  *  pointer. This could certainly be generalized further, but 
  *  maybe we should take this one step at a time.
-/**/
-void pvshell_fetch(register pvshell_susp_type susp, snd_list_type snd_list)
+ */
+void pvshell_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    pvshell_susp_type susp = (pvshell_susp_type) a_susp;
     long n, flags;
     sample_block_type out;
     sample_block_values_type out_ptr;
@@ -130,15 +131,17 @@ void pvshell_fetch(register pvshell_susp_type susp, snd_list_type snd_list)
 } /* pvshell_fetch */
 
 
-void pvshell_mark(pvshell_susp_type susp)
+void pvshell_mark(snd_susp_type a_susp)
 {
+    pvshell_susp_type susp = (pvshell_susp_type) a_susp;
     sound_xlmark(susp->pvshell.f);
     sound_xlmark(susp->pvshell.g);
 }
 
 
-void pvshell_free(pvshell_susp_type susp)
+void pvshell_free(snd_susp_type a_susp)
 {
+    pvshell_susp_type susp = (pvshell_susp_type) a_susp;
     /* note that f or g can be NULL */
     sound_unref(susp->pvshell.f);
     sound_unref(susp->pvshell.g);
@@ -146,8 +149,9 @@ void pvshell_free(pvshell_susp_type susp)
 }
 
 
-void pvshell_print_tree(pvshell_susp_type susp, int n)
+void pvshell_print_tree(snd_susp_type a_susp, int n)
 {
+    pvshell_susp_type susp = (pvshell_susp_type) a_susp;
     indent(n);
     stdputstr("f:");
     sound_print_tree_1(susp->pvshell.f, n);

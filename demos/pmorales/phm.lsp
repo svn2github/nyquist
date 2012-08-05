@@ -64,16 +64,16 @@
         (setf last-sig out-sig)))))
        
 
-(defun flute (freq dur &key (noise-lev 0.0356) (atk 0.05) (dec 0.1) (emb-size 0.5)
+(defun pm-flute (freq dur &key (noise-lev 0.0356) (atk 0.05) (dec 0.1) (emb-size 0.5)
                             (vib-amount 0.015) (vib-rate 5))
   (let (obj)
     (setf obj (send flute-class :new
                 (flute-exc noise-lev vib-amount vib-rate atk dec dur) emb-size freq dur))
     (hp (snd-fromobject 0.0 *sound-srate* obj) 20.0)))
 
-(ss (seq (flute a4 0.5 :dec 0.01)
-         (flute b4 0.5 :dec 0.01)
-         (flute c5 0.5 :dec 0.01)
-         (flute gs4 1.0))) 
+(ss (seq (pm-flute a4 0.5 :dec 0.01)
+         (pm-flute b4 0.5 :dec 0.01)
+         (pm-flute c5 0.5 :dec 0.01)
+         (pm-flute gs4 1.0))) 
  
 

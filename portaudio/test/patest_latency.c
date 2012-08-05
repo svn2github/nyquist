@@ -5,7 +5,7 @@
 	@author Phil Burk <philburk@softsynth.com>, and Darren Gibbs
 */
 /*
- * $Id: patest_latency.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest_latency.c 1368 2008-03-01 00:38:27Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -135,6 +135,10 @@ int main(void)
     printf("PortAudio Test: output device = %d\n", OUTPUT_DEVICE );
 
     outputParameters.device = OUTPUT_DEVICE;
+    if (outputParameters.device == paNoDevice) {
+      fprintf(stderr,"Error: No default output device.\n");
+      goto error;
+    }
     outputParameters.channelCount = 2;         /* stereo output */
     outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;

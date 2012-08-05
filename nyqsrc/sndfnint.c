@@ -1,5 +1,5 @@
-/* nyqsrc/sndfnint.c -- interface to  nyqsrc/sndfmt.h, 
- * nylsf/sndfile.h, nyqsrc/sound.h, nyqsrc/add.h, 
+/* nyqsrc/sndfnint.c -- interface to  nylsf/sndfile.h, 
+ * nyqsrc/sndfmt.h, nyqsrc/sound.h, nyqsrc/add.h, 
  * nyqsrc/avg.h, nyqsrc/compose.h, nyqsrc/convolve.h, 
  * nyqsrc/downsample.h, nyqsrc/fft.h, nyqsrc/inverse.h, 
  * nyqsrc/multiseq.h, nyqsrc/resamp.h, nyqsrc/resampv.h, 
@@ -52,9 +52,9 @@ extern LVAL s_true;
 extern LVAL RSLT_sym;
 
 
-#include "sndfmt.h"
-
 #include "sndfile.h"
+
+#include "sndfmt.h"
 
 #include "sound.h"
 
@@ -1979,11 +1979,10 @@ LVAL xlc_snd_stkrev(void)
     sound_type arg2 = getsound(xlgasound());
     double arg3 = testarg2(xlgaanynum());
     double arg4 = testarg2(xlgaanynum());
-    double arg5 = testarg2(xlgaanynum());
     sound_type result;
 
     xllastarg();
-    result = snd_stkrev(arg1, arg2, arg3, arg4, arg5);
+    result = snd_stkrev(arg1, arg2, arg3, arg4);
     return cvsound(result);
 }
 
@@ -1997,11 +1996,10 @@ LVAL xlc_snd_stkpitshift(void)
     sound_type arg1 = getsound(xlgasound());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
-    double arg4 = testarg2(xlgaanynum());
     sound_type result;
 
     xllastarg();
-    result = snd_stkpitshift(arg1, arg2, arg3, arg4);
+    result = snd_stkpitshift(arg1, arg2, arg3);
     return cvsound(result);
 }
 
@@ -2017,11 +2015,10 @@ LVAL xlc_snd_stkchorus(void)
     double arg3 = testarg2(xlgaanynum());
     double arg4 = testarg2(xlgaanynum());
     double arg5 = testarg2(xlgaanynum());
-    double arg6 = testarg2(xlgaanynum());
     sound_type result;
 
     xllastarg();
-    result = snd_stkchorus(arg1, arg2, arg3, arg4, arg5, arg6);
+    result = snd_stkchorus(arg1, arg2, arg3, arg4, arg5);
     return cvsound(result);
 }
 

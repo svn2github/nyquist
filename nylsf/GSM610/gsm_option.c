@@ -4,7 +4,7 @@
  * details.  THERE IS ABSOLUTELY NO WARRANTY FOR THIS SOFTWARE.
  */
 
-#include "config.h" // RBD
+#include "config.h" /* RBD */
 
 #include "gsm610_priv.h"
 
@@ -66,11 +66,3 @@ int gsm_option (gsm r, int opt, int * val)
 	}
 	return result;
 }
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
-** revision control system.
-**
-** arch-tag: 963ff156-506f-4359-9145-371e9060b030
-*/
-

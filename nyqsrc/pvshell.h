@@ -67,6 +67,8 @@ typedef struct pvshell_struct {
  * flag because you saved it in susp->flags, and the flag applies to the
  * *beginning* of the sample block. This code handles terminate too.
  */
+long pvshell_test_f(pvshell_type susp);
+long pvshell_test_g(pvshell_type susp);
 #define PVSHELL_TEST_F(susp) ((susp)->f_cnt == 0 ? pvshell_test_f(susp) : 0)
 #define PVSHELL_FETCH_F(susp) ((susp)->f_cnt--, (*(susp)->f_ptr++))
 

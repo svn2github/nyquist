@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "resoncv.h"
 
-void resoncv_free();
+void resoncv_free(snd_susp_type a_susp);
 
 
 typedef struct resoncv_susp_struct {
@@ -44,8 +44,9 @@ typedef struct resoncv_susp_struct {
 } resoncv_susp_node, *resoncv_susp_type;
 
 
-void resoncv_ns_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
+void resoncv_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resoncv_susp_type susp = (resoncv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -138,9 +139,9 @@ void resoncv_ns_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
 	    c1_reg = (normalization_reg == 0 ? 1.0 :
           (normalization_reg == 1 ? omc3 * sqrt(1.0 - c2_reg * c2_reg / c3t4) :
               sqrt(c3p1 * c3p1 - c2_reg * c2_reg) * omc3 / c3p1)) * scale1_reg;
-{ double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
-            *out_ptr_reg++ = (sample_type) y0; 
-            y2_reg = y1_reg; y1_reg = y0; };
+            { double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
+              *out_ptr_reg++ = (sample_type) y0; 
+              y2_reg = y1_reg; y1_reg = y0; };
 	} while (--n); /* inner loop */
 
 	susp->y1 = y1_reg;
@@ -171,8 +172,9 @@ void resoncv_ns_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
 } /* resoncv_ns_fetch */
 
 
-void resoncv_ni_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
+void resoncv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resoncv_susp_type susp = (resoncv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -281,18 +283,18 @@ void resoncv_ni_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
 		bw_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
 		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
-		c3co_reg = susp->c3co = exp(bw_x1_sample_reg);
+		c3co_reg = exp(bw_x1_sample_reg);
 		c3p1 = c3co_reg + 1.0;
 		c3t4 = c3co_reg * 4.0;
 		omc3 = 1.0 - c3co_reg;
-		c2_reg = susp->c2 = c3t4 * coshz_reg / c3p1;
-		c1_reg = susp->c1 = (normalization_reg == 0 ? 1.0 :
+		c2_reg = c3t4 * coshz_reg / c3p1;
+		c1_reg = (normalization_reg == 0 ? 1.0 :
           (normalization_reg == 1 ? omc3 * sqrt(1.0 - c2_reg * c2_reg / c3t4) :
               sqrt(c3p1 * c3p1 - c2_reg * c2_reg) * omc3 / c3p1)) * scale1_reg;
 	    }
-{ double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
-            *out_ptr_reg++ = (sample_type) y0; 
-            y2_reg = y1_reg; y1_reg = y0; };
+            { double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
+              *out_ptr_reg++ = (sample_type) y0; 
+              y2_reg = y1_reg; y1_reg = y0; };
 	    bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -324,8 +326,9 @@ void resoncv_ni_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
 } /* resoncv_ni_fetch */
 
 
-void resoncv_nr_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
+void resoncv_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resoncv_susp_type susp = (resoncv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type bw_val;
     int togo;
@@ -432,9 +435,9 @@ void resoncv_nr_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-{ double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
-            *out_ptr_reg++ = (sample_type) y0; 
-            y2_reg = y1_reg; y1_reg = y0; };
+            { double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
+              *out_ptr_reg++ = (sample_type) y0; 
+              y2_reg = y1_reg; y1_reg = y0; };
 	} while (--n); /* inner loop */
 
 	susp->y1 = y1_reg;
@@ -464,11 +467,9 @@ void resoncv_nr_fetch(register resoncv_susp_type susp, snd_list_type snd_list)
 } /* resoncv_nr_fetch */
 
 
-void resoncv_toss_fetch(susp, snd_list)
-  register resoncv_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void resoncv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    resoncv_susp_type susp = (resoncv_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -491,27 +492,30 @@ void resoncv_toss_fetch(susp, snd_list)
     susp->bw_ptr += n;
     susp_took(bw_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void resoncv_mark(resoncv_susp_type susp)
+void resoncv_mark(snd_susp_type a_susp)
 {
+    resoncv_susp_type susp = (resoncv_susp_type) a_susp;
     sound_xlmark(susp->s1);
     sound_xlmark(susp->bw);
 }
 
 
-void resoncv_free(resoncv_susp_type susp)
+void resoncv_free(snd_susp_type a_susp)
 {
+    resoncv_susp_type susp = (resoncv_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->bw);
     ffree_generic(susp, sizeof(resoncv_susp_node), "resoncv_free");
 }
 
 
-void resoncv_print_tree(resoncv_susp_type susp, int n)
+void resoncv_print_tree(snd_susp_type a_susp, int n)
 {
+    resoncv_susp_type susp = (resoncv_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
@@ -541,6 +545,12 @@ sound_type snd_make_resoncv(sound_type s1, double hz, sound_type bw, int normali
     susp->y2 = 0.0;
     bw->scale = (sample_type) (bw->scale * (-PI2 / s1->sr));
 
+    /* make sure no sample rate is too high */
+    if (bw->sr > sr) {
+        sound_unref(bw);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s1, sr);
     interp_desc = (interp_desc << 2) + interp_style(bw, sr);
@@ -565,8 +575,8 @@ sound_type snd_make_resoncv(sound_type s1, double hz, sound_type bw, int normali
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = resoncv_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = resoncv_toss_fetch;
     }
 
     /* initialize susp state */

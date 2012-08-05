@@ -1,4 +1,5 @@
-(load "nyinit.lsp")
+;; some tones for testing Open Sound Control for controlling Nyquist sounds
+
 (osc-enable t)
 (autonorm-off)
 (snd-set-latency 0.1)

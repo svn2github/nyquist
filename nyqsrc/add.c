@@ -817,9 +817,7 @@ void add_print_tree(snd_susp_type a_susp, int n)
 }
 
 
-sound_type snd_make_add(s1, s2)
-  sound_type s1;
-  sound_type s2;
+sound_type snd_make_add(sound_type s1, sound_type s2)
 {
     register add_susp_type susp;
     rate_type sr = MAX(s1->sr, s2->sr);
@@ -897,13 +895,10 @@ D            stdputstr("snd_make_add: add_s1_s2_nn_fetch installed\n");
 }
 
 
-sound_type snd_add(s1, s2, t0)
-  sound_type s1;
-  sound_type s2;
-  time_type t0;
+sound_type snd_add(sound_type s1, sound_type s2)
 {
     sound_type s1_copy = sound_copy(s1);
     sound_type s2_copy = sound_copy(s2);
 /*    nyquist_printf("snd_add %p %p copied to %p %p\n", s1, s2, s1_copy,  s2_copy); */
-    return snd_make_add(s1_copy, s2_copy, t0);
+    return snd_make_add(s1_copy, s2_copy);
 }

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2005 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2005-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -93,16 +93,21 @@
 #define HAVE_STDINT_H 0
 #endif
 
+#ifndef HAVE_SYS_WAIT_H
+#define HAVE_SYS_WAIT_H 0
+#endif
+
 #ifndef HAVE_UNISTD_H
 #define HAVE_UNISTD_H 0
 #endif
 
+#ifndef HAVE_PIPE
+#define HAVE_PIPE 0
 #endif
 
-/*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch
-** revision control system.
-**
-** arch-tag: 2df2316e-8f9d-4860-bba7-f3c16c63eed3
-*/
+#ifndef HAVE_WAITPID
+#define	HAVE_WAITPID 0
+#endif
+
+#endif
+

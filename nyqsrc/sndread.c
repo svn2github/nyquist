@@ -86,15 +86,16 @@ void read__fetch(susp, snd_list)
 } /* read__fetch */
 
 
-void read_free(read_susp_type susp)
+void read_free(snd_susp_type a_susp)
 {
+    read_susp_type susp = (read_susp_type) a_susp;
     sf_close(susp->sndfile);
     sndread_file_open_count--;
     ffree_generic(susp, sizeof(read_susp_node), "read_free");
 }
 
 
-void read_print_tree(read_susp_type susp, int n)
+void read_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
