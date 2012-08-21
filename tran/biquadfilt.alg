@@ -21,7 +21,7 @@
         ("double" "a1" "a1")
         ("double" "a2" "a2"))
 (CONSTANT "b0" "b1" "b2" "a1" "a2")
-(INNER-LOOP-LOCALS "double z0;")
+(INNER-LOOP-LOCALS "            double z0;")
 (INNER-LOOP "z0 = s + a1*z1 + a2*z2;
             output = (sample_type) (z0*b0 + z1*b1 + z2*b2);
             z2 = z1; z1 = z0")

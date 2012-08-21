@@ -47,7 +47,7 @@
 (FORCE-INTO-REGISTER recompute)
 (STEP-FUNCTION hz) ;; gain width)
 (CONSTANT "w1" "sw" "cw" "J" "g" "b0" "b1" "b2" "b3" "a0" "a1" "a2")
-(INNER-LOOP-LOCALS "double z0;")
+(INNER-LOOP-LOCALS "            double z0;")
 (INNER-LOOP "z0 = s + a1*z1 + a2*z2;
             output = (sample_type) (z0*b0 + z1*b1 + z2*b2);
             z2 = z1; z1 = z0")

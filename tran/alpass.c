@@ -69,7 +69,7 @@ void alpass_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-register sample_type y, z;
+            register sample_type y, z;
             y = *delayptr_reg;
             *delayptr_reg++ = z = (sample_type) (feedback_reg * y + *input_ptr_reg++);
             *out_ptr_reg++ = (sample_type) (y - feedback_reg * z);

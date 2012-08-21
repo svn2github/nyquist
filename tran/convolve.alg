@@ -33,7 +33,7 @@ void h_reverse(sample_type *h, long len)
 (TERMINATE (MIN x_snd))
 (LOGICAL-STOP (MIN x_snd))
 (INNER-LOOP-LOCALS 
-  "long i; double sum;")
+  "            long i; double sum;")
 (INNER-LOOP "/* see if we've reached end of x_buffer */
             if ((x_buffer_pointer + x_buf_len) <= (x_buffer_current + h_len)) {
                 /* shift x_buffer from current back to base */

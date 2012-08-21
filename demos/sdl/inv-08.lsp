@@ -10,8 +10,6 @@
 
 (load "sdl")
 
-(setf *autonorm-type* 'previous)
-
 
 (defun analog-saw (pitch dur atk rel det reson-freq)
   (let ((hz (step-to-hz pitch)))

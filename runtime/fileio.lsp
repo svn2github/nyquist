@@ -135,6 +135,17 @@
   (setf *autonorm* 1.0)
   (format t "AutoNorm feature is off.~%"))
 
+(defun explain-why-autonorm-failed ()
+  (format t "~A~A~A~A~A~A"
+          "     *autonorm-type* is LOOKAHEAD and your sound got\n"
+          "       louder after the lookahead period, resulting in\n"
+          "       too large a scale factor and clipping. Consider\n"
+          "       setting *automode-type* to 'PREVIOUS. Alternatively,\n"
+          "       try turning off autonorm, e.g. \"exec autonorm-off()\"\n"
+          "       or in Lisp mode, (autonorm-off), and scale your sound\n"
+          "       as follows.\n"))
+
+
 ;; AUTONORM-UPDATE -- called with true peak to report and prepare
 ;;
 ;; after saving/playing a file, we have the true peak. This along
@@ -154,18 +165,27 @@
   (cond ((> peak 1.0)
          (format t "*** CLIPPING DETECTED! ***~%")))
   (cond ((and *autonormflag* (> peak 0.0))
-           (setf *autonorm-previous-peak* (/ peak *autonorm*))
+         (setf *autonorm-previous-peak* (/ peak *autonorm*))
          (setf *autonorm* (/ *autonorm-target* *autonorm-previous-peak*))
          (format t "AutoNorm: peak was ~A,~%" *autonorm-previous-peak*)
          (format t "     peak after normalization was ~A,~%" peak)
-         (format t (if (eq *autonorm-type* 'PREVIOUS)
-                       "     new normalization factor is ~A~%"
-                       "     suggested normalization factor is ~A~%")
-                 *autonorm*))
+         (cond ((eq *autonorm-type* 'PREVIOUS)
+                (cond ((zerop *autonorm*)
+                       (setf *autonorm* 1.0)))
+                (format t "     new normalization factor is ~A~%" *autonorm*))
+               ((eq *autonorm-type* 'LOOKAHEAD)
+                (cond ((> peak 1.0)
+                       (explain-why-autonorm-failed)))
+                (format t "     suggested manual normalization factor is ~A~%"
+                          *autonorm*))
+               (t
+                (format t
+                 "     unexpected value for *autonorm-type*, reset to LOOKAHEAD\n")
+                (setf *autonorm-type* 'LOOKAHEAD))))
         (t
          (format t "Peak was ~A,~%" peak)
          (format t "     suggested normalization factor is ~A~%"
-                   (/ *autonorm-target* peak)))
+                   (/ *autonorm-target* peak)))))
    peak
   ))
 
@@ -294,7 +314,7 @@
                                           :time-offset ny:offset)
                                          ny:addend)
                                     ny:addend))
-                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0))
+                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0 0.0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 
@@ -302,11 +322,11 @@
 (defmacro s-overwrite (expr maxlen filename &optional (time-offset 0.0))
   `(let ((ny:fname (soundfilename ,filename))
          (ny:peak 0.0)
-         ny:input ny:rslt ny:offset)
+         ny:input ny:rslt (ny:offset ,time-offset))
     (format t "Overwriting ~A at offset ~A~%" ny:fname ny:offset)
     (setf ny:offset (s-read-byte-offset ny:rslt))
-    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ,time-offset
-                   0, 0, 0, 0.0, 0))
+    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ny:offset
+                   SND-HEAD-NONE 0 0 0 0.0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 

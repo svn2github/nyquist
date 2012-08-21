@@ -3,8 +3,6 @@
 ;; pmorales. Junio, 2007
 
 
-(setf *autonorm-type* 'previous)
-
 (load "sdl")
 
 (defun analog-saw (pitch dur atk rel det reson-freq)

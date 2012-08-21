@@ -170,7 +170,7 @@ out:        togo = 0;     /* indicate termination */
 	x_snd_ptr_reg = susp->x_snd_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double z0; long xi; long xj;            z0 = (x_snd_scale_reg * *x_snd_ptr_reg++) * gain_reg;
+            double z0; long xi; long xj;            z0 = (x_snd_scale_reg * *x_snd_ptr_reg++) * gain_reg;
             for (xi=0; xi < ak_len_reg; xi++) {
                 xj = index_reg + xi; if (xj >= ak_len_reg) xj -= ak_len_reg;
                 z0 += ak_coefs_reg[xi] * zk_buf_reg[xj];

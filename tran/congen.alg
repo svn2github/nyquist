@@ -6,7 +6,6 @@
        ("double" "rise_factor" "exp(log(0.5) / (sndin->sr * risetime))")
        ("double" "fall_factor" "exp(log(0.5) / (sndin->sr * falltime))"))
 (CONSTANT "fall_factor" "rise_factor")
-(ALWAYS-SCALE sndin)
 (TERMINATE (MIN sndin))
 (INNER-LOOP "sample_type current = sndin;
             if (current > value) {

@@ -23,16 +23,17 @@
 (LINEAR input)
 (INTERNAL-SCALING delaysnd) ; incorporated into delay_scale_factor
 (TERMINATE (MIN input))
-(INNER-LOOP-LOCALS "        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;\n")
-(INNER-LOOP "/* compute where to read y, we want y to be delay_snd samples
+(INNER-LOOP-LOCALS "            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;\n")
+(INNER-LOOP "{
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = feedback;
-            delaysamp = delaysnd * delay_scale_factor;
+            register sample_type fb = (sample_type) feedback;
+            delaysamp = (sample_type) (delaysnd * delay_scale_factor);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr + buflen - (delayi + 1);
@@ -55,7 +56,8 @@
                 delayptr = susp->delaybuf;
                 *delayptr++ = *endptr;
             }
-            output = (sample_type) (y - fb * z)")
+            output = (sample_type) (y - fb * z);
+            }")
 (FINALIZATION "free(susp->delaybuf);")
 )
 

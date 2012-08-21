@@ -108,16 +108,17 @@ void alpassvv_nnn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
-            /* compute where to read y, we want y to be delay_snd samples
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = *feedback_ptr_reg++;
-            delaysamp = *delaysnd_ptr_reg++ * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) *feedback_ptr_reg++;
+            delaysamp = (sample_type) (*delaysnd_ptr_reg++ * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -141,6 +142,7 @@ void alpassvv_nnn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	} while (--n); /* inner loop */
 
 	susp->buflen = buflen_reg;
@@ -225,16 +227,17 @@ void alpassvv_nns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
-            /* compute where to read y, we want y to be delay_snd samples
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = (feedback_scale_reg * *feedback_ptr_reg++);
-            delaysamp = *delaysnd_ptr_reg++ * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) (feedback_scale_reg * *feedback_ptr_reg++);
+            delaysamp = (sample_type) (*delaysnd_ptr_reg++ * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -258,6 +261,7 @@ void alpassvv_nns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	} while (--n); /* inner loop */
 
 	susp->buflen = buflen_reg;
@@ -351,9 +355,9 @@ void alpassvv_nni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
 	    if (feedback_pHaSe_ReG >= 1.0) {
 		feedback_x1_sample_reg = feedback_x2_sample;
 		/* pick up next sample as feedback_x2_sample: */
@@ -362,14 +366,15 @@ void alpassvv_nni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		feedback_pHaSe_ReG -= 1.0;
 		susp_check_samples_break(feedback, feedback_ptr, feedback_cnt, feedback_x2_sample);
 	    }
-            /* compute where to read y, we want y to be delay_snd samples
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = 
+            register sample_type fb = (sample_type) 
 		(feedback_x1_sample_reg * (1 - feedback_pHaSe_ReG) + feedback_x2_sample * feedback_pHaSe_ReG);
-            delaysamp = *delaysnd_ptr_reg++ * delay_scale_factor_reg;
+            delaysamp = (sample_type) (*delaysnd_ptr_reg++ * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -393,6 +398,7 @@ void alpassvv_nni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    feedback_pHaSe_ReG += feedback_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -501,16 +507,17 @@ void alpassvv_nnr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
-            /* compute where to read y, we want y to be delay_snd samples
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = feedback_val;
-            delaysamp = *delaysnd_ptr_reg++ * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) feedback_val;
+            delaysamp = (sample_type) (*delaysnd_ptr_reg++ * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -534,6 +541,7 @@ void alpassvv_nnr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    feedback_val += feedback_DeLtA;
 	} while (--n); /* inner loop */
 
@@ -627,9 +635,9 @@ void alpassvv_nin_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
 	    if (delaysnd_pHaSe_ReG >= 1.0) {
 		delaysnd_x1_sample_reg = delaysnd_x2_sample;
 		/* pick up next sample as delaysnd_x2_sample: */
@@ -638,14 +646,15 @@ void alpassvv_nin_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		delaysnd_pHaSe_ReG -= 1.0;
 		susp_check_samples_break(delaysnd, delaysnd_ptr, delaysnd_cnt, delaysnd_x2_sample);
 	    }
-            /* compute where to read y, we want y to be delay_snd samples
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = *feedback_ptr_reg++;
-            delaysamp = 
-		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) *feedback_ptr_reg++;
+            delaysamp = (sample_type) (
+		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -669,6 +678,7 @@ void alpassvv_nin_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_pHaSe_ReG += delaysnd_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -764,9 +774,9 @@ void alpassvv_nis_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
 	    if (delaysnd_pHaSe_ReG >= 1.0) {
 		delaysnd_x1_sample_reg = delaysnd_x2_sample;
 		/* pick up next sample as delaysnd_x2_sample: */
@@ -775,14 +785,15 @@ void alpassvv_nis_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		delaysnd_pHaSe_ReG -= 1.0;
 		susp_check_samples_break(delaysnd, delaysnd_ptr, delaysnd_cnt, delaysnd_x2_sample);
 	    }
-            /* compute where to read y, we want y to be delay_snd samples
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = (feedback_scale_reg * *feedback_ptr_reg++);
-            delaysamp = 
-		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) (feedback_scale_reg * *feedback_ptr_reg++);
+            delaysamp = (sample_type) (
+		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -806,6 +817,7 @@ void alpassvv_nis_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_pHaSe_ReG += delaysnd_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -905,9 +917,9 @@ void alpassvv_nii_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
 	    if (delaysnd_pHaSe_ReG >= 1.0) {
 		delaysnd_x1_sample_reg = delaysnd_x2_sample;
 		/* pick up next sample as delaysnd_x2_sample: */
@@ -924,15 +936,16 @@ void alpassvv_nii_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		feedback_pHaSe_ReG -= 1.0;
 		susp_check_samples_break(feedback, feedback_ptr, feedback_cnt, feedback_x2_sample);
 	    }
-            /* compute where to read y, we want y to be delay_snd samples
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = 
+            register sample_type fb = (sample_type) 
 		(feedback_x1_sample_reg * (1 - feedback_pHaSe_ReG) + feedback_x2_sample * feedback_pHaSe_ReG);
-            delaysamp = 
-		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg;
+            delaysamp = (sample_type) (
+		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -956,6 +969,7 @@ void alpassvv_nii_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_pHaSe_ReG += delaysnd_pHaSe_iNcR_rEg;
 	    feedback_pHaSe_ReG += feedback_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
@@ -1069,9 +1083,9 @@ void alpassvv_nir_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
 	    if (delaysnd_pHaSe_ReG >= 1.0) {
 		delaysnd_x1_sample_reg = delaysnd_x2_sample;
 		/* pick up next sample as delaysnd_x2_sample: */
@@ -1080,14 +1094,15 @@ void alpassvv_nir_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		delaysnd_pHaSe_ReG -= 1.0;
 		susp_check_samples_break(delaysnd, delaysnd_ptr, delaysnd_cnt, delaysnd_x2_sample);
 	    }
-            /* compute where to read y, we want y to be delay_snd samples
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = feedback_val;
-            delaysamp = 
-		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) feedback_val;
+            delaysamp = (sample_type) (
+		(delaysnd_x1_sample_reg * (1 - delaysnd_pHaSe_ReG) + delaysnd_x2_sample * delaysnd_pHaSe_ReG) * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -1111,6 +1126,7 @@ void alpassvv_nir_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_pHaSe_ReG += delaysnd_pHaSe_iNcR_rEg;
 	    feedback_val += feedback_DeLtA;
 	} while (--n); /* inner loop */
@@ -1219,16 +1235,17 @@ void alpassvv_nrn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
-            /* compute where to read y, we want y to be delay_snd samples
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = *feedback_ptr_reg++;
-            delaysamp = delaysnd_val * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) *feedback_ptr_reg++;
+            delaysamp = (sample_type) (delaysnd_val * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -1252,6 +1269,7 @@ void alpassvv_nrn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_val += delaysnd_DeLtA;
 	} while (--n); /* inner loop */
 
@@ -1360,16 +1378,17 @@ void alpassvv_nrs_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
-            /* compute where to read y, we want y to be delay_snd samples
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = (feedback_scale_reg * *feedback_ptr_reg++);
-            delaysamp = delaysnd_val * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) (feedback_scale_reg * *feedback_ptr_reg++);
+            delaysamp = (sample_type) (delaysnd_val * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -1393,6 +1412,7 @@ void alpassvv_nrs_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_val += delaysnd_DeLtA;
 	} while (--n); /* inner loop */
 
@@ -1505,9 +1525,9 @@ void alpassvv_nri_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
 	    if (feedback_pHaSe_ReG >= 1.0) {
 		feedback_x1_sample_reg = feedback_x2_sample;
 		/* pick up next sample as feedback_x2_sample: */
@@ -1516,14 +1536,15 @@ void alpassvv_nri_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		feedback_pHaSe_ReG -= 1.0;
 		susp_check_samples_break(feedback, feedback_ptr, feedback_cnt, feedback_x2_sample);
 	    }
-            /* compute where to read y, we want y to be delay_snd samples
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = 
+            register sample_type fb = (sample_type) 
 		(feedback_x1_sample_reg * (1 - feedback_pHaSe_ReG) + feedback_x2_sample * feedback_pHaSe_ReG);
-            delaysamp = delaysnd_val * delay_scale_factor_reg;
+            delaysamp = (sample_type) (delaysnd_val * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -1547,6 +1568,7 @@ void alpassvv_nri_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_val += delaysnd_DeLtA;
 	    feedback_pHaSe_ReG += feedback_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
@@ -1674,16 +1696,17 @@ void alpassvv_nrr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
-            /* compute where to read y, we want y to be delay_snd samples
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
+            {
+             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
-            register sample_type fb = feedback_val;
-            delaysamp = delaysnd_val * delay_scale_factor_reg;
+            register sample_type fb = (sample_type) feedback_val;
+            delaysamp = (sample_type) (delaysnd_val * delay_scale_factor_reg);
             delayi = (int) delaysamp; /* get integer part */
             delaysamp = delaysamp - delayi; /* get phase */
             yptr = delayptr_reg + buflen_reg - (delayi + 1);
@@ -1707,6 +1730,7 @@ void alpassvv_nrr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 *delayptr_reg++ = *endptr_reg;
             }
             *out_ptr_reg++ = (sample_type) (y - fb * z);
+            };
 	    delaysnd_val += delaysnd_DeLtA;
 	    feedback_val += feedback_DeLtA;
 	} while (--n); /* inner loop */

@@ -84,7 +84,7 @@ out:        togo = 0;     /* indicate termination */
 
 ")
 
-(INNER-LOOP-LOCALS "double z0; long xi; long xj;")
+(INNER-LOOP-LOCALS "            double z0; long xi; long xj;")
 
 (INNER-LOOP "z0 = x_snd * gain;
             for (xi=0; xi < ak_len; xi++) {

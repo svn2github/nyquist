@@ -1,4 +1,4 @@
-ny with optimized code 1,268,704 bytes
+ny with optimized code 1,264,608 bytes
 ny without optimized code 1,149,760
 
 ny without optimized tran code: 1240000 bytes

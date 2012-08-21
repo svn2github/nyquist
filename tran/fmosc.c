@@ -108,7 +108,7 @@ void fmosc_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s_fm_ptr_reg = susp->s_fm_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-	    long table_index;
+            long table_index;
             double x1;
             table_index = (long) phase_reg;
             x1 = table_ptr_reg[table_index];
@@ -219,7 +219,7 @@ void fmosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s_fm_x1_sample_reg = susp->s_fm_x1_sample;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-	    long table_index;
+            long table_index;
             double x1;
 	    if (s_fm_pHaSe_ReG >= 1.0) {
 /* fixup-depends s_fm */
@@ -349,7 +349,7 @@ void fmosc_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	phase_reg = susp->phase;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-	    long table_index;
+            long table_index;
             double x1;
             table_index = (long) phase_reg;
             x1 = table_ptr_reg[table_index];

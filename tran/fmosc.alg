@@ -18,7 +18,7 @@
 (STEP-FUNCTION s_fm)
 (TERMINATE (MIN s_fm))
 (LOGICAL-STOP (MIN s_fm))
-(INNER-LOOP-LOCALS "	    long table_index;
+(INNER-LOOP-LOCALS "            long table_index;
             double x1;
 ")
 (INNER-LOOP "table_index = (long) phase;

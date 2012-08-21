@@ -24,9 +24,9 @@
 (LINEAR input)
 (INTERNAL-SCALING delaysnd)
 (TERMINATE (MIN input))
-(INNER-LOOP-LOCALS "        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;\n")
+(INNER-LOOP-LOCALS "            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;\n")
 (INNER-LOOP "/* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type

@@ -12,7 +12,7 @@
 (NOT-REGISTER delaybuf)
 (LINEAR input)
 (TERMINATE (MIN input))
-(INNER-LOOP-LOCALS "register sample_type y, z;\n")
+(INNER-LOOP-LOCALS "            register sample_type y, z;\n")
 (INNER-LOOP "y = *delayptr;
             *delayptr++ = z = (sample_type) (feedback * y + input);
             output = (sample_type) (y - feedback * z);

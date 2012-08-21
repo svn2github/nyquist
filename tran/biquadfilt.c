@@ -105,7 +105,7 @@ void biquadfilt_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s_ptr_reg = susp->s_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double z0;            z0 = *s_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
+            double z0;            z0 = *s_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
             *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
             z2_reg = z1_reg; z1_reg = z0;
 	} while (--n); /* inner loop */

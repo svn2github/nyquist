@@ -93,9 +93,9 @@ void alpassvc_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
@@ -211,9 +211,9 @@ void alpassvc_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
 	    if (delaysnd_pHaSe_ReG >= 1.0) {
 		delaysnd_x1_sample_reg = delaysnd_x2_sample;
 		/* pick up next sample as delaysnd_x2_sample: */
@@ -353,9 +353,9 @@ void alpassvc_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        register sample_type y, z, delaysamp;
-        register int delayi;
-        register sample_type *yptr;
+            register sample_type y, z, delaysamp;
+            register int delayi;
+            register sample_type *yptr;
             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
              * conver from seconds to samples. Note: don't use actual sound_type
