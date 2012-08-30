@@ -368,7 +368,7 @@ int osdir_list_start(char *path)
 }
 
 
-char *osdir_list_next()
+const char *osdir_list_next()
 {
     if (FindNextFile(hFind, &FindFileData) == 0) {
         osdir_list_status = OSDIR_LIST_DONE;

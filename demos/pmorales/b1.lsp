@@ -3,6 +3,7 @@
 ;;; coded by Pedro Jose Morales
 ;;; pmorales@iele-ab.uclm.es
 
+(autonorm-on)
 (setf *pmorales-path* (current-path))
 (load (strcat *pmorales-path* "pjmg.lsp"))
 

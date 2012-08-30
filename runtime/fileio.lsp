@@ -77,6 +77,7 @@
 	(t (error "unexpected value in multichannel-max" snd))))
 
 
+
 ;; AUTONORM -- look ahead to find peak and normalize sound to 80%
 ;;
 (defun autonorm (snd)
@@ -97,9 +98,19 @@
 	  (t snd))))
 	
 
+(init-global *clipping-threshold* (/ 127.0 128.0))
+
 (defmacro s-save-autonorm (expression &rest arglist)
   `(let ((peak (s-save (autonorm ,expression) ,@arglist)))
+     (when (and *clipping-error* (> peak *clipping-threshold*))
+       (format t "s-save-autonorm peak ~A from ~A~%" peak ,expression)
+       (error "clipping"))
      (autonorm-update peak)))
+
+;; If the amplitude exceeds *clipping-threshold*, an error will
+;; be raised if *clipping-error* is set.
+;;
+(init-global *clipping-error* nil)
 
 ;; The "AutoNorm" facility: when you play something, the Nyquist play
 ;; command will automatically compute what normalization factor you
@@ -121,6 +132,7 @@
 ;;
 (init-global *autonorm-type* 'lookahead)
 (init-global *autonorm-max-samples* 1000000) ; default is 4MB buffer
+
 ;;
 (defun autonorm-on ()
   (setf *autonorm* 1.0)
@@ -185,9 +197,10 @@
         (t
          (format t "Peak was ~A,~%" peak)
          (format t "     suggested normalization factor is ~A~%"
-                   (/ *autonorm-target* peak)))))
+                   (/ *autonorm-target* peak))))
    peak
-  ))
+  )
+
 
 ;; s-read -- reads a file
 (defun s-read (filename &key (time-offset 0) (srate *sound-srate*)

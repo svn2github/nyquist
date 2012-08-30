@@ -44,7 +44,16 @@
   (play (snd-ifft 0 *sound-srate* iterator skip NIL)))
 
 ;; a convenient sound file name (change this to one of your soundfiles):
-(setf sfn "/Users/rbd/class/icm2009/sounds/talking.wav") 
+(setf sfn nil) ; "/Users/rbd/class/icm2009/sounds/talking.wav") 
+
+;; if sfn does not exist, make a file (useful for testing)
+(cond ((null sfn)
+       (load "pmorales/b1.lsp")
+       ;; nyquist has no built-in function to remove a file, so this
+       ;; sound file, temp-gong3melody.wav, will not be removed. It is
+       ;; not large compared to Nyquist itself.
+       (setf sfn (strcat *default-sf-dir* "temp-gong3melody.wav"))
+       (s-save (scale 0.05 (gong-3-melody)) ny:all sfn)))
 
 (defun file-test () (play-fft1 (file-fft1 sfn 512 512) 512))
 

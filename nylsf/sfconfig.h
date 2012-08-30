@@ -109,5 +109,39 @@
 #define	HAVE_WAITPID 0
 #endif
 
+#if (defined (WIN32) || defined (_WIN32))
+#ifdef _MSC_VER
+#define __func__ __FUNCTION__
+#endif
+
+#include <math.h>
+/* Win32 doesn't seem to have these functions.
+** Therefore implement inline versions of these functions here.
+*/
+__inline long int
+lrint (double flt)
+{
+  int intgr;
+  _asm
+  {
+      fld flt
+      fistp intgr
+  } ;
+  return intgr ;
+}
+
+__inline long int
+lrintf (float flt)
+{
+   int intgr;
+   _asm
+  {
+    fld flt
+    fistp intgr
+  } ;
+  return intgr ;
+}
+#endif
+
 #endif
 

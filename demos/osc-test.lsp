@@ -53,7 +53,7 @@
 
 
 (defun gran-osc ()
-  (scale 0.8 
+  (scale 0.7 
    (stretch 4 ; total is stretch * 10 seconds, i.e. 4 -> 40s 
     (simrep (i 4)
             (sf-granulate *granfile* 0.04 0.0 0.02 0.001 10 0 0)))))

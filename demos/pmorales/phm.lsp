@@ -69,7 +69,7 @@
   (let (obj)
     (setf obj (send flute-class :new
                 (flute-exc noise-lev vib-amount vib-rate atk dec dur) emb-size freq dur))
-    (hp (snd-fromobject 0.0 *sound-srate* obj) 20.0)))
+    (hp (snd-fromobject (local-to-global 0.0) *sound-srate* obj) 20.0)))
 
 (ss (seq (pm-flute a4 0.5 :dec 0.01)
          (pm-flute b4 0.5 :dec 0.01)

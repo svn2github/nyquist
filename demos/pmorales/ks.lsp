@@ -28,6 +28,6 @@
 (defun ks (pitch dur)
   (let (obj)
     (setf obj (send ks-class :new pitch dur))
-    (snd-fromobject 0.0 *sound-srate* obj)))
+    (snd-fromobject (local-to-global 0.0) *sound-srate* obj)))
 
 (ss (seq (ks e2 2)(ks a2 2)(ks d3 2)(ks g3 2)(ks b3 2)(ks e4 2)))

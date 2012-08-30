@@ -24,7 +24,7 @@ void io_init();
    so that all C programs will see it. Perhaps it should go into cext.h, but
    I'm not sure I want to drag all that into here. 
  */
-void nyquist_printf(char *format, ...);
+void nyquist_printf(const char *format, ...);
 
 #ifdef __cplusplus
 }

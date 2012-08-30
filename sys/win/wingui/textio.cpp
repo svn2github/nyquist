@@ -74,6 +74,7 @@ void typein::handler(char *inp)
 
 extern char *next_ascii;
 
+extern "C"
 int get_ascii(char *c)
 {
     check_aborted(); /* input buffer check */
@@ -84,7 +85,7 @@ int get_ascii(char *c)
 
 
 /* check_aborted -- see if any characters are available, check for ctrl C */
-
+extern "C"
 int check_aborted()
 {
     process_win_events(USE_PEEK);
@@ -95,6 +96,7 @@ int check_aborted()
 
 
 /* define with va_alist and use vsprintf to get temp */
+extern "C"
 void gprintf(long where, char *format, ...)
 {
     char temp[GPRINTF_MESSAGE_LEN];
@@ -124,9 +126,12 @@ void gprintf(long where, char *format, ...)
         edit_append(temp);              
 }
 
+#if defined(nyquist_printf)
+#error "nyquist_printf should not be defined yet"
+#endif
 
-
-void nyquist_printf(char *format, ...)
+extern "C"
+void nyquist_printf(const char *format, ...)
 {
     char temp[GPRINTF_MESSAGE_LEN];
     va_list pvar;
@@ -136,12 +141,11 @@ void nyquist_printf(char *format, ...)
     edit_append(temp);
 }
 
-
 /**************************************************************************
 *                               gputchar
 * General putchar
 **************************************************************************/
-
+extern "C"
 void gputchar(int c)
 {
     char tmp[4];
@@ -156,6 +160,7 @@ void gputchar(int c)
 * General getchar
 **************************************************************************/
 
+extern "C"
 int ggetchar()
 {
     return wait_ascii();
@@ -166,7 +171,7 @@ int ggetchar()
 * General gets
 **************************************************************************/
 
-
+extern "C"
 char *ggets(char *str)
 {
     char *s = str;
@@ -202,7 +207,7 @@ char *ggets(char *str)
 * Effect:
 *    prompts user for yes or no input, returns result
 ****************************************************************************/
-
+extern "C"
 int askbool(char *prompt, int deflt)
 {
 #define undefined -1
@@ -233,8 +238,7 @@ int askbool(char *prompt, int deflt)
 }
 
 
-
-
+extern "C"
 void io_init()
 {
 }

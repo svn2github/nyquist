@@ -6035,6 +6035,23 @@ There are many global variables in Nyquist. A convention in Lisp is to place ast
 
 @codef(*breakenable*)@pragma(defn)@index(*breakenable*)@\Controls whether XLISP enters a break loop when an error is encountered. See Section @ref(symbols-sec).
 
+@codef(*clipping-error*)@pragma(defn)@index(*clipping-error*)@index(clipping)@\If
+the peak absolute amplitude value of a sound saved or played exceeds
+@code(*clipping-threshold*), an XLISP error is raised. See
+@code(*clipping-threshold* for more detail.
+
+@codef(*clipping-threshold*)@pragma(defn)@index(*clipping-threshold*)@\See
+@code(*clipping-error*) for a description of this
+variable. @code(*clipping-threshold*) is initialized to 127/128. This
+number is conservative, 
+and it is possible to slightly exceed this value, even with 8-bit
+files without actual clipping (consider rounding). Also, floating point
+format files will not clip even when the amplitude exceeds 1.0. Note
+that a ``clipping'' threshold of 1.0 is optimistic: 1.0 corresponds to
+a 16-bit integer value of 32,768 (2^15), but the maximum positive
+16-bit integer is 32,767. Thus, a positive sample of 1.0 will clip
+when written or played as 16-bit audio.
+
 @codef(*control-srate*)@pragma(defn)@index(*control-srate*)@\Part of the environment, establishes the control sample rate. See Section @ref(environment-sec) for details.
 
 @codef(*default-sf-bits*)@pragma(defn)@index(*default-sf-bits*)@\The default bits-per-sample for sound files. Typically 16.

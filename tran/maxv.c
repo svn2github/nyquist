@@ -309,6 +309,7 @@ void maxv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
+            double x1, x2;
 	    if (s2_pHaSe_ReG >= 1.0) {
 		s2_x1_sample_reg = s2_x2_sample;
 		/* pick up next sample as s2_x2_sample: */
@@ -317,8 +318,8 @@ void maxv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		s2_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(s2, s2_ptr, s2_cnt, s2_x2_sample);
 	    }
-            double x1 = *s1_ptr_reg++;
-            double x2 = 
+            x1 = *s1_ptr_reg++;
+            x2 = 
 		(s2_x1_sample_reg * (1 - s2_pHaSe_ReG) + s2_x2_sample * s2_pHaSe_ReG);
             *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
 	    s2_pHaSe_ReG += s2_pHaSe_iNcR_rEg;
@@ -650,6 +651,7 @@ void maxv_si_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
+            double x1, x2;
 	    if (s2_pHaSe_ReG >= 1.0) {
 		s2_x1_sample_reg = s2_x2_sample;
 		/* pick up next sample as s2_x2_sample: */
@@ -658,8 +660,8 @@ void maxv_si_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		s2_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(s2, s2_ptr, s2_cnt, s2_x2_sample);
 	    }
-            double x1 = (s1_scale_reg * *s1_ptr_reg++);
-            double x2 = 
+            x1 = (s1_scale_reg * *s1_ptr_reg++);
+            x2 = 
 		(s2_x1_sample_reg * (1 - s2_pHaSe_ReG) + s2_x2_sample * s2_pHaSe_ReG);
             *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
 	    s2_pHaSe_ReG += s2_pHaSe_iNcR_rEg;

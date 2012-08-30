@@ -46,7 +46,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories=".\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;C:\Users\rbd\nyquist\liblo\pthreads.2"
-				PreprocessorDefinitions="OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;PA_NO_DS;PA_NO_ASIO"
+				PreprocessorDefinitions="OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;PA_USE_WDMKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -136,7 +136,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;C:\Users\rbd\nyquist\liblo\pthreads.2"
-				PreprocessorDefinitions="OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_NO_DS;PA_NO_ASIO"
+				PreprocessorDefinitions="OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_USE_WDMKS"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\WinDebug/nyquist.pch"
@@ -229,28 +229,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="nyqsrc\add.c"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\nylsf\GSM610\add.c"
 				>
 				<FileConfiguration
@@ -269,6 +247,28 @@
 						Name="VCCLCompilerTool"
 						ObjectFile="$(IntDir)\$(InputName)1.obj"
 						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="nyqsrc\add.c"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -531,6 +531,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\nylsf\audio_detect.c"
+				>
+			</File>
+			<File
 				RelativePath="nyqsrc\avg.c"
 				>
 				<FileConfiguration
@@ -629,6 +633,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\nylsf\chanmap.c"
+				>
+			</File>
+			<File
 				RelativePath="tran\chase.c"
 				>
 				<FileConfiguration
@@ -652,6 +660,10 @@
 			</File>
 			<File
 				RelativePath=".\nyqstk\src\Chorus.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\nylsf\chunk.c"
 				>
 			</File>
 			<File
@@ -1473,6 +1485,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\nylsf\id3.c"
+				>
+			</File>
+			<File
 				RelativePath="snd\ieeecvt.c"
 				>
 				<FileConfiguration
@@ -1518,6 +1534,10 @@
 			</File>
 			<File
 				RelativePath=".\nylsf\ima_adpcm.c"
+				>
+			</File>
+			<File
+				RelativePath=".\nylsf\ima_oki_adpcm.c"
 				>
 			</File>
 			<File
@@ -2029,6 +2049,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\nylsf\mpc2k.c"
+				>
 			</File>
 			<File
 				RelativePath=".\nylsf\ms_adpcm.c"
@@ -2581,6 +2605,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\nylsf\rf64.c"
+				>
 			</File>
 			<File
 				RelativePath=".\nylsf\GSM610\rpe.c"
@@ -4870,11 +4898,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\portaudio\src\common\pa_ringbuffer.h"
+						RelativePath=".\portaudio\src\common\pa_ringbuffer.c"
 						>
 					</File>
 					<File
-						RelativePath=".\portaudio\src\common\pa_skeleton.c"
+						RelativePath=".\portaudio\src\common\pa_ringbuffer.h"
 						>
 					</File>
 					<File
@@ -4905,10 +4933,6 @@
 				<Filter
 					Name="hostapi"
 					>
-					<File
-						RelativePath=".\portaudio\src\hostapi\wasapi\pa_win_wasapi.cpp"
-						>
-					</File>
 					<File
 						RelativePath=".\portaudio\src\hostapi\wdmks\pa_win_wdmks.c"
 						>

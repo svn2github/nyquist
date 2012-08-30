@@ -27,7 +27,7 @@
 #define PACKAGE_VERSION "1.0.17"
 
 /* Set to maximum allowed value of sf_count_t type. */
-#define SF_COUNT_MAX 0x7FFFFFFFFFFFFFFFLL
+//#define SF_COUNT_MAX 0x7FFFFFFFFFFFFFFFLL
 
 /* The size of `void*', as computed by sizeof. */
 #define SIZEOF_VOIDP sizeof(void *)

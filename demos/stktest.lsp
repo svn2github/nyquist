@@ -201,7 +201,9 @@
  
 (defun mandolin-demo ()
   (autonorm-off)
-  (play (seq (mandolin c4 1.0)
+  (play (scale 0.4 
+         (seq 
+	     (mandolin c4 1.0)
              (mandolin c4 1.0 2.0)
 	     (mandolin c4 1.0 3.0)
              (mandolin c4 1.0 4.0)
@@ -229,7 +231,7 @@
 	     (mandolin c4 1.0 50.0)
 	     (mandolin c4 1.0 55.0)
 	     (mandolin c4 1.0 60.0)
-	     (mandolin c4 1.0 65.0)))
+	     (mandolin c4 1.0 65.0))))
   (autonorm-on))
 
 ;(mandolin-demo)
@@ -268,10 +270,12 @@
 
 (defun wg-tibetan-bowl-demo ()
   (autonorm-off)
-  (play (seq (wg-tibetan-bowl c4 (wg-env 0.2))
+  (play 
+     (scale 0.5
+        (seq (wg-tibetan-bowl c4 (wg-env 0.2))
 	     (wg-tibetan-bowl ef4 (wg-env 0.2))
 	     (wg-tibetan-bowl fs4 (wg-env 0.2))
-	     (wg-tibetan-bowl a4 (wg-env 2.0))))
+	     (wg-tibetan-bowl a4 (wg-env 2.0)))))
   (autonorm-on))
 
 ;(wg-tibetan-bowl-demo)
@@ -285,7 +289,9 @@
 
 (defun modalbar-demo ()
   (autonorm-off)
-  (play (seq (modalbar-demo-1 'MARIMBA)
+  (play (scale 0.05
+          (seq 
+	     (modalbar-demo-1 'MARIMBA)
 	     (modalbar-demo-1 'VIBRAPHONE)
 	     (modalbar-demo-1 'AGOGO)
 	     (modalbar-demo-1 'WOOD1)
@@ -293,7 +299,7 @@
 	     (modalbar-demo-1 'WOOD2)
 	     (modalbar-demo-1 'BEATS)
 	     (modalbar-demo-1 'TWO-FIXED)
-	     (modalbar-demo-1 'CLUMP)))
+	     (modalbar-demo-1 'CLUMP))))
   (autonorm-on))
 
 ;(modalbar-demo)

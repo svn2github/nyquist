@@ -5,6 +5,11 @@
 ;; The typical patterns are very much like the palindrome pattern generator
 ;; in Nyquist, so this example shows how to make arpeggiation patterns.
 
+;; define a defualt note function for these examples
+;;
+function note(pitch: 60, vel: 100)
+  return piano-note-2(pitch, vel)
+
 ;; A simple arpeggiation of a major-7th chord
 ;;
 define function arp1()

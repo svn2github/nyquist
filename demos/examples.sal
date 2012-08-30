@@ -491,7 +491,7 @@ define function ex46()
 
 ; band pass sweep from 100 to 1000 hz, 20 hz bandwidth
 define function ex47()
-  play reson(0.04 * noise(),
+  play reson(0.03 * noise(),
              pwl(0.0, 200.0, 1.0, 1000.0, 1.0),
              20.0)
 
@@ -561,6 +561,7 @@ define function ex-global ()
     play hzosc-osc()
     play gran-osc()
     play piano-osc()
+    exec autonorm-on() ; back on after osc-test.lsp
     load "plight/drum.lsp"
     exec play-drum-example()
     load "pmorales/all.lsp"

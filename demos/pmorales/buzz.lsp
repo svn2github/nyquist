@@ -1,6 +1,12 @@
 ;;; BUZZ generator for Nyquist
 ;;; Pedro J. Morales. Albacete, Spain. Jule, 2001
 ;;; pmorales@iele-ab.uclm.es
+;;;
+;;; modified by Roger Dannenberg to avoid conflict with built-in BUZZ
+;;; primitive in Nyquist, which has different parameters
+;;;
+;;; Note that the vib-buzz function defined here could use the 
+;;; BUZZ primitive.
 
 ; tested on Nyquist IDE 3.0 under Windows
 
@@ -31,7 +37,7 @@
 ; Number of harmonics is optional. If it is not
 ; specified then the waveform is calculated with maximum
 ; number of harmonics without aliasing
-(defun buzz (pitch dur &optional harm)
+(defun pm-buzz (pitch dur &optional harm)
   (unless harm (setf harm (num-harm pitch)))
   (osc pitch dur (make-buzz-table harm)))
 

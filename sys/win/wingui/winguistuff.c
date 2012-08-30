@@ -37,7 +37,7 @@ static int line_edit = TRUE;
 
 //int isascii (char c) { return 1; }  /* every char is an ascii char, isn't it? */
 
-void osinit (char *banner) {
+void osinit(const char *banner) {
 //	int i;
     char version[] = "\nWindows console interface by Roger Dannenberg.\n";
 //	InitMac ();  /* initialize the mac interface routines */
@@ -49,11 +49,11 @@ void osinit (char *banner) {
 }
 
 
-FILE *osaopen (char *name, char *mode) {
+FILE *osaopen (const char *name, const char *mode) {
     return fopen (name, mode);
 }
 
-FILE *osbopen (char *name, char *mode) {
+FILE *osbopen (const char *name, const char *mode) {
     char nmode[4];
     strcpy (nmode, mode); strcat (nmode, "b");
     return (fopen (name, nmode));
@@ -268,13 +268,13 @@ void oscheck (void) {
     }
 }
 
-void oserror (char *msg) {
+void oserror(const char *msg) {
     char line[100], *p;
     sprintf (line,"error: %s\n",msg);
     for (p = line; *p != '\0'; ++p) ostputc (*p);
 }
 
-void osfinish (void) {
+void osfinish(void) {
     portaudio_exit();
     /* dispose of everything... */
 //	if (linebuf) DisposPtr (linebuf);
@@ -296,7 +296,7 @@ static osdir_list_status = OSDIR_LIST_READY;
 static char osdir_path[OSDIR_MAX_PATH];
 
 // osdir_list_start -- prepare to list a directory
-int osdir_list_start(char *path)
+int osdir_list_start(const char *path)
 {
     if (strlen(path) >= OSDIR_MAX_PATH - 2) {
         xlcerror("LISTDIR path too big", "return nil", NULL);
@@ -315,7 +315,7 @@ int osdir_list_start(char *path)
 }
 
 
-char *osdir_list_next()
+const char *osdir_list_next()
 {
     if (FindNextFile(hFind, &FindFileData) == 0) {
         osdir_list_status = OSDIR_LIST_DONE;
