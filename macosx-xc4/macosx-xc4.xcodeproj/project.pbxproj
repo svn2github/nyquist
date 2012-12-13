@@ -3195,6 +3195,7 @@
 				3D1936E015BE31FE0061BACA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D19371C15BE37320061BACA /* Build configuration list for PBXNativeTarget "lo" */ = {
 			isa = XCConfigurationList;
@@ -3203,6 +3204,7 @@
 				3D19371E15BE37320061BACA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D19376615BE440A0061BACA /* Build configuration list for PBXNativeTarget "ser-to-osc" */ = {
 			isa = XCConfigurationList;
@@ -3211,6 +3213,7 @@
 				3D19376815BE440A0061BACA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D1939AF15CC0BB50061BACA /* Build configuration list for PBXNativeTarget "intgen" */ = {
 			isa = XCConfigurationList;
@@ -3219,6 +3222,7 @@
 				3D1939B115CC0BB50061BACA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D2DB0F315BC9B0400466EBA /* Build configuration list for PBXProject "macosx-xc4" */ = {
 			isa = XCConfigurationList;

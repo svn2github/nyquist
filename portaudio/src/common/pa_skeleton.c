@@ -516,9 +516,9 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
         values.
     */
     stream->streamRepresentation.streamInfo.inputLatency =
-            PaUtil_GetBufferProcessorInputLatency(&stream->bufferProcessor);
+            PaUtil_GetBufferProcessorInputLatencyFrames(&stream->bufferProcessor) / sampleRate;
     stream->streamRepresentation.streamInfo.outputLatency =
-            PaUtil_GetBufferProcessorOutputLatency(&stream->bufferProcessor);
+            PaUtil_GetBufferProcessorOutputLatencyFrames(&stream->bufferProcessor) / sampleRate;
     stream->streamRepresentation.streamInfo.sampleRate = sampleRate;
 
     
