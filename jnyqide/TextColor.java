@@ -1,5 +1,6 @@
 package jnyqide;
 
+
 import javax.swing.*;
 // import java.awt.*; -- includes List, which conflicts
 import java.awt.Color;

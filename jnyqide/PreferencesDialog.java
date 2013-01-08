@@ -1,3 +1,4 @@
+package jnyqide;
 /*
  * Preferences dialog based on ReplaceDialog.java
  */
@@ -8,7 +9,7 @@
 //   [] Automatically insert close-parentheses
 //   <-|--> Relative height of completion box
 //
-package jnyqide;
+
 
 import java.util.*;
 import java.awt.*;

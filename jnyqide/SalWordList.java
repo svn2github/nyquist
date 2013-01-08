@@ -1,3 +1,4 @@
+package jnyqide;
 //
 //  SalWordList.java
 //  nyquist
@@ -6,7 +7,7 @@
 //  Copyright 2007 __MyCompanyName__. All rights reserved.
 //
 
-package jnyqide;
+
 
 import java.util.HashMap;
 import java.util.Map;

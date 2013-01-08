@@ -1,3 +1,4 @@
+package jnyqide;
 /////////////////////////////////////////////////////////
 //  Bare Bones Browser Launch                          //
 //  Version 1.5                                        //
@@ -10,7 +11,7 @@
 //  Public Domain Software -- Free to Use as You Like  //
 /////////////////////////////////////////////////////////
 
-package jnyqide; // this line was added by RBD
+
 
 import java.lang.reflect.Method;
 import javax.swing.JOptionPane;

@@ -1,3 +1,4 @@
+package jnyqide;
 //
 //  CodePane.java
 //  nyquist
@@ -6,7 +7,7 @@
 //  Copyright 2007 Roger B. Dannenberg. All rights reserved.
 //
 
-package jnyqide;
+
 
 import java.awt.*;
 import java.awt.event.*;

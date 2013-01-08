@@ -1,5 +1,6 @@
 package jnyqide;
 
+
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -20,6 +21,7 @@ import java.lang.reflect.*; // import Constructor class
 import java.util.prefs.*;
 import java.util.Collection;
 import java.net.URL;
+import javax.swing.border.EmptyBorder;
 
 /**
  * <p>Title: </p>
@@ -551,13 +553,16 @@ public class MainFrame extends JFrame {
         
         // Main desktop
         jDesktop = new JDesktopPane();
+        jDesktop.setBorder(new EmptyBorder(80, 0, 0, 0));
         jDesktop.setPreferredSize( new Dimension(300, 300) );
         
-        jOutputFrame = new JInternalFrame("Output");
+        jOutputFrame = new JNonHiddenableInternalFrame("Output");
+       
         // make this wide enough so XLISP GC messages do not wrap 
         //   (it's annoying)
         //jOutputFrame.setSize(new Dimension(500, 530 / 3));
         jOutputFrame.setVisible(true);
+        jDesktop.setLayout(null);
         jOutputFrame.getContentPane().add(jOutputPane);
         jOutputFrame.setResizable( true );
         //jOutputFrame.setLocation(0, (530 * 2) / 3);
@@ -567,7 +572,8 @@ public class MainFrame extends JFrame {
         String clTitle = "Completion List" + (hasRightMouseButton ?
                                               " - Right Click for Help" :
                                               " - Option Click for Help");
-        jListOutputFrame = new JInternalFrame(clTitle);
+        jListOutputFrame = new JNonHiddenableInternalFrame(clTitle);
+        jListOutputFrame.setBounds(0, 0, 0, 0);
         //jListOutputFrame.setSize( new Dimension (500, (530 * 2) / 3));
         jListOutputFrame.setVisible(true);
         jListOutputFrame.getContentPane().add(jListOutputPane);
@@ -581,6 +587,7 @@ public class MainFrame extends JFrame {
         setSize( new Dimension(800, 800) );
 
         miniBrowser = new MiniBrowser("Nyquist Manual");
+        miniBrowser.setBounds(50, 100, 700, 400);
         jDesktop.add(miniBrowser);
         
         TextColor.init();

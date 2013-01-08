@@ -1,3 +1,4 @@
+package jnyqide;
 /*
  * Copyright (c) 1997 John Jensen. All rights reserved.
  *
@@ -25,7 +26,7 @@
  * CopyrightVersion 1.0
  */
 
-package jnyqide;
+
 
 import java.util.*;
 import java.awt.*;

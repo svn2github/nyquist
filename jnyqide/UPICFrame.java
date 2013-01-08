@@ -1,3 +1,4 @@
+package jnyqide;
 // Code: Dmitry Portnoy, 5/1/09
 // Revised 2011 by Roger B. Dannenberg
 /*
@@ -58,7 +59,11 @@ functions to do this.
 
 */
 
-package jnyqide;
+/* Revised by Zeyu Jin (Jan-03-2013)
+ * Replace JInternalFrame with a new one.
+ */
+
+
 
 import java.awt.*;
 import java.awt.event.*;
@@ -70,8 +75,7 @@ import java.text.*;
 import java.io.*;
 import javax.imageio.ImageIO;
 
-@SuppressWarnings("serial")
-public class UPICFrame extends JInternalFrame implements ActionListener {
+public class UPICFrame extends JNonHiddenableInternalFrame implements ActionListener {
 
     double EPSILON = 0.00000001; // small number -- allow for rounding error
     int LEFT_BORDER = 3; // inset everything by 3 pixels

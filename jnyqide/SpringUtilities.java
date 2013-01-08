@@ -1,5 +1,6 @@
 package jnyqide;
 
+
 import javax.swing.*;
 import javax.swing.SpringLayout;
 import java.awt.*;

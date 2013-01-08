@@ -1,3 +1,4 @@
+package jnyqide;
 /*
  * Ming Yang Koh (mykoh@andrew.cmu.edu)
  * Eugene Ang (ewee@andrew.cmu.edu)
@@ -39,7 +40,7 @@
  "score-edit: writing " around line 230. 
  */
 
-package jnyqide;
+
 import java.io.*; 
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
