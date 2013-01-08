@@ -1,0 +1,1444 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6b48e8e8-013b-4a9c-a59b-32a88eec69a0}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{ff0ff64b-771f-4758-ae59-5f411aee02d7}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;fi;fd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{86a33591-6548-4919-b443-9d843c3967b0}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="portaudio">
+      <UniqueIdentifier>{e030aa29-980f-48cd-8342-5eff3a0ecd8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="portaudio\src">
+      <UniqueIdentifier>{2dba744d-9f38-4fee-aaf7-c3385347c437}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="portaudio\src\common">
+      <UniqueIdentifier>{e85e5a1c-6427-4a76-8267-1e8899775aa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="portaudio\src\hostapi">
+      <UniqueIdentifier>{9a7e7894-9496-42f7-876c-abce9c344d56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="portaudio\src\os-win">
+      <UniqueIdentifier>{872a42df-6d31-4121-bda3-39a464939b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="portaudio\include">
+      <UniqueIdentifier>{ec94dce2-0c65-4793-8a5a-67c247480f03}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="tran\abs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\add.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\add.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\ADSR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\aiff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\alaw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\allpoles.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\alpass.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\alpasscv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\alpassvv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\amosc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\areson.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\aresoncv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\aresonvc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\aresonvv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\atone.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\atonev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\au.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\audio_detect.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\avg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\avr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\BandedWG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\BiQuad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\biquadfilt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Bowed.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\BowTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\broadcast.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\buzz.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\caf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\cext.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\chanmap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\chase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Chorus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\chunk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Clarinet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\cleanup.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\clip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\cmdline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\cmtcmd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\code.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\command.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\compose.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\congen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\const.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\convolve.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\coterm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\debug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\decode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Delay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\DelayA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\delaycc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\delaycv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\DelayL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\dither.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\double64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\downsample.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\dwd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\dwvw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Effect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Envelope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\eqbandvvv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\exp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\extern.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\falloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\ffilterkit.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\fft.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ffts\src\fftext.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ffts\src\fftlib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\file_io.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\FileRead.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\FileWvIn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Filter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\flac.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\float32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Flute.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\fmfb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\fmfbv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\fmosc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\follow.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\fromarraystream.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\fromobject.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Function.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\G72x\g721.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\G72x\g723_16.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\G72x\g723_24.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\G72x\g723_40.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\G72x\g72x.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\g72x.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\gate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\gsm610.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\gsm_create.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\gsm_decode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\gsm_destroy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\gsm_encode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\gsm_option.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\handlers.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\htk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\id3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snd\ieeecvt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\ifft.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\ima_adpcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\ima_oki_adpcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrbanded.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrbow.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrbowedfreq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrclar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrclarall.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrclarfreq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrflute.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrfluteall.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrflutefreq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrmandolin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Instrmnt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrmodalbar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrsax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrsaxall.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrsaxfreq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\instrsitar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\integrate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\interleave.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\inverse.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\ircam.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\JCRev.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\JetTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\local.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\log.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\long_term.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\win\wingui\longque.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\lpanal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\lpc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\lpreson.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\macbinary3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\macos.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Mandolin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\mat4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\mat5.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ffts\src\matlib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\maxv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\mem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\midifile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\midifns.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Modal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\ModalBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\moxc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\mpc2k.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\ms_adpcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\multiread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\multiseq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\nist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Noise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\NRev.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\nyq-osc-server.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\offset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\ogg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\OnePole.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\oneshot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\OneZero.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\osc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\paf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\partial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\path.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\pcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\phasevocoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\PitShift.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\pluck.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\PluckTwo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\PoleZero.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\PRCRev.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\preprocess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\prod.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\pvf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\pvshell.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\pwl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\quantize.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\raw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\recip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\record.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\ReedTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\resamp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\resampv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\reson.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\resoncv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\resonvc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\resonvv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\rf64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\rpe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\rx2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\sampler.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\samples.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Saxofony.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\scale.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\sd2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\sds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\seq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\seqext.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\seqfnint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\seqinterf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\seqmread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\seqmwrite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\seqread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\seqwrite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\shape.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\short_term.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\sine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\SineWave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\siosc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Sitar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\sliders.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\slope.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\sndfile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\sndfnint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\sndmax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\sndread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\sndseq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snd\sndwin32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\sndwritepa.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\sound.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\sqrt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\stats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\Stk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\stkchorus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\stkinit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\stkint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\stkpitshift.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\stkrev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\strings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\svx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\GSM610\table.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\tapf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\tapv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\tempomap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\win\wingui\textio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmt\timebase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\tone.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\tonev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\trigger.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\txw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\ulaw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\upsample.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\voc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\vox_adpcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\w64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\wav.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\wav_w64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\WaveLoop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tran\white.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\win\msvc\winfun.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\win\wingui\winguistuff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\win\wingui\winmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\wve.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqstk\src\WvIn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\xi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlbfun.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlcont.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xldbug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xldmem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xleval.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\win\wingui\xlextstart.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlfio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlftab.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlglob.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlimage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlinit.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlisp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\win\wingui\xlispfns.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xljump.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xllist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlmath.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlobj.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlpp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlprin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlstr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlsubr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlsym.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlisp\xlsys.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\yin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_allocation.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_converters.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_cpuload.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_debugprint.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_dither.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_front.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_process.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_ringbuffer.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_stream.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\common\pa_trace.c">
+      <Filter>portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\hostapi\wdmks\pa_win_wdmks.c">
+      <Filter>portaudio\src\hostapi</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\hostapi\wmme\pa_win_wmme.c">
+      <Filter>portaudio\src\hostapi</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\os\win\pa_win_hostapis.c">
+      <Filter>portaudio\src\os-win</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\os\win\pa_win_util.c">
+      <Filter>portaudio\src\os-win</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\os\win\pa_win_waveformat.c">
+      <Filter>portaudio\src\os-win</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\os\win\pa_win_wdmks_utils.c">
+      <Filter>portaudio\src\os-win</Filter>
+    </ClCompile>
+    <ClCompile Include="portaudio\src\os\win\pa_x86_plain_converters.c">
+      <Filter>portaudio\src\os-win</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nyqstk\globals.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqstk\instr.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrbanded.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrbow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrbowedfreq.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrclar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrclarfreq.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrflute.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrfluteall.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrflutefreq.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrmandolin.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrmodalbar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrsax.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrsaxfreq.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrsitar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\yin.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\add.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\alpass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\amosc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\areson.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\aresoncv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\aresonvc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\aresonvv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\atone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\atonev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="snd\audiont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\avg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\biquad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\cext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\chase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\cleanup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\clip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\cmdline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\cmtcmd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\compose.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\congen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\const.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\convolve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\coterm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\cppext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\delay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\delaycv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\downsample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\exp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xlisp\extern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\falloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\ffilterkit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\fft.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fft\fftn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\float_cast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\fmosc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\follow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\fromarraystream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\fromobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\G72x\g72x.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\G72x\g72x_priv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\gate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\GSM610\gsm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\GSM610\gsm610_priv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="snd\ieeecvt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\ifft.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrclarall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\instrsaxall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\integrate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\inverse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\longque.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\lpanal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\maxv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\midifile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\midifns.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\moxc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\multiread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\multiseq.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\offset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\oneshot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\osc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\partial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\phasevocoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\pluck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\ppc-config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\prod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\pvshell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\pwl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\quantize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\recip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\record.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\resamp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\resampv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\reson.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\resoncv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\resonvc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\resonvv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\sampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\samples.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\scale.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\seq.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\seqext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\seqinterf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\seqmread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\seqmwrite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\seqread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\seqwrite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\sf_unistd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\sfconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\sfendian.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\sine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\siosc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\slider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\slope.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="snd\snd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\sndfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="snd\sndheader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\sndmax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\sndread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\sndseq.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="snd\sndwin32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\sndwrite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqsrc\sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\stkchorus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqstk\stkinit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nyqstk\stkint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\stkpitshift.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\stkrev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\tapv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\tempomap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\textio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\timebase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\tone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\tonev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\typein.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\upsample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmt\userio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nylsf\wav_w64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tran\white.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\msvc\winfun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\winmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\winmain2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xlisp\xldmem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xlisp\xlisp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\win\wingui\xlispfns.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_allocation.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_converters.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_cpuload.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_debugprint.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_dither.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_endianness.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_hostapi.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_process.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_ringbuffer.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_stream.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_trace.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_types.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\common\pa_util.h">
+      <Filter>portaudio\src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\os\win\pa_win_wdmks_utils.h">
+      <Filter>portaudio\src\os-win</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\src\os\win\pa_x86_plain_converters.h">
+      <Filter>portaudio\src\os-win</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\include\pa_win_ds.h">
+      <Filter>portaudio\include</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\include\pa_win_waveformat.h">
+      <Filter>portaudio\include</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\include\pa_win_wmme.h">
+      <Filter>portaudio\include</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio\include\portaudio.h">
+      <Filter>portaudio\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="sys\win\wingui\winmain.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="sys\win\wingui\nycon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

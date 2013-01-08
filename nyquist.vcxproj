@@ -1,0 +1,655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{208E5158-7B25-4185-8D8E-5E5BFC2153EC}</ProjectGuid>
+    <RootNamespace>nyquist</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\WinRel\</OutDir>
+    <IntDir>.\WinRel\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>.\liblo\pthreads.2;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\WinDebug\</OutDir>
+    <IntDir>.\WinDebug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\WinRel/nyquist.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;C:\Users\rbd\nyquist\liblo\pthreads.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;PA_USE_WDMKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\WinRel/nyquist.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\WinRel/</AssemblerListingLocation>
+      <ObjectFileName>.\WinRel/</ObjectFileName>
+      <ProgramDataBaseFileName>.\WinRel/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/VERBOSE:LIB %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\WinRel/nyquist.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ProgramDatabaseFile>.\WinRel/nyquist.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\WinRel/nyquist.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\WinDebug/nyquist.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;C:\Users\rbd\nyquist\liblo\pthreads.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_USE_WDMKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\WinDebug/nyquist.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\WinDebug/</AssemblerListingLocation>
+      <ObjectFileName>.\WinDebug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\WinDebug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/VERBOSE:LIB %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\WinDebug/nyquist.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\WinDebug/nyquist.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\WinDebug/nyquist.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="tran\abs.c" />
+    <ClCompile Include="nylsf\GSM610\add.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="nyqsrc\add.c" />
+    <ClCompile Include="nyqstk\src\ADSR.cpp" />
+    <ClCompile Include="nylsf\aiff.c" />
+    <ClCompile Include="nylsf\alaw.c" />
+    <ClCompile Include="tran\allpoles.c" />
+    <ClCompile Include="tran\alpass.c" />
+    <ClCompile Include="tran\alpasscv.c" />
+    <ClCompile Include="tran\alpassvv.c" />
+    <ClCompile Include="tran\amosc.c" />
+    <ClCompile Include="tran\areson.c" />
+    <ClCompile Include="tran\aresoncv.c" />
+    <ClCompile Include="tran\aresonvc.c" />
+    <ClCompile Include="tran\aresonvv.c" />
+    <ClCompile Include="tran\atone.c" />
+    <ClCompile Include="tran\atonev.c" />
+    <ClCompile Include="nylsf\au.c" />
+    <ClCompile Include="nylsf\audio_detect.c" />
+    <ClCompile Include="nyqsrc\avg.c" />
+    <ClCompile Include="nylsf\avr.c" />
+    <ClCompile Include="nyqstk\src\BandedWG.cpp" />
+    <ClCompile Include="nyqstk\src\BiQuad.cpp" />
+    <ClCompile Include="tran\biquadfilt.c" />
+    <ClCompile Include="nyqstk\src\Bowed.cpp" />
+    <ClCompile Include="nyqstk\src\BowTable.cpp" />
+    <ClCompile Include="nylsf\broadcast.c" />
+    <ClCompile Include="tran\buzz.c" />
+    <ClCompile Include="nylsf\caf.c" />
+    <ClCompile Include="cmt\cext.c" />
+    <ClCompile Include="nylsf\chanmap.c" />
+    <ClCompile Include="tran\chase.c" />
+    <ClCompile Include="nyqstk\src\Chorus.cpp" />
+    <ClCompile Include="nylsf\chunk.c" />
+    <ClCompile Include="nyqstk\src\Clarinet.cpp" />
+    <ClCompile Include="cmt\cleanup.c" />
+    <ClCompile Include="tran\clip.c" />
+    <ClCompile Include="cmt\cmdline.c" />
+    <ClCompile Include="cmt\cmtcmd.c" />
+    <ClCompile Include="nylsf\GSM610\code.c" />
+    <ClCompile Include="nylsf\command.c" />
+    <ClCompile Include="nylsf\common.c" />
+    <ClCompile Include="nyqsrc\compose.c" />
+    <ClCompile Include="tran\congen.c" />
+    <ClCompile Include="tran\const.c" />
+    <ClCompile Include="nyqsrc\convolve.c" />
+    <ClCompile Include="tran\coterm.c" />
+    <ClCompile Include="nyqsrc\debug.c" />
+    <ClCompile Include="nylsf\GSM610\decode.c" />
+    <ClCompile Include="nyqstk\src\Delay.cpp" />
+    <ClCompile Include="nyqstk\src\DelayA.cpp" />
+    <ClCompile Include="tran\delaycc.c" />
+    <ClCompile Include="tran\delaycv.c" />
+    <ClCompile Include="nyqstk\src\DelayL.cpp" />
+    <ClCompile Include="nylsf\dither.c" />
+    <ClCompile Include="nylsf\double64.c" />
+    <ClCompile Include="nyqsrc\downsample.c" />
+    <ClCompile Include="nylsf\dwd.c" />
+    <ClCompile Include="nylsf\dwvw.c" />
+    <ClCompile Include="nyqstk\src\Effect.cpp" />
+    <ClCompile Include="nyqstk\src\Envelope.cpp" />
+    <ClCompile Include="tran\eqbandvvv.c" />
+    <ClCompile Include="tran\exp.c" />
+    <ClCompile Include="xlisp\extern.c" />
+    <ClCompile Include="nyqsrc\falloc.c" />
+    <ClCompile Include="nyqsrc\ffilterkit.c" />
+    <ClCompile Include="nyqsrc\fft.c" />
+    <ClCompile Include="ffts\src\fftext.c" />
+    <ClCompile Include="ffts\src\fftlib.c" />
+    <ClCompile Include="nylsf\file_io.c" />
+    <ClCompile Include="nyqstk\src\FileRead.cpp" />
+    <ClCompile Include="nyqstk\src\FileWvIn.cpp" />
+    <ClCompile Include="nyqstk\src\Filter.cpp" />
+    <ClCompile Include="nylsf\flac.c" />
+    <ClCompile Include="nylsf\float32.c" />
+    <ClCompile Include="nyqstk\src\Flute.cpp" />
+    <ClCompile Include="tran\fmfb.c" />
+    <ClCompile Include="tran\fmfbv.c" />
+    <ClCompile Include="tran\fmosc.c" />
+    <ClCompile Include="tran\follow.c" />
+    <ClCompile Include="tran\fromarraystream.c" />
+    <ClCompile Include="tran\fromobject.c" />
+    <ClCompile Include="nyqstk\src\Function.cpp" />
+    <ClCompile Include="nylsf\G72x\g721.c" />
+    <ClCompile Include="nylsf\G72x\g723_16.c" />
+    <ClCompile Include="nylsf\G72x\g723_24.c" />
+    <ClCompile Include="nylsf\G72x\g723_40.c" />
+    <ClCompile Include="nylsf\G72x\g72x.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="nylsf\g72x.c" />
+    <ClCompile Include="tran\gate.c" />
+    <ClCompile Include="nyqstk\src\Generator.cpp" />
+    <ClCompile Include="nylsf\gsm610.c" />
+    <ClCompile Include="nylsf\GSM610\gsm_create.c" />
+    <ClCompile Include="nylsf\GSM610\gsm_decode.c" />
+    <ClCompile Include="nylsf\GSM610\gsm_destroy.c" />
+    <ClCompile Include="nylsf\GSM610\gsm_encode.c" />
+    <ClCompile Include="nylsf\GSM610\gsm_option.c" />
+    <ClCompile Include="nyqsrc\handlers.c" />
+    <ClCompile Include="nylsf\htk.c" />
+    <ClCompile Include="nylsf\id3.c" />
+    <ClCompile Include="snd\ieeecvt.c" />
+    <ClCompile Include="tran\ifft.c" />
+    <ClCompile Include="nylsf\ima_adpcm.c" />
+    <ClCompile Include="nylsf\ima_oki_adpcm.c" />
+    <ClCompile Include="nyqstk\instr.cpp" />
+    <ClCompile Include="tran\instrbanded.c" />
+    <ClCompile Include="tran\instrbow.c" />
+    <ClCompile Include="tran\instrbowedfreq.c" />
+    <ClCompile Include="tran\instrclar.c" />
+    <ClCompile Include="tran\instrclarall.c" />
+    <ClCompile Include="tran\instrclarfreq.c" />
+    <ClCompile Include="tran\instrflute.c" />
+    <ClCompile Include="tran\instrfluteall.c" />
+    <ClCompile Include="tran\instrflutefreq.c" />
+    <ClCompile Include="tran\instrmandolin.c" />
+    <ClCompile Include="nyqstk\src\Instrmnt.cpp" />
+    <ClCompile Include="tran\instrmodalbar.c" />
+    <ClCompile Include="tran\instrsax.c" />
+    <ClCompile Include="tran\instrsaxall.c" />
+    <ClCompile Include="tran\instrsaxfreq.c" />
+    <ClCompile Include="tran\instrsitar.c" />
+    <ClCompile Include="tran\integrate.c" />
+    <ClCompile Include="nylsf\interleave.c" />
+    <ClCompile Include="nyqsrc\inverse.c" />
+    <ClCompile Include="nylsf\ircam.c" />
+    <ClCompile Include="nyqstk\src\JCRev.cpp" />
+    <ClCompile Include="nyqstk\src\JetTable.cpp" />
+    <ClCompile Include="nyqsrc\local.c" />
+    <ClCompile Include="tran\log.c" />
+    <ClCompile Include="nylsf\GSM610\long_term.c" />
+    <ClCompile Include="nyqsrc\lpanal.c" />
+    <ClCompile Include="nylsf\GSM610\lpc.c" />
+    <ClCompile Include="tran\lpreson.c" />
+    <ClCompile Include="nylsf\macbinary3.c" />
+    <ClCompile Include="nylsf\macos.c" />
+    <ClCompile Include="nyqstk\src\Mandolin.cpp" />
+    <ClCompile Include="nylsf\mat4.c" />
+    <ClCompile Include="nylsf\mat5.c" />
+    <ClCompile Include="ffts\src\matlib.c" />
+    <ClCompile Include="tran\maxv.c" />
+    <ClCompile Include="cmt\mem.c" />
+    <ClCompile Include="cmt\midifile.c" />
+    <ClCompile Include="cmt\midifns.c" />
+    <ClCompile Include="nyqstk\src\Modal.cpp" />
+    <ClCompile Include="nyqstk\src\ModalBar.cpp" />
+    <ClCompile Include="cmt\moxc.c" />
+    <ClCompile Include="nylsf\mpc2k.c" />
+    <ClCompile Include="nylsf\ms_adpcm.c" />
+    <ClCompile Include="nyqsrc\multiread.c" />
+    <ClCompile Include="nyqsrc\multiseq.c" />
+    <ClCompile Include="nylsf\nist.c" />
+    <ClCompile Include="nyqstk\src\Noise.cpp" />
+    <ClCompile Include="nyqstk\src\NRev.cpp" />
+    <ClCompile Include="nyqsrc\nyq-osc-server.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="tran\offset.c" />
+    <ClCompile Include="nylsf\ogg.c" />
+    <ClCompile Include="nyqstk\src\OnePole.cpp" />
+    <ClCompile Include="tran\oneshot.c" />
+    <ClCompile Include="nyqstk\src\OneZero.cpp" />
+    <ClCompile Include="tran\osc.c" />
+    <ClCompile Include="nylsf\paf.c" />
+    <ClCompile Include="tran\partial.c" />
+    <ClCompile Include="xlisp\path.c" />
+    <ClCompile Include="nylsf\pcm.c" />
+    <ClCompile Include="nyqsrc\phasevocoder.c" />
+    <ClCompile Include="nyqstk\src\PitShift.cpp" />
+    <ClCompile Include="tran\pluck.c" />
+    <ClCompile Include="nyqstk\src\PluckTwo.cpp" />
+    <ClCompile Include="nyqstk\src\PoleZero.cpp" />
+    <ClCompile Include="nyqstk\src\PRCRev.cpp" />
+    <ClCompile Include="nylsf\GSM610\preprocess.c" />
+    <ClCompile Include="tran\prod.c" />
+    <ClCompile Include="nylsf\pvf.c" />
+    <ClCompile Include="nyqsrc\pvshell.c" />
+    <ClCompile Include="tran\pwl.c" />
+    <ClCompile Include="tran\quantize.c" />
+    <ClCompile Include="nylsf\raw.c" />
+    <ClCompile Include="tran\recip.c" />
+    <ClCompile Include="cmt\record.c" />
+    <ClCompile Include="nyqstk\src\ReedTable.cpp" />
+    <ClCompile Include="nyqsrc\resamp.c" />
+    <ClCompile Include="nyqsrc\resampv.c" />
+    <ClCompile Include="tran\reson.c" />
+    <ClCompile Include="tran\resoncv.c" />
+    <ClCompile Include="tran\resonvc.c" />
+    <ClCompile Include="tran\resonvv.c" />
+    <ClCompile Include="nylsf\rf64.c" />
+    <ClCompile Include="nylsf\GSM610\rpe.c" />
+    <ClCompile Include="nylsf\rx2.c" />
+    <ClCompile Include="tran\sampler.c" />
+    <ClCompile Include="nyqsrc\samples.c" />
+    <ClCompile Include="nyqstk\src\Saxofony.cpp" />
+    <ClCompile Include="tran\scale.c" />
+    <ClCompile Include="nylsf\sd2.c" />
+    <ClCompile Include="nylsf\sds.c" />
+    <ClCompile Include="cmt\seq.c" />
+    <ClCompile Include="nyqsrc\seqext.c" />
+    <ClCompile Include="nyqsrc\seqfnint.c" />
+    <ClCompile Include="nyqsrc\seqinterf.c" />
+    <ClCompile Include="cmt\seqmread.c" />
+    <ClCompile Include="cmt\seqmwrite.c" />
+    <ClCompile Include="cmt\seqread.c" />
+    <ClCompile Include="cmt\seqwrite.c" />
+    <ClCompile Include="tran\shape.c" />
+    <ClCompile Include="nylsf\GSM610\short_term.c" />
+    <ClCompile Include="tran\sine.c" />
+    <ClCompile Include="nyqstk\src\SineWave.cpp" />
+    <ClCompile Include="tran\siosc.c" />
+    <ClCompile Include="nyqstk\src\Sitar.cpp" />
+    <ClCompile Include="nyqsrc\sliders.c" />
+    <ClCompile Include="tran\slope.c" />
+    <ClCompile Include="nylsf\sndfile.c" />
+    <ClCompile Include="nyqsrc\sndfnint.c" />
+    <ClCompile Include="nyqsrc\sndmax.c" />
+    <ClCompile Include="nyqsrc\sndread.c" />
+    <ClCompile Include="nyqsrc\sndseq.c" />
+    <ClCompile Include="snd\sndwin32.c" />
+    <ClCompile Include="nyqsrc\sndwritepa.c" />
+    <ClCompile Include="nyqsrc\sound.c" />
+    <ClCompile Include="tran\sqrt.c" />
+    <ClCompile Include="nyqsrc\stats.c" />
+    <ClCompile Include="nyqstk\src\Stk.cpp" />
+    <ClCompile Include="tran\stkchorus.c" />
+    <ClCompile Include="nyqstk\stkinit.cpp" />
+    <ClCompile Include="nyqstk\stkint.cpp" />
+    <ClCompile Include="tran\stkpitshift.c" />
+    <ClCompile Include="tran\stkrev.c" />
+    <ClCompile Include="nylsf\strings.c" />
+    <ClCompile Include="nylsf\svx.c" />
+    <ClCompile Include="nylsf\GSM610\table.c" />
+    <ClCompile Include="tran\tapf.c" />
+    <ClCompile Include="tran\tapv.c" />
+    <ClCompile Include="cmt\tempomap.c" />
+    <ClCompile Include="cmt\timebase.c" />
+    <ClCompile Include="tran\tone.c" />
+    <ClCompile Include="tran\tonev.c" />
+    <ClCompile Include="nyqsrc\trigger.c" />
+    <ClCompile Include="nylsf\txw.c" />
+    <ClCompile Include="nylsf\ulaw.c" />
+    <ClCompile Include="tran\upsample.c" />
+    <ClCompile Include="cmt\userio.c" />
+    <ClCompile Include="nylsf\voc.c" />
+    <ClCompile Include="nylsf\vox_adpcm.c" />
+    <ClCompile Include="nylsf\w64.c" />
+    <ClCompile Include="nylsf\wav.c" />
+    <ClCompile Include="nylsf\wav_w64.c" />
+    <ClCompile Include="nyqstk\src\WaveLoop.cpp" />
+    <ClCompile Include="tran\white.c" />
+    <ClCompile Include="sys\win\msvc\winfun.c" />
+    <ClCompile Include="sys\win\msvc\winstuff.c" />
+    <ClCompile Include="nylsf\wve.c" />
+    <ClCompile Include="nyqstk\src\WvIn.cpp" />
+    <ClCompile Include="nylsf\xi.c" />
+    <ClCompile Include="xlisp\xlbfun.c" />
+    <ClCompile Include="xlisp\xlcont.c" />
+    <ClCompile Include="xlisp\xldbug.c" />
+    <ClCompile Include="xlisp\xldmem.c" />
+    <ClCompile Include="xlisp\xleval.c" />
+    <ClCompile Include="xlisp\xlfio.c" />
+    <ClCompile Include="xlisp\xlftab.c" />
+    <ClCompile Include="xlisp\xlglob.c" />
+    <ClCompile Include="xlisp\xlimage.c" />
+    <ClCompile Include="xlisp\xlinit.c" />
+    <ClCompile Include="xlisp\xlio.c" />
+    <ClCompile Include="xlisp\xlisp.c" />
+    <ClCompile Include="xlisp\xljump.c" />
+    <ClCompile Include="xlisp\xllist.c" />
+    <ClCompile Include="xlisp\xlmath.c" />
+    <ClCompile Include="xlisp\xlobj.c" />
+    <ClCompile Include="xlisp\xlpp.c" />
+    <ClCompile Include="xlisp\xlprin.c" />
+    <ClCompile Include="xlisp\xlread.c" />
+    <ClCompile Include="xlisp\xlstr.c" />
+    <ClCompile Include="xlisp\xlsubr.c" />
+    <ClCompile Include="xlisp\xlsym.c" />
+    <ClCompile Include="xlisp\xlsys.c" />
+    <ClCompile Include="nyqsrc\yin.c" />
+    <ClCompile Include="portaudio\src\common\pa_allocation.c" />
+    <ClCompile Include="portaudio\src\common\pa_converters.c" />
+    <ClCompile Include="portaudio\src\common\pa_cpuload.c" />
+    <ClCompile Include="portaudio\src\common\pa_debugprint.c" />
+    <ClCompile Include="portaudio\src\common\pa_dither.c" />
+    <ClCompile Include="portaudio\src\common\pa_front.c" />
+    <ClCompile Include="portaudio\src\common\pa_process.c" />
+    <ClCompile Include="portaudio\src\common\pa_ringbuffer.c" />
+    <ClCompile Include="portaudio\src\common\pa_stream.c" />
+    <ClCompile Include="portaudio\src\common\pa_trace.c" />
+    <ClCompile Include="portaudio\src\hostapi\wdmks\pa_win_wdmks.c" />
+    <ClCompile Include="portaudio\src\hostapi\wmme\pa_win_wmme.c" />
+    <ClCompile Include="portaudio\src\os\win\pa_win_hostapis.c" />
+    <ClCompile Include="portaudio\src\os\win\pa_win_util.c" />
+    <ClCompile Include="portaudio\src\os\win\pa_win_waveformat.c" />
+    <ClCompile Include="portaudio\src\os\win\pa_win_wdmks_utils.c" />
+    <ClCompile Include="portaudio\src\os\win\pa_x86_plain_converters.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tran\abs.h" />
+    <ClInclude Include="nyqsrc\add.h" />
+    <ClInclude Include="tran\allpoles.h" />
+    <ClInclude Include="tran\alpass.h" />
+    <ClInclude Include="tran\alpassvv.h" />
+    <ClInclude Include="tran\amosc.h" />
+    <ClInclude Include="tran\areson.h" />
+    <ClInclude Include="tran\aresoncv.h" />
+    <ClInclude Include="tran\aresonvc.h" />
+    <ClInclude Include="tran\aresonvv.h" />
+    <ClInclude Include="tran\atone.h" />
+    <ClInclude Include="tran\atonev.h" />
+    <ClInclude Include="snd\audiont.h" />
+    <ClInclude Include="snd\audiowin32.h" />
+    <ClInclude Include="nyqsrc\avg.h" />
+    <ClInclude Include="nyqstk\include\BandedWG.h" />
+    <ClInclude Include="nyqstk\include\BiQuad.h" />
+    <ClInclude Include="tran\biquadfilt.h" />
+    <ClInclude Include="nyqstk\include\Bowed.h" />
+    <ClInclude Include="nyqstk\include\BowTable.h" />
+    <ClInclude Include="tran\buzz.h" />
+    <ClInclude Include="cmt\cext.h" />
+    <ClInclude Include="tran\chase.h" />
+    <ClInclude Include="nyqstk\include\Chorus.h" />
+    <ClInclude Include="nyqstk\include\Clarinet.h" />
+    <ClInclude Include="cmt\cleanup.h" />
+    <ClInclude Include="tran\clip.h" />
+    <ClInclude Include="cmt\cmdline.h" />
+    <ClInclude Include="cmt\cmtcmd.h" />
+    <ClInclude Include="nylsf\common.h" />
+    <ClInclude Include="nyqsrc\compose.h" />
+    <ClInclude Include="nylsf\config.h" />
+    <ClInclude Include="nylsf\GSM610\config.h" />
+    <ClInclude Include="tran\congen.h" />
+    <ClInclude Include="tran\const.h" />
+    <ClInclude Include="nyqsrc\convolve.h" />
+    <ClInclude Include="tran\coterm.h" />
+    <ClInclude Include="nyqsrc\debug.h" />
+    <ClInclude Include="tran\delay.h" />
+    <ClInclude Include="nyqstk\include\Delay.h" />
+    <ClInclude Include="tran\delaycc.h" />
+    <ClInclude Include="tran\delaycv.h" />
+    <ClInclude Include="nyqstk\include\DelayL.h" />
+    <ClInclude Include="nyqsrc\downsample.h" />
+    <ClInclude Include="nyqstk\include\Envelope.h" />
+    <ClInclude Include="tran\exp.h" />
+    <ClInclude Include="xlisp\extern.h" />
+    <ClInclude Include="nyqsrc\falloc.h" />
+    <ClInclude Include="nyqsrc\ffilterkit.h" />
+    <ClInclude Include="nyqsrc\fft.h" />
+    <ClInclude Include="fft\fftn.h" />
+    <ClInclude Include="nyqstk\include\Filter.h" />
+    <ClInclude Include="nylsf\float_cast.h" />
+    <ClInclude Include="nyqstk\include\Flute.h" />
+    <ClInclude Include="tran\fmosc.h" />
+    <ClInclude Include="tran\follow.h" />
+    <ClInclude Include="tran\fromarraystream.h" />
+    <ClInclude Include="tran\fromobject.h" />
+    <ClInclude Include="nylsf\G72x\g72x.h" />
+    <ClInclude Include="nylsf\G72x\g72x_priv.h" />
+    <ClInclude Include="tran\gate.h" />
+    <ClInclude Include="nyqstk\globals.h" />
+    <ClInclude Include="nylsf\GSM610\gsm.h" />
+    <ClInclude Include="nylsf\GSM610\gsm610_priv.h" />
+    <ClInclude Include="snd\ieeecvt.h" />
+    <ClInclude Include="tran\ifft.h" />
+    <ClInclude Include="nyqstk\instr.h" />
+    <ClInclude Include="tran\instrbanded.h" />
+    <ClInclude Include="tran\instrbow.h" />
+    <ClInclude Include="tran\instrbowedfreq.h" />
+    <ClInclude Include="tran\instrclar.h" />
+    <ClInclude Include="tran\instrclarall.h" />
+    <ClInclude Include="tran\instrclarfreq.h" />
+    <ClInclude Include="tran\instrflute.h" />
+    <ClInclude Include="tran\instrfluteall.h" />
+    <ClInclude Include="tran\instrflutefreq.h" />
+    <ClInclude Include="tran\instrmandolin.h" />
+    <ClInclude Include="nyqstk\include\Instrmnt.h" />
+    <ClInclude Include="tran\instrmodalbar.h" />
+    <ClInclude Include="tran\instrsax.h" />
+    <ClInclude Include="tran\instrsaxall.h" />
+    <ClInclude Include="tran\instrsaxfreq.h" />
+    <ClInclude Include="tran\instrsitar.h" />
+    <ClInclude Include="tran\integrate.h" />
+    <ClInclude Include="nyqsrc\inverse.h" />
+    <ClInclude Include="tran\log.h" />
+    <ClInclude Include="tran\lpanal.h" />
+    <ClInclude Include="tran\lpreson.h" />
+    <ClInclude Include="nyqstk\include\Mandolin.h" />
+    <ClInclude Include="tran\maxv.h" />
+    <ClInclude Include="cmt\mem.h" />
+    <ClInclude Include="cmt\midifile.h" />
+    <ClInclude Include="cmt\midifns.h" />
+    <ClInclude Include="nyqstk\include\Modal.h" />
+    <ClInclude Include="nyqstk\include\ModalBar.h" />
+    <ClInclude Include="cmt\moxc.h" />
+    <ClInclude Include="nyqsrc\multiread.h" />
+    <ClInclude Include="nyqsrc\multiseq.h" />
+    <ClInclude Include="nyqstk\include\Noise.h" />
+    <ClInclude Include="nyqstk\include\NRev.h" />
+    <ClInclude Include="tran\offset.h" />
+    <ClInclude Include="nyqstk\include\OnePole.h" />
+    <ClInclude Include="tran\oneshot.h" />
+    <ClInclude Include="nyqstk\include\OneZero.h" />
+    <ClInclude Include="tran\osc.h" />
+    <ClInclude Include="tran\partial.h" />
+    <ClInclude Include="nyqsrc\phasevocoder.h" />
+    <ClInclude Include="nyqstk\include\PitShift.h" />
+    <ClInclude Include="nyqstk\include\PluckTwo.h" />
+    <ClInclude Include="nylsf\ppc-config.h" />
+    <ClInclude Include="nyqstk\include\PRCRev.h" />
+    <ClInclude Include="tran\prod.h" />
+    <ClInclude Include="nyqsrc\pvshell.h" />
+    <ClInclude Include="tran\pwl.h" />
+    <ClInclude Include="tran\quantize.h" />
+    <ClInclude Include="tran\recip.h" />
+    <ClInclude Include="cmt\record.h" />
+    <ClInclude Include="nyqstk\include\ReedTable.h" />
+    <ClInclude Include="nyqsrc\resamp.h" />
+    <ClInclude Include="nyqsrc\resampv.h" />
+    <ClInclude Include="tran\reson.h" />
+    <ClInclude Include="tran\resoncv.h" />
+    <ClInclude Include="tran\resonvc.h" />
+    <ClInclude Include="tran\resonvv.h" />
+    <ClInclude Include="tran\sampler.h" />
+    <ClInclude Include="nyqsrc\samples.h" />
+    <ClInclude Include="nyqstk\include\Saxofony.h" />
+    <ClInclude Include="tran\scale.h" />
+    <ClInclude Include="cmt\seq.h" />
+    <ClInclude Include="nyqsrc\seqext.h" />
+    <ClInclude Include="nyqsrc\seqinterf.h" />
+    <ClInclude Include="cmt\seqmread.h" />
+    <ClInclude Include="cmt\seqmwrite.h" />
+    <ClInclude Include="cmt\seqread.h" />
+    <ClInclude Include="cmt\seqwrite.h" />
+    <ClInclude Include="nylsf\sf_unistd.h" />
+    <ClInclude Include="nylsf\sfconfig.h" />
+    <ClInclude Include="nylsf\sfendian.h" />
+    <ClInclude Include="tran\shape.h" />
+    <ClInclude Include="tran\sine.h" />
+    <ClInclude Include="tran\siosc.h" />
+    <ClInclude Include="tran\slope.h" />
+    <ClInclude Include="snd\snd.h" />
+    <ClInclude Include="nylsf\sndfile.h" />
+    <ClInclude Include="snd\sndheader.h" />
+    <ClInclude Include="nyqsrc\sndmax.h" />
+    <ClInclude Include="nyqsrc\sndread.h" />
+    <ClInclude Include="nyqsrc\sndseq.h" />
+    <ClInclude Include="snd\sndwin32.h" />
+    <ClInclude Include="nyqsrc\sndwrite.h" />
+    <ClInclude Include="nyqsrc\sound.h" />
+    <ClInclude Include="tran\sqrt.h" />
+    <ClInclude Include="nyqstk\include\Stk.h" />
+    <ClInclude Include="tran\stkchorus.h" />
+    <ClInclude Include="nyqstk\stkinit.h" />
+    <ClInclude Include="nyqstk\stkint.h" />
+    <ClInclude Include="tran\stkpitshift.h" />
+    <ClInclude Include="tran\stkrev.h" />
+    <ClInclude Include="tran\tapv.h" />
+    <ClInclude Include="cmt\tempomap.h" />
+    <ClInclude Include="cmt\timebase.h" />
+    <ClInclude Include="tran\tone.h" />
+    <ClInclude Include="tran\tonev.h" />
+    <ClInclude Include="nyqsrc\trigger.h" />
+    <ClInclude Include="tran\upsample.h" />
+    <ClInclude Include="cmt\userio.h" />
+    <ClInclude Include="nylsf\wav_w64.h" />
+    <ClInclude Include="nyqstk\include\WaveLoop.h" />
+    <ClInclude Include="tran\white.h" />
+    <ClInclude Include="sys\win\msvc\winfun.h" />
+    <ClInclude Include="nyqstk\include\WvIn.h" />
+    <ClInclude Include="xlisp\xldmem.h" />
+    <ClInclude Include="xlisp\xlisp.h" />
+    <ClInclude Include="portaudio\src\common\pa_allocation.h" />
+    <ClInclude Include="portaudio\src\common\pa_converters.h" />
+    <ClInclude Include="portaudio\src\common\pa_cpuload.h" />
+    <ClInclude Include="portaudio\src\common\pa_debugprint.h" />
+    <ClInclude Include="portaudio\src\common\pa_dither.h" />
+    <ClInclude Include="portaudio\src\common\pa_endianness.h" />
+    <ClInclude Include="portaudio\src\common\pa_hostapi.h" />
+    <ClInclude Include="portaudio\src\common\pa_process.h" />
+    <ClInclude Include="portaudio\src\common\pa_ringbuffer.h" />
+    <ClInclude Include="portaudio\src\common\pa_stream.h" />
+    <ClInclude Include="portaudio\src\common\pa_trace.h" />
+    <ClInclude Include="portaudio\src\common\pa_types.h" />
+    <ClInclude Include="portaudio\src\common\pa_util.h" />
+    <ClInclude Include="portaudio\src\os\win\pa_win_wdmks_utils.h" />
+    <ClInclude Include="portaudio\src\os\win\pa_x86_plain_converters.h" />
+    <ClInclude Include="portaudio\include\pa_win_ds.h" />
+    <ClInclude Include="portaudio\include\pa_win_waveformat.h" />
+    <ClInclude Include="portaudio\include\pa_win_wmme.h" />
+    <ClInclude Include="portaudio\include\portaudio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="liblo\build\vs2008\liblo.vcxproj">
+      <Project>{fea9d5d3-46bd-594f-85c6-f1380fd994a6}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="liblo\pthreads.2\pthread.vcxproj">
+      <Project>{a02e8ec5-317c-42cd-9425-60bdde09d833}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
