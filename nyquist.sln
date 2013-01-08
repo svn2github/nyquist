@@ -1,44 +1,25 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filelist", "misc\filelist.vcproj", "{DA1A1539-671B-4E70-BF6E-10EC6887FAF4}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filelist", "misc\filelist.vcxproj", "{DA1A1539-671B-4E70-BF6E-10EC6887FAF4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "intgen", "misc\intgen_win32\intgen.vcproj", "{378FBAED-0CA5-4CFB-ACF4-CCEDF8A4596E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "intgen", "misc\intgen_win32\intgen.vcxproj", "{378FBAED-0CA5-4CFB-ACF4-CCEDF8A4596E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nyquist", "nyquist.vcproj", "{208E5158-7B25-4185-8D8E-5E5BFC2153EC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A02E8EC5-317C-42CD-9425-60BDDE09D833} = {A02E8EC5-317C-42CD-9425-60BDDE09D833}
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6} = {FEA9D5D3-46BD-594F-85C6-F1380FD994A6}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nyquist", "nyquist.vcxproj", "{208E5158-7B25-4185-8D8E-5E5BFC2153EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nyqwin", "nyqwin.vcproj", "{19DEEB57-B0BB-476A-9960-CE360A884906}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A02E8EC5-317C-42CD-9425-60BDDE09D833} = {A02E8EC5-317C-42CD-9425-60BDDE09D833}
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6} = {FEA9D5D3-46BD-594F-85C6-F1380FD994A6}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nyqwin", "nyqwin.vcxproj", "{19DEEB57-B0BB-476A-9960-CE360A884906}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "packer", "misc\packer.vcproj", "{F40BCDEF-F66F-4FEB-9513-F7EFF29BFC93}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "packer", "misc\packer.vcxproj", "{F40BCDEF-F66F-4FEB-9513-F7EFF29BFC93}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unpacker", "misc\unpacker.vcproj", "{E09240DC-CFBD-46BE-A6EA-2379C7502230}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unpacker", "misc\unpacker.vcxproj", "{E09240DC-CFBD-46BE-A6EA-2379C7502230}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osc-test-client", "liblo\test-client\osc-test-client.vcproj", "{22B02EA5-24F7-4F8D-8D8F-E066D80A0957}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A02E8EC5-317C-42CD-9425-60BDDE09D833} = {A02E8EC5-317C-42CD-9425-60BDDE09D833}
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6} = {FEA9D5D3-46BD-594F-85C6-F1380FD994A6}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osc-test-client", "liblo\test-client\osc-test-client.vcxproj", "{22B02EA5-24F7-4F8D-8D8F-E066D80A0957}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ser-to-osc", "liblo\ser-to-osc\ser-to-osc.vcproj", "{44736D55-68C4-496D-B08A-9C66844AE857}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A02E8EC5-317C-42CD-9425-60BDDE09D833} = {A02E8EC5-317C-42CD-9425-60BDDE09D833}
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6} = {FEA9D5D3-46BD-594F-85C6-F1380FD994A6}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ser-to-osc", "liblo\ser-to-osc\ser-to-osc.vcxproj", "{44736D55-68C4-496D-B08A-9C66844AE857}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pthread", "liblo\pthreads.2\pthread.vcproj", "{A02E8EC5-317C-42CD-9425-60BDDE09D833}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pthread", "liblo\pthreads.2\pthread.vcxproj", "{A02E8EC5-317C-42CD-9425-60BDDE09D833}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblo", "liblo\build\vs2008\liblo.vcproj", "{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A02E8EC5-317C-42CD-9425-60BDDE09D833} = {A02E8EC5-317C-42CD-9425-60BDDE09D833}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblo", "liblo\build\vs2008\liblo.vcxproj", "{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
