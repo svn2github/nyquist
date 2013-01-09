@@ -48,7 +48,7 @@
     <OutDir>.\NyqWinRel\</OutDir>
     <IntDir>.\NyqWinRel\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\sys\win\msvc;$(IncludePath)</IncludePath>
+    <IncludePath>.\sys\win\msvc;.\libogg\include;.\libvorbis\include;.\FLAC;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>

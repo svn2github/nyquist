@@ -44,7 +44,10 @@
     <OutDir>.\WinRel\</OutDir>
     <IntDir>.\WinRel\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\liblo\pthreads.2;$(IncludePath)</IncludePath>
+    <IncludePath>.\liblo\pthreads.2;.\libogg\include;.\libvorbis\include;.\FLAC\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\Win32\Release\;.\FLAC\win32;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib;.\Win32\Release\</ReferencePath>
+    <ExecutablePath>$(SolutionDir)FLAC\win32;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\WinDebug\</OutDir>
@@ -62,7 +65,7 @@
       <AdditionalIncludeDirectories>.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;C:\Users\rbd\nyquist\liblo\pthreads.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;PA_USE_WDMKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>.\WinRel/nyquist.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\WinRel/</AssemblerListingLocation>
@@ -78,7 +81,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/VERBOSE:LIB %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;libFLAC.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\WinRel/nyquist.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>.\WinRel/nyquist.pdb</ProgramDatabaseFile>
@@ -86,6 +89,10 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
+      <IgnoreSpecificDefaultLibraries>libCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -135,6 +142,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="nylsf\ogg_vorbis.c" />
     <ClCompile Include="tran\abs.c" />
     <ClCompile Include="nylsf\GSM610\add.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
@@ -640,14 +648,28 @@
     <ClInclude Include="portaudio\include\portaudio.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="FLAC\win32\libFLAC\libFLAC_static.vcxproj">
+      <Project>{4cefbc84-c215-11db-8314-0800200c9a66}</Project>
+    </ProjectReference>
     <ProjectReference Include="liblo\build\vs2008\liblo.vcxproj">
       <Project>{fea9d5d3-46bd-594f-85c6-f1380fd994a6}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="liblo\pthreads.2\pthread.vcxproj">
       <Project>{a02e8ec5-317c-42cd-9425-60bdde09d833}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="libogg\win32\VS2010\libogg_static.vcxproj">
+      <Project>{15cbfeff-7965-41f5-b4e2-21e8795c9159}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libvorbis\win32\VS2010\libvorbisfile\libvorbisfile_static.vcxproj">
+      <Project>{cebde98b-a6aa-46e6-bc79-faaf823db9ec}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libvorbis\win32\VS2010\libvorbis\libvorbis_static.vcxproj">
+      <Project>{3a214e06-b95e-4d61-a291-1f8df2ec10fd}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="FLAC\win32\libFLAC_static.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

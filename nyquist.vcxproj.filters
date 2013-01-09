@@ -915,6 +915,9 @@
     <ClCompile Include="portaudio\src\os\win\pa_x86_plain_converters.c">
       <Filter>portaudio\src\os-win</Filter>
     </ClCompile>
+    <ClCompile Include="nylsf\ogg_vorbis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tran\abs.h">
@@ -1493,5 +1496,8 @@
     <ClInclude Include="portaudio\include\portaudio.h">
       <Filter>portaudio\include</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="FLAC\win32\libFLAC_static.lib" />
   </ItemGroup>
 </Project>

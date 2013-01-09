@@ -109,6 +109,10 @@
 #define	HAVE_WAITPID 0
 #endif
 
+#ifndef HAVE_EXTERNAL_LIBS /* ZEYU: turn on FLAC/OGG support */
+#define HAVE_EXTERNAL_LIBS 1
+#endif 
+
 #if (defined (WIN32) || defined (_WIN32))
 #ifdef _MSC_VER
 #define __func__ __FUNCTION__
