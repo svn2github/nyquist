@@ -1,0 +1,84 @@
+;; regression.sal - Linear Regression algorithm
+;;
+;; Roger B. Dannenberg
+;; Jan, 2013
+;; 
+;; This could be done with the XLISP object system, but
+;; since SAL does not support objects, I decided to
+;; simulate objects using an array to hold:
+;;  (sumxx, sumyy, sumxy, sumx, sumy, n, a, b)
+;; 
+;; set lnrg = lnrg-new() to start a linear regression
+;; exec lnrg-point(lnrg, x, y) to add a data point
+;; exec lnrg-remove-point(lnrg, x, y) to remove a data point
+;; exec lnrg-regress(lnrg) to compute the regression
+;; exec lnrg-f(lnrg, x) to evaluate the linear regression at x
+;; exec lnrg-f-inv(lnrg, y) to evaluate the inverse linear regression at y
+;; lnrg-get-slope() to get the slope of the linear regression
+;; lnrg-get-n() to get the number of points in the regression data
+;; to restart with new points, call lnrg-init(lnrg) or just use lnrg-new()
+;; exec lnrg-regress(lnrg) can be called after each point()
+;;
+;; other forms of regression should be added. This one does
+;; standard least squares regression
+
+variable lnrg-sumxx = 0, lnrg-sumyy = 1, lnrg-sumxy = 2, lnrg-sumx = 3,
+         lnrg-sumy = 4, lnrg-n = 5, lnrg-a = 6, lnrg-b = 7, lnrg-size = 8
+
+function lnrg-new()
+  return lnrg-init(make-array(lnrg-size))
+
+function lnrg-init(lnrg)
+  begin
+    set lnrg[lnrg-sumxx] = 0,
+        lnrg[lnrg-sumyy] = 0,
+        lnrg[lnrg-sumxy] = 0,
+        lnrg[lnrg-sumx] = 0,
+        lnrg[lnrg-sumy] = 0,
+        lnrg[lnrg-n] = 0
+    return lnrg
+  end
+
+function lnrg-point(lnrg, x, y)
+  set lnrg[lnrg-sumx] += x,
+      lnrg[lnrg-sumy] += y,
+      lnrg[lnrg-sumxx] += (x * x),
+      lnrg[lnrg-sumyy] += (y * y),
+      lnrg[lnrg-sumxy] += (x * y),
+      lnrg[lnrg-n] += 1
+
+
+function lnrg-remove-point(lnrg, x, y)
+  set lnrg[lnrg-sumx] -= x,
+      lnrg[lnrg-sumy] -= y,
+      lnrg[lnrg-sumxx] -= (x * x),
+      lnrg[lnrg-sumyy] -= (y * y),
+      lnrg[lnrg-sumxy] -= (x * y),
+      lnrg[lnrg-n] -= 1
+
+function lnrg-regress(lnrg)
+  begin
+    with sxx = lnrg[lnrg-sumxx] -
+               lnrg[lnrg-sumx] * lnrg[lnrg-sumx] / lnrg[lnrg-n],
+         sxy = lnrg[lnrg-sumxy] -
+               lnrg[lnrg-sumx] * lnrg[lnrg-sumy] / lnrg[lnrg-n]
+    set lnrg[lnrg-b] = sxy / sxx,
+        lnrg[lnrg-a] = (lnrg[lnrg-sumy] - lnrg[lnrg-b] * lnrg[lnrg-sumx]) /
+                       lnrg[lnrg-n]
+  end
+
+
+function lnrg-f(lnrg, x)
+  return lnrg[lnrg-a] + lnrg[lnrg-b] * x
+
+
+function lnrg-f-inv(lnrg, y)
+  return (lnrg[lnrg-y] - lnrg[lnrg-a]) / lnrg[lnrg-b]
+
+
+function lnrg-get-slope(lnrg)
+  return lnrg[lnrg-b]
+
+
+function lnrg-get-n(lnrg)
+  return lnrg[lnrg-n]

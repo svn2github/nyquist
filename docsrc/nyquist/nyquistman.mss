@@ -8021,6 +8021,26 @@ Section @ref(install-sec).) Each library is documented in one of the following
 sections. When you load the library described by the section, all functions
 documented in that section become available.
 
+@section(Statistics)
+@index(statistics)@index(mean)@index(standard deviation)@index(Levene's test)@index(min, statistics)@index(max, statistics)@index(variance)@index(median, statistics)@index(kurtosis, statistics)@index(histogram)@index(Pearson correlation)@index(correlation)@index(Welch's t-test)@index(t-test, statistics)
+The file @code(statistics.lsp) defines a class and functions to compute simple statistics, histograms, correlation, and some other tests. See the source code for complete details.
+
+@section(Plots)
+@index(plots)@index(gnuplot)
+The Nyquist IDE has a simple facility to plot signals. For more advanced plotting, you can use @code(gnuplot.sal) to generate plots for @code(gnuplot), a separate, but free program. See the source for details.
+
+@section(Labeling Audio Events, Marking Audio Times, Displaying Marked Audio Times)
+@index(Audacity)@index(label files)@index(audio annotation)@index(annotation, audio)
+The @code(labels.sal) program can convert lists to label files and label files to lists. Label files can be loaded along with audio in Audacity to show metadata. See the source for details.
+
+@section(Linear Regression)
+@index(linear regression)@index(regression)@index(curve fitting)
+See @code(regression.sal) for simple linear regression functions.
+
+@section(Vector Math, Linear Algebra)
+@index(vectors)@index(linear algegra)@index(autocorrelation of vector data)@index(variance of vector data)@index(mean of vector)@index(standard deviation of vector)@index(cosine, vector)@index(vector cosine)@index(norm of vector)@index(vector norm)@index(median of vector data)@index(vector median)@index(difference of vector data)@index(vector difference)
+See @code(vectors.lsp) for a simple implementation of vector arithmetic and other vector functions.
+
 @section(Piano Synthesizer)
 The piano synthesizer (library name is @code(pianosyn.lsp)) generates
 realistic piano tones using a multiple wavetable implementation by Zheng (Geoffrey)
