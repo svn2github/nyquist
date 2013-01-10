@@ -175,7 +175,8 @@ LVAL snd_make_read(
 
     if (!susp->sndfile) {
         char error[240];
-        sprintf(error, "SND-READ: Cannot open file '%s'", filename);
+        sprintf(error, "SND-READ: Cannot open file '%s' because of %s", filename,
+                sf_strerror(susp->sndfile));
         xlfail(error);
     }
     if (susp->sf_info.channels < 1) {
@@ -240,6 +241,7 @@ LVAL snd_make_read(
     case SF_FORMAT_SD2: *format = SND_HEAD_SD2; break;
     case SF_FORMAT_FLAC: *format = SND_HEAD_FLAC; break;
     case SF_FORMAT_CAF: *format = SND_HEAD_CAF; break;
+    case SF_FORMAT_OGG: *format = SND_HEAD_OGG; break;
     default: *format = SND_HEAD_NONE; break;
     }
     *channels = susp->sf_info.channels;

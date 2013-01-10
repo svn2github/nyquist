@@ -70,7 +70,11 @@ error here
 /* LISP-SRC: (setf snd-head-FLAC 18) */
 #define SND_HEAD_CAF 19
 /* LISP-SRC: (setf snd-head-CAF 19) */
-#define SND_NUM_HEADS 20
+#define SND_HEAD_CAF 20
+/* LISP-SRC: (setf snd-head-raw 20) */
+#define SND_HEAD_OGG 21
+/* LISP-SRC: (setf snd-head-OGG 21) */
+#define SND_NUM_HEADS 22
 
 /* bitfields for soundheaders */
 #define SND_HEAD_CHANNELS (1<<0)

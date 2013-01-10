@@ -239,7 +239,8 @@ long lookup_format(long format, long mode, long bits, long swap)
     case SND_HEAD_SD2: sf_format = SF_FORMAT_SD2; break;
     case SND_HEAD_FLAC: sf_format = SF_FORMAT_FLAC; break;
     case SND_HEAD_CAF: sf_format = SF_FORMAT_CAF; break;
-    case SND_HEAD_RAW: 
+    case SND_HEAD_OGG: sf_format = SF_FORMAT_OGG; break;
+    case SND_HEAD_RAW:
         sf_format = SF_FORMAT_RAW; 
 #ifdef XL_BIG_ENDIAN
         sf_format |= (swap ? SF_ENDIAN_LITTLE : SF_ENDIAN_BIG);

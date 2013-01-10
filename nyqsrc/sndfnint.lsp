@@ -39,6 +39,8 @@
  (setf snd-head-CAF 19) 
 
  (setf snd-head-raw 20) 
+ 
+ (setf snd-head-OGG 21) 
 
  (setf snd-head-channels 1) 
 

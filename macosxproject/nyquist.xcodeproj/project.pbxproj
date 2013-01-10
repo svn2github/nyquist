@@ -1034,28 +1034,6 @@
 		F3145161168276B800833823 /* codec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = codec.h; sourceTree = "<group>"; };
 		F3145164168276B800833823 /* vorbisenc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vorbisenc.h; sourceTree = "<group>"; };
 		F3145165168276B800833823 /* vorbisfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vorbisfile.h; sourceTree = "<group>"; };
-		F31451FD16827A2700833823 /* all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = all.h; path = flac/src/libFLAC/include/private/all.h; sourceTree = "<group>"; };
-		F31451FE16827A2700833823 /* bitmath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitmath.h; path = flac/src/libFLAC/include/private/bitmath.h; sourceTree = "<group>"; };
-		F31451FF16827A2700833823 /* bitreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitreader.h; path = flac/src/libFLAC/include/private/bitreader.h; sourceTree = "<group>"; };
-		F314520016827A2700833823 /* bitwriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitwriter.h; path = flac/src/libFLAC/include/private/bitwriter.h; sourceTree = "<group>"; };
-		F314520116827A2700833823 /* cpu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu.h; path = flac/src/libFLAC/include/private/cpu.h; sourceTree = "<group>"; };
-		F314520216827A2700833823 /* crc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crc.h; path = flac/src/libFLAC/include/private/crc.h; sourceTree = "<group>"; };
-		F314520316827A2700833823 /* fixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fixed.h; path = flac/src/libFLAC/include/private/fixed.h; sourceTree = "<group>"; };
-		F314520416827A2700833823 /* float.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = float.h; path = flac/src/libFLAC/include/private/float.h; sourceTree = "<group>"; };
-		F314520516827A2700833823 /* format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = format.h; path = flac/src/libFLAC/include/private/format.h; sourceTree = "<group>"; };
-		F314520616827A2700833823 /* lpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lpc.h; path = flac/src/libFLAC/include/private/lpc.h; sourceTree = "<group>"; };
-		F314520716827A2700833823 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = md5.h; path = flac/src/libFLAC/include/private/md5.h; sourceTree = "<group>"; };
-		F314520816827A2700833823 /* memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = memory.h; path = flac/src/libFLAC/include/private/memory.h; sourceTree = "<group>"; };
-		F314520916827A2700833823 /* metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = metadata.h; path = flac/src/libFLAC/include/private/metadata.h; sourceTree = "<group>"; };
-		F314520A16827A2700833823 /* ogg_decoder_aspect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogg_decoder_aspect.h; path = flac/src/libFLAC/include/private/ogg_decoder_aspect.h; sourceTree = "<group>"; };
-		F314520B16827A2700833823 /* ogg_encoder_aspect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogg_encoder_aspect.h; path = flac/src/libFLAC/include/private/ogg_encoder_aspect.h; sourceTree = "<group>"; };
-		F314520C16827A2700833823 /* ogg_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogg_helper.h; path = flac/src/libFLAC/include/private/ogg_helper.h; sourceTree = "<group>"; };
-		F314520D16827A2700833823 /* ogg_mapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogg_mapping.h; path = flac/src/libFLAC/include/private/ogg_mapping.h; sourceTree = "<group>"; };
-		F314520E16827A2700833823 /* stream_encoder_framing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream_encoder_framing.h; path = flac/src/libFLAC/include/private/stream_encoder_framing.h; sourceTree = "<group>"; };
-		F314520F16827A2700833823 /* window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = window.h; path = flac/src/libFLAC/include/private/window.h; sourceTree = "<group>"; };
-		F314522416827A5200833823 /* all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = all.h; path = flac/src/libFLAC/include/protected/all.h; sourceTree = "<group>"; };
-		F314522516827A5200833823 /* stream_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream_decoder.h; path = flac/src/libFLAC/include/protected/stream_decoder.h; sourceTree = "<group>"; };
-		F314522616827A5200833823 /* stream_encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream_encoder.h; path = flac/src/libFLAC/include/protected/stream_encoder.h; sourceTree = "<group>"; };
 		F314523F16827D8B00833823 /* FLAC */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FLAC; path = FLAC/FLAC; sourceTree = "<group>"; };
 		F3145249168281DC00833823 /* libFLAC32.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFLAC32.a; path = ../FLAC/libFLAC32.a; sourceTree = "<group>"; };
 		F3361FD9169BE4BE006AD110 /* ogg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ogg.h; path = ../../nyquist/libogg/include/ogg/ogg.h; sourceTree = "<group>"; };
@@ -1456,8 +1434,6 @@
 			isa = PBXGroup;
 			children = (
 				F314523F16827D8B00833823 /* FLAC */,
-				F314522316827A4900833823 /* protected */,
-				F31451FC16827A1900833823 /* private */,
 				F31450FE1682744400833823 /* vorbis */,
 				F31450FD1682743B00833823 /* ogg */,
 				3D48B84E0F59937D0073A251 /* ffts */,
@@ -2049,42 +2025,6 @@
 			children = (
 			);
 			name = headers;
-			sourceTree = "<group>";
-		};
-		F31451FC16827A1900833823 /* private */ = {
-			isa = PBXGroup;
-			children = (
-				F31451FD16827A2700833823 /* all.h */,
-				F31451FE16827A2700833823 /* bitmath.h */,
-				F31451FF16827A2700833823 /* bitreader.h */,
-				F314520016827A2700833823 /* bitwriter.h */,
-				F314520116827A2700833823 /* cpu.h */,
-				F314520216827A2700833823 /* crc.h */,
-				F314520316827A2700833823 /* fixed.h */,
-				F314520416827A2700833823 /* float.h */,
-				F314520516827A2700833823 /* format.h */,
-				F314520616827A2700833823 /* lpc.h */,
-				F314520716827A2700833823 /* md5.h */,
-				F314520816827A2700833823 /* memory.h */,
-				F314520916827A2700833823 /* metadata.h */,
-				F314520A16827A2700833823 /* ogg_decoder_aspect.h */,
-				F314520B16827A2700833823 /* ogg_encoder_aspect.h */,
-				F314520C16827A2700833823 /* ogg_helper.h */,
-				F314520D16827A2700833823 /* ogg_mapping.h */,
-				F314520E16827A2700833823 /* stream_encoder_framing.h */,
-				F314520F16827A2700833823 /* window.h */,
-			);
-			name = private;
-			sourceTree = "<group>";
-		};
-		F314522316827A4900833823 /* protected */ = {
-			isa = PBXGroup;
-			children = (
-				F314522416827A5200833823 /* all.h */,
-				F314522516827A5200833823 /* stream_decoder.h */,
-				F314522616827A5200833823 /* stream_encoder.h */,
-			);
-			name = protected;
 			sourceTree = "<group>";
 		};
 		F510BDB903A0314301029006 /* Frameworks */ = {
