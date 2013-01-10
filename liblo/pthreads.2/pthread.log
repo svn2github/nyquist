@@ -1,4 +1,8 @@
-﻿Build started 2013/1/9 21:00:54.
+﻿Build started 2013/1/10 11:14:03.
+     1>Project "C:\Projects\Nyquist-test\nyquist\liblo\pthreads.2\pthread.vcxproj" on node 2 (clean target(s)).
+     1>_PrepareForClean:
+         Deleting file ".\.\pthread.lastbuildstate".
+     1>Done Building Project "C:\Projects\Nyquist-test\nyquist\liblo\pthreads.2\pthread.vcxproj" (clean target(s)).
 
 Build succeeded.
 

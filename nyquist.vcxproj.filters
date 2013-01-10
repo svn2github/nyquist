@@ -2,33 +2,33 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{cde4064a-310d-48d9-91aa-143083966d50}</UniqueIdentifier>
+      <UniqueIdentifier>{5ce780bb-1997-4fe8-97e0-ef2f59ca8d14}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{6feffe40-5814-484c-a1b9-63256a40002f}</UniqueIdentifier>
+      <UniqueIdentifier>{802edf16-c3ad-4449-9761-3d46b749e791}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;fi;fd</Extensions>
     </Filter>
     <Filter Include="portaudio">
-      <UniqueIdentifier>{f870229f-92d9-4059-9761-8ebbb24d1f82}</UniqueIdentifier>
+      <UniqueIdentifier>{9cc50f33-e2a2-4ad8-adda-97427eca57f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="portaudio\src">
-      <UniqueIdentifier>{335e8f5e-4d74-4ffe-b526-aabfc6f865be}</UniqueIdentifier>
+      <UniqueIdentifier>{1a7febe2-f379-4b95-9e1b-3ff9b09d4fe7}</UniqueIdentifier>
     </Filter>
     <Filter Include="portaudio\src\common">
-      <UniqueIdentifier>{db26fbc2-27da-493d-b82a-2a467b84234e}</UniqueIdentifier>
+      <UniqueIdentifier>{cd5f4112-aba7-4a8e-a7d9-622e2f311c8d}</UniqueIdentifier>
     </Filter>
     <Filter Include="portaudio\src\hostapi">
-      <UniqueIdentifier>{add8b0a4-9d68-46d5-93d0-94fb55fc808f}</UniqueIdentifier>
+      <UniqueIdentifier>{c8bf08f1-4b33-4999-a446-9958dc68114b}</UniqueIdentifier>
     </Filter>
     <Filter Include="portaudio\src\os-win">
-      <UniqueIdentifier>{33c4aaeb-bba1-4ef0-b974-8dc17a1cc564}</UniqueIdentifier>
+      <UniqueIdentifier>{5a3c89e8-ccdb-44ee-ba64-d03d935c5dfe}</UniqueIdentifier>
     </Filter>
     <Filter Include="portaudio\include">
-      <UniqueIdentifier>{8bf68d3e-8fe1-4c01-991f-5a40ba091b32}</UniqueIdentifier>
+      <UniqueIdentifier>{4d380d69-e028-4f53-973c-7a23e8ca85e5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{337f411a-c518-4d50-bf47-7cc994ebc172}</UniqueIdentifier>
+      <UniqueIdentifier>{fe9e5d6f-0c56-4503-9371-3f65fdb273a1}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
   </ItemGroup>
@@ -915,7 +915,13 @@
     <ClCompile Include="portaudio\src\os\win\pa_x86_plain_converters.c">
       <Filter>portaudio\src\os-win</Filter>
     </ClCompile>
+    <ClCompile Include="nylsf\ogg_speex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="nylsf\ogg_vorbis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nylsf\ogg_pcm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1496,8 +1502,5 @@
     <ClInclude Include="portaudio\include\portaudio.h">
       <Filter>portaudio\include</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="FLAC\win32\libFLAC_static.lib" />
   </ItemGroup>
 </Project>

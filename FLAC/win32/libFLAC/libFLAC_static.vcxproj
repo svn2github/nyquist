@@ -57,6 +57,7 @@
     <IntDir>.\Debug_static\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>C:\Users\MusicFish\AppData\Local\nasm;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>.\libogg\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
@@ -75,7 +76,7 @@
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>.\include;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;..\..\include;.\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VERSION="1.2.1";FLAC__NO_DLL;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;WIN32;_DEBUG;DEBUG;FLAC__OVERFLOW_DETECT;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug_static\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug_static\libFLAC_static.pch</PrecompiledHeaderOutputFile>
