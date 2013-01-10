@@ -1410,11 +1410,6 @@
   <ItemGroup>
     <ProjectReference Include="liblo\build\vs2008\liblo.vcxproj">
       <Project>{fea9d5d3-46bd-594f-85c6-f1380fd994a6}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="libogg\win32\VS2010\libogg_static.vcxproj">
       <Project>{15cbfeff-7965-41f5-b4e2-21e8795c9159}</Project>

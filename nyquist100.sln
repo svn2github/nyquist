@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblo", "liblo\build\vs2008\liblo.vcxproj", "{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libogg_static", "libogg\win32\VS2010\libogg_static.vcxproj", "{15CBFEFF-7965-41F5-B4E2-21E8795C9159}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvorbis_static", "libvorbis\win32\VS2010\libvorbis\libvorbis_static.vcxproj", "{3A214E06-B95E-4D61-A291-1F8DF2EC10FD}"
@@ -29,16 +27,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nyquist", "nyquist.vcxproj"
 		{15CBFEFF-7965-41F5-B4E2-21E8795C9159} = {15CBFEFF-7965-41F5-B4E2-21E8795C9159}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblo", "liblo\build\vs2008\liblo.vcxproj", "{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Debug|Win32.Build.0 = Debug|Win32
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Release|Win32.ActiveCfg = Release|Win32
-		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Release|Win32.Build.0 = Release|Win32
 		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Debug|Win32.ActiveCfg = Debug|Win32
 		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Debug|Win32.Build.0 = Debug|Win32
 		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Release|Win32.ActiveCfg = Release|Win32
@@ -79,6 +75,10 @@ Global
 		{208E5158-7B25-4185-8D8E-5E5BFC2153EC}.Debug|Win32.Build.0 = Debug|Win32
 		{208E5158-7B25-4185-8D8E-5E5BFC2153EC}.Release|Win32.ActiveCfg = Release|Win32
 		{208E5158-7B25-4185-8D8E-5E5BFC2153EC}.Release|Win32.Build.0 = Release|Win32
+		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Debug|Win32.Build.0 = Debug|Win32
+		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Release|Win32.ActiveCfg = Release|Win32
+		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

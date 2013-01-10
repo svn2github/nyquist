@@ -99,10 +99,6 @@
     <ClInclude Include="Serial.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\build\vs2008\liblo.vcxproj">
-      <Project>{fea9d5d3-46bd-594f-85c6-f1380fd994a6}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\pthreads.2\pthread.vcxproj">
       <Project>{a02e8ec5-317c-42cd-9425-60bdde09d833}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
