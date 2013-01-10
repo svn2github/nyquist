@@ -34,4 +34,4 @@ copy advantages nyqrelwin
 copy readme.txt nyqrelwin
 copy todo.txt nyqrelwin
 copy license.txt nyqrelwin
-
+copy FLAC\win32\libFLAC.dll nyqrelwin

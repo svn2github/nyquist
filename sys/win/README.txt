@@ -136,3 +136,29 @@ directory to the PATH variable, e.g. "C:\Program
 Files\Java\jdk1.6.0\bin."
 
 You might have to reboot for these changes to take effect.
+
+Compile Nyquist for using Visual Studio
+---------------------------------------
+Nyquist can be compiled using Visual Studio 2010 or 2012. You can download
+Visual C++ Express 2010 and Visual Studio 2012 Express for free from Mircosoft
+website. For VC2010 or VS2010 users, open nyquist100.sln; If you are using
+Visual Studio 2012 or later versions, open nyquist.sln instead.
+
+In Visual Studio,
+	Set solution configuration to "Release" and solution platforms to "Win32". 
+	Click Debug->Build Solution (or press F7)
+	
+To run the program from VS, 
+	Copy libFLAC.dll file to .\WinRe
+	Click debug->start debugging (or press F5)
+
+To build jnyqide, 
+	Check if you have installed JDK and have the directory to javac.exe added
+	to your system PATH. 
+	Run comp-ide.bat under the project root. It will compile .java files under
+	jnyqide.
+	Run releasenyqide.bat under the project root. It will copy all the 
+	necessary files to .\nyqrelide\. Run jnyqide.bat from there.
+
+To update FLAC libraries,
+	put compiled dynamic-lib files libFLAC.dll, libFLAC.lib under .\FLAC\win32

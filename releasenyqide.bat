@@ -43,3 +43,4 @@ copy jnyqide\NyquistWords.txt nyqrelide\jnyqide
 copy jnyqide\keywords.txt nyqrelide\jnyqide
 copy jnyqide\jNyqIDE.jar nyqrelide\jnyqide
 copy jnyqide.bat nyqrelide\jnyqide.bat
+copy FLAC\win32\libFLAC.dll nyqrelide
