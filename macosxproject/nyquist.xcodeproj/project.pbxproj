@@ -3495,7 +3495,12 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = ../sys/unix;
+				HEADER_SEARCH_PATHS = (
+					../sys/unix,
+					../FLAC/include,
+					../libogg/include,
+					../libvorbis/include,
+				);
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = sndfile;
 				ZERO_LINK = YES;
@@ -3508,7 +3513,12 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
-				HEADER_SEARCH_PATHS = ../sys/unix;
+				HEADER_SEARCH_PATHS = (
+					../sys/unix,
+					../FLAC/include,
+					../libogg/include,
+					../libvorbis/include,
+				);
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = sndfile;
 				ZERO_LINK = NO;
@@ -3519,7 +3529,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_MODEL_TUNING = G5;
-				HEADER_SEARCH_PATHS = ../sys/unix;
+				HEADER_SEARCH_PATHS = (
+					../sys/unix,
+					../FLAC/include,
+					../libogg/include,
+					../libvorbis/include,
+				);
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = sndfile;
 				ZERO_LINK = YES;

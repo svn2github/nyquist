@@ -1,2 +1,0 @@
-Main-Class: jnyqide.Main
-Class-Path: NyquistIDE.jar
