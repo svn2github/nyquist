@@ -141,7 +141,7 @@ Compile Nyquist for using Visual Studio
 ---------------------------------------
 Nyquist can be compiled using Visual Studio 2010 or 2012. You can download
 Visual C++ Express 2010 and Visual Studio 2012 Express for free from Mircosoft
-website. For VC2010 or VS2010 users, open nyquist100.sln; If you are using
+website. For VC2010 or VS2010 users, open nyquist-vc2010.sln; If you are using
 Visual Studio 2012 or later versions, open nyquist.sln instead.
 
 In Visual Studio,
