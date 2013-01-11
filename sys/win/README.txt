@@ -148,9 +148,7 @@ In Visual Studio,
 	Set solution configuration to "Release" and solution platforms to "Win32". 
 	Click Debug->Build Solution (or press F7)
 	
-To run the program from VS, 
-	Copy libFLAC.dll file to .\WinRe
-	Click debug->start debugging (or press F5)
+	Click Debug->Start Debugging (or press F5)
 
 To build jnyqide, 
 	Check if you have installed JDK and have the directory to javac.exe added
@@ -160,5 +158,3 @@ To build jnyqide,
 	Run releasenyqide.bat under the project root. It will copy all the 
 	necessary files to .\nyqrelide\. Run jnyqide.bat from there.
 
-To update FLAC libraries,
-	put compiled dynamic-lib files libFLAC.dll, libFLAC.lib under .\FLAC\win32

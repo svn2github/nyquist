@@ -75,7 +75,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\include;..\..\..\include;..\..\..\..\libogg\include;$(WindowsSdkDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VERSION="1.2.1";FLAC__NO_DLL;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;WIN32;_DEBUG;DEBUG;FLAC__OVERFLOW_DETECT;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VERSION="1.2.1";FLAC__NO_DLL;FLAC__USE_3DNOW;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__HAS_OGG;WIN32;_DEBUG;DEBUG;FLAC__OVERFLOW_DETECT;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug_static\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug_static\libFLAC_static.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Debug_static\</ObjectFileName>
@@ -203,7 +203,7 @@
     <ClInclude Include="..\..\..\include\FLAC\stream_encoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\bitmath.cpp" />
+    <ClCompile Include="..\bitmath.c" />
     <ClCompile Include="..\bitreader.c" />
     <ClCompile Include="..\bitwriter.c" />
     <ClCompile Include="..\cpu.c" />
@@ -217,7 +217,7 @@
     <ClCompile Include="..\metadata_iterators.c" />
     <ClCompile Include="..\metadata_object.c" />
     <ClCompile Include="..\ogg_decoder_aspect.c" />
-    <ClCompile Include="..\ogg_encoder_aspect.cpp" />
+    <ClCompile Include="..\ogg_encoder_aspect.c" />
     <ClCompile Include="..\ogg_helper.c" />
     <ClCompile Include="..\ogg_mapping.c" />
     <ClCompile Include="..\stream_decoder.c" />

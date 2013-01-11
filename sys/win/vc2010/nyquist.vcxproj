@@ -44,7 +44,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\WinDebug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\FLAC\win32;..\..\..\Win32\Release;..\..\..\liblo\lib\Release;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\FLAC\win32;..\..\..\Win32\Debug;..\..\..\liblo\lib\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\FLAC\win32\obj\debug\lib;..\..\..\Win32\Debug;..\..\..\liblo\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
