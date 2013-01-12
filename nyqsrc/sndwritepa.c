@@ -1,4 +1,4 @@
-/* sndwrite.c -- write sounds to files */
+ /* sndwrite.c -- write sounds to files */
 
 #include "stdlib.h"
 #include "switches.h"

@@ -56,7 +56,7 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>..\..\..\xlisp;..\..\..\snd;..\..\..\nyqsrc;..\..\..\tran;..\..\..\cmt;..\..\..\liblo;..\..\..\nyqstk;..\..\..\nyqstk\include;..\..\..\sys\win\msvc;..\..\..\ffts\src;..\..\..\portaudio\include;..\..\..\nylsf;..\..\..\portaudio\src\common;..\..\..\liblo\pthreads.2;..\..\..\FLAC\include;..\..\..\libogg\include;..\..\..\libvorbis\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;PA_USE_WDMKS;FLAC__NO_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;FLAC__NO_DLL;PA_USE_WMME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -103,7 +103,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\xlisp;..\..\..\snd;..\..\..\nyqsrc;..\..\..\tran;..\..\..\cmt;..\..\..\liblo;..\..\..\nyqstk;..\..\..\nyqstk\include;..\..\..\sys\win\msvc;..\..\..\ffts\src;..\..\..\portaudio\include;..\..\..\nylsf;..\..\..\portaudio\src\common;..\..\..\liblo\pthreads.2;..\..\..\FLAC\include;..\..\..\libogg\include;..\..\..\libvorbis\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_USE_WDMKS;FLAC__NO_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_USE_WDMKS;FLAC__NO_DLL;PA_USE_WMME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>..\..\..\WinDebug/nyquist.pch</PrecompiledHeaderOutputFile>
@@ -122,7 +122,6 @@
     <Link>
       <AdditionalOptions>/VERBOSE:LIB </AdditionalOptions>
       <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;libFLAC_static.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;liblo_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\..\WinDebug/nyquist.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>

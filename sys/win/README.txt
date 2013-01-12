@@ -155,6 +155,11 @@ To build jnyqide,
 	to your system PATH. 
 	Run comp-ide.bat under the project root. It will compile .java files under
 	jnyqide.
-	Run releasenyqide.bat under the project root. It will copy all the 
-	necessary files to .\nyqrelide\. Run jnyqide.bat from there.
+	For debugging, you can run the IDE immediately. 
+	    First copy nyquist\WinRel\nyquist.exe to nyquist\ (only do this 
+	    	  each time you recompile nyquist.)
+	    Then, run jnyqide.bat.
+        To generate a release:
+	    Run releasenyqide.bat under the project root. It will copy all the 
+	    necessary files to .\nyqrelide\. You can run jnyqide.bat from there.
 
