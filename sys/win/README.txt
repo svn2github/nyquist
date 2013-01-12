@@ -139,27 +139,33 @@ You might have to reboot for these changes to take effect.
 
 Compile Nyquist for using Visual Studio
 ---------------------------------------
-Nyquist can be compiled using Visual Studio 2010 or 2012. You can download
-Visual C++ Express 2010 and Visual Studio 2012 Express for free from Mircosoft
-website. For VC2010 or VS2010 users, open nyquist-vc2010.sln; If you are using
-Visual Studio 2012 or later versions, open nyquist.sln instead.
+Nyquist can be compiled using Visual Studio 2010 or 2012. You can
+download Visual C++ Express 2010 and Visual Studio 2012 Express for
+free from Mircosoft website.
+
+If you use Visual C++ 2010 Express, you MUST install SP1 (service pack
+1).
+
+Open nyquist-vc2010.sln; If you are using Visual Studio 2012 or later
+versions, open nyquist.sln instead. 
 
 In Visual Studio,
-	Set solution configuration to "Release" and solution platforms to "Win32". 
+	Set solution configuration to "Release" and solution platforms
+	to "Win32".
 	Click Debug->Build Solution (or press F7)
 	
 	Click Debug->Start Debugging (or press F5)
 
 To build jnyqide, 
-	Check if you have installed JDK and have the directory to javac.exe added
-	to your system PATH. 
-	Run comp-ide.bat under the project root. It will compile .java files under
-	jnyqide.
+	Check if you have installed JDK and have the directory to
+	javac.exe added to your system PATH. 
+	Run comp-ide.bat under the project root. It will compile .java
+	files under jnyqide.
 	For debugging, you can run the IDE immediately. 
-	    First copy nyquist\WinRel\nyquist.exe to nyquist\ (only do this 
-	    	  each time you recompile nyquist.)
+	    First copy nyquist\WinRel\nyquist.exe to nyquist\ (only do
+            	this each time you recompile nyquist.)
 	    Then, run jnyqide.bat.
         To generate a release:
-	    Run releasenyqide.bat under the project root. It will copy all the 
-	    necessary files to .\nyqrelide\. You can run jnyqide.bat from there.
-
+	    Run releasenyqide.bat under the project root. It will copy
+                all the necessary files to .\nyqrelide\. You can run
+                jnyqide.bat from there. 
