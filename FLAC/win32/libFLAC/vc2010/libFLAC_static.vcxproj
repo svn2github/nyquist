@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\include;..\..\..\include;..\..\..\..\libogg\include;$(WindowsSdkDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(SolutionDir)FLAC\include;$(SolutionDir)libogg\include;$(WindowsSdkDir)\include;$(WindowsSdk_IncludePath);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VERSION="1.2.1";FLAC__NO_DLL;FLAC__USE_3DNOW;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__HAS_OGG;WIN32;_DEBUG;DEBUG;FLAC__OVERFLOW_DETECT;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug_static\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug_static\libFLAC_static.pch</PrecompiledHeaderOutputFile>
