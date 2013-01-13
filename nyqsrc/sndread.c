@@ -19,11 +19,11 @@
 #include "io.h"
 #else
 #include <stat.h>
-#endif
+#endif /* WINDOWS */
 #define L_SET SEEK_SET
 #define L_INCR SEEK_CUR
 #define PROTECTION 
-#endif
+#endif /* UNIX */
 #ifndef mips
 #include "stdlib.h"
 #endif

@@ -1,7 +1,7 @@
 <a href = "part18.html">Previous Section</a> | <a href = "indx.html">Next Section (Index)</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "title.html">Title Page</a>
 <hr>
 <html><head><title>Appendix 4: XLISP: An Object-oriented Lisp</title></head>
-<a name = "202"><h2>Appendix 4: XLISP: An Object-oriented Lisp</h2></a>
+<a name = "207"><h2>Appendix 4: XLISP: An Object-oriented Lisp</h2></a>
 
 <blockquote><b>Version 2.0</b>
 <p>
@@ -28,7 +28,7 @@ Permission is granted for unrestricted non-commercial use<br>
 
 
 
-<a name = "203"><h3>Introduction</h3></a>
+<a name = "208"><h3>Introduction</h3></a>
         XLISP is an experimental programming language combining some of
         the features of Common Lisp with an object-oriented extension
         capability.  It was implemented to allow experimentation with
@@ -61,7 +61,7 @@ Permission is granted for unrestricted non-commercial use<br>
         use as a reference for some of the Common Lisp functions that
         are described only briefly in this document.
 <p>
-        <a name = "204"><h3>A Note From The Author</h3></a>        If you have any problems with XLISP, feel free to contact me [me being David Betz - RBD] for
+        <a name = "209"><h3>A Note From The Author</h3></a>        If you have any problems with XLISP, feel free to contact me [me being David Betz - RBD] for
         help or advice.  Please remember that since XLISP is available
         in source form in a high level language, many users [e.g. that Dannenberg fellow - RBD] have been
         making versions available on a variety of machines.  If you call
@@ -88,7 +88,7 @@ Permission is granted for unrestricted non-commercial use<br>
         don't want it to get so big that it requires megabytes of memory
         to run.
 <p>
-        <a name = "205"><h3>XLISP Command Loop</h3></a><a name="index1254"><a name="index1255">        When XLISP is started, it first tries to load the workspace
+        <a name = "210"><h3>XLISP Command Loop</h3></a><a name="index1299"><a name="index1300">        When XLISP is started, it first tries to load the workspace
         <code>xlisp.wks</code> from the current directory.  If that file doesn't
         exist, XLISP builds an initial workspace, empty except for the
         built-in functions and symbols.
@@ -110,7 +110,7 @@ Permission is granted for unrestricted non-commercial use<br>
         successfully, XLISP prints the result and then returns to the
         initial prompt waiting for another expression to be typed.
 <p>
-        <a name = "206"><h3>Special Characters</h3></a><a name="index1256"> When XLISP is running from a console, some control characters invoke operations:
+        <a name = "211"><h3>Special Characters</h3></a><a name="index1301"> When XLISP is running from a console, some control characters invoke operations:
 <ul>
 <li>
 Backspace and Delete characters erase the previous character on the input line (if any).
@@ -124,16 +124,16 @@ Backspace and Delete characters erase the previous character on the input line (
 <li>Control-T evaluates the INFO function.
 </ul>
 <p>
-        <a name = "207"><h3>Break Command Loop</h3></a><a name="index1257">        When XLISP encounters an error while evaluating an expression,
+        <a name = "212"><h3>Break Command Loop</h3></a><a name="index1302">        When XLISP encounters an error while evaluating an expression,
         it attempts to handle the error in the following way:
 <p>
-        If the symbol <code>*breakenable*<a name="index1258"></code> is
+        If the symbol <code>*breakenable*<a name="index1303"></code> is
         true, the message corresponding to the error is printed.  If
         the error is correctable, the correction message is printed.
 <p>
-        If the symbol <code>*tracenable*<a name="index1259"></code> is true, a trace back is printed.
+        If the symbol <code>*tracenable*<a name="index1304"></code> is true, a trace back is printed.
         The number of entries printed depends on the value of the symbol
-        <code>*tracelimit*<a name="index1260"></code>.  If this symbol is set to something other than a
+        <code>*tracelimit*<a name="index1305"></code>.  If this symbol is set to something other than a
         number, the entire trace back stack is printed.
 <p>
         XLISP then enters a read/eval/print loop to allow the user to
@@ -146,7 +146,7 @@ Backspace and Delete characters erase the previous character on the input line (
         numbered break loop.  When in a break loop, XLISP prefixes the
         break level to the normal prompt.
 <p>
-        If the symbol <code>*breakenable*<a name="index1261"></code> is <code>nil</code>, XLISP looks for a
+        If the symbol <code>*breakenable*<a name="index1306"></code> is <code>nil</code>, XLISP looks for a
         surrounding errset function.  If one is found, XLISP examines
         the value of the print flag.  If this flag is true, the error
         message is printed.  In any case, XLISP causes the errset
@@ -155,7 +155,7 @@ Backspace and Delete characters erase the previous character on the input line (
         If there is no surrounding errset function, XLISP prints the
         error message and returns to the top level.
 <p>
-        <a name = "208"><h3>Data Types</h3></a><a name="index1262"><a name="index1263">        There are several different data types available to XLISP
+        <a name = "213"><h3>Data Types</h3></a><a name="index1307"><a name="index1308">        There are several different data types available to XLISP
         programmers.
 <p>
 <ul>
@@ -174,7 +174,7 @@ lists
 <li>closures (user defined functions)
 </ul>
 <p>
-<a name = "209"><h3>The Evaluator</h3></a><a name="index1264"><a name="index1265">        The process of evaluation in XLISP:
+<a name = "214"><h3>The Evaluator</h3></a><a name="index1309"><a name="index1310">        The process of evaluation in XLISP:
 <ul>
 <li>
         Strings, integers, characters, floats, objects, arrays, streams,
@@ -207,7 +207,7 @@ lists
 </ul>
 </ul>
 <p>
-<a name = "210"><h3>Lexical Conventions</h3></a><a name="index1266"><a name="index1267">        The following conventions must be followed when entering XLISP
+<a name = "215"><h3>Lexical Conventions</h3></a><a name="index1311"><a name="index1312">        The following conventions must be followed when entering XLISP
         programs:
 <p>
         Comments in XLISP code begin with a semi-colon character and
@@ -249,8 +249,8 @@ lists
 <li><code>\nnn</code>    means the character whose octal code is nnn
 </ul>
 <p>
-<a name = "211"><h3>Readtables</h3></a><a name="index1268">        The behavior of the reader is controlled by a data structure
-        called a <i>readtable</i>.  The reader uses the symbol <code>*readtable*<a name="index1269"></code> to
+<a name = "216"><h3>Readtables</h3></a><a name="index1313">        The behavior of the reader is controlled by a data structure
+        called a <i>readtable</i>.  The reader uses the symbol <code>*readtable*<a name="index1314"></code> to
         locate the current readtable.  This table controls the
         interpretation of input characters.  It is an array with 128
         entries, one for each of the ASCII character codes.  Each entry
@@ -277,7 +277,7 @@ lists
         specified value.  Of course, the readmacro code is free to read
         additional characters from the input stream.
 <p>
-        XLISP defines several useful read macros<a name="index1270">:
+        XLISP defines several useful read macros<a name="index1315">:
 <ul>
 <li>
                 <code>'</code><i>&lt;expr&gt;</i>         == <code>(quote</code> <i>&lt;expr&gt;</i><code>)</code>
@@ -293,7 +293,7 @@ lists
 <li>                <code>,</code><i>&lt;expr&gt;</i>         == <code>(comma</code> <i>&lt;expr&gt;</i><code>)</code>
 <li>                <code>,@</code><i>&lt;expr&gt;</i>        == <code>(comma-at</code> <i>&lt;expr&gt;</i><code>)</code>
 <li></ul>
-<a name = "212"><h3>Lambda Lists</h3></a><a name="index1271">        There are several forms in XLISP that require that a "lambda
+<a name = "217"><h3>Lambda Lists</h3></a><a name="index1316">        There are several forms in XLISP that require that a "lambda
         list" be specified.  A lambda list is a definition of the
         arguments accepted by a function.  There are four different
         types of arguments.
@@ -373,7 +373,7 @@ lists
 
 </blockquote>
 <p>
-<a name = "213"><h3>Objects</h3></a><a name="index1272">        Definitions:
+<a name = "218"><h3>Objects</h3></a><a name="index1317">        Definitions:
 <ul>
 <li>
 selector - a symbol used to select an appropriate method
@@ -432,44 +432,44 @@ selector - a symbol used to select an appropriate method
         superclass of the class containing the current method
         rather than the class of the current object.
 <p>
-<a name = "214"><h3>The "Object" Class</h3></a><a name="index1273"><code>Object</code><a name="index1274"> - the top of the class hierarchy.
+<a name = "219"><h3>The "Object" Class</h3></a><a name="index1318"><code>Object</code><a name="index1319"> - the top of the class hierarchy.
 <p>
 Messages:
 <dl>
 <dt>
-<code>:show<a name="index1275"></code> - show an object's instance variables.
+<code>:show<a name="index1320"></code> - show an object's instance variables.
 <dd>
 returns -  the object
 
 <br>
-<br><dt><code>:class<a name="index1276"></code> - return the class of an object
+<br><dt><code>:class<a name="index1321"></code> - return the class of an object
 <dd>
 returns -  the class of the object
 
 <br>
-<br><dt><code>:isa<a name="index1277"></code> <i>class</i> - test if object inherits from class
+<br><dt><code>:isa<a name="index1322"></code> <i>class</i> - test if object inherits from class
 <dd>
 returns - <code>t</code> if object is an instance of <i>class</i> or a subclass of <i>class</i>, otherwise <code>nil</code>
 
 <br>
-<br><dt><code>:isnew<a name="index1278"></code> - the default object initialization routine
+<br><dt><code>:isnew<a name="index1323"></code> - the default object initialization routine
 <dd>
 returns -  the object
 
 </dl>
 <p>
-<a name = "215"><h3>The "Class" Class</h3></a><a name="index1279"><code>Class<a name="index1280"></code> - class of all object classes (including itself)
+<a name = "220"><h3>The "Class" Class</h3></a><a name="index1324"><code>Class<a name="index1325"></code> - class of all object classes (including itself)
 <p>
             Messages:
 <p>
 <dl>
 <dt>
-                <code>:new<a name="index1281"></code> - create a new instance of a class
+                <code>:new<a name="index1326"></code> - create a new instance of a class
 <dd>
                     returns -    the new class object
 
 <br>
-<br><dt>                <code>:isnew<a name="index1282"></code> <i>ivars</i> [<i>cvars</i> [<i>super</i>]] - initialize a new class
+<br><dt>                <code>:isnew<a name="index1327"></code> <i>ivars</i> [<i>cvars</i> [<i>super</i>]] - initialize a new class
 <dd>
                     <i>ivars</i> -    the list of instance variable symbols<br>
                     <i>cvars</i> -    the list of class variable symbols<br>
@@ -477,7 +477,7 @@ returns -  the object
                     returns -    the new class object
 
 <br>
-<br><dt>                <code>:answer<a name="index1283"></code> <i>msg</i> <i>fargs</i> <i>code</i> - add a message to a class
+<br><dt>                <code>:answer<a name="index1328"></code> <i>msg</i> <i>fargs</i> <i>code</i> - add a message to a class
 <dd>
                     <i>msg</i> -      the message symbol<br>
                 <i>fargs</i> -    the formal argument list (lambda list)<br>
@@ -500,33 +500,33 @@ returns -  the object
         class inherits all instance variables, class variables, and
         methods from its super-class.
 <p>
-<a name = "216"><h3>Profiling</h3></a><a name="index1284">
+<a name = "221"><h3>Profiling</h3></a><a name="index1329">
 The Xlisp 2.0 release has been extended with a profiling facility, which counts how many times and where <code>eval</code> is executed.  A separate count is maintained for each named function, closure, or macro, and a count indicates an <code>eval</code> in the immediately (lexically) enclosing named function, closure, or macro.  Thus, the count gives an indication of the amount of time spent in a function, not counting nested function calls.  The list of all functions executed is maintained on the global <code>*profile*</code> variable.  These functions in turn have <code>*profile*</code> properties, which maintain the counts.  The profile system merely increments counters and puts symbols on the <code>*profile*</code> list.  It is up to the user to initialize data and gather results.  Profiling is turned on or off with the <code>profile</code> function.  Unfortunately, methods cannot be profiled with this facility.
 <p>
 
-<a name = "217"><h3>Symbols</h3></a><a name="index1285">
+<a name = "222"><h3>Symbols</h3></a><a name="index1330">
 <ul>
 <li>
-<code>self</code><a name="index1286"> - the current object (within a method context)
-<li><code>*obarray*<a name="index1287"></code> - the object hash table
-<li><code>*standard-input*<a name="index1288"></code> - the standard input stream
-<li><code>*standard-output*<a name="index1289"></code> - the standard output stream
-<li><code>*error-output*<a name="index1290"></code> - the error output stream
-<li><code>*trace-output*<a name="index1291"></code> - the trace output stream
-<li><code>*debug-io*<a name="index1292"></code> - the debug i/o stream
-<li><code>*breakenable*<a name="index1293"></code> - flag controlling entering break loop on errors
-<li><code>*tracelist*<a name="index1294"></code> - list of names of functions to trace
-<li><code>*tracenable*<a name="index1295"></code> - enable trace back printout on errors
-<li><code>*tracelimit*<a name="index1296"></code> - number of levels of trace back information
-<li><code>*evalhook*<a name="index1297"></code> - user substitute for the evaluator function
-<li><code>*applyhook*<a name="index1298"></code> - (not yet implemented)
-<li><code>*readtable*<a name="index1299"></code> - the current readtable
-<li><code>*unbound*<a name="index1300"></code> - indicator for unbound symbols
-<li><code>*gc-flag*<a name="index1301"></code> - controls the printing of gc messages
-<li><code>*gc-hook*<a name="index1302"></code> - function to call after garbage collection
-<li><code>*integer-format*<a name="index1303"></code> - format for printing integers ("%d" or "%ld")
-<li><code>*float-format*<a name="index1304"></code> - format for printing floats ("%g")
-<li><code>*print-case*<a name="index1305"></code> - symbol output case (:upcase or :downcase)
+<code>self</code><a name="index1331"> - the current object (within a method context)
+<li><code>*obarray*<a name="index1332"></code> - the object hash table
+<li><code>*standard-input*<a name="index1333"></code> - the standard input stream
+<li><code>*standard-output*<a name="index1334"></code> - the standard output stream
+<li><code>*error-output*<a name="index1335"></code> - the error output stream
+<li><code>*trace-output*<a name="index1336"></code> - the trace output stream
+<li><code>*debug-io*<a name="index1337"></code> - the debug i/o stream
+<li><code>*breakenable*<a name="index1338"></code> - flag controlling entering break loop on errors
+<li><code>*tracelist*<a name="index1339"></code> - list of names of functions to trace
+<li><code>*tracenable*<a name="index1340"></code> - enable trace back printout on errors
+<li><code>*tracelimit*<a name="index1341"></code> - number of levels of trace back information
+<li><code>*evalhook*<a name="index1342"></code> - user substitute for the evaluator function
+<li><code>*applyhook*<a name="index1343"></code> - (not yet implemented)
+<li><code>*readtable*<a name="index1344"></code> - the current readtable
+<li><code>*unbound*<a name="index1345"></code> - indicator for unbound symbols
+<li><code>*gc-flag*<a name="index1346"></code> - controls the printing of gc messages
+<li><code>*gc-hook*<a name="index1347"></code> - function to call after garbage collection
+<li><code>*integer-format*<a name="index1348"></code> - format for printing integers ("%d" or "%ld")
+<li><code>*float-format*<a name="index1349"></code> - format for printing floats ("%g")
+<li><code>*print-case*<a name="index1350"></code> - symbol output case (:upcase or :downcase)
 </ul>
 <p>
         There are several symbols maintained by the read/eval/print
@@ -535,11 +535,11 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
         are bound to the most recent three results.  The symbol <code>-</code> is
         bound to the expression currently being evaluated.  It becomes
         the value of <code>+</code> at the end of the evaluation.
-<a name = "218"><h3>Evaluation Functions</h3></a><a name="index1306">
+<a name = "223"><h3>Evaluation Functions</h3></a><a name="index1351">
 <dl>
 <dt>
         <code>eval(<i>expr</i>)</code> [SAL]<br>
-        <code>(eval<a name="index1307"> <tt><i>expr</i></tt>)</code> [LISP] - evaluate an xlisp expression
+        <code>(eval<a name="index1352"> <tt><i>expr</i></tt>)</code> [LISP] - evaluate an xlisp expression
 
 <dd>
             <i>expr</i> -     the expression to be evaluated<br>
@@ -547,7 +547,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 <br>
 <br><dt>        <code>apply(<i>fun</i>, <i>args</i>)</code> [SAL]<br>
-        <code>(apply<a name="index1308"> <tt><i>fun</i></tt> <tt><i>args</i></tt>)</code> [LISP] - apply a function to a list of arguments
+        <code>(apply<a name="index1353"> <tt><i>fun</i></tt> <tt><i>args</i></tt>)</code> [LISP] - apply a function to a list of arguments
 
 <dd>
             <i>fun</i> -      the function to apply (or function symbol)<br>
@@ -556,7 +556,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 <br>
 <br><dt>        <code>funcall(<i>fun</i>, <i>arg</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(funcall<a name="index1309"> <tt><i>fun</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP] - call a function with arguments
+        <code>(funcall<a name="index1354"> <tt><i>fun</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP] - call a function with arguments
 
 <dd>
             <i>fun</i> -      the function to call (or function symbol)<br>
@@ -565,7 +565,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 <br>
 <br><dt>        <code>quote(<i>expr</i>)</code> [SAL]<br>
-        <code>(quote<a name="index1310"> <tt><i>expr</i></tt>)</code> [LISP] -  return an expression unevaluated
+        <code>(quote<a name="index1355"> <tt><i>expr</i></tt>)</code> [LISP] -  return an expression unevaluated
 
 <dd>
             <i>expr</i>  -    the expression to be quoted (quoted)<br>
@@ -573,13 +573,13 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 <br>
 <br><dt>        <code>function(<i>expr</i>)</code> [SAL]<br>
-        <code>(function<a name="index1311"> <tt><i>expr</i></tt>)</code> [LISP] -  get the functional interpretation
+        <code>(function<a name="index1356"> <tt><i>expr</i></tt>)</code> [LISP] -  get the functional interpretation
 <dd>
             <i>expr</i> -     the symbol or lambda expression (quoted)<br>
             returns  -   the functional interpretation<br>
 
 <br><dt>        <code>backquote(<i>expr</i>)</code> [SAL]<br>
-        <code>(backquote<a name="index1312"> <tt><i>expr</i></tt>)</code> [LISP] - fill in a template
+        <code>(backquote<a name="index1357"> <tt><i>expr</i></tt>)</code> [LISP] - fill in a template
 <dd>
             <i>expr</i> -     the template<br>
             returns  -   a copy of the template with comma and comma-at<br>
@@ -587,36 +587,36 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 <br>
 <br><dt>        <code>lambda(<i>args</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(lambda<a name="index1313"> <tt><i>args</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] - make a function closure
+        <code>(lambda<a name="index1358"> <tt><i>args</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] - make a function closure
 <dd>
             <i>args</i> -     formal argument list (lambda list) (quoted)<br>
             <i>expr</i> -     expressions of the function body<br>
             returns  -   the function closure<br>
 
 <br><dt>        <code>get-lambda-expression(<i>closure</i>)</code> [SAL]<br>
-        <code>(get-lambda-expression<a name="index1314"> <tt><i>closure</i></tt>)</code> [LISP] - get the lambda expression
+        <code>(get-lambda-expression<a name="index1359"> <tt><i>closure</i></tt>)</code> [LISP] - get the lambda expression
 <dd>
             <i>closure</i> -  the closure<br>
             returns  -   the original lambda expression<br>
 
 <br><dt>        <code>macroexpand(<i>form</i>)</code> [SAL]<br>
-        <code>(macroexpand<a name="index1315"> <tt><i>form</i></tt>)</code> [LISP] - recursively expand macro calls
+        <code>(macroexpand<a name="index1360"> <tt><i>form</i></tt>)</code> [LISP] - recursively expand macro calls
 <dd>
             <i>form</i> -     the form to expand<br>
             returns  -   the macro expansion<br>
 
 <br><dt>        <code>macroexpand-1(<i>form</i>)</code> [SAL]<br>
-        <code>(macroexpand-1<a name="index1316"> <tt><i>form</i></tt>)</code> [LISP] - expand a macro call
+        <code>(macroexpand-1<a name="index1361"> <tt><i>form</i></tt>)</code> [LISP] - expand a macro call
 <dd>
             <i>form</i> -     the macro call form<br>
             returns  -   the macro expansion<br>
 
 <br><dt>
-</dl><a name = "219"><h3>Symbol Functions</h3></a><a name="index1317">
+</dl><a name = "224"><h3>Symbol Functions</h3></a><a name="index1362">
 <dl>
 <dt>
         <code>set(<i>sym</i>, <i>expr</i>)</code> [SAL]<br>
-        <code>(set<a name="index1318"> <tt><i>sym</i></tt> <tt><i>expr</i></tt>)</code> [LISP] -  set the value of a symbol
+        <code>(set<a name="index1363"> <tt><i>sym</i></tt> <tt><i>expr</i></tt>)</code> [LISP] -  set the value of a symbol
 
 <dd>
             <i>sym</i>  -     the symbol being set<br>
@@ -624,7 +624,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns  -   the new value<br>
 
 <br><dt>        <code>setq([<i>sym</i>, <i>expr</i>]<span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(setq<a name="index1319"> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP] -  set the value of a symbol
+        <code>(setq<a name="index1364"> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP] -  set the value of a symbol
 
 <dd>
             <i>sym</i>  -     the symbol being set (quoted)<br>
@@ -632,7 +632,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns  -   the new value<br>
 
 <br><dt>        <code>psetq([<i>sym</i>, <i>expr</i>]<span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(psetq<a name="index1320"> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  - parallel version of setq
+        <code>(psetq<a name="index1365"> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  - parallel version of setq
 
 <dd>
             <i>sym</i>  -     the symbol being set (quoted)<br>
@@ -640,7 +640,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns  -   the new value<br>
 
 <br><dt>        <code>setf([<i>place</i>, <i>expr</i>]<span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(setf<a name="index1321"> [<tt><i>place</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  - set the value of a field
+        <code>(setf<a name="index1366"> [<tt><i>place</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  - set the value of a field
 
 <dd>
             <i>place</i> -     the field specifier (quoted):<br>
@@ -660,9 +660,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 <br><dt>
 
-        <code>(defun<a name="index1322"> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - define a function<br>
+        <code>(defun<a name="index1367"> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - define a function<br>
 
-        <code>(defmacro<a name="index1323"> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  define a macro
+        <code>(defmacro<a name="index1368"> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  define a macro
 
 <dd>
             <i>sym</i> -      symbol being defined (quoted)<br>
@@ -672,56 +672,56 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the function symbol<br>
 
 <br><dt>        <code>gensym([<i>tag</i>])</code> [SAL]<br>
-        <code>(gensym<a name="index1324"> [<tt><i>tag</i></tt>])</code> [LISP]  - generate a symbol
+        <code>(gensym<a name="index1369"> [<tt><i>tag</i></tt>])</code> [LISP]  - generate a symbol
 
 <dd>
             <i>tag</i>   -    string or number<br>
             returns   -  the new symbol<br>
 
 <br><dt><code>intern(<i>pname</i>)</code> [SAL]<br>
-        <code>(intern<a name="index1325"> <tt><i>pname</i></tt>)</code> [LISP]  - make an interned symbol
+        <code>(intern<a name="index1370"> <tt><i>pname</i></tt>)</code> [LISP]  - make an interned symbol
 
 <dd>
             <i>pname</i> -    the symbol's print name string<br>
             returns   -  the new symbol<br>
 
 <br><dt>        <code>make-symbol(<i>pname</i>)</code> [SAL]<br>
-        <code>(make-symbol<a name="index1326"> <tt><i>pname</i></tt>)</code> [LISP]  - make an uninterned symbol
+        <code>(make-symbol<a name="index1371"> <tt><i>pname</i></tt>)</code> [LISP]  - make an uninterned symbol
 
 <dd>
             <i>pname</i> -    the symbol's print name string<br>
             returns   -  the new symbol<br>
 
 <br><dt>        <code>symbol-name(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-name<a name="index1327"> <tt><i>sym</i></tt>)</code> [LISP]  - get the print name of a symbol
+        <code>(symbol-name<a name="index1372"> <tt><i>sym</i></tt>)</code> [LISP]  - get the print name of a symbol
 
 <dd>
             <i>sym</i>   -    the symbol<br>
             returns   -  the symbol's print name<br>
 
 <br><dt>    <code>symbol-value(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-value<a name="index1328"> <tt><i>sym</i></tt>)</code> [LISP]  - get the value of a symbol
+        <code>(symbol-value<a name="index1373"> <tt><i>sym</i></tt>)</code> [LISP]  - get the value of a symbol
 
 <dd>
             <i>sym</i>   -    the symbol<br>
             returns   -  the symbol's value<br>
 
 <br><dt>        <code>symbol-function(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-function<a name="index1329"> <tt><i>sym</i></tt>)</code> [LISP]  - get the functional value of a symbol
+        <code>(symbol-function<a name="index1374"> <tt><i>sym</i></tt>)</code> [LISP]  - get the functional value of a symbol
 
 <dd>
             <i>sym</i>   -    the symbol<br>
             returns   -  the symbol's functional value<br>
 
 <br><dt>        <code>symbol-plist(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-plist<a name="index1330"> <tt><i>sym</i></tt>)</code> [LISP]  - get the property list of a symbol
+        <code>(symbol-plist<a name="index1375"> <tt><i>sym</i></tt>)</code> [LISP]  - get the property list of a symbol
 
 <dd>
             <i>sym</i>   -    the symbol<br>
             returns   -  the symbol's property list<br>
 
 <br><dt>        <code>hash(<i>sym</i>, <i>n</i>)</code> [SAL]<br>
-        <code>(hash<a name="index1331"> <tt><i>sym</i></tt> <tt><i>n</i></tt>)</code> [LISP]  - compute the hash index for a symbol
+        <code>(hash<a name="index1376"> <tt><i>sym</i></tt> <tt><i>n</i></tt>)</code> [LISP]  - compute the hash index for a symbol
 
 <dd>
             <i>sym</i>   -    the symbol or string<br>
@@ -729,11 +729,11 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the hash index (integer)<br>
 
 <br><dt>
-</dl><a name = "220"><h3>Property List Functions</h3></a><a name="index1332">
+</dl><a name = "225"><h3>Property List Functions</h3></a><a name="index1377">
 <dl>
 <dt>
         <code>get(<i>sym</i>, <i>prop</i>)</code> [SAL]<br>
-        <code>(get<a name="index1333"> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  - get the value of a property
+        <code>(get<a name="index1378"> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  - get the value of a property
 
 <dd>
             <i>sym</i>   -    the symbol<br>
@@ -741,7 +741,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the property value or <code>nil</code><br>
 
 <br><dt>        <code>putprop(<i>sym</i>, <i>val</i>, <i>prop</i>)</code> [SAL]<br>
-        <code>(putprop<a name="index1334"> <tt><i>sym</i></tt> <tt><i>val</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  - put a property onto a property list
+        <code>(putprop<a name="index1379"> <tt><i>sym</i></tt> <tt><i>val</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  - put a property onto a property list
 
 <dd>
             <i>sym</i>   -    the symbol<br>
@@ -750,7 +750,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the property value<br>
 
 <br><dt>        <code>remprop(<i>sym</i>, <i>prop</i>)</code> [SAL]<br>
-        <code>(remprop<a name="index1335"> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  - remove a property
+        <code>(remprop<a name="index1380"> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  - remove a property
 
 <dd>
             <i>sym</i>   -    the symbol<br>
@@ -758,11 +758,11 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  <code>nil</code><br>
 
 <br><dt>
-</dl><a name = "221"><h3>Array Functions</h3></a><a name="index1336">
+</dl><a name = "226"><h3>Array Functions</h3></a><a name="index1381">
 <dl>
 <dt>
         <code>aref(<i>array</i>, <i>n</i>)</code> [SAL]<br>
-        <code>(aref<a name="index1337"> <tt><i>array</i></tt> <tt><i>n</i></tt>)</code> [LISP]  - get the nth element of an array
+        <code>(aref<a name="index1382"> <tt><i>array</i></tt> <tt><i>n</i></tt>)</code> [LISP]  - get the nth element of an array
 
 <dd>
             <i>array</i> -    the array<br>
@@ -770,87 +770,87 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the value of the array element<br>
 
 <br><dt>        <code>make-array(<i>size</i>)</code> [SAL]<br>
-        <code>(make-array<a name="index1338"> <tt><i>size</i></tt>)</code> [LISP]  - make a new array
+        <code>(make-array<a name="index1383"> <tt><i>size</i></tt>)</code> [LISP]  - make a new array
 
 <dd>
             <i>size</i>  -    the size of the new array (integer)<br>
             returns   -  the new array<br>
 
 <br><dt>        <code>vector(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(vector<a name="index1339"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - make an initialized vector
+        <code>(vector<a name="index1384"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - make an initialized vector
 
 <dd>
             <i>expr</i>  -    the vector elements<br>
             returns   -  the new vector<br>
 
 <br><dt>
-</dl><a name = "222"><h3>List Functions</h3></a><a name="index1340">
+</dl><a name = "227"><h3>List Functions</h3></a><a name="index1385">
 <dl>
 <dt>
         <code>car(<i>expr</i>)</code> [SAL]<br>
-        <code>(car<a name="index1341"> <tt><i>expr</i></tt>)</code> [LISP] -  return the car of a list node
+        <code>(car<a name="index1386"> <tt><i>expr</i></tt>)</code> [LISP] -  return the car of a list node
 
 <dd>
             <i>expr</i>  -    the list node<br>
             returns   -  the car of the list node<br>
 
 <br><dt>        <code>cdr(<i>expr</i>)</code> [SAL]<br>
-        <code>(cdr<a name="index1342"> <tt><i>expr</i></tt>)</code> [LISP]  - return the cdr of a list node
+        <code>(cdr<a name="index1387"> <tt><i>expr</i></tt>)</code> [LISP]  - return the cdr of a list node
 
 <dd>
             <i>expr</i>  -    the list node<br>
             returns   -  the cdr of the list node<br>
 
 <br><dt>        <code>c<i>xx</i>r(<i>expr</i>)</code> [SAL]<br>
-        <code>(c<i>xx</i>r<a name="index1343"> <tt><i>expr</i></tt>)</code> [LISP]  - all c<i>xx</i>r combinations
+        <code>(c<i>xx</i>r<a name="index1388"> <tt><i>expr</i></tt>)</code> [LISP]  - all c<i>xx</i>r combinations
 
 <dd>
 
 <br>
 <br><dt>        <code>c<i>xxx</i>r(<i>expr</i>)</code> [SAL]<br>
-        <code>(c<i>xxx</i>r<a name="index1344"> <tt><i>expr</i></tt>)</code> [LISP]  - all c<i>xxx</i>r combinations
+        <code>(c<i>xxx</i>r<a name="index1389"> <tt><i>expr</i></tt>)</code> [LISP]  - all c<i>xxx</i>r combinations
 
 <dd>
 
 <br>
 <br><dt>        <code>c<i>xxxx</i>r(<i>expr</i>)</code> [SAL]<br>
-        <code>(c<i>xxxx</i>r<a name="index1345"> <tt><i>expr</i></tt>)</code> [LISP]  - all c<i>xxxx</i>r combinations
+        <code>(c<i>xxxx</i>r<a name="index1390"> <tt><i>expr</i></tt>)</code> [LISP]  - all c<i>xxxx</i>r combinations
 
 <dd>
 
 <br>
 <br><dt>        <code>first(<i>expr</i>)</code> [SAL]<br>
-        <code>(first<a name="index1346"> <tt><i>expr</i></tt>)</code> [LISP]  -  a synonym for car
+        <code>(first<a name="index1391"> <tt><i>expr</i></tt>)</code> [LISP]  -  a synonym for car
 
 <dd>
 
 <br>
 <br><dt>        <code>second(<i>expr</i>)</code> [SAL]<br>
-        <code>(second<a name="index1347"> <tt><i>expr</i></tt>)</code> [LISP]  - a synonym for cadr
+        <code>(second<a name="index1392"> <tt><i>expr</i></tt>)</code> [LISP]  - a synonym for cadr
 
 <dd>
 
 <br>
 <br><dt>        <code>third(<i>expr</i>)</code> [SAL]<br>
-        <code>(third<a name="index1348"> <tt><i>expr</i></tt>)</code> [LISP]  -  a synonym for caddr
+        <code>(third<a name="index1393"> <tt><i>expr</i></tt>)</code> [LISP]  -  a synonym for caddr
 
 <dd>
 
 <br>
 <br><dt>        <code>fourth(<i>expr</i>)</code> [SAL]<br>
-        <code>(fourth<a name="index1349"> <tt><i>expr</i></tt>)</code> [LISP]  - a synonym for cadddr
+        <code>(fourth<a name="index1394"> <tt><i>expr</i></tt>)</code> [LISP]  - a synonym for cadddr
 
 <dd>
 
 <br>
 <br><dt>        <code>rest(<i>expr</i>)</code> [SAL]<br>
-        <code>(rest<a name="index1350"> <tt><i>expr</i></tt>)</code> [LISP]  -   a synonym for cdr
+        <code>(rest<a name="index1395"> <tt><i>expr</i></tt>)</code> [LISP]  -   a synonym for cdr
 
 <dd>
 
 <br>
 <br><dt>        <code>cons(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(cons<a name="index1351"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - construct a new list node
+        <code>(cons<a name="index1396"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - construct a new list node
 
 <dd>
             <i>expr1</i> -    the car of the new list node<br>
@@ -858,35 +858,35 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the new list node<br>
 
 <br><dt>        <code>list(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(list<a name="index1352"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - create a list of values
+        <code>(list<a name="index1397"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - create a list of values
 
 <dd>
             <i>expr</i>  -    expressions to be combined into a list<br>
             returns   -  the new list<br>
 
 <br><dt>        <code>append(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(append<a name="index1353"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - append lists
+        <code>(append<a name="index1398"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - append lists
 
 <dd>
             <i>expr</i>  -    lists whose elements are to be appended<br>
             returns   -  the new list<br>
 
 <br><dt>        <code>reverse(<i>expr</i>)</code> [SAL]<br>
-        <code>(reverse<a name="index1354"> <tt><i>expr</i></tt>)</code> [LISP]  - reverse a list
+        <code>(reverse<a name="index1399"> <tt><i>expr</i></tt>)</code> [LISP]  - reverse a list
 
 <dd>
             <i>expr</i>  -    the list to reverse<br>
             returns   -  a new list in the reverse order<br>
 
 <br><dt>        <code>last(<i>list</i>)</code> [SAL]<br>
-        <code>(last<a name="index1355"> <tt><i>list</i></tt>)</code> [LISP]  - return the last list node of a list
+        <code>(last<a name="index1400"> <tt><i>list</i></tt>)</code> [LISP]  - return the last list node of a list
 
 <dd>
             <i>list</i>  -    the list<br>
             returns   -  the last list node in the list<br>
 
 <br><dt>        <code>member(<i>expr</i>, <i>list</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(member<a name="index1356"> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - find an expression in a list
+        <code>(member<a name="index1401"> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - find an expression in a list
 
 <dd>
             <i>expr</i>  -    the expression to find<br>
@@ -896,7 +896,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the remainder of the list starting with the expression<br>
 
 <br><dt>        <code>assoc(<i>expr</i>, <i>alist</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(assoc<a name="index1357"> <tt><i>expr</i></tt> <tt><i>alist</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - find an expression in an a-list
+        <code>(assoc<a name="index1402"> <tt><i>expr</i></tt> <tt><i>alist</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - find an expression in an a-list
 
 <dd>
             <i>expr</i>  -    the expression to find<br>
@@ -906,7 +906,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the alist entry or <code>nil</code><br>
 
 <br><dt>        <code>remove(<i>expr</i>, <i>list</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(remove<a name="index1358"> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - remove elements from a list
+        <code>(remove<a name="index1403"> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - remove elements from a list
 
 <dd>
             <i>expr</i>  -    the element to remove<br>
@@ -916,7 +916,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  copy of list with matching expressions removed<br>
 
 <br><dt>        <code>remove-if(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(remove-if<a name="index1359"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - remove elements that pass test
+        <code>(remove-if<a name="index1404"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - remove elements that pass test
 
 <dd>
             <i>test</i>  -    the test predicate<br>
@@ -924,7 +924,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  copy of list with matching elements removed<br>
 
 <br><dt>        <code>remove-if-not(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(remove-if-not<a name="index1360"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - remove elements that fail test
+        <code>(remove-if-not<a name="index1405"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - remove elements that fail test
 
 <dd>
             <i>test</i>  -    the test predicate<br>
@@ -932,14 +932,14 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  copy of list with non-matching elements removed<br>
 
 <br><dt>        <code>length(<i>expr</i>)</code> [SAL]<br>
-        <code>(length<a name="index1361"> <tt><i>expr</i></tt>)</code> [LISP]  - find the length of a list, vector or string
+        <code>(length<a name="index1406"> <tt><i>expr</i></tt>)</code> [LISP]  - find the length of a list, vector or string
 
 <dd>
             <i>expr</i>  -    the list, vector or string<br>
             returns   -  the length of the list, vector or string<br>
 
 <br><dt>        <code>nth(<i>n</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(nth<a name="index1362"> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - return the nth element of a list
+        <code>(nth<a name="index1407"> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - return the nth element of a list
 
 <dd>
             <i>n</i>     -    the number of the element to return (zero origin)<br>
@@ -947,7 +947,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the nth element or <code>nil</code> if the list isn't that long<br>
 
 <br><dt>        <code>nthcdr(<i>n</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(nthcdr<a name="index1363"> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - return the nth cdr of a list
+        <code>(nthcdr<a name="index1408"> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - return the nth cdr of a list
 
 <dd>
             <i>n</i>     -    the number of the element to return (zero origin)<br>
@@ -955,7 +955,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the nth cdr or <code>nil</code> if the list isn't that long<br>
 
 <br><dt>        <code>mapc(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(mapc<a name="index1364"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cars
+        <code>(mapc<a name="index1409"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cars
 
 <dd>
             <i>fcn</i>   -    the function or function name<br>
@@ -963,7 +963,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the first list of arguments<br>
 
 <br><dt>        <code>mapcar(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(mapcar<a name="index1365"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cars
+        <code>(mapcar<a name="index1410"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cars
 
 <dd>
             <i>fcn</i>   -    the function or function name<br>
@@ -971,7 +971,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  a list of the values returned<br>
 
 <br><dt>        <code>mapl(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(mapl<a name="index1366"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cdrs
+        <code>(mapl<a name="index1411"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cdrs
 
 <dd>
             <i>fcn</i>   -    the function or function name<br>
@@ -979,7 +979,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the first list of arguments<br>
 
 <br><dt>        <code>maplist(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(maplist<a name="index1367"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cdrs
+        <code>(maplist<a name="index1412"> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - apply function to successive cdrs
 
 <dd>
             <i>fcn</i>   -    the function or function name<br>
@@ -987,7 +987,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  a list of the values returned<br>
 
 <br><dt>       <code>subst(<i>to</i>, <i>from</i>, <i>expr</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(subst<a name="index1368"> <tt><i>to</i></tt> <tt><i>from</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - substitute expressions
+        <code>(subst<a name="index1413"> <tt><i>to</i></tt> <tt><i>from</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - substitute expressions
 
 <dd>
             <i>to</i>    -    the new expression<br>
@@ -998,7 +998,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the expression with substitutions<br>
 
 <br><dt>        <code>sublis(<i>alist</i>, <i>expr</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(sublis<a name="index1369"> <tt><i>alist</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - substitute with an a-list
+        <code>(sublis<a name="index1414"> <tt><i>alist</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - substitute with an a-list
 
 <dd>
             <i>alist</i> -    the association list<br>
@@ -1008,11 +1008,11 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the expression with substitutions<br>
 
 <br><dt>
-</dl><a name = "223"><h3>Destructive List Functions</h3></a><a name="index1370">
+</dl><a name = "228"><h3>Destructive List Functions</h3></a><a name="index1415">
 <dl>
 <dt>
         <code>rplaca(<i>list</i>, <i>expr</i>)</code> [SAL]<br>
-        <code>(rplaca<a name="index1371"> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  - replace the car of a list node
+        <code>(rplaca<a name="index1416"> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  - replace the car of a list node
 
 <dd>
             <i>list</i> -     the list node<br>
@@ -1020,7 +1020,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns  -   the list node after updating the car<br>
 
 <br><dt>        <code>rplacd(<i>list</i>, <i>expr</i>)</code> [SAL]<br>
-        <code>(rplacd<a name="index1372"> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  - replace the cdr of a list node
+        <code>(rplacd<a name="index1417"> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  - replace the cdr of a list node
 
 <dd>
             <i>list</i> -     the list node<br>
@@ -1028,14 +1028,14 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns  -   the list node after updating the cdr<br>
 
 <br><dt>        <code>nconc(<i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(nconc<a name="index1373"> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - destructively concatenate lists
+        <code>(nconc<a name="index1418"> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - destructively concatenate lists
 
 <dd>
             <i>list</i> -     lists to concatenate<br>
             returns  -   the result of concatenating the lists<br>
 
 <br><dt>        <code>delete(<i>expr</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(delete<a name="index1374"> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - delete elements from a list
+        <code>(delete<a name="index1419"> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  - delete elements from a list
 
 <dd>
             <i>expr</i> -     the element to delete<br>
@@ -1045,7 +1045,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the list with the matching expressions deleted<br>
 
 <br><dt>        <code>delete-if(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(delete-if<a name="index1375"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - delete elements that pass test
+        <code>(delete-if<a name="index1420"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - delete elements that pass test
 
 <dd>
             <i>test</i>  -    the test predicate<br>
@@ -1053,7 +1053,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the list with matching elements deleted<br>
 
 <br><dt>        <code>delete-if-not(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(delete-if-not<a name="index1376"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - delete elements that fail test
+        <code>(delete-if-not<a name="index1421"> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  - delete elements that fail test
 
 <dd>
             <i>test</i>  -    the test predicate<br>
@@ -1061,7 +1061,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the list with non-matching elements deleted<br>
 
 <br><dt>        <code>sort(<i>list</i>, <i>test</i>)</code> [SAL]<br>
-        <code>(sort<a name="index1377"> <tt><i>list</i></tt> <tt><i>test</i></tt>)</code> [LISP]  - sort a list
+        <code>(sort<a name="index1422"> <tt><i>list</i></tt> <tt><i>test</i></tt>)</code> [LISP]  - sort a list
 
 <dd>
             <i>list</i>  -    the list to sort<br>
@@ -1069,130 +1069,130 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   -  the sorted list<br>
 
 <br><dt>
-</dl><a name = "224"><h3>Predicate Functions</h3></a><a name="index1378">
+</dl><a name = "229"><h3>Predicate Functions</h3></a><a name="index1423">
 <dl>
 <dt>
 	<code>atom(<i>expr</i>)</code> [SAL]<br>
-        <code>(atom<a name="index1379"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an atom?
+        <code>(atom<a name="index1424"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an atom?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is an atom, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>symbolp(<i>expr</i>)</code> [SAL]<br>
-        <code>(symbolp<a name="index1380"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a symbol?
+        <code>(symbolp<a name="index1425"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a symbol?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the expression is a symbol, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>numberp(<i>expr</i>)</code> [SAL]<br>
-        <code>(numberp<a name="index1381"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a number?
+        <code>(numberp<a name="index1426"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a number?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the expression is a number, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>null(<i>expr</i>)</code> [SAL]<br>
-        <code>(null<a name="index1382"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an empty list?
+        <code>(null<a name="index1427"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an empty list?
 
 <dd>
             <i>expr</i>  -    the list to check<br>
             returns   - <code>t</code> if the list is empty, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>not(<i>expr</i>)</code> [SAL]<br>
-        <code>(not<a name="index1383"> <tt><i>expr</i></tt>)</code> [LISP]  - is this false?
+        <code>(not<a name="index1428"> <tt><i>expr</i></tt>)</code> [LISP]  - is this false?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             return    - <code>t</code> if the value is <code>nil</code>, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>listp(<i>expr</i>)</code> [SAL]<br>
-        <code>(listp<a name="index1384"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a list?
+        <code>(listp<a name="index1429"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a list?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is a cons or <code>nil</code>, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>endp(<i>list</i>)</code> [SAL]<br>
-        <code>(endp<a name="index1385"> <tt><i>list</i></tt>)</code> [LISP]  - is this the end of a list
+        <code>(endp<a name="index1430"> <tt><i>list</i></tt>)</code> [LISP]  - is this the end of a list
 
 <dd>
             <i>list</i>  -    the list<br>
             returns   - <code>t</code> if the value is <code>nil</code>, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>consp(<i>expr</i>)</code> [SAL]<br>
-        <code>(consp<a name="index1386"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a non-empty list?
+        <code>(consp<a name="index1431"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a non-empty list?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is a cons, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>integerp(<i>expr</i>)</code> [SAL]<br>
-        <code>(integerp<a name="index1387"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an integer?
+        <code>(integerp<a name="index1432"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an integer?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is an integer, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>floatp(<i>expr</i>)</code> [SAL]<br>
-        <code>(floatp<a name="index1388"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a float?
+        <code>(floatp<a name="index1433"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a float?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is a float, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>stringp(<i>expr</i>)</code> [SAL]<br>
-        <code>(stringp<a name="index1389"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a string?
+        <code>(stringp<a name="index1434"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a string?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is a string, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>characterp(<i>expr</i>)</code> [SAL]<br>
-        <code>(characterp<a name="index1390"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a character?
+        <code>(characterp<a name="index1435"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a character?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is a character, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>arrayp(<i>expr</i>)</code> [SAL]<br>
-        <code>(arrayp<a name="index1391"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an array?
+        <code>(arrayp<a name="index1436"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an array?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is an array, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>streamp(<i>expr</i>)</code> [SAL]<br>
-        <code>(streamp<a name="index1392"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a stream?
+        <code>(streamp<a name="index1437"> <tt><i>expr</i></tt>)</code> [LISP]  - is this a stream?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is a stream, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>objectp(<i>expr</i>)</code> [SAL]<br>
-        <code>(objectp<a name="index1393"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an object?
+        <code>(objectp<a name="index1438"> <tt><i>expr</i></tt>)</code> [LISP]  - is this an object?
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is an object, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>filep(<i>expr</i>)</code> [SAL]<br>
-        <code>(filep<a name="index1394"> <tt><i>expr</i></tt>)</code> [LISP] <a href = "foot.html#foot8">(Footnote 8)</a>   - is this a file? 
+        <code>(filep<a name="index1439"> <tt><i>expr</i></tt>)</code> [LISP] <a href = "foot.html#foot5">(Footnote 5)</a>   - is this a file? 
 
 <dd>
             <i>expr</i>  -    the expression to check<br>
             returns   - <code>t</code> if the value is an object, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>boundp(<i>sym</i>)</code> [SAL]<br>
-        <code>(boundp<a name="index1395"> <tt><i>sym</i></tt>)</code> [LISP]  - is a value bound to this symbol?
+        <code>(boundp<a name="index1440"> <tt><i>sym</i></tt>)</code> [LISP]  - is a value bound to this symbol?
 
 <dd>
             <i>sym</i>   -    the symbol<br>
             returns   - <code>t</code> if a value is bound to the symbol, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>fboundp(<i>sym</i>)</code> [SAL]<br>
-        <code>(fboundp<a name="index1396"> <tt><i>sym</i></tt>)</code> [LISP]  - is a functional value bound to this symbol?
+        <code>(fboundp<a name="index1441"> <tt><i>sym</i></tt>)</code> [LISP]  - is a functional value bound to this symbol?
 
 <dd>
             <i>sym</i>   -    the symbol<br>
@@ -1201,42 +1201,42 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 <br>
 <br><dt>        <code>minusp(<i>expr</i>)</code> [SAL]<br>
-        <code>(minusp<a name="index1397"> <tt><i>expr</i></tt>)</code> [LISP]  - is this number negative?
+        <code>(minusp<a name="index1442"> <tt><i>expr</i></tt>)</code> [LISP]  - is this number negative?
 
 <dd>
             <i>expr</i>  -    the number to test<br>
             returns   - <code>t</code> if the number is negative, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>zerop(<i>expr</i>)</code> [SAL]<br>
-        <code>(zerop<a name="index1398"> <tt><i>expr</i></tt>)</code> [LISP]  - is this number zero?
+        <code>(zerop<a name="index1443"> <tt><i>expr</i></tt>)</code> [LISP]  - is this number zero?
 
 <dd>
             <i>expr</i>  -    the number to test<br>
             returns   - <code>t</code> if the number is zero, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>plusp(<i>expr</i>)</code> [SAL]<br>
-        <code>(plusp<a name="index1399"> <tt><i>expr</i></tt>)</code> [LISP]  - is this number positive?
+        <code>(plusp<a name="index1444"> <tt><i>expr</i></tt>)</code> [LISP]  - is this number positive?
 
 <dd>
             <i>expr</i>  -    the number to test<br>
             returns   - <code>t</code> if the number is positive, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>evenp(<i>expr</i>)</code> [SAL]<br>
-        <code>(evenp<a name="index1400"> <tt><i>expr</i></tt>)</code> [LISP]  - is this integer even?
+        <code>(evenp<a name="index1445"> <tt><i>expr</i></tt>)</code> [LISP]  - is this integer even?
 
 <dd>
             <i>expr</i>  -    the integer to test<br>
             returns   - <code>t</code> if the integer is even, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>oddp(<i>expr</i>)</code> [SAL]<br>
-        <code>(oddp<a name="index1401"> <tt><i>expr</i></tt>)</code> [LISP]  - is this integer odd?
+        <code>(oddp<a name="index1446"> <tt><i>expr</i></tt>)</code> [LISP]  - is this integer odd?
 
 <dd>
             <i>expr</i>  -    the integer to test<br>
             returns   - <code>t</code> if the integer is odd, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>eq(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(eq<a name="index1402"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - are the expressions identical?
+        <code>(eq<a name="index1447"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - are the expressions identical?
 
 <dd>
             <i>expr1</i> -    the first expression<br>
@@ -1244,7 +1244,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   - <code>t</code> if they are equal, <code>nil</code> otherwise<br>
 
 <br><dt><code>eql(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(eql<a name="index1403"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - are the expressions identical? (works with all numbers)
+        <code>(eql<a name="index1448"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - are the expressions identical? (works with all numbers)
 
 <dd>
             <i>expr1</i> -    the first expression<br>
@@ -1252,7 +1252,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   - <code>t</code> if they are equal, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>equal(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(equal<a name="index1404"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - are the expressions equal?
+        <code>(equal<a name="index1449"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  - are the expressions equal?
 
 <dd>
             <i>expr1</i> -    the first expression<br>
@@ -1260,10 +1260,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             returns   - <code>t</code> if they are equal, <code>nil</code> otherwise<br>
 
 <br><dt>
-</dl><a name = "225"><h3>Control Constructs</h3></a><a name="index1405">
+</dl><a name = "230"><h3>Control Constructs</h3></a><a name="index1450">
 <dl>
 <dt>
-        <code>(cond<a name="index1406"> <tt><i>pair</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate conditionally
+        <code>(cond<a name="index1451"> <tt><i>pair</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate conditionally
 <dd>
             <i>pair</i>  -    pair consisting of:<br>
 <dl><dd>
@@ -1280,7 +1280,7 @@ returns  -   the value of the first expression whose predicate is not
 
 <br>
 <br><dt>        <code>and(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(and<a name="index1407"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the logical and of a list of expressions
+        <code>(and<a name="index1452"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the logical and of a list of expressions
 
 <dd>
             <i>expr</i> -     the expressions to be anded<br>
@@ -1291,7 +1291,7 @@ returns  -   the value of the first expression whose predicate is not
 
 <br>
 <br><dt>        <code>or(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(or<a name="index1408"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the logical or of a list of expressions
+        <code>(or<a name="index1453"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the logical or of a list of expressions
 
 <dd>
             <i>expr</i> -     the expressions to be ored<br>
@@ -1302,7 +1302,7 @@ returns  -   the value of the first expression whose predicate is not
 
 <br>
 <br><dt>        <code>if(<i>texpr</i>, <i>expr1</i> [, <i>expr2</i>])</code> [SAL]<br>
-        <code>(if<a name="index1409"> <tt><i>texpr</i></tt> <tt><i>expr1</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP]  - evaluate expressions conditionally
+        <code>(if<a name="index1454"> <tt><i>texpr</i></tt> <tt><i>expr1</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP]  - evaluate expressions conditionally
 
 <dd>
             <i>texpr</i> -    the test expression<br>
@@ -1311,7 +1311,7 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  the value of the selected expression<br>
 
 <br><dt>        <code>when(<i>texpr</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(when<a name="index1410"> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate only when a condition is true
+        <code>(when<a name="index1455"> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate only when a condition is true
 
 <dd>
             <i>texpr</i> -    the test expression<br>
@@ -1320,14 +1320,14 @@ returns  -   the value of the first expression whose predicate is not
 
 <br>
 <br><dt>        <code>unless(<i>texpr</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(unless<a name="index1411"> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate only when a condition is false
+        <code>(unless<a name="index1456"> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate only when a condition is false
 
 <dd>
             <i>texpr</i> -    the test expression<br>
             <i>expr</i>  -    the expression(s) to be evaluated if texpr is <code>nil</code><br>
             returns   -  the value of the last expression or <code>nil</code><br>
 
-<br><dt>          <code>(case<a name="index1412"> <tt><i>expr</i></tt> <tt><i>case</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - select by case
+<br><dt>          <code>(case<a name="index1457"> <tt><i>expr</i></tt> <tt><i>case</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - select by case
 <dd>
             <i>expr</i>  -    the selection expression<br>
             <i>case</i>  -    pair consisting of:<br>
@@ -1345,9 +1345,9 @@ returns  -   the value of the first expression whose predicate is not
 
 <br><dt>
 
-       <code>(let<a name="index1413"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - create local bindings<br>
+       <code>(let<a name="index1458"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - create local bindings<br>
 
-        <code>(let*<a name="index1414"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - let with sequential binding
+        <code>(let*<a name="index1459"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - let with sequential binding
 
 <dd>
             <i>binding</i> -   the variable bindings each of which is either:<br>
@@ -1361,11 +1361,11 @@ returns  -   the value of the first expression whose predicate is not
 
 <br><dt>
 
-        <code>(flet<a name="index1415"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - create local functions<br>
+        <code>(flet<a name="index1460"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - create local functions<br>
 
-        <code>(labels<a name="index1416"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  flet with recursive functions<br>
+        <code>(labels<a name="index1461"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  flet with recursive functions<br>
 
-        <code>(macrolet<a name="index1417"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  create local macros
+        <code>(macrolet<a name="index1462"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  create local macros
 
 <dd>
             <i>binding</i> -  the function bindings each of which is:<br>
@@ -1384,7 +1384,7 @@ returns  -   the value of the first expression whose predicate is not
 
 <br>
 <br><dt>        <code>catch(<i>sym</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(catch<a name="index1418"> <tt><i>sym</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate expressions and catch throws
+        <code>(catch<a name="index1463"> <tt><i>sym</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - evaluate expressions and catch throws
 
 <dd>
             <i>sym</i>  -     the catch tag<br>
@@ -1392,7 +1392,7 @@ returns  -   the value of the first expression whose predicate is not
             returns  -   the value of the last expression the throw expression<br>
 
 <br><dt>        <code>throw(<i>sym</i> [, <i>expr</i>])</code> [SAL]<br>
-        <code>(throw<a name="index1419"> <tt><i>sym</i></tt> [<tt><i>expr</i></tt>])</code> [LISP]  - throw to a catch
+        <code>(throw<a name="index1464"> <tt><i>sym</i></tt> [<tt><i>expr</i></tt>])</code> [LISP]  - throw to a catch
 
 <dd>
             <i>sym</i>  -     the catch tag<br>
@@ -1400,7 +1400,7 @@ returns  -   the value of the first expression whose predicate is not
             returns  -   never returns<br>
 
 <br><dt>        <code>unwind-protect(<i>expr</i>, <i>cexpr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(unwind-protect<a name="index1420"> <tt><i>expr</i></tt> <tt><i>cexpr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - protect evaluation of an expression
+        <code>(unwind-protect<a name="index1465"> <tt><i>expr</i></tt> <tt><i>cexpr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - protect evaluation of an expression
 
 <dd>
             <i>expr</i> -     the expression to protect<br>
@@ -1414,19 +1414,19 @@ returns  -   the value of the first expression whose predicate is not
 <br><dt>
 </dl>
 <p>
-<a name = "226"><h3>Looping Constructs</h3></a><a name="index1421">
+<a name = "231"><h3>Looping Constructs</h3></a><a name="index1466">
 <dl>
 <dt>
-        <code>(loop<a name="index1422"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - basic looping form
+        <code>(loop<a name="index1467"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - basic looping form
 <dd>
             <i>expr</i> -     the body of the loop<br>
             returns  -   never returns (must use non-local exit)<br>
 
 <br><dt>
 
-        <code>(do<a name="index1423"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(do<a name="index1468"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
-        <code>(do*<a name="index1424"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(do*<a name="index1469"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <dd>
             <i>binding</i> -  the variable bindings each of which is either:<br>
@@ -1445,14 +1445,14 @@ returns  -   the value of the first expression whose predicate is not
             <i>expr</i>  -    the body of the loop (treated like an implicit prog)<br>
             returns   -  the value of the last result expression<br>
 
-<br><dt>    <code>(dolist<a name="index1425"> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - loop through a list
+<br><dt>    <code>(dolist<a name="index1470"> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - loop through a list
 <dd>
             <i>sym</i>   -    the symbol to bind to each list element<br>
             <i>expr</i>  -    the list expression<br>
             <i>rexpr</i> -    the result expression (the default is <code>nil</code>)<br>
             <i>expr</i>  -    the body of the loop (treated like an implicit prog)<br>
 
-<br><dt>        <code>(dotimes<a name="index1426"> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - loop from zero to n-1
+<br><dt>        <code>(dotimes<a name="index1471"> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - loop from zero to n-1
 <dd>
             <i>sym</i>   -    the symbol to bind to each value from 0 to n-1<br>
             <i>expr</i>  -    the number of times to loop<br>
@@ -1460,13 +1460,13 @@ returns  -   the value of the first expression whose predicate is not
             <i>expr</i>  -    the body of the loop (treated like an implicit prog)<br>
 
 <br><dt>
-</dl><a name = "227"><h3>The Program Feature</h3></a><a name="index1427">
+</dl><a name = "232"><h3>The Program Feature</h3></a><a name="index1472">
 <dl>
 <dt>
 
-<code>(prog<a name="index1428"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the program feature<br>
+<code>(prog<a name="index1473"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the program feature<br>
 
-<code>(prog*<a name="index1429"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - prog with sequential binding
+<code>(prog*<a name="index1474"> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - prog with sequential binding
 
 <dd>
             <i>binding</i> -  the variable bindings each of which is either:<br>
@@ -1479,20 +1479,20 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  <code>nil</code> or the argument passed to the return function<br>
 
 <br><dt>        <code>block(<i>name</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(block<a name="index1430"> <tt><i>name</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - named block
+        <code>(block<a name="index1475"> <tt><i>name</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - named block
 
 <dd>
             <i>name</i>  -    the block name (symbol)<br>
             <i>expr</i>  -    the block body<br>
             returns   -  the value of the last expression<br>
 
-<br><dt>        <code>(return<a name="index1431"> [<tt><i>expr</i></tt>])</code> [LISP]  - cause a prog construct to return a value
+<br><dt>        <code>(return<a name="index1476"> [<tt><i>expr</i></tt>])</code> [LISP]  - cause a prog construct to return a value
 <dd>
             <i>expr</i>  -    the value (defaults to <code>nil</code>)<br>
             returns   -  never returns<br>
 
 <br><dt>        <code>return-from(<i>name</i> [, <i>value</i>])</code> [SAL]<br>
-        <code>(return-from<a name="index1432"> <tt><i>name</i></tt> [<tt><i>value</i></tt>])</code> [LISP]  - return from a named block
+        <code>(return-from<a name="index1477"> <tt><i>name</i></tt> [<tt><i>value</i></tt>])</code> [LISP]  - return from a named block
 
 <dd>
             <i>name</i>  -    the block name (symbol)<br>
@@ -1500,20 +1500,20 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  never returns<br>
 
 <br><dt>        <code>tagbody(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(tagbody<a name="index1433"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - block with labels
+        <code>(tagbody<a name="index1478"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - block with labels
 
 <dd>
             <i>expr</i>  -    expression(s) to evaluate or tags (symbols)<br>
             returns   -  <code>nil</code><br>
 
 <br><dt>        <code>go(<i>sym</i>)</code> [SAL]<br>
-        <code>(go<a name="index1434"> <tt><i>sym</i></tt>)</code> [LISP]  - go to a tag within a tagbody or prog
+        <code>(go<a name="index1479"> <tt><i>sym</i></tt>)</code> [LISP]  - go to a tag within a tagbody or prog
 
 <dd>
             <i>sym</i>   -    the tag (quoted)<br>
             returns   -  never returns<br>
 
-<br><dt>        <code>(progv<a name="index1435"> <tt><i>slist</i></tt> <tt><i>vlist</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - dynamically bind symbols
+<br><dt>        <code>(progv<a name="index1480"> <tt><i>slist</i></tt> <tt><i>vlist</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - dynamically bind symbols
 <dd>
             <i>slist</i> -    list of symbols<br>
             <i>vlist</i> -    list of values to bind to the symbols<br>
@@ -1521,7 +1521,7 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  the value of the last expression<br>
 
 <br><dt>        <code>prog1(<i>expr1</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(prog1<a name="index1436"> <tt><i>expr1</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - execute expressions sequentially
+        <code>(prog1<a name="index1481"> <tt><i>expr1</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - execute expressions sequentially
 
 <dd>
             <i>expr1</i> -    the first expression to evaluate<br>
@@ -1529,7 +1529,7 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  the value of the first expression<br>
 
 <br><dt>        <code>prog2(<i>expr1</i>, <i>expr2</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(prog2<a name="index1437"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - execute expressions sequentially
+        <code>(prog2<a name="index1482"> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - execute expressions sequentially
 
 <dd>
             <i>expr1</i> -    the first expression to evaluate<br>
@@ -1538,32 +1538,32 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  the value of the second expression<br>
 
 <br><dt>        <code>progn(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(progn<a name="index1438"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - execute expressions sequentially
+        <code>(progn<a name="index1483"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - execute expressions sequentially
 
 <dd>
             <i>expr</i>  -    the expressions to evaluate<br>
             returns   -  the value of the last expression (or <code>nil</code>)<br>
 
 <br><dt>
-</dl><a name = "228"><h3>Debugging and Error Handling</h3></a><a name="index1439"><a name="index1440">
+</dl><a name = "233"><h3>Debugging and Error Handling</h3></a><a name="index1484"><a name="index1485">
 <dl>
 <dt>
         <code>trace(<i>sym</i>)</code> [SAL]<br>
-        <code>(trace<a name="index1441"> <tt><i>sym</i></tt>)</code> [LISP]  - add a function to the trace list
+        <code>(trace<a name="index1486"> <tt><i>sym</i></tt>)</code> [LISP]  - add a function to the trace list
 
 <dd>
             <i>sym</i>   -    the function to add (quoted)<br>
             returns   -  the trace list<br>
 
 <br><dt>        <code>untrace(<i>sym</i>)</code> [SAL]<br>
-        <code>(untrace<a name="index1442"> <tt><i>sym</i></tt>)</code> [LISP]  - remove a function from the trace list
+        <code>(untrace<a name="index1487"> <tt><i>sym</i></tt>)</code> [LISP]  - remove a function from the trace list
 
 <dd>
             <i>sym</i>   -    the function to remove (quoted)<br>
             returns   -  the trace list<br>
 
 <br><dt>        <code>error(<i>emsg</i> [, <i>arg</i>])</code> [SAL]<br>
-        <code>(error<a name="index1443"> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  - signal a non-correctable error
+        <code>(error<a name="index1488"> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  - signal a non-correctable error
 
 <dd>
             <i>emsg</i>  -    the error message string<br>
@@ -1571,7 +1571,7 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  never returns<br>
 
 <br><dt>        <code>cerror(<i>cmsg</i>, <i>emsg</i> [, <i>arg</i>])</code> [SAL]<br>
-        <code>(cerror<a name="index1444"> <tt><i>cmsg</i></tt> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  - signal a correctable error
+        <code>(cerror<a name="index1489"> <tt><i>cmsg</i></tt> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  - signal a correctable error
 
 <dd>
             <i>cmsg</i>  -    the continue message string<br>
@@ -1580,26 +1580,26 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  <code>nil</code> when continued from the break loop<br>
 
 <br><dt>        <code>break([<i>bmsg</i> [, <i>arg</i>]])</code> [SAL]<br>
-        <code>(break<a name="index1445"> [<tt><i>bmsg</i></tt> [<tt><i>arg</i></tt>]])</code> [LISP]  - enter a break loop
+        <code>(break<a name="index1490"> [<tt><i>bmsg</i></tt> [<tt><i>arg</i></tt>]])</code> [LISP]  - enter a break loop
 
 <dd>
             <i>bmsg</i>  -    the break message string (defaults to <code>**break**</code>)<br>
             <i>arg</i>   -    the argument expression (printed after the message)<br>
             returns   -  <code>nil</code> when continued from the break loop<br>
 
-<br><dt>        <code>(clean-up<a name="index1446">)</code> [LISP]  - clean-up after an error
+<br><dt>        <code>(clean-up<a name="index1491">)</code> [LISP]  - clean-up after an error
 <dd>
             returns   -  never returns<br>
 
-<br><dt>        <code>(top-level<a name="index1447">)</code> [LISP]  - clean-up after an error and return to the top level
+<br><dt>        <code>(top-level<a name="index1492">)</code> [LISP]  - clean-up after an error and return to the top level
 <dd>
             returns   -  never returns<br>
 
-<br><dt>        <code>(continue<a name="index1448">)</code> [LISP]  - continue from a correctable error
+<br><dt>        <code>(continue<a name="index1493">)</code> [LISP]  - continue from a correctable error
 <dd>
             returns   -  never returns<br>
 
-<br><dt>        <code>(errset<a name="index1449"> <tt><i>expr</i></tt> [<tt><i>pflag</i></tt>])</code> [LISP]  - trap errors
+<br><dt>        <code>(errset<a name="index1494"> <tt><i>expr</i></tt> [<tt><i>pflag</i></tt>])</code> [LISP]  - trap errors
 <dd>
             <i>expr</i>  -    the expression to execute<br>
             <i>pflag</i> -    flag to control printing of the error message<br>
@@ -1607,12 +1607,12 @@ returns  -   the value of the first expression whose predicate is not
                         or <code>nil</code> on error
 
 <br>
-<br><dt>        <code>(baktrace<a name="index1450"><a name="index1451"><a name="index1452"> [<tt><i>n</i></tt>])</code> [LISP]  - print n levels of trace back information
+<br><dt>        <code>(baktrace<a name="index1495"><a name="index1496"><a name="index1497"> [<tt><i>n</i></tt>])</code> [LISP]  - print n levels of trace back information
 <dd>
             <i>n</i>     -    the number of levels (defaults to all levels)<br>
             returns   -  <code>nil</code><br>
 
-<br><dt>        <code>(evalhook<a name="index1453"> <tt><i>expr</i></tt> <tt><i>ehook</i></tt> <tt><i>ahook</i></tt> [<tt><i>env</i></tt>])</code> [LISP]  - evaluate with hooks
+<br><dt>        <code>(evalhook<a name="index1498"> <tt><i>expr</i></tt> <tt><i>ehook</i></tt> <tt><i>ahook</i></tt> [<tt><i>env</i></tt>])</code> [LISP]  - evaluate with hooks
 <dd>
             <i>expr</i>  -    the expression to evaluate<br>
             <i>ehook</i> -    the value for <code>*evalhook*</code><br>
@@ -1621,90 +1621,90 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  the result of evaluating the expression<br>
 
 <br><dt>        <code>profile(<i>flag</i>)</code> [SAL]<br>
-        <code>(profile<a name="index1454"> <tt><i>flag</i></tt>)</code> [LISP] <a href = "foot.html#foot9">(Footnote 9)</a>   - turn profiling on or off.
+        <code>(profile<a name="index1499"> <tt><i>flag</i></tt>)</code> [LISP] <a href = "foot.html#foot6">(Footnote 6)</a>   - turn profiling on or off.
 
 <dd>
             <i>flag</i>   -    <code>nil</code> turns profiling off, otherwise on<br>
             returns   -  the previous state of profiling.<br>
 
 <br><dt>
-</dl><a name = "229"><h3>Arithmetic Functions</h3></a><a name="index1455">
+</dl><a name = "234"><h3>Arithmetic Functions</h3></a><a name="index1500">
 <dl>
 <dt>
         <code>truncate(<i>expr</i>)</code> [SAL]<br>
-        <code>(truncate<a name="index1456"> <tt><i>expr</i></tt>)</code> [LISP]  - truncates a floating point number to an integer
+        <code>(truncate<a name="index1501"> <tt><i>expr</i></tt>)</code> [LISP]  - truncates a floating point number to an integer
 
 <dd>
             <i>expr</i>  -    the number<br>
             returns   -  the result of truncating the number<br>
 
 <br><dt>        <code>float(<i>expr</i>)</code> [SAL]<br>
-        <code>(float<a name="index1457"> <tt><i>expr</i></tt>)</code> [LISP]  - converts an integer to a floating point number
+        <code>(float<a name="index1502"> <tt><i>expr</i></tt>)</code> [LISP]  - converts an integer to a floating point number
 
 <dd>
             <i>expr</i>  -    the number<br>
             returns   -  the result of floating the integer<br>
 
-<br><dt>        <code>(+<a name="index1458"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - add a list of numbers
+<br><dt>        <code>(+<a name="index1503"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - add a list of numbers
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the addition<br>
 
-<br><dt>        <code>(-<a name="index1459"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - subtract a list of numbers or negate a single number
+<br><dt>        <code>(-<a name="index1504"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - subtract a list of numbers or negate a single number
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the subtraction<br>
 
-<br><dt>        <code>(*<a name="index1460"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - multiply a list of numbers
+<br><dt>        <code>(*<a name="index1505"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - multiply a list of numbers
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the multiplication<br>
 
-<br><dt>        <code>(/<a name="index1461"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - divide a list of numbers
+<br><dt>        <code>(/<a name="index1506"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - divide a list of numbers
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the division<br>
 
-<br><dt>        <code>(1+<a name="index1462"> <tt><i>expr</i></tt>)</code> [LISP]  - add one to a number
+<br><dt>        <code>(1+<a name="index1507"> <tt><i>expr</i></tt>)</code> [LISP]  - add one to a number
 <dd>
             <i>expr</i>  -    the number<br>
             returns   -  the number plus one<br>
 
-<br><dt>        <code>(1-<a name="index1463"> <tt><i>expr</i></tt>)</code> [LISP]  - subtract one from a number
+<br><dt>        <code>(1-<a name="index1508"> <tt><i>expr</i></tt>)</code> [LISP]  - subtract one from a number
 <dd>
             <i>expr</i>  -    the number<br>
             returns   -  the number minus one<br>
 
 <br><dt>        <code>rem(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(rem<a name="index1464"><a name="index1465"><a name="index1466"> function) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - remainder of a list of numbers
+        <code>(rem<a name="index1509"><a name="index1510"><a name="index1511"> function) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - remainder of a list of numbers
 
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the remainder operation<br>
 
 <br><dt>        <code>min(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(min<a name="index1467"><a name="index1468"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the smallest of a list of numbers
+        <code>(min<a name="index1512"><a name="index1513"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the smallest of a list of numbers
 
 <dd>
             <i>expr</i>  -    the expressions to be checked<br>
             returns   -  the smallest number in the list<br>
 
 <br><dt>        <code>max(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(max<a name="index1469"><a name="index1470"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the largest of a list of numbers
+        <code>(max<a name="index1514"><a name="index1515"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the largest of a list of numbers
 
 <dd>
             <i>expr</i>  -    the expressions to be checked<br>
             returns   -  the largest number in the list<br>
 
 <br><dt>        <code>abs(<i>expr</i>)</code> [SAL]<br>
-        <code>(abs<a name="index1471"> <tt><i>expr</i></tt>)</code> [LISP]  - the absolute value of a number
+        <code>(abs<a name="index1516"> <tt><i>expr</i></tt>)</code> [LISP]  - the absolute value of a number
 
 <dd>
             <i>expr</i>  -    the number<br>
             returns   -  the absolute value of the number<br>
 
 <br><dt>        <code>gcd(<i>n1</i>, <i>n2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(gcd<a name="index1472"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - compute the greatest common divisor
+        <code>(gcd<a name="index1517"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - compute the greatest common divisor
 
 <dd>
             <i>n1</i>    -    the first number (integer)<br>
@@ -1712,41 +1712,43 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  the greatest common divisor<br>
 
 <br><dt>       <code>random(<i>n</i>)</code> [SAL]<br>
-        <code>(random<a name="index1473"> <tt><i>n</i></tt>)</code> [LISP]  - compute a random number between 0 and n-1 inclusive
+        <code>(random<a name="index1518"> <tt><i>n</i></tt>)</code>
+        [LISP]  - compute a random number between 0 and |n|-1
+        inclusive. If n is 0, return 0.
 
 <dd>
             <i>n</i>     -    the upper bound (integer)<br>
             returns   -  a random number<br>
 
 <br><dt>       <code>rrandom()</code> [SAL]<br>
-        <code>(rrandom<a name="index1474"><a name="index1475">)</code> [LISP]  - compute a random real number between 0 and 1 inclusive
+        <code>(rrandom<a name="index1519"><a name="index1520">)</code> [LISP]  - compute a random real number between 0 and 1 inclusive
 
 <dd>
             returns   -  a random floating point number<br>
 
 <br><dt>        <code>sin(<i>expr</i>)</code> [SAL]<br>
-        <code>(sin<a name="index1476"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the sine of a number
+        <code>(sin<a name="index1521"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the sine of a number
 
 <dd>
             <i>expr</i>  -    the floating point number<br>
             returns   -  the sine of the number<br>
 
 <br><dt>        <code>cos(<i>expr</i>)</code> [SAL]<br>
-        <code>(cos<a name="index1477"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the cosine of a number
+        <code>(cos<a name="index1522"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the cosine of a number
 
 <dd>
             <i>expr</i>  -    the floating point number<br>
             returns   -  the cosine of the number<br>
 
 <br><dt>        <code>tan(<i>expr</i>)</code> [SAL]<br>
-        <code>(tan<a name="index1478"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the tangent of a number
+        <code>(tan<a name="index1523"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the tangent of a number
 
 <dd>
             <i>expr</i>  -    the floating point number<br>
             returns   -  the tangent of the number<br>
 
 <br><dt>        <code>atan(<i>expr</i> [, <i>expr2</i>])</code> [SAL]<br>
-        <code>(atan<a name="index1479"> <tt><i>expr</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP] <a href = "foot.html#foot10">(Footnote 10)</a>   - compute the arctangent
+        <code>(atan<a name="index1524"> <tt><i>expr</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP] <a href = "foot.html#foot7">(Footnote 7)</a>   - compute the arctangent
 
 <dd>
             <i>expr</i>  -    the value of <i>x</i><br>
@@ -1754,7 +1756,7 @@ returns  -   the value of the first expression whose predicate is not
             returns   -  the arctangent of <i>x</i>/<i>y</i><br>
 
 <br><dt>        <code>expt(<i>x-expr</i>, <i>y-expr</i>)</code> [SAL]<br>
-        <code>(expt<a name="index1480"> <tt><i>x-expr</i></tt> <tt><i>y-expr</i></tt>)</code> [LISP]  - compute x to the y power
+        <code>(expt<a name="index1525"> <tt><i>x-expr</i></tt> <tt><i>y-expr</i></tt>)</code> [LISP]  - compute x to the y power
 
 <dd>
             <i>x-expr</i> -    the floating point number<br>
@@ -1762,14 +1764,14 @@ returns  -   the value of the first expression whose predicate is not
             returns    - x to the y power<br>
 
 <br><dt>        <code>exp(<i>x-expr</i>)</code> [SAL]<br>
-        <code>(exp<a name="index1481"> <tt><i>x-expr</i></tt>)</code> [LISP]  - compute e to the x power
+        <code>(exp<a name="index1526"> <tt><i>x-expr</i></tt>)</code> [LISP]  - compute e to the x power
 
 <dd>
             <i>x-expr</i> -   the floating point number<br>
             returns   -  e to the x power<br>
 
 <br><dt>        <code>sqrt(<i>expr</i>)</code> [SAL]<br>
-        <code>(sqrt<a name="index1482"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the square root of a number
+        <code>(sqrt<a name="index1527"> <tt><i>expr</i></tt>)</code> [LISP]  - compute the square root of a number
 
 <dd>
             <i>expr</i>  -    the floating point number<br>
@@ -1777,12 +1779,12 @@ returns  -   the value of the first expression whose predicate is not
 
 <br><dt>
 
-<code>(&lt;<a name="index1483"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - test for less than<br>
-<code>(&lt;=<a name="index1484"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  test for less than or equal to<br>
-<code>(=<a name="index1485"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - test for equal to<br>
-<code>(/=<a name="index1486"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  test for not equal to<br>
-<code>(&gt;=<a name="index1487"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -   test for greater than or equal to<br>
-<code>(&gt;<a name="index1488"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -   test for greater than
+<code>(&lt;<a name="index1528"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - test for less than<br>
+<code>(&lt;=<a name="index1529"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  test for less than or equal to<br>
+<code>(=<a name="index1530"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - test for equal to<br>
+<code>(/=<a name="index1531"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  test for not equal to<br>
+<code>(&gt;=<a name="index1532"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -   test for greater than or equal to<br>
+<code>(&gt;<a name="index1533"> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -   test for greater than
 
 <dd>
             <i>n1</i>    -    the first number to compare<br>
@@ -1791,50 +1793,50 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
 <i>n2</i> with <i>n3</i>, etc., are all true.<br>
 
 <br><dt>
-</dl><a name = "230"><h3>Bitwise Logical Functions</h3></a><a name="index1489">
+</dl><a name = "235"><h3>Bitwise Logical Functions</h3></a><a name="index1534">
 <dl>
 <dt>
         <code>logand(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(logand<a name="index1490"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  the bitwise and of a list of numbers
+        <code>(logand<a name="index1535"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] -  the bitwise and of a list of numbers
 
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the and operation<br>
 
 <br><dt>        <code>logior(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(logior<a name="index1491"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the bitwise inclusive or of a list of numbers
+        <code>(logior<a name="index1536"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the bitwise inclusive or of a list of numbers
 
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the inclusive or operation<br>
 
 <br><dt>        <code>logxor(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(logxor<a name="index1492"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the bitwise exclusive or of a list of numbers
+        <code>(logxor<a name="index1537"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - the bitwise exclusive or of a list of numbers
 
 <dd>
             <i>expr</i>  -    the numbers<br>
             returns   -  the result of the exclusive or operation<br>
 
 <br><dt>        <code>lognot(<i>expr</i>)</code> [SAL]<br>
-        <code>(lognot<a name="index1493"> <tt><i>expr</i></tt>)</code> [LISP]  - the bitwise not of a number
+        <code>(lognot<a name="index1538"> <tt><i>expr</i></tt>)</code> [LISP]  - the bitwise not of a number
 
 <dd>
             <i>expr</i>  -    the number<br>
             returns   -  the bitwise inversion of number<br>
 
 <br><dt>
-</dl><a name = "231"><h3>String Functions</h3></a><a name="index1494">
+</dl><a name = "236"><h3>String Functions</h3></a><a name="index1539">
 <dl>
 <dt>
         <code>string(<i>expr</i>)</code> [SAL]<br>
-        <code>(string<a name="index1495"> <tt><i>expr</i></tt>)</code> [LISP] -  make a string from a value
+        <code>(string<a name="index1540"> <tt><i>expr</i></tt>)</code> [LISP] -  make a string from a value
 
 <dd>
             <i>expr</i>  -    an integer (which is first converted into its ASCII character value), string, character, or symbol<br>
             returns   -  the string representation of the argument<br>
 
 <br><dt>        <code>string-search(<i>pat</i>, <i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(string-search<a name="index1496"><a name="index1497"> <tt><i>pat</i></tt> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP] <a href = "foot.html#foot11">(Footnote 11)</a>   - search for pattern in string
+        <code>(string-search<a name="index1541"><a name="index1542"> <tt><i>pat</i></tt> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP] <a href = "foot.html#foot8">(Footnote 8)</a>   - search for pattern in string
 
 <dd>
             <i>pat</i>   -    a string to search for<br>
@@ -1844,7 +1846,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns   -  index of pat in str or NIL if not found<br>
 
 <br><dt>        <code>string-trim(<i>bag</i>, <i>str</i>)</code> [SAL]<br>
-        <code>(string-trim<a name="index1498"> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  - trim both ends of a string
+        <code>(string-trim<a name="index1543"> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  - trim both ends of a string
 
 <dd>
             <i>bag</i>   -    a string containing characters to trim<br>
@@ -1852,7 +1854,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns   -  a trimed copy of the string<br>
 
 <br><dt>        <code>string-left-trim(<i>bag</i>, <i>str</i>)</code> [SAL]<br>
-        <code>(string-left-trim<a name="index1499"> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  - trim the left end of a string
+        <code>(string-left-trim<a name="index1544"> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  - trim the left end of a string
 
 <dd>
             <i>bag</i>   -    a string containing characters to trim<br>
@@ -1860,7 +1862,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns   -  a trimed copy of the string<br>
 
 <br><dt>        <code>string-right-trim(<i>bag</i>, <i>str</i>)</code> [SAL]<br>
-        <code>(string-right-trim<a name="index1500"> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  - trim the right end of a string
+        <code>(string-right-trim<a name="index1545"> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  - trim the right end of a string
 
 <dd>
             <i>bag</i>   -    a string containing characters to trim<br>
@@ -1868,7 +1870,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns   -  a trimed copy of the string<br>
 
 <br><dt>        <code>string-upcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(string-upcase<a name="index1501"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to uppercase
+        <code>(string-upcase<a name="index1546"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to uppercase
 
 <dd>
             <i>str</i>   -    the string<br>
@@ -1877,7 +1879,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns   -  a converted copy of the string<br>
 
 <br><dt>        <code>string-downcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(string-downcase<a name="index1502"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to lowercase
+        <code>(string-downcase<a name="index1547"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to lowercase
 
 <dd>
             <i>str</i>   -    the string<br>
@@ -1886,7 +1888,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns   -  a converted copy of the string<br>
 
 <br><dt>        <code>nstring-upcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(nstring-upcase<a name="index1503"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to uppercase
+        <code>(nstring-upcase<a name="index1548"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to uppercase
 
 <dd>
             <i>str</i>   -    the string<br>
@@ -1895,7 +1897,7 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns   -  the converted string (not a copy)<br>
 
 <br><dt>        <code>nstring-downcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(nstring-downcase<a name="index1504"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to lowercase
+        <code>(nstring-downcase<a name="index1549"> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  - convert to lowercase
 
 <dd>
             <i>str</i>   -    the string<br>
@@ -1904,14 +1906,14 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns  -   the converted string (not a copy)<br>
 
 <br><dt>        <code>strcat(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(strcat<a name="index1505"><a name="index1506"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - concatenate strings
+        <code>(strcat<a name="index1550"><a name="index1551"> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  - concatenate strings
 
 <dd>
             <i>expr</i> -     the strings to concatenate<br>
             returns  -   the result of concatenating the strings<br>
 
 <br><dt>        <code>subseq(<i>string</i>, <i>start</i> [, <i>end</i>])</code> [SAL]<br>
-        <code>(subseq<a name="index1507"> <tt><i>string</i></tt> <tt><i>start</i></tt> [<tt><i>end</i></tt>])</code> [LISP]  - extract a substring
+        <code>(subseq<a name="index1552"> <tt><i>string</i></tt> <tt><i>start</i></tt> [<tt><i>end</i></tt>])</code> [LISP]  - extract a substring
 
 <dd>
             <i>string</i> -   the string<br>
@@ -1922,27 +1924,27 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
 <br><dt>
 
         <code>string&lt;(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&lt;<a name="index1508"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string&lt;<a name="index1553"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 
         <code>string&lt;=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&lt;=<a name="index1509"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string&lt;=<a name="index1554"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
         <code>string=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string=<a name="index1510"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string=<a name="index1555"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
         <code>string/=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string/=<a name="index1511"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string/=<a name="index1556"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
         <code>string&gt;=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&gt;=<a name="index1512"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string&gt;=<a name="index1557"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
         <code>string&gt;(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&gt;<a name="index1513"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string&gt;<a name="index1558"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 
 <dd>
@@ -1959,27 +1961,27 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
 <br><dt>
 
 <code>string-lessp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-lessp<a name="index1514"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string-lessp<a name="index1559"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
 <code>string-not-greaterp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-not-greaterp<a name="index1515"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string-not-greaterp<a name="index1560"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
-<code>string-equalp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-equalp<a name="index1516"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+<code>string-equal(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
+        <code>(string-equal<a name="index1561"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
-<code>string-not-equalp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-not-equalp<a name="index1517"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+<code>string-not-equal(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
+        <code>(string-not-equal<a name="index1562"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
 <code>string-not-lessp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-not-lessp<a name="index1518"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string-not-lessp<a name="index1563"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 <br>
 <code>string-greaterp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-greaterp<a name="index1519"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
+        <code>(string-greaterp<a name="index1564"> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]
 
 
 <dd>
@@ -1996,11 +1998,11 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
 <br><dt>
 </dl>
 <p>
-<a name = "232"><h3>Character Functions</h3></a><a name="index1520">
+<a name = "237"><h3>Character Functions</h3></a><a name="index1565">
 <dl>
 <dt>
         <code>char(<i>string</i>, <i>index</i>)</code> [SAL]<br>
-        <code>(char<a name="index1521"> <tt><i>string</i></tt> <tt><i>index</i></tt>)</code> [LISP] -  extract a character from a string
+        <code>(char<a name="index1566"> <tt><i>string</i></tt> <tt><i>index</i></tt>)</code> [LISP] -  extract a character from a string
 
 <dd>
             <i>string</i> -   the string<br>
@@ -2008,77 +2010,77 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
             returns    - the ascii code of the character<br>
 
 <br><dt>        <code>upper-case-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(upper-case-p<a name="index1522"> <tt><i>chr</i></tt>)</code> [LISP]  - is this an upper case character?
+        <code>(upper-case-p<a name="index1567"> <tt><i>chr</i></tt>)</code> [LISP]  - is this an upper case character?
 
 <dd>
             <i>chr</i> -      the character<br>
             returns -    <code>t</code> if the character is upper case, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>lower-case-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(lower-case-p<a name="index1523"> <tt><i>chr</i></tt>)</code> [LISP]  - is this a lower case character?
+        <code>(lower-case-p<a name="index1568"> <tt><i>chr</i></tt>)</code> [LISP]  - is this a lower case character?
 
 <dd>
             <i>chr</i> -      the character<br>
             returns -    <code>t</code> if the character is lower case, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>both-case-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(both-case-p<a name="index1524"> <tt><i>chr</i></tt>)</code> [LISP]  - is this an alphabetic (either case) character?
+        <code>(both-case-p<a name="index1569"> <tt><i>chr</i></tt>)</code> [LISP]  - is this an alphabetic (either case) character?
 
 <dd>
             <i>chr</i> -      the character<br>
             returns -    <code>t</code> if the character is alphabetic, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>digit-char-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(digit-char-p<a name="index1525"> <tt><i>chr</i></tt>)</code> [LISP]  - is this a digit character?
+        <code>(digit-char-p<a name="index1570"> <tt><i>chr</i></tt>)</code> [LISP]  - is this a digit character?
 
 <dd>
             <i>chr</i> -      the character<br>
             returns -    the digit weight if character is a digit, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>char-code(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-code<a name="index1526"> <tt><i>chr</i></tt>)</code> [LISP]  - get the ascii code of a character
+        <code>(char-code<a name="index1571"> <tt><i>chr</i></tt>)</code> [LISP]  - get the ascii code of a character
 
 <dd>
             <i>chr</i> -      the character<br>
             returns -    the ascii character code (integer)<br>
 
 <br><dt>        <code>code-char(<i>code</i>)</code> [SAL]<br>
-        <code>(code-char<a name="index1527"> <tt><i>code</i></tt>)</code> [LISP]  - get the character with a specified ascii code
+        <code>(code-char<a name="index1572"> <tt><i>code</i></tt>)</code> [LISP]  - get the character with a specified ascii code
 
 <dd>
             <i>code</i> -     the ascii code (integer)<br>
             returns  -   the character with that code or <code>nil</code><br>
 
 <br><dt>        <code>char-upcase(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-upcase<a name="index1528"> <tt><i>chr</i></tt>)</code> [LISP]  - convert a character to upper case
+        <code>(char-upcase<a name="index1573"> <tt><i>chr</i></tt>)</code> [LISP]  - convert a character to upper case
 
 <dd>
             <i>chr</i>  -     the character<br>
             returns  -   the upper case character<br>
 
 <br><dt>        <code>char-downcase(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-downcase<a name="index1529"> <tt><i>chr</i></tt>)</code> [LISP]  - convert a character to lower case
+        <code>(char-downcase<a name="index1574"> <tt><i>chr</i></tt>)</code> [LISP]  - convert a character to lower case
 
 <dd>
             <i>chr</i>  -     the character<br>
             returns  -   the lower case character<br>
 
 <br><dt>        <code>digit-char(<i>n</i>)</code> [SAL]<br>
-        <code>(digit-char<a name="index1530"> <tt><i>n</i></tt>)</code> [LISP]  - convert a digit weight to a digit
+        <code>(digit-char<a name="index1575"> <tt><i>n</i></tt>)</code> [LISP]  - convert a digit weight to a digit
 
 <dd>
             <i>n</i>    -     the digit weight (integer)<br>
             returns  -   the digit character or <code>nil</code><br>
 
 <br><dt>        <code>char-int(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-int<a name="index1531"> <tt><i>chr</i></tt>)</code> [LISP]  - convert a character to an integer
+        <code>(char-int<a name="index1576"> <tt><i>chr</i></tt>)</code> [LISP]  - convert a character to an integer
 
 <dd>
             <i>chr</i>  -     the character<br>
             returns  -   the ascii character code<br>
 
 <br><dt>        <code>int-char(<i>int</i>)</code> [SAL]<br>
-        <code>(int-char<a name="index1532"> <tt><i>int</i></tt>)</code> [LISP]  - convert an integer to a character
+        <code>(int-char<a name="index1577"> <tt><i>int</i></tt>)</code> [LISP]  - convert an integer to a character
 
 <dd>
             <i>int</i>  -     the ascii character code<br>
@@ -2087,27 +2089,27 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
 <br><dt>
 
        <code>char&lt;(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&lt;<a name="index1533"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char&lt;<a name="index1578"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
         <code>char&lt;=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&lt;=<a name="index1534"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char&lt;=<a name="index1579"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
         <code>char=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char=<a name="index1535"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char=<a name="index1580"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
         <code>char/=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char/=<a name="index1536"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char/=<a name="index1581"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
         <code>char&gt;=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&gt;=<a name="index1537"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char&gt;=<a name="index1582"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
         <code>char&gt;(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&gt;<a name="index1538"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char&gt;<a name="index1583"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 
 <dd>
@@ -2120,27 +2122,27 @@ returns   -  <code>t</code> if the results of comparing <i>n1</i> with <i>n2</i>
 <br><dt>
 
 <code>char-lessp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-lessp<a name="index1539"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char-lessp<a name="index1584"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
 <code>char-not-greaterp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-not-greaterp<a name="index1540"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char-not-greaterp<a name="index1585"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
-<code>char-equalp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-equalp<a name="index1541"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+<code>char-equal(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
+        <code>(char-equal<a name="index1586"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
-<code>char-not-equalp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-not-equalp<a name="index1542"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+<code>char-not-equal(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
+        <code>(char-not-equal<a name="index1587"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
 <code>char-not-lessp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-not-lessp<a name="index1543"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char-not-lessp<a name="index1588"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 <br>
 <code>char-greaterp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-greaterp<a name="index1544"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
+        <code>(char-greaterp<a name="index1589"> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]
 
 
 <dd>
@@ -2153,11 +2155,11 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
 <br><dt>
 </dl>
 <p>
-<a name = "233"><h3>Input/Output Functions</h3></a><a name="index1545">
+<a name = "238"><h3>Input/Output Functions</h3></a><a name="index1590">
 <dl>
 <dt>
         <code>read([<i>stream</i> [, <i>eof</i> [, <i>rflag</i>]]])</code> [SAL]<br>
-        <code>(read<a name="index1546"> [<tt><i>stream</i></tt> [<tt><i>eof</i></tt> [<tt><i>rflag</i></tt>]]])</code> [LISP]  - read an expression
+        <code>(read<a name="index1591"> [<tt><i>stream</i></tt> [<tt><i>eof</i></tt> [<tt><i>rflag</i></tt>]]])</code> [LISP]  - read an expression
 
 <dd>
             <i>stream</i> -   the input stream (default is standard input)<br>
@@ -2165,14 +2167,14 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
             <i>rflag</i>  -   recursive read flag (default is <code>nil</code>)<br>
             returns    - the expression read<br>
 
-<br><dt>        <code>(print<a name="index1547"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression on a new line
+<br><dt>        <code>(print<a name="index1592"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression on a new line
 <dd>
             <i>expr</i>   -   the expression to be printed<br>
             <i>stream</i> -   the output stream (default is standard output)<br>
             returns    - the expression<br>
 
 <br><dt>        <code>prin1(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(prin1<a name="index1548"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression
+        <code>(prin1<a name="index1593"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression
 
 <dd>
             <i>expr</i>   -   the expression to be printed<br>
@@ -2180,7 +2182,7 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
             returns    - the expression<br>
 
 <br><dt>        <code>princ(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(princ<a name="index1549"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression without quoting
+        <code>(princ<a name="index1594"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - print an expression without quoting
 
 <dd>
             <i>expr</i>   -   the expressions to be printed<br>
@@ -2188,7 +2190,7 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
             returns   -  the expression<br>
 
 <br><dt>        <code>pprint(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(pprint<a name="index1550"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - pretty print an expression
+        <code>(pprint<a name="index1595"> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - pretty print an expression
 
 <dd>
             <i>expr</i>  -    the expressions to be printed<br>
@@ -2196,21 +2198,21 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
             returns -    the expression<br>
 
 <br><dt>        <code>terpri([<i>stream</i>])</code> [SAL]<br>
-        <code>(terpri<a name="index1551"> [<tt><i>stream</i></tt>])</code> [LISP]  - terminate the current print line
+        <code>(terpri<a name="index1596"> [<tt><i>stream</i></tt>])</code> [LISP]  - terminate the current print line
 
 <dd>
             <i>stream</i> -   the output stream (default is standard output)<br>
             returns   -  <code>nil</code><br>
 
 <br><dt>        <code>flatsize(<i>expr</i>)</code> [SAL]<br>
-        <code>(flatsize<a name="index1552"> <tt><i>expr</i></tt>)</code> [LISP]  - length of printed representation using prin1
+        <code>(flatsize<a name="index1597"> <tt><i>expr</i></tt>)</code> [LISP]  - length of printed representation using prin1
 
 <dd>
             <i>expr</i>  -    the expression<br>
             returns  -   the length<br>
 
 <br><dt>        <code>flatc(<i>expr</i>)</code> [SAL]<br>
-        <code>(flatc<a name="index1553"> <tt><i>expr</i></tt>)</code> [LISP]  - length of printed representation using princ
+        <code>(flatc<a name="index1598"> <tt><i>expr</i></tt>)</code> [LISP]  - length of printed representation using princ
 
 <dd>
             <i>expr</i> -     the expression<br>
@@ -2220,11 +2222,11 @@ returns  -   <code>t</code> if predicate is true, <code>nil</code> otherwise<br>
 <br><dt>
 </dl>
 <p>
-<a name = "234"><h3>The Format Function</h3></a><a name="index1554">
+<a name = "239"><h3>The Format Function</h3></a><a name="index1599">
 <dl>
 <dt>
 <code>format(<i>stream</i>, <i>fmt</i>, <i>arg</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(format<a name="index1555"> <tt><i>stream</i></tt> <tt><i>fmt</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP]   - do formated
+        <code>(format<a name="index1600"> <tt><i>stream</i></tt> <tt><i>fmt</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP]   - do formated
 
 output
 <dd>
@@ -2255,12 +2257,12 @@ allows strings to continue across multiple lines<br>
 
 </blockquote>
 <p>
-<a name = "235"><h3>File I/O Functions</h3></a><a name="index1556">
+<a name = "240"><h3>File I/O Functions</h3></a><a name="index1601">
 Note that files are ordinarily opened as text. Binary files (such as standard midi files) must be opened with <code>open-binary</code> on non-unix systems.
 <dl>
 <dt>
         <code>open(<i>fname</i>, direction: <i>direction</i>)</code> [SAL]<br>
-        <code>(open<a name="index1557"> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] -  open a file stream
+        <code>(open<a name="index1602"> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] -  open a file stream
 
 <dd>
             <i>fname</i> -    the file name string or symbol<br>
@@ -2269,7 +2271,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 
 <br><dt>
         <code>open-binary(<i>fname</i>, direction: <i>direction</i>)</code> [SAL]<br>
-        <code>(open-binary<a name="index1558"><a name="index1559"><a name="index1560"> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] -  open a binary file stream
+        <code>(open-binary<a name="index1603"><a name="index1604"><a name="index1605"> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] -  open a binary file stream
 
 <dd>
             <i>fname</i> -    the file name string or symbol<br>
@@ -2277,14 +2279,14 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             returns   -  a stream<br>
 
 <br><dt>        <code>close(<i>stream</i>)</code> [SAL]<br>
-        <code>(close<a name="index1561"> <tt><i>stream</i></tt>)</code> [LISP]  - close a file stream
+        <code>(close<a name="index1606"> <tt><i>stream</i></tt>)</code> [LISP]  - close a file stream
 
 <dd>
             <i>stream</i> -   the stream<br>
             returns    - <code>nil</code><br>
 
 <br><dt>        <code>setdir(<i>path</i> [, <i>verbose</i>])</code> [SAL]<br>
-        <code>(setdir<a name="index1562"><a name="index1563"> <tt><i>path</i></tt> [<tt><i>verbose</i></tt>])</code> [LISP] <a href = "foot.html#foot12">(Footnote 12)</a>  - set current directory
+        <code>(setdir<a name="index1607"><a name="index1608"> <tt><i>path</i></tt> [<tt><i>verbose</i></tt>])</code> [LISP] <a href = "foot.html#foot9">(Footnote 9)</a>  - set current directory
 
 <dd>
             <i>path</i> -   the path of the new directory<br>
@@ -2292,41 +2294,41 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             returns   -  the resulting full path, e.g. (setdir ".") gets the current working directory, or <code>nil</code> if an error occurs<br>
 
 <br><dt>        <code>listdir(<i>path</i>)</code> [SAL]<br>
-        <code>(listdir<a name="index1564"><a name="index1565"><a name="index1566"><a name="index1567"><a name="index1568"> <tt><i>path</i></tt>)</code> [LISP] <a href = "foot.html#foot13">(Footnote 13)</a>  - get a directory listing
+        <code>(listdir<a name="index1609"><a name="index1610"><a name="index1611"><a name="index1612"><a name="index1613"> <tt><i>path</i></tt>)</code> [LISP] <a href = "foot.html#foot10">(Footnote 10)</a>  - get a directory listing
 
 <dd>
             <i>path</i> -   the path of the directory to be listed<br>
             returns   -  list of filenames in the directory<br>
 
 <br><dt>        <code>get-temp-path()</code> [SAL]<br>
-        <code>(get-temp-path<a name="index1569"><a name="index1570"><a name="index1571">)</code> [LISP] <a href = "foot.html#foot14">(Footnote 14)</a>  - get a path where a temporary file can be created. Under Windows, this is based on environment variables. If XLISP is running as a sub-process to Java, the environment may not exist, in which case the default result is the unfortunate choice <code>c:\windows\</code>.
+        <code>(get-temp-path<a name="index1614"><a name="index1615"><a name="index1616">)</code> [LISP] <a href = "foot.html#foot11">(Footnote 11)</a>  - get a path where a temporary file can be created. Under Windows, this is based on environment variables. If XLISP is running as a sub-process to Java, the environment may not exist, in which case the default result is the unfortunate choice <code>c:\windows\</code>.
 
 <dd>
             returns   -  the resulting full path as a string<br>
 
 <br><dt>        <code>get-user()</code> [SAL]<br>
-        <code>(get-user<a name="index1572"><a name="index1573"><a name="index1574">)</code> [LISP] <a href = "foot.html#foot15">(Footnote 15)</a>  - get the user ID. In Unix systems (including OS X and Linux), this is the value of the USER environment variable. In Windows, this is currently just "nyquist", which is also returned if the environment variable cannot be accessed. This function is used to avoid the case of two users creating files of the same name in the same temp directory.
+        <code>(get-user<a name="index1617"><a name="index1618"><a name="index1619">)</code> [LISP] <a href = "foot.html#foot12">(Footnote 12)</a>  - get the user ID. In Unix systems (including OS X and Linux), this is the value of the USER environment variable. In Windows, this is currently just "nyquist", which is also returned if the environment variable cannot be accessed. This function is used to avoid the case of two users creating files of the same name in the same temp directory.
 
 <dd>
             returns   - the string naming the user<br>
 
 <br><dt>
         <code>find-in-xlisp-path(<i>filename</i>)</code> [SAL]<br>
-        <code>(find-in-xlisp-path<a name="index1575"> <tt><i>filename</i></tt>)</code> [LISP] <a href = "foot.html#foot16">(Footnote 16)</a>  - search the XLISP search path (e.g. <code>XLISPPATH</code> from the environment) for <i>filename</i>. If <i>filename</i> is not found as is, and there is no file extension, append "<code>.lsp</code>" to <i>filename</i> and search again. The current directory is not searched.
+        <code>(find-in-xlisp-path<a name="index1620"> <tt><i>filename</i></tt>)</code> [LISP] <a href = "foot.html#foot13">(Footnote 13)</a>  - search the XLISP search path (e.g. <code>XLISPPATH</code> from the environment) for <i>filename</i>. If <i>filename</i> is not found as is, and there is no file extension, append "<code>.lsp</code>" to <i>filename</i> and search again. The current directory is not searched.
 
 <dd>
             <i>filename</i> - the name of the file to search for<br>
             returns - a full path name to the first occurrence found<br>
 
 <br><dt>        <code>read-char([<i>stream</i>])</code> [SAL]<br>
-        <code>(read-char<a name="index1576"><a name="index1577"> [<tt><i>stream</i></tt>])</code> [LISP]  - read a character from a stream
+        <code>(read-char<a name="index1621"><a name="index1622"> [<tt><i>stream</i></tt>])</code> [LISP]  - read a character from a stream
 
 <dd>
             <i>stream</i> -   the input stream (default is standard input)<br>
             returns   -  the character<br>
 
 <br><dt>        <code>peek-char([<i>flag</i> [, <i>stream</i>]])</code> [SAL]<br>
-        <code>(peek-char<a name="index1578"> [<tt><i>flag</i></tt> [<tt><i>stream</i></tt>]])</code> [LISP]  - peek at the next character
+        <code>(peek-char<a name="index1623"> [<tt><i>flag</i></tt> [<tt><i>stream</i></tt>]])</code> [LISP]  - peek at the next character
 
 <dd>
             <i>flag</i>  -    flag for skipping white space (default is <code>nil</code>)<br>
@@ -2334,7 +2336,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             returns   -  the character (integer)<br>
 
 <br><dt>        <code>write-char(<i>ch</i>  [, <i>stream</i>])</code> [SAL]<br>
-        <code>(write-char<a name="index1579"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - write a character to a stream
+        <code>(write-char<a name="index1624"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - write a character to a stream
 
 <dd>
             <i>ch</i>    -    the character to write<br>
@@ -2342,7 +2344,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             returns   -  the character<br>
 
 <br><dt>        <code>read-int([<i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(read-int<a name="index1580"> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - read a binary integer from a stream
+        <code>(read-int<a name="index1625"> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - read a binary integer from a stream
 
 <dd>
             <i>stream</i> -   the input stream (default is standard input)<br>
@@ -2354,7 +2356,7 @@ negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.<br>
 
 <br><dt>        <code>write-int(<i>ch</i> [, <i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(write-int<a name="index1581"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - write a binary integer to a stream
+        <code>(write-int<a name="index1626"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - write a binary integer to a stream
 
 <dd>
             <i>ch</i>    -    the character to write<br>
@@ -2367,7 +2369,7 @@ negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.<br>
 
 <br><dt>        <code>read-float([<i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(read-float<a name="index1582"> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - read a binary floating-point number from a stream
+        <code>(read-float<a name="index1627"> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - read a binary floating-point number from a stream
 
 <dd>
             <i>stream</i> -   the input stream (default is standard input)<br>
@@ -2379,7 +2381,7 @@ negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.<br>
 
 <br><dt>        <code>write-float(<i>ch</i> [, <i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(write-float<a name="index1583"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - write a binary floating-point number to a stream
+        <code>(write-float<a name="index1628"> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  - write a binary floating-point number to a stream
 
 <dd>
             <i>ch</i>    -    the character to write<br>
@@ -2392,21 +2394,21 @@ negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.<br>
 
 <br><dt>        <code>read-line([<i>stream</i>])</code> [SAL]<br>
-        <code>(read-line<a name="index1584"> [<tt><i>stream</i></tt>])</code> [LISP]  - read a line from a stream
+        <code>(read-line<a name="index1629"> [<tt><i>stream</i></tt>])</code> [LISP]  - read a line from a stream
 
 <dd>
             <i>stream</i> -   the input stream (default is standard input)<br>
             returns   -  the string<br>
 
 <br><dt>        <code>read-byte([<i>stream</i>])</code> [SAL]<br>
-        <code>(read-byte<a name="index1585"> [<tt><i>stream</i></tt>])</code> [LISP]  - read a byte from a stream
+        <code>(read-byte<a name="index1630"> [<tt><i>stream</i></tt>])</code> [LISP]  - read a byte from a stream
 
 <dd>
             <i>stream</i> -   the input stream (default is standard input)<br>
             returns    - the byte (integer)<br>
 
 <br><dt>        <code>write-byte(<i>byte</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(write-byte<a name="index1586"> <tt><i>byte</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - write a byte to a stream
+        <code>(write-byte<a name="index1631"> <tt><i>byte</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  - write a byte to a stream
 
 <dd>
             <i>byte</i>   -   the byte to write (integer)<br>
@@ -2414,7 +2416,7 @@ byte first. The file should be opened in binary mode.<br>
             returns    - the byte (integer)<br>
 
 <br><dt>
-</dl><a name = "236"><h3>String Stream Functions</h3></a><a name="index1587">
+</dl><a name = "241"><h3>String Stream Functions</h3></a><a name="index1632">
         These functions operate on unnamed streams.  An unnamed output
         stream collects characters sent to it when it is used as the
         destination of any output function.  The functions 
@@ -2428,7 +2430,7 @@ An unnamed input stream is setup with the
 <dt>
 <br><dt>
         <code>make-string-input-stream(<i>str</i> [, <i>start</i> [, <i>end</i>]])</code> [SAL]<br>
-        <code>(make-string-input-stream<a name="index1588"> <tt><i>str</i></tt> [<tt><i>start</i></tt> [<tt><i>end</i></tt>]])</code> [LISP]
+        <code>(make-string-input-stream<a name="index1633"> <tt><i>str</i></tt> [<tt><i>start</i></tt> [<tt><i>end</i></tt>]])</code> [LISP]
 
 <dd>
             <i>str</i>    -   the string<br>
@@ -2437,13 +2439,13 @@ An unnamed input stream is setup with the
             returns    - an unnamed stream that reads from the string<br>
 
 <br><dt>        <code>make-string-output-stream)()</code> [SAL]<br>
-        <code>(make-string-output-stream)</code> [LISP]<a name="index1589">
+        <code>(make-string-output-stream)</code> [LISP]<a name="index1634">
 
 <dd>
             returns   -  an unnamed output stream<br>
 
 <br><dt>        <code>get-output-stream-string(<i>stream</i>)</code> [SAL]<br>
-        <code>(get-output-stream-string<a name="index1590"> <tt><i>stream</i></tt>)</code> [LISP]
+        <code>(get-output-stream-string<a name="index1635"> <tt><i>stream</i></tt>)</code> [LISP]
 
 <dd>
             <i>stream</i> -    the output stream<br>
@@ -2452,7 +2454,7 @@ An unnamed input stream is setup with the
 
 <br>
 <br><dt>        <code>get-output-stream-list(<i>stream</i>)</code> [SAL]<br>
-        <code>(get-output-stream-list<a name="index1591"> <tt><i>stream</i></tt>)</code> [LISP]
+        <code>(get-output-stream-list<a name="index1636"> <tt><i>stream</i></tt>)</code> [LISP]
 
 <dd>
             <i>stream</i> -   the output stream<br>
@@ -2463,19 +2465,19 @@ An unnamed input stream is setup with the
 <br><dt>
 </dl>
 <p>
-<a name = "237"><h3>System Functions</h3></a><a name="index1592">
+<a name = "242"><h3>System Functions</h3></a><a name="index1637">
 Note: the <code>load</code> function first tries to load a file from the current directory. A <code>.lsp</code> extension is added if there is not already an alphanumeric extension following  a period.  If that fails, XLISP searches the path, which is obtained from the XLISPPATH environment variable in Unix and  HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH under Win32. (The Macintosh version has no search path.)
 <p>
 <dl>
 <dt>
         <code>get-env(<i>name</i>)</code> [SAL]<br>
-        <code>(get-env<a name="index1593"><a name="index1594"><a name="index1595"> <tt><i>name</i></tt>)</code> [LISP] - get from an environment variable
+        <code>(get-env<a name="index1638"><a name="index1639"><a name="index1640"> <tt><i>name</i></tt>)</code> [LISP] - get from an environment variable
 
 <dd>
            <i>name</i> - the name of the environment variable<br>
            returns  - string value of the environment variable, <code>nil</code> if variable does not exist<br>
 
-<br><dt>        <code>(load<a name="index1596"> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:verbose</tt> <tt>:print</tt>)</code> [LISP]   - load a source file
+<br><dt>        <code>(load<a name="index1641"> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:verbose</tt> <tt>:print</tt>)</code> [LISP]   - load a source file
 <dd>
             <i>fname</i>   -  the filename string or symbol<br>
             :verbose  -  the verbose flag (default is t)<br>
@@ -2483,21 +2485,21 @@ Note: the <code>load</code> function first tries to load a file from the current
             returns   -  the filename<br>
 
 <br><dt>        <code>save(<i>fname</i>)</code> [SAL]<br>
-        <code>(save<a name="index1597"> <tt><i>fname</i></tt>)</code> [LISP] - save workspace to a file
+        <code>(save<a name="index1642"> <tt><i>fname</i></tt>)</code> [LISP] - save workspace to a file
 
 <dd>
             <i>fname</i> -    the filename string or symbol<br>
             returns   - <code>t</code> if workspace was written, <code>nil</code> otherwise<br>
 
 <br><dt>        <code>restore(<i>fname</i>)</code> [SAL]<br>
-        <code>(restore<a name="index1598"> <tt><i>fname</i></tt>)</code> [LISP]  - restore workspace from a file
+        <code>(restore<a name="index1643"> <tt><i>fname</i></tt>)</code> [LISP]  - restore workspace from a file
 
 <dd>
             <i>fname</i> -    the filename string or symbol<br>
             returns   -  <code>nil</code> on failure, otherwise never returns<br>
 
 <br><dt>        <code>dribble([<i>fname</i>])</code> [SAL]<br>
-        <code>(dribble<a name="index1599"> [<tt><i>fname</i></tt>])</code> [LISP]  - create a file with a transcript of a session
+        <code>(dribble<a name="index1644"> [<tt><i>fname</i></tt>])</code> [LISP]  - create a file with a transcript of a session
 
 <dd>
             <i>fname</i> -    file name string or symbol
@@ -2505,39 +2507,39 @@ Note: the <code>load</code> function first tries to load a file from the current
             returns   - <code>t</code> if the transcript is opened, <code>nil</code> if it is closed<br>
 
 <br><dt>        <code>gc()</code> [SAL]<br>
-        <code>(gc<a name="index1600">)</code> [LISP]  - force garbage collection
+        <code>(gc<a name="index1645">)</code> [LISP]  - force garbage collection
 
 <dd>
             returns -    <code>nil</code><br>
 
 <br><dt>        <code>expand(<i>num</i>)</code> [SAL]<br>
-        <code>(expand<a name="index1601"> <tt><i>num</i></tt>)</code> [LISP]  - expand memory by adding segments
+        <code>(expand<a name="index1646"> <tt><i>num</i></tt>)</code> [LISP]  - expand memory by adding segments
 
 <dd>
             <i>num</i> -      the number of segments to add<br>
             returns -    the number of segments added<br>
 
 <br><dt>        <code>alloc(<i>num</i>)</code> [SAL]<br>
-        <code>(alloc<a name="index1602"> <tt><i>num</i></tt>)</code> [LISP]  - change number of nodes to allocate in each segment
+        <code>(alloc<a name="index1647"> <tt><i>num</i></tt>)</code> [LISP]  - change number of nodes to allocate in each segment
 
 <dd>
             <i>num</i> -      the number of nodes to allocate<br>
             returns -    the old number of nodes to allocate<br>
 
 <br><dt>        <code>info()</code> [SAL]<br>
-        <code>(info<a name="index1603">)</code> [LISP]  - show information about memory usage.
+        <code>(info<a name="index1648">)</code> [LISP]  - show information about memory usage.
 
 <dd>
             returns -    <code>nil</code><br>
 
 <br><dt>        <code>room()</code> [SAL]<br>
-        <code>(room<a name="index1604">)</code> [LISP]  - show memory allocation statistics
+        <code>(room<a name="index1649">)</code> [LISP]  - show memory allocation statistics
 
 <dd>
             returns -    <code>nil</code><br>
 
 <br><dt>        <code>type-of(<i>expr</i>)</code> [SAL]<br>
-        <code>(type-of<a name="index1605"> <tt><i>expr</i></tt>)</code> [LISP]  - returns the type of the expression
+        <code>(type-of<a name="index1650"> <tt><i>expr</i></tt>)</code> [LISP]  - returns the type of the expression
 
 <dd>
             <i>expr</i> -     the expression to return the type of<br>
@@ -2559,14 +2561,14 @@ Note: the <code>load</code> function first tries to load a file from the current
 </dl>
 
 <br><dt>        <code>peek(<i>addrs</i>)</code> [SAL]<br>
-        <code>(peek<a name="index1606"> <tt><i>addrs</i></tt>)</code> [LISP]   - peek at a location in memory
+        <code>(peek<a name="index1651"> <tt><i>addrs</i></tt>)</code> [LISP]   - peek at a location in memory
 
 <dd>
             <i>addrs</i>  -   the address to peek at (integer)<br>
             returns    - the value at the specified address (integer)<br>
 
 <br><dt>        <code>poke(<i>addrs</i>, <i>value</i>)</code> [SAL]<br>
-        <code>(poke<a name="index1607"> <tt><i>addrs</i></tt> <tt><i>value</i></tt>)</code> [LISP] -  poke a value into memory
+        <code>(poke<a name="index1652"> <tt><i>addrs</i></tt> <tt><i>value</i></tt>)</code> [LISP] -  poke a value into memory
 
 <dd>
             <i>addrs</i>  -   the address to poke (integer)<br>
@@ -2574,34 +2576,36 @@ Note: the <code>load</code> function first tries to load a file from the current
             returns    - the value<br>
 
 <br><dt>        <code>bigendianp()</code> [SAL]<br>
-        <code>(bigendianp<a name="index1608"><a name="index1609"><a name="index1610"><a name="index1611">)</code> [LISP] -  is this a big-endian machine?
+        <code>(bigendianp<a name="index1653"><a name="index1654"><a name="index1655"><a name="index1656">)</code> [LISP] -  is this a big-endian machine?
 
 <dd>
             returns    - T if this a big-endian architecture, storing the high-order byte of an integer at the lowest byte address of the integer; otherwise, NIL.
- <a href = "foot.html#foot17">(Footnote 17)</a> <br>
+ <a href = "foot.html#foot14">(Footnote 14)</a> <br>
 
 <br><dt>        <code>address-of(<i>expr</i>)</code> [SAL]<br>
-        <code>(address-of<a name="index1612"> <tt><i>expr</i></tt>)</code> [LISP]  - get the address of an xlisp node
+        <code>(address-of<a name="index1657"> <tt><i>expr</i></tt>)</code> [LISP]  - get the address of an xlisp node
 
 <dd>
             <i>expr</i>   -   the node<br>
             returns    - the address of the node (integer)<br>
 
 <br><dt>        <code>exit()</code> [SAL]<br>
-        <code>(exit<a name="index1613">)</code> [LISP]  - exit xlisp
+        <code>(exit<a name="index1658">)</code> [LISP]  -
+        exit xlisp. (Note: in Audacity plug-ins, <code>exit</code> is
+        undefined because exiting would terminate Audacity.)
 
 <dd>
             returns    - never returns<br>
 
 <br><dt>        <code>setup-console()</code> [SAL]<br>
-        <code>(setup-console<a name="index1614"><a name="index1615">)</code> [LISP]  - set default console attributes
+        <code>(setup-console<a name="index1659"><a name="index1660">)</code> [LISP]  - set default console attributes
 
 <dd>
             returns    - NIL<br>
-Note: Under Windows, Nyquist normally starts up in a medium-sized console window with black text and a white background, with a window title of "Nyquist." This is normally accomplished by calling <code>setup-console</code> in <code>system.lsp</code>. In Nyquist, you can avoid this behavior by setting <code>*setup-console*</code> to NIL in your <code>init.lsp</code> file. If <code>setup-console</code> is not called, Nyquist uses standard input and output as is. This is what you want if you are running Nyquist inside of emacs, for example.<a name="index1616"><br>
+Note: Under Windows, Nyquist normally starts up in a medium-sized console window with black text and a white background, with a window title of "Nyquist." This is normally accomplished by calling <code>setup-console</code> in <code>system.lsp</code>. In Nyquist, you can avoid this behavior by setting <code>*setup-console*</code> to NIL in your <code>init.lsp</code> file. If <code>setup-console</code> is not called, Nyquist uses standard input and output as is. This is what you want if you are running Nyquist inside of emacs, for example.<a name="index1661"><br>
 
 <br><dt>        <code>echoenabled(<i>flag</i>)</code> [SAL]<br>
-        <code>(echoenabled<a name="index1617"><a name="index1618"> <tt><i>flag</i></tt>)</code> [LISP]  - turn console input echoing on or off
+        <code>(echoenabled<a name="index1662"><a name="index1663"> <tt><i>flag</i></tt>)</code> [LISP]  - turn console input echoing on or off
 
 <dd>
             <i>flag</i>   - T to enable echo, NIL to disable<br>
@@ -2610,7 +2614,7 @@ Note: This function is only implemented under Linux and Mac OS X. If Nyquist I/O
 the Windows version does not echo the input, but the Linux and Mac versions do. You can turn off echoing with
 this function. Under windows it is defined to do nothing.<br>
 
-</dl><a name = "238"><h3>File I/O Functions</h3></a><a name="index1619"><a name = "239"><h4>Input from a File</h4></a><a name="index1620">To open a file for input, use the <code>open</code> function with the keyword
+</dl><a name = "243"><h3>File I/O Functions</h3></a><a name="index1664"><a name = "244"><h4>Input from a File</h4></a><a name="index1665">To open a file for input, use the <code>open</code> function with the keyword
 argument <code>:direction</code> set to <code>:input</code>.  To open a file for output,
 use the <code>open</code> function with the keyword argument <code>:direction</code> set
 to <code>:output</code>.  The <code>open</code> function takes a single required argument which
@@ -2652,7 +2656,7 @@ binding it using <code>let</code> or <code>let*</code>.  Here is an example:
 
         Evaluating this expression will cause the file to be closed.
 <p>
-<a name = "240"><h4>Output to a File</h4></a><a name="index1621">        Writing to a file is pretty much the same as reading from one.
+<a name = "245"><h4>Output to a File</h4></a><a name="index1666">        Writing to a file is pretty much the same as reading from one.
         You need to open the file first.  This time you should use the
         <code>open</code> function to indicate that you will do output to the file.
         For example:
@@ -2686,7 +2690,7 @@ binding it using <code>let</code> or <code>let*</code>.  Here is an example:
         Evaluating this expression will close the output file and make
         it permanent.
 <p>
-<a name = "241"><h4>A Slightly More Complicated File Example</h4></a>        This example shows how to open a file, read each Lisp expression
+<a name = "246"><h4>A Slightly More Complicated File Example</h4></a>        This example shows how to open a file, read each Lisp expression
         from the file and print it.  It demonstrates the use of files
         and the use of the optional <i>stream</i> argument to the <code>read</code>
         function.

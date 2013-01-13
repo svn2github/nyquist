@@ -59,9 +59,9 @@
 @begin(titlebox)
 @blankspace(0.5 inch)
 @majorheading(Nyquist Reference Manual)
-@b(Version 3.05)
+@b(Version 3.06)
 @blankspace(0.3 inch)
-@b(Copyright 2011 by Roger B. Dannenberg)
+@b(Copyright 2013 by Roger B. Dannenberg)
 @value(date)
 @end(titlebox)
 @pragma(startscribe)
@@ -213,7 +213,7 @@ You can download source code and precompiled versions from the Nyquist project
 on SourceForge (@code(http://sourceforge.net/projects/nyquist)). The latest 
 source code can be obtained via Subversion (svn) using the following:
 @begin(example)
-svn co https://nyquist.svn.sourceforge.net/svnroot/nyquist/trunk nyquist
+svn co svn://svn.code.sf.net/p/nyquist/code/trunk/nyquist nyquist
 @end(example)
 or by checking out nyquist using a graphical interface svn client such as 
 TortoiseSVN for Windows.
@@ -4934,7 +4934,14 @@ format header immediately after the NeXT-style header.
 
 @code(snd-head-Wave)@\Microsoft Wave format header.
 
-@code(snd-head-*)@\See sndfnint.lsp for more formats.
+@code(snd-head-flac)@\FLAC lossless compressed audio.
+
+@code(snd-head-ogg)@\OGG-VORBIS compressed audio.
+
+@code(snd-head-*)@\See sndfnint.lsp in the @code(nyquist/runtime) directory
+ for more formats. The current list includes
+@code(paf), @code(svx), @code(nist), @code(voc), @code(w64), @code(mat4), @code(mat5),
+@code(pvf), @code(xi), @code(htk), @code(sds), @code(avr), @code(sd2), and @code(caf).
 @end(description)
 
 @b(Mode)
@@ -4951,7 +4958,8 @@ format header immediately after the NeXT-style header.
 
 @code(snd-mode-upcm)@\unsigned binary PCM mode.
 
-@code(snd-mode-*)@\See sndfnint.lsp for more modes.
+@code(snd-mode-*)@\See sndfnint.lsp in the @code(nyquist/runtime) for more modes. The current list includes 
+@code(double), @code(gsm610), @code(dwvw), @code(dpcm), and @code(msadpcm).
 @end(description)
 
 The defaults for format, mode, and bits are as follows:

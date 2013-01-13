@@ -3512,7 +3512,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/build/Development\"";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = ny;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -3540,7 +3540,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/build/Development\"";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = ny;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -3566,7 +3566,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/build/Development\"";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = ny;
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include ../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
+				USER_HEADER_SEARCH_PATHS = "../ffts/src ../snd ../cmt ../sys/unix ../xlisp ../tran ../nyqsrc ../nyqstk/include ../portaudio/include ../liblo $(inherited)";
 				ZERO_LINK = YES;
 			};
 			name = Default;
@@ -3807,6 +3807,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = "";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 			};
 			name = Development;
 		};
@@ -3815,6 +3816,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 			};
 			name = Deployment;
 		};
@@ -3822,6 +3824,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = "";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 			};
 			name = Default;
 		};

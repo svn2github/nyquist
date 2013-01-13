@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.05
-13 Mar 2011
+README file for Nyquist Version 3.06
+13 Jan 2013
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -18,6 +18,12 @@ other versions of Unix. For details, see one of these files:
 
 IMPLEMENTATION STATUS
 =====================
+
+Version 3.06 provides:
+    64-bit architecture support
+    Access to OGG and FLAC file formats
+    Updates for MSVC++2010, VS2012, XCode 4.5
+    This is a deadline-driven release. Expect an update soon.
 
 Version 3.05 provides:
     New "UPIC Editor" window in NyquistIDE

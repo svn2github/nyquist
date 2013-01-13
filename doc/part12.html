@@ -3,7 +3,7 @@
 <a href = "part11.html">Previous Section</a> | <a href = "part13.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
 <a name = "130"><h2>Linear Prediction Analysis and Synthesis</h2></a>
-<a name="index957"><a name="index958">
+<a name="index965"><a name="index966">
 Nyquist provides functions to perform Linear Prediction Coding (LPC) 
 analysis and synthesis. In simple terms, LPC analysis assumes that a
 sound is the result of an all-pole filter applied to a source with a 
@@ -16,7 +16,7 @@ spectra to musical tones, creating an artificial (or sometimes natural)
 singing voice.
 <p>
 Examples of LPC analysis and synthesis can be found in the file 
-<code>lpc_tutorial.htm</code><a name="index959"><a name="index960"><a name="index961">,
+<code>lpc_tutorial.htm</code><a name="index967"><a name="index968"><a name="index969">,
 which is part of the standard Nyquist release.
 <p>
 As with FFT processing, LPC analysis takes a sound as input and returns 
@@ -26,10 +26,10 @@ selector just as with FFT frames. An LPC frame is a list consisting of:
 residual signal, <i>ERR</i>, the square root of <i>RMS1</i>/<i>RMS2</i>, and 
 <i>FILTER-COEFS</i>, an array of filter coefficients. To make code more
 readable and to avoid code dependence on the exact format of a frame, 
-the functions <code>lpc-frame-rms1</code><a name="index962">, 
-<code>lpc-frame-rms2</code><a name="index963">, 
-<code>lpc-frame-err</code><a name="index964">, and
-<code>lpc-frame-filter-coefs</code><a name="index965"> can be
+the functions <code>lpc-frame-rms1</code><a name="index970">, 
+<code>lpc-frame-rms2</code><a name="index971">, 
+<code>lpc-frame-err</code><a name="index972">, and
+<code>lpc-frame-filter-coefs</code><a name="index973"> can be
 applied to a frame to obtain the respective fields.
 <p>
 The <i>z</i> transform
@@ -46,7 +46,7 @@ is <i>not</i> automatically loaded with Nyquist, so you must execute
 <a name = "131"><h3>LPC Classes and Functions</h3></a>
 <dl>
 <dt>
-<code>make-lpanal-iterator(<a name="index966"><i>sound</i>, <i>framedur</i>, <i>skiptime</i>, <i>npoles</i>)</code> [SAL]<br>
+<code>make-lpanal-iterator(<a name="index974"><i>sound</i>, <i>framedur</i>, <i>skiptime</i>, <i>npoles</i>)</code> [SAL]<br>
 
 <code>(make-lpanal-iterator <i>sound</i> <i>framedur</i> <i>skiptime</i> <i>npoles</i>)</code> [LISP]<dd>Makes an iterator
 object, an instance of <code>lpanal-class</code>, 
@@ -63,17 +63,17 @@ described above. <code>NIL</code> is returned when <i>sound</i> terminates.
 (Note that one or more of the last analysis windows may be 
 padded with zeros. <code>NIL</code> is only returned when the corresponding
 window would begin after the termination time of the sound.)<br><br>
-<dt><code>make-lpc-file-iterator(<a name="index967"><i>filename</i>)</code> [SAL]<br>
+<dt><code>make-lpc-file-iterator(<a name="index975"><i>filename</i>)</code> [SAL]<br>
 
 <code>(make-lpc-file-iterator <i>filename</i>)</code> [LISP]<dd>Another way to get LPC frames is to read them from a
  file. This function opens an ASCII file containing LPC frames and
  creates an iterator object, an instance of class <code>lpc-file-class</code>
  to access them. Create a file using <code>save-lpc-file</code> (see below).<br><br>
-<dt><code>save-lpc-file(<a name="index968"><i>lpc-iterator</i>, <i>filename</i>)</code> [SAL]<br>
+<dt><code>save-lpc-file(<a name="index976"><i>lpc-iterator</i>, <i>filename</i>)</code> [SAL]<br>
 
 <code>(save-lpc-file <i>lpc-iterator</i> <i>filename</i>)</code> [LISP]<dd>Create a file containing LPC frames.
 This file can be read by <code>make-lpc-file-iterator</code> (see above).<br><br>
-<dt><code>show-lpc-data(<a name="index969"><i>lpc-iterator</i>,
+<dt><code>show-lpc-data(<a name="index977"><i>lpc-iterator</i>,
 <i>iniframe</i>, <i>endframe</i> [, <i>poles?</i>])</code> [SAL]<br>
 
 <code>(show-lpc-data <i>lpc-iterator</i> <i>iniframe</i> <i>endframe</i>
@@ -86,7 +86,7 @@ files starting at <i>iniframe</i> (a <code>FIXNUM</code>) and ending before
 the values for <i>RMS1</i>, <i>RMS2</i>, and <i>ERR</i> are printed, but
 if optional parameter <i>poles?</i> is non-<code>NIL</code>, then
 the LPC coefficients are also printed.<br><br>
-<dt><code>allpoles-from-lpc(<a name="index970"><i>snd</i>, <i>lpc-frame</i>)</code> [SAL]<br>
+<dt><code>allpoles-from-lpc(<a name="index978"><i>snd</i>, <i>lpc-frame</i>)</code> [SAL]<br>
 
 <code>(allpoles-from-lpc <i>snd</i> <i>lpc-frame</i>)</code> [LISP]<dd>A single LPC frame defines a filter.
 Use <code>allpoles-from-lpc</code> to apply this filter to <i>snd</i>,
@@ -94,7 +94,7 @@ a <code>SOUND</code>. To obtain <i>lpc-frame</i>, a <code>LIST</code>
  containing an LPC frame, either send <code>:next</code> to an
  LPC iterator, or use <code>nth-frame</code> (see below). The result
  is a <code>SOUND</code> whose duration is the same as that of <i>snd</i>.<br><br>
-<dt><code>lpreson(<a name="index971"><i>snd</i>, <i>lpc-iterator</i>, 
+<dt><code>lpreson(<a name="index979"><i>snd</i>, <i>lpc-iterator</i>, 
 <i>skiptime</i>)</code> [SAL]<br>
 
 <code>(lpreson <i>snd</i> <i>lpc-iterator</i> <i>skiptime</i>)</code> [LISP]<dd>Implements a time-varying all-pole filter 
@@ -109,16 +109,16 @@ evolution slow down, and smaller values will cause it to
 speed up.) The result is a <code>SOUND</code>. The duration of the
 result is the minimum of the duration of <i>snd</i> and that of
 the sequence of frames. <br><br>
-<dt><code>lpc-frame-rms1(<a name="index972"><i>frame</i>)</code> [SAL]<br>
+<dt><code>lpc-frame-rms1(<a name="index980"><i>frame</i>)</code> [SAL]<br>
 
 <code>(lpc-frame-rms1 <i>frame</i>)</code> [LISP]<dd>Get the energy of the input signal from a frame.<br><br>
-<dt><code>lpc-frame-rms2(<a name="index973"><i>frame</i>)</code> [SAL]<br>
+<dt><code>lpc-frame-rms2(<a name="index981"><i>frame</i>)</code> [SAL]<br>
 
 <code>(lpc-frame-rms2 <i>frame</i>)</code> [LISP]<dd>Get the energy of the residual from a frame.<br><br>
-<dt><code>lpc-frame-err(<a name="index974"><i>frame</i>)</code> [SAL]<br>
+<dt><code>lpc-frame-err(<a name="index982"><i>frame</i>)</code> [SAL]<br>
 
 <code>(lpc-frame-err <i>frame</i>)</code> [LISP]<dd>Get the square root of <i>RMS1</i>/<i>RMS2</i> from a frame.<br><br>
-<dt><code>lpc-frame-filter-coefs(<a name="index975"><i>frame</i>)</code> [SAL]<br>
+<dt><code>lpc-frame-filter-coefs(<a name="index983"><i>frame</i>)</code> [SAL]<br>
 
 <code>(lpc-frame-filter-coefs <i>frame</i>)</code> [LISP]<dd>Get the filter coefficients from a frame.<br><br>
 <dt></dl><a name = "132"><h3>Low-level LPC Functions</h3></a>
@@ -132,21 +132,21 @@ The lowest-level Nyquist functions for LPC are
 <p>
 <dl>
 <dt>
-<code>snd-lpanal(<a name="index976"><i>samps</i>, <i>npoles</i>)</code> [SAL]<br>
+<code>snd-lpanal(<a name="index984"><i>samps</i>, <i>npoles</i>)</code> [SAL]<br>
 
 <code>(snd-lpanal <i>samps</i> <i>npoles</i>)</code> [LISP]<dd>Compute
 an LPC frame with <i>npoles</i> (a <code>FIXNUM</code>) poles from an 
 <code>ARRAY</code> of samples (<code>FLONUMS</code>). Note that <code>snd-fetch-array</code>
 can be used to fetch a sequence of frames from a sound. Ordinarily, you
 should not use this function. Use <code>make-lpanal-iterator</code> instead.<br><br>
-<dt><code>snd-allpoles(<a name="index977"><i>snd</i>, <i>lpc-coefs</i>, <i>gain</i>)</code> [SAL]<br>
+<dt><code>snd-allpoles(<a name="index985"><i>snd</i>, <i>lpc-coefs</i>, <i>gain</i>)</code> [SAL]<br>
 
 <code>(snd-allpoles <i>snd</i> <i>lpc-coefs</i> <i>gain</i>)</code> [LISP]<dd>A fixed all-pole filter. The input is
 <i>snd</i>, a <code>SOUND</code>. The filter coefficients are given by <i>lpc-coefs</i>
 (an <code>ARRAY</code>), and the filter gain is given by <i>gain</i>, a <code>FLONUM</code>.
 The result is a <code>SOUND</code> whose duration matches that of <i>snd</i>. 
 Ordinarily, you should use <code>allpoles-from-lpc</code> instead (see above).<br><br>
-<dt><code>snd-lpreson(<a name="index978"><i>snd</i>, <i>lpc-iterator</i>, 
+<dt><code>snd-lpreson(<a name="index986"><i>snd</i>, <i>lpc-iterator</i>, 
 <i>skiptime</i>)</code> [SAL]<br>
 
 <code>(snd-lpreson <i>snd</i> <i>lpc-iterator</i> <i>skiptime</i>)</code> [LISP]<dd>This function is identical to <code>lpreson</code> (see above).

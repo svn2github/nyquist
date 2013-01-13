@@ -4,7 +4,7 @@
 <hr>
 <a name = "136"><h2>Xmusic and Algorithmic Composition</h2></a>
 
-<a name="index1003"><a name="index1004">
+<a name="index1011"><a name="index1012">
 Several Nyquist libraries offer support for algorithmic composition. Xmusic 
 is a library for generating sequences and patterns of data. Included in Xmusic 
 is the <code>score-gen</code> macro which helps to generate scores from patterns.
@@ -31,7 +31,7 @@ set pitch-source = make-cycle(list(c4, d4, e4, f4))
 </pre>
 
 After creating the pattern, you can access it repeatedly 
-with <code>next</code><a name="index1005"> to generate data, e.g.
+with <code>next</code><a name="index1013"> to generate data, e.g.
 <pre>
 play seqrep(i, 13, pluck(next(pitch-source), 0.2))
 </pre>
@@ -73,7 +73,7 @@ paragraph explains the concept of the <i>period</i>.
 <p>
 The data returned by a pattern object is structured into logical groups
 called <i>periods</i>. You can get an entire period (as a list) by calling
-<code>next(<i>pattern</i>, t)</code><a name="index1006">. For example:
+<code>next(<i>pattern</i>, t)</code><a name="index1014">. For example:
 <pre>
 set pitch-source = make-cycle(list(c4, d4, e4, f4))
 print next(pitch-source, t)
@@ -137,7 +137,7 @@ For example, two periods of <code>make-cycle({a b c})</code> would be
 <p>
 <dl>
 <dt>
-<code>make-cycle(<a name="index1007"><a name="index1008"><a name="index1009"><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-cycle(<a name="index1015"><a name="index1016"><a name="index1017"><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-cycle <i>items</i> :for <i>for</i> :name <i>name</i>
  :trace <i>trace</i>)</code> [LISP]<dd>Make a cycle 
@@ -156,7 +156,7 @@ For example, two periods of <code>make-line({a b c})</code> would be
 <p>
 <dl>
 <dt>
-<code>make-line(<a name="index1010"><a name="index1011"><a name="index1012"><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-line(<a name="index1018"><a name="index1019"><a name="index1020"><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-line <i>items</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make a line 
 pattern that iterates over <i>items</i>. The default period length is the
@@ -179,7 +179,7 @@ Weights (but not currently minima and maxima) can be patterns. The patterns
 <p>
 <dl>
 <dt>
-<code>make-random(<a name="index1013"><a name="index1014"><a name="index1015"><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-random(<a name="index1021"><a name="index1022"><a name="index1023"><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-random <i>items</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make a random 
 pattern that selects from <i>items</i>. Any (or all) element(s) of <i>items</i>
@@ -218,7 +218,7 @@ make-palindrome({a b c}, elide: :last)
 <p>
 <dl>
 <dt>
-<code>make-palindrome(<a name="index1016"><a name="index1017"><a name="index1018"><i>items</i>, elide: <i>elide</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-palindrome(<a name="index1024"><a name="index1025"><a name="index1026"><i>items</i>, elide: <i>elide</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-palindrome <i>items</i> :elide <i>elide</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate items
 from list alternating in-order and reverse-order sequencing. The keyword 
@@ -245,7 +245,7 @@ within a period regardless of the value of <code>max:</code>.
 <p>
 <dl>
 <dt>
-<code>make-heap(<a name="index1019"><a name="index1020"><a name="index1021"><i>items</i>, for: <i>for</i>, max: <i>max</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-heap(<a name="index1027"><a name="index1028"><a name="index1029"><i>items</i>, for: <i>for</i>, max: <i>max</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-heap <i>items</i> :for <i>for</i> :max <i>max</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate items
 randomly from list without replacement. If <i>max</i> is 1, the first element of 
@@ -266,7 +266,7 @@ generated period is (A A B A B C).
 <p>
 <dl>
 <dt>
-<code>make-accumulation(<a name="index1022"><a name="index1023"><a name="index1024"><i>items</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-accumulation(<a name="index1030"><a name="index1031"><a name="index1032"><i>items</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-accumulation <i>items</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>For each item, generate items from the first to
 the item including the item. The period length is (<i>n</i>^(2) + <i>n</i>) / 2
@@ -282,7 +282,7 @@ would be <code>(A A) (B B) (C C)</code>. Note that entire periods (not
 individual items) are repeated, so in this example the <code>for:</code> 
 keyword was used to force periods to be of length one so that 
 each item is repeated by the <code>repeat:</code> count.<br><br>
-<dt><code>make-copier(<a name="index1025"><a name="index1026"><a name="index1027"><i>sub-pattern</i>, repeat: <i>repeat</i>, merge: <i>merge</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<dt><code>make-copier(<a name="index1033"><a name="index1034"><a name="index1035"><i>sub-pattern</i>, repeat: <i>repeat</i>, merge: <i>merge</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-copier <i>sub-pattern</i> :repeat <i>repeat</i> :merge <i>merge</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate a period
 from <i>sub-pattern</i> and repeat it <i>repeat</i> times. If <i>merge</i> is false
@@ -309,7 +309,7 @@ The default output period length is the length of the input period.
 <p>
 <dl>
 <dt>
-<code>make-accumulate(<a name="index1028"><a name="index1029"><a name="index1030"><i>sub-pattern</i>, for: <i>for</i>, max: <i>maximum</i>, min: <i>minimum</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-accumulate(<a name="index1036"><a name="index1037"><a name="index1038"><i>sub-pattern</i>, for: <i>for</i>, max: <i>maximum</i>, min: <i>minimum</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-accumulate <i>sub-pattern</i> :for <i>for</i> :max <i>maximum</i> :min <i>minimum</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Keep
 a running sum of numbers generated by <i>sub-pattern</i>. The default
@@ -328,7 +328,7 @@ second argument can be a pattern or a number.
 <p>
 <dl>
 <dt>
-<code>make-sum(<a name="index1031"><a name="index1032"><a name="index1033"><i>x</i>, <i>y</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-sum(<a name="index1039"><a name="index1040"><a name="index1041"><i>x</i>, <i>y</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-sum <i>x</i> <i>y</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Form
 sums of items (which must be numbers) from pattern
@@ -348,7 +348,7 @@ second argument can be a pattern or a number.
 <p>
 <dl>
 <dt>
-<code>make-product(<a name="index1034"><a name="index1035"><a name="index1036"><i>x</i>, <i>y</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-product(<a name="index1042"><a name="index1043"><a name="index1044"><i>x</i>, <i>y</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-product <i>x</i> <i>y</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Form
 products of items (which must be numbers) from pattern
@@ -362,7 +362,7 @@ The default output period length is 1.
 <p>
 <dl>
 <dt>
-<code>make-eval(<a name="index1037"><a name="index1038"><a name="index1039"><a name="index1040"><a name="index1041"><i>expr</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-eval(<a name="index1045"><a name="index1046"><a name="index1047"><a name="index1048"><a name="index1049"><i>expr</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-eval <i>expr</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Evaluate
 <i>expr</i> to generate each item. If <i>expr</i> is a pattern, each item is generated by getting the next item from <i>expr</i> and evaluating it.
@@ -384,7 +384,7 @@ default palindrome periods.
 <p>
 <dl>
 <dt>
-<code>make-length(<a name="index1042"><a name="index1043"><a name="index1044"><i>pattern</i>, <i>length-pattern</i>, 
+<code>make-length(<a name="index1050"><a name="index1051"><a name="index1052"><i>pattern</i>, <i>length-pattern</i>, 
 name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-length <i>pattern</i> <i>length-pattern</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make a pattern of class
@@ -405,7 +405,7 @@ then the output periods will be (A B C), (B C D), (C D E), (D E F), ....
 <p>
 <dl>
 <dt>
-<code>make-window(<a name="index1045"><a name="index1046"><a name="index1047"><i>pattern</i>, <i>length-pattern</i>, 
+<code>make-window(<a name="index1053"><a name="index1054"><a name="index1055"><i>pattern</i>, <i>length-pattern</i>, 
 <i>skip-pattern</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-window <i>pattern</i> <i>length-pattern</i> <i>skip-pattern</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make
@@ -443,7 +443,7 @@ might be <code>(C A C) (A B C)</code>.
 <p>
 <dl>
 <dt>
-<code>make-markov(<a name="index1048"><a name="index1049"><a name="index1050"><i>rules</i>, past: <i>past</i>, produces: <i>produces</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+<code>make-markov(<a name="index1056"><a name="index1057"><a name="index1058"><i>rules</i>, past: <i>past</i>, produces: <i>produces</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
 <code>(make-markov <i>rules</i> <i>past</i> :produces <i>produces</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate a sequence
 of items from a Markov process. The <i>rules</i> parameter has the form: 
@@ -483,7 +483,7 @@ the corresponding state.  Finally, the <i>produces</i> keyword can be
 be useful if states are Nyquist global variables such as 
 <code>C4, CS4, D4, ]..., which evaluate to numerical 
 values (60, 61, 62, ...</code>.<br><br>
-<dt><code>markov-create-rules(<a name="index1051"><a name="index1052"><i>sequence</i>, <i>order</i> [, <i>generalize</i>])</code> [SAL]<br>
+<dt><code>markov-create-rules(<a name="index1059"><a name="index1060"><i>sequence</i>, <i>order</i> [, <i>generalize</i>])</code> [SAL]<br>
 
 <code>(markov-create-rules <i>sequence</i> <i>order</i> [<i>generalize</i>])</code> [LISP]<dd>Generate a set of rules suitable for the 
 <code>make-markov</code> function. The <i>sequence</i> is a "typical" sequence
@@ -500,7 +500,7 @@ rule will be appended to the end so it will only apply if no other rule does.
 </dl>
 <p>
 <a name = "153"><h3>Random Number Generators</h3></a>
-<a name="index1053"><a name="index1054"><a name="index1055"><a name="index1056">
+<a name="index1061"><a name="index1062"><a name="index1063"><a name="index1064">
 The <code>distributions.lsp</code> library implements random number generators that return random values with various probability distributions. Without this library, you can generate random numbers with <i>uniform</i> distributions. In a uniform distribution, all values are equally likely. To generate a random integer in some range, use <code>random</code>. To generate a real number (FLONUM) in some range, use <code>real-random</code> (or <code>rrandom</code> if the range is 0-1). But there are other interesting distributions. For example, the Gaussian distribution is often used to model 
 real-world errors and fluctuations where values are clustered around some central value and large deviations are more unlikely than small ones. See Dennis Lorrain, "A Panoply of Stochastic 'Canons'," <i>Computer Music Journal</i> vol. 4, no. 1, 1980, pp. 53-81.
 <p>
@@ -509,7 +509,7 @@ The upper and lower bounds are implemented simply by drawing a random number fro
 <p>
 <dl>
 <dt>
-<code>linear-dist(<a name="index1057"><a name="index1058"><i>g</i>)</code> [SAL]<br>
+<code>linear-dist(<a name="index1065"><a name="index1066"><i>g</i>)</code> [SAL]<br>
 
 <code>(linear-dist <i>g</i>)</code> [LISP]<dd>Return a <code>FLONUM</code> value from a linear distribution, where the probability of a value decreases linearly from zero to <i>g</i> which must be greater than zero. (See Figure <a href = "#153">7</a>.) The linear distribution is useful for generating for generating time and pitch intervals.
 </dl>
@@ -525,7 +525,7 @@ The upper and lower bounds are implemented simply by drawing a random number fro
 <p>
 <dl>
 <dt>
-<code>exponential-dist(<a name="index1059"><a name="index1060"><i>delta</i> [, <i>high</i>])</code> [SAL]<br>
+<code>exponential-dist(<a name="index1067"><a name="index1068"><i>delta</i> [, <i>high</i>])</code> [SAL]<br>
 
 <code>(exponential-dist <i>delta</i> [<i>high</i>])</code> [LISP]<dd>Return a <code>FLONUM</code> value from an exponential distribution. The initial downward slope is steeper with larger values of <i>delta</i>, which must be greater than zero. (See Figure <a href = "#153">8</a>. The optional <i>high</i> parameter puts an artificial upper bound on the return value.
 The exponential distribution generates values greater
@@ -545,7 +545,7 @@ is a continuous distribution, but <code>geometric-dist</code> (described below) 
 <p>
 <dl>
 <dt>
-<code>gamma-dist(<a name="index1061"><i>nu</i> [, <i>high</i>])</code> [SAL]<br>
+<code>gamma-dist(<a name="index1069"><i>nu</i> [, <i>high</i>])</code> [SAL]<br>
 
 <code>(gamma-dist <i>nu</i> [<i>high</i>])</code> [LISP]<dd>Return a <code>FLONUM</code> value from a Gamma distribution. The value is greater than zero, has a mean of <i>nu</i> (a <code>FIXNUM</code> greater than zero), and a mode (peak) of around <i>nu</i> - 1. 
  The optional <i>high</i> parameter puts an artificial upper bound on the return value.
@@ -562,7 +562,7 @@ is a continuous distribution, but <code>geometric-dist</code> (described below) 
 <p>
 <dl>
 <dt>
-<code>bilateral-exponential-dist(<a name="index1062"><a name="index1063"><i>xmu</i>,
+<code>bilateral-exponential-dist(<a name="index1070"><a name="index1071"><i>xmu</i>,
  <i>tau</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
 
 <code>(bilateral-exponential-dist <i>xmu</i> <i>tau</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> value from a bilateral exponential distribution, where <i>xmu</i> is the center of the double exponential and <i>tau</i> controls the spread of the distribution. A larger <i>tau</i> gives a wider distribution (greater variance), and <i>tau</i> must be greater than zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
@@ -582,7 +582,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 <p>
 <dl>
 <dt>
-<code>cauchy-dist(<a name="index1064"><a name="index1065"><i>tau</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
+<code>cauchy-dist(<a name="index1072"><a name="index1073"><i>tau</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
 
 <code>(cauchy-dist <i>tau</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> from the Cauchy distribution, a symetric distribution with a high peak at zero and a width (variance) that increases with parameter <i>tau</i>, which must be greater than zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 </dl>
@@ -598,7 +598,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 <p>
 <dl>
 <dt>
-<code>hyperbolic-cosine-dist(<a name="index1066">[<i>low</i>, <i>high</i>])</code> [SAL]<br>
+<code>hyperbolic-cosine-dist(<a name="index1074">[<i>low</i>, <i>high</i>])</code> [SAL]<br>
 
 <code>(hyperbolic-cosine-dist [<i>low</i> <i>high</i></code>)] [LISP]<dd>Returns a <code>FLONUM</code> value from the hyperbolic cosine distribution, a symetric distribution with its peak at zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 </dl>
@@ -614,7 +614,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 <p>
 <dl>
 <dt>
-<code>logistic-dist(<a name="index1067"><a name="index1068"><i>alpha</i>, <i>beta</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
+<code>logistic-dist(<a name="index1075"><a name="index1076"><i>alpha</i>, <i>beta</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
 
 <code>(logistic-dist <i>alpha</i> <i>beta</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the logistic distribution, which is symetric about the mean. The <i>alpha</i> parameter primarily affects dispersion (variance), with larger values resulting in values closer to the mean (less variance), and the <i>beta</i> parameter primarily influences the mean. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 </dl>
@@ -630,7 +630,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 <p>
 <dl>
 <dt>
-<code>arc-sine-dist(<a name="index1069"><a name="index1070">)</code> [SAL]<br>
+<code>arc-sine-dist(<a name="index1077"><a name="index1078">)</code> [SAL]<br>
 
 <code>(arc-sine-dist)</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the arc sine distribution, which outputs values between 0 and 1. It is symetric about the mean of 1/2, but is more likely to generate values closer to 0 and 1. 
 </dl>
@@ -646,7 +646,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 <p>
 <dl>
 <dt>
-<code>gaussian-dist(<a name="index1071"><a name="index1072"><i>xmu</i>, <i>sigma</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
+<code>gaussian-dist(<a name="index1079"><a name="index1080"><i>xmu</i>, <i>sigma</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
 
 <code>(gaussian-dist <i>xmu</i> <i>sigma</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the Gaussian or Gauss-Laplace distribution, a linear function of the normal distribution. It is symetric about the mean of <i>xmu</i>, with a standard deviation of <i>sigma</i>, which must be greater than zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 </dl>
@@ -662,7 +662,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 <p>
 <dl>
 <dt>
-<code>beta-dist(<a name="index1073"><a name="index1074"><i>a</i>, <i>b</i>)</code> [SAL]<br>
+<code>beta-dist(<a name="index1081"><a name="index1082"><i>a</i>, <i>b</i>)</code> [SAL]<br>
 
 <code>(beta-dist <i>a</i> <i>b</i>)</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the Beta distribution. This distribution outputs values between 0 and 1, with outputs more likely to be close to 0 or 1. The parameter <i>a</i> controls the height (probability) of the right side of the distribution (at 1) and <i>b</i> controls the height of the left side (at 0). The distribution is symetric about 1/2 when <i>a</i> = <i>b</i>.
 </dl>
@@ -678,7 +678,7 @@ the exponential, it can be used to generate time intervals; however, it might be
 <p>
 <dl>
 <dt>
-<code>bernoulli-dist(<a name="index1075"><a name="index1076"><i>px1</i> [, <i>x1</i>, <i>x2</i>])</code> [SAL]<br>
+<code>bernoulli-dist(<a name="index1083"><a name="index1084"><i>px1</i> [, <i>x1</i>, <i>x2</i>])</code> [SAL]<br>
 
 <code>(bernoulli-dist <i>px1</i> [<i>x1</i> <i>x2</i>])</code> [LISP]<dd>Returns either <i>x1</i> (default value is 1) with probability <i>px1</i> or <i>x2</i> (default value is 0) with probability 1 - <i>px1</i>. The value of <i>px1</i> should be between 0 and 1. By
 convention, a result of <i>x1</i> is viewed as a success while <i>x2</i> is viewed as
@@ -696,7 +696,7 @@ a failure.
 <p>
 <dl>
 <dt>
-<code>binomial-dist(<a name="index1077"><a name="index1078"><i>n</i>, <i>p</i>)</code> [SAL]<br>
+<code>binomial-dist(<a name="index1085"><a name="index1086"><i>n</i>, <i>p</i>)</code> [SAL]<br>
 
 <code>(binomial-dist <i>n</i> <i>p</i>)</code> [LISP]<dd>Returns a <code>FIXNUM</code> value from the binomial distribution, where <i>n</i> is the number of Bernoulli trials run (a <code>FIXNUM</code>) and <i>p</i> is the probability of success in the Bernoulli trial (a <code>FLONUM</code> from 0 to 1). The mean is the product of <i>n</i> and <i>p</i>.
 </dl>
@@ -712,7 +712,7 @@ a failure.
 <p>
 <dl>
 <dt>
-<code>geometric-dist(<a name="index1079"><a name="index1080"><i>p</i>)</code> [SAL]<br>
+<code>geometric-dist(<a name="index1087"><a name="index1088"><i>p</i>)</code> [SAL]<br>
 
 <code>(geometric-dist <i>p</i>)</code> [LISP]<dd>Returns a <code>FIXNUM</code> value from the geometric distribution, which is defined as the number of failures before a success is achieved in a Bernoulli trial with probability of success <i>p</i> (a <code>FLONUM</code> from 0 to 1).
 </dl>
@@ -728,7 +728,7 @@ a failure.
 <p>
 <dl>
 <dt>
-<code>poisson-dist(<a name="index1081"><a name="index1082"><i>delta</i>)</code> [SAL]<br>
+<code>poisson-dist(<a name="index1089"><a name="index1090"><i>delta</i>)</code> [SAL]<br>
 
 <code>(poisson-dist <i>delta</i>)</code> [LISP]<dd>Returns a <code>FIXNUM</code> value from the Poisson distribution with a mean of <i>delta</i> (a <code>FIXNUM</code>). The Poisson distribution is often used to generate a sequence of time intervals, resulting in random but often pleasing rhythms.
 </dl>
@@ -759,7 +759,7 @@ The Xmusic representation goes a bit further by specifying that
 <i>all notes are specified by an alternation of keywords and values, where
 some keywords have specific meanings and interpretations.</i>
 <p>
-The basic idea of <code>score-gen</code><a name="index1083"> is you provide a template for notes in 
+The basic idea of <code>score-gen</code><a name="index1091"> is you provide a template for notes in 
 a score as a set of keywords and values. For example,
 <pre>
 set pitch-pattern = make-cycle(list(c4, d4, e4, f4))
@@ -795,14 +795,14 @@ is a brief explanation of how to define functions that use
 keyword parameters.
 <p>
 <a name = "155"><h4>Keyword Parameters</h4></a>
-<a name="index1084">
-<a name="index1085">
+<a name="index1092">
+<a name="index1093">
 Keyword parameters are parameters whose presence is
 indicated by a special symbol, called a keyword, followed
 by the actual parameter. Keyword parameters in SAL have
 default values that are used if no actual parameter is
 provided by the caller of the function. (See Appendix
- <a href = "part19.html#202">"XLISP: An Object-oriented Lisp"</a> to learn about keywords in XLISP.)
+ <a href = "part19.html#207">"XLISP: An Object-oriented Lisp"</a> to learn about keywords in XLISP.)
 <p>
 To specify that a parameter is a keyword parameter, 
 use a keyword symbol (one that ends in a colon) followed
@@ -841,7 +841,7 @@ to determine whether or not a keyword parameter was
 supplied, but these features are little-used. See the XLISP
 manual for details.
 <p>
-<a name = "156"><h4>Using score-gen</h4></a><a name="index1086">
+<a name = "156"><h4>Using score-gen</h4></a><a name="index1094">
 The <code>score-gen</code> macro computes a score based on keyword parameters.
 Some keywords have a special meaning, while others are not interpreted
 but merely placed in the score. The resulting score can be synthesized
@@ -850,7 +850,7 @@ using <code>timed-seq</code> (see Section <a href = "part8.html#93">"Combination
 The form of a call to <code>score-gen</code> is simply:
 <dl>
 <dt>
-<code>score-gen(<a name="index1087"><i>k1:</i> <i>e1</i>, <i>k2:</i> <i>e2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+<code>score-gen(<a name="index1095"><i>k1:</i> <i>e1</i>, <i>k2:</i> <i>e2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
 
 <code>(score-gen <i>:k1</i> <i>e1</i> <i>:k2</i> <i>e2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>where the <i>k</i>'s 
 are keywords and the <i>e</i>'s are 
@@ -916,12 +916,12 @@ allowing function names to be recomputed for each note. The default value
 is <code>note</code>.
 <p>
 <i>Can I make parameters depend upon the starting time or the duration
-of the note?</i> Parameter expressions can use the variable <code>sg:time</code> 
+of the note?</i> Parameter expressions can use the variable <code>sg:start</code> 
 to access the start time of the note, <code>sg:ioi</code> to access the 
 inter-onset time, and <code>sg:dur</code> to access the 
 duration (stretch factor) of the note. Also, <code>sg:count</code> counts how 
 many notes have been computed so far, starting at 0. The order of 
-computation is: <code>sg:time</code> first, then <code>sg:ioi</code> and <code>sg:dur</code>,
+computation is: <code>sg:start</code> first, then <code>sg:ioi</code> and <code>sg:dur</code>,
 so for example, an expression to compute <code>sg:dur</code> can 
 depend on <code>sg:ioi</code>.
 <p>
@@ -951,7 +951,7 @@ parameters are expressions that are evaluated once for each note
 and become the parameters of the notes.
 <p>
 <a name = "157"><h4>Score Manipulation</h4></a>
-<a name="index1088"><a name="index1089">
+<a name="index1096"><a name="index1097">
 Nyquist encourages the representation of music as 
 executable programs, or <i>behaviors</i>, and there are various
 ways to modify behaviors, including time stretching, 
@@ -976,59 +976,59 @@ readable when more mnemonic functions are used to access events.
 <p>
 <dl>
 <dt>
-<code>event-time(<a name="index1090"><i>event</i>)</code> [SAL]<br>
+<code>event-time(<a name="index1098"><i>event</i>)</code> [SAL]<br>
 
 <code>(event-time <i>event</i>)</code> [LISP]<dd>Retrieve the time field from 
 an event.<br><br>
-<dt><code>event-set-time(<a name="index1091"><i>event</i>, <i>time</i>)</code> [SAL]<br>
+<dt><code>event-set-time(<a name="index1099"><i>event</i>, <i>time</i>)</code> [SAL]<br>
 
 <code>(event-set-time <i>event</i> <i>time</i>)</code> [LISP]<dd>Construct
 a new event where the time of <i>event</i> is replaced by <i>time</i>.<br><br>
-<dt><code>event-dur(<a name="index1092"><i>event</i>)</code> [SAL]<br>
+<dt><code>event-dur(<a name="index1100"><i>event</i>)</code> [SAL]<br>
 
 <code>(event-dur <i>event</i>)</code> [LISP]<dd>Retrieve the duration 
 (i.e. the stretch factor) field from an event.<br><br>
-<dt><code>event-set-dur(<a name="index1093"><i>event</i>, <i>dur</i>)</code> [SAL]<br>
+<dt><code>event-set-dur(<a name="index1101"><i>event</i>, <i>dur</i>)</code> [SAL]<br>
 
 <code>(event-set-dur <i>event</i> <i>dur</i>)</code> [LISP]<dd>Construct
 a new event where the duration (or stretch factor) of <i>event</i> is
 replaced by <i>dur</i>.<br><br>
-<dt><code>event-expression(<a name="index1094"><i>event</i>)</code> [SAL]<br>
+<dt><code>event-expression(<a name="index1102"><i>event</i>)</code> [SAL]<br>
 
 <code>(event-expression <i>event</i>)</code> [LISP]<dd>Retrieve the expression 
 field from an event.<br><br>
-<dt><code>event-set-expression(<a name="index1095"><i>event</i>, 
+<dt><code>event-set-expression(<a name="index1103"><i>event</i>, 
 <i>dur</i>)</code> [SAL]<br>
 
 <code>(event-set-expression <i>event</i> <i>dur</i>)</code> [LISP]<dd>Construct
 a new event where the expression of <i>event</i> is replaced by <i>expression</i>.<br><br>
-<dt><code>event-end(<a name="index1096"><i>event</i>)</code> [SAL]<br>
+<dt><code>event-end(<a name="index1104"><i>event</i>)</code> [SAL]<br>
 
 <code>(event-end <i>event</i>)</code> [LISP]<dd>Retrieve the end time 
 of <i>event</i>, its time plus its duration.<br><br>
-<dt><code>expr-has-attr(<a name="index1097"><i>expression</i>, <i>attribute</i>)</code> [SAL]<br>
+<dt><code>expr-has-attr(<a name="index1105"><i>expression</i>, <i>attribute</i>)</code> [SAL]<br>
 
 <code>(expr-has-attr <i>expression</i> <i>attribute</i>)</code> [LISP]<dd>Test 
 whether a score event <i>expression</i> has the given <i>attribute</i>.<br><br>
-<dt><code>expr-get-attr(<a name="index1098"><i>expression</i>, <i>attribute</i> [, <i>default</i>])</code> [SAL]<br>
+<dt><code>expr-get-attr(<a name="index1106"><i>expression</i>, <i>attribute</i> [, <i>default</i>])</code> [SAL]<br>
 
 <code>(expr-get-attr <i>expression</i> <i>attribute</i> [<i>default</i>])</code> [LISP]<dd>Get the value of the given <i>attribute</i> from a score event
 <i>expression</i>. If <i>attribute</i> is not present, return <i>default</i> if
 specified, and otherwise <code>nil</code>.<br><br>
-<dt><code>expr-set-attr(<a name="index1099"><i>expr</i>, <i>attribute</i>, <i>value</i>)</code> [SAL]<br>
+<dt><code>expr-set-attr(<a name="index1107"><i>expr</i>, <i>attribute</i>, <i>value</i>)</code> [SAL]<br>
 
 <code>(expr-set-attr <i>expr</i> <i>attribute</i> <i>value</i>)</code> [LISP]<dd>Construct a new expression identical to <i>expr</i> except that the <i>attribute</i> has <i>value</i>.<br><br>
-<dt><code>event-has-attr(<a name="index1100"><i>event</i>, <i>attribute</i>)</code> [SAL]<br>
+<dt><code>event-has-attr(<a name="index1108"><i>event</i>, <i>attribute</i>)</code> [SAL]<br>
 
 <code>(event-has-attr <i>event</i> <i>attribute</i>)</code> [LISP]<dd>Test 
 whether a given score <i>event</i>'s expression has the given <i>attribute</i>.<br><br>
-<dt><code>event-get-attr(<a name="index1101"><i>event</i>, <i>attribute</i>, 
+<dt><code>event-get-attr(<a name="index1109"><i>event</i>, <i>attribute</i>, 
 [<i>default</i>])</code> [SAL]<br>
 
 <code>(event-get-attr <i>event</i> <i>attribute</i> [<i>default</i>])</code> [LISP]<dd>Get the value of the given <i>attribute</i> from a score 
 <i>event</i>'s expression. If <i>attribute</i> is not present, return <i>default</i> if
 specified, and otherwise <code>nil</code>.<br><br>
-<dt><code>event-set-attr(<a name="index1102"><i>event</i>, <i>attribute</i>, <i>value</i>)</code> [SAL]<br>
+<dt><code>event-set-attr(<a name="index1110"><i>event</i>, <i>attribute</i>, <i>value</i>)</code> [SAL]<br>
 
 <code>(event-set-attr <i>event</i> <i>attribute</i> <i>value</i>)</code> [LISP]<dd>Construct a new event identical to <i>event</i> except that the <i>attribute</i> has <i>value</i>.<br><br>
 <dt></dl>Functions are provided to shift the starting times of notes,
@@ -1052,10 +1052,10 @@ LISP syntax, colons <i>precede</i> the keyword, so use
 <p>
 <dl>
 <dt>
-<code>score-sorted(<a name="index1103"><i>score</i>)</code> [SAL]<br>
+<code>score-sorted(<a name="index1111"><i>score</i>)</code> [SAL]<br>
 
 <code>(score-sorted <i>score</i>)</code> [LISP]<dd>Test if <i>score</i> is sorted.<br><br>
-<dt><code>score-sort(<a name="index1104"><i>score</i> [, <i>copy-flag</i>])</code> [SAL]<br>
+<dt><code>score-sort(<a name="index1112"><i>score</i> [, <i>copy-flag</i>])</code> [SAL]<br>
 
 <code>(score-sort <i>score</i> [<i>copy-flag</i>])</code> [LISP]<dd>Sort
  the notes in a 
@@ -1065,7 +1065,7 @@ is a fresh copy that is not shared by any other variables. (The
 <i>copy-flag</i> is intended for internal system use only.)
  For the following operations, it is assumed
 that scores are sorted, and all operations return a sorted score.<br><br>
-<dt><code>score-shift(<a name="index1105"><i>score</i>, <i>offset</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+<dt><code>score-shift(<a name="index1113"><i>score</i>, <i>offset</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
  to-time: <i>y</i>)</code> [SAL]<br>
 
 <code>(score-shift <i>score</i> <i>offset</i>
@@ -1076,7 +1076,7 @@ all notes are modified, but the range of notes can be limited with the
 keyword parameters. The begin time of the score is not changed, but the 
 end time is increased by <i>offset</i>.
 The original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-stretch(<a name="index1106"><i>score</i>, <i>factor</i>, dur: <i>dur-flag</i>, time: <i>time-flag</i>, from-index: <i>i</i>,
+<dt><code>score-stretch(<a name="index1114"><i>score</i>, <i>factor</i>, dur: <i>dur-flag</i>, time: <i>time-flag</i>, from-index: <i>i</i>,
  to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
 
 <code>(score-stretch <i>score</i> <i>factor</i>
@@ -1097,7 +1097,7 @@ takes place over the indicated time interval independent of whether
 any notes are present or where they start. In other words, the 
 "rests" are stretched along with the notes.
 The original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-transpose(<a name="index1107"><i>score</i>,
+<dt><code>score-transpose(<a name="index1115"><i>score</i>,
  <i>keyword</i>,  <i>amount</i>, from-index: <i>i</i>, to-index: <i>j</i>,
  from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
 
@@ -1111,7 +1111,7 @@ the parameter value by <i>amount</i>. For example, to tranpose up by a whole
 step, write <code>(score-transpose 2 :pitch <i>score</i>)</code>. The 
 original score is not modified, and a new score 
 is returned.<br><br>
-<dt><code>score-scale(<a name="index1108"><i>score</i>, <i>keyword</i>, <i>amount</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+<dt><code>score-scale(<a name="index1116"><i>score</i>, <i>keyword</i>, <i>amount</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
  to-time: <i>y</i>)</code> [SAL]<br>
 
 <code>(score-scale <i>score</i> <i>keyword</i> <i>amount</i>
@@ -1122,7 +1122,7 @@ parameter matching <i>keyword</i> and the
 parameter value is a number, multiply
 the parameter value by <i>amount</i>. The original score is not modified, 
 and a new score is returned.<br><br>
-<dt><code>score-sustain(<a name="index1109"><i>score</i>, <i>factor</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+<dt><code>score-sustain(<a name="index1117"><i>score</i>, <i>factor</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
  to-time: <i>y</i>)</code> [SAL]<br>
 
 <code>(score-sustain <i>score</i> <i>factor</i>
@@ -1133,7 +1133,7 @@ the duration (stretch factor) by <i>amount</i>. This can be used to
 make notes sound more legato or staccato, and does not change their 
 starting times. The original score is not modified, and 
 a new score is returned.<br><br>
-<dt><code>score-voice(<a name="index1110"><i>score</i>,
+<dt><code>score-voice(<a name="index1118"><i>score</i>,
  <i>replacement-list</i>, from-index: <i>i</i>, to-index: <i>j</i>,
  from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
 
@@ -1151,7 +1151,7 @@ replace <code>my-note-1</code> by <code>trombone</code> and <code>my-note-2</cod
 <code>piano</code>, use <code>score-voice(<i>score</i>, {{* piano}})</code>. 
 The original score is not modified, and a
  new score is returned.<br><br>
-<dt><code>score-merge(<a name="index1111"><i>score1</i>, <i>score2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+<dt><code>score-merge(<a name="index1119"><i>score1</i>, <i>score2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
 
 <code>(score-merge <i>score1</i> <i>score2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>Create
 a new score containing all the notes of the parameters, which are all
@@ -1160,7 +1160,7 @@ merged score begin time is the minimum of the begin times of the parameters
 and the merged score end time is the maximum of the end times of 
 the parameters. The original scores are not modified, and a new 
 score is returned.<br><br>
-<dt><code>score-append(<a name="index1112"><i>score1</i>, <i>score2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+<dt><code>score-append(<a name="index1120"><i>score1</i>, <i>score2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
 
 <code>(score-append <i>score1</i> <i>score2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>Create
 a new score containing all the notes of the parameters, which are all
@@ -1168,7 +1168,7 @@ scores. The begin time of the first score is unaltered. The begin time of
  each other score is aligned to the end time of the
 previous score; thus, scores are "spliced" in sequence. The original 
 scores are not modified, and a new score is returned.<br><br>
-<dt><code>score-select(<a name="index1113"><a name="index1114"><i>score</i>,
+<dt><code>score-select(<a name="index1121"><a name="index1122"><i>score</i>,
  <i>predicate</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
  to-time: <i>y</i>, reject: <i>flag</i>)</code> [SAL]<br>
 
@@ -1185,32 +1185,32 @@ the <code>reject:</code> parameter is non-null, the notes <i>not</i> selected fo
  the new score (in other words the selected notes are rejected or removed to
  form the new score). The original score is not modified, and a
  new score is returned.<br><br>
-<dt><code>score-set-begin(<a name="index1115"><i>score</i>, <i>time</i>)</code> [SAL]<br>
+<dt><code>score-set-begin(<a name="index1123"><i>score</i>, <i>time</i>)</code> [SAL]<br>
 
 <code>(score-set-begin <i>score</i> <i>time</i>)</code> [LISP]<dd>The begin 
 time
  from the <i>score</i>'s <code>SCORE-BEGIN-END</code> marker is set to <i>time</i>. The 
 original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-get-begin(<a name="index1116"><i>score</i>)</code> [SAL]<br>
+<dt><code>score-get-begin(<a name="index1124"><i>score</i>)</code> [SAL]<br>
 
 <code>(score-get-begin <i>score</i>)</code> [LISP]<dd>Return the begin
 time of the <i>score</i>.<br><br>
-<dt><code>score-set-end(<a name="index1117"><i>score</i>, <i>time</i>)</code> [SAL]<br>
+<dt><code>score-set-end(<a name="index1125"><i>score</i>, <i>time</i>)</code> [SAL]<br>
 
 <code>(score-set-end <i>score</i> <i>time</i>)</code> [LISP]<dd>The end time
  from the <i>score</i>'s <code>SCORE-BEGIN-END</code> marker is set to <i>time</i>. The 
 original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-get-end(<a name="index1118"><i>score</i>)</code> [SAL]<br>
+<dt><code>score-get-end(<a name="index1126"><i>score</i>)</code> [SAL]<br>
 
 <code>(score-get-end <i>score</i>)</code> [LISP]<dd>Return the end
 time of the <i>score</i>.<br><br>
-<dt><code>score-must-have-begin-end(<a name="index1119"><i>score</i>)</code> [SAL]<br>
+<dt><code>score-must-have-begin-end(<a name="index1127"><i>score</i>)</code> [SAL]<br>
 
 <code>(score-must-have-begin-end <i>score</i>)</code> [LISP]<dd>If 
  <i>score</i> does not have a begin and end time, construct a score with a
  <code>SCORE-BEGIN-END</code> expression and return it. If score already has a begin
 and end time, just return the score. The orignal score is not modified.<br><br>
-<dt><code>score-filter-length(<a name="index1120"><i>score</i>, 
+<dt><code>score-filter-length(<a name="index1128"><i>score</i>, 
 <i>cutoff</i>)</code> [SAL]<br>
 
 <code>(score-filter-length <i>score</i> <i>cutoff</i>)</code> [LISP]<dd>Remove notes that extend beyond the <i>cutoff</i> time. This
@@ -1218,19 +1218,19 @@ is similar to <code>score-select</code>, but the here, events are removed when
 their nominal ending time (start time plus duration) exceeds the <i>cutoff</i>,
 whereas the <code>to-time:</code> parameter is compared to the note's start time.
 The original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-repeat(<a name="index1121"><i>score</i>, <i>n</i>)</code> [SAL]<br>
+<dt><code>score-repeat(<a name="index1129"><i>score</i>, <i>n</i>)</code> [SAL]<br>
 
 <code>(score-repeat <i>score</i> <i>n</i>)</code> [LISP]<dd>Make a sequence
 of <i>n</i> copies of <i>score</i>. Each copy is shifted to that it's begin
 time aligns with the end time of the previous copy, as in <code>score-append</code>.
 The original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-stretch-to-length(<a name="index1122"><i>score</i>, 
+<dt><code>score-stretch-to-length(<a name="index1130"><i>score</i>, 
 <i>length</i>)</code> [SAL]<br>
 
 <code>(score-stretch-to-length <i>score</i> <i>length</i>)</code> [LISP]<dd>Stretch the score so that the end time of the score is
 the score's begin time plus <i>length</i>. 
 The original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-filter-overlap(<a name="index1123"><i>score</i>)</code> [SAL]<br>
+<dt><code>score-filter-overlap(<a name="index1131"><i>score</i>)</code> [SAL]<br>
 
 <code>(score-filter-overlap <i>score</i>)</code> [LISP]<dd>Remove
 overlapping notes (based on the note start time and duration), giving
@@ -1238,16 +1238,16 @@ priority to the
 positional order within the note list (which is also time order). 
 The original score is not modified, 
 and a new score is returned.<br><br>
-<dt><code>score-print(<a name="index1124"><i>score</i>)</code> [SAL]<br>
+<dt><code>score-print(<a name="index1132"><i>score</i>)</code> [SAL]<br>
 
 <code>(score-print <i>score</i>)</code> [LISP]<dd>Print a score with
 one note per line. Returns <code>nil</code>.<br><br>
-<dt><code>score-play(<a name="index1125"><i>score</i>)</code> [SAL]<br>
+<dt><code>score-play(<a name="index1133"><i>score</i>)</code> [SAL]<br>
 
 <code>(score-play <i>score</i>)</code> [LISP]<dd>Play <i>score</i>
 using <code>timed-seq</code> to convert the score to a sound, and 
  <code>play</code> to play the sound.<br><br>
-<dt><code>score-adjacent-events(<a name="index1126"><i>score</i>,
+<dt><code>score-adjacent-events(<a name="index1134"><i>score</i>,
  <i>function</i>,
  from-index: <i>i</i>, to-index: <i>j</i>, 
  from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
@@ -1265,7 +1265,7 @@ This function
 allows notes and their parameters to be adjusted according to their 
 immediate context. The original score is not modified, 
 and a new score is returned.<br><br>
-<dt><code>score-apply(<a name="index1127"><i>score</i>, <i>function</i>,
+<dt><code>score-apply(<a name="index1135"><i>score</i>, <i>function</i>,
  from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> 
 [SAL]<br>
 
@@ -1277,13 +1277,13 @@ where <i>time</i>, <i>dur</i>,
 and <i>expression</i> are the time, duration, and expression of the note.
 If a range is indicated, only notes in the range are replaced.
 The original score is not modified, and a new score is returned.<br><br>
-<dt><code>score-indexof(<a name="index1128"><i>score</i>, <i>function</i>,
+<dt><code>score-indexof(<a name="index1136"><i>score</i>, <i>function</i>,
  from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
 
 <code>(score-indexof <i>score</i> <i>function</i> :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>Return the index (position)
 of the first score event (in range) for which applying <i>function</i> 
 using <code>(<i>function time dur expression</i>)</code> returns true.<br><br>
-<dt><code>score-last-indexof(<a name="index1129"><i>score</i>,
+<dt><code>score-last-indexof(<a name="index1137"><i>score</i>,
  <i>function</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, 
 to-time: <i>y</i>)</code> [SAL]<br>
 
@@ -1291,7 +1291,7 @@ to-time: <i>y</i>)</code> [SAL]<br>
  :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>Return the index (position)
 of the last score event (in range) for which applying <i>function</i> 
 using <code>(<i>function time dur expression</i>)</code> returns true.<br><br>
-<dt><code>score-randomize-start(<a name="index1130"><a name="index1131"><a name="index1132"><a name="index1133"><i>score</i>, <i>amt</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+<dt><code>score-randomize-start(<a name="index1138"><a name="index1139"><a name="index1140"><a name="index1141"><i>score</i>, <i>amt</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
  to-time: <i>y</i>)</code> [SAL]<br>
 
 <code>(score-randomize-start <i>score</i> <i>amt</i>
@@ -1302,7 +1302,7 @@ The original score is not modified, and a new score is returned.
 </dl>
 <p>
 <a name = "158"><h4>Xmusic and Standard MIDI Files</h4></a>
-<a name="index1134"><a name="index1135">
+<a name="index1142"><a name="index1143">
 Nyquist has a general facility to read and write MIDI files. 
 You can even translate to and from a text representation, as described
 in Chapter <a href = "part11.html#104">"MIDI, Adagio, and Sequences"</a>. It is also useful sometimes to read notes
@@ -1322,7 +1322,7 @@ Note also that note-off messages are implied by the stretch factor
 <p>
 <dl>
 <dt>
-<code>score-read-smf(<a name="index1136"><a name="index1137"><i>filename</i>)</code> [SAL]<br>
+<code>score-read-smf(<a name="index1144"><a name="index1145"><i>filename</i>)</code> [SAL]<br>
 
 <code>(score-read-smf <i>filename</i>)</code> [LISP]<dd>Read a 
 standard MIDI file from <i>filename</i>. Return an Xmusic score, or <code>nil</code>
@@ -1341,7 +1341,7 @@ correct when the MIDI file sends single program change per channel before
 any notes are played. This, however, is a fairly common practice. Note that 
 the list returned as <code>*rslt*</code> can be passed 
 to <code>score-write-smf</code>, described below.<br><br>
-<dt><code>score-write-smf(<a name="index1138"><a name="index1139"><i>score</i>, <i>filename</i>,
+<dt><code>score-write-smf(<a name="index1146"><a name="index1147"><i>score</i>, <i>filename</i>,
 [<i>programs</i>])</code> [SAL]<br>
 
 <code>(score-write-smf <i>score</i> <i>filename</i> <i>programs</i>)</code> [LISP]<dd>Write a standard MIDI file to <i>filename</i> 
@@ -1370,7 +1370,7 @@ one less than displayed on MIDI hardware, sequencers, etc.</i>
 <p>
 <a name = "159"><h4>Workspaces</h4></a>
 
-<a name="index1140">
+<a name="index1148">
 When working with scores, you may find it necessary to save 
 them in files between work sessions. This is not an issue
 with functions because they are 
@@ -1398,17 +1398,17 @@ graphical interface. (This is how sliders are saved by the IDE.)
 <p>
 <dl>
 <dt>
-<code>add-to-workspace(<a name="index1141"><i>symbol</i>)</code> [SAL]<br>
+<code>add-to-workspace(<a name="index1149"><i>symbol</i>)</code> [SAL]<br>
 
 <code>(add-to-workspace <i>symbol</i>)</code> [LISP]<dd>Adds 
 a global variable to the workspace. The <i>symbol</i> should be a (quoted)
 symbol.<br><br>
-<dt><code>save-workspace(<a name="index1142">)</code> [SAL]<br>
+<dt><code>save-workspace(<a name="index1150">)</code> [SAL]<br>
 
 <code>(save-workspace)</code> [LISP]<dd>All global variables
 in the workspace are saved to <code>workspace.lsp</code> (in the current
 directory), overwriting the previous file.<br><br>
-<dt><code>describe(<a name="index1143"><i>symbol</i> [, <i>description</i>])</code>
+<dt><code>describe(<a name="index1151"><i>symbol</i> [, <i>description</i>])</code>
  [SAL]<br>
 
 <code>(describe <i>symbol</i> [<i>description</i></code>)] [LISP]<dd>If <i>description</i>, a text string, is present, 
@@ -1416,7 +1416,7 @@ associate <i>description</i> with the variable named by the
 <i>symbol</i>. If <i>symbol</i> is not already in the workspace, 
 it is added. If <i>description</i> is omitted, the function returns
 the current description (from a previous call) for <i>symbol</i>.<br><br>
-<dt><code>add-action-to-workspace(<a name="index1144"><i>symbol</i>)</code> [SAL]<br>
+<dt><code>add-action-to-workspace(<a name="index1152"><i>symbol</i>)</code> [SAL]<br>
 
 <code>(add-action-to-workspace <i>symbol</i>)</code> [LISP]<dd>Requests that the function named by <i>symbol</i> be
 called when the workspace is loaded (if the function is defined).
@@ -1443,11 +1443,11 @@ manipulation.
 <p>
 <dl>
 <dt>
-<code>patternp(<a name="index1145"><i>expression</i>)</code> [SAL]<br>
+<code>patternp(<a name="index1153"><i>expression</i>)</code> [SAL]<br>
 
 <code>(patternp <i>expression</i>)</code> [LISP]<dd>Test if <i>expression</i> is 
 an Xmusic pattern.<br><br>
-<dt><code>params-transpose(<a name="index1146"><i>params</i>, <i>keyword</i>, 
+<dt><code>params-transpose(<a name="index1154"><i>params</i>, <i>keyword</i>, 
  <i>amount</i>)</code> [SAL]<br>
 
 <code>(params-transpose <i>params</i> <i>keyword</i> <i>amount</i>)</code> [LISP]<dd>Add a transposition amount to a score event parameter. The 
@@ -1457,7 +1457,7 @@ The <i>keyword</i> is the keyword of the value to be altered, and <i>amount</i>
 is a number to be added to the value. If no matching keyword is present 
 in <i>params</i>, then <i>params</i> is returned. Otherwise, a new parameter 
 list is constructed and returned. The original <i>params</i> is not changed.<br><br>
-<dt><code>params-scale(<a name="index1147"><i>params</i>, <i>keyword</i>,
+<dt><code>params-scale(<a name="index1155"><i>params</i>, <i>keyword</i>,
  <i>amount</i>)</code> [SAL]<br>
 
 <code>(params-scale <i>params</i> <i>keyword</i> <i>amount</i>)</code> [LISP]<dd>Scale a score event parameter by some factor. This is like 
@@ -1465,25 +1465,25 @@ list is constructed and returned. The original <i>params</i> is not changed.<br>
 list is a list of 
 keyword/value pairs, <i>keyword</i> is the parameter keyword, 
 and <i>amount</i> is the scale factor. <br><br>
-<dt><code>interpolate(<a name="index1148"><a name="index1149"><i>x</i>, <i>x1</i>, <i>y1</i>, <i>x2</i>, <i>y2</i>)</code> [SAL]<br>
+<dt><code>interpolate(<a name="index1156"><a name="index1157"><i>x</i>, <i>x1</i>, <i>y1</i>, <i>x2</i>, <i>y2</i>)</code> [SAL]<br>
 
 <code>(interpolate <i>x</i> <i>x1</i> <i>y1</i> <i>x2</i> <i>y2</i>)</code> [LISP]<dd>Linearly interpolate (or extrapolate)
  between points
 (<i>x1</i>, <i>y1</i>) and (<i>x2</i>, <i>y2</i>) to compute the y value
  corresponding to <i>x</i>.<br><br>
-<dt><code>intersection(<a name="index1150"><a name="index1151"><i>a</i>,
+<dt><code>intersection(<a name="index1158"><a name="index1159"><i>a</i>,
  <i>b</i>)</code> [SAL]<br>
 
 <code>(intersection <i>a</i> <i>b</i>)</code> [LISP]<dd>Compute the set intersection of lists <i>a</i> and <i>b</i>.<br><br>
-<dt><code>union(<a name="index1152"><a name="index1153"><i>a</i>, <i>b</i>)</code> [SAL]<br>
+<dt><code>union(<a name="index1160"><a name="index1161"><i>a</i>, <i>b</i>)</code> [SAL]<br>
 
 <code>(union <i>a</i> <i>b</i>)</code> [LISP]<dd>Compute 
 the set union of lists <i>a</i> and <i>b</i>.<br><br>
-<dt><code>set-difference(<a name="index1154"><a name="index1155"><i>a</i>,
+<dt><code>set-difference(<a name="index1162"><a name="index1163"><i>a</i>,
  <i>b</i>)</code> [SAL]<br>
 
 <code>(set-difference <i>a</i> <i>b</i>)</code> [LISP]<dd>Compute the set of all elements that are in <i>a</i> but not in <i>b</i>.<br><br>
-<dt><code>subsetp(<a name="index1156"><a name="index1157"><i>a</i>, <i>b</i>)</code> [SAL]<br>
+<dt><code>subsetp(<a name="index1164"><a name="index1165"><i>a</i>, <i>b</i>)</code> [SAL]<br>
 
 <code>(subsetp <i>a</i> <i>b</i>)</code> [LISP]<dd>Returns true iff
 <i>a</i> is a subset of <i>b</i>, that is, each element of <i>a</i> is a member 

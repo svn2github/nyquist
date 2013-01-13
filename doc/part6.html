@@ -424,7 +424,7 @@ The drawback is that Nyquist must provide the DSP operations you need, or
 you are out of luck. When Nyquist is found lacking, you can either write a
 new primitive signal operation, or you can perform DSP in Lisp code. Neither
 option is recommended for inexperienced programmers. Instructions for
-extending Nyquist are given in Appendix <a href = "part16.html#183">"Extending Nyquist"</a>. This section
+extending Nyquist are given in Appendix <a href = "part16.html#188">"Extending Nyquist"</a>. This section
 describes the process of writing a new signal processing function in Lisp.
 <p>
 Before implementing a new DSP function, you should decide which approach is
@@ -454,7 +454,7 @@ decide whether to use C or Lisp. (At present, SAL is not a good option
 because it has no support for object-oriented programming.) 
 To use C, you must have a C compiler, the
 full source code for Nyquist, and you must learn about extending Nyquist by
-reading Appendix <a href = "part16.html#183">"Extending Nyquist"</a>. This is the more complex approach, but
+reading Appendix <a href = "part16.html#188">"Extending Nyquist"</a>. This is the more complex approach, but
 the result will be very efficient. A C implementation will deal properly
 with sounds that are not time-aligned or matched in sample rates.
 To use Lisp, you must learn something
@@ -493,7 +493,7 @@ Thus the goal is to design an XLISP object that, in response to a
 <code>:next</code> message will return a proper sequence of samples.  When the
 sound reaches the termination time, simply return <code>NIL</code>.
 <p>
-The XLISP manual (see Appendix <a href = "part19.html#202">"XLISP: An Object-oriented Lisp"</a> describes the object system,
+The XLISP manual (see Appendix <a href = "part19.html#207">"XLISP: An Object-oriented Lisp"</a> describes the object system,
 but in a very terse style, so this example will include some explanation of
 how the object system is used. First, we need to define a class for the
 objects that will compute sound products. Every class is a subclass of class
