@@ -24,6 +24,13 @@ version of Nyquist from within Visual C++. There is a batch file,
 comp-ide.bat, for bulding the Nyquist IDE. This requires the Java SDK
 from Sun Microsystems. 
 
+64-bit Windows
+--------------
+Nyquist runs on 64-bit Windows. Although you can compile a 64-bit
+native version, Nyquist is currently released for 32-bit Windows.
+When running on 64-bit Windows, note that the Registry entries will
+be under HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\CMU\Nyquist. The
+"Wow6432Node" creates a special namespace for 32-bit programs.
 
 Optional
 --------
@@ -37,6 +44,9 @@ follows:
     box of the Start menu and type the Enter key).
 
     Find and highlight the SOFTWARE key under HKEY_LOCAL_MACHINE.
+
+    If you are on 64-bit Windows using 32-bit Nyquist, open the
+    Wow6432Node key under SOFTWARE.
 
     Open the CMU key (if it is not there, use the Edit:New:Key menu
     item to create a CMU key. CMU is case sensitive.)
