@@ -393,6 +393,7 @@
 		3D5CD9060B5BC78900DF426B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA446C20789FF430002CE69 /* CoreAudio.framework */; };
 		3D7327DF125BFB31009AAF15 /* JavaApplicationStub in Copy Executable */ = {isa = PBXBuildFile; fileRef = 3D7327DE125BFB19009AAF15 /* JavaApplicationStub */; };
 		3D7327FC125BFCCE009AAF15 /* ny in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D5CD82D0B5BC73700DF426B /* ny */; };
+		3D81D5F416A39A7900AED04F /* demos in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D81D5F316A39A6700AED04F /* demos */; };
 		3DA1194A0D2DE1BF00948714 /* DelayA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119350D2DE1BF00948714 /* DelayA.cpp */; };
 		3DA1194B0D2DE1BF00948714 /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119360D2DE1BF00948714 /* Effect.cpp */; };
 		3DA1194C0D2DE1BF00948714 /* FileRead.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119370D2DE1BF00948714 /* FileRead.cpp */; };
@@ -564,6 +565,7 @@
 				3D17769C125CB593007B2152 /* NyquistWords.txt in Copy Java Resources */,
 				3D17769D125CB593007B2152 /* runtime in Copy Java Resources */,
 				3D17769E125CB593007B2152 /* lib in Copy Java Resources */,
+				3D81D5F416A39A7900AED04F /* demos in Copy Java Resources */,
 				3D1776A0125CB593007B2152 /* system.lsp in Copy Java Resources */,
 			);
 			name = "Copy Java Resources";
@@ -797,6 +799,7 @@
 		3D7A6FD10A7A85F900098CAB /* NyquistWords.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = NyquistWords.txt; sourceTree = "<group>"; };
 		3D7E28BD0B3E3E540078F9A3 /* Piano_Roll.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = Piano_Roll.java; sourceTree = "<group>"; };
 		3D7E29000B3EC8F90078F9A3 /* Jslide.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = Jslide.java; sourceTree = "<group>"; };
+		3D81D5F316A39A6700AED04F /* demos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = demos; sourceTree = "<group>"; };
 		3D81ED240A76B1290053113C /* sliders.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = sliders.c; sourceTree = "<group>"; };
 		3D81ED250A76B1290053113C /* sliders.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sliders.h; sourceTree = "<group>"; };
 		3D91FF8B0B97CB3300565C3F /* BareBonesBrowserLaunch.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = BareBonesBrowserLaunch.java; sourceTree = "<group>"; };
@@ -1110,7 +1113,6 @@
 		F543EF630375CD7101029006 /* sndsystemmac.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sndsystemmac.h; sourceTree = "<group>"; };
 		F543EF660375CD7101029006 /* sndwrite.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sndwrite.h; sourceTree = "<group>"; };
 		F543EFBF0375CD9901029006 /* osstuff.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = osstuff.c; sourceTree = "<group>"; };
-		F5DA143903A1108C01029006 /* README */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		F5FF5F49039D84B901029006 /* extern.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = extern.c; sourceTree = "<group>"; };
 		F5FF5F4A039D84B901029006 /* extern.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = extern.h; sourceTree = "<group>"; };
 		F5FF5F4B039D84B901029006 /* osdefs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = osdefs.h; sourceTree = "<group>"; };
@@ -1414,10 +1416,7 @@
 			children = (
 				F3145249168281DC00833823 /* libFLAC32.a */,
 				3D7327DE125BFB19009AAF15 /* JavaApplicationStub */,
-				3DE80D680F7EA840003761D2 /* phasevocoder.c */,
-				3DE80D660F7EA825003761D2 /* pvshell.c */,
 				3D1472C70A799DFF00F00E71 /* Nyquist.icns */,
-				F5DA143903A1108C01029006 /* README */,
 				F510BDB903A0314301029006 /* Frameworks */,
 				F543F19F0375E1E401029006 /* Source */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -1433,6 +1432,7 @@
 		08FB7795FE84155DC02AAC07 /* nyquist */ = {
 			isa = PBXGroup;
 			children = (
+				3D81D5F316A39A6700AED04F /* demos */,
 				F314523F16827D8B00833823 /* FLAC */,
 				F31450FE1682744400833823 /* vorbis */,
 				F31450FD1682743B00833823 /* ogg */,
@@ -2325,6 +2325,8 @@
 		F5FF60A6039D87B001029006 /* nyqsrc */ = {
 			isa = PBXGroup;
 			children = (
+				3DE80D680F7EA840003761D2 /* phasevocoder.c */,
+				3DE80D660F7EA825003761D2 /* pvshell.c */,
 				3D3223280F544BBB00F074EF /* nyq-osc-server.c */,
 				3D81ED250A76B1290053113C /* sliders.h */,
 				F5FF615C039D899F01029006 /* seqfnint.c */,
@@ -3806,6 +3808,7 @@
 		3DEBDFD3095B177A001BCCB6 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 			};
@@ -3815,6 +3818,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = "build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 			};
@@ -3823,6 +3827,7 @@
 		3DEBDFD5095B177A001BCCB6 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 			};
