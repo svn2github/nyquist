@@ -58,6 +58,8 @@ copy the documentation from d:/rbd/nyquist to AFS, or
 
 ON WINDOWS
 
+Make release version of nyquist
+run comp-ide.bat to build NyquistIDE
 Run releasenyqide.bat to create release directory.
 Run Inno Setup 5/Inno Setup Compiler
 Select C:\Users\rbd\nyquist\sys\win\nyqrelide.iss
