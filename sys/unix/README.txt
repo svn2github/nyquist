@@ -54,6 +54,12 @@ export) command tells Nyquist where to search for lisp files to be
 loaded when a file is not found in the current directory. See 
 SHELL STARTUP below for information about how to automate this.
 
+64-BIT UBUNTU
+=============
+if xlisp/extern.c fails to compile because of a missing bits/predefs.h,
+    try using synaptic to update libc6 and libc6-i386 and libc6-dev-i386, or
+    try sudo apt-get install libc6-dev-i386
+
 RUNNING NYQUIST FROM THE COMMAND LINE
 =====================================
 Assuming the make completes successfully, you can run Nyquist as follows:

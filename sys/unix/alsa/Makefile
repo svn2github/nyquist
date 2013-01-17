@@ -53,7 +53,7 @@ jnyqide/jNyqIDE.jar: $(JAVASRC)
 INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Iffts/src \
    -Inyqstk/include -Inyqstk -Iportaudio/include -Iportaudio/src/common \
    -Iportaudio/src/os/unix \
-   -Iliblo -Inylsf
+   -Iliblo -Inylsf -IFLAC/include
 
 # system dependent stuff for alsa:
 

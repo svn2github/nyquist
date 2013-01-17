@@ -1,5 +1,5 @@
-/* nyqsrc/sndfnint.c -- interface to  nylsf/sndfile.h, 
- * nyqsrc/sndfmt.h, nyqsrc/sound.h, nyqsrc/add.h, 
+/* nyqsrc/sndfnint.c -- interface to  nyqsrc/sndfmt.h, 
+ * nylsf/sndfile.h, nyqsrc/sound.h, nyqsrc/add.h, 
  * nyqsrc/avg.h, nyqsrc/compose.h, nyqsrc/convolve.h, 
  * nyqsrc/downsample.h, nyqsrc/fft.h, nyqsrc/inverse.h, 
  * nyqsrc/multiseq.h, nyqsrc/resamp.h, nyqsrc/resampv.h, 
@@ -52,9 +52,9 @@ extern LVAL s_true;
 extern LVAL RSLT_sym;
 
 
-#include "sndfile.h"
-
 #include "sndfmt.h"
+
+#include "sndfile.h"
 
 #include "sound.h"
 
