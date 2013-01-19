@@ -151,21 +151,25 @@ OBJECTS = xlisp/extern.o xlisp/xldmem.o  \
 	cmt/seqread.o cmt/seqwrite.o  \
 	cmt/tempomap.o cmt/timebase.o  \
 	cmt/userio.o nylsf/aiff.o  \
-	nylsf/alaw.o nylsf/au.o nylsf/audio_detect.o \
-	nylsf/avr.o nylsf/broadcast.o  \
-	nylsf/caf.o nylsf/chanmap.o nylsf/chunk.o nylsf/command.o  \
-	nylsf/common.o nylsf/dither.o  \
-	nylsf/double64.o nylsf/dwd.o  \
-	nylsf/dwvw.o nylsf/file_io.o  \
-	nylsf/flac.o nylsf/float32.o  \
-	nylsf/gsm610.o nylsf/htk.o nylsf/id3.o \
-	nylsf/ima_adpcm.o nylsf/ima_oki_adpcm.o nylsf/interleave.o  \
-	nylsf/ircam.o nylsf/macbinary3.o  \
-	nylsf/macos.o nylsf/mat4.o  \
-	nylsf/mat5.o nylsf/mpc2k.o nylsf/ms_adpcm.o  \
-	nylsf/nist.o nylsf/ogg.o nylsf/ogg_vorbis.o \
-	nylsf/paf.o nylsf/pcm.o  \
-	nylsf/pvf.o nylsf/raw.o nylsf/rf64.o \
+	nylsf/alaw.o nylsf/au.o  \
+	nylsf/audio_detect.o nylsf/avr.o  \
+	nylsf/broadcast.o nylsf/caf.o  \
+	nylsf/chanmap.o nylsf/chunk.o  \
+	nylsf/command.o nylsf/common.o  \
+	nylsf/dither.o nylsf/double64.o  \
+	nylsf/dwd.o nylsf/dwvw.o  \
+	nylsf/file_io.o nylsf/flac.o  \
+	nylsf/float32.o nylsf/gsm610.o  \
+	nylsf/htk.o nylsf/id3.o  \
+	nylsf/ima_adpcm.o nylsf/ima_oki_adpcm.o  \
+	nylsf/interleave.o nylsf/ircam.o  \
+	nylsf/macbinary3.o nylsf/macos.o  \
+	nylsf/mat4.o nylsf/mat5.o  \
+	nylsf/mpc2k.o nylsf/ms_adpcm.o  \
+	nylsf/nist.o nylsf/ogg.o  \
+	nylsf/ogg_vorbis.o nylsf/paf.o  \
+	nylsf/pcm.o nylsf/pvf.o  \
+	nylsf/raw.o nylsf/rf64.o  \
 	nylsf/rx2.o nylsf/sd2.o  \
 	nylsf/sds.o nylsf/sndfile.o  \
 	nylsf/strings.o nylsf/svx.o  \
@@ -297,6 +301,8 @@ liblo/Makefile:
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 	cd liblo; make
 
+
+
 bin/ser-to-osc: bin $(LIBLO_PATH)/liblo.a
 	$(CC) -c $(CFLAGS) liblo/ser-to-osc/ser-to-osc.cpp \
 	      -o liblo/ser-to-osc/ser-to-osc.o
@@ -308,9 +314,9 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 	$(LN) liblo/test-client/test-client.o -o bin/test-client  $(LFLAGS)
 
 portaudio/Makefile:
-#       note: without-jack avoids 32/64-bit link error on Debian
+	# note: without-jack avoids 32/64-bit link error on Debian
 	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack --with-alsa
-#       sometimes, residual files cause problems
+	# sometimes, residual files cause problems
 	cd portaudio; make clean
 
 $(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
@@ -357,7 +363,7 @@ $(NY): $(OBJECTS) $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a \
 # copy appropriate system.lsp and make it read-only;
 # changes should be made to sys/unix/<system>/system.lsp
 runtime/system.lsp: sys/unix/alsa/system.lsp
-#       make sure it's there before you make it writeable
+#	make sure it's there before you make it writeable
 	touch runtime/system.lsp
 	chmod +w runtime/system.lsp
 	cp -p sys/unix/alsa/system.lsp runtime/system.lsp

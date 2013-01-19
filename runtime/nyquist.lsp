@@ -153,14 +153,26 @@ functions assume durations are always positive.")))
 (setf *TABLE* *SINE-TABLE*)
 
 
+(defun calculate-hz (pitch what)
+  (let ((hz (step-to-hz (+ pitch (get-transpose))))
+        (octaves 0))
+    (cond ((> hz (/ *SOUND-SRATE* 2))
+       (format t "Warning: ~A frequency (~A hz) will alias at current sample rate (~A hz).\n"
+	       what hz *SOUND-SRATE*)
+       (while (> hz *SOUND-SRATE*)
+         (setf octaves (1+ octaves)
+               hz (* hz 0.5)))
+       (cond ((> octaves 0)
+              (format t "Warning: ~A frequency reduced by ~A octaves to ~A hz (which will still alias).\n" 
+		      what octaves hz)))))
+    hz))
+
+
 ;; AMOSC
 ;;
 (defun amosc (pitch modulation &optional (sound *table*) (phase 0.0))
   (let ((modulation-srate (snd-srate modulation))
-    (hz (step-to-hz (+ pitch (get-transpose)))))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-       (format t "Warning: amosc frequency (~A hz) will alias at current sample rate (~A hz).\n"
-           hz *SOUND-SRATE*)))
+        (hz (calculate-hz pitch "amosc")))
     (scale-db (get-loud)
       (snd-amosc
         (car sound)     ; samples for table
@@ -180,10 +192,7 @@ functions assume durations are always positive.")))
 ;;
 (defun fmosc (pitch modulation &optional (sound *table*) (phase 0.0))
   (let ((modulation-srate (snd-srate modulation))
-        (hz (step-to-hz (+ pitch (get-transpose)))))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-       (format t "Warning: fmosc nominal frequency (~A hz) will alias at current sample rate (~A hz).\n"
-           hz *SOUND-SRATE*)))
+        (hz (calculate-hz pitch "fmosc")))
     (scale-db (get-loud)
       (snd-fmosc 
         (car sound)         ; samples for table
@@ -200,10 +209,7 @@ functions assume durations are always positive.")))
 ;; this code is based on FMOSC above
 ;;
 (defun fmfb (pitch index &optional dur)
- (let ((hz (step-to-hz (+ pitch (get-transpose)))))
-   (cond ((> hz (/ *SOUND-SRATE* 2))
-          (format "Warning: fmfb nominal frequency (~A hz) will alias at current sample rate (~A hz).~%"
-                  hz *SOUND-SRATE*)))
+ (let ((hz (calculate-hz pitch "fmfb")))
    (setf dur (get-duration dur))
    (cond ((soundp index) (ny:fmfbv hz index))
           (t
@@ -228,13 +234,10 @@ functions assume durations are always positive.")))
 ;; 
 (defun buzz (n pitch modulation)
   (let ((modulation-srate (snd-srate modulation))
-        (hz (step-to-hz (+ pitch (get-transpose)))))
+	(hz (calculate-hz pitch "buzz nominal")))
     (cond ((< *SOUND-SRATE* modulation-srate)
            (format t "Warning: down-sampling modulation in buzz~%")
            (setf modulation (snd-down *SOUND-SRATE* modulation))))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-           (format t "Warning: buzz nominal frequency (~A hz) will alias at current sample rate (~A hz).\n"
-                   hz *SOUND-SRATE*)))
     (setf n (max n 1)) ; avoid divide by zero problem
     (scale-db (get-loud)
               (snd-buzz n                   ; number of harmonics
@@ -325,20 +328,16 @@ loop
 ;;
 (defun siosc (pitch modulation breakpoints)
   (let ((modulation-srate (snd-srate modulation))
-    (hz (step-to-hz (+ pitch (get-transpose)))))
+	(hz (calculate-hz pitch "siosc nominal")))
     (cond ((< *SOUND-SRATE* modulation-srate)
        (format t "Warning: down-sampling FM modulation in siosc~%")
        (setf modulation (snd-down *SOUND-SRATE* modulation))))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-       (format t "Warning: siosc nominal frequency (~A hz) will alias at current sample rate (~A hz).\n"
-           hz *SOUND-SRATE*)))
-     (scale-db (get-loud)
-      (snd-siosc 
-    (siosc-breakpoints breakpoints)	; tables
-    *SOUND-SRATE*		; output sample rate
-    hz			;  output hz
-    (local-to-global 0)	; starting time
-    modulation))))		; modulation
+    (scale-db (get-loud)
+	      (snd-siosc (siosc-breakpoints breakpoints) ; tables
+			 *SOUND-SRATE*		; output sample rate
+			 hz			;  output hz
+			 (local-to-global 0)	; starting time
+			 modulation))))		; modulation
 
 
 ;; LFO -- freq &optional duration sound phase)
@@ -385,12 +384,7 @@ loop
 (defun osc (pitch &optional (duration 1.0) 
             (sound *TABLE*) (phase 0.0))
   (let ((d  (get-duration duration))
-        (hz (step-to-hz (+ pitch (get-transpose)))))
-    ;(display "osc" *warp* global-start global-stop actual-dur  
-    ;         (get-transpose))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-           (format t "Warning: osc frequency (~A hz) will alias at current sample rate (~A hz).\n"
-                     hz *SOUND-SRATE*)))
+	(hz (calculate-hz pitch "osc")))
     (set-logical-stop
       (scale-db (get-loud)
         (snd-osc 
@@ -407,10 +401,7 @@ loop
 ;; PARTIAL -- sine osc with built-in envelope scaling
 ;;
 (defun partial (steps env)
-  (let ((hz (step-to-hz (+ steps (get-transpose)))))
-    (cond ((> hz (/ *sound-srate* 2))
-           (format t "Warning: partial frequency (~A hz) will alias at current sample rate (~A hz).\n"
-                     hz *sound-srate*)))
+  (let ((hz (calculate-hz pitch "partial")))
     (scale-db (get-loud)
       (snd-partial *sound-srate* hz
                    (force-srate *sound-srate* env)))))
@@ -423,13 +414,10 @@ loop
   (let ((samp (car sample))
     (samp-pitch (cadr sample))
     (samp-loop-start (caddr sample))
-    (hz (step-to-hz (+ pitch (get-transpose)))))
+    (hz (calculate-hz pitch "sampler nominal"))
     ; make a waveform table look like a sample with no attack:
     (cond ((not (numberp samp-loop-start))
            (setf samp-loop-start 0.0)))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-           (format t "Warning: sampler nominal frequency (~A hz) will alias at current sample rate (~A hz).\n"
-                     hz *SOUND-SRATE*)))
     (scale-db (get-loud)
        (snd-sampler 
         samp		; samples for table
@@ -445,11 +433,8 @@ loop
 ;; SINE -- simple sine oscillator
 ;;
 (defun sine (steps &optional (duration 1.0))
-  (let ((hz (step-to-hz (+ steps (get-transpose))))
+  (let ((hz (calculate-hz pitch "sine"))
         (d (get-duration duration)))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-           (format t "Warning: sine frequency (~A hz) will alias at current sample rate (~A hz).\n"
-                     hz *SOUND-SRATE*)))
     (set-logical-stop
       (scale-db (get-loud)
         (snd-sine *rslt* hz *sound-srate* d))
@@ -462,11 +447,8 @@ loop
 ;;            ("time_type" "d") ("double" "final_amp"))
 ;;
 (defun pluck (steps &optional (duration 1.0) (final-amp 0.001))
-  (let ((hz (step-to-hz (+ steps (get-transpose))))
+  (let ((hz (calculate-hz pitch "pluck"))
         (d (get-duration duration)))
-    (cond ((> hz (/ *SOUND-SRATE* 2))
-           (format t "Warning: pluck frequency (~A hz) will alias at current sample rate (~A hz).\n"
-                     hz *SOUND-SRATE*)))
     (set-logical-stop
       (scale-db (get-loud)
         (snd-pluck *SOUND-SRATE* hz *rslt* d final-amp))

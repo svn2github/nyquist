@@ -124,14 +124,15 @@
   "pitch"  "swlogic" "hash" "hashrout" "io" "midibuff"))
 
 
-(setf nylsffiles '("aiff" "alaw" "au" "avr" "broadcast"
-	"caf" "command" "common" "dither"
+(setf nylsffiles '("aiff" "alaw" "au" "audio_detect"
+        "avr" "broadcast"
+	"caf" "chanmap" "chunk" "command" "common" "dither"
 	"double64" "dwd" "dwvw" "file_io"
-	"flac" "float32" "gsm610" "htk"
-	"ima_adpcm" "interleave" "ircam" "macbinary3"
-        "macos" "mat4" "mat5" "ms_adpcm"
-        "nist" "ogg" "paf"
-	"pcm" "pvf" "raw" "rx2" "sd2"
+	"flac" "float32" "gsm610" "htk" "id3"
+	"ima_adpcm" "ima_oki_adpcm" "interleave" "ircam" 
+	"macbinary3" "macos" "mat4" "mat5" "mpc2k"
+        "ms_adpcm" "nist" "ogg" "ogg_vorbis" "paf"
+	"pcm" "pvf" "raw" "rf64" "rx2" "sd2"
 	"sds" "sndfile" "strings" "svx"
 	"txw" "ulaw" "voc" "vox_adpcm"
 	"w64" "wav" "wav_w64" "wve"
@@ -245,7 +246,7 @@
 ;; *********************************************************
 
 (defun makefile ()
-  (let (system-name outf outf-name)
+  (let (system-name outf outf-name portaudio-host-flag)
     (load "misc/transfiles.lsp") ; just to make sure we're current
     (while (null system-type)
        (format t "Write Makefile for what system?  One of:~A~%" system-types)
@@ -255,6 +256,8 @@
           (setf system-type nil))))
     (setf system-name (string-downcase
       (symbol-name system-type)))
+    (setf portaudio-host-flag 
+	  (if (eq system-type 'ALSA) "--with-alsa" "--with-oss"))
     (setf outf-name (strcat "sys/unix/" system-name "/Makefile"))
     (format t "Opening for output: ~A\n" outf-name)
     (setf outf (open outf-name :direction :output))
@@ -348,6 +351,8 @@ liblo/Makefile:
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 \tcd liblo; make
 
+
+
 bin/ser-to-osc: bin $(LIBLO_PATH)/liblo.a
 \t$(CC) -c $(CFLAGS) liblo/ser-to-osc/ser-to-osc.cpp \\
 \t      -o liblo/ser-to-osc/ser-to-osc.o
@@ -360,26 +365,61 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 
 portaudio/Makefile:
 \t# note: without-jack avoids 32/64-bit link error on Debian
-\tcd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack
+\tcd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack ~A
 \t# sometimes, residual files cause problems
 \tcd portaudio; make clean
 
 $(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
 \tcd portaudio; make
 
-$(NY): $(OBJECTS) $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a
-\t$(LN) $(OBJECTS) $(LFLAGS) -o $(NY)
+libogg/Makefile:
+	cd libogg; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+
+$(LIBOGG_PATH)/libogg.a: libogg/Makefile
+	cd libogg; make
+
+# NOTE: libvorbis/configure on a 64-bit machine will expect to find
+#  libogg installed (even though we are not going to use the installed
+#  libogg library, and even though the installed libogg library will
+#  be for 64-bit architecture. This represents a bug in configure
+#  because it checks for a 64-bit library when it is building for
+#  a 32-bit architecture (we pass in CFLAGS=-m32). In spite of the 
+#  bug, configure will build a Makefile that will build a 32-bit
+#  libvorbis library that we need. We will link it with other 
+#  32-bit code including 32-bit libogg.a
+
+libvorbis/Makefile:
+	cd libvorbis; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+
+$(LIBVORBIS_PATH)/libvorbis.a: libvorbis/Makefile
+	cd libvorbis; make
+
+$(LIBVORBIS_PATH)/libvorbisfile.a: libvorbis/Makefile
+	cd libvorbis; make
+
+$(LIBVORBIS_PATH)/libvorbisenc.a: libvorbis/Makefile
+	cd libvorbis; make
+
+
+$(LIBFLAC_PATH)/libFLAC.a: FLAC/src/libFLAC/Makefile.lite
+	cd FLAC/src/libFLAC; make -f Makefile.lite
+
+$(NY): $(OBJECTS) $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a \\
+       FLAC/obj/release/lib/libFLAC.a \\
+       $(LIBVORBIS_PATH)/libvorbis.a $(LIBVORBIS_PATH)/libvorbisfile.a \\
+       $(LIBVORBIS_PATH)/libvorbisenc.a $(LIBOGG_PATH)/libogg.a
+	$(LN) $(OBJECTS) $(LFLAGS) -o $(NY)
 
 # copy appropriate system.lsp and make it read-only;
 # changes should be made to sys/unix/<system>/system.lsp
 runtime/system.lsp: sys/unix/~A/system.lsp
-\t# make sure it's there before you make it writeable
+#\tmake sure it's there before you make it writeable
 \ttouch runtime/system.lsp
 \tchmod +w runtime/system.lsp
 \tcp -p sys/unix/~A/system.lsp runtime/system.lsp
 \tchmod -w runtime/system.lsp
 
-" system-name system-name)
+" portaudio-host-flag system-name system-name)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (dependencies outf system-name)
@@ -649,8 +689,10 @@ LFLAGS = -lm -lpthread
 CC = gcc
 
 LIBPA_PATH = portaudio/lib/.libs
-
+LIBOGG_PATH = libogg/src/.libs
+LIBVORBIS_PATH = libvorbis/lib/.libs
 LIBLO_PATH = liblo/src/.libs
+LIBFLAC_PATH = FLAC/obj/release/lib
 
 # to enable command line editing, use -DREADLINE. WARNING: THIS WILL 
 # DISABLE THE ABILITY TO INTERRUPT LISP AND USE SOME OTHER HANDY 
@@ -662,7 +704,12 @@ CFLAGS = -DOSC -DCMTSTUFF $(OPT) $(INCL) \\
 LN = g++ -m32
 AR = ar
 # to enable command line editing, insert -lreadline -lcurses
-LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a $(AUDIOLIBS) -lm -lpthread -lrt
+LFLAGS = -L/usr/lib32 $(LIBPA_PATH)/libportaudio.a \\
+         $(LIBLO_PATH)/liblo.a $(AUDIOLIBS) $(LIBFLAC_PATH)/libFLAC.a \\
+         $(LIBVORBIS_PATH)/libvorbis.a \\
+         $(LIBVORBIS_PATH)/libvorbisfile.a \\
+         $(LIBVORBIS_PATH)/libvorbisenc.a $(LIBOGG_PATH)/libogg.a \\
+         -lm -lpthread -lrt
 
 TAGS:
 	find . \( -name "*.c" -o -name "*.h" \) -print | etags -
