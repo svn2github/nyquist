@@ -1,3 +1,42 @@
+portaudio diffs:
+
+portaudio.h
+src/hostapi/coreaudio/pa_mac_core.c
+src/os/win/pa_win_wdmks_utils.c
+
+
+diff -r ./include/portaudio.h ../nyquist/portaudio/include/portaudio.h
+51a52,53
+>     
+> #include <stdint.h>
+661c663,664
+< typedef unsigned long PaStreamCallbackFlags;
+---
+> /* RBD changed type to uint32_t */
+> typedef uint32_t PaStreamCallbackFlags;
+
+
+========================
+
+diff -r ./src/hostapi/coreaudio/pa_mac_core.c ../nyquist/portaudio/src/hostapi/c
+oreaudio/pa_mac_core.c
+632c632
+<     memset(deviceInfo, 0, sizeof(deviceInfo));
+---
+>     memset(deviceInfo, 0, sizeof(PaDeviceInfo));
+=========================
+
+diff -r ./src/os/win/pa_win_wdmks_utils.c ../nyquist/portaudio/src/os/win/pa_win_wdmks_utils.c
+57a58,62
+> #ifndef PA_WDMKS_NO_KSGUID_LIB 
+> #define PA_WDMKS_NO_KSGUID_LIB 
+> #endif /* Disable ksguid.lib  (Zeyu) Jan.8.2013 */
+> 
+> 
+===========================
+
+
+
 build directories for all the libraries are quite random
 
 

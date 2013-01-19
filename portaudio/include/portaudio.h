@@ -49,8 +49,6 @@
 extern "C"
 {
 #endif /* __cplusplus */
-    
-#include <stdint.h>
 
  
 /** Retrieve the release number of the currently running PortAudio build,
@@ -660,8 +658,7 @@ typedef struct PaStreamCallbackTimeInfo{
  @see paInputUnderflow, paInputOverflow, paOutputUnderflow, paOutputOverflow,
  paPrimingOutput
 */
-/* RBD changed type to uint32_t */
-typedef uint32_t PaStreamCallbackFlags;
+typedef unsigned long PaStreamCallbackFlags;
 
 /** In a stream opened with paFramesPerBufferUnspecified, indicates that
  input data is all silence (zeros) because no real data is available. In a

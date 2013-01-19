@@ -49,7 +49,8 @@ DEFINES = -DFLAC__CPU_IA32 -DFLAC__USE_3DNOW -DFLAC__HAS_NASM -DFLAC__ALIGN_MALL
 endif
 endif
 INCLUDES = -I./include -I$(topdir)/include -I../../../libogg/include -I$(OGG_INCLUDE_DIR)
-DEBUG_CFLAGS = -DFLAC__OVERFLOW_DETECT
+RELEASE_CFLAGS = -m32
+DEBUG_CFLAGS = -m32 -DFLAC__OVERFLOW_DETECT
 
 ifeq ($(DARWIN_BUILD),yes)
 SRCS_S = \
@@ -89,6 +90,16 @@ SRCS_C = \
 	stream_encoder_framing.c \
 	window.c
 
+#this added for Nyquist to create target directory:
+release: $(topdir)/obj/release/lib
+
+$(topdir)/obj/release/lib:
+	    mkdir $(topdir)/obj
+	    mkdir $(topdir)/obj/release
+	    mkdir $(topdir)/obj/release/lib
+
 include $(topdir)/build/lib.mk
+
+
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.

@@ -55,11 +55,6 @@
 #include "pa_util.h"
 #include "pa_win_wdmks_utils.h"
 
-#ifndef PA_WDMKS_NO_KSGUID_LIB 
-#define PA_WDMKS_NO_KSGUID_LIB 
-#endif /* Disable ksguid.lib  (Zeyu) Jan.8.2013 */
-
-
 #if !defined(PA_WDMKS_NO_KSGUID_LIB) && !defined(PAWIN_WDMKS_NO_KSGUID_LIB)
     #if (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) /* MSC version 6 and above */
         #pragma comment( lib, "ksguid.lib" )

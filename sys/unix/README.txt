@@ -60,6 +60,15 @@ if xlisp/extern.c fails to compile because of a missing bits/predefs.h,
     try using synaptic to update libc6 and libc6-i386 and libc6-dev-i386, or
     try sudo apt-get install libc6-dev-i386
 
+you may need to install nasm
+you may need to install build-essential and g++
+you may need to install lib32asound2-dev
+you may need to install lib32stdc++
+you may need to install g++multilib
+you may need to install libogg-dev
+you may need to install libvorbis-dev
+
+
 RUNNING NYQUIST FROM THE COMMAND LINE
 =====================================
 Assuming the make completes successfully, you can run Nyquist as follows:

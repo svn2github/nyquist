@@ -65,9 +65,14 @@ LFLAGS  = -L$(LIBPATH)
 DEBUG_OBJS = $(SRCS_C:%.c=%.debug.o) $(SRCS_CC:%.cc=%.debug.o) $(SRCS_CPP:%.cpp=%.debug.o) $(SRCS_NASM:%.nasm=%.debug.o) $(SRCS_S:%.s=%.debug.o)
 RELEASE_OBJS = $(SRCS_C:%.c=%.release.o) $(SRCS_CC:%.cc=%.release.o) $(SRCS_CPP:%.cpp=%.release.o) $(SRCS_NASM:%.nasm=%.release.o) $(SRCS_S:%.s=%.release.o)
 
-debug   : $(DEBUG_STATIC_LIB) $(DEBUG_DYNAMIC_LIB)
-valgrind: $(DEBUG_STATIC_LIB) $(DEBUG_DYNAMIC_LIB)
-release : $(RELEASE_STATIC_LIB) $(RELEASE_DYNAMIC_LIB)
+#FOR NYQUIST, BUILD ONLY STATIC LIBRARIES
+#debug   : $(DEBUG_STATIC_LIB) $(DEBUG_DYNAMIC_LIB)
+#valgrind: $(DEBUG_STATIC_LIB) $(DEBUG_DYNAMIC_LIB)
+#release : $(RELEASE_STATIC_LIB) $(RELEASE_DYNAMIC_LIB)
+
+debug   : $(DEBUG_STATIC_LIB)
+valgrind: $(DEBUG_STATIC_LIB)
+release : $(RELEASE_STATIC_LIB)
 
 $(DEBUG_STATIC_LIB): $(DEBUG_OBJS)
 	$(LINK) $@ $(DEBUG_OBJS) && ranlib $@

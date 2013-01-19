@@ -53,7 +53,7 @@ jnyqide/jNyqIDE.jar: $(JAVASRC)
 INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Iffts/src \
    -Inyqstk/include -Inyqstk -Iportaudio/include -Iportaudio/src/common \
    -Iportaudio/src/os/unix \
-   -Iliblo -Inylsf -IFLAC/include
+   -Iliblo -Inylsf -IFLAC/include -Ilibogg/include
 
 # system dependent stuff for alsa:
 
@@ -62,8 +62,10 @@ AUDIOLIBS = -lasound
 CC = gcc
 
 LIBPA_PATH = portaudio/lib/.libs
-
+LIBOGG_PATH = libogg/src/.libs
+LIBVORBIS_PATH = libvorbis/lib/.libs
 LIBLO_PATH = liblo/src/.libs
+LIBFLAC_PATH = FLAC/obj/release/lib
 
 # to enable command line editing, use -DREADLINE. WARNING: THIS WILL 
 # DISABLE THE ABILITY TO INTERRUPT LISP AND USE SOME OTHER HANDY 
@@ -75,7 +77,12 @@ CFLAGS = -DOSC -DCMTSTUFF $(OPT) $(INCL) \
 LN = g++ -m32
 AR = ar
 # to enable command line editing, insert -lreadline -lcurses
-LFLAGS = $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a $(AUDIOLIBS) -lm -lpthread -lrt
+LFLAGS = -L/usr/lib32 $(LIBPA_PATH)/libportaudio.a \
+         $(LIBLO_PATH)/liblo.a $(AUDIOLIBS) $(LIBFLAC_PATH)/libFLAC.a \
+         $(LIBVORBIS_PATH)/libvorbis.a \
+         $(LIBVORBIS_PATH)/libvorbisfile.a \
+         $(LIBVORBIS_PATH)/libvorbisenc.a $(LIBOGG_PATH)/libogg.a \
+         -lm -lpthread -lrt
 
 TAGS:
 	find . ( -name 
@@ -144,21 +151,21 @@ OBJECTS = xlisp/extern.o xlisp/xldmem.o  \
 	cmt/seqread.o cmt/seqwrite.o  \
 	cmt/tempomap.o cmt/timebase.o  \
 	cmt/userio.o nylsf/aiff.o  \
-	nylsf/alaw.o nylsf/au.o  \
+	nylsf/alaw.o nylsf/au.o nylsf/audio_detect.o \
 	nylsf/avr.o nylsf/broadcast.o  \
-	nylsf/caf.o nylsf/command.o  \
+	nylsf/caf.o nylsf/chanmap.o nylsf/chunk.o nylsf/command.o  \
 	nylsf/common.o nylsf/dither.o  \
 	nylsf/double64.o nylsf/dwd.o  \
 	nylsf/dwvw.o nylsf/file_io.o  \
 	nylsf/flac.o nylsf/float32.o  \
-	nylsf/gsm610.o nylsf/htk.o  \
-	nylsf/ima_adpcm.o nylsf/interleave.o  \
+	nylsf/gsm610.o nylsf/htk.o nylsf/id3.o \
+	nylsf/ima_adpcm.o nylsf/ima_oki_adpcm.o nylsf/interleave.o  \
 	nylsf/ircam.o nylsf/macbinary3.o  \
 	nylsf/macos.o nylsf/mat4.o  \
-	nylsf/mat5.o nylsf/ms_adpcm.o  \
-	nylsf/nist.o nylsf/ogg.o  \
+	nylsf/mat5.o nylsf/mpc2k.o nylsf/ms_adpcm.o  \
+	nylsf/nist.o nylsf/ogg.o nylsf/ogg_vorbis.o \
 	nylsf/paf.o nylsf/pcm.o  \
-	nylsf/pvf.o nylsf/raw.o  \
+	nylsf/pvf.o nylsf/raw.o nylsf/rf64.o \
 	nylsf/rx2.o nylsf/sd2.o  \
 	nylsf/sds.o nylsf/sndfile.o  \
 	nylsf/strings.o nylsf/svx.o  \
@@ -301,21 +308,56 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 	$(LN) liblo/test-client/test-client.o -o bin/test-client  $(LFLAGS)
 
 portaudio/Makefile:
-	# note: without-jack avoids 32/64-bit link error on Debian
-	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack
-	# sometimes, residual files cause problems
+#       note: without-jack avoids 32/64-bit link error on Debian
+	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack --with-alsa
+#       sometimes, residual files cause problems
 	cd portaudio; make clean
 
 $(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
 	cd portaudio; make
 
-$(NY): $(OBJECTS) $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a
+libogg/Makefile:
+	cd libogg; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+
+$(LIBOGG_PATH)/libogg.a: libogg/Makefile
+	cd libogg; make
+
+# NOTE: libvorbis/configure on a 64-bit machine will expect to find
+#  libogg installed (even though we are not going to use the installed
+#  libogg library, and even though the installed libogg library will
+#  be for 64-bit architecture. This represents a bug in configure
+#  because it checks for a 64-bit library when it is building for
+#  a 32-bit architecture (we pass in CFLAGS=-m32). In spite of the 
+#  bug, configure will build a Makefile that will build a 32-bit
+#  libvorbis library that we need. We will link it with other 
+#  32-bit code including 32-bit libogg.a
+
+libvorbis/Makefile:
+	cd libvorbis; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+
+$(LIBVORBIS_PATH)/libvorbis.a: libvorbis/Makefile
+	cd libvorbis; make
+
+$(LIBVORBIS_PATH)/libvorbisfile.a: libvorbis/Makefile
+	cd libvorbis; make
+
+$(LIBVORBIS_PATH)/libvorbisenc.a: libvorbis/Makefile
+	cd libvorbis; make
+
+
+$(LIBFLAC_PATH)/libFLAC.a: FLAC/src/libFLAC/Makefile.lite
+	cd FLAC/src/libFLAC; make -f Makefile.lite
+
+$(NY): $(OBJECTS) $(LIBPA_PATH)/libportaudio.a $(LIBLO_PATH)/liblo.a \
+       FLAC/obj/release/lib/libFLAC.a \
+       $(LIBVORBIS_PATH)/libvorbis.a $(LIBVORBIS_PATH)/libvorbisfile.a \
+       $(LIBVORBIS_PATH)/libvorbisenc.a $(LIBOGG_PATH)/libogg.a
 	$(LN) $(OBJECTS) $(LFLAGS) -o $(NY)
 
 # copy appropriate system.lsp and make it read-only;
 # changes should be made to sys/unix/<system>/system.lsp
 runtime/system.lsp: sys/unix/alsa/system.lsp
-	# make sure it's there before you make it writeable
+#       make sure it's there before you make it writeable
 	touch runtime/system.lsp
 	chmod +w runtime/system.lsp
 	cp -p sys/unix/alsa/system.lsp runtime/system.lsp
@@ -933,6 +975,9 @@ nylsf/alaw.o: nylsf/alaw.c
 nylsf/au.o: nylsf/au.c
 	$(CC) -c nylsf/au.c -o nylsf/au.o $(CFLAGS)
 
+nylsf/audio_detect.o: nylsf/audio_detect.c
+	$(CC) -c nylsf/audio_detect.c -o nylsf/audio_detect.o $(CFLAGS)
+
 nylsf/avr.o: nylsf/avr.c
 	$(CC) -c nylsf/avr.c -o nylsf/avr.o $(CFLAGS)
 
@@ -941,6 +986,12 @@ nylsf/broadcast.o: nylsf/broadcast.c
 
 nylsf/caf.o: nylsf/caf.c
 	$(CC) -c nylsf/caf.c -o nylsf/caf.o $(CFLAGS)
+
+nylsf/chanmap.o: nylsf/chanmap.c
+	$(CC) -c nylsf/chanmap.c -o nylsf/chanmap.o $(CFLAGS)
+
+nylsf/chunk.o: nylsf/chunk.c
+	$(CC) -c nylsf/chunk.c -o nylsf/chunk.o $(CFLAGS)
 
 nylsf/command.o: nylsf/command.c
 	$(CC) -c nylsf/command.c -o nylsf/command.o $(CFLAGS)
@@ -975,8 +1026,14 @@ nylsf/gsm610.o: nylsf/gsm610.c
 nylsf/htk.o: nylsf/htk.c
 	$(CC) -c nylsf/htk.c -o nylsf/htk.o $(CFLAGS)
 
+nylsf/id3.o: nylsf/id3.c
+	$(CC) -c nylsf/id3.c -o nylsf/id3.o $(CFLAGS)
+
 nylsf/ima_adpcm.o: nylsf/ima_adpcm.c
 	$(CC) -c nylsf/ima_adpcm.c -o nylsf/ima_adpcm.o $(CFLAGS)
+
+nylsf/ima_oki_adpcm.o: nylsf/ima_oki_adpcm.c
+	$(CC) -c nylsf/ima_oki_adpcm.c -o nylsf/ima_oki_adpcm.o $(CFLAGS)
 
 nylsf/interleave.o: nylsf/interleave.c
 	$(CC) -c nylsf/interleave.c -o nylsf/interleave.o $(CFLAGS)
@@ -996,6 +1053,9 @@ nylsf/mat4.o: nylsf/mat4.c
 nylsf/mat5.o: nylsf/mat5.c
 	$(CC) -c nylsf/mat5.c -o nylsf/mat5.o $(CFLAGS)
 
+nylsf/mpc2k.o: nylsf/mpc2k.c
+	$(CC) -c nylsf/mpc2k.c -o nylsf/mpc2k.o $(CFLAGS)
+
 nylsf/ms_adpcm.o: nylsf/ms_adpcm.c
 	$(CC) -c nylsf/ms_adpcm.c -o nylsf/ms_adpcm.o $(CFLAGS)
 
@@ -1004,6 +1064,9 @@ nylsf/nist.o: nylsf/nist.c
 
 nylsf/ogg.o: nylsf/ogg.c
 	$(CC) -c nylsf/ogg.c -o nylsf/ogg.o $(CFLAGS)
+
+nylsf/ogg_vorbis.o: nylsf/ogg_vorbis.c
+	$(CC) -c nylsf/ogg_vorbis.c -o nylsf/ogg_vorbis.o $(CFLAGS)
 
 nylsf/paf.o: nylsf/paf.c
 	$(CC) -c nylsf/paf.c -o nylsf/paf.o $(CFLAGS)
@@ -1016,6 +1079,9 @@ nylsf/pvf.o: nylsf/pvf.c
 
 nylsf/raw.o: nylsf/raw.c
 	$(CC) -c nylsf/raw.c -o nylsf/raw.o $(CFLAGS)
+
+nylsf/rf64.o: nylsf/rf64.c
+	$(CC) -c nylsf/rf64.c -o nylsf/rf64.o $(CFLAGS)
 
 nylsf/rx2.o: nylsf/rx2.c
 	$(CC) -c nylsf/rx2.c -o nylsf/rx2.o $(CFLAGS)

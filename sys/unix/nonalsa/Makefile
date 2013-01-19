@@ -302,7 +302,7 @@ bin/test-client: bin $(LIBLO_PATH)/liblo.a
 
 portaudio/Makefile:
 	# note: without-jack avoids 32/64-bit link error on Debian
-	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack
+	cd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack --with_oss
 	# sometimes, residual files cause problems
 	cd portaudio; make clean
 

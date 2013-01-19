@@ -318,7 +318,7 @@ jnyqide/jNyqIDE.jar: $(JAVASRC)
 INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Iffts/src \\
    -Inyqstk/include -Inyqstk -Iportaudio/include -Iportaudio/src/common \\
    -Iportaudio/src/os/unix \\
-   -Iliblo -Inylsf -IFLAC/include
+   -Iliblo -Inylsf -IFLAC/include -Ilibogg/include
 
 # system dependent stuff for ~A:
 ~A
