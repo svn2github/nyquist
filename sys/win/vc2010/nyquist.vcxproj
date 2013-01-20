@@ -37,14 +37,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\WinRel\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\WinRel\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)WinRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)WinRel\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\WinDebug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\WinDebug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)WinDebug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)WinDebug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\FLAC\win32;..\..\..\Win32\Release;..\..\..\liblo\lib\Release;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\FLAC\win32\obj\debug\lib;..\..\..\Win32\Debug;..\..\..\liblo\lib\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\Win32\Debug;..\..\..\liblo\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -58,7 +58,7 @@
       <AdditionalIncludeDirectories>..\..\..\xlisp;..\..\..\snd;..\..\..\nyqsrc;..\..\..\tran;..\..\..\cmt;..\..\..\liblo;..\..\..\nyqstk;..\..\..\nyqstk\include;..\..\..\sys\win\msvc;..\..\..\ffts\src;..\..\..\portaudio\include;..\..\..\nylsf;..\..\..\portaudio\src\common;..\..\..\liblo\pthreads.2;..\..\..\FLAC\include;..\..\..\libogg\include;..\..\..\libvorbis\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;FLAC__NO_DLL;PA_USE_WMME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>..\..\..\WinRel/nyquist.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>..\..\..\WinRel/</AssemblerListingLocation>
@@ -83,7 +83,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <Bscmake>
@@ -105,7 +105,7 @@
       <AdditionalIncludeDirectories>..\..\..\xlisp;..\..\..\snd;..\..\..\nyqsrc;..\..\..\tran;..\..\..\cmt;..\..\..\liblo;..\..\..\nyqstk;..\..\..\nyqstk\include;..\..\..\sys\win\msvc;..\..\..\ffts\src;..\..\..\portaudio\include;..\..\..\nylsf;..\..\..\portaudio\src\common;..\..\..\liblo\pthreads.2;..\..\..\FLAC\include;..\..\..\libogg\include;..\..\..\libvorbis\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_USE_WDMKS;FLAC__NO_DLL;PA_USE_WMME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>..\..\..\WinDebug/nyquist.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>..\..\..\WinDebug/</AssemblerListingLocation>
       <ObjectFileName>..\..\..\WinDebug/</ObjectFileName>
@@ -123,7 +123,7 @@
       <AdditionalOptions>/VERBOSE:LIB </AdditionalOptions>
       <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;libFLAC_static.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;liblo_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>..\..\..\WinDebug/nyquist.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
