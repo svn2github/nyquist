@@ -401,7 +401,7 @@ loop
 ;; PARTIAL -- sine osc with built-in envelope scaling
 ;;
 (defun partial (steps env)
-  (let ((hz (calculate-hz pitch "partial")))
+  (let ((hz (calculate-hz steps "partial")))
     (scale-db (get-loud)
       (snd-partial *sound-srate* hz
                    (force-srate *sound-srate* env)))))
@@ -433,7 +433,7 @@ loop
 ;; SINE -- simple sine oscillator
 ;;
 (defun sine (steps &optional (duration 1.0))
-  (let ((hz (calculate-hz pitch "sine"))
+  (let ((hz (calculate-hz steps "sine"))
         (d (get-duration duration)))
     (set-logical-stop
       (scale-db (get-loud)
@@ -447,7 +447,7 @@ loop
 ;;            ("time_type" "d") ("double" "final_amp"))
 ;;
 (defun pluck (steps &optional (duration 1.0) (final-amp 0.001))
-  (let ((hz (calculate-hz pitch "pluck"))
+  (let ((hz (calculate-hz steps "pluck"))
         (d (get-duration duration)))
     (set-logical-stop
       (scale-db (get-loud)

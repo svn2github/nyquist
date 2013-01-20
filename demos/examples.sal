@@ -1,4 +1,10 @@
-;; examples.lsp -- these are from the Nyquist Manual examples
+;; examples.sal -- these are from the Nyquist Manual examples
+
+print "setting directory to", setdir(current-path())
+
+
+;; eliminate some warnings by declaring globals
+variable *fm-voice*, *a-voice*, *mkwave* = #t
 
 define function ex1()
   play osc(60)
@@ -20,10 +26,10 @@ define function mkwave()
   end
 
 
-if ! boundp(quote(*mkwave*)) then
+if *mkwave* then
   begin
     exec mkwave()
-    set *mkwave* = #t
+    set *mkwave* = #f
   end
 
 

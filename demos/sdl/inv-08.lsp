@@ -8,7 +8,7 @@
 ; Nyquist 2.37
 ; *********************************************
 
-(load "sdl")
+(load "sdl.lsp")
 
 
 (defun analog-saw (pitch dur atk rel det reson-freq)
