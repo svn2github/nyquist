@@ -412,9 +412,9 @@ loop
 (defun sampler (pitch modulation 
                 &optional (sample *table*) (npoints 2))
   (let ((samp (car sample))
-    (samp-pitch (cadr sample))
-    (samp-loop-start (caddr sample))
-    (hz (calculate-hz pitch "sampler nominal"))
+        (samp-pitch (cadr sample))
+        (samp-loop-start (caddr sample))
+        (hz (calculate-hz pitch "sampler nominal")))
     ; make a waveform table look like a sample with no attack:
     (cond ((not (numberp samp-loop-start))
            (setf samp-loop-start 0.0)))
