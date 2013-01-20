@@ -52,7 +52,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\..\..\obj\debug\lib\</OutDir>
+    <OutDir>.\..\..\..\obj\debug\lib\</OutDir>
     <IntDir>.\Debug_static\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>C:\Users\MusicFish\AppData\Local\nasm;$(ExecutablePath)</ExecutablePath>
@@ -204,7 +204,6 @@
     <ClInclude Include="..\..\include\FLAC\stream_encoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bitmath.cpp" />
     <ClCompile Include="bitreader.c" />
     <ClCompile Include="bitwriter.c" />
     <ClCompile Include="cpu.c" />
@@ -218,7 +217,6 @@
     <ClCompile Include="metadata_iterators.c" />
     <ClCompile Include="metadata_object.c" />
     <ClCompile Include="ogg_decoder_aspect.c" />
-    <ClCompile Include="ogg_encoder_aspect.cpp" />
     <ClCompile Include="ogg_helper.c" />
     <ClCompile Include="ogg_mapping.c" />
     <ClCompile Include="stream_decoder.c" />
