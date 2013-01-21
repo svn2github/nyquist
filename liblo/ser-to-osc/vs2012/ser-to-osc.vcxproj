@@ -102,6 +102,14 @@
   <ItemGroup>
     <ClInclude Include="..\Serial.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\build\vs2012\liblo.vcxproj">
+      <Project>{fea9d5d3-46bd-594f-85c6-f1380fd994a6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\pthreads.2\vs2012\pthread.vcxproj">
+      <Project>{a02e8ec5-317c-42cd-9425-60bdde09d833}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

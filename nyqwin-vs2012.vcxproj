@@ -54,10 +54,10 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\liblo;.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\sys\win\msvc;.\ffts;.\portaudio\include;.\nyqstk;.\nyqstk\include;.\nylsf;.\portaudio\src\common;.\ffts\src;$(SolutionDir)libogg\include;$(SolutionDir)libvorbis\include;$(SolutionDir)FLAC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINGUI;STDERR=stderr;WIN32;PA_USE_WDMKS;PA_WDMKS_NO_KSGUID_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;$(SolutionDir)liblo\pthreads.2;$(SolutionDir)libogg\include;$(SolutionDir)libvorbis\include;$(SolutionDir)FLAC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINGUI;STDERR=stderr;WIN32;PA_USE_WDMKS;PA_WDMKS_NO_KSGUID_LIB;FLAC__NO_DLL</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\NyqWinDebug/nyqwin.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\NyqWinDebug/</AssemblerListingLocation>
       <ObjectFileName>.\NyqWinDebug/</ObjectFileName>
@@ -82,6 +82,9 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -97,10 +100,10 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>.\liblo;.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\sys\win\msvc;.\ffts;.\portaudio\include;.\nyqstk;.\nyqstk\include;.\nylsf;.\portaudio\src\common;.\ffts\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINGUI;STDERR=stderr;WIN32;PA_USE_WDMKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;$(SolutionDir)liblo\pthreads.2;$(SolutionDir)libogg\include;$(SolutionDir)libvorbis\include;$(SolutionDir)FLAC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINGUI;STDERR=stderr;WIN32;PA_USE_WDMKS;PA_WDMKS_NO_KSGUID_LIB;FLAC__NO_DLL</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>.\NyqWinRel/nyqwin.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\NyqWinRel/</AssemblerListingLocation>
@@ -124,6 +127,9 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -131,6 +137,9 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="nylsf\ogg_pcm.c" />
+    <ClCompile Include="nylsf\ogg_speex.c" />
+    <ClCompile Include="nylsf\ogg_vorbis.c" />
     <ClCompile Include="tran\abs.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1406,6 +1415,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="sys\win\wingui\nycon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="FLAC\src\libFLAC\libFLAC_static-vs2012.vcxproj">
+      <Project>{4cefbc84-c215-11db-8314-0800200c9a66}</Project>
+    </ProjectReference>
+    <ProjectReference Include="liblo\build\vs2012\liblo.vcxproj">
+      <Project>{fea9d5d3-46bd-594f-85c6-f1380fd994a6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libogg\win32\vs2012\libogg_static.vcxproj">
+      <Project>{15cbfeff-7965-41f5-b4e2-21e8795c9159}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libvorbis\win32\vs2012\libvorbisfile\libvorbisfile_static.vcxproj">
+      <Project>{cebde98b-a6aa-46e6-bc79-faaf823db9ec}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libvorbis\win32\vs2012\libvorbis\libvorbis_static.vcxproj">
+      <Project>{3a214e06-b95e-4d61-a291-1f8df2ec10fd}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

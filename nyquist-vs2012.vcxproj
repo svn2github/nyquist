@@ -63,9 +63,9 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;$(SolutionDir)liblo\pthreads.2;$(SolutionDir)libogg\include;$(SolutionDir)libvorbis\include;$(SolutionDir)FLAC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;PA_USE_WDMKS;PA_WDMKS_NO_KSGUID_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;PA_USE_WDMKS;PA_WDMKS_NO_KSGUID_LIB;FLAC__NO_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>.\WinRel/nyquist.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\WinRel/</AssemblerListingLocation>
@@ -90,6 +90,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -105,7 +106,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.\xlisp;.\snd;.\nyqsrc;.\tran;.\cmt;.\liblo;.\nyqstk;.\nyqstk\include;.\sys\win\msvc;.\ffts\src;.\portaudio\include;.\nylsf;.\portaudio\src\common;$(SolutionDir)liblo\pthreads.2;$(SolutionDir)libogg\include;$(SolutionDir)libvorbis\include;$(SolutionDir)FLAC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_USE_WDMKS;PA_WDMKS_NO_KSGUID_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;_DEBUG;PA_USE_WDMKS;PA_WDMKS_NO_KSGUID_LIB;FLAC__NO_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\WinDebug/nyquist.pch</PrecompiledHeaderOutputFile>
