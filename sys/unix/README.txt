@@ -67,6 +67,19 @@ you may need to install lib32stdc++
 you may need to install g++multilib
 you may need to install libogg-dev
 you may need to install libvorbis-dev
+you may need to install Java (perhaps as follows):
+    download jdk-7u2-linux-x64.tar.gz from
+        http://www.oracle.com/technetwork/java/javase/downloads/jdk-7u2-download-1377129.html
+    tar xfvz jdk-7u2-linux-x64.tar.gz
+    sudo mv ./jdk1.7.0_02 /usr/lib/jvm/jdk1.7.0    
+    sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.7.0/bin/java" 1
+    sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.7.0/bin/javac" 1
+    sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/bin/javaws" 1
+    sudo update-alternatives --config java
+    java -version [check that output is 1.7.0_02"]
+    sudo update-alternatives --config javac
+    sudo update-alternatives --config java
+
 
 
 RUNNING NYQUIST FROM THE COMMAND LINE
