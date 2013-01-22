@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nyquist", "nyquist-vs2012.vcxproj", "{208E5158-7B25-4185-8D8E-5E5BFC2153EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nyqwin", "nyqwin-vs2012.vcxproj", "{19DEEB57-B0BB-476A-9960-CE360A884906}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblo_static", "liblo\build\vs2012\liblo.vcxproj", "{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pthread_static", "liblo\pthreads.2\vs2012\pthread.vcxproj", "{A02E8EC5-317C-42CD-9425-60BDDE09D833}"
@@ -36,12 +34,6 @@ Global
 		{208E5158-7B25-4185-8D8E-5E5BFC2153EC}.Release|Win32.Build.0 = Release|Win32
 		{208E5158-7B25-4185-8D8E-5E5BFC2153EC}.Template|Win32.ActiveCfg = Release|Win32
 		{208E5158-7B25-4185-8D8E-5E5BFC2153EC}.Template|Win32.Build.0 = Release|Win32
-		{19DEEB57-B0BB-476A-9960-CE360A884906}.Debug|Win32.ActiveCfg = Debug|Win32
-		{19DEEB57-B0BB-476A-9960-CE360A884906}.Debug|Win32.Build.0 = Debug|Win32
-		{19DEEB57-B0BB-476A-9960-CE360A884906}.Release|Win32.ActiveCfg = Release|Win32
-		{19DEEB57-B0BB-476A-9960-CE360A884906}.Release|Win32.Build.0 = Release|Win32
-		{19DEEB57-B0BB-476A-9960-CE360A884906}.Template|Win32.ActiveCfg = Release|Win32
-		{19DEEB57-B0BB-476A-9960-CE360A884906}.Template|Win32.Build.0 = Release|Win32
 		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Debug|Win32.Build.0 = Debug|Win32
 		{FEA9D5D3-46BD-594F-85C6-F1380FD994A6}.Release|Win32.ActiveCfg = Release|Win32
