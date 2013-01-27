@@ -23,21 +23,16 @@ current: $(CURRENT)
 
 onlyny: $(NY) runtime/system.lsp
 
-JAVASRC = jnyqide/browser.java jnyqide/NyquistThread.java \
-          jnyqide/Pair.java jnyqide/BareBonesBrowserLaunch.java \
-          jnyqide/EnvelopeFrame.java jnyqide/Piano_Roll.java \
-          jnyqide/FindDialog.java jnyqide/PlotFrame.java \
-          jnyqide/InstrumentCharacteristics.java \
-          jnyqide/PlotMouseAdapter.java \
-          jnyqide/Jslide.java jnyqide/PopupListener.java \
-          jnyqide/LispFileFilter.java jnyqide/PreferencesDialog.java \
-          jnyqide/MainFrame_AboutBox.java jnyqide/ReplaceDialog.java \
-          jnyqide/MainFrame.java jnyqide/SpringUtilities.java \
-          jnyqide/Main.java \
-          jnyqide/NotFoundDialog.java jnyqide/TextColor.java \
-          jnyqide/NyqPlot.java jnyqide/Trie.java \
-          jnyqide/NyquistFile.java jnyqide/WordList.java
-
+JAVASRC = JAVASRC =  jnyqide/browser.o jnyqide/NyquistThread.o jnyqide/Pair.o \
+	jnyqide/BareBonesBrowserLaunch.o jnyqide/EnvelopeFrame.o \
+	jnyqide/Piano_Roll.o jnyqide/FindDialog.o jnyqide/PlotFrame.o \
+	jnyqide/InstrumentCharacteristics.o jnyqide/PlotMouseAdapter.o \
+	jnyqide/Jslide.o jnyqide/PopupListener.o jnyqide/LispFileFilter.o \
+	jnyqide/PreferencesDialog.o jnyqide/MainFrame_AboutBox.o \
+	jnyqide/ReplaceDialog.o jnyqide/MainFrame.o jnyqide/SpringUtilities.o \
+	jnyqide/Main.o jnyqide/NotFoundDialog.o jnyqide/TextColor.o \
+	jnyqide/NyqPlot.o jnyqide/Trie.o jnyqide/NyquistFile.o \
+	jnyqide/WordList.o
 
 jnyqide/jNyqIDE.jar: $(JAVASRC)
 	if [ -r jnyqide/SpecialMacHandler.java ] ; then \
@@ -85,208 +80,120 @@ LFLAGS = -L/usr/lib32 $(LIBPA_PATH)/libportaudio.a \
          -lm -lpthread -lrt
 
 TAGS:
-	find . ( -name 
+	find . ( -name "*.c" -o -name "*.h" ) -print | etags -
+
+tags: TAGS
+
+# end of system dependencies
 
 INTGEN = misc/intgen
 
 # Object files for Nyquist:
-OBJECTS = xlisp/extern.o xlisp/xldmem.o  \
-	xlisp/xlbfun.o xlisp/xlcont.o  \
-	xlisp/xldbug.o xlisp/xleval.o  \
-	xlisp/xlfio.o xlisp/xlftab.o  \
-	xlisp/xlglob.o xlisp/xlimage.o  \
-	xlisp/xlinit.o xlisp/xlio.o  \
-	xlisp/xlisp.o xlisp/xljump.o  \
-	xlisp/xllist.o xlisp/xlmath.o  \
-	xlisp/xlobj.o xlisp/xlpp.o  \
-	xlisp/xlprin.o xlisp/xlread.o  \
-	xlisp/xlstr.o xlisp/xlsubr.o  \
-	xlisp/xlsym.o xlisp/xlsys.o  \
-	xlisp/path.o tran/abs.o  \
-	tran/allpoles.o tran/alpass.o  \
-	tran/alpasscv.o tran/alpassvv.o  \
-	tran/amosc.o tran/areson.o  \
-	tran/aresonvc.o tran/aresoncv.o  \
-	tran/aresonvv.o tran/atone.o  \
-	tran/atonev.o tran/biquadfilt.o  \
-	tran/buzz.o tran/chase.o  \
-	tran/clip.o tran/congen.o  \
-	tran/const.o tran/coterm.o  \
-	tran/delaycc.o tran/delaycv.o  \
-	tran/eqbandvvv.o tran/exp.o  \
-	tran/follow.o tran/fmosc.o  \
-	tran/fromobject.o tran/fromarraystream.o  \
-	tran/gate.o tran/ifft.o  \
-	tran/instrclar.o tran/instrclarall.o  \
-	tran/instrclarfreq.o tran/instrsax.o  \
-	tran/instrsaxall.o tran/instrsaxfreq.o  \
-	tran/integrate.o tran/log.o  \
-	tran/lpreson.o tran/maxv.o  \
-	tran/offset.o tran/oneshot.o  \
-	tran/osc.o tran/partial.o  \
-	tran/pluck.o tran/prod.o  \
-	tran/pwl.o tran/quantize.o  \
-	tran/recip.o tran/reson.o  \
-	tran/resonvc.o tran/resoncv.o  \
-	tran/resonvv.o tran/sampler.o  \
-	tran/scale.o tran/shape.o  \
-	tran/sine.o tran/siosc.o  \
-	tran/slope.o tran/sqrt.o  \
-	tran/tapf.o tran/tapv.o  \
-	tran/tone.o tran/tonev.o  \
-	tran/upsample.o tran/white.o  \
-	tran/stkrev.o tran/stkpitshift.o  \
-	tran/stkchorus.o tran/instrbow.o  \
-	tran/instrbowedfreq.o tran/instrbanded.o  \
-	tran/instrmandolin.o tran/instrsitar.o  \
-	tran/instrmodalbar.o tran/instrflute.o  \
-	tran/instrflutefreq.o tran/instrfluteall.o  \
-	tran/fmfb.o tran/fmfbv.o  \
-	cmt/cext.o cmt/cleanup.o  \
-	cmt/cmdline.o cmt/cmtcmd.o  \
-	cmt/moxc.o cmt/mem.o  \
-	cmt/midifile.o cmt/midifns.o  \
-	cmt/record.o cmt/seq.o  \
-	cmt/seqmread.o cmt/seqmwrite.o  \
-	cmt/seqread.o cmt/seqwrite.o  \
-	cmt/tempomap.o cmt/timebase.o  \
-	cmt/userio.o nylsf/aiff.o  \
-	nylsf/alaw.o nylsf/au.o  \
-	nylsf/audio_detect.o nylsf/avr.o  \
-	nylsf/broadcast.o nylsf/caf.o  \
-	nylsf/chanmap.o nylsf/chunk.o  \
-	nylsf/command.o nylsf/common.o  \
-	nylsf/dither.o nylsf/double64.o  \
-	nylsf/dwd.o nylsf/dwvw.o  \
-	nylsf/file_io.o nylsf/flac.o  \
-	nylsf/float32.o nylsf/gsm610.o  \
-	nylsf/htk.o nylsf/id3.o  \
-	nylsf/ima_adpcm.o nylsf/ima_oki_adpcm.o  \
-	nylsf/interleave.o nylsf/ircam.o  \
-	nylsf/macbinary3.o nylsf/macos.o  \
-	nylsf/mat4.o nylsf/mat5.o  \
-	nylsf/mpc2k.o nylsf/ms_adpcm.o  \
-	nylsf/nist.o nylsf/ogg.o  \
-	nylsf/ogg_vorbis.o nylsf/paf.o  \
-	nylsf/pcm.o nylsf/pvf.o  \
-	nylsf/raw.o nylsf/rf64.o  \
-	nylsf/rx2.o nylsf/sd2.o  \
-	nylsf/sds.o nylsf/sndfile.o  \
-	nylsf/strings.o nylsf/svx.o  \
-	nylsf/txw.o nylsf/ulaw.o  \
-	nylsf/voc.o nylsf/vox_adpcm.o  \
-	nylsf/w64.o nylsf/wav.o  \
-	nylsf/wav_w64.o nylsf/wve.o  \
-	nylsf/xi.o nylsf/g72x.o  \
-	nylsf/GSM610/add.o nylsf/GSM610/code.o  \
-	nylsf/GSM610/decode.o nylsf/GSM610/gsm_create.o  \
-	nylsf/GSM610/gsm_decode.o nylsf/GSM610/gsm_destroy.o  \
-	nylsf/GSM610/gsm_encode.o nylsf/GSM610/gsm_option.o  \
-	nylsf/GSM610/long_term.o nylsf/GSM610/lpc.o  \
-	nylsf/GSM610/preprocess.o nylsf/GSM610/rpe.o  \
-	nylsf/GSM610/short_term.o nylsf/GSM610/table.o  \
-	nylsf/G72x/g721.o nylsf/G72x/g723_16.o  \
-	nylsf/G72x/g723_24.o nylsf/G72x/g723_40.o  \
-	nylsf/G72x/g72x.o nyqsrc/debug.o  \
-	nyqsrc/falloc.o nyqsrc/local.o  \
-	nyqsrc/handlers.o nyqsrc/multiread.o  \
-	nyqsrc/seqext.o nyqsrc/seqinterf.o  \
-	nyqsrc/stats.o nyqsrc/ffilterkit.o  \
-	nyqsrc/sliders.o nyqsrc/sound.o  \
-	nyqsrc/add.o nyqsrc/avg.o  \
-	nyqsrc/compose.o nyqsrc/convolve.o  \
-	nyqsrc/downsample.o nyqsrc/fft.o  \
-	nyqsrc/inverse.o nyqsrc/multiseq.o  \
-	nyqsrc/resamp.o nyqsrc/resampv.o  \
-	nyqsrc/samples.o nyqsrc/sndmax.o  \
-	nyqsrc/sndread.o nyqsrc/sndseq.o  \
-	nyqsrc/sndwritepa.o nyqsrc/yin.o  \
-	nyqsrc/nyq-osc-server.o nyqsrc/trigger.o  \
-	nyqsrc/lpanal.o nyqsrc/phasevocoder.o  \
-	nyqsrc/pvshell.o nyqstk/src/Generator.o  \
-	nyqstk/src/SineWave.o nyqstk/src/Function.o  \
-	nyqstk/src/FileRead.o nyqstk/src/FileWvIn.o  \
-	nyqstk/src/Effect.o nyqstk/src/Clarinet.o  \
-	nyqstk/src/Delay.o nyqstk/src/DelayL.o  \
-	nyqstk/src/Envelope.o nyqstk/src/Filter.o  \
-	nyqstk/src/Instrmnt.o nyqstk/src/Noise.o  \
-	nyqstk/src/OneZero.o nyqstk/src/ReedTable.o  \
-	nyqstk/src/Saxofony.o nyqstk/src/Stk.o  \
-	nyqstk/src/WaveLoop.o nyqstk/src/WvIn.o  \
-	nyqstk/src/NRev.o nyqstk/src/JCRev.o  \
-	nyqstk/src/PRCRev.o nyqstk/src/PitShift.o  \
-	nyqstk/src/Chorus.o nyqstk/src/Bowed.o  \
-	nyqstk/src/BowTable.o nyqstk/src/ADSR.o  \
-	nyqstk/src/OnePole.o nyqstk/src/BiQuad.o  \
-	nyqstk/src/BandedWG.o nyqstk/src/DelayA.o  \
-	nyqstk/src/Mandolin.o nyqstk/src/PluckTwo.o  \
-	nyqstk/src/Sitar.o nyqstk/src/ModalBar.o  \
-	nyqstk/src/Modal.o nyqstk/src/Flute.o  \
-	nyqstk/src/JetTable.o nyqstk/src/PoleZero.o  \
-	nyqstk/stkinit.o nyqstk/instr.o  \
-	nyqstk/stkint.o ffts/src/fftext.o  \
-	ffts/src/fftlib.o ffts/src/matlib.o  \
-	nyqsrc/sndfnint.o nyqsrc/seqfnint.o  \
-	sys/unix/osstuff.o sys/unix/term.o 
+OBJECTS =  xlisp/extern.o xlisp/xldmem.o xlisp/xlbfun.o xlisp/xlcont.o \
+	xlisp/xldbug.o xlisp/xleval.o xlisp/xlfio.o xlisp/xlftab.o \
+	xlisp/xlglob.o xlisp/xlimage.o xlisp/xlinit.o xlisp/xlio.o \
+	xlisp/xlisp.o xlisp/xljump.o xlisp/xllist.o xlisp/xlmath.o \
+	xlisp/xlobj.o xlisp/xlpp.o xlisp/xlprin.o xlisp/xlread.o xlisp/xlstr.o \
+	xlisp/xlsubr.o xlisp/xlsym.o xlisp/xlsys.o xlisp/path.o tran/abs.o \
+	tran/allpoles.o tran/alpass.o tran/alpasscv.o tran/alpassvv.o \
+	tran/amosc.o tran/areson.o tran/aresonvc.o tran/aresoncv.o \
+	tran/aresonvv.o tran/atone.o tran/atonev.o tran/biquadfilt.o \
+	tran/buzz.o tran/chase.o tran/clip.o tran/congen.o tran/const.o \
+	tran/coterm.o tran/delaycc.o tran/delaycv.o tran/eqbandvvv.o tran/exp.o \
+	tran/follow.o tran/fmosc.o tran/fromobject.o tran/fromarraystream.o \
+	tran/gate.o tran/ifft.o tran/instrclar.o tran/instrclarall.o \
+	tran/instrclarfreq.o tran/instrsax.o tran/instrsaxall.o \
+	tran/instrsaxfreq.o tran/integrate.o tran/log.o tran/lpreson.o \
+	tran/maxv.o tran/offset.o tran/oneshot.o tran/osc.o tran/partial.o \
+	tran/pluck.o tran/prod.o tran/pwl.o tran/quantize.o tran/recip.o \
+	tran/reson.o tran/resonvc.o tran/resoncv.o tran/resonvv.o \
+	tran/sampler.o tran/scale.o tran/shape.o tran/sine.o tran/siosc.o \
+	tran/slope.o tran/sqrt.o tran/tapf.o tran/tapv.o tran/tone.o \
+	tran/tonev.o tran/upsample.o tran/white.o tran/stkrev.o \
+	tran/stkpitshift.o tran/stkchorus.o tran/instrbow.o \
+	tran/instrbowedfreq.o tran/instrbanded.o tran/instrmandolin.o \
+	tran/instrsitar.o tran/instrmodalbar.o tran/instrflute.o \
+	tran/instrflutefreq.o tran/instrfluteall.o tran/fmfb.o tran/fmfbv.o \
+	cmt/cext.o cmt/cleanup.o cmt/cmdline.o cmt/cmtcmd.o cmt/moxc.o \
+	cmt/mem.o cmt/midifile.o cmt/midifns.o cmt/record.o cmt/seq.o \
+	cmt/seqmread.o cmt/seqmwrite.o cmt/seqread.o cmt/seqwrite.o \
+	cmt/tempomap.o cmt/timebase.o cmt/userio.o nylsf/aiff.o nylsf/alaw.o \
+	nylsf/au.o nylsf/audio_detect.o nylsf/avr.o nylsf/broadcast.o \
+	nylsf/caf.o nylsf/chanmap.o nylsf/chunk.o nylsf/command.o \
+	nylsf/common.o nylsf/dither.o nylsf/double64.o nylsf/dwd.o nylsf/dwvw.o \
+	nylsf/file_io.o nylsf/flac.o nylsf/float32.o nylsf/gsm610.o nylsf/htk.o \
+	nylsf/id3.o nylsf/ima_adpcm.o nylsf/ima_oki_adpcm.o nylsf/interleave.o \
+	nylsf/ircam.o nylsf/macbinary3.o nylsf/macos.o nylsf/mat4.o \
+	nylsf/mat5.o nylsf/mpc2k.o nylsf/ms_adpcm.o nylsf/nist.o nylsf/ogg.o \
+	nylsf/ogg_vorbis.o nylsf/paf.o nylsf/pcm.o nylsf/pvf.o nylsf/raw.o \
+	nylsf/rf64.o nylsf/rx2.o nylsf/sd2.o nylsf/sds.o nylsf/sndfile.o \
+	nylsf/strings.o nylsf/svx.o nylsf/txw.o nylsf/ulaw.o nylsf/voc.o \
+	nylsf/vox_adpcm.o nylsf/w64.o nylsf/wav.o nylsf/wav_w64.o nylsf/wve.o \
+	nylsf/xi.o nylsf/g72x.o nylsf/GSM610/add.o nylsf/GSM610/code.o \
+	nylsf/GSM610/decode.o nylsf/GSM610/gsm_create.o \
+	nylsf/GSM610/gsm_decode.o nylsf/GSM610/gsm_destroy.o \
+	nylsf/GSM610/gsm_encode.o nylsf/GSM610/gsm_option.o \
+	nylsf/GSM610/long_term.o nylsf/GSM610/lpc.o nylsf/GSM610/preprocess.o \
+	nylsf/GSM610/rpe.o nylsf/GSM610/short_term.o nylsf/GSM610/table.o \
+	nylsf/G72x/g721.o nylsf/G72x/g723_16.o nylsf/G72x/g723_24.o \
+	nylsf/G72x/g723_40.o nylsf/G72x/g72x.o nyqsrc/debug.o nyqsrc/falloc.o \
+	nyqsrc/local.o nyqsrc/handlers.o nyqsrc/multiread.o nyqsrc/seqext.o \
+	nyqsrc/seqinterf.o nyqsrc/stats.o nyqsrc/ffilterkit.o nyqsrc/sound.o \
+	nyqsrc/add.o nyqsrc/avg.o nyqsrc/compose.o nyqsrc/convolve.o \
+	nyqsrc/downsample.o nyqsrc/fft.o nyqsrc/inverse.o nyqsrc/multiseq.o \
+	nyqsrc/resamp.o nyqsrc/resampv.o nyqsrc/samples.o nyqsrc/sndmax.o \
+	nyqsrc/sndread.o nyqsrc/sndseq.o nyqsrc/sndsliders.o \
+	nyqsrc/sliderdata.o nyqsrc/sndwritepa.o nyqsrc/yin.o \
+	nyqsrc/nyq-osc-server.o nyqsrc/trigger.o nyqsrc/lpanal.o \
+	nyqsrc/phasevocoder.o nyqsrc/pvshell.o nyqstk/src/Generator.o \
+	nyqstk/src/SineWave.o nyqstk/src/Function.o nyqstk/src/FileRead.o \
+	nyqstk/src/FileWvIn.o nyqstk/src/Effect.o nyqstk/src/Clarinet.o \
+	nyqstk/src/Delay.o nyqstk/src/DelayL.o nyqstk/src/Envelope.o \
+	nyqstk/src/Filter.o nyqstk/src/Instrmnt.o nyqstk/src/Noise.o \
+	nyqstk/src/OneZero.o nyqstk/src/ReedTable.o nyqstk/src/Saxofony.o \
+	nyqstk/src/Stk.o nyqstk/src/WaveLoop.o nyqstk/src/WvIn.o \
+	nyqstk/src/NRev.o nyqstk/src/JCRev.o nyqstk/src/PRCRev.o \
+	nyqstk/src/PitShift.o nyqstk/src/Chorus.o nyqstk/src/Bowed.o \
+	nyqstk/src/BowTable.o nyqstk/src/ADSR.o nyqstk/src/OnePole.o \
+	nyqstk/src/BiQuad.o nyqstk/src/BandedWG.o nyqstk/src/DelayA.o \
+	nyqstk/src/Mandolin.o nyqstk/src/PluckTwo.o nyqstk/src/Sitar.o \
+	nyqstk/src/ModalBar.o nyqstk/src/Modal.o nyqstk/src/Flute.o \
+	nyqstk/src/JetTable.o nyqstk/src/PoleZero.o nyqstk/stkinit.o \
+	nyqstk/instr.o nyqstk/stkint.o ffts/src/fftext.o ffts/src/fftlib.o \
+	ffts/src/matlib.o nyqsrc/sndfnint.o nyqsrc/seqfnint.o \
+	sys/unix/osstuff.o sys/unix/term.o
 
 # Sound functions to add to xlisp
-NYQHDRS = nyqsrc/sndfmt.h nylsf/sndfile.h  \
-	nyqsrc/sound.h nyqsrc/add.h  \
-	nyqsrc/avg.h nyqsrc/compose.h  \
-	nyqsrc/convolve.h nyqsrc/downsample.h  \
-	nyqsrc/fft.h nyqsrc/inverse.h  \
-	nyqsrc/multiseq.h nyqsrc/resamp.h  \
-	nyqsrc/resampv.h nyqsrc/samples.h  \
-	nyqsrc/sndmax.h nyqsrc/sndread.h  \
-	nyqsrc/sndseq.h nyqsrc/sndsliders.h  \
-	nyqsrc/sndwrite.h nyqsrc/yin.h  \
-	nyqsrc/nyq-osc-server.h nyqsrc/trigger.h  \
-	nyqsrc/lpanal.h nyqsrc/phasevocoder.h  \
-	nyqsrc/pvshell.h tran/abs.h  \
-	tran/allpoles.h tran/alpass.h  \
-	tran/alpasscv.h tran/alpassvv.h  \
-	tran/amosc.h tran/areson.h  \
-	tran/aresonvc.h tran/aresoncv.h  \
-	tran/aresonvv.h tran/atone.h  \
-	tran/atonev.h tran/biquadfilt.h  \
-	tran/buzz.h tran/chase.h  \
-	tran/clip.h tran/congen.h  \
-	tran/const.h tran/coterm.h  \
-	tran/delaycc.h tran/delaycv.h  \
-	tran/eqbandvvv.h tran/exp.h  \
-	tran/follow.h tran/fmosc.h  \
-	tran/fromobject.h tran/fromarraystream.h  \
-	tran/gate.h tran/ifft.h  \
-	tran/instrclar.h tran/instrclarall.h  \
-	tran/instrclarfreq.h tran/instrsax.h  \
-	tran/instrsaxall.h tran/instrsaxfreq.h  \
-	tran/integrate.h tran/log.h  \
-	tran/lpreson.h tran/maxv.h  \
-	tran/offset.h tran/oneshot.h  \
-	tran/osc.h tran/partial.h  \
-	tran/pluck.h tran/prod.h  \
-	tran/pwl.h tran/quantize.h  \
-	tran/recip.h tran/reson.h  \
-	tran/resonvc.h tran/resoncv.h  \
-	tran/resonvv.h tran/sampler.h  \
-	tran/scale.h tran/shape.h  \
-	tran/sine.h tran/siosc.h  \
-	tran/slope.h tran/sqrt.h  \
-	tran/tapf.h tran/tapv.h  \
-	tran/tone.h tran/tonev.h  \
-	tran/upsample.h tran/white.h  \
-	tran/stkrev.h tran/stkpitshift.h  \
-	tran/stkchorus.h tran/instrbow.h  \
-	tran/instrbowedfreq.h tran/instrbanded.h  \
-	tran/instrmandolin.h tran/instrsitar.h  \
-	tran/instrmodalbar.h tran/instrflute.h  \
-	tran/instrflutefreq.h tran/instrfluteall.h  \
-	tran/fmfb.h tran/fmfbv.h 
+SNDFNINT_HDRS =  nyqsrc/sndfmt.h nylsf/sndfile.h nyqsrc/sound.h \
+	nyqsrc/add.h nyqsrc/avg.h nyqsrc/compose.h nyqsrc/convolve.h \
+	nyqsrc/downsample.h nyqsrc/fft.h nyqsrc/inverse.h nyqsrc/multiseq.h \
+	nyqsrc/resamp.h nyqsrc/resampv.h nyqsrc/samples.h nyqsrc/sndmax.h \
+	nyqsrc/sndread.h nyqsrc/sndseq.h nyqsrc/sndsliders.h \
+	nyqsrc/sliderdata.h nyqsrc/sndwritepa.h nyqsrc/yin.h \
+	nyqsrc/nyq-osc-server.h nyqsrc/trigger.h nyqsrc/lpanal.h \
+	nyqsrc/phasevocoder.h nyqsrc/pvshell.h tran/abs.h tran/allpoles.h \
+	tran/alpass.h tran/alpasscv.h tran/alpassvv.h tran/amosc.h \
+	tran/areson.h tran/aresonvc.h tran/aresoncv.h tran/aresonvv.h \
+	tran/atone.h tran/atonev.h tran/biquadfilt.h tran/buzz.h tran/chase.h \
+	tran/clip.h tran/congen.h tran/const.h tran/coterm.h tran/delaycc.h \
+	tran/delaycv.h tran/eqbandvvv.h tran/exp.h tran/follow.h tran/fmosc.h \
+	tran/fromobject.h tran/fromarraystream.h tran/gate.h tran/ifft.h \
+	tran/instrclar.h tran/instrclarall.h tran/instrclarfreq.h \
+	tran/instrsax.h tran/instrsaxall.h tran/instrsaxfreq.h tran/integrate.h \
+	tran/log.h tran/lpreson.h tran/maxv.h tran/offset.h tran/oneshot.h \
+	tran/osc.h tran/partial.h tran/pluck.h tran/prod.h tran/pwl.h \
+	tran/quantize.h tran/recip.h tran/reson.h tran/resonvc.h tran/resoncv.h \
+	tran/resonvv.h tran/sampler.h tran/scale.h tran/shape.h tran/sine.h \
+	tran/siosc.h tran/slope.h tran/sqrt.h tran/tapf.h tran/tapv.h \
+	tran/tone.h tran/tonev.h tran/upsample.h tran/white.h tran/stkrev.h \
+	tran/stkpitshift.h tran/stkchorus.h tran/instrbow.h \
+	tran/instrbowedfreq.h tran/instrbanded.h tran/instrmandolin.h \
+	tran/instrsitar.h tran/instrmodalbar.h tran/instrflute.h \
+	tran/instrflutefreq.h tran/instrfluteall.h tran/fmfb.h tran/fmfbv.h
 
-CMTHDRS = cmt/seqdecls.h nyqsrc/seqext.h  \
-	cmt/seq.h nyqsrc/seqinterf.h  \
-	cmt/seqread.h cmt/seqmread.h  \
-	cmt/seqwrite.h cmt/seqmwrite.h 
+SEQFNINT_HDRS =  cmt/seqdecls.h nyqsrc/seqext.h cmt/seq.h \
+	nyqsrc/seqinterf.h cmt/seqread.h cmt/seqmread.h cmt/seqwrite.h \
+	cmt/seqmwrite.h
 
 
 
@@ -300,8 +207,6 @@ liblo/Makefile:
 
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 	cd liblo; make
-
-
 
 bin/ser-to-osc: bin $(LIBLO_PATH)/liblo.a
 	$(CC) -c $(CFLAGS) liblo/ser-to-osc/ser-to-osc.cpp \
@@ -369,79 +274,84 @@ runtime/system.lsp: sys/unix/alsa/system.lsp
 	cp -p sys/unix/alsa/system.lsp runtime/system.lsp
 	chmod -w runtime/system.lsp
 
-nyqsrc/sound.o: nyqsrc/sound.c nyqsrc/sound.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+NYQDEP = nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+
+nyqsrc/sound.o: nyqsrc/sound.c nyqsrc/sound.h $(NYQDEP)
 	$(CC) -c nyqsrc/sound.c -o nyqsrc/sound.o $(CFLAGS)
 
-nyqsrc/add.o: nyqsrc/add.c nyqsrc/add.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/add.o: nyqsrc/add.c nyqsrc/add.h $(NYQDEP)
 	$(CC) -c nyqsrc/add.c -o nyqsrc/add.o $(CFLAGS)
 
-nyqsrc/avg.o: nyqsrc/avg.c nyqsrc/avg.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/avg.o: nyqsrc/avg.c nyqsrc/avg.h $(NYQDEP)
 	$(CC) -c nyqsrc/avg.c -o nyqsrc/avg.o $(CFLAGS)
 
-nyqsrc/compose.o: nyqsrc/compose.c nyqsrc/compose.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/compose.o: nyqsrc/compose.c nyqsrc/compose.h $(NYQDEP)
 	$(CC) -c nyqsrc/compose.c -o nyqsrc/compose.o $(CFLAGS)
 
-nyqsrc/convolve.o: nyqsrc/convolve.c nyqsrc/convolve.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/convolve.o: nyqsrc/convolve.c nyqsrc/convolve.h $(NYQDEP)
 	$(CC) -c nyqsrc/convolve.c -o nyqsrc/convolve.o $(CFLAGS)
 
-nyqsrc/downsample.o: nyqsrc/downsample.c nyqsrc/downsample.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/downsample.o: nyqsrc/downsample.c nyqsrc/downsample.h $(NYQDEP)
 	$(CC) -c nyqsrc/downsample.c -o nyqsrc/downsample.o $(CFLAGS)
 
-nyqsrc/fft.o: nyqsrc/fft.c nyqsrc/fft.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/fft.o: nyqsrc/fft.c nyqsrc/fft.h $(NYQDEP)
 	$(CC) -c nyqsrc/fft.c -o nyqsrc/fft.o $(CFLAGS)
 
-nyqsrc/inverse.o: nyqsrc/inverse.c nyqsrc/inverse.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/inverse.o: nyqsrc/inverse.c nyqsrc/inverse.h $(NYQDEP)
 	$(CC) -c nyqsrc/inverse.c -o nyqsrc/inverse.o $(CFLAGS)
 
-nyqsrc/multiseq.o: nyqsrc/multiseq.c nyqsrc/multiseq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/multiseq.o: nyqsrc/multiseq.c nyqsrc/multiseq.h $(NYQDEP)
 	$(CC) -c nyqsrc/multiseq.c -o nyqsrc/multiseq.o $(CFLAGS)
 
-nyqsrc/resamp.o: nyqsrc/resamp.c nyqsrc/resamp.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/resamp.o: nyqsrc/resamp.c nyqsrc/resamp.h $(NYQDEP)
 	$(CC) -c nyqsrc/resamp.c -o nyqsrc/resamp.o $(CFLAGS)
 
-nyqsrc/resampv.o: nyqsrc/resampv.c nyqsrc/resampv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/resampv.o: nyqsrc/resampv.c nyqsrc/resampv.h $(NYQDEP)
 	$(CC) -c nyqsrc/resampv.c -o nyqsrc/resampv.o $(CFLAGS)
 
-nyqsrc/samples.o: nyqsrc/samples.c nyqsrc/samples.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/samples.o: nyqsrc/samples.c nyqsrc/samples.h $(NYQDEP)
 	$(CC) -c nyqsrc/samples.c -o nyqsrc/samples.o $(CFLAGS)
 
-nyqsrc/sndmax.o: nyqsrc/sndmax.c nyqsrc/sndmax.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/sndmax.o: nyqsrc/sndmax.c nyqsrc/sndmax.h $(NYQDEP)
 	$(CC) -c nyqsrc/sndmax.c -o nyqsrc/sndmax.o $(CFLAGS)
 
-nyqsrc/sndread.o: nyqsrc/sndread.c nyqsrc/sndread.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/sndread.o: nyqsrc/sndread.c nyqsrc/sndread.h $(NYQDEP)
 	$(CC) -c nyqsrc/sndread.c -o nyqsrc/sndread.o $(CFLAGS)
 
-nyqsrc/sndseq.o: nyqsrc/sndseq.c nyqsrc/sndseq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/sndseq.o: nyqsrc/sndseq.c nyqsrc/sndseq.h $(NYQDEP)
 	$(CC) -c nyqsrc/sndseq.c -o nyqsrc/sndseq.o $(CFLAGS)
 
-nyqsrc/sndsliders.o: nyqsrc/sndsliders.c nyqsrc/sndsliders.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/sndsliders.o: nyqsrc/sndsliders.c nyqsrc/sndsliders.h $(NYQDEP)
 	$(CC) -c nyqsrc/sndsliders.c -o nyqsrc/sndsliders.o $(CFLAGS)
+
+nyqsrc/sliderdata.o: nyqsrc/sliderdata.c nyqsrc/sliderdata.h $(NYQDEP)
+	$(CC) -c nyqsrc/sliderdata.c -o nyqsrc/sliderdata.o $(CFLAGS)
 
 nyqsrc/sndwritepa.o: nyqsrc/sndwritepa.c nyqsrc/sndwrite.h
 	$(CC) -c nyqsrc/sndwritepa.c -o nyqsrc/sndwritepa.o $(CFLAGS)
 
-nyqsrc/yin.o: nyqsrc/yin.c nyqsrc/yin.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/yin.o: nyqsrc/yin.c nyqsrc/yin.h $(NYQDEP)
 	$(CC) -c nyqsrc/yin.c -o nyqsrc/yin.o $(CFLAGS)
 
-nyqsrc/nyq-osc-server.o: nyqsrc/nyq-osc-server.c nyqsrc/nyq-osc-server.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/nyq-osc-server.o: nyqsrc/nyq-osc-server.c nyqsrc/nyq-osc-server.h $(NYQDEP)
 	$(CC) -c nyqsrc/nyq-osc-server.c -o nyqsrc/nyq-osc-server.o $(CFLAGS)
 
-nyqsrc/trigger.o: nyqsrc/trigger.c nyqsrc/trigger.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/trigger.o: nyqsrc/trigger.c nyqsrc/trigger.h $(NYQDEP)
 	$(CC) -c nyqsrc/trigger.c -o nyqsrc/trigger.o $(CFLAGS)
 
-nyqsrc/lpanal.o: nyqsrc/lpanal.c nyqsrc/lpanal.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/lpanal.o: nyqsrc/lpanal.c nyqsrc/lpanal.h $(NYQDEP)
 	$(CC) -c nyqsrc/lpanal.c -o nyqsrc/lpanal.o $(CFLAGS)
 
-nyqsrc/phasevocoder.o: nyqsrc/phasevocoder.c nyqsrc/phasevocoder.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/phasevocoder.o: nyqsrc/phasevocoder.c nyqsrc/phasevocoder.h $(NYQDEP)
 	$(CC) -c nyqsrc/phasevocoder.c -o nyqsrc/phasevocoder.o $(CFLAGS)
 
-nyqsrc/pvshell.o: nyqsrc/pvshell.c nyqsrc/pvshell.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/pvshell.o: nyqsrc/pvshell.c nyqsrc/pvshell.h $(NYQDEP)
 	$(CC) -c nyqsrc/pvshell.c -o nyqsrc/pvshell.o $(CFLAGS)
 
-nyqsrc/debug.o: nyqsrc/debug.c nyqsrc/debug.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/debug.o: nyqsrc/debug.c nyqsrc/debug.h $(NYQDEP)
 	$(CC) -c nyqsrc/debug.c -o nyqsrc/debug.o $(CFLAGS)
 
-nyqsrc/falloc.o: nyqsrc/falloc.c nyqsrc/falloc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/falloc.o: nyqsrc/falloc.c nyqsrc/falloc.h $(NYQDEP)
 	$(CC) -c nyqsrc/falloc.c -o nyqsrc/falloc.o $(CFLAGS)
 
 nyqsrc/local.o: nyqsrc/local.c xlisp/xlisp.h nyqsrc/sound.h
@@ -450,268 +360,265 @@ nyqsrc/local.o: nyqsrc/local.c xlisp/xlisp.h nyqsrc/sound.h
 nyqsrc/handlers.o: nyqsrc/handlers.c 
 	$(CC) -c nyqsrc/handlers.c -o nyqsrc/handlers.o $(CFLAGS)
 
-nyqsrc/multiread.o: nyqsrc/multiread.c nyqsrc/multiread.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/multiread.o: nyqsrc/multiread.c nyqsrc/multiread.h $(NYQDEP)
 	$(CC) -c nyqsrc/multiread.c -o nyqsrc/multiread.o $(CFLAGS)
 
-nyqsrc/seqext.o: nyqsrc/seqext.c nyqsrc/seqext.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/seqext.o: nyqsrc/seqext.c nyqsrc/seqext.h $(NYQDEP)
 	$(CC) -c nyqsrc/seqext.c -o nyqsrc/seqext.o $(CFLAGS)
 
-nyqsrc/seqinterf.o: nyqsrc/seqinterf.c nyqsrc/seqinterf.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/seqinterf.o: nyqsrc/seqinterf.c nyqsrc/seqinterf.h $(NYQDEP)
 	$(CC) -c nyqsrc/seqinterf.c -o nyqsrc/seqinterf.o $(CFLAGS)
 
 nyqsrc/stats.o: nyqsrc/stats.c nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
 	$(CC) -c nyqsrc/stats.c -o nyqsrc/stats.o $(CFLAGS)
 
-nyqsrc/ffilterkit.o: nyqsrc/ffilterkit.c nyqsrc/ffilterkit.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+nyqsrc/ffilterkit.o: nyqsrc/ffilterkit.c nyqsrc/ffilterkit.h $(NYQDEP)
 	$(CC) -c nyqsrc/ffilterkit.c -o nyqsrc/ffilterkit.o $(CFLAGS)
 
-nyqsrc/sliders.o: nyqsrc/sliders.c nyqsrc/sliders.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
-	$(CC) -c nyqsrc/sliders.c -o nyqsrc/sliders.o $(CFLAGS)
-
-ffts/src/fftext.o: ffts/src/fftext.c ffts/src/fftext.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+ffts/src/fftext.o: ffts/src/fftext.c ffts/src/fftext.h $(NYQDEP)
 	$(CC) -c ffts/src/fftext.c -o ffts/src/fftext.o $(CFLAGS)
 
-ffts/src/fftlib.o: ffts/src/fftlib.c ffts/src/fftlib.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+ffts/src/fftlib.o: ffts/src/fftlib.c ffts/src/fftlib.h $(NYQDEP)
 	$(CC) -c ffts/src/fftlib.c -o ffts/src/fftlib.o $(CFLAGS)
 
-ffts/src/matlib.o: ffts/src/matlib.c ffts/src/matlib.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+ffts/src/matlib.o: ffts/src/matlib.c ffts/src/matlib.h $(NYQDEP)
 	$(CC) -c ffts/src/matlib.c -o ffts/src/matlib.o $(CFLAGS)
 
-tran/abs.o: tran/abs.c tran/abs.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/abs.o: tran/abs.c tran/abs.h $(NYQDEP)
 	$(CC) -c tran/abs.c -o tran/abs.o $(CFLAGS)
 
-tran/allpoles.o: tran/allpoles.c tran/allpoles.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/allpoles.o: tran/allpoles.c tran/allpoles.h $(NYQDEP)
 	$(CC) -c tran/allpoles.c -o tran/allpoles.o $(CFLAGS)
 
-tran/alpass.o: tran/alpass.c tran/alpass.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/alpass.o: tran/alpass.c tran/alpass.h $(NYQDEP)
 	$(CC) -c tran/alpass.c -o tran/alpass.o $(CFLAGS)
 
-tran/alpasscv.o: tran/alpasscv.c tran/alpasscv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/alpasscv.o: tran/alpasscv.c tran/alpasscv.h $(NYQDEP)
 	$(CC) -c tran/alpasscv.c -o tran/alpasscv.o $(CFLAGS)
 
-tran/alpassvv.o: tran/alpassvv.c tran/alpassvv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/alpassvv.o: tran/alpassvv.c tran/alpassvv.h $(NYQDEP)
 	$(CC) -c tran/alpassvv.c -o tran/alpassvv.o $(CFLAGS)
 
-tran/amosc.o: tran/amosc.c tran/amosc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/amosc.o: tran/amosc.c tran/amosc.h $(NYQDEP)
 	$(CC) -c tran/amosc.c -o tran/amosc.o $(CFLAGS)
 
-tran/areson.o: tran/areson.c tran/areson.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/areson.o: tran/areson.c tran/areson.h $(NYQDEP)
 	$(CC) -c tran/areson.c -o tran/areson.o $(CFLAGS)
 
-tran/aresonvc.o: tran/aresonvc.c tran/aresonvc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/aresonvc.o: tran/aresonvc.c tran/aresonvc.h $(NYQDEP)
 	$(CC) -c tran/aresonvc.c -o tran/aresonvc.o $(CFLAGS)
 
-tran/aresoncv.o: tran/aresoncv.c tran/aresoncv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/aresoncv.o: tran/aresoncv.c tran/aresoncv.h $(NYQDEP)
 	$(CC) -c tran/aresoncv.c -o tran/aresoncv.o $(CFLAGS)
 
-tran/aresonvv.o: tran/aresonvv.c tran/aresonvv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/aresonvv.o: tran/aresonvv.c tran/aresonvv.h $(NYQDEP)
 	$(CC) -c tran/aresonvv.c -o tran/aresonvv.o $(CFLAGS)
 
-tran/atone.o: tran/atone.c tran/atone.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/atone.o: tran/atone.c tran/atone.h $(NYQDEP)
 	$(CC) -c tran/atone.c -o tran/atone.o $(CFLAGS)
 
-tran/atonev.o: tran/atonev.c tran/atonev.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/atonev.o: tran/atonev.c tran/atonev.h $(NYQDEP)
 	$(CC) -c tran/atonev.c -o tran/atonev.o $(CFLAGS)
 
-tran/biquadfilt.o: tran/biquadfilt.c tran/biquadfilt.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/biquadfilt.o: tran/biquadfilt.c tran/biquadfilt.h $(NYQDEP)
 	$(CC) -c tran/biquadfilt.c -o tran/biquadfilt.o $(CFLAGS)
 
-tran/buzz.o: tran/buzz.c tran/buzz.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/buzz.o: tran/buzz.c tran/buzz.h $(NYQDEP)
 	$(CC) -c tran/buzz.c -o tran/buzz.o $(CFLAGS)
 
-tran/chase.o: tran/chase.c tran/chase.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/chase.o: tran/chase.c tran/chase.h $(NYQDEP)
 	$(CC) -c tran/chase.c -o tran/chase.o $(CFLAGS)
 
-tran/clip.o: tran/clip.c tran/clip.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/clip.o: tran/clip.c tran/clip.h $(NYQDEP)
 	$(CC) -c tran/clip.c -o tran/clip.o $(CFLAGS)
 
-tran/congen.o: tran/congen.c tran/congen.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/congen.o: tran/congen.c tran/congen.h $(NYQDEP)
 	$(CC) -c tran/congen.c -o tran/congen.o $(CFLAGS)
 
-tran/const.o: tran/const.c tran/const.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/const.o: tran/const.c tran/const.h $(NYQDEP)
 	$(CC) -c tran/const.c -o tran/const.o $(CFLAGS)
 
-tran/coterm.o: tran/coterm.c tran/coterm.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/coterm.o: tran/coterm.c tran/coterm.h $(NYQDEP)
 	$(CC) -c tran/coterm.c -o tran/coterm.o $(CFLAGS)
 
-tran/delaycc.o: tran/delaycc.c tran/delaycc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/delaycc.o: tran/delaycc.c tran/delaycc.h $(NYQDEP)
 	$(CC) -c tran/delaycc.c -o tran/delaycc.o $(CFLAGS)
 
-tran/delaycv.o: tran/delaycv.c tran/delaycv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/delaycv.o: tran/delaycv.c tran/delaycv.h $(NYQDEP)
 	$(CC) -c tran/delaycv.c -o tran/delaycv.o $(CFLAGS)
 
-tran/eqbandvvv.o: tran/eqbandvvv.c tran/eqbandvvv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/eqbandvvv.o: tran/eqbandvvv.c tran/eqbandvvv.h $(NYQDEP)
 	$(CC) -c tran/eqbandvvv.c -o tran/eqbandvvv.o $(CFLAGS)
 
-tran/exp.o: tran/exp.c tran/exp.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/exp.o: tran/exp.c tran/exp.h $(NYQDEP)
 	$(CC) -c tran/exp.c -o tran/exp.o $(CFLAGS)
 
-tran/follow.o: tran/follow.c tran/follow.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/follow.o: tran/follow.c tran/follow.h $(NYQDEP)
 	$(CC) -c tran/follow.c -o tran/follow.o $(CFLAGS)
 
-tran/fmosc.o: tran/fmosc.c tran/fmosc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/fmosc.o: tran/fmosc.c tran/fmosc.h $(NYQDEP)
 	$(CC) -c tran/fmosc.c -o tran/fmosc.o $(CFLAGS)
 
-tran/fromobject.o: tran/fromobject.c tran/fromobject.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/fromobject.o: tran/fromobject.c tran/fromobject.h $(NYQDEP)
 	$(CC) -c tran/fromobject.c -o tran/fromobject.o $(CFLAGS)
 
-tran/fromarraystream.o: tran/fromarraystream.c tran/fromarraystream.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/fromarraystream.o: tran/fromarraystream.c tran/fromarraystream.h $(NYQDEP)
 	$(CC) -c tran/fromarraystream.c -o tran/fromarraystream.o $(CFLAGS)
 
-tran/gate.o: tran/gate.c tran/gate.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/gate.o: tran/gate.c tran/gate.h $(NYQDEP)
 	$(CC) -c tran/gate.c -o tran/gate.o $(CFLAGS)
 
-tran/ifft.o: tran/ifft.c tran/ifft.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/ifft.o: tran/ifft.c tran/ifft.h $(NYQDEP)
 	$(CC) -c tran/ifft.c -o tran/ifft.o $(CFLAGS)
 
-tran/instrclar.o: tran/instrclar.c tran/instrclar.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrclar.o: tran/instrclar.c tran/instrclar.h $(NYQDEP)
 	$(CC) -c tran/instrclar.c -o tran/instrclar.o $(CFLAGS)
 
-tran/instrclarall.o: tran/instrclarall.c tran/instrclarall.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrclarall.o: tran/instrclarall.c tran/instrclarall.h $(NYQDEP)
 	$(CC) -c tran/instrclarall.c -o tran/instrclarall.o $(CFLAGS)
 
-tran/instrclarfreq.o: tran/instrclarfreq.c tran/instrclarfreq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrclarfreq.o: tran/instrclarfreq.c tran/instrclarfreq.h $(NYQDEP)
 	$(CC) -c tran/instrclarfreq.c -o tran/instrclarfreq.o $(CFLAGS)
 
-tran/instrsax.o: tran/instrsax.c tran/instrsax.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrsax.o: tran/instrsax.c tran/instrsax.h $(NYQDEP)
 	$(CC) -c tran/instrsax.c -o tran/instrsax.o $(CFLAGS)
 
-tran/instrsaxall.o: tran/instrsaxall.c tran/instrsaxall.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrsaxall.o: tran/instrsaxall.c tran/instrsaxall.h $(NYQDEP)
 	$(CC) -c tran/instrsaxall.c -o tran/instrsaxall.o $(CFLAGS)
 
-tran/instrsaxfreq.o: tran/instrsaxfreq.c tran/instrsaxfreq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrsaxfreq.o: tran/instrsaxfreq.c tran/instrsaxfreq.h $(NYQDEP)
 	$(CC) -c tran/instrsaxfreq.c -o tran/instrsaxfreq.o $(CFLAGS)
 
-tran/integrate.o: tran/integrate.c tran/integrate.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/integrate.o: tran/integrate.c tran/integrate.h $(NYQDEP)
 	$(CC) -c tran/integrate.c -o tran/integrate.o $(CFLAGS)
 
-tran/log.o: tran/log.c tran/log.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/log.o: tran/log.c tran/log.h $(NYQDEP)
 	$(CC) -c tran/log.c -o tran/log.o $(CFLAGS)
 
-tran/lpreson.o: tran/lpreson.c tran/lpreson.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/lpreson.o: tran/lpreson.c tran/lpreson.h $(NYQDEP)
 	$(CC) -c tran/lpreson.c -o tran/lpreson.o $(CFLAGS)
 
-tran/maxv.o: tran/maxv.c tran/maxv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/maxv.o: tran/maxv.c tran/maxv.h $(NYQDEP)
 	$(CC) -c tran/maxv.c -o tran/maxv.o $(CFLAGS)
 
-tran/offset.o: tran/offset.c tran/offset.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/offset.o: tran/offset.c tran/offset.h $(NYQDEP)
 	$(CC) -c tran/offset.c -o tran/offset.o $(CFLAGS)
 
-tran/oneshot.o: tran/oneshot.c tran/oneshot.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/oneshot.o: tran/oneshot.c tran/oneshot.h $(NYQDEP)
 	$(CC) -c tran/oneshot.c -o tran/oneshot.o $(CFLAGS)
 
-tran/osc.o: tran/osc.c tran/osc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/osc.o: tran/osc.c tran/osc.h $(NYQDEP)
 	$(CC) -c tran/osc.c -o tran/osc.o $(CFLAGS)
 
-tran/partial.o: tran/partial.c tran/partial.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/partial.o: tran/partial.c tran/partial.h $(NYQDEP)
 	$(CC) -c tran/partial.c -o tran/partial.o $(CFLAGS)
 
-tran/pluck.o: tran/pluck.c tran/pluck.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/pluck.o: tran/pluck.c tran/pluck.h $(NYQDEP)
 	$(CC) -c tran/pluck.c -o tran/pluck.o $(CFLAGS)
 
-tran/prod.o: tran/prod.c tran/prod.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/prod.o: tran/prod.c tran/prod.h $(NYQDEP)
 	$(CC) -c tran/prod.c -o tran/prod.o $(CFLAGS)
 
-tran/pwl.o: tran/pwl.c tran/pwl.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/pwl.o: tran/pwl.c tran/pwl.h $(NYQDEP)
 	$(CC) -c tran/pwl.c -o tran/pwl.o $(CFLAGS)
 
-tran/quantize.o: tran/quantize.c tran/quantize.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/quantize.o: tran/quantize.c tran/quantize.h $(NYQDEP)
 	$(CC) -c tran/quantize.c -o tran/quantize.o $(CFLAGS)
 
-tran/recip.o: tran/recip.c tran/recip.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/recip.o: tran/recip.c tran/recip.h $(NYQDEP)
 	$(CC) -c tran/recip.c -o tran/recip.o $(CFLAGS)
 
-tran/reson.o: tran/reson.c tran/reson.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/reson.o: tran/reson.c tran/reson.h $(NYQDEP)
 	$(CC) -c tran/reson.c -o tran/reson.o $(CFLAGS)
 
-tran/resonvc.o: tran/resonvc.c tran/resonvc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/resonvc.o: tran/resonvc.c tran/resonvc.h $(NYQDEP)
 	$(CC) -c tran/resonvc.c -o tran/resonvc.o $(CFLAGS)
 
-tran/resoncv.o: tran/resoncv.c tran/resoncv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/resoncv.o: tran/resoncv.c tran/resoncv.h $(NYQDEP)
 	$(CC) -c tran/resoncv.c -o tran/resoncv.o $(CFLAGS)
 
-tran/resonvv.o: tran/resonvv.c tran/resonvv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/resonvv.o: tran/resonvv.c tran/resonvv.h $(NYQDEP)
 	$(CC) -c tran/resonvv.c -o tran/resonvv.o $(CFLAGS)
 
-tran/sampler.o: tran/sampler.c tran/sampler.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/sampler.o: tran/sampler.c tran/sampler.h $(NYQDEP)
 	$(CC) -c tran/sampler.c -o tran/sampler.o $(CFLAGS)
 
-tran/scale.o: tran/scale.c tran/scale.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/scale.o: tran/scale.c tran/scale.h $(NYQDEP)
 	$(CC) -c tran/scale.c -o tran/scale.o $(CFLAGS)
 
-tran/shape.o: tran/shape.c tran/shape.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/shape.o: tran/shape.c tran/shape.h $(NYQDEP)
 	$(CC) -c tran/shape.c -o tran/shape.o $(CFLAGS)
 
-tran/sine.o: tran/sine.c tran/sine.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/sine.o: tran/sine.c tran/sine.h $(NYQDEP)
 	$(CC) -c tran/sine.c -o tran/sine.o $(CFLAGS)
 
-tran/siosc.o: tran/siosc.c tran/siosc.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/siosc.o: tran/siosc.c tran/siosc.h $(NYQDEP)
 	$(CC) -c tran/siosc.c -o tran/siosc.o $(CFLAGS)
 
-tran/slope.o: tran/slope.c tran/slope.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/slope.o: tran/slope.c tran/slope.h $(NYQDEP)
 	$(CC) -c tran/slope.c -o tran/slope.o $(CFLAGS)
 
-tran/sqrt.o: tran/sqrt.c tran/sqrt.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/sqrt.o: tran/sqrt.c tran/sqrt.h $(NYQDEP)
 	$(CC) -c tran/sqrt.c -o tran/sqrt.o $(CFLAGS)
 
-tran/tapf.o: tran/tapf.c tran/tapf.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/tapf.o: tran/tapf.c tran/tapf.h $(NYQDEP)
 	$(CC) -c tran/tapf.c -o tran/tapf.o $(CFLAGS)
 
-tran/tapv.o: tran/tapv.c tran/tapv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/tapv.o: tran/tapv.c tran/tapv.h $(NYQDEP)
 	$(CC) -c tran/tapv.c -o tran/tapv.o $(CFLAGS)
 
-tran/tone.o: tran/tone.c tran/tone.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/tone.o: tran/tone.c tran/tone.h $(NYQDEP)
 	$(CC) -c tran/tone.c -o tran/tone.o $(CFLAGS)
 
-tran/tonev.o: tran/tonev.c tran/tonev.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/tonev.o: tran/tonev.c tran/tonev.h $(NYQDEP)
 	$(CC) -c tran/tonev.c -o tran/tonev.o $(CFLAGS)
 
-tran/upsample.o: tran/upsample.c tran/upsample.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/upsample.o: tran/upsample.c tran/upsample.h $(NYQDEP)
 	$(CC) -c tran/upsample.c -o tran/upsample.o $(CFLAGS)
 
-tran/white.o: tran/white.c tran/white.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/white.o: tran/white.c tran/white.h $(NYQDEP)
 	$(CC) -c tran/white.c -o tran/white.o $(CFLAGS)
 
-tran/stkrev.o: tran/stkrev.c tran/stkrev.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/stkrev.o: tran/stkrev.c tran/stkrev.h $(NYQDEP)
 	$(CC) -c tran/stkrev.c -o tran/stkrev.o $(CFLAGS)
 
-tran/stkpitshift.o: tran/stkpitshift.c tran/stkpitshift.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/stkpitshift.o: tran/stkpitshift.c tran/stkpitshift.h $(NYQDEP)
 	$(CC) -c tran/stkpitshift.c -o tran/stkpitshift.o $(CFLAGS)
 
-tran/stkchorus.o: tran/stkchorus.c tran/stkchorus.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/stkchorus.o: tran/stkchorus.c tran/stkchorus.h $(NYQDEP)
 	$(CC) -c tran/stkchorus.c -o tran/stkchorus.o $(CFLAGS)
 
-tran/instrbow.o: tran/instrbow.c tran/instrbow.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrbow.o: tran/instrbow.c tran/instrbow.h $(NYQDEP)
 	$(CC) -c tran/instrbow.c -o tran/instrbow.o $(CFLAGS)
 
-tran/instrbowedfreq.o: tran/instrbowedfreq.c tran/instrbowedfreq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrbowedfreq.o: tran/instrbowedfreq.c tran/instrbowedfreq.h $(NYQDEP)
 	$(CC) -c tran/instrbowedfreq.c -o tran/instrbowedfreq.o $(CFLAGS)
 
-tran/instrbanded.o: tran/instrbanded.c tran/instrbanded.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrbanded.o: tran/instrbanded.c tran/instrbanded.h $(NYQDEP)
 	$(CC) -c tran/instrbanded.c -o tran/instrbanded.o $(CFLAGS)
 
-tran/instrmandolin.o: tran/instrmandolin.c tran/instrmandolin.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrmandolin.o: tran/instrmandolin.c tran/instrmandolin.h $(NYQDEP)
 	$(CC) -c tran/instrmandolin.c -o tran/instrmandolin.o $(CFLAGS)
 
-tran/instrsitar.o: tran/instrsitar.c tran/instrsitar.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrsitar.o: tran/instrsitar.c tran/instrsitar.h $(NYQDEP)
 	$(CC) -c tran/instrsitar.c -o tran/instrsitar.o $(CFLAGS)
 
-tran/instrmodalbar.o: tran/instrmodalbar.c tran/instrmodalbar.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrmodalbar.o: tran/instrmodalbar.c tran/instrmodalbar.h $(NYQDEP)
 	$(CC) -c tran/instrmodalbar.c -o tran/instrmodalbar.o $(CFLAGS)
 
-tran/instrflute.o: tran/instrflute.c tran/instrflute.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrflute.o: tran/instrflute.c tran/instrflute.h $(NYQDEP)
 	$(CC) -c tran/instrflute.c -o tran/instrflute.o $(CFLAGS)
 
-tran/instrflutefreq.o: tran/instrflutefreq.c tran/instrflutefreq.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrflutefreq.o: tran/instrflutefreq.c tran/instrflutefreq.h $(NYQDEP)
 	$(CC) -c tran/instrflutefreq.c -o tran/instrflutefreq.o $(CFLAGS)
 
-tran/instrfluteall.o: tran/instrfluteall.c tran/instrfluteall.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/instrfluteall.o: tran/instrfluteall.c tran/instrfluteall.h $(NYQDEP)
 	$(CC) -c tran/instrfluteall.c -o tran/instrfluteall.o $(CFLAGS)
 
-tran/fmfb.o: tran/fmfb.c tran/fmfb.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/fmfb.o: tran/fmfb.c tran/fmfb.h $(NYQDEP)
 	$(CC) -c tran/fmfb.c -o tran/fmfb.o $(CFLAGS)
 
-tran/fmfbv.o: tran/fmfbv.c tran/fmfbv.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h
+tran/fmfbv.o: tran/fmfbv.c tran/fmfbv.h $(NYQDEP)
 	$(CC) -c tran/fmfbv.c -o tran/fmfbv.o $(CFLAGS)
 
 nyqsrc/sndfnint.o: nyqsrc/sndfnint.c 
@@ -1200,17 +1107,11 @@ sys/unix/osstuff.o: sys/unix/osstuff.c
 misc/intgen: misc/intgen.c
 	cd misc; make intgen
 
-misc/unpacker: misc/unpacker.c misc/convert.c
-	cd misc; make unpacker
+nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen
+	$(INTGEN) nyqsrc/sndfnint $(SNDFNINT_HDRS)
 
-misc/packer: misc/packer.c misc/convert.c
-	cd misc; make packer
-
-nyqsrc/sndfnintptrs.h: $(NYQHDRS) misc/intgen
-	$(INTGEN) nyqsrc/sndfnint $(NYQHDRS)
-
-nyqsrc/seqfnintptrs.h: $(CMTHDRS) misc/intgen
-	$(INTGEN) nyqsrc/seqfnint $(CMTHDRS)
+nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen
+	$(INTGEN) nyqsrc/seqfnint $(SEQFNINT_HDRS)
 
 clean:
 	cd misc; make clean
@@ -1236,15 +1137,3 @@ cleaner: clean
 	rm -f points.dat
 	rm -f core.* core
 	rm -f $(NY)
-
-release: cleaner
-	cd misc; make packer
-	misc/packer files.txt release.pac
-	rm -f *.wav
-	mv ny ..
-	mv -f *.pac ..
-	rm -f unpacker
-	rm -f packer
-	cd ..; zip -r nyquist.zip nyquist
-	../ny misc/cmu/cmu-linux-install.lsp
-	mv ../ny ./ny

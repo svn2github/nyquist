@@ -1,3 +1,6 @@
+Manual should explain how to open demos folder and documents.
+
+
 portaudio diffs:
 
 portaudio.h

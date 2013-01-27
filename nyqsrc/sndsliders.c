@@ -8,19 +8,8 @@
 #include "falloc.h"
 #include "cext.h"
 #include "nyq-osc-server.h"
-#include "sliders.h"
+#include "sliderdata.h"
 #include "sndsliders.h"
-
-float slider_array[SLIDERS_MAX];
-
-
-void set_slider(int index, float value)
-{
-    if (index >= 0 && index < SLIDERS_MAX) {
-        slider_array[index] = value;
-    }
-}
-
 
 LVAL xslider_read(void)
 {

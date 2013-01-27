@@ -28,7 +28,7 @@
 #include "sound.h" /* to get nosc_enabled */
 #include "lo/lo.h"
 #include "nyq-osc-server.h"
-#include "sliders.h"
+#include "sndsliders.h"
 
 static lo_server the_server = NULL;
 static int lo_fd;

@@ -387,12 +387,13 @@
 		3D5CD8DF0B5BC75E00DF426B /* instrsaxfreq.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E088A0789D9230002CE69 /* instrsaxfreq.c */; };
 		3D5CD8E00B5BC75E00DF426B /* instrclarfreq.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E088E0789D9430002CE69 /* instrclarfreq.c */; };
 		3D5CD8E10B5BC75E00DF426B /* instrsax.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E08920789D9680002CE69 /* instrsax.c */; };
-		3D5CD8E40B5BC75E00DF426B /* sliders.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D81ED240A76B1290053113C /* sliders.c */; };
 		3D5CD8EE0B5BC75E00DF426B /* trigger.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB7FB20B30690F00A51A49 /* trigger.c */; };
 		3D5CD9050B5BC78900DF426B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA446C00789FF350002CE69 /* AudioToolbox.framework */; };
 		3D5CD9060B5BC78900DF426B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA446C20789FF430002CE69 /* CoreAudio.framework */; };
 		3D7327DF125BFB31009AAF15 /* JavaApplicationStub in Copy Executable */ = {isa = PBXBuildFile; fileRef = 3D7327DE125BFB19009AAF15 /* JavaApplicationStub */; };
 		3D7327FC125BFCCE009AAF15 /* ny in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D5CD82D0B5BC73700DF426B /* ny */; };
+		3D7DA83316B2C0630001DFF2 /* sliderdata.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D7DA83116B2C0630001DFF2 /* sliderdata.c */; };
+		3D7DA83616B2C1160001DFF2 /* sndsliders.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D7DA83416B2C1160001DFF2 /* sndsliders.c */; };
 		3D81D5F416A39A7900AED04F /* demos in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D81D5F316A39A6700AED04F /* demos */; };
 		3DA1194A0D2DE1BF00948714 /* DelayA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119350D2DE1BF00948714 /* DelayA.cpp */; };
 		3DA1194B0D2DE1BF00948714 /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119360D2DE1BF00948714 /* Effect.cpp */; };
@@ -823,11 +824,13 @@
 		3D7A6FC90A7A851B00098CAB /* Trie.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = Trie.java; sourceTree = "<group>"; };
 		3D7A6FCA0A7A851B00098CAB /* WordList.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = WordList.java; sourceTree = "<group>"; };
 		3D7A6FD10A7A85F900098CAB /* NyquistWords.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = NyquistWords.txt; sourceTree = "<group>"; };
+		3D7DA83116B2C0630001DFF2 /* sliderdata.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sliderdata.c; sourceTree = "<group>"; };
+		3D7DA83216B2C0630001DFF2 /* sliderdata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sliderdata.h; sourceTree = "<group>"; };
+		3D7DA83416B2C1160001DFF2 /* sndsliders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sndsliders.c; sourceTree = "<group>"; };
+		3D7DA83516B2C1160001DFF2 /* sndsliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sndsliders.h; sourceTree = "<group>"; };
 		3D7E28BD0B3E3E540078F9A3 /* Piano_Roll.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = Piano_Roll.java; sourceTree = "<group>"; };
 		3D7E29000B3EC8F90078F9A3 /* Jslide.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = Jslide.java; sourceTree = "<group>"; };
 		3D81D5F316A39A6700AED04F /* demos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = demos; sourceTree = "<group>"; };
-		3D81ED240A76B1290053113C /* sliders.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = sliders.c; sourceTree = "<group>"; };
-		3D81ED250A76B1290053113C /* sliders.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sliders.h; sourceTree = "<group>"; };
 		3D91FF8B0B97CB3300565C3F /* BareBonesBrowserLaunch.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = BareBonesBrowserLaunch.java; sourceTree = "<group>"; };
 		3D9867CC04FFDD3C0002CE69 /* tapf.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = tapf.c; sourceTree = "<group>"; };
 		3D9867CE04FFDD6B0002CE69 /* tapf.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tapf.h; sourceTree = "<group>"; };
@@ -2416,10 +2419,13 @@
 		F5FF60A6039D87B001029006 /* nyqsrc */ = {
 			isa = PBXGroup;
 			children = (
+				3D7DA83416B2C1160001DFF2 /* sndsliders.c */,
+				3D7DA83516B2C1160001DFF2 /* sndsliders.h */,
+				3D7DA83116B2C0630001DFF2 /* sliderdata.c */,
+				3D7DA83216B2C0630001DFF2 /* sliderdata.h */,
 				3DE80D680F7EA840003761D2 /* phasevocoder.c */,
 				3DE80D660F7EA825003761D2 /* pvshell.c */,
 				3D3223280F544BBB00F074EF /* nyq-osc-server.c */,
-				3D81ED250A76B1290053113C /* sliders.h */,
 				F5FF615C039D899F01029006 /* seqfnint.c */,
 				F5FF615D039D899F01029006 /* seqfnintdefs.h */,
 				F5FF615E039D899F01029006 /* seqfnintptrs.h */,
@@ -2482,7 +2488,6 @@
 				F5FF60D6039D87B001029006 /* seqfnint.lsp */,
 				F5FF60D7039D87B001029006 /* seqinterf.c */,
 				F5FF60D8039D87B001029006 /* seqinterf.h */,
-				3D81ED240A76B1290053113C /* sliders.c */,
 				F5FF60DA039D87B001029006 /* sndfn.wcl */,
 				F5FF60DC039D87B001029006 /* sndfnint.lsp */,
 				F5FF60DD039D87B001029006 /* sndmax.c */,
@@ -3226,7 +3231,6 @@
 				3D5CD8DF0B5BC75E00DF426B /* instrsaxfreq.c in Sources */,
 				3D5CD8E00B5BC75E00DF426B /* instrclarfreq.c in Sources */,
 				3D5CD8E10B5BC75E00DF426B /* instrsax.c in Sources */,
-				3D5CD8E40B5BC75E00DF426B /* sliders.c in Sources */,
 				3D5CD8EE0B5BC75E00DF426B /* trigger.c in Sources */,
 				3DA1194A0D2DE1BF00948714 /* DelayA.cpp in Sources */,
 				3DA1194B0D2DE1BF00948714 /* Effect.cpp in Sources */,
@@ -3284,6 +3288,8 @@
 				3D48B86E0F599EE90073A251 /* matlib.c in Sources */,
 				3DE80D670F7EA825003761D2 /* pvshell.c in Sources */,
 				3DE80D690F7EA840003761D2 /* phasevocoder.c in Sources */,
+				3D7DA83316B2C0630001DFF2 /* sliderdata.c in Sources */,
+				3D7DA83616B2C1160001DFF2 /* sndsliders.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

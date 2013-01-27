@@ -1,15 +1,13 @@
 ;; makefile.lsp -- builds makefiles for various machine types
 
-(setf old-system-types '(rs6k next pmax sparc sgi))
+(load "misc/files.lsp") ; just to make sure we're current
+
 (setf system-types '(alsa nonalsa))
 
 (if (not (boundp 'system-type)) (setf system-type nil))
 (if (not (boundp 'target-file)) (setf target-file "ny"))
 
 (format t "System types: ~A~%" system-types)
-(format t 
-  "The following types are not maintained but might get close: ~A~%"
-  old-system-types)
 (format t "Current type: ~A~%" system-type)
 (format t "Current target: ~A~%" target-file)
 (format t "~%Instructions: (run from top nyquist directory)~%")
@@ -24,134 +22,59 @@
 (format t "To make sndfn.wcl and sndfn.cl, type:~%")
 (format t "\t(commandline)~%")
 
-;(format t "To build the Makesrc file, type:~%")
-;(format t "\t(makesrc)~%")
-;(format t
-;"Note: Makesrc is used to update sources from other directories.
-;    It isn't necessary if you got the sources from the normal
-;    .tar file release of Nyquist
-;")
+
+;; add-prefix - place string at beginning of each string in list
+;;
+(defun add-prefix (prefix lis)
+  (mapcar #'(lambda (str) (strcat prefix str)) lis))
 
 
-(setf xlfiles '("extern" "xldmem" 
-  "xlbfun" "xlcont" "xldbug" "xleval"
-  "xlfio" "xlftab" "xlglob" "xlimage" "xlinit" "xlio" "xlisp"
-  "xljump" "xllist" "xlmath" "xlobj" "xlpp" "xlprin" "xlread"
-  "xlstr" "xlsubr" "xlsym" "xlsys" "path"))
+;; add-suffix - place string at end of each string in list
+;;
+(defun add-suffix (lis suffix)
+  (mapcar #'(lambda (str) (strcat str suffix)) lis))
 
-(setf xlfiles-h '("osdefs" "osptrs" "xldmem" "xlisp" "extern"))
-
-(setf xlfiles-lsp '("xlinit" "misc" "evalenv" "printrec"))
-
-; ************************************
-; CHANGED stksrcfiles. PJM July 2007
-; ************************************
-
-(setf stksrcfiles '("Generator" "SineWave" "Function" "FileRead" "FileWvIn" "Effect"
- "Clarinet" "Delay" "DelayL" "Envelope" "Filter" 
-  "Instrmnt" "Noise" "OneZero" "ReedTable" "Saxofony" "Stk"
-  "WaveLoop" "WvIn"
-  "NRev" "JCRev" "PRCRev" "PitShift" "Chorus"
-  "Bowed" "BowTable" "ADSR" "OnePole" "BiQuad"
-  "BandedWG" "DelayA"
-  "Mandolin" "PluckTwo"
-  "Sitar" "ModalBar" "Modal"
-  "Flute" "JetTable" "PoleZero"
-))
-
-; ***************************************************
-; CHANGED stkfiles. PJM July 2007
-; Added stkint, An interface for new stk instruments
-; ***************************************************
-
-(setf stkfiles '("stkinit" "instr" "stkint"))
-
-(setf fftfiles '("fftext" "fftlib" "matlib"))
-
-; note: audio<sys> and snd<sys> will be prepended to this list, e.g.
-;   the strings "audiooss" and "sndlinux" will be added for linux systems
-;
-(defun init-sndfiles ()
-  (setf sndfiles '("ieeecvt" "snd" "sndcvt" "sndio" "sndheader"))
-  (setf sndfiles-lsp '("snd")))
-
-(init-sndfiles)
 
 (setf depends-exceptions '(
    ("nyqsrc/handlers" "") 
    ;("nyqsrc/sndfail" "")
    ("nyqsrc/local" "xlisp/xlisp.h nyqsrc/sound.h")
    ("nyqsrc/stats" "nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h")
-   ("snd/sndcvt" "snd/snd.h")
-   ("snd/sndio" "snd/snd.h")
-   ("snd/audiors6k" "snd/snd.h")
-   ("snd/audionext" "snd/snd.h")
-   ("snd/audiosgi" "snd/snd.h")
-   ("snd/audiopmax" "snd/snd.h")
-   ("snd/audiosparc" "snd/snd.h")
-   ("snd/audiolinux" "snd/snd.h")
-   ("snd/audiooss" "snd/snd.h")
    ("nyqsrc/sndwritepa" "nyqsrc/sndwrite.h")
    ("nyqsrc/sndfnint" "")  ; sparc needs explicit rule for sndfnint.o
    ("nyqsrc/seqfnint" "")  ; ditto for seqfnint.o
 ))
 
-(setf nyqfiles-lsp '("init" "nyquist" "seqmidi" "seq" "makefile" "update" "transfiles" "examples" "nyinit"))
 
 (setf system-types-as-strings (mapcar #'string-downcase 
                 (mapcar #'symbol-name system-types)))
-(setf nyqfiles-lsp (append nyqfiles-lsp system-types-as-strings))
-
-(setf nyqfiles-h '("localdefs" "localptrs" "seqdecls" "cque" "switches"))
 
 (setf intfiles '("sndfnint" "seqfnint"))
 
-(setf extrafiles nil)
-;(dolist (m system-types)
-;        (push (strcat "Makefile." 
-;                      (string-downcase (symbol-name m)))
-;              extrafiles))
-(push "export" extrafiles)
-(push "README" extrafiles)
-(push "howtorelease.doc" extrafiles)
-
-(setf cmtfiles '("cext" "cleanup" "cmdline" "cmtcmd" 
-  "moxc" "mem" "midifile" "midifns" "record"
-  "seq" "seqmread" "seqmwrite" "seqread" "seqwrite" "tempomap"
-  "timebase" "userio")) ; "midimgr" - removed by RBD
-
-(setf cmtfiles-h '("mfmidi" "midicode" "midierr" "musiprog"
-  "pitch"  "swlogic" "hash" "hashrout" "io" "midibuff"))
+(setf object-files 
+  (append
+   (add-prefix "xlisp/" xlfiles)
+   (add-prefix "tran/" transfiles)
+   (add-prefix "cmt/" cmtfiles)
+   (add-prefix "nylsf/" nylsffiles)
+   (add-prefix "nyqsrc/" nyqfiles)
+   (add-prefix "nyqsrc/" nyqsrcfiles)
+   (add-prefix "nyqstk/src/" stksrcfiles)
+   (add-prefix "nyqstk/" stkfiles)
+   (add-prefix "ffts/src/" fftfiles)
+   (add-prefix "nyqsrc/" intfiles)
+   (add-prefix "sys/unix/" sysunixfiles)))
 
 
-(setf nylsffiles '("aiff" "alaw" "au" "audio_detect"
-        "avr" "broadcast"
-	"caf" "chanmap" "chunk" "command" "common" "dither"
-	"double64" "dwd" "dwvw" "file_io"
-	"flac" "float32" "gsm610" "htk" "id3"
-	"ima_adpcm" "ima_oki_adpcm" "interleave" "ircam" 
-	"macbinary3" "macos" "mat4" "mat5" "mpc2k"
-        "ms_adpcm" "nist" "ogg" "ogg_vorbis" "paf"
-	"pcm" "pvf" "raw" "rf64" "rx2" "sd2"
-	"sds" "sndfile" "strings" "svx"
-	"txw" "ulaw" "voc" "vox_adpcm"
-	"w64" "wav" "wav_w64" "wve"
-	"xi" "g72x"
-        "GSM610/add" "GSM610/code" "GSM610/decode"
-	"GSM610/gsm_create" "GSM610/gsm_decode"
-	"GSM610/gsm_destroy" "GSM610/gsm_encode"
-	"GSM610/gsm_option" "GSM610/long_term"
-	"GSM610/lpc" "GSM610/preprocess"
-	"GSM610/rpe" "GSM610/short_term"
-	"GSM610/table"
-	"G72x/g721" "G72x/g723_16" "G72x/g723_24"
-	"G72x/g723_40" "G72x/g72x"))
-
-(setf nylsffiles-h '("common" "config" "float_cast" "sfconfig"
-                     "endian" "sf_unistd" "sndfile" "wav_w64"
-                     "GSM610/gsm610_priv.h" "GSM610/gsm.h"
-                     "G72x/g72x.h" "G72x/g72x_priv.h"))
-
+;; insert-separator -- converts each list (dir name) to pre/dir/name.h
+;;     pre is the prefix string
+;;     sep is the separator character, e.g. "/"
+;;     lis is the list of (dir name) pairs
+;; result is ("pre/dir1/name1.h" "pre/dir2/name2.h" ...)
+;;
+;; A special case is that an element of lis may be a triple, e.g.
+;;   ("~" "dir" "file") which is converted to ~pre/dir/file.h
+;;
 (defun insert-separator (pre sep lis)
   (mapcar #'(lambda (pair) 
               (cond ((= (length pair) 2)
@@ -160,32 +83,26 @@
                      (strcat (car pair) pre (cadr pair) sep (caddr pair) ".h"))))
           lis))
 
+
 ;; COMMAND-PREFIX -- insert prefix before each file
 ;;
 (defun command-prefix (prefix lis)
   (mapcar #'(lambda (item) (list prefix item))
           lis))
 
-(defun fix-sndwritepa (lis)
-  ;; exception: sndwritepa.h -> sndwrite.h
-  (mapcar #'(lambda (f)
-	      (cond ((equal f "sndwritepa") "sndwrite")
-		    (t f)))
-	  lis))
 
 ;; COMMAND-FILELIST -- build files for command line
 ;;
-(defun command-filelist (prefix separator)
+(defun command-filelist (separator)
   (let ()
-    (setf filelist '(("snd" "snd")))
     (setf filelist (append filelist 
-			   (command-prefix "nyqsrc" 
-					   (fix-sndwritepa nyqsrcfiles))))
+			   (command-prefix "nyqsrc" nyqsrcfiles)))
     (display "after nyqsrc" filelist nyqsrcfiles)
-    (setf filelist (append filelist '(("~" "nyqsrc" "sndheader"))))
+    ;; sndheader no longer needed with libsndfile
+    ;;(setf filelist (append filelist '(("~" "nyqsrc" "sndheader"))))
     (setf filelist (append filelist (command-prefix "tran" transfiles)))
-    (cons (strcat prefix "nyqsrc" separator "sndfnint") 
-          (insert-separator prefix separator filelist))))
+    (cons (strcat "nyqsrc" separator "sndfnint") 
+          (insert-separator separator filelist))))
 
 
 ;; COMMANDLINE -- build sndfn.cl and sndfn.wcl for mac and windows
@@ -194,16 +111,15 @@
 (defun commandline ()
   (princ "Your current directory should be nyquist, and you should have\n")
   (princ "just evaluated (load \"misc/makefile\") and (commandline).\n")
-  (load "misc/transfiles") ;; get current versions of transfiles and nyqsrcfiles
   (let (filelist outf)
-    (setf filelist (command-filelist "" "\\"))
+    (setf filelist (command-filelist "\\"))
     (setf outf (open "sndfn.wcl" :direction :output))
-    (write-file-list outf filelist #\ )
+    (write-file-list outf "" filelist #\ )
     (close outf)
     ; now do the mac
-    (setf filelist (command-filelist "" "/"))
+    (setf filelist (command-filelist "/"))
     (setf outf (open "sndfn.cl" :direction :output))
-    (write-file-list outf filelist #\ )
+    (write-file-list outf "" filelist #\ )
     (close outf)
     (princ "On Mac OS-X, you should now (exit) nyquist, and at the commandline\n")
     (princ "run macosxproject/build/Development/intgen @sndfn.cl\n")
@@ -220,34 +136,15 @@
   (dolist (m system-types)
       (setf system-type m)
       (setf m (string-downcase (symbol-name m)))
-      (init-sndfiles)
       (makefile)))
-
-;; MAKE-AUDIO-NAME -- (strcat "audio" system-name)
-;; jlh1 is audiooss something I need to track down and consider changing?
-(defun make-audio-name (system-name)
-  (cond ((eq system-type 'linux)
-         "audiooss")
-        (t (strcat "audio" system-name))))
-
-;; MAKE-SND-NAME -- (strcat "audio" system-name)
-(defun make-snd-name (system-name)
-   (strcat "snd" system-name))
 
 
 ;; MAKEFILE - creates a Makefile from a list of sources
 ;;
 ;; reads sources from transfiles.lsp
 
-;; *********************************************************
-;; CHANGED. PJM July 2007
-;; JAVASRC separators must be double bar  \\
-;; Added onlyny: to compile only Nyquist. javac not needed
-;; *********************************************************
-
 (defun makefile ()
   (let (system-name outf outf-name portaudio-host-flag)
-    (load "misc/transfiles.lsp") ; just to make sure we're current
     (while (null system-type)
        (format t "Write Makefile for what system?  One of:~A~%" system-types)
        (setf system-type (read))
@@ -263,8 +160,6 @@
     (setf outf (open outf-name :direction :output))
     (cond ((null outf)
            (error "could not open output file" outf-name)))
-    (setf sndfiles (cons (make-audio-name system-name)
-             (cons (make-snd-name system-name) sndfiles)))
     (format outf 
      "#
 # Makefile for Nyquist, SYSTEM-TYPE is ~A
@@ -291,23 +186,13 @@ current: $(CURRENT)
 
 onlyny: $(NY) runtime/system.lsp
 
-JAVASRC = jnyqide/browser.java jnyqide/NyquistThread.java \\
-          jnyqide/Pair.java jnyqide/BareBonesBrowserLaunch.java \\
-          jnyqide/EnvelopeFrame.java jnyqide/Piano_Roll.java \\
-          jnyqide/FindDialog.java jnyqide/PlotFrame.java \\
-          jnyqide/InstrumentCharacteristics.java \\
-          jnyqide/PlotMouseAdapter.java \\
-          jnyqide/Jslide.java jnyqide/PopupListener.java \\
-          jnyqide/LispFileFilter.java jnyqide/PreferencesDialog.java \\
-          jnyqide/MainFrame_AboutBox.java jnyqide/ReplaceDialog.java \\
-          jnyqide/MainFrame.java jnyqide/SpringUtilities.java \\
-          jnyqide/Main.java \\
-          jnyqide/NotFoundDialog.java jnyqide/TextColor.java \\
-          jnyqide/NyqPlot.java jnyqide/Trie.java \\
-          jnyqide/NyquistFile.java jnyqide/WordList.java
+" system-type target-file)
 
-
-jnyqide/jNyqIDE.jar: $(JAVASRC)
+   (format outf "JAVASRC = ")
+   (write-file-list outf "JAVASRC = "
+    (add-prefix "jnyqide/" (add-suffix javafiles ".o")) #\\)
+   (format outf
+"jnyqide/jNyqIDE.jar: $(JAVASRC)
 	if [ -r jnyqide/SpecialMacHandler.java ] ; then \\
 	mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden ;\\
 	fi 
@@ -325,17 +210,19 @@ INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Iffts/src \\
 
 # system dependent stuff for ~A:
 ~A
+# end of system dependencies
 
 INTGEN = misc/intgen
 
 # Object files for Nyquist:
-" system-type target-file system-name (system-defs))
+" 
+     system-name (system-defs))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    (object-files outf)
+    (write-object-files outf)
     (format outf "# Sound functions to add to xlisp~%")
-    (nyqheaders outf)
-    (cmtheaders outf)
+    (sndfnint-headers outf)
+    (seqfnint-headers outf)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     (format outf "
@@ -350,8 +237,6 @@ liblo/Makefile:
 
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 \tcd liblo; make
-
-
 
 bin/ser-to-osc: bin $(LIBLO_PATH)/liblo.a
 \t$(CC) -c $(CFLAGS) liblo/ser-to-osc/ser-to-osc.cpp \\
@@ -422,6 +307,8 @@ runtime/system.lsp: sys/unix/~A/system.lsp
 " portaudio-host-flag system-name system-name)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (format outf "NYQDEP = nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h~%~%")
+
     (dependencies outf system-name)
     (format outf (system-rules))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -429,17 +316,11 @@ runtime/system.lsp: sys/unix/~A/system.lsp
         "misc/intgen: misc/intgen.c
 \tcd misc; make intgen
 
-misc/unpacker: misc/unpacker.c misc/convert.c
-\tcd misc; make unpacker
+nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen
+\t$(INTGEN) nyqsrc/sndfnint $(SNDFNINT_HDRS)
 
-misc/packer: misc/packer.c misc/convert.c
-\tcd misc; make packer
-
-nyqsrc/sndfnintptrs.h: $(NYQHDRS) misc/intgen
-\t$(INTGEN) nyqsrc/sndfnint $(NYQHDRS)
-
-nyqsrc/seqfnintptrs.h: $(CMTHDRS) misc/intgen
-\t$(INTGEN) nyqsrc/seqfnint $(CMTHDRS)
+nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen
+\t$(INTGEN) nyqsrc/seqfnint $(SEQFNINT_HDRS)
 
 clean:
 \tcd misc; make clean
@@ -465,30 +346,19 @@ cleaner: clean
 \trm -f points.dat
 \trm -f core.* core
 \trm -f $(NY)
-
-release: cleaner
-\tcd misc; make packer
-\tmisc/packer files.txt release.pac
-\trm -f *.wav
-\tmv ny ..
-\tmv -f *.pac ..
-\trm -f unpacker
-\trm -f packer
-\tcd ..; zip -r nyquist.zip nyquist
-\t../ny misc/cmu/cmu-linux-install.lsp
-\tmv ../ny ./ny
 ")
 
-    (cond ((eq system-type 'rs6k)
-       (format outf "
-tar: cleaner
-\tsh -v sys/unix/cmu/tar.script
-
-backup: cleaner
-\tsh -v sys/unix/cmu/backup.script
-")))
     (close outf)
     ))
+
+;;;;;; SYSTEM DEPENDENT STUFF ;;;;;;;;;;;;;;;;;;;;
+;;
+;; The way this works is you define variables, e.g. ALSA-DEFS or NONALSA-RULES
+;; in order to insert system-dependent rules at different places in the
+;; Makefile. As of this writing, these are undefined and so nothing (empty
+;; string) is generated.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; system-defs looks for a string of system-dependent defs for the makefile
 ;;
@@ -499,7 +369,6 @@ backup: cleaner
 ;;
 (defun system-rules () (system-var "-RULES"))
 
-
 ;; system-var returns a string stored in the variable (if any):
 ;;   <system-type>-<suffix>
 ;;
@@ -508,28 +377,15 @@ backup: cleaner
     (cond ((boundp v) (symbol-value v))
       (t ""))))
 
+;;;;;; END OF SYSTEM DEPENDENT STUFF ;;;;;;;;;;;;;;;
 
-(defun fix-sndsliders (lis)
-  (remove "sndsliders" lis :test #'string=))
 
-;; object-files - writes names of all object files for linking
+;; write-object-files - writes names of all object files for linking
 ;;
-(defun object-files (outf)
-  (let ((flist (append (add-prefix "xlisp/" xlfiles)
-               (add-prefix "tran/" transfiles)
-               (add-prefix "cmt/" cmtfiles)
-               (add-prefix "nylsf/" nylsffiles)
-               (add-prefix "nyqsrc/" nyqfiles)
-               (add-prefix "nyqsrc/" (fix-sndsliders nyqsrcfiles)) ; pjm January 2008
-               (add-prefix "nyqstk/src/" stksrcfiles)
-               (add-prefix "nyqstk/" stkfiles)
-               (add-prefix "ffts/src/" fftfiles)
-               (add-prefix "nyqsrc/" intfiles)
-               ;(add-prefix "snd/" sndfiles)
-               '("sys/unix/osstuff" "sys/unix/term"))))
+(defun write-object-files (outf)
+  (let ((flist object-files))
     (setf flist (add-suffix flist ".o"))
-    (format outf "OBJECTS = ")
-    (write-file-list outf flist #\\)))
+    (write-file-list outf "OBJECTS = " flist #\\)))
 
 
 ;; add-prefix - place string at beginning of each string in list
@@ -544,38 +400,47 @@ backup: cleaner
   (mapcar #'(lambda (str) (strcat str suffix)) lis))
 
 
-;; write-file-list - write file names to Make macro
+;; write-file-list - write file names as list with line continuation char
+;;    outf - output file
+;;    first - an initial string to write, e.g. "MYMACRO = "
+;;    flist - list of files
+;;    continuation-char - typically #\\, used to wrap lines in Makefile macros
 ;;
-(defun write-file-list (outf flist continuation-char)
-  (while flist
-     (dotimes (i 2)
-          (format outf "~A " (car flist))
-          (setf flist (cdr flist))
-          (if (null flist) (return)))
-     (if flist (format outf " ~A~%\t" continuation-char)))
-  (format outf "~%~%"))
+(defun write-file-list (outf first flist continuation-char)
+  (let ((str first) str2 len)
+    (while flist
+      ;; see if we can add file to str
+      (setf str2 (strcat str " " (car flist)))
+      (setf len (+ (length str2)
+                   (if (eql (char str2 0) #\t) 7 0)))
+      (cond ((> len 72) ;; too long: print str and put filename on next line
+             (format outf "~A ~A~%" str continuation-char)
+             (setf str (strcat "\t" (car flist))))
+            (t ;; not too long, filename goes at end of current line
+             (setf str str2)))
+      (setf flist (cdr flist)))
+    ;; at loop exit, str has the left-overs
+    (format outf "~A~%~%" str)))
 
 
-(defun nyqheaders (outf)
+(defun sndfnint-headers (outf)
   (let ((flist (append
                 (list "nyqsrc/sndfmt" "nylsf/sndfile")
-                 (add-prefix "nyqsrc/" (fix-sndwritepa nyqsrcfiles))
+                 (add-prefix "nyqsrc/" nyqsrcfiles)
                  (add-prefix "tran/" transfiles))))
     (setf flist (mapcar #'(lambda (f) (strcat f ".h"))
                         flist))
-    (format outf "NYQHDRS = ")
-    (write-file-list outf flist #\\)))
+    (write-file-list outf "SNDFNINT_HDRS = " flist #\\)))
 
 
-(defun cmtheaders (outf)
+(defun seqfnint-headers (outf)
   (let ((flist 
      (append '("cmt/seqdecls" "nyqsrc/seqext" "cmt/seq"
            "nyqsrc/seqinterf")  ; order is important here!
          (add-prefix "cmt/"
           '("seqread" "seqmread" "seqwrite" "seqmwrite")))))
     (setf flist (add-suffix flist ".h"))
-    (format outf "CMTHDRS = ")
-    (write-file-list outf flist #\\)))
+    (write-file-list outf "SEQFNINT_HDRS = " flist #\\)))
 
 
 (defun dependencies (outf system-name)
@@ -591,8 +456,7 @@ backup: cleaner
          (format outf "~A.o: ~A.c ~A~%" f f (cadr ex))
          (format outf "\t$(CC) -c ~A.c -o ~A.o $(CFLAGS)~%~%" f f))
         (t
-         (format outf "~A.o: ~A.c ~A.h nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h~%"
-              f f f)
+         (format outf "~A.o: ~A.c ~A.h $(NYQDEP)~%" f f f)
          (format outf "\t$(CC) -c ~A.c -o ~A.o $(CFLAGS)~%~%" f f)))))
   (dolist (f stkfiles)
      (format outf "nyqstk/~A.o: nyqstk/~A.cpp nyqstk/~A.h~%"
@@ -624,67 +488,9 @@ backup: cleaner
 ;; SYSTEM DEPENDENCIES
 ;;===================================================
 
-(setf rs6k-defs "
-MIDI = /afs/cs/project/music/rs6k/midilib
-CC = cc
-# change -g to -O for optimization
-# to enable command line editing, add -DREADLINE
-CFLAGS = -DCMTSTUFF -g $(INCL) -I$(MIDI)
-XFLAGS = $(CFLAGS) -qlanglvl=extended
-LN = xlc -qattr -qlist
-# to enable command line editing, add -lreadline -lcurses
-LFLAGS = -lm -lpthread -L$(MIDI) -lmidi -lbsd -lg
-")
-
-
-(setf next-defs "
-CC = cc
-# to enable command line editing, insert -DREADLINE
-CFLAGS = -DCMTSTUFF -O $(INCL)
-LN = cc
-# to enable command line editing, insert -lreadline -lcurses
-LFLAGS = -lm -lpthread
-")
-
-(setf next-rules "
-# this doesn't compile with the -O switch (a NeXT compiler bug?)
-xlisp/xljump.o : xlisp/xljump.c xlisp/xlisp.h
-\t$(CC) -DCMTSTUFF -c xlisp/xljump.c -o xlisp/xljump.o
-")
-
-(setf pmax-defs "
-CC = cc
-# to enable command line editing, insert -DREADLINE
-CFLAGS = -DCMTSTUFF -g $(INCL)
-LN = cc
-# to enable command line editing, insert -lreadline -lcurses
-LFLAGS = -lm
-")
-
-
-(setf sgi-defs "
-CC = cc
-# to enable command line editing, insert -DREADLINE
-CFLAGS = -DCMTSTUFF -g $(INCL)
-LN = cc
-# to enable command line editing, insert -lreadline -lcurses
-LFLAGS = -lm -lpthread
-# you would need -lmd if UNIX_IRIX_MIDIFNS were defined in midifns.c
-")
-
-
-(setf sparc-defs "
-CC = gcc
-# to enable command line editing, insert -DREADLINE
-CFLAGS = -DCMTSTUFF -g $(INCL)
-LN = g++
-# to enable command line editing, insert -lreadline -lcurses
-LFLAGS = -lm -lpthread
-")
-
-;; this is the general plan for linux, but Debian cannot link with -lasound, 
-;; so to this string you need to prepend a definition for AUDIOLIBS which
-;; has extra link directives for audio libraries, e.g. -lasound (see below)
+;; linux-defs - definitions for Makefile that are common to ALSA and NONALSA.
+;;    we have NONALSA because Debian cannot link with -lasound. The NONALSA
+;;    makefile omits -lasound.
 (setf linux-defs "
 CC = gcc
 
@@ -712,7 +518,7 @@ LFLAGS = -L/usr/lib32 $(LIBPA_PATH)/libportaudio.a \\
          -lm -lpthread -lrt
 
 TAGS:
-	find . \( -name "*.c" -o -name "*.h" \) -print | etags -
+	find . \( -name \"*.c\" -o -name \"*.h\" \) -print | etags -
 
 tags: TAGS
 ")
@@ -724,3 +530,6 @@ AUDIOLIBS = -lasound
 (setf nonalsa-defs (strcat "
 AUDIOLIBS =
 " linux-defs))
+
+(format t "loaded makefile.lsp")
+ 

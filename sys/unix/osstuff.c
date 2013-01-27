@@ -54,7 +54,7 @@
 #include "userio.h"
 #include "exitpa.h"
 #include "nyq-osc-server.h"
-#include "sliders.h" /* define sliders -- not just for OSC */
+#include "sliderdata.h" /* define sliders -- not just for OSC */
 #include "sound.h" /* define nosc_enabled and mark_sound_time */
 #define LBSIZE 200
 
