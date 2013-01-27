@@ -23,16 +23,17 @@ current: $(CURRENT)
 
 onlyny: $(NY) runtime/system.lsp
 
-JAVASRC = JAVASRC =  jnyqide/browser.o jnyqide/NyquistThread.o jnyqide/Pair.o \
-	jnyqide/BareBonesBrowserLaunch.o jnyqide/EnvelopeFrame.o \
-	jnyqide/Piano_Roll.o jnyqide/FindDialog.o jnyqide/PlotFrame.o \
-	jnyqide/InstrumentCharacteristics.o jnyqide/PlotMouseAdapter.o \
-	jnyqide/Jslide.o jnyqide/PopupListener.o jnyqide/LispFileFilter.o \
-	jnyqide/PreferencesDialog.o jnyqide/MainFrame_AboutBox.o \
-	jnyqide/ReplaceDialog.o jnyqide/MainFrame.o jnyqide/SpringUtilities.o \
-	jnyqide/Main.o jnyqide/NotFoundDialog.o jnyqide/TextColor.o \
-	jnyqide/NyqPlot.o jnyqide/Trie.o jnyqide/NyquistFile.o \
-	jnyqide/WordList.o
+JAVASRC =  jnyqide/browser.java jnyqide/NyquistThread.java \
+	jnyqide/Pair.java jnyqide/BareBonesBrowserLaunch.java \
+	jnyqide/EnvelopeFrame.java jnyqide/Piano_Roll.java \
+	jnyqide/FindDialog.java jnyqide/PlotFrame.java \
+	jnyqide/InstrumentCharacteristics.java jnyqide/PlotMouseAdapter.java \
+	jnyqide/Jslide.java jnyqide/PopupListener.java \
+	jnyqide/LispFileFilter.java jnyqide/PreferencesDialog.java \
+	jnyqide/MainFrame_AboutBox.java jnyqide/ReplaceDialog.java \
+	jnyqide/MainFrame.java jnyqide/SpringUtilities.java jnyqide/Main.java \
+	jnyqide/NotFoundDialog.java jnyqide/TextColor.java jnyqide/NyqPlot.java \
+	jnyqide/Trie.java jnyqide/NyquistFile.java jnyqide/WordList.java
 
 jnyqide/jNyqIDE.jar: $(JAVASRC)
 	if [ -r jnyqide/SpecialMacHandler.java ] ; then \
@@ -189,7 +190,8 @@ SNDFNINT_HDRS =  nyqsrc/sndfmt.h nylsf/sndfile.h nyqsrc/sound.h \
 	tran/stkpitshift.h tran/stkchorus.h tran/instrbow.h \
 	tran/instrbowedfreq.h tran/instrbanded.h tran/instrmandolin.h \
 	tran/instrsitar.h tran/instrmodalbar.h tran/instrflute.h \
-	tran/instrflutefreq.h tran/instrfluteall.h tran/fmfb.h tran/fmfbv.h
+	tran/instrflutefreq.h tran/instrfluteall.h tran/fmfb.h tran/fmfbv.h \
+	nyqsrc/sndwrite.h
 
 SEQFNINT_HDRS =  cmt/seqdecls.h nyqsrc/seqext.h cmt/seq.h \
 	nyqsrc/seqinterf.h cmt/seqread.h cmt/seqmread.h cmt/seqwrite.h \
@@ -1107,10 +1109,10 @@ sys/unix/osstuff.o: sys/unix/osstuff.c
 misc/intgen: misc/intgen.c
 	cd misc; make intgen
 
-nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen
+nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen Makefile
 	$(INTGEN) nyqsrc/sndfnint $(SNDFNINT_HDRS)
 
-nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen
+nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen Makefile
 	$(INTGEN) nyqsrc/seqfnint $(SEQFNINT_HDRS)
 
 clean:

@@ -188,9 +188,8 @@ onlyny: $(NY) runtime/system.lsp
 
 " system-type target-file)
 
-   (format outf "JAVASRC = ")
    (write-file-list outf "JAVASRC = "
-    (add-prefix "jnyqide/" (add-suffix javafiles ".o")) #\\)
+    (add-prefix "jnyqide/" (add-suffix javafiles ".java")) #\\)
    (format outf
 "jnyqide/jNyqIDE.jar: $(JAVASRC)
 	if [ -r jnyqide/SpecialMacHandler.java ] ; then \\
@@ -316,10 +315,10 @@ runtime/system.lsp: sys/unix/~A/system.lsp
         "misc/intgen: misc/intgen.c
 \tcd misc; make intgen
 
-nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen
+nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen Makefile
 \t$(INTGEN) nyqsrc/sndfnint $(SNDFNINT_HDRS)
 
-nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen
+nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen Makefile
 \t$(INTGEN) nyqsrc/seqfnint $(SEQFNINT_HDRS)
 
 clean:
@@ -426,10 +425,10 @@ cleaner: clean
 (defun sndfnint-headers (outf)
   (let ((flist (append
                 (list "nyqsrc/sndfmt" "nylsf/sndfile")
-                 (add-prefix "nyqsrc/" nyqsrcfiles)
-                 (add-prefix "tran/" transfiles))))
-    (setf flist (mapcar #'(lambda (f) (strcat f ".h"))
-                        flist))
+                (add-prefix "nyqsrc/" nyqsrcfiles)
+                (add-prefix "tran/" transfiles)
+		'("nyqsrc/sndwrite"))))
+    (setf flist (add-suffix flist ".h"))
     (write-file-list outf "SNDFNINT_HDRS = " flist #\\)))
 
 

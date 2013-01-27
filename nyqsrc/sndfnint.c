@@ -1,11 +1,12 @@
-/* nyqsrc/sndfnint.c -- interface to  snd/snd.h, 
- * nyqsrc/sound.h, nyqsrc/add.h, nyqsrc/avg.h, 
- * nyqsrc/compose.h, nyqsrc/convolve.h, 
+/* nyqsrc/sndfnint.c -- interface to  nyqsrc/sndfmt.h, 
+ * nylsf/sndfile.h, nyqsrc/sound.h, nyqsrc/add.h, 
+ * nyqsrc/avg.h, nyqsrc/compose.h, nyqsrc/convolve.h, 
  * nyqsrc/downsample.h, nyqsrc/fft.h, nyqsrc/inverse.h, 
  * nyqsrc/multiseq.h, nyqsrc/resamp.h, nyqsrc/resampv.h, 
  * nyqsrc/samples.h, nyqsrc/sndmax.h, nyqsrc/sndread.h, 
- * nyqsrc/sndseq.h, nyqsrc/sndsliders.h, nyqsrc/sndwrite.h, 
- * nyqsrc/yin.h, nyqsrc/nyq-osc-server.h, nyqsrc/trigger.h, 
+ * nyqsrc/sndseq.h, nyqsrc/sndsliders.h, 
+ * nyqsrc/sliderdata.h, nyqsrc/sndwritepa.h, nyqsrc/yin.h, 
+ * nyqsrc/nyq-osc-server.h, nyqsrc/trigger.h, 
  * nyqsrc/lpanal.h, nyqsrc/phasevocoder.h, 
  * nyqsrc/pvshell.h, tran/abs.h, tran/allpoles.h, 
  * tran/alpass.h, tran/alpasscv.h, tran/alpassvv.h, 
@@ -34,7 +35,8 @@
  * tran/instrbanded.h, tran/instrmandolin.h, 
  * tran/instrsitar.h, tran/instrmodalbar.h, 
  * tran/instrflute.h, tran/instrflutefreq.h, 
- * tran/instrfluteall.h, tran/fmfb.h, tran/fmfbv.h */
+ * tran/instrfluteall.h, tran/fmfb.h, tran/fmfbv.h, 
+ * nyqsrc/sndwrite.h */
 
 #ifndef mips
 #include "stdlib.h"
@@ -52,7 +54,9 @@ extern LVAL s_true;
 extern LVAL RSLT_sym;
 
 
-#include "snd.h"
+#include "sndfmt.h"
+
+#include "sndfile.h"
 
 #include "sound.h"
 
@@ -697,63 +701,9 @@ LVAL xlc_snd_slider(void)
 }
 
 
-#include "sndwrite.h"
+#include "sliderdata.h"
 
-/* xlc_snd_save -- interface to C routine sound_save */
-/**/
-LVAL xlc_snd_save(void)
-{
-    LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
-    unsigned char * arg3 = getstring(xlgastring());
-    long arg4 = getfixnum(xlgafixnum());
-    long arg5 = getfixnum(xlgafixnum());
-    long arg6 = getfixnum(xlgafixnum());
-    long arg7 = getfixnum(xlgafixnum());
-    double arg8 = 0.0;
-    long arg9 = 0;
-    double arg10 = 0.0;
-    LVAL arg11 = xlgetarg();
-    double result;
-
-    xllastarg();
-    result = sound_save(arg1, arg2, arg3, arg4, arg5, arg6, arg7, &arg8, &arg9, &arg10, arg11);
-    {	LVAL *next = &getvalue(RSLT_sym);
-	*next = cons(NIL, NIL);
-	car(*next) = cvflonum(arg8);	next = &cdr(*next);
-	*next = cons(NIL, NIL);
-	car(*next) = cvfixnum(arg9);	next = &cdr(*next);
-	*next = cons(NIL, NIL);
-	car(*next) = cvflonum(arg10);
-    }
-    return cvflonum(result);
-}
-
-
-/* xlc_snd_overwrite -- interface to C routine sound_overwrite */
-/**/
-LVAL xlc_snd_overwrite(void)
-{
-    LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
-    unsigned char * arg3 = getstring(xlgastring());
-    double arg4 = testarg2(xlgaanynum());
-    long arg5 = getfixnum(xlgafixnum());
-    long arg6 = getfixnum(xlgafixnum());
-    long arg7 = getfixnum(xlgafixnum());
-    long arg8 = getfixnum(xlgafixnum());
-    double arg9 = 0.0;
-    double result;
-
-    xllastarg();
-    result = sound_overwrite(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, &arg9);
-    {	LVAL *next = &getvalue(RSLT_sym);
-	*next = cons(NIL, NIL);
-	car(*next) = cvflonum(arg9);
-    }
-    return cvflonum(result);
-}
-
+#include "sndwritepa.h"
 
 #include "yin.h"
 
@@ -2222,6 +2172,64 @@ LVAL xlc_snd_fmfbv(void)
     xllastarg();
     result = snd_fmfbv(arg1, arg2, arg3, arg4);
     return cvsound(result);
+}
+
+
+#include "sndwrite.h"
+
+/* xlc_snd_save -- interface to C routine sound_save */
+/**/
+LVAL xlc_snd_save(void)
+{
+    LVAL arg1 = xlgetarg();
+    long arg2 = getfixnum(xlgafixnum());
+    unsigned char * arg3 = getstring(xlgastring());
+    long arg4 = getfixnum(xlgafixnum());
+    long arg5 = getfixnum(xlgafixnum());
+    long arg6 = getfixnum(xlgafixnum());
+    long arg7 = getfixnum(xlgafixnum());
+    double arg8 = 0.0;
+    long arg9 = 0;
+    double arg10 = 0.0;
+    LVAL arg11 = xlgetarg();
+    double result;
+
+    xllastarg();
+    result = sound_save(arg1, arg2, arg3, arg4, arg5, arg6, arg7, &arg8, &arg9, &arg10, arg11);
+    {	LVAL *next = &getvalue(RSLT_sym);
+	*next = cons(NIL, NIL);
+	car(*next) = cvflonum(arg8);	next = &cdr(*next);
+	*next = cons(NIL, NIL);
+	car(*next) = cvfixnum(arg9);	next = &cdr(*next);
+	*next = cons(NIL, NIL);
+	car(*next) = cvflonum(arg10);
+    }
+    return cvflonum(result);
+}
+
+
+/* xlc_snd_overwrite -- interface to C routine sound_overwrite */
+/**/
+LVAL xlc_snd_overwrite(void)
+{
+    LVAL arg1 = xlgetarg();
+    long arg2 = getfixnum(xlgafixnum());
+    unsigned char * arg3 = getstring(xlgastring());
+    double arg4 = testarg2(xlgaanynum());
+    long arg5 = getfixnum(xlgafixnum());
+    long arg6 = getfixnum(xlgafixnum());
+    long arg7 = getfixnum(xlgafixnum());
+    long arg8 = getfixnum(xlgafixnum());
+    double arg9 = 0.0;
+    double result;
+
+    xllastarg();
+    result = sound_overwrite(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, &arg9);
+    {	LVAL *next = &getvalue(RSLT_sym);
+	*next = cons(NIL, NIL);
+	car(*next) = cvflonum(arg9);
+    }
+    return cvflonum(result);
 }
 
 

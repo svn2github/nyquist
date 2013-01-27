@@ -39,7 +39,7 @@
                    ))
 
 ;; nyqsrcfiles - these are .c and .h files in /nyqsrc that implement nyquist
-;; primitives they become arguments to intgen, which builds the stubs from
+;; primitives. They become arguments to intgen, which builds the stubs from
 ;; lisp to C
 (setf nyqsrcfiles '("sound" "add" "avg" "compose" "convolve" "downsample" 
                     "fft" "inverse" "multiseq" "resamp" "resampv" 
