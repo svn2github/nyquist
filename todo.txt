@@ -1,5 +1,30 @@
 Manual should explain how to open demos folder and documents.
 
+negative values to duration of CONST and other functions causes crash.
+
+nyquist plugins in Audacity slower on Linux than Windows:
+On Linux, Nyquist plug-ins are much slower than on Win XP.
+Details here: http://audacity.238276.n2.nabble.com/Nyquist-in-Audacity-is-much-slower-on-Linux-than-on-Windows-XP-td7556262.html
+
+Playback from Nyquist in Audacity on Linux is unpredictable and often
+fails. I think there may be a couple of issues here. One is that
+Nyquist is not using PulseAudio, so if Pulse is accessing the sound
+card then playback fails. There also appears to be a problem with
+SND-SET-LATENCY not working correctly (as described here:
+http://bugzilla.audacityteam.org/show_bug.cgi?id=570). In standalone
+Nyquist I get the error "could not open audio output" when attempting
+to play audio.
+
+Possibly more to do with Audacity, but (vector (aref s 0)(aref s 0))
+does not work correctly:
+http://bugzilla.audacityteam.org/show_bug.cgi?id=425
+
+Most of the other "top bugs" are more to do with the Audacity than
+Nyquist itself, though there is an issue that s-add-to does not work
+with stereo sounds.
+
+There is also this 64 bit issue:
+http://bugzilla.audacityteam.org/show_bug.cgi?id=336
 
 portaudio diffs:
 
