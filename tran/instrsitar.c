@@ -97,7 +97,7 @@ sound_type snd_make_sitar(time_type t0, double freq, time_type dur, rate_type sr
     susp->temp_ret_value = noteOn(susp->mysitar, freq, 1.0);
     susp->susp.fetch = sitar__fetch;
 
-    susp->terminate_cnt = round((dur) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((dur) * sr));
     /* initialize susp state */
     susp->susp.free = sitar_free;
     susp->susp.sr = sr;

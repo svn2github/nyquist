@@ -98,7 +98,7 @@ sound_type snd_make_modalbar(time_type t0, double freq, int preset, time_type du
     susp->temp_ret_value = noteOn(susp->mymbar, freq, 1.0);;
     susp->susp.fetch = modalbar__fetch;
 
-    susp->terminate_cnt = round((dur) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((dur) * sr));
     /* initialize susp state */
     susp->susp.free = modalbar_free;
     susp->susp.sr = sr;

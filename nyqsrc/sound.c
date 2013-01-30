@@ -73,6 +73,16 @@ double snd_set_latency(double latency)
 }
 
 
+long check_terminate_cnt(long tc)
+{
+    if (tc < 0) {
+        xlfail("duration is less than 0 samples");
+        tc = 0; /* this should not be reached */
+    }
+    return tc;
+}
+
+
 /* xlbadsr - report a "bad combination of sample rates" error */
 LVAL snd_badsr(void)
 {

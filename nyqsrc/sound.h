@@ -226,6 +226,7 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_SHIFT 2
 
 LVAL snd_badsr(void);
+long check_terminate_cnt(long tc);
 
 typedef double time_type;
 typedef double rate_type;

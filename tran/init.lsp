@@ -26,3 +26,5 @@
 (setf *gc-flag* t)
 
 (setf *watch* nil)
+
+(print "Assuming you ran Nyquist in nyquist/tran, type (m) to regenerate all source code from .alg files")

@@ -7353,7 +7353,7 @@ keywords are simply the formal parameter names with
 a prepended colon character (@code(:pitch) and @code(:dur)
 in this example), so a function call would look like:
 @begin(example)
-pluck(pitch: c3, dur: 3)
+k-pluck(pitch: c3, dur: 3)
 @end(example)
 Usually, it is best to give keyword parameters useful
 default values. That way, if a parameter such as @code(dur:)

@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrbow.h"
 
-void bowed_free();
+void bowed_free(snd_susp_type a_susp);
 
 
 typedef struct bowed_susp_struct {

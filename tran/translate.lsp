@@ -133,7 +133,7 @@
  
 
 (defun mstk () (icl) (isx) (ifl) (icla) (isxa) (ifla) (iclf) (isxf) (iflf)
-               (ibf) (mps) (mcho) (mrv) (mbd) (mmd) (mst) (mmb))
+               (ibf) (mib) (mps) (mcho) (mrv) (mbd) (mmd) (mst) (mmb))
 (defun mfmfb () (translate "fmfb") (translate "fmfbv"))
 
 (defun m () (mf) (mp) (mc) (mcl) (mg)

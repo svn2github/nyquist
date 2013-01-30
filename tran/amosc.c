@@ -174,7 +174,6 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     amod_x2_sample = susp_current_sample(amod, amod_ptr);
 
     while (cnt < max_sample_block_len) { /* outer loop */
-        long table_index;
 	/* first compute how many samples to generate in inner loop: */
 	/* don't overflow the output sample block: */
 	togo = max_sample_block_len - cnt;
@@ -220,7 +219,6 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	amod_x1_sample_reg = susp->amod_x1_sample;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            double x1;
 	    if (amod_pHaSe_ReG >= 1.0) {
 		amod_x1_sample_reg = amod_x2_sample;
 		/* pick up next sample as amod_x2_sample: */
@@ -229,11 +227,11 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		amod_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(amod, amod_ptr, amod_cnt, amod_x2_sample);
 	    }
-            table_index = (long) phase_reg;
-            x1 = (double) (table_ptr_reg[table_index]);
-            *out_ptr_reg++ = (sample_type) ((x1 + (phase_reg - table_index) * 
+            long table_index = (long) phase_reg;
+            double x1 = (double) (table_ptr_reg[table_index]);
+            *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
                           (table_ptr_reg[table_index + 1] - x1)) * 
-		(amod_x1_sample_reg * (1 - amod_pHaSe_ReG) + amod_x2_sample * amod_pHaSe_ReG));
+		(amod_x1_sample_reg * (1 - amod_pHaSe_ReG) + amod_x2_sample * amod_pHaSe_ReG);
             phase_reg += ph_incr_reg;
             while (phase_reg > table_len_reg) phase_reg -= table_len_reg;;
 	    amod_pHaSe_ReG += amod_pHaSe_iNcR_rEg;
