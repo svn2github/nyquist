@@ -1,4 +1,5 @@
 package jnyqide;
+
 // Code: Chris Yealy, 5/2/06
 // Edited: Derek D'Souza 5/3/07
 // Edited: Roger Dannenberg 23Jul07
@@ -85,11 +86,11 @@ package jnyqide;
 
  */
 
-
-
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
@@ -101,6 +102,8 @@ import java.lang.Math.*;
 import java.text.DecimalFormat;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import jnyqide.*;
 
@@ -108,8 +111,7 @@ import jnyqide.*;
  * Internal Frame for envolope editing. Special version of Internal frame is
  * used to avoid being moved outside the desktop panel.
  * 
- * @author original_author
- * Revised by Zeyu Jin
+ * @author original_author Revised by Zeyu Jin
  * 
  */
 public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
@@ -143,9 +145,24 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 	private JComboBox compare3;
 	private JComboBox compare4;
 	private JComboBox envTimes;
-	private JButton dispCoord;
-	private Checkbox toggleGrid;
+	private JButton saveEnv;
+	private JToggleButton dispCoord;
+	private JButton loadEnv;
+	private JButton deleteEnv;
+	private JButton addPoint;
+	private JButton deletePoint;
+	private JButton updatePoint;
+	private JButton updateRange;
+	private JButton snap;
+	private JButton updateGrid;
+	private JButton undo;
+	private JButton redo;
+	private JButton clear;
+	private JButton output;
+	private JButton copy;
+	private JToggleButton toggleGrid;
 	private String currentEnvName;
+	private EnvelopeFrame thisFrame;
 	public String[] types = { "Piecewise Linear", "Piecewise Exponential" };
 	public int PWL_TYPE = 0;
 	public int PWE_TYPE = 1;
@@ -181,29 +198,55 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 	// Constructor
 	public EnvelopeFrame(final MainFrame parent, JTextPane inputArea) {
 		super();
-		setTitle("Untitled");
+		setPreferredSize(new Dimension(520, 520));
+		setMinimumSize(new Dimension(520, 520));
+		thisFrame = this;
+		modified = false;
+		constructFrame(parent, inputArea);
+		constructData();
+
+		System.out.println("EnvelopeFrame constructor 1");
+		initGlobalComponents();
+
+		// components for parameter panel
+		ActionListener stateChange = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.history.save(canvas);
+			}
+		};
+
+		constructComponents();
+		setSize(500, 515);
+		pack();
+
+		setResizable(true);
+		setVisible(true);
+		setClosable(true);
+		setMaximizable(true);
+		setIconifiable(true);
+		loadEnvelopes();
+		repaint();
+	}
+
+	private void constructFrame(final MainFrame parent, JTextPane inputArea) {
+		setTitle("Piecewise Envelope Generator");
 		myParent = parent;
 		jInputArea = inputArea;
 		// canvasPanel = new JPanel();
 		// canvasPanel.setPreferredSize(new Dimension(575, 256));
 		mainPanel = (JPanel) getContentPane();
-
-		envColl = new Hashtable<String, String>();
-		setTitle("Piecewise Envelope Generator");
 		setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-		final EnvelopeFrame envelopeFrame = this;
-		modified = false;
 		addInternalFrameListener(new InternalFrameListener() {
 			public void internalFrameClosing(InternalFrameEvent e) {
 				// System.out.println("FrameClosing");
 				int r = JOptionPane.OK_OPTION;
-				if (envelopeFrame.modified) {
-					r = JOptionPane.showConfirmDialog(envelopeFrame,
+				if (thisFrame.modified) {
+					r = JOptionPane.showConfirmDialog(thisFrame,
 							"Really close without saving?", "Alert",
 							JOptionPane.OK_CANCEL_OPTION);
 				}
 				if (r == JOptionPane.OK_OPTION) {
-					envelopeFrame.dispose();
+					thisFrame.dispose();
 				}
 			}
 
@@ -227,18 +270,23 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 			public void internalFrameDeactivated(InternalFrameEvent e) {
 			}
 		});
+	}
 
-		System.out.println("EnvelopeFrame constructor 1");
+	private void constructData() {
+		envColl = new Hashtable<String, String>();
+	}
 
-		JLabel currEnvNameLabel = new JLabel("Name: ");
+	private void initGlobalComponents() {
+		//
 		currEnvName = new JTextField("envelope", 10);
 		currentEnvName = "envelope";
 
-		JButton saveEnv = new JButton("Save");
+		//
+		saveEnv = new JButton("Save");
 		saveEnv.addActionListener(this);
 		saveEnv.setActionCommand("saveEnvelopes");
 
-		JLabel currEnvTypeLabel = new JLabel("Type: ");
+		//
 		envTypes = new JComboBox(types);
 		envTypes.addActionListener(this);
 		envTypes.setActionCommand("envTypeChanged");
@@ -250,54 +298,20 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 		envName.addActionListener(this);
 		envName.setActionCommand("envNameSelected");
 
-		JButton loadEnv = new JButton("Load");
+		//
+		loadEnv = new JButton("Load");
 		loadEnv.addActionListener(this);
 		loadEnv.setActionCommand("loadEnvelope");
 
-		JButton deleteEnv = new JButton("Delete");
+		//
+		deleteEnv = new JButton("Delete");
 		deleteEnv.addActionListener(this);
 		deleteEnv.setActionCommand("deleteEnvelope");
 
-		JPanel envNamePanel = new JPanel();
-		envNamePanel.setBorder(BorderFactory
-				.createTitledBorder("Current Envelope"));
-		GridBagLayout layout0 = new GridBagLayout();
-		envNamePanel.setLayout(layout0);
-
-		GridBagConstraints cons0 = new GridBagConstraints();
-
-		cons0.fill = GridBagConstraints.NONE;
-		cons0.anchor = GridBagConstraints.EAST;
-		cons0.weightx = 0;
-		cons0.weighty = 0;
-		cons0.gridx = 0;
-		cons0.gridy = 0;
-		cons0.gridheight = 1;
-		cons0.gridwidth = 1;
-		envNamePanel.add(currEnvNameLabel, cons0);
-		cons0.anchor = GridBagConstraints.WEST;
-		cons0.gridx = 1;
-		envNamePanel.add(currEnvName, cons0);
-		cons0.anchor = GridBagConstraints.CENTER;
-		cons0.gridx = 2;
-		envNamePanel.add(saveEnv, cons0);
-		cons0.anchor = GridBagConstraints.EAST;
-		cons0.gridx = 0;
-		cons0.gridy = 1;
-		envNamePanel.add(currEnvTypeLabel, cons0);
-		cons0.anchor = GridBagConstraints.WEST;
-		cons0.gridx = 1;
-		cons0.gridwidth = 2;
-		envNamePanel.add(envTypes, cons0);
-
-		JPanel envListPanel = new JPanel();
-		envListPanel.setBorder(BorderFactory
-				.createTitledBorder("Saved Envelopes List"));
-		envListPanel.add(envName);
-		envListPanel.add(loadEnv);
-		envListPanel.add(deleteEnv);
-
+		//
 		envTimes = new JComboBox();
+		envTimes.setMaximumSize(new Dimension(68, 27));
+		envTimes.setPreferredSize(new Dimension(64, 27));
 		envTimes.setEditable(true);
 		envTimes.addActionListener(this);
 		envTimes.setActionCommand("envTimeChange");
@@ -306,99 +320,35 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 				System.out.println("itemStateChanged " + e);
 			}
 		});
-		JLabel envTimesLabel = new JLabel("Time: ");
-
+		//
 		envAmplitudes = new JTextField(6);
-		JLabel envAmplitudesLabel = new JLabel("Ampl: ");
-		envTimes.setPreferredSize(envAmplitudes.getPreferredSize());
 
-		JButton addPoint = new JButton("Add Point");
+		//
+		addPoint = new JButton("Add Point");
 		addPoint.addActionListener(this);
 		addPoint.setActionCommand("addPoint");
 
-		JButton deletePoint = new JButton("Delete Point");
+		//
+		deletePoint = new JButton("Delete Point");
 		deletePoint.addActionListener(this);
 		deletePoint.setActionCommand("deletePoint");
 
-		JButton updatePoint = new JButton("Update Point");
+		//
+		updatePoint = new JButton("Update Point");
 		updatePoint.addActionListener(this);
 		updatePoint.setActionCommand("updatePoint");
 
-		GridBagLayout layout1 = new GridBagLayout();
-		JPanel envPointsPanel = new JPanel();
-		envPointsPanel.setBorder(BorderFactory
-				.createTitledBorder("Envelope Points"));
-		envPointsPanel.setLayout(layout1);
-
-		GridBagConstraints cons = new GridBagConstraints();
-
-		cons.fill = GridBagConstraints.NONE;
-		cons.anchor = GridBagConstraints.EAST;
-		cons.weightx = 0;
-		cons.weighty = 0;
-		cons.gridx = 0;
-		cons.gridy = 0;
-		cons.gridheight = 1;
-		cons.gridwidth = 1;
-		envPointsPanel.add(envTimesLabel, cons);
-		cons.anchor = GridBagConstraints.WEST;
-		cons.gridx = 1;
-		envPointsPanel.add(envTimes, cons);
-		cons.anchor = GridBagConstraints.EAST;
-		cons.gridx = 0;
-		cons.gridy = 1;
-		envPointsPanel.add(envAmplitudesLabel, cons);
-		cons.anchor = GridBagConstraints.WEST;
-		cons.gridx = 1;
-		envPointsPanel.add(envAmplitudes, cons);
-		cons.anchor = GridBagConstraints.CENTER;
-		cons.gridx = 2;
-		cons.gridy = 0;
-		envPointsPanel.add(addPoint, cons);
-		cons.gridy = 1;
-		envPointsPanel.add(deletePoint, cons);
-		cons.gridy = 2;
-		envPointsPanel.add(updatePoint, cons);
-
-		// panel to contain time and amplitude parameters
-		JPanel rangePanel = new JPanel();
-		JPanel paramPanel = new JPanel();
-		paramPanel.setBorder(BorderFactory.createTitledBorder("Range"));
-		rangePanel.setLayout(new GridBagLayout());
-		paramPanel.setLayout(layout1);
-
-		// components for parameter panel
-		ActionListener stateChange = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				canvas.history.save(canvas);
-			}
-		};
-
+		//
 		maxT = new JTextField("1.0", 5);
 		minA = new JTextField("0.0", 5);
 		maxA = new JTextField("1.0", 5);
-		JLabel maxTL = new JLabel("Stop: ");
-		JLabel minAL = new JLabel("Min: ");
-		JLabel maxAL = new JLabel("Max: ");
 
-		cons.gridx = 2;
-		cons.gridy = 0;
-		rangePanel.add(maxTL, cons);
-		cons.gridx = 3;
-		cons.gridy = 0;
-		rangePanel.add(maxT, cons);
-		cons.gridx = 0;
-		cons.gridy = 1;
-		rangePanel.add(minAL, cons);
-		cons.gridx = 2;
-		rangePanel.add(maxAL, cons);
-		cons.gridx = 1;
-		rangePanel.add(minA, cons);
-		cons.gridx = 3;
-		rangePanel.add(maxA, cons);
+		//
+		canvas = new PiecewiseCanvas();
 
-		JButton update = new JButton("Update Range");
-		update.addActionListener(new ActionListener() {
+		//
+		updateRange = new JButton("Update");
+		updateRange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (getMaxT() <= 0) {
 					JOptionPane.showMessageDialog(mainPanel,
@@ -445,29 +395,7 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 			}
 		});
 
-		// insert components into the larger panels
-		cons.fill = GridBagConstraints.NONE;
-		cons.anchor = GridBagConstraints.WEST;
-		cons.weightx = 0;
-		cons.weighty = 0;
-		cons.gridx = 0;
-		cons.gridy = 0;
-		cons.gridheight = 1;
-		cons.gridwidth = 1;
-		// cons.insets = new Insets(5,0,0,5);
-		paramPanel.add(rangePanel, cons);
-		cons.fill = GridBagConstraints.NONE;
-		cons.anchor = GridBagConstraints.CENTER;
-		cons.weightx = 0;
-		cons.weighty = 0;
-		cons.gridx = 0;
-		cons.gridy = 1;
-		cons.gridheight = 1;
-		cons.gridwidth = 1;
-		// cons.insets = new Insets(0,0,0,5);
-		paramPanel.add(update, cons);
-
-		// comparePanel
+		//
 		// Used to display extra envelopes in the 'background'
 		String[] tmp = { "" };
 		compare1 = new JComboBox(tmp);
@@ -503,34 +431,16 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 			}
 		});
 
-		JPanel comparePanel = new JPanel();
-		comparePanel.setBorder(BorderFactory
-				.createTitledBorder("Show More Envelopes"));
-		comparePanel.setLayout(layout1);
-		cons.fill = GridBagConstraints.NONE;
-		cons.anchor = GridBagConstraints.EAST;
-		cons.weightx = 0;
-		cons.weighty = 0;
-		cons.gridx = 0;
-		cons.gridy = 0;
-		comparePanel.add(compare1, cons);
-		cons.gridy = 1;
-		comparePanel.add(compare2, cons);
-		cons.gridx = 1;
-		cons.anchor = GridBagConstraints.WEST;
-		comparePanel.add(compare3, cons);
-		cons.gridy = 0;
-		comparePanel.add(compare4, cons);
-
-		// gridPanel
-		JButton updateGrid = new JButton("Update Grid");
+		//
+		updateGrid = new JButton("Update Grid");
 		updateGrid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.repaint();
 			}
 		});
 
-		JButton snap = new JButton("Snap Points to Grid");
+		//
+		snap = new JButton("Snap Points to Grid");
 		snap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Vector<Double> oldtimes = (Vector<Double>) canvas.times.clone();
@@ -556,84 +466,37 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 			}
 		});
 
-		toggleGrid = new Checkbox("Display Grid", false);
-		toggleGrid.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				canvas.repaint();
-			}
-		});
-
-		timeRes = new JTextField(".1", 5);
-		ampRes = new JTextField(".2", 5);
-		JLabel timeResL = new JLabel("Time Res.: ");
-		JLabel ampResL = new JLabel("Ampl. Res.: ");
-
-		JPanel gridPanel = new JPanel();
-		gridPanel.setBorder(BorderFactory.createTitledBorder("Grid"));
-		gridPanel.setLayout(layout1);
-		cons.fill = GridBagConstraints.NONE;
-		cons.anchor = GridBagConstraints.EAST;
-		cons.weightx = 0;
-		cons.weighty = 0;
-		cons.gridx = 0;
-		cons.gridy = 0;
-		gridPanel.add(timeResL, cons);
-		cons.anchor = GridBagConstraints.WEST;
-		cons.gridx = 1;
-		gridPanel.add(timeRes, cons);
-		cons.anchor = GridBagConstraints.EAST;
-		cons.gridx = 0;
-		cons.gridy = 1;
-		gridPanel.add(ampResL, cons);
-		cons.anchor = GridBagConstraints.WEST;
-		cons.gridx = 1;
-		gridPanel.add(ampRes, cons);
-		cons.anchor = GridBagConstraints.CENTER;
-		cons.gridx = 2;
-		cons.gridy = 0;
-		gridPanel.add(updateGrid, cons);
-		cons.gridy = 1;
-		gridPanel.add(snap, cons);
-		cons.gridy = 2;
-		gridPanel.add(toggleGrid, cons);
-
+		//
 		// components for envelope edit panel
-		JButton undo = new JButton("Undo");
+		undo = new JButton("Undo");
 		undo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.history.undo();
 				canvas.restore();
 			}
 		});
-		JButton redo = new JButton("Redo");
+		redo = new JButton("Redo");
 		redo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.history.redo();
 				canvas.restore();
 			}
 		});
-		JButton clear = new JButton("Clear");
+		clear = new JButton("Clear");
 		clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("calling canvas.clear\n");
 				canvas.clear();
 			}
 		});
-		dispCoord = new JButton("Coordinates");
-		dispCoord.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				displayCoord = !displayCoord;
-				canvas.repaint();
-			}
-		});
-		JButton output = new JButton("Output Envelope");
+		output = new JButton("Output Envelope");
 		output.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String outputStr = canvas.getExpression();
 				jInputArea.setText(jInputArea.getText().concat(outputStr));
 			}
 		});
-		JButton copy = new JButton("Copy to Clipboard");
+		copy = new JButton("Copy to Clipboard");
 		copy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StringSelection ss = new StringSelection(canvas.getExpression());
@@ -642,70 +505,338 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 			}
 		});
 
-		JPanel envEditButtonPanel = new JPanel();
-		envEditButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-		envEditButtonPanel.add(undo);
-		envEditButtonPanel.add(redo);
-		envEditButtonPanel.add(clear);
-		envEditButtonPanel.add(dispCoord);
-		envEditButtonPanel.add(output);
-		envEditButtonPanel.add(copy);
-		JPanel topPanel = new JPanel();
-		// topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0));
-		topPanel.setLayout(new GridBagLayout());
-		cons.anchor = GridBagConstraints.NORTHWEST;
-		cons.gridx = 0;
-		cons.gridy = 0;
-		topPanel.add(envNamePanel, cons);
-		cons.gridx = 1;
-		topPanel.add(envListPanel, cons);
-		cons.gridx = 0;
-		cons.gridy = 1;
-		topPanel.add(envPointsPanel, cons);
-		cons.gridx = 1;
-		topPanel.add(paramPanel, cons);
-		cons.gridx = 2;
-		cons.gridy = 0;
-		topPanel.add(comparePanel, cons);
-		cons.gridy = 1;
-		topPanel.add(gridPanel, cons);
+		//
+		timeRes = new JTextField(".1", 5);
+		ampRes = new JTextField(".2", 5);
+	}
 
-		JPanel envEditPanel = new JPanel();
-		envEditPanel.setBorder(BorderFactory
-				.createTitledBorder("Graphical Envelope Editor"));
-		// envEditPanel.setLayout(new BoxLayout(envEditPanel,
-		// BoxLayout.Y_AXIS));
-		envEditPanel.setLayout(new BorderLayout());
-		envEditPanel.add(BorderLayout.NORTH, envEditButtonPanel);
-		canvas = new PiecewiseCanvas();
-		// canvasPanel.add(canvas);
-		// canvasPanel.setBorder(BorderFactory.createEtchedBorder());
-		envEditPanel.add(BorderLayout.CENTER, canvas);
+	private void constructComponents() {
 
-		// insert panels into main frame and display
-		// mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-		// mainPanel.setBorder(BorderFactory.createEmptyBorder());
-		// canvasPanel.add(canvas);
-		mainPanel.add(BorderLayout.NORTH, topPanel);
-		mainPanel.add(BorderLayout.CENTER, envEditPanel);
-		pack();
+		setBounds(100, 100, 500, 503);
 
-		// resize and center the window
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		JPanel upperPanel = new JPanel();
+		upperPanel.setPreferredSize(new Dimension(1, 200));
+		getContentPane().add(upperPanel, BorderLayout.NORTH);
+		upperPanel.setLayout(new GridLayout(1, 0, 0, 0));
 
-		setLocation(80, 0);
-		setSize(700, 525);
-		// setBackground(Color.white);
-		setResizable(true);
-		setVisible(true);
-		setClosable(true);
-		setMaximizable(true);
-		setIconifiable(true);
-		System.out.println("EnvelopeFrame constructor 2 after setIcnifiable");
-		// synchronize env data by loading data from Nyquist process
-		loadEnvelopes();
-		repaint();
-		// canvas.repaint();
+		JPanel envelopePanel = new JPanel();
+		envelopePanel.setBorder(new TitledBorder(null, "Envelope",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		upperPanel.add(envelopePanel);
+		envelopePanel.setLayout(new BorderLayout(0, 0));
+
+		JPanel nameSubPanel = new JPanel();
+		envelopePanel.add(nameSubPanel, BorderLayout.NORTH);
+		nameSubPanel.setLayout(new BorderLayout(0, 0));
+
+		saveEnv.setPreferredSize(new Dimension(84, 29));
+		nameSubPanel.add(saveEnv, BorderLayout.EAST);
+
+		nameSubPanel.add(currEnvName);
+
+		JLabel lblName = new JLabel("Name");
+		nameSubPanel.add(lblName, BorderLayout.WEST);
+
+		JPanel moreEnvSubPanel = new JPanel();
+		envelopePanel.add(moreEnvSubPanel, BorderLayout.SOUTH);
+		moreEnvSubPanel.setLayout(new BorderLayout(0, 0));
+
+		JPanel panel_6 = new JPanel();
+		moreEnvSubPanel.add(panel_6, BorderLayout.CENTER);
+		GridBagLayout gbl_panel_6 = new GridBagLayout();
+		gbl_panel_6.columnWidths = new int[] { 52, 52, 0 };
+		gbl_panel_6.rowHeights = new int[] { 27, 27, 0, 0 };
+		gbl_panel_6.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+		gbl_panel_6.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panel_6.setLayout(gbl_panel_6);
+
+		JLabel lblMoreEnvelopes = new JLabel("More Envelopes");
+		GridBagConstraints gbc_lblMoreEnvelopes = new GridBagConstraints();
+		gbc_lblMoreEnvelopes.insets = new Insets(0, 0, 5, 5);
+		gbc_lblMoreEnvelopes.gridx = 0;
+		gbc_lblMoreEnvelopes.gridy = 0;
+		gbc_lblMoreEnvelopes.gridwidth = 2;
+		panel_6.add(lblMoreEnvelopes, gbc_lblMoreEnvelopes);
+
+		GridBagConstraints gbc_comboBox_3 = new GridBagConstraints();
+		gbc_comboBox_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox_3.anchor = GridBagConstraints.NORTH;
+		gbc_comboBox_3.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBox_3.gridx = 0;
+		gbc_comboBox_3.gridy = 1;
+		panel_6.add(compare1, gbc_comboBox_3);
+
+		GridBagConstraints gbc_comboBox_4 = new GridBagConstraints();
+		gbc_comboBox_4.insets = new Insets(0, 0, 5, 0);
+		gbc_comboBox_4.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox_4.anchor = GridBagConstraints.NORTH;
+		gbc_comboBox_4.gridx = 1;
+		gbc_comboBox_4.gridy = 1;
+		panel_6.add(compare2, gbc_comboBox_4);
+
+		GridBagConstraints gbc_comboBox_1 = new GridBagConstraints();
+		gbc_comboBox_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox_1.anchor = GridBagConstraints.NORTH;
+		gbc_comboBox_1.insets = new Insets(0, 0, 0, 5);
+		gbc_comboBox_1.gridx = 0;
+		gbc_comboBox_1.gridy = 2;
+		panel_6.add(compare3, gbc_comboBox_1);
+
+		GridBagConstraints gbc_comboBox_2 = new GridBagConstraints();
+		gbc_comboBox_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox_2.anchor = GridBagConstraints.NORTH;
+		gbc_comboBox_2.gridx = 1;
+		gbc_comboBox_2.gridy = 2;
+		panel_6.add(compare4, gbc_comboBox_2);
+
+		JPanel currAndTypeSubPanel = new JPanel();
+		envelopePanel.add(currAndTypeSubPanel, BorderLayout.CENTER);
+		currAndTypeSubPanel.setLayout(new BorderLayout(0, 0));
+
+		currAndTypeSubPanel.add(deleteEnv, BorderLayout.EAST);
+
+		currAndTypeSubPanel.add(envName);
+
+		JLabel lblCurrent = new JLabel("->");
+		lblCurrent.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblCurrent.setPreferredSize(new Dimension(36, 16));
+		currAndTypeSubPanel.add(lblCurrent, BorderLayout.WEST);
+
+		JPanel panel_17 = new JPanel();
+		currAndTypeSubPanel.add(panel_17, BorderLayout.SOUTH);
+		panel_17.setLayout(new BorderLayout(0, 0));
+
+		JLabel lblType = new JLabel("Type");
+		lblType.setPreferredSize(new Dimension(36, 16));
+		panel_17.add(lblType, BorderLayout.WEST);
+
+		panel_17.add(envTypes, BorderLayout.CENTER);
+		
+		loadEnv.setPreferredSize(new Dimension(84, 29));
+		panel_17.add(loadEnv, BorderLayout.EAST);
+
+		JPanel panel_11 = new JPanel();
+		upperPanel.add(panel_11);
+		panel_11.setLayout(new BorderLayout(0, 0));
+
+		JPanel panel_2 = new JPanel();
+		panel_11.add(panel_2, BorderLayout.NORTH);
+		panel_2.setBorder(new TitledBorder(null, "Points",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_2.setLayout(new BorderLayout(0, 0));
+
+		JPanel panel_7 = new JPanel();
+		panel_2.add(panel_7, BorderLayout.NORTH);
+		panel_7.setLayout(new GridLayout(1, 0, 0, 0));
+
+		panel_7.add(addPoint);
+
+		panel_7.add(deletePoint);
+
+		panel_7.add(updatePoint);
+
+		JPanel panel_8 = new JPanel();
+		panel_2.add(panel_8, BorderLayout.CENTER);
+		GridBagLayout gbl_panel_8 = new GridBagLayout();
+		gbl_panel_8.columnWidths = new int[] { 0, 0, 0, 0, 0 };
+		gbl_panel_8.rowHeights = new int[] { 0, 0 };
+		gbl_panel_8.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0,
+				Double.MIN_VALUE };
+		gbl_panel_8.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		panel_8.setLayout(gbl_panel_8);
+
+		JLabel lblTime = new JLabel("Time");
+		GridBagConstraints gbc_lblTime = new GridBagConstraints();
+		gbc_lblTime.anchor = GridBagConstraints.EAST;
+		gbc_lblTime.insets = new Insets(0, 0, 0, 5);
+		gbc_lblTime.gridx = 0;
+		gbc_lblTime.gridy = 0;
+		panel_8.add(lblTime, gbc_lblTime);
+
+		GridBagConstraints gbc_comboBox_6 = new GridBagConstraints();
+		gbc_comboBox_6.insets = new Insets(0, 0, 0, 5);
+		gbc_comboBox_6.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox_6.gridx = 1;
+		gbc_comboBox_6.gridy = 0;
+		panel_8.add(envTimes, gbc_comboBox_6);
+
+		JLabel lblAmpl = new JLabel("Ampl");
+		GridBagConstraints gbc_lblAmpl = new GridBagConstraints();
+		gbc_lblAmpl.insets = new Insets(0, 0, 0, 5);
+		gbc_lblAmpl.anchor = GridBagConstraints.ABOVE_BASELINE;
+		gbc_lblAmpl.gridx = 2;
+		gbc_lblAmpl.gridy = 0;
+		panel_8.add(lblAmpl, gbc_lblAmpl);
+
+		GridBagConstraints gbc_spinner = new GridBagConstraints();
+		gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinner.gridx = 3;
+		gbc_spinner.gridy = 0;
+		panel_8.add(envAmplitudes, gbc_spinner);
+
+		JPanel panel_12 = new JPanel();
+		panel_11.add(panel_12, BorderLayout.CENTER);
+		panel_12.setLayout(new BorderLayout(0, 0));
+
+		output.setText("Output Envelope");
+		panel_12.add(output, BorderLayout.NORTH);
+
+		panel_12.add(copy, BorderLayout.SOUTH);
+
+		JPanel panel_13 = new JPanel();
+		panel_12.add(panel_13, BorderLayout.CENTER);
+		GridBagLayout gbl_panel_13 = new GridBagLayout();
+		gbl_panel_13.columnWidths = new int[]{119, 0};
+		gbl_panel_13.rowHeights = new int[]{20, 0, 0};
+		gbl_panel_13.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_13.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		panel_13.setLayout(gbl_panel_13);
+				dispCoord = new JToggleButton("Show Coordinates");
+				dispCoord.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						displayCoord = dispCoord.isSelected();
+						canvas.repaint();				
+					}
+				});
+				
+						GridBagConstraints gbc_dispCoord = new GridBagConstraints();
+						gbc_dispCoord.anchor = GridBagConstraints.NORTH;
+						gbc_dispCoord.insets = new Insets(0, 0, 5, 0);
+						gbc_dispCoord.gridx = 0;
+						gbc_dispCoord.gridy = 0;
+						panel_13.add(dispCoord, gbc_dispCoord);
+				
+						//
+						toggleGrid = new JToggleButton("Show Grid", false);
+						toggleGrid.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								canvas.repaint();
+							}
+						});
+						GridBagConstraints gbc_toggleGrid = new GridBagConstraints();
+						gbc_toggleGrid.anchor = GridBagConstraints.NORTH;
+						gbc_toggleGrid.gridx = 0;
+						gbc_toggleGrid.gridy = 1;
+						panel_13.add(toggleGrid, gbc_toggleGrid);
+
+		JPanel panel_9 = new JPanel();
+		panel_9.setBorder(new TitledBorder(null, "Envelope View",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(panel_9, BorderLayout.CENTER);
+		panel_9.setLayout(new BorderLayout(0, 0));
+
+		JPanel panel_10 = new JPanel();
+		panel_9.add(panel_10, BorderLayout.NORTH);
+
+		panel_10.add(undo);
+
+		panel_10.add(redo);
+
+		panel_10.add(clear);
+
+		JPanel panel_14 = new JPanel();
+		panel_9.add(panel_14, BorderLayout.SOUTH);
+		GridBagLayout gbl_panel_14 = new GridBagLayout();
+		gbl_panel_14.columnWidths = new int[] { 55, 37, 61, 37, 121, 0 };
+		gbl_panel_14.rowHeights = new int[] { 29, 0 };
+		gbl_panel_14.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
+		gbl_panel_14.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		panel_14.setLayout(gbl_panel_14);
+
+		JLabel lblGridSize = new JLabel("Grid-x Size");
+		GridBagConstraints gbc_lblGridSize = new GridBagConstraints();
+		gbc_lblGridSize.anchor = GridBagConstraints.WEST;
+		gbc_lblGridSize.insets = new Insets(0, 0, 0, 5);
+		gbc_lblGridSize.gridx = 0;
+		gbc_lblGridSize.gridy = 0;
+		panel_14.add(lblGridSize, gbc_lblGridSize);
+
+		GridBagConstraints gbc_spinner_1 = new GridBagConstraints();
+		gbc_spinner_1.anchor = GridBagConstraints.NORTHWEST;
+		gbc_spinner_1.insets = new Insets(0, 0, 0, 5);
+		gbc_spinner_1.gridx = 1;
+		gbc_spinner_1.gridy = 0;
+		panel_14.add(timeRes, gbc_spinner_1);
+
+		JLabel lblMaxTime = new JLabel("Max Time");
+		GridBagConstraints gbc_lblMaxTime = new GridBagConstraints();
+		gbc_lblMaxTime.anchor = GridBagConstraints.WEST;
+		gbc_lblMaxTime.insets = new Insets(0, 0, 0, 5);
+		gbc_lblMaxTime.gridx = 2;
+		gbc_lblMaxTime.gridy = 0;
+		panel_14.add(lblMaxTime, gbc_lblMaxTime);
+
+		GridBagConstraints gbc_spinner_2 = new GridBagConstraints();
+		gbc_spinner_2.anchor = GridBagConstraints.NORTHWEST;
+		gbc_spinner_2.insets = new Insets(0, 0, 0, 5);
+		gbc_spinner_2.gridx = 3;
+		gbc_spinner_2.gridy = 0;
+		panel_14.add(maxT, gbc_spinner_2);
+
+		GridBagConstraints gbc_btnSnapToGrid = new GridBagConstraints();
+		gbc_btnSnapToGrid.anchor = GridBagConstraints.NORTHWEST;
+		gbc_btnSnapToGrid.gridx = 4;
+		gbc_btnSnapToGrid.gridy = 0;
+		panel_14.add(snap, gbc_btnSnapToGrid);
+
+		JPanel panel_15 = new JPanel();
+		panel_9.add(panel_15, BorderLayout.EAST);
+		GridBagLayout gbl_panel_15 = new GridBagLayout();
+		gbl_panel_15.columnWidths = new int[] { 34, 0 };
+		gbl_panel_15.rowHeights = new int[] { 16, 0, 0, 0, 0, 0 };
+		gbl_panel_15.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panel_15.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
+				0.0, 0.0 };
+		panel_15.setLayout(gbl_panel_15);
+
+		JLabel lblResol = new JLabel("Grid-y size");
+		GridBagConstraints gbc_lblResol = new GridBagConstraints();
+		gbc_lblResol.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblResol.insets = new Insets(0, 0, 5, 0);
+		gbc_lblResol.anchor = GridBagConstraints.NORTH;
+		gbc_lblResol.gridx = 0;
+		gbc_lblResol.gridy = 0;
+		panel_15.add(lblResol, gbc_lblResol);
+
+		GridBagConstraints gbc_spinner_3 = new GridBagConstraints();
+		gbc_spinner_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinner_3.insets = new Insets(0, 0, 5, 0);
+		gbc_spinner_3.gridx = 0;
+		gbc_spinner_3.gridy = 1;
+		panel_15.add(ampRes, gbc_spinner_3);
+
+		JLabel lblRange = new JLabel("Min~Max");
+		GridBagConstraints gbc_lblRange = new GridBagConstraints();
+		gbc_lblRange.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblRange.insets = new Insets(0, 0, 5, 0);
+		gbc_lblRange.gridx = 0;
+		gbc_lblRange.gridy = 2;
+		panel_15.add(lblRange, gbc_lblRange);
+
+		GridBagConstraints gbc_spinner_4 = new GridBagConstraints();
+		gbc_spinner_4.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinner_4.insets = new Insets(0, 0, 5, 0);
+		gbc_spinner_4.gridx = 0;
+		gbc_spinner_4.gridy = 3;
+		panel_15.add(minA, gbc_spinner_4);
+
+		GridBagConstraints gbc_spinner_5 = new GridBagConstraints();
+		gbc_spinner_5.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinner_5.insets = new Insets(0, 0, 5, 0);
+		gbc_spinner_5.gridx = 0;
+		gbc_spinner_5.gridy = 4;
+		panel_15.add(maxA, gbc_spinner_5);
+		
+		updateRange.setPreferredSize(new Dimension(72, 29));
+		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
+		gbc_btnUpdate.gridx = 0;
+		gbc_btnUpdate.gridy = 5;
+		panel_15.add(updateRange, gbc_btnUpdate);
+
+		panel_9.add(canvas, BorderLayout.CENTER);
 	}
 
 	public void envNameSelected() {
@@ -777,7 +908,7 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 	}
 
 	public boolean getGridToggle() {
-		return toggleGrid.getState();
+		return toggleGrid.isSelected();
 	}
 
 	public int getEnvType() {
@@ -1718,4 +1849,9 @@ public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
 		public void keyTyped(KeyEvent event) {
 		}
 	}
+
+	private void saveHistory() {
+		canvas.history.save(canvas);
+	}
+
 }
