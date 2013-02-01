@@ -44,10 +44,8 @@ LVAL xget_temp_path()
     char szDir[MAX_PATH];
     char szDirLC[MAX_PATH];
     int rslt = GetTempPath(MAX_PATH, szDir);
-    if (rslt > MAX_PATH || rslt <= 0) {
-        return cvstring("");
-    } else {
-        /* Vista apparently treats c:\windows with
+    if (!(rslt > MAX_PATH || rslt <= 0)) {
+		/* Vista apparently treats c:\windows with
          * special semantics, so just don't allow
          * GetTempPath to put us in c:\windows...
          */
@@ -55,12 +53,16 @@ LVAL xget_temp_path()
         for (p = szDirLC; *p; p++) { 
             *p = tolower(*p);
         }
-        if (strstr(szDirLC, "c:\\windows")) {
-            /* c:\windows is bad. */
-            return cvstring("");
+        if (!strstr(szDirLC, "c:\\windows")) {
+           return cvstring(szDir);
         }
-        return cvstring(szDir);
     }
+	// if not defined or "c:\windows", which is bad
+	strcpy(szDir, getenv("TEMP"));
+	if ((!strstr(szDirLC, "c:\\windows"))) {
+		return cvstring(szDir);
+	}
+	return cvstring("");
 }
 
 //Updated End
