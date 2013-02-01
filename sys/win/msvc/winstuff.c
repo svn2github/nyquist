@@ -59,7 +59,7 @@ const char os_sepchar = ',';
 #include "xlisp.h"
 #include "cext.h"
 #include "userio.h"
-#include "sliders.h"
+#include "sliderdata.h"
 #include "sound.h" /* define nosc_enabled */
 
 /* externals */

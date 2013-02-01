@@ -142,6 +142,8 @@ void amosc_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
 void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+	long table_index;
+		double x1;
     amosc_susp_type susp = (amosc_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type amod_x2_sample;
@@ -227,8 +229,8 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		amod_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(amod, amod_ptr, amod_cnt, amod_x2_sample);
 	    }
-            long table_index = (long) phase_reg;
-            double x1 = (double) (table_ptr_reg[table_index]);
+            table_index = (long) phase_reg;
+            x1 = (double) (table_ptr_reg[table_index]);
             *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
                           (table_ptr_reg[table_index + 1] - x1)) * 
 		(amod_x1_sample_reg * (1 - amod_pHaSe_ReG) + amod_x2_sample * amod_pHaSe_ReG);

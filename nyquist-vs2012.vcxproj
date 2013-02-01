@@ -148,6 +148,8 @@
     <ClCompile Include="nylsf\ogg_pcm.c" />
     <ClCompile Include="nylsf\ogg_speex.c" />
     <ClCompile Include="nylsf\ogg_vorbis.c" />
+    <ClCompile Include="nyqsrc\sliderdata.c" />
+    <ClCompile Include="nyqsrc\sndsliders.c" />
     <ClCompile Include="tran\abs.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -892,7 +894,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="nyqstk\src\Sitar.cpp" />
-    <ClCompile Include="nyqsrc\sliders.c" />
     <ClCompile Include="tran\slope.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1224,6 +1225,7 @@
     <ClCompile Include="portaudio\src\os\win\pa_x86_plain_converters.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="nyqsrc\sliderdata.h" />
     <ClInclude Include="tran\abs.h" />
     <ClInclude Include="nyqsrc\add.h" />
     <ClInclude Include="tran\allpoles.h" />
