@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0450"
+   LastUpgradeVersion = "0460"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F31451CC168279EE00833823"
-               BuildableName = "libflac.a"
-               BlueprintName = "flac"
+               BlueprintIdentifier = "3DD1B16216AACBB0000D560D"
+               BuildableName = "libFLAC.a"
+               BlueprintName = "FLAC"
                ReferencedContainer = "container:nyquist.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

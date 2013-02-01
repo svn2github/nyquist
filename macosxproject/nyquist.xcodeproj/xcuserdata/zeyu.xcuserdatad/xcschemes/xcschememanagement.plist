@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
+		<key>FLAC.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>14</integer>
+		</dict>
 		<key>NyquistIDE.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -113,6 +118,11 @@
 			<true/>
 		</dict>
 		<key>3DAB7F280B2E172300A51A49</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3DD1B16216AACBB0000D560D</key>
 		<dict>
 			<key>primary</key>
 			<true/>

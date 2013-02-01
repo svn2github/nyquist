@@ -2925,7 +2925,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# there must be a better way, but in order to get Xcode to run the application, I\n# set the executable (JavaApplicationStub) to have the same name as the application\n# (NyquistIDE).\nmv $TARGET_BUILD_DIR/$EXECUTABLE_FOLDER_PATH/JavaApplicationStub $TARGET_BUILD_DIR/$EXECUTABLE_FOLDER_PATH/NyquistIDE\n";
+			shellScript = "# there must be a better way, but in order to get Xcode to run the application, I\n# set the executable (JavaApplicationStub) to have the same name as the application\n# (NyquistIDE).\nmv \"$TARGET_BUILD_DIR/$EXECUTABLE_FOLDER_PATH/JavaApplicationStub\" \"$TARGET_BUILD_DIR/$EXECUTABLE_FOLDER_PATH/NyquistIDE\"\n";
 		};
 		3D7327A4125BF5D8009AAF15 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
