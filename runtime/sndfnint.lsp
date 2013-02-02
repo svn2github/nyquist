@@ -79,6 +79,8 @@
  (setf snd-mode-DPCM 10) 
 
  (setf snd-mode-msadpcm 11) 
+ 
+ (setf snd-mode-vorbis 12)
 
  (SETF MAX-STOP-TIME 10E20) 
 

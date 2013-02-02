@@ -239,7 +239,7 @@ long lookup_format(long format, long mode, long bits, long swap)
     case SND_HEAD_SD2: sf_format = SF_FORMAT_SD2; break;
     case SND_HEAD_FLAC: sf_format = SF_FORMAT_FLAC; break;
     case SND_HEAD_CAF: sf_format = SF_FORMAT_CAF; break;
-    case SND_HEAD_OGG: sf_format = SF_FORMAT_OGG; break;
+    case SND_HEAD_OGG: sf_format = SF_FORMAT_OGG; mode = SND_MODE_VORBIS; break; /* ZEYU */
     case SND_HEAD_RAW:
         sf_format = SF_FORMAT_RAW; 
 #ifdef XL_BIG_ENDIAN
@@ -285,7 +285,7 @@ long lookup_format(long format, long mode, long bits, long swap)
     case SND_MODE_FLOAT: sf_mode = SF_FORMAT_FLOAT; break;
     case SND_MODE_DOUBLE: sf_mode = SF_FORMAT_DOUBLE; break;
     case SND_MODE_UNKNOWN: sf_mode = SF_FORMAT_PCM_16; break;
-    case SND_MODE_GSM610: sf_mode = SF_FORMAT_GSM610; break;
+    case SND_MODE_GSM610: sf_mode = SF_FORMAT_GSM610; break; 
     case SND_MODE_DWVW: 
         if (bits <= 12) sf_mode = SF_FORMAT_DWVW_12;
         else if (bits <= 16) sf_mode = SF_FORMAT_DWVW_16;
@@ -303,6 +303,7 @@ long lookup_format(long format, long mode, long bits, long swap)
         }
         break;
     case SND_MODE_MSADPCM: sf_mode = SF_FORMAT_MS_ADPCM; break;
+    case SND_MODE_VORBIS: sf_mode = SF_FORMAT_VORBIS; break;
     }
     return sf_format | sf_mode;
 }
@@ -383,7 +384,11 @@ double sound_save(
             if (sndfile) {
                 /* use proper scale factor: 8000 vs 7FFF */
                 sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
-            } else xlabort("snd_save -- could not open file or bad parameters");
+            } else {
+                char error[240];
+                sprintf(error, "snd_save -- %s", sf_error_number(sf_error(sndfile)));
+                xlabort(error);
+            }
         }
         if (play)
             play = prepare_audio(play, &sf_info, &audio_stream);

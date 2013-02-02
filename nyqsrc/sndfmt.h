@@ -105,7 +105,9 @@ error here
 /* microsoft ADPCM */
 #define SND_MODE_MSADPCM 11
 /* LISP-SRC: (setf snd-mode-msadpcm 11) */
-#define SND_NUM_MODES 12
+#define SND_MODE_VORBIS 12
+/* LISP-SRC: (setf snd-mode-vorbis 11) */
+#define SND_NUM_MODES 13
 
 
 #define SND_LOOP_NONE 0
