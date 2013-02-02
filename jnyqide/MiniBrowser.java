@@ -16,7 +16,7 @@ import java.net.URL;
  * @author original_author Revised by Zeyu Jin (Jan-03-2013)
  * 
  */
-public class MiniBrowser extends JNonHiddenableInternalFrame {
+public class MiniBrowser extends JNonHidableInternalFrame {
 	JEditorPane urlPane;
 
 	class Hyperactive implements HyperlinkListener {

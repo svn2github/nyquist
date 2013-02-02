@@ -114,7 +114,7 @@ import jnyqide.*;
  * @author original_author Revised by Zeyu Jin
  * 
  */
-public class EnvelopeFrame extends JNonHiddenableInternalFrame implements
+public class EnvelopeFrame extends JNonHidableInternalFrame implements
 		ActionListener {
 
 	double EPSILON = 0.00000001; // small number -- allow for rounding error
