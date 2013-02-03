@@ -13,9 +13,9 @@ import javax.swing.JInternalFrame;
  * @author zeyu
  * @version 1.0 (Jan-3-2013)
  */
-public class JNonHiddenableInternalFrame extends JInternalFrame {
+public class JNonHideableInternalFrame extends JInternalFrame {
 
-	JNonHiddenableInternalFrame thisFrame;
+	JNonHideableInternalFrame thisFrame;
 	
 	private void _initialize() {
 		thisFrame = this;
@@ -29,17 +29,17 @@ public class JNonHiddenableInternalFrame extends JInternalFrame {
 		});
 	}
 
-	public JNonHiddenableInternalFrame() {
+	public JNonHideableInternalFrame() {
 		super();
 		_initialize();
 	}
 	
-	public JNonHiddenableInternalFrame(String name) {
+	public JNonHideableInternalFrame(String name) {
 		super(name);
 		_initialize();
 	}
 	
-	public JNonHiddenableInternalFrame(String name, boolean someMeans) {
+	public JNonHideableInternalFrame(String name, boolean someMeans) {
 		super(name, someMeans);
 		_initialize();
 	}

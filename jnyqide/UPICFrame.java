@@ -75,7 +75,7 @@ import java.text.*;
 import java.io.*;
 import javax.imageio.ImageIO;
 
-public class UPICFrame extends JNonHidableInternalFrame implements ActionListener {
+public class UPICFrame extends JNonHideableInternalFrame implements ActionListener {
 
     double EPSILON = 0.00000001; // small number -- allow for rounding error
     int LEFT_BORDER = 3; // inset everything by 3 pixels

@@ -557,7 +557,7 @@ public class MainFrame extends JFrame {
         jDesktop.setBorder(new EmptyBorder(80, 0, 0, 0));
         jDesktop.setPreferredSize( new Dimension(300, 300) );
         
-        jOutputFrame = new JNonHidableInternalFrame("Output");
+        jOutputFrame = new JNonHideableInternalFrame("Output");
        
         // make this wide enough so XLISP GC messages do not wrap 
         //   (it's annoying)
@@ -573,7 +573,7 @@ public class MainFrame extends JFrame {
         String clTitle = "Completion List" + (hasRightMouseButton ?
                                               " - Right Click for Help" :
                                               " - Option Click for Help");
-        jListOutputFrame = new JNonHidableInternalFrame(clTitle);
+        jListOutputFrame = new JNonHideableInternalFrame(clTitle);
         jListOutputFrame.setBounds(0, 0, 0, 0);
         //jListOutputFrame.setSize( new Dimension (500, (530 * 2) / 3));
         jListOutputFrame.setVisible(true);

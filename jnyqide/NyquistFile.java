@@ -21,7 +21,7 @@ import jnyqide.*;
 
 
 // BWP -- added "implements ActionListener"
-public class NyquistFile extends JNonHidableInternalFrame 
+public class NyquistFile extends JNonHideableInternalFrame 
                          implements ActionListener, ComponentListener {
     DefaultStyledDocument doc;
     JTextPane pane;

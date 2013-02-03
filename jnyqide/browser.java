@@ -43,7 +43,7 @@ import javax.swing.event.ChangeEvent;
 ** Description: This is the frame class that implements the sound browser. 
 **/
 
-class Browser extends JNonHidableInternalFrame {
+class Browser extends JNonHideableInternalFrame {
     
     NyquistThread nyquistThread;
     MainFrame mainFrame;
