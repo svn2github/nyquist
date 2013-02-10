@@ -22,6 +22,11 @@ import java.util.prefs.*;
 import java.util.Collection;
 import java.net.URL;
 import javax.swing.border.EmptyBorder;
+/* DO NOT EXIST FOR JAVA 6 -- SEE "SymbolicLink" BELOW 
+import java.nio.file.Path;
+import java.nio.file.Files;
+*/
+import java.lang.Runtime;
 
 /**
  * <p>Title: </p>
@@ -64,7 +69,7 @@ public class MainFrame extends JFrame {
     JButton salLispButton;
     BorderLayout borderLayout1 = new BorderLayout();
     JDesktopPane jDesktop;
-    public CodePane jScrollPane;
+    public CodePane codeInputPane;
     // accessed by CodePane sometimes:
     public JTextArea jOutputArea;
     JTextArea jListOutputArea;
@@ -220,7 +225,7 @@ public class MainFrame extends JFrame {
     
     protected void setVariable(String var, String val) {
         String input;
-        if (jScrollPane.isSal) {
+        if (codeInputPane.isSal) {
             input = "set " + var + " = " + val;
         } else {
             input = "(setf " + var + " " + val + ")";
@@ -243,7 +248,7 @@ public class MainFrame extends JFrame {
     // (pass "" for 0 parameters)
     protected void callFunction(String fn, String parameter) {
         String input;
-        if (jScrollPane.isSal) {
+        if (codeInputPane.isSal) {
             input = "exec " + fn + "(" + parameter + ")";
         } else {
             input = "(" + fn + (parameter.length() > 0 ? " " : "") +
@@ -283,11 +288,29 @@ public class MainFrame extends JFrame {
         item.addActionListener(listener);
         menu.add(item);
     }
+
     
     public void handlePrefs() {
         System.out.println("handlePrefs called");
     }
-    
+
+	/* THIS CODE WRITTEN FOR JAVA SE 7 -- NOT TESTED, USING SHELL SCRIPT INSTEAD
+	// create a symbolic link if it is not already there
+	private static void createSymbolicLinkConditional(Path link, File target) {
+		try {
+			Path targetPath = Files.readSymbolicLink(link);
+			if (targetPath.equals(target.toPath())) {
+				System.out.println("link " + link + " points to " + 
+								  target + " already");
+				return;
+			}
+		} catch(Exception e) {
+			System.out.println("Failed to read " + link);
+		}
+		Files.createSymbolicLink(link, target.toPath());
+	}
+	*/
+
     //Component initialization
     private void mainFrameInit()  throws Exception  {
         // if this is a Mac, we want some menu items on the application menu, 
@@ -299,6 +322,14 @@ public class MainFrame extends JFrame {
         // The special code ultimately calls back to the methods About(), 
         // Prefs(), and Quit() in this class. The "normal" Windows/Linux 
         // code should do the same.
+		//
+		// Also, if this is a Mac, the lib, demo, and runtime directories
+		// are effectively hidden inside the application bundle. To make
+		// them more accessible, look in the directory containing
+		// the application bundle for a directory named nyquist. This is
+		// normally created to hold documentation. Add links in nyquist
+		// to lib and demo
+		//
         if (isMac()) {
             hasRightMouseButton = false;
             try {
@@ -307,18 +338,50 @@ public class MainFrame extends JFrame {
 
                 Class mac_class = Class.forName("jnyqide.SpecialMacHandler");
 
-                /* 
-                Thread t = Thread.currentThread();
-                ClassLoader cl = t.getContextClassLoader();
-                Class mac_class = cl.loadClass("SpecialMacHandler");
-                 */
-
                 System.out.println("got the class\n");
                 Constructor new_one = mac_class.getConstructor(arglist);
                 System.out.println("got the constructor\n");
                 new_one.newInstance(args);
 
                 System.out.println("isMac, so created instance of SpecialMacHandler");
+
+				// install links to lib and demo if they do not exist
+				/* THIS CODE WRITTEN FOR JAVA SE 7, BUT OS X IS CURRENTLY USING
+				 * VERSION 6, SO CALL A SHELL SCRIPT INSTEAD 
+				// start by getting the current directory; should be
+				// ?/NyquistIDE.app/Contents/Resources/Java
+				String path = System.getProperty("user.dir");
+				File f = new File(path); // Java
+				Path libFile = new File(f, "lib"); // link to this
+				Path demosFile = new Path(f, "demos"); // and link to this
+				if (f) f = f.getParentFile(); // Resources
+				if (f) f = f.getParentFile(); // Content
+				// check to see if we are where we expect to be
+				if (f && f.getName().equals("Contents")) {
+					// good so far. Do not check for NyquistIDE.app because it
+					// might be renamed. Look for ../../nyquist
+					f = f.getParentFile(); // NyquistIDE.app
+					if (f) f = f.getParentFile(); // NyquistIDE.app/..
+					if (f) f = new File(f, "nyquist"); // nyquist
+					if (f) { // add symbolic links
+						Path p = f.toPath();
+						Path libLink = new Path(p, "lib");
+						createSymbolicLinkConditional(libLink, libTarget);
+						Path demosLink = new Path(p, "demos");
+						createSymbolicLinkConditional(demosLink, demosTarget);
+					}
+				}
+				*/
+				Process process = Runtime.getRuntime().exec(
+						"/bin/sh ./mac-os-x-link-script.sh");
+				int result = process.waitFor();
+				// if this fails, something is wrong, but it would be annoying to
+				// pop up a dialog box every time the user starts NyquistIDE, so 
+				// we'll just print the error to aid with debugging and ignore the
+				// failure, which could happen if the user intentionally write
+				// protected nyquist (not a bad idea, really), or removed it.
+				System.out.println("Ran script to install lib and demos links,");
+				System.out.println("   -> result is " + result + " (0 == success)");
             } catch(Exception e) {
                 System.out.println(e);
             }
@@ -540,14 +603,13 @@ public class MainFrame extends JFrame {
         jListOutputPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     
-        jScrollPane = new CodePane(new Dimension(400, 200), this, statusBar,
+        codeInputPane = new CodePane(new Dimension(400, 200), this, statusBar,
                                    Integer.parseInt(prefFontSize));
         
         // Top panel for command entry, plot, and toolbar
         JPanel jCommands = new JPanel( new BorderLayout() );
         JPanel jInputAndPlot = new JPanel(new BorderLayout(3, 0));
-        jInputAndPlot.add(jScrollPane, BorderLayout.WEST);
-        System.out.println("\n\n\n\n\n\n\nadded jScrollPane " + jScrollPane + " to panel\n\n\n\n\n\n");
+        jInputAndPlot.add(codeInputPane, BorderLayout.WEST);
         jCommands.add(jToolBar, BorderLayout.SOUTH);
         jCommands.add(jInputAndPlot, BorderLayout.CENTER);
         jCommands.setPreferredSize(new Dimension(300, 150));
@@ -796,8 +858,8 @@ public class MainFrame extends JFrame {
         System.out.println("Sending (exit) to Nyquist...");
         // try to shut down Nyquist before it is orphaned
         // Sal need special syntax to exit the Nyquist process:
-        if (jScrollPane.isSal) sendInputLn("exit nyquist");
-        else                  callFunction("exit", ""); 
+        if (codeInputPane.isSal) sendInputLn("exit nyquist");
+        else                     callFunction("exit", ""); 
         try {
             Thread.sleep(200); // does it help Nyquist's exit to stall? 
         } catch (InterruptedException ie) {
@@ -864,7 +926,7 @@ public class MainFrame extends JFrame {
         SalFileFilter salFilter = new SalFileFilter();
         // last one seems to be the default setting for user, so set according
         // to current mode
-        if (jScrollPane.isSal) {
+        if (codeInputPane.isSal) {
             chooser.setFileFilter(lispFilter);
             chooser.addChoosableFileFilter(salFilter);
         } else {
@@ -995,7 +1057,7 @@ public class MainFrame extends JFrame {
         String text = inputStrings[inputStringsCursor];
         if (text != null) {
             // remove the newline at the end
-            jScrollPane.pane.setText(trimNewline(text));
+            codeInputPane.pane.setText(trimNewline(text));
         }
     }
     
@@ -1005,7 +1067,7 @@ public class MainFrame extends JFrame {
         if (inputStringsCursor >= inputStringsLen) inputStringsCursor = 0;
         String text = inputStrings[inputStringsCursor];
         if (text != null) {
-            jScrollPane.pane.setText(trimNewline(text));
+            codeInputPane.pane.setText(trimNewline(text));
         }
     }
     
@@ -1145,7 +1207,7 @@ public class MainFrame extends JFrame {
         // open an envelope window
         if (!workspaceWarning("envelopes")) return;
         final EnvelopeFrame envelopeFrame = 
-                new EnvelopeFrame(this, jScrollPane.pane);
+                new EnvelopeFrame(this, codeInputPane.pane);
         final MainFrame mainFrame = this;
         envelopeEditor = envelopeFrame;
         envelopeFrame.validate();
@@ -1183,7 +1245,7 @@ public class MainFrame extends JFrame {
         }
         // open a UPIC window
         final UPICFrame upicFrame = 
-                new UPICFrame(this, jScrollPane.pane);
+                new UPICFrame(this, codeInputPane.pane);
         upicEditor = upicFrame;
         upicFrame.validate();
         jDesktop.add(upicFrame);
@@ -1324,7 +1386,7 @@ public class MainFrame extends JFrame {
         if (frame instanceof NyquistFile) {
             NyquistFile file = (NyquistFile) frame;
             String selection = file.currentSelection();
-            jScrollPane.pane.setText(selection);
+            codeInputPane.pane.setText(selection);
             sendCommandToNyquist();
         }
     }
@@ -1445,7 +1507,7 @@ public class MainFrame extends JFrame {
         String path = escape_backslashes(file.getAbsolutePath());
         // if we're in lisp, pop out of any debug/break prompts before loading
         // don't do this is we're in sal because it will exit Sal - not good
-        if (jScrollPane.isSal) {
+        if (codeInputPane.isSal) {
             // callFunction would also work, but I prefer to use the "native"
             // Sal load command
             sendInputLn("load \"" + path + "\"");
@@ -1460,14 +1522,14 @@ public class MainFrame extends JFrame {
     // a newline
     public void sendInputLn(String text) {
         // fix text with indentation if there are multiple lines
-        String newlines = (jScrollPane.isSal ? "\n\n" : "\n");
+        String newlines = (codeInputPane.isSal ? "\n\n" : "\n");
         sendInput(
-            text.replaceAll("\n", (jScrollPane.isSal ? "\n     " : "\n  ")) + 
+            text.replaceAll("\n", (codeInputPane.isSal ? "\n     " : "\n  ")) + 
             newlines, false);
     }
     
     public void setSalMode(final boolean sal) {
-        jScrollPane.isSal = sal;
+        codeInputPane.isSal = sal;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 String name = (sal ? "Lisp" : "Sal");
@@ -1492,7 +1554,7 @@ public class MainFrame extends JFrame {
     }
     
     public void sendCommandToNyquist() {
-        StringBuffer text = new StringBuffer(jScrollPane.pane.getText());
+        StringBuffer text = new StringBuffer(codeInputPane.pane.getText());
         inputStrings[inputStringsX] = new String(text);
         // for some reason, text sometimes ends up
         // with a CR LF at end. Make sure it's gone
@@ -1500,7 +1562,7 @@ public class MainFrame extends JFrame {
         filterCRLF(text);
         // System.out.println("text |" + text +  "| pos " + pos);
         // SAL wants newline before multiline input to make input prettier
-        //if (jScrollPane.isSal && 
+        //if (codeInputPane.isSal && 
         //    inputStrings[inputStringsX].indexOf("\n") >= 0)
         //    sendInput("\n");
 
@@ -1511,7 +1573,7 @@ public class MainFrame extends JFrame {
             inputStringsX = 0;
         }
         inputStringsCursor = inputStringsX;
-        jScrollPane.pane.setText("");
+        codeInputPane.pane.setText("");
     }
     
     public void ScrollToEnd() {
@@ -1559,7 +1621,7 @@ public class MainFrame extends JFrame {
                 pane.setFontSize(s);
             }
         }
-        jScrollPane.setFontSize(s);
+        codeInputPane.setFontSize(s);
         jOutputArea.setFont(new Font("Courier", Font.PLAIN, s));
     }
 

@@ -3520,13 +3520,30 @@ velocity 1 to -60 dB and 127 to 0 dB. The amplitude is proportional to
 the square of MIDI velocity. The input @i(x) can be a @code(FIXNUM) or
 @code(FLONUM) but not a sound. The result is a @code[FLONUM].
 
+@codef[db-to-vel(@pragma(defn)@index(db-to-vel)@i(x))] @c{[sal]}@*
+@altdef{@code[(db-to-vel @i(x))] @c{[lisp]}}@\Returns the conversion
+of @i(x) from decibels to MIDI velocity using a rule that maps 0 dB to 
+MIDI velocity 127 and -60 dB to MIDI velocity 1.
+The MIDI velocity is proportional to the square root of the amplitude. 
+The input @i(x) can be a @code(FIXNUM) or
+@code(FLONUM) but not a sound. The result is a @code[FLONUM].
+
 @code[vel-to-linear(@pragma(defn)@index(vel-to-linear)@i(x))]
 @c{[sal]}@* @altdef{@code[(vel-to-linear @i(x))] @c{[lisp]}}@\Returns
-the conversion of @i(x) from MIDI velocity to decibels using a rule
-that maps MIDI 
-velocity 1 to -60 dB and 127 to 0 dB. The amplitude is proportional to
+the conversion of @i(x) from MIDI velocity to linear amplitude
+ratio using a rule that maps MIDI 
+velocity 1 to -60 dB (0.001) and 127 to unity gain. The amplitude is proportional to
 the square of MIDI velocity. The input @i(x) can be a @code(FIXNUM) or
 @code(FLONUM) but not a sound. The result is a @code[FLONUM].
+
+@code[linear-to-vel(@pragma(defn)@index(linear-to-vel)@i(x))]
+@c{[sal]}@* @altdef{@code[(linear-to-vel @i(x))] @c{[lisp]}}@\Returns
+the conversion of @i(x) from lineary amplitude to MIDI velocity
+using a rule that maps unity gain to 127 and -60 dB (0.001) to MIDI 
+velocity 1. The velocity is proportional to
+the square root of the linear amplitude. The input @i(x) can be a @code(FIXNUM) or
+@code(FLONUM) but not a sound. The result is a @code[FLONUM].
+
 @end(fndefs)
 
 @section(Behaviors)@index(Behaviors)

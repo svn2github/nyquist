@@ -377,7 +377,7 @@ class Browser extends JNonHideableInternalFrame {
 
     
     public void playSound() {
-        boolean isSal = mainFrame.jScrollPane.isSal;
+        boolean isSal = mainFrame.codeInputPane.isSal;
         /* debugging 
         System.out.println("isSal: " + isSal + "\n" +
                            currentInstr.getFunctionName() + "\nSal: " +

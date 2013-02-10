@@ -134,9 +134,19 @@
       (snd-alpassvv the-snd delay feedback max-delay)))
 
 
+;; NYQ:SND-ALPASS -- ignores min-hz argument and calls snd-alpass
+;;
+(defun nyq:snd-alpass (snd delay feedback min-hz)
+  (snd-alpass snd delay feedback))
+
+;; NYQ:SND-ALPASSCV -- ignores min-hz argument and calls snd-alpasscv
+;;
+(defun nyq:snd-alpasscv (snd delay feedback min-hz)
+  (snd-alpasscv snd delay feedback))
+
 (setf alpass-implementations
-      (vector #'snd-alpass #'snd-alpass-error
-              #'snd-alpasscv #'nyq:alpassvv))
+      (vector #'nyq:snd-alpass #'snd-alpass-error
+              #'nyq:snd-alpasscv #'nyq:alpassvv))
 
 
 ;; NYQ:ALPASS1 -- single channel alpass

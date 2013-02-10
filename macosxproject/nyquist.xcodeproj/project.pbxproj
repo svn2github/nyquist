@@ -233,6 +233,8 @@
 		3D48B84C0F5993750073A251 /* fftlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D48B84B0F5993750073A251 /* fftlib.c */; };
 		3D48B8500F5993A60073A251 /* fftext.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D48B84F0F5993A60073A251 /* fftext.c */; };
 		3D48B86E0F599EE90073A251 /* matlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D48B86D0F599EE90073A251 /* matlib.c */; };
+		3D50EFF016C816B5006EC3DA /* mac-os-x-link-script.sh in Resources */ = {isa = PBXBuildFile; fileRef = 3D50EFEF16C816B5006EC3DA /* mac-os-x-link-script.sh */; };
+		3D50EFF216C816E5006EC3DA /* mac-os-x-link-script.sh in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D50EFEF16C816B5006EC3DA /* mac-os-x-link-script.sh */; };
 		3D5CD8340B5BC75E00DF426B /* osstuff.c in Sources */ = {isa = PBXBuildFile; fileRef = F543EFBF0375CD9901029006 /* osstuff.c */; };
 		3D5CD8350B5BC75E00DF426B /* extern.c in Sources */ = {isa = PBXBuildFile; fileRef = F5FF5F49039D84B901029006 /* extern.c */; };
 		3D5CD8360B5BC75E00DF426B /* xldmem.c in Sources */ = {isa = PBXBuildFile; fileRef = F5FF5F50039D84B901029006 /* xldmem.c */; };
@@ -584,6 +586,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
+				3D50EFF216C816E5006EC3DA /* mac-os-x-link-script.sh in Copy Java Resources */,
 				3D177689125CB411007B2152 /* jnyqide.jar in Copy Java Resources */,
 				3D7327FC125BFCCE009AAF15 /* ny in Copy Java Resources */,
 				3D177699125CB593007B2152 /* closeFile.gif in Copy Java Resources */,
@@ -810,6 +813,7 @@
 		3D48B84B0F5993750073A251 /* fftlib.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = fftlib.c; path = ffts/src/fftlib.c; sourceTree = "<group>"; };
 		3D48B84F0F5993A60073A251 /* fftext.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = fftext.c; path = ffts/src/fftext.c; sourceTree = "<group>"; };
 		3D48B86D0F599EE90073A251 /* matlib.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = matlib.c; path = ffts/src/matlib.c; sourceTree = "<group>"; };
+		3D50EFEF16C816B5006EC3DA /* mac-os-x-link-script.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "mac-os-x-link-script.sh"; path = "../jnyqide/mac-os-x-link-script.sh"; sourceTree = "<group>"; };
 		3D587FD80B67A053002E40F9 /* SpecialMacHandler.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = SpecialMacHandler.java; sourceTree = "<group>"; };
 		3D5CD82D0B5BC73700DF426B /* ny */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ny; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D6032F50790A600007A3CA5 /* FindDialog.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = FindDialog.java; sourceTree = "<group>"; };
@@ -1475,6 +1479,7 @@
 		08FB7794FE84155DC02AAC07 /* MacOSXProject */ = {
 			isa = PBXGroup;
 			children = (
+				3D50EFEF16C816B5006EC3DA /* mac-os-x-link-script.sh */,
 				3D7327DE125BFB19009AAF15 /* JavaApplicationStub */,
 				3D1472C70A799DFF00F00E71 /* Nyquist.icns */,
 				F510BDB903A0314301029006 /* Frameworks */,
@@ -2907,6 +2912,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D1776A1125CB5B3007B2152 /* Nyquist.icns in Resources */,
+				3D50EFF016C816B5006EC3DA /* mac-os-x-link-script.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2940,7 +2946,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# shell script goes here\ncd ..\necho \"compiling java sources\"\njavac jnyqide/*.java\nif [ -f jnyqide/jnyqide.jar ]\nthen\n  echo \"removing jnyqide/jnyqide.jar\"\n  rm -f jnyqide/jnyqide.jar\nelse\n  echo \"jnyqide/jnyqide.jar does not exist\"\nfi\necho \"(re)creating jar file\"\njar -cfm jnyqide/jnyqide.jar jnyqide/manifest.txt jnyqide/*.class\necho \"end of script\"\nexit 0\n";
+			shellScript = "# shell script goes here\ncd ..\necho \"compiling java sources\"\njavac jnyqide/*.java\n# $? returns the exit code from the last command, javac\nif [ $? -ne 0 ]   #--check if everything is OK\nthen\n    echo \"Error during Java compilation\"\n    exit 1\nfi\nif [ -f jnyqide/jnyqide.jar ]\nthen\n  echo \"removing jnyqide/jnyqide.jar\"\n  rm -f jnyqide/jnyqide.jar\nelse\n  echo \"jnyqide/jnyqide.jar does not exist\"\nfi\necho \"(re)creating jar file\"\njar -cfm jnyqide/jnyqide.jar jnyqide/manifest.txt jnyqide/*.class\nif [ -f jnyqide/jnyqide.jar ]\nthen\n    echo \"Java compilation script completed OK\"\n    exit 0\nelse\n    echo \"Error: jnyqide.jar not created\"\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
