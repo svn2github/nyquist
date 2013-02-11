@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.06
-13 Jan 2013
+README file for Nyquist Version 3.07
+10 Feb 2013
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -18,6 +18,13 @@ other versions of Unix. For details, see one of these files:
 
 IMPLEMENTATION STATUS
 =====================
+
+Version 3.07 provides:
+    Bug fixes in NyquistIDE Envelope Editor
+    NyquistIDE installs symbolic links to lib and demos
+      directories from nyquist directory (where documentation
+      is kept) so these folders are not hidden in the app bundle.
+    Bug fix in quantize and snd-quantize functions. 
 
 Version 3.06 provides:
     64-bit architecture support

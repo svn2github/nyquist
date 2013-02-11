@@ -3,7 +3,7 @@
 <a href = "part12.html">Previous Section</a> | <a href = "part14.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
 <a name = "133"><h2>Developing and Debugging in Nyquist</h2></a>
-<a name="index987"><a name="index988">
+<a name="index989"><a name="index990">
 There are a number of tools, functions, and techniques that can help to debug Nyquist programs. Since these are described in many places 
 throughout this manual, this chapter brings together many suggestions and techniques for developing code and debugging. You <i>really</i> 
 should read this chapter before you spend too much time with Nyquist. Many problems that you will certainly run into are addressed here.
@@ -102,13 +102,13 @@ and another button named "SAL" that puts you back in SAL mode.
 <a name = "135"><h3>Useful Functions</h3></a>
 <dl>
 <dt>
-<code>grindef(<a name="index989"><a name="index990"><i>name</i>)</code> [SAL]<br>
+<code>grindef(<a name="index991"><a name="index992"><i>name</i>)</code> [SAL]<br>
 
 <code>(grindef <i>name</i>)</code> [LISP]<dd>Prints
 a formatted listing of a lisp function. This is often useful to quickly inspect
 a function without searching for it in source files. Do not forget to quote the
 name, e.g. <code>(grindef 'prod)</code>.<br><br>
-<dt><code>args(<a name="index991"><a name="index992"><i>name</i>)</code> [SAL]<br>
+<dt><code>args(<a name="index993"><a name="index994"><i>name</i>)</code> [SAL]<br>
 
 <code>(args <i>name</i>)</code> [LISP]<dd>Similar
 to <code>grindef</code>, this function prints the arguments to a function. This may
@@ -123,22 +123,22 @@ XLISP. They are so useful that they are defined as part of Nyquist.
 <p>
 <dl>
 <dt>
-<code>incf(<a name="index993"><a name="index994"><i>symbol</i>)</code> [SAL]<br>
+<code>incf(<a name="index995"><a name="index996"><i>symbol</i>)</code> [SAL]<br>
 
 <code>(incf <i>symbol</i>)</code> [LISP]<dd>Increment <i>symbol</i>
 by one. This is a macro, and <i>symbol</i> can be anything that can be set by
 <code>setf</code>. Typically, <i>symbol</i> is a variable: "<code>(incf i)</code>," but
 <i>symbol</i> can also be an array element: "<code>(incf (aref myarray i))</code>."<br><br>
-<dt><code>decf(<a name="index995"><a name="index996"><i>symbol</i>)</code> [SAL]<br>
+<dt><code>decf(<a name="index997"><a name="index998"><i>symbol</i>)</code> [SAL]<br>
 
 <code>(decf <i>symbol</i>)</code> [LISP]<dd>Decrement <i>symbol</i>
 by one. (See <code>incf</code>, above.)<br><br>
-<dt><code>push(<a name="index997"><i>val</i>, <i>lis</i>)</code> [SAL]<br>
+<dt><code>push(<a name="index999"><i>val</i>, <i>lis</i>)</code> [SAL]<br>
 
 <code>(push <i>val</i> <i>lis</i>)</code> [LISP]<dd>Push <i>val</i> onto <i>lis</i> (a Lisp
 list). This is a macro that is equivalent to writing (in Lisp) 
 <code>(setf <i>lis</i> (cons <i>val</i> <i>lis</i>))</code>.<br><br>
-<dt><code>pop(<a name="index998"><i>lis</i>)</code> [SAL]<br>
+<dt><code>pop(<a name="index1000"><i>lis</i>)</code> [SAL]<br>
 
 <code>(pop <i>lis</i>)</code> [LISP]<dd>Remove (pop) the first item from <i>lis</i> (a
 Lisp list). This is a macro that is equivalent to writing (in Lisp)
@@ -151,7 +151,7 @@ The following macros are useful control constructs.
 <p>
 <dl>
 <dt>
-<code>while(<a name="index999"><i>test</i>, <i>expr1</i>, <i>expr2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+<code>while(<a name="index1001"><i>test</i>, <i>expr1</i>, <i>expr2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
 
 <code>(while <i>test</i> <i>expr1</i> <i>expr2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>A conventional
 "while" loop. If <i>test</i> is true, evaluate expressions
@@ -159,7 +159,7 @@ The following macros are useful control constructs.
  expression evaluates to NIL unless the expression <code>(return <i>expr</i>)</code>
  is evaluated, in which case the value of <i>expr</i> is returned. In SAL, the 
  loop statement is preferred.<br><br>
-<dt><code>when(<a name="index1000"><i>test</i>, <i>action</i>)</code> [SAL]<br>
+<dt><code>when(<a name="index1002"><i>test</i>, <i>action</i>)</code> [SAL]<br>
 
 <code>(when <i>test</i> <i>action</i>)</code> [LISP]<dd>A conventional "if-then" 
 statement. If <i>test</i> is true, <i>action</i> is evaluated and returned. Otherwise,
@@ -177,7 +177,7 @@ the function does not yet exist, Nyquist satisfies the requirement by loading
 the file.
 <dl>
 <dt>
-<code>require-from(<a name="index1001"><a name="index1002"><i>fnsymbol</i>, 
+<code>require-from(<a name="index1003"><a name="index1004"><i>fnsymbol</i>, 
 <i>filename</i> [, <i>path</i>])</code> [SAL]<br>
 
 <code>(require-from <i>fnsymbol</i> <i>filename</i> [<i>path</i>])</code> [LISP]<dd>Tests whether <i>fnsymbol</i>, an unquoted 
@@ -195,7 +195,7 @@ the <code>lib/piano.lsp</code> library loads data files from the <code>lib/piano
 but how can we find out the full path of <code>lib</code>? The solution is:
 <dl>
 <dt>
-<code>current-path(<a name="index1003"><a name="index1004"><a name="index1005">)</code> [SAL]<br>
+<code>current-path(<a name="index1005"><a name="index1006"><a name="index1007">)</code> [SAL]<br>
 
 <code>(current-path)</code> [LISP]<dd>Returns the full path name of the file that is
 currently being loaded (see <code>load</code>). Returns NIL if no file is being loaded.
@@ -204,10 +204,10 @@ currently being loaded (see <code>load</code>). Returns NIL if no file is being 
 Finally, there are some helpful math functions:
 <dl>
 <dt>
-<code>real-random(<a name="index1006"><a name="index1007"><a name="index1008"><i>from</i>, <i>to</i>)</code> [SAL]<br>
+<code>real-random(<a name="index1008"><a name="index1009"><a name="index1010"><i>from</i>, <i>to</i>)</code> [SAL]<br>
 
 <code>(real-random <i>from</i> <i>to</i>)</code> [LISP]<dd>Returns a random <code>FLONUM</code> between <i>from</i> and <i>to</i>. (See also <code>rrandom</code>, which is equivalent to <code>(real-random 0 1</code>)).<br><br>
-<dt><code>power(<a name="index1009"><a name="index1010"><i>x</i>, <i>y</i>)</code> [SAL]<br>
+<dt><code>power(<a name="index1011"><a name="index1012"><i>x</i>, <i>y</i>)</code> [SAL]<br>
 
 <code>(power <i>x</i> <i>y</i>)</code> [LISP]<dd>Returns <i>x</i> raised to
 the <i>y</i> power.

@@ -28,13 +28,13 @@ With <code>snd-fft</code> and <code>snd-ifft</code>, you can create all sorts of
 idea is to create intermediate objects that both accept and generate sequences of frames.
 These objects can operate on the frames to implement the desired spectral-domain
 processes. Examples of this can be found in the file 
-<code>fft_tutorial.htm</code><a name="index817"><a name="index818"><a name="index819">,
+<code>fft_tutorial.htm</code><a name="index819"><a name="index820"><a name="index821">,
 which is part of the standard Nyquist release. The documentation for <code>snd-fft</code> and
 <code>snd-ifft</code> follows.
 <p>
 <dl>
 <dt>
-<code>snd-fft(<a name="index820"><a name="index821"><i>sound</i>, <i>length</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
+<code>snd-fft(<a name="index822"><a name="index823"><i>sound</i>, <i>length</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
 
 <code>(snd-fft <i>sound</i> <i>length</i> <i>skip</i> <i>window</i>)</code> [LISP]<dd>This
 function performs an FFT on the first samples in <i>sound</i> and returns a Lisp array of <code>FLONUM</code>s. 
@@ -49,7 +49,7 @@ performing the FFT. When there are no more samples in <i>sound</i> to transform,
 this function returns <code>NIL</code>. The coefficients in the returned array, in order, are the DC coefficient,
 the first real, the first imaginary, the second real, the second imaginary, etc. 
 The last array element corresponds to the real coefficient at the Nyquist frequency.<br><br>
-<dt><code>snd-ifft(<a name="index822"><a name="index823"><a name="index824"><i>time</i>, <i>srate</i>, <i>iterator</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
+<dt><code>snd-ifft(<a name="index824"><a name="index825"><a name="index826"><i>time</i>, <i>srate</i>, <i>iterator</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
 
 <code>(snd-ifft <i>time</i> <i>srate</i> <i>iterator</i> <i>skip</i> <i>window</i>)</code> [LISP]<dd>This function performs an IFFT on a sequence of spectral frames obtained from <i>iterator</i> 
 and returns a sound. The start time of the sound is given by <i>time</i>. Typically, this would be computed 
