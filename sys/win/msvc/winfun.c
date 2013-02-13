@@ -37,31 +37,43 @@ LVAL xsetdir() {
     return NIL;
 }
 
+
+// test if source matches "c:\\windows" (case insensitive)
+//
+static int is_windows_dir(char *source)
+{
+	char *windows_dir = "c:\\windows";
+	while (*source) {
+		if (!*windows_dir || tolower(*source++) != *windows_dir++) {
+			return FALSE;
+		}
+	}
+	return !*windows_dir;
+}
+
+
 /* xget_temp_path -- get a path to create temp files */
 LVAL xget_temp_path()
 {
     char *p;
     char szDir[MAX_PATH];
-    char szDirLC[MAX_PATH];
     int rslt = GetTempPath(MAX_PATH, szDir);
     if (!(rslt > MAX_PATH || rslt <= 0)) {
 		/* Vista apparently treats c:\windows with
          * special semantics, so just don't allow
          * GetTempPath to put us in c:\windows...
          */
-        strcpy(szDirLC, szDir); /* convert to lower case */
-        for (p = szDirLC; *p; p++) { 
-            *p = tolower(*p);
-        }
-        if (!strstr(szDirLC, "c:\\windows")) {
+        if (!is_windows_dir(szDir)) {
            return cvstring(szDir);
         }
     }
-	// if not defined or "c:\windows", which is bad
-	strcpy(szDir, getenv("TEMP"));
-	if ((!strstr(szDirLC, "c:\\windows"))) {
-		return cvstring(szDir);
-	}
+	// if not defined or "c:\\windows", which is bad
+	p = getenv("TEMP");
+	if (p && strlen(p) < MAX_PATH) strcpy(szDir, p);
+	else *szDir = 0;
+    if (!is_windows_dir(szDir)) {
+        return cvstring(szDir);
+    }
 	return cvstring("");
 }
 

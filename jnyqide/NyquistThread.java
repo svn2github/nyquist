@@ -86,12 +86,21 @@ public class NyquistThread extends Thread {
             // if xlisppath file exists, use it instead
             path = "XLISPPATH=" + StringFromFile("xlisppath", path);
             
+	    // build TEMP environment specification
+	    String temp = System.getenv("TEMP"); // use getenv
+	    if (temp == null) { // getenv failed, use a default setting
+		temp = "./";
+	    }
+	    // if temp file exists, use it instead
+	    temp = "TEMP=" + StringFromFile("temp", temp);
+
             // construct SystemRoot for environment from file
             String systemroot = StringFromFile("systemroot", "SystemRoot=C:/windows");
             
             // See if we can get the USER
             String user = System.getenv("USER");
-            if (user == null) user = "";
+            if (user == null) user = System.getenv("USERNAME");
+	    if (user == null) user = "";
             user = StringFromFile("user", user); // file value overrides all
             if (user == "") user = "IGNORE="; // default value
             else user = "USER=" + user;
@@ -99,10 +108,11 @@ public class NyquistThread extends Thread {
             // Construct the environment for nyquist subprocess
             System.out.println(path);
             System.out.println(user);
+	    System.out.println(temp);
+	    System.out.println(systemroot);
 
             // make environment from 3 strings
-            String[] envp = {path, user, systemroot};
-	    System.out.println("envp has " + systemroot);
+	    String[] envp = {path, user, systemroot, temp};
 
             try {
                 myProcess = Runtime.getRuntime().exec( "./ny", envp );

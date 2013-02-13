@@ -64,9 +64,10 @@ Run releasenyqide.bat to create release directory.
 Run Inno Setup 5/Inno Setup Compiler
 Select C:\Users\rbd\nyquist\sys\win\nyqrelide.iss
 Update the version number in the code and save it
+Possibly set the SourceDir in [setup] and save it
 Select Build:Compile
 
-move sys\win\setup\setupnyqiderun.exe setupnyqiderunNNN.exe
+move nyquist\setup\setupnyqiderun.exe setupnyqiderunNNN.exe
   , using the version number for NNN
 
 Visit https://frs.sourceforge.net/webupload and upload setupnyqiderunNNN.exe

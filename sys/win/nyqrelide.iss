@@ -7,18 +7,19 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{3E29123D-0726-441C-8A38-42836B05F74C}
 AppName=NyquistIDE
-AppVerName=NyquistIDE 3.06
+AppVerName=NyquistIDE 3.07
 AppPublisher=Roger B. Dannenberg
 AppPublisherURL=http://www.cs.cmu.edu/~music/nyquist
 AppSupportURL=http://www.cs.cmu.edu/~music/nyquist
 AppUpdatesURL=http://www.cs.cmu.edu/~music/nyquist
 DefaultDirName={pf}\Nyquist
 DefaultGroupName=Nyquist
-LicenseFile=C:\Users\rbd\nyquist\nyqrelide\license.txt
-InfoAfterFile=C:\Users\rbd\nyquist\nyqrelide\Readme.txt
+LicenseFile=nyqrelide\license.txt
+InfoAfterFile=nyqrelide\Readme.txt
 OutputDir=setup
 OutputBaseFilename=setupnyqiderun
-SetupIconFile=C:\Users\rbd\nyquist\sys\win\wingui\nycon.ico
+SetupIconFile=sys\win\wingui\nycon.ico
+SourceDir=c:\Users\Roger\research\nyquist2013
 Compression=lzma
 SolidCompression=yes
 
@@ -29,7 +30,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\rbd\nyquist\nyqrelide\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "nyqrelide\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
