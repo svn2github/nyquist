@@ -199,9 +199,6 @@ SEQFNINT_HDRS =  cmt/seqdecls.h nyqsrc/seqext.h cmt/seq.h \
 
 
 
-bin:
-	mkdir bin
-
 liblo/Makefile:
 	cd liblo; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
 	# sometimes, residual files cause problems
@@ -210,12 +207,14 @@ liblo/Makefile:
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 	cd liblo; make
 
-bin/ser-to-osc: bin $(LIBLO_PATH)/liblo.a
+bin/ser-to-osc: $(LIBLO_PATH)/liblo.a
+	mkdir -p bin
 	$(CC) -c $(CFLAGS) liblo/ser-to-osc/ser-to-osc.cpp \
 	      -o liblo/ser-to-osc/ser-to-osc.o
 	$(LN)  liblo/ser-to-osc/ser-to-osc.o -o bin/ser-to-osc $(LFLAGS)
 
-bin/test-client: bin $(LIBLO_PATH)/liblo.a
+bin/test-client: $(LIBLO_PATH)/liblo.a
+	mkdir -p bin
 	$(CC) -c $(CFLAGS) liblo/test-client/test-client.c \
 	      -o liblo/test-client/test-client.o
 	$(LN) liblo/test-client/test-client.o -o bin/test-client  $(LFLAGS)
@@ -1109,10 +1108,10 @@ sys/unix/osstuff.o: sys/unix/osstuff.c
 misc/intgen: misc/intgen.c
 	cd misc; make intgen
 
-nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen
+nyqsrc/sndfnintptrs.h: $(SNDFNINT_HDRS) misc/intgen Makefile
 	$(INTGEN) nyqsrc/sndfnint $(SNDFNINT_HDRS)
 
-nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen
+nyqsrc/seqfnintptrs.h: $(SEQFNINT_HDRS) misc/intgen Makefile
 	$(INTGEN) nyqsrc/seqfnint $(SEQFNINT_HDRS)
 
 clean:

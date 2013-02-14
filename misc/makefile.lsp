@@ -226,9 +226,6 @@ INTGEN = misc/intgen
 
     (format outf "
 
-bin:
-\tmkdir bin
-
 liblo/Makefile:
 \tcd liblo; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
 \t# sometimes, residual files cause problems
@@ -237,12 +234,14 @@ liblo/Makefile:
 $(LIBLO_PATH)/liblo.a: liblo/Makefile
 \tcd liblo; make
 
-bin/ser-to-osc: bin $(LIBLO_PATH)/liblo.a
+bin/ser-to-osc: $(LIBLO_PATH)/liblo.a
+\tmkdir -p bin
 \t$(CC) -c $(CFLAGS) liblo/ser-to-osc/ser-to-osc.cpp \\
 \t      -o liblo/ser-to-osc/ser-to-osc.o
 \t$(LN)  liblo/ser-to-osc/ser-to-osc.o -o bin/ser-to-osc $(LFLAGS)
 
-bin/test-client: bin $(LIBLO_PATH)/liblo.a
+bin/test-client: $(LIBLO_PATH)/liblo.a
+\tmkdir -p bin
 \t$(CC) -c $(CFLAGS) liblo/test-client/test-client.c \\
 \t      -o liblo/test-client/test-client.o
 \t$(LN) liblo/test-client/test-client.o -o bin/test-client  $(LFLAGS)
