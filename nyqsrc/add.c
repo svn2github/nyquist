@@ -165,7 +165,7 @@ A	nyquist_printf("add[%p,%p] (s1_s2_nn) %p starting inner loop, n %d\n",
         out_ptr_reg = out_ptr;
         if (n) do { /* the inner sample computation loop */
             /* scale? */
-A 	    nyquist_printf("add_s1_s2_nn: %g + %g\n", *s1_ptr_reg, *s2_ptr_reg);
+/*A 	    nyquist_printf("add_s1_s2_nn: %g + %g\n", *s1_ptr_reg, *s2_ptr_reg); */
             *out_ptr_reg++ = *(s1_ptr_reg++) + *(s2_ptr_reg++);
         } while (--n); /* inner loop */
         /* using s1_ptr_reg is a bad idea on RS/6000 */
@@ -382,7 +382,7 @@ B           if (togo == 0) stdputstr("togo is zero at checkpoint 4\n");
         snd_list->block_len = togo;
 
         /* if other is terminated and sound_types match, collapse */
-        /* NOTE: in order to collapse, we need s2 to be generating
+        /* NOTE: in order to collapse, we need s1 to be generating
          * blocks and linking them onto a sound list.  This is true
          * when the get_next fn is SND_get_next.  (A counterexample is
          * SND_get_zeros, which returns zero blocks but does not link
@@ -625,7 +625,7 @@ D	nyquist_printf("add[%p,%p] (s%d_nn) %p shared block %p zero_block %p\n",susp->
         snd_list->block_len = togo;
 
         /* if other is terminated and sound_types match, collapse */
-        /* NOTE: in order to collapse, we need s1 to be generating
+        /* NOTE: in order to collapse, we need s2 to be generating
          * blocks and linking them onto a sound list.  This is true
          * when the get_next fn is SND_get_next.  (A counterexample is
          * SND_get_zeros, which returns zero blocks but does not link
@@ -639,9 +639,9 @@ D	nyquist_printf("add[%p,%p] (s%d_nn) %p shared block %p zero_block %p\n",susp->
             susp->s2->get_next == SND_get_next &&
             susp->s2->logical_stop_cnt == UNKNOWN) {
             snd_list_type addend_list;
-D	    nyquist_printf("add[%p,%p]: collapsing! LSC %d\n",
+D           nyquist_printf("add[%p,%p]: collapsing! LSC %d\n",
                       susp->s2, susp->s1, (int)susp->s2->logical_stop_cnt);
-D	    sound_print_tree(susp->s2);
+D           sound_print_tree(susp->s2);
             /* will "current" values match? */
             /* test for logical stop */
             if (susp->logically_stopped) {
@@ -656,6 +656,9 @@ D	    sound_print_tree(susp->s2);
             snd_list_unref(snd_list->u.next);
             snd_list->u.next = addend_list;
             return;
+        } else {
+D           nyquist_printf("s1 == NULL, but no collapse, lsc %ld\n",
+                           susp->s2->logical_stop_cnt);
         }
     } else {
         /*
