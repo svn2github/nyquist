@@ -13,7 +13,11 @@ package jnyqide;
 
 
 
+import java.awt.Desktop;
+import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URI;
+
 import javax.swing.JOptionPane;
 
 public class BareBonesBrowserLaunch {
@@ -28,8 +32,10 @@ public class BareBonesBrowserLaunch {
         try {
             if (osName.startsWith("Mac OS")) {
                 System.out.println("BareBonesBrowserLaunch: Mac OS detected");
+                // try a even newer way
+                Desktop.getDesktop().browse(new URI(url));
                 // try a new way
-                Runtime.getRuntime().exec(new String[] {"/usr/bin/open", url});
+                // Runtime.getRuntime().exec(new String[] {"/usr/bin/open", "\"" + url + "\""});
                 // here's the old way that does not handle #name suffix on url
 //                Class fileMgr = Class.forName("com.apple.eio.FileManager");
 //                System.out.println("fileMgr=" + fileMgr);
@@ -62,6 +68,7 @@ public class BareBonesBrowserLaunch {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, errMsg + ":\n" + 
                                                 e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -587,7 +587,7 @@ public class MainFrame extends JFrame {
                     
                     if (prefInternalBrowser) {
                         miniBrowser.setVisible(true);
-                        System.out.println("URL is: " + url);
+                        System.out.println("Mini browser URL is: " + url);
                         miniBrowser.setPage(url);
                     } else BareBonesBrowserLaunch.openURL(url);
             	} else {
