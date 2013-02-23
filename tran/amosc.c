@@ -110,12 +110,14 @@ void amosc_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	amod_ptr_reg = susp->amod_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            long table_index = (long) phase_reg;
-            double x1 = (double) (table_ptr_reg[table_index]);
-            *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
-                          (table_ptr_reg[table_index + 1] - x1)) * (amod_scale_reg * *amod_ptr_reg++);
-            phase_reg += ph_incr_reg;
-            while (phase_reg > table_len_reg) phase_reg -= table_len_reg;;
+            {
+		long table_index = (long) phase_reg;
+		double x1 = (double) (table_ptr_reg[table_index]);
+		*out_ptr_reg++ = (sample_type) ((x1 + (phase_reg - table_index) * 
+		          (table_ptr_reg[table_index + 1] - x1)) * (amod_scale_reg * *amod_ptr_reg++));
+		phase_reg += ph_incr_reg;
+		while (phase_reg > table_len_reg) phase_reg -= table_len_reg;
+	     };
 	} while (--n); /* inner loop */
 
 	susp->phase = phase_reg;
@@ -231,13 +233,15 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		amod_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(amod, amod_ptr, amod_cnt, amod_x2_sample);
 	    }
-            long table_index = (long) phase_reg;
-            double x1 = (double) (table_ptr_reg[table_index]);
-            *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
-                          (table_ptr_reg[table_index + 1] - x1)) * 
-		(amod_x1_sample_reg * (1 - amod_pHaSe_ReG) + amod_x2_sample * amod_pHaSe_ReG);
-            phase_reg += ph_incr_reg;
-            while (phase_reg > table_len_reg) phase_reg -= table_len_reg;;
+            {
+		long table_index = (long) phase_reg;
+		double x1 = (double) (table_ptr_reg[table_index]);
+		*out_ptr_reg++ = (sample_type) ((x1 + (phase_reg - table_index) * 
+		          (table_ptr_reg[table_index + 1] - x1)) * 
+		(amod_x1_sample_reg * (1 - amod_pHaSe_ReG) + amod_x2_sample * amod_pHaSe_ReG));
+		phase_reg += ph_incr_reg;
+		while (phase_reg > table_len_reg) phase_reg -= table_len_reg;
+	     };
 	    amod_pHaSe_ReG += amod_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -360,12 +364,14 @@ void amosc_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	phase_reg = susp->phase;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            long table_index = (long) phase_reg;
-            double x1 = (double) (table_ptr_reg[table_index]);
-            *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
-                          (table_ptr_reg[table_index + 1] - x1)) * amod_val;
-            phase_reg += ph_incr_reg;
-            while (phase_reg > table_len_reg) phase_reg -= table_len_reg;;
+            {
+		long table_index = (long) phase_reg;
+		double x1 = (double) (table_ptr_reg[table_index]);
+		*out_ptr_reg++ = (sample_type) ((x1 + (phase_reg - table_index) * 
+		          (table_ptr_reg[table_index + 1] - x1)) * amod_val);
+		phase_reg += ph_incr_reg;
+		while (phase_reg > table_len_reg) phase_reg -= table_len_reg;
+	     };
 	    amod_val += amod_DeLtA;
 	} while (--n); /* inner loop */
 
