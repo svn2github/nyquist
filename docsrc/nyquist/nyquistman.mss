@@ -818,6 +818,8 @@ to automatically lay out windows in a rational way. There is a preference
 setting to determine the height of the completion list relative to the height of the output 
 window.
 
+Many of the key commands for editing files are standard and built into Java. In particular, Control-Z is the ``undo'' command, even on OS X where you would expect to use Command-Z.@index(undo) A special command, ``Copy to Lisp,'' or Control-U (Command-U on OS x)copies the selection and enters it into the input window as if it had been typed there.
+
 @section(The Button Bar)
 @index(button bar)
 There are a number of buttons with frequently-used operations. These are:

@@ -676,10 +676,10 @@
     ;
     ;	/* don't run past terminate time */
     ;	if (susp->terminate_cnt != UNKNOWN && 
-    ;		susp->terminate_cnt <= susp->susp.current) {
-    ;	    int to_stop = (susp->terminate_cnt + max_sample_block_len) -
-    ;			 (susp->susp.current + cnt);
-    ;	    if (to_stop < togo && ((togo = to_stop) == 0)) break;
+    ;		susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+   ;	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+    ;       if (togo < 0) togo = 0; // avoids rounding errors
+    ;       if (togo == 0) break;
     ;	}
     ;----------------
     (cond ((terminate-check-needed terminate alg)
@@ -688,6 +688,7 @@
      "\tif (susp->terminate_cnt != UNKNOWN &&\n"
      "\t    susp->terminate_cnt <= susp->susp.current + cnt + togo) {\n"
      "\t    togo = susp->terminate_cnt - (susp->susp.current + cnt);\n"
+     "\t    if (togo < 0) togo = 0;  /* avoids rounding errros */\n"
      "\t    if (togo == 0) break;\n"
      "\t}\n\n") stream)))
 
@@ -702,6 +703,7 @@
     ;	     * AND cnt > 0 (we're not at the beginning of the
     ;	     * output block).
     ;	     */
+    ;       if (to_stop < 0) to_stop = 0; // avoids rounding errors
     ;	    if (to_stop < togo) {
     ;		if (to_stop == 0) {
     ;		    if (cnt) {
@@ -728,6 +730,7 @@
      "\t     * AND cnt > 0 (we're not at the beginning of the\n"
      "\t     * output block).\n"
      "\t     */\n"
+     "\t    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */\n"
      "\t    if (to_stop < togo) {\n"
      "\t\tif (to_stop == 0) {\n"
      "\t\t    if (cnt) {\n"

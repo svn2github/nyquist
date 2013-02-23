@@ -152,7 +152,7 @@
           "     *autonorm-type* is LOOKAHEAD and your sound got\n"
           "       louder after the lookahead period, resulting in\n"
           "       too large a scale factor and clipping. Consider\n"
-          "       setting *automode-type* to 'PREVIOUS. Alternatively,\n"
+          "       setting *autonorm-type* to 'PREVIOUS. Alternatively,\n"
           "       try turning off autonorm, e.g. \"exec autonorm-off()\"\n"
           "       or in Lisp mode, (autonorm-off), and scale your sound\n"
           "       as follows.\n"))

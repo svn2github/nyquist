@@ -54,6 +54,7 @@ void quantize_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -65,6 +66,7 @@ void quantize_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -87,11 +89,9 @@ void quantize_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-		long xx;
-		float x;
-            x = *s1_ptr_reg++ * factor_reg;
+            float x = *s1_ptr_reg++ * factor_reg;
             x = (x > 0.0F ? x + 0.5 : x - 0.5);
-			xx = (long) x;
+            long xx = (long) x;
             *out_ptr_reg++ = (float) xx;
 	} while (--n); /* inner loop */
 

@@ -72,6 +72,7 @@ void amosc_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -83,6 +84,7 @@ void amosc_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -142,8 +144,6 @@ void amosc_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
 void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
-	long table_index;
-		double x1;
     amosc_susp_type susp = (amosc_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type amod_x2_sample;
@@ -184,6 +184,7 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -195,6 +196,7 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -229,8 +231,8 @@ void amosc_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		amod_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(amod, amod_ptr, amod_cnt, amod_x2_sample);
 	    }
-            table_index = (long) phase_reg;
-            x1 = (double) (table_ptr_reg[table_index]);
+            long table_index = (long) phase_reg;
+            double x1 = (double) (table_ptr_reg[table_index]);
             *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
                           (table_ptr_reg[table_index + 1] - x1)) * 
 		(amod_x1_sample_reg * (1 - amod_pHaSe_ReG) + amod_x2_sample * amod_pHaSe_ReG);
@@ -321,6 +323,7 @@ void amosc_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -332,6 +335,7 @@ void amosc_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {

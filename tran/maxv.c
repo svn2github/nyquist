@@ -69,6 +69,7 @@ void maxv_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -80,6 +81,7 @@ void maxv_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -168,6 +170,7 @@ void maxv_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -179,6 +182,7 @@ void maxv_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -234,7 +238,6 @@ void maxv_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
 void maxv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
-	double x1, x2;
     maxv_susp_type susp = (maxv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type s2_x2_sample;
@@ -276,6 +279,7 @@ void maxv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -287,6 +291,7 @@ void maxv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -317,10 +322,9 @@ void maxv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		susp_took(s2_cnt, 1);
 		s2_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(s2, s2_ptr, s2_cnt, s2_x2_sample);
-	    };
-		
-        x1 = *s1_ptr_reg++;
-        x2 = 
+	    }
+            double x1 = *s1_ptr_reg++;
+            double x2 = 
 		(s2_x1_sample_reg * (1 - s2_pHaSe_ReG) + s2_x2_sample * s2_pHaSe_ReG);
             *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
 	    s2_pHaSe_ReG += s2_pHaSe_iNcR_rEg;
@@ -411,6 +415,7 @@ void maxv_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -422,6 +427,7 @@ void maxv_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -510,6 +516,7 @@ void maxv_ss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -521,6 +528,7 @@ void maxv_ss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -576,7 +584,6 @@ void maxv_ss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
 void maxv_si_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
-	double x1, x2;
     maxv_susp_type susp = (maxv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type s2_x2_sample;
@@ -619,6 +626,7 @@ void maxv_si_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -630,6 +638,7 @@ void maxv_si_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -661,8 +670,8 @@ void maxv_si_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		s2_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(s2, s2_ptr, s2_cnt, s2_x2_sample);
 	    }
-        x1 = (s1_scale_reg * *s1_ptr_reg++);
-        x2 = 
+            double x1 = (s1_scale_reg * *s1_ptr_reg++);
+            double x2 = 
 		(s2_x1_sample_reg * (1 - s2_pHaSe_ReG) + s2_x2_sample * s2_pHaSe_ReG);
             *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
 	    s2_pHaSe_ReG += s2_pHaSe_iNcR_rEg;
@@ -754,6 +763,7 @@ void maxv_sr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -765,6 +775,7 @@ void maxv_sr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
