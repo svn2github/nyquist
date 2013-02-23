@@ -104,9 +104,11 @@ void maxv_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            double x1 = *s1_ptr_reg++;
-            double x2 = *s2_ptr_reg++;
-            *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+            {
+		double x1 = *s1_ptr_reg++;
+		double x2 = *s2_ptr_reg++;
+		*out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+	    };
 	} while (--n); /* inner loop */
 
 	/* using s2_ptr_reg is a bad idea on RS/6000: */
@@ -205,9 +207,11 @@ void maxv_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            double x1 = *s1_ptr_reg++;
-            double x2 = (s2_scale_reg * *s2_ptr_reg++);
-            *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+            {
+		double x1 = *s1_ptr_reg++;
+		double x2 = (s2_scale_reg * *s2_ptr_reg++);
+		*out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+	    };
 	} while (--n); /* inner loop */
 
 	/* using s2_ptr_reg is a bad idea on RS/6000: */
@@ -323,10 +327,12 @@ void maxv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		s2_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(s2, s2_ptr, s2_cnt, s2_x2_sample);
 	    }
-            double x1 = *s1_ptr_reg++;
-            double x2 = 
+            {
+		double x1 = *s1_ptr_reg++;
+		double x2 = 
 		(s2_x1_sample_reg * (1 - s2_pHaSe_ReG) + s2_x2_sample * s2_pHaSe_ReG);
-            *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+		*out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+	    };
 	    s2_pHaSe_ReG += s2_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -449,9 +455,11 @@ void maxv_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            double x1 = *s1_ptr_reg++;
-            double x2 = s2_val;
-            *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+            {
+		double x1 = *s1_ptr_reg++;
+		double x2 = s2_val;
+		*out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+	    };
 	    s2_val += s2_DeLtA;
 	} while (--n); /* inner loop */
 
@@ -551,9 +559,11 @@ void maxv_ss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            double x1 = (s1_scale_reg * *s1_ptr_reg++);
-            double x2 = (s2_scale_reg * *s2_ptr_reg++);
-            *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+            {
+		double x1 = (s1_scale_reg * *s1_ptr_reg++);
+		double x2 = (s2_scale_reg * *s2_ptr_reg++);
+		*out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+	    };
 	} while (--n); /* inner loop */
 
 	/* using s2_ptr_reg is a bad idea on RS/6000: */
@@ -670,10 +680,12 @@ void maxv_si_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 		s2_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(s2, s2_ptr, s2_cnt, s2_x2_sample);
 	    }
-            double x1 = (s1_scale_reg * *s1_ptr_reg++);
-            double x2 = 
+            {
+		double x1 = (s1_scale_reg * *s1_ptr_reg++);
+		double x2 = 
 		(s2_x1_sample_reg * (1 - s2_pHaSe_ReG) + s2_x2_sample * s2_pHaSe_ReG);
-            *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+		*out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+	    };
 	    s2_pHaSe_ReG += s2_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -797,9 +809,11 @@ void maxv_sr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            double x1 = (s1_scale_reg * *s1_ptr_reg++);
-            double x2 = s2_val;
-            *out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+            {
+		double x1 = (s1_scale_reg * *s1_ptr_reg++);
+		double x2 = s2_val;
+		*out_ptr_reg++ = (sample_type) (x1 > x2 ? x1 : x2);
+	    };
 	    s2_val += s2_DeLtA;
 	} while (--n); /* inner loop */
 

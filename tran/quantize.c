@@ -89,10 +89,12 @@ void quantize_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            float x = *s1_ptr_reg++ * factor_reg;
-            x = (x > 0.0F ? x + 0.5 : x - 0.5);
-            long xx = (long) x;
-            *out_ptr_reg++ = (float) xx;
+            {
+		float x = *s1_ptr_reg++ * factor_reg;
+		x = (x > 0.0F ? x + 0.5 : x - 0.5);
+		long xx = (long) x;
+		*out_ptr_reg++ = (float) xx;
+	    };
 	} while (--n); /* inner loop */
 
 	/* using s1_ptr_reg is a bad idea on RS/6000: */

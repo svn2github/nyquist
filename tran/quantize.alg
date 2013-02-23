@@ -5,10 +5,12 @@
   (START (MIN s1))
   (STATE ("double" "factor" "s1->scale * steps;
     scale_factor = (sample_type) (1.0 / steps);"))
-  (INNER-LOOP "float x = s1 * factor;
-            x = (x > 0.0F ? x + 0.5 : x - 0.5);
-            long xx = (long) x;
-            output = (float) xx")
+  (INNER-LOOP "{
+\t\tfloat x = s1 * factor;
+\t\tx = (x > 0.0F ? x + 0.5 : x - 0.5);
+\t\tlong xx = (long) x;
+\t\toutput = (float) xx;
+\t    }")
   (TERMINATE (MIN s1))
   (CONSTANT "factor")
   (LOGICAL-STOP (MIN s1))
