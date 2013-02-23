@@ -7,8 +7,9 @@
     scale_factor = (sample_type) (1.0 / steps);"))
   (INNER-LOOP "{
 \t\tfloat x = s1 * factor;
+\t\tlong xx;
 \t\tx = (x > 0.0F ? x + 0.5 : x - 0.5);
-\t\tlong xx = (long) x;
+\t\txx = (long) x;
 \t\toutput = (float) xx;
 \t    }")
   (TERMINATE (MIN s1))

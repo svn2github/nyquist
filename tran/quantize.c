@@ -91,8 +91,9 @@ void quantize_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	if (n) do { /* the inner sample computation loop */
             {
 		float x = *s1_ptr_reg++ * factor_reg;
+		long xx;
 		x = (x > 0.0F ? x + 0.5 : x - 0.5);
-		long xx = (long) x;
+		xx = (long) x;
 		*out_ptr_reg++ = (float) xx;
 	    };
 	} while (--n); /* inner loop */
