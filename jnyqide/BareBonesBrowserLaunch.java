@@ -146,11 +146,17 @@ public class BareBonesBrowserLaunch {
 		String valueDefaultBrowser = readRegistry(
 				"HKEY_CURRENT_USER\\SOFTWARE\\MICROSOFT\\WINDOWS\\CUrrentVersion\\Explorer\\FileExts\\.html\\UserChoice",
 				"Progid");
+		if (valueDefaultBrowser == null) {
+			return false;
+		}
 		System.out.println("Default Browser: " + valueDefaultBrowser);
 
 		// Get Path
 		String regLocation = "HKEY_CLASSES_ROOT\\" + valueDefaultBrowser
 				+ "\\Shell\\open\\command";
+		if (regLocation == null) {
+			return false;
+		}	
 		String command = readRegistry(regLocation, "");
 
 		System.out.println("Command: " + command);
