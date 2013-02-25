@@ -9,21 +9,36 @@
        ("double" "loop_to" "loop_start * s->sr")
        ("table_type" "the_table" "sound_to_table(s)")
        ("sample_type *" "table_ptr" "susp->the_table->samples")
-       ("double" "table_len" "susp->the_table->length;
+       ("double" "table_len" "susp->the_table->length;")
+       ("double" "phase" "0.0")
+       ("double" "ph_incr" "(s->sr / sr) * hz / step_to_hz(step);
+    s_fm->scale = (sample_type) (s_fm->scale * (susp->ph_incr / hz));
+    /* make sure parameters are ok
+     *  the table must have samples
+     *  the loop_start must be before the end of the table
+     *  ph_incr must be positive
+     *  sr should be positive
+     */
     { long index = (long) susp->loop_to;
       double frac = susp->loop_to - index;
-      if (index > round(susp->table_len) ||
+       if (susp->the_table->length <= 1) { 
+             xlfail(\"sampler table length <= 1\");
+       }
+      if (index > round(susp->table_len) - 2 ||
           index < 0) {
-          index = 0;
-          frac = 0;
+          xlfail(\"sampler loop start not within samples\");
+      }
+      if (susp->ph_incr <= 0) {
+          xlfail(\"sampler phase increment <= 0\");
+      }
+      if (sr <= 0) {
+          xlfail(\"sampler sample rate <= 0\");
       }
       /* copy interpolated start to last entry */
       susp->table_ptr[round(susp->table_len)] =
           (sample_type) (susp->table_ptr[index] * (1.0 - frac) + 
                          susp->table_ptr[index + 1] * frac);}")
-       ("double" "phase" "0.0")
-       ("double" "ph_incr" "(s->sr / sr) * hz / step_to_hz(step);
-    s_fm->scale = (sample_type) (s_fm->scale * (susp->ph_incr / hz))") )
+ )
 
 (ALWAYS-SCALE s_fm)
 (STEP-FUNCTION s_fm)
