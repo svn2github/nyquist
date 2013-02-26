@@ -14,8 +14,8 @@ import javax.swing.*;
  */
 
 public class NyquistThread extends Thread {
-
-    Process myProcess;
+    public Process myProcess;
+	public boolean nyquist_is_running;
     InputStream stdout;
     InputStreamReader isrStdout;
     BufferedReader brStdout;
@@ -37,6 +37,7 @@ public class NyquistThread extends Thread {
     MainFrame mainFrame; // used to find current directory
     String soundBrowser; // path for sound browser
     String scoreEditFileName;
+
     public NyquistThread() {
     }
 
@@ -151,7 +152,7 @@ public class NyquistThread extends Thread {
         final int max_buf_len = 256;
         StringBuffer buffer = new StringBuffer(max_buf_len);
         int buffer_index = 0;
-        boolean nyquist_is_running = true;
+        nyquist_is_running = true;
         // this is tricky -- we want to accumulate lines to test
         // for plot commands, but we want to append chars to 
         // textOut even if there is no end-of-line.

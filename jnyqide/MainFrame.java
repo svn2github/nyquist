@@ -856,15 +856,23 @@ public class MainFrame extends JFrame {
             if (r == JOptionPane.CANCEL_OPTION) return; // do not quit
         }
         System.out.println("Sending (exit) to Nyquist...");
+
         // try to shut down Nyquist before it is orphaned
         // Sal need special syntax to exit the Nyquist process:
         if (codeInputPane.isSal) sendInputLn("exit nyquist");
         else                     callFunction("exit", ""); 
-        try {
-            Thread.sleep(200); // does it help Nyquist's exit to stall? 
-        } catch (InterruptedException ie) {
-        }
+
         System.out.println("Exiting from NyquistIDE");
+		for (i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(200); // does it help Nyquist's exit to stall? 
+            } catch (InterruptedException ie) {
+            }
+			if (!nyquistThread.nyquist_is_running) break;
+		}
+		if (nyquistThread.nyquist_is_running) {
+            nyquistThread.myProcess.destroy(); // make sure it dies
+		}
         System.exit(0);
     }
     

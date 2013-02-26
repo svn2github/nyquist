@@ -22,4 +22,4 @@
 ; here's where the error occurs (at sample rate of 4)
 ;(play (trumpet c4))
 ;(load "natbug")
-(load "sampler-bomb")
+;(load "sampler-bomb")
