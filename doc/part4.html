@@ -2,14 +2,14 @@
 <body bgcolor="ffffff">
 <a href = "part3.html">Previous Section</a> | <a href = "part5.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "24"><h2>Behavioral Abstraction</h2></a><a name="index125">
+<a name = "24"><h2>Behavioral Abstraction</h2></a><a name="index126">
 
 In Nyquist, all functions are subject to
-transformations<a name="index126">.  You can think of transformations as
+transformations<a name="index127">.  You can think of transformations as
 additional parameters to every function, and functions are free to use these
 additional parameters in any way.  The set of transformation parameters is
 captured in what is referred to as the <i>transformation
-environment<a name="index127"></i>.  (Note that the term
+environment<a name="index128"></i>.  (Note that the term
 <i>environment</i> is heavily overloaded in computer science.  This is yet
 another usage of the term.)
 <p>
@@ -35,7 +35,7 @@ perform an appropriate transformation, such as maintaining the desired pitch
 and stretching only the "sustain" portion
 of an envelope to obtain a longer note.
 <p>
-<a name = "25"><h3>The Environment</h3></a><a name="index128">
+<a name = "25"><h3>The Environment</h3></a><a name="index129">
 
 The transformation environment consists of a set of special variables.
 These variables should not be read directly and should <i>never</i> be set
@@ -52,7 +52,7 @@ percussion instruments:
 <p>
 <dl>
 <dt>
- <code>*warp*<a name="index129"></code><dd>Time transformation, including time shift,
+ <code>*warp*<a name="index130"></code><dd>Time transformation, including time shift,
 time stretch, and continuous time warp.  The value of <code>*warp*</code> is
 interpreted as a function from logical (local score) time to physical
 (global real) time.  Do not access <code>*warp*</code> directly.  Instead, use
@@ -61,17 +61,17 @@ interpreted as a function from logical (local score) time to physical
 you will call <code>local-to-global(0)</code>.  Several transformation operators
 operate on <code>*warp*</code>, including <i>at</i> (<code>@</code>), <i>stretch</i> (<code>~</code>),
 and <code>warp</code>. See also <code>get-duration()</code> and <code>get-warp()</code>.<br><br>
-<dt> <code>*loud*<a name="index130"></code><dd>Loudness, expressed in decibels.  The default
+<dt> <code>*loud*<a name="index131"></code><dd>Loudness, expressed in decibels.  The default
 (nominal) loudness is 0.0 dB (no change).  Do not access <code>*loud*</code>
 directly.  Instead, use <code>get-loud()</code> to get the current value of
 <code>*loud*</code> and either <code>loud</code> or <code>loud-abs</code> to modify it.<br><br>
-<dt> <code>*transpose*<a name="index131"></code><dd>Pitch transposition, 
+<dt> <code>*transpose*<a name="index132"></code><dd>Pitch transposition, 
 expressed in
 semitones.  (Default: 0.0).  Do not access <code>*transpose*</code> directly.
 Instead, use <code>get-transpose()</code> to get the current value of
 <code>*transpose*</code> and either <code>transpose</code> or <code>transpose-abs</code> to
 modify it.<br><br>
-<dt> <code>*sustain*<a name="index132"></code><dd>The "sustain,"
+<dt> <code>*sustain*<a name="index133"></code><dd>The "sustain,"
 "articulation," "duty factor," or amount by which to 
 separate or overlap sequential notes.  For
 example, staccato might be expressed with a <code>*sustain*</code> of 0.5, while very
@@ -81,7 +81,7 @@ without affecting the inter-onset time (the rhythm).  Do not access
 <code>*sustain*</code> directly.  Instead, use <code>get-sustain()</code> to get the
 current value of <code>*sustain*</code> and either <code>sustain</code> or
 <code>sustain-abs</code> to modify it.<br><br>
-<dt> <code>*start*<a name="index133"></code><dd>Start 
+<dt> <code>*start*<a name="index134"></code><dd>Start 
 time of a clipping region.  <i>Note:</i>
 unlike the previous elements of the environment, <code>*start*</code> has a
 precise interpretation: no sound should be generated before <code>*start*</code>.
@@ -91,7 +91,7 @@ generally be ignored.  You can read <code>*start*</code> directly, but use
 to some internal confusion between the specified starting time and 
 the actual starting time of a signal after clipping, <code>*start*</code> 
 is not fully implemented.<br><br>
-<dt> <code>*stop*<a name="index134"></code><dd>Stop time of clipping 
+<dt> <code>*stop*<a name="index135"></code><dd>Stop time of clipping 
 region.  By analogy to
 <code>*start*</code>, no sound should be generated after this time.
 <code>*start*</code> and
@@ -101,18 +101,18 @@ directly, but use <code>extract</code> or <code>extract-abs</code> to modify it.
  <b><i>Note:</i></b> Due to some internal confusion between the specified 
 starting time and the actual starting time of a signal after 
 clipping, <code>*stop*</code> is not fully implemented.<br><br>
-<dt><code>*control-srate*<a name="index135"></code><dd>Sample 
+<dt><code>*control-srate*<a name="index136"></code><dd>Sample 
 rate of control signals.  This environment
 element provides the default sample rate for control signals.  There is no
 formal distinction between a control signal and an audio signal.  
 You can read <code>*control-srate*</code> directly, but 
 use <code>control-srate</code> or <code>control-srate-abs</code> to modify it.<br><br>
-<dt> <code>*sound-srate*<a name="index136"></code><dd>Sample 
+<dt> <code>*sound-srate*<a name="index137"></code><dd>Sample 
 rate of musical sounds.  This environment element provides the 
 default sample rate for musical sounds.  You can 
 read <code>*sound-srate*</code> directly, but use <code>sound-srate</code> 
 or <code>sound-srate-abs</code> to modify it.<br><br>
-<dt></dl><a name = "26"><h3>Sequential Behavior</h3></a><a name="index137">
+<dt></dl><a name = "26"><h3>Sequential Behavior</h3></a><a name="index138">
 Previous examples have shown the use of <code>seq</code>, the sequential behavior
 operator.  We can now explain <code>seq</code> in terms of transformations.
 Consider the simple expression:
@@ -154,7 +154,7 @@ bound to the ending time of the first part.
 A language detail: Even though Nyquist defers evaluation of the second part of the <code>seq</code>, the expression can reference variables according to ordinary 
 Lisp/SAL scope rules.  This is because the <code>seq</code> captures the expression in a closure, which retains all of the variable bindings.
 <p>
-<a name = "27"><h3>Simultaneous Behavior</h3></a><a name="index138">
+<a name = "27"><h3>Simultaneous Behavior</h3></a><a name="index139">
 Another operator is <code>sim</code>, which invokes multiple behaviors at the same
 time.  For example,
 <pre>
@@ -171,7 +171,7 @@ illustrates two concepts: first, a <i>sound</i> is not a
 <i>behavior</i>, and second, the <code>sim</code> operator and and the <code>at</code> 
 transformation can be used to place sounds in time.
 <p>
-<a name = "28"><h3>Sounds vs. Behaviors</h3></a><a name="index139">
+<a name = "28"><h3>Sounds vs. Behaviors</h3></a><a name="index140">
 The following example loads a sound from a file in the current directory and stores it in <code>a-snd</code>:
 <pre>
 <i>; load a sound
@@ -236,7 +236,7 @@ play sim(cue(a-snd) @ 0.0,
 </pre>
 
 <p>
-<a name = "29"><h3>The At Transformation</h3></a><a name="index140">
+<a name = "29"><h3>The At Transformation</h3></a><a name="index141">
 The second concept introduced by the previous example is the <code>@</code>
 operation, which shifts the <code>*warp*</code> component of the environment.  For
 example,
@@ -261,7 +261,7 @@ Since <code>sim</code> respects the intrinsic starting times of sounds, a specia
 operation, <code>cue</code>, is needed to create a new sound with a new starting
 time.
 <p>
-<a name = "30"><h3>The Stretch Transformation</h3></a><a name="index141">
+<a name = "30"><h3>The Stretch Transformation</h3></a><a name="index142">
 In addition to At (denoted in SAL by the <code>@</code> operator, the Stretch
 transformation is very important. It appeared in the introduction, and
 it is denoted in SAL by the <code>~</code> operator (or in LISP by the <code>stretch</code>
@@ -280,7 +280,7 @@ equivalent to <code>a-snd</code> because <code>a-snd</code> is a sound, not a
 behavior. Behaviors are functions that compute sounds according to
 the environment and return a sound.
 <p>
-<a name = "31"><h3>Nested Transformations</h3></a><a name="index142">
+<a name = "31"><h3>Nested Transformations</h3></a><a name="index143">
 Transformations can be combined using nested expressions.  For example,
 <pre>
 sim(cue(a-snd),
@@ -304,7 +304,7 @@ loud(6.0, sim(cue(a-snd) @ 0.0,
 </pre>
 
 <p>
-<a name = "32"><h3>Defining Behaviors</h3></a><a name="index143">
+<a name = "32"><h3>Defining Behaviors</h3></a><a name="index144">
 Groups of behaviors can be named using <code>define</code> (we already saw this
 in the definitions of <code>my-note</code> and <code>env-note</code>).  Here is another example
 of a behavior definition and its use.  The definition has one parameter:
@@ -389,7 +389,7 @@ not be stretched, but we must be careful to extend the envelope to
 <code>dur</code> so that it has the expected duration.
 <p>
 <a name = "34"><h3>Sample Rates</h3></a>
-<a name="index144">
+<a name="index145">
 The global environment contains <code>*sound-srate*</code> and
 <code>*control-srate*</code>, which determine the sample rates of sounds and
 control signals.  These can be overridden at any point by the
@@ -402,7 +402,7 @@ sound-srate-abs(44100.0, osc(c4)
 will compute a tone using a 44.1Khz sample rate even if the default rate
 is set to something different.
 <p>
-<a name="index145">
+<a name="index146">
 As with other components of the environment, you should <i>never</i> change
 <code>*sound-srate*</code> or <code>*control-srate*</code> directly.
   The global environment is determined by two additional
@@ -418,8 +418,8 @@ You can also do this using preferences in NyquistIDE.
 If you have already started Nyquist and want to change the defaults, the
 preferences or the following functions can be used:
 <pre>
-exec set-control-srate(1102.5)<a name="index146">
-exec set-sound-srate(22050.0)<a name="index147">
+exec set-control-srate(1102.5)<a name="index147">
+exec set-sound-srate(22050.0)<a name="index148">
 </pre>
 
 These modify the default values and reinitialize the Nyquist environment.

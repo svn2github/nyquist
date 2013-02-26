@@ -30,7 +30,7 @@ to an XLISP prompt. In general, the way to get back to SAL is by typing
 Nyquist environment. Then type <code>(sal)</code> to restart the SAL interpreter.
 <p>
 <a name = "49"><h3>SAL Syntax and Semantics</h3></a>
-<a name="index174">
+<a name="index175">
  The most unusual feature of SAL syntax is that identifiers
 are Lisp-like, including names such as "play-file" and even "*warp*."
 In SAL, most operators must be separated from identifiers by white space.
@@ -47,7 +47,7 @@ here. The NyquistIDE program is purposely insistent about SAL indentation,
 so if you use it to edit SAL programs, your indentation should be 
 both beautiful and consistent.
 <p>
-As in Lisp (but very unlike C or Java), comments <a name="index175">
+As in Lisp (but very unlike C or Java), comments <a name="index176">
 are indicated by
 semicolons. Any text from an unquoted semicolon to the end of the 
 line is ignored.
@@ -60,7 +60,7 @@ print "Hello World" <i>; this is a SAL statement</i>
 
 <p>
 As in Lisp, identifiers are translated to upper-case, making SAL 
-case-insensitive<a name="index176">. For example, the function name <code>autonorm</code> can
+case-insensitive<a name="index177">. For example, the function name <code>autonorm</code> can
 be typed in lower case or as <code>AUTONORM</code>, <code>AutoNorm</code>, or even 
 <code>AuToNoRm</code>. All forms denote the same function. The recommended
 approach is to write programs in all lower case.
@@ -70,7 +70,7 @@ contain expressions. We will begin with expressions and then look at
 statements.
 <p>
 <a name = "50"><h4>Expressions</h4></a>
-<a name="index177"><a name="index178">
+<a name="index178"><a name="index179">
 <a name = "51"><h5>Simple Expressions</h5></a>
 As in XLISP, simple expressions include:
 <ul>
@@ -89,7 +89,7 @@ Additional simple expressions in SAL are:
 <ul>
 <li>
 lists such as <code>{c 60 e 64}</code>. Note that there are no commas to separate list elements, and symbols in lists are not evaluated as variables but stand for themselves. Lists may contain numbers, booleans, symbols, strings, and other lists.
-<li>Booleans: SAL interprets <code>#t</code><a name="index179"> as true and <code>#f</code><a name="index180">
+<li>Booleans: SAL interprets <code>#t</code><a name="index180"> as true and <code>#f</code><a name="index181">
 as false. (As far
 as the SAL compiler is concerned, <code>t</code> and <code>nil</code> are just variables.
 Since these are the Lisp versions of true and false, they are interchangeable
@@ -97,32 +97,32 @@ with <code>#t</code> and <code>#f</code>, respectively.)
 </ul>
 A curious property of Lisp and Sal is that <i>false</i> and the empty list are 
 the same value. Since SAL is based on Lisp, <code>#f</code> and <code>{}</code> (the empty
-list)<a name="index181"> are equal.
+list)<a name="index182"> are equal.
 <p>
 <a name = "52"><h5>Operators</h5></a>
 Expressions can be formed with unary and binary operators using infix notation. The operators are:
 <ul>
 <li>
-<a name="index182"><code>+</code> - addition, including sounds
-<li><a name="index183"><code>-</code> - subtraction, including sounds
-<li><a name="index184"><code>*</code> - multiplication, including sounds
-<li><a name="index185"><code>/</code> - division (due to divide-by-zero problems, does not operate on sounds)
-<li><a name="index186"><code>%</code> - modulus (remainder after division)
-<li><a name="index187"><code>^</code> - exponentiation
-<li><a name="index188"><code>=</code> - equal (using Lisp <code>eql</code>)
-<li><a name="index189"><code>!=</code> - not equal
-<li><a name="index190"><code>&gt;</code> - greater than
-<li><a name="index191"><code>&lt;</code> - less than
-<li><a name="index192"><code>&gt;=</code> - greater than or equal
-<li><a name="index193"><code>&lt;=</code> - less than or equal
-<li><a name="index194"><code>~=</code> - general equality (using Lisp <code>equal</code>)
-<li><a name="index195"><code>&amp;</code> - logical and
-<li><a name="index196"><code>|</code> - logical or
-<li><a name="index197"><code>!</code> - logical not (unary)
-<li><a name="index198"><a name="index199"><a name="index200"><code>@</code> - time shift
-<li><a name="index201"><a name="index202"><a name="index203"><code>@@</code> - time shift to absolute time
-<li><a name="index204"><a name="index205"><code>~</code> - time stretch
-<li><a name="index206"><a name="index207"><code>~~</code> - time stretch to absolute stretch factor
+<a name="index183"><code>+</code> - addition, including sounds
+<li><a name="index184"><code>-</code> - subtraction, including sounds
+<li><a name="index185"><code>*</code> - multiplication, including sounds
+<li><a name="index186"><code>/</code> - division (due to divide-by-zero problems, does not operate on sounds)
+<li><a name="index187"><code>%</code> - modulus (remainder after division)
+<li><a name="index188"><code>^</code> - exponentiation
+<li><a name="index189"><code>=</code> - equal (using Lisp <code>eql</code>)
+<li><a name="index190"><code>!=</code> - not equal
+<li><a name="index191"><code>&gt;</code> - greater than
+<li><a name="index192"><code>&lt;</code> - less than
+<li><a name="index193"><code>&gt;=</code> - greater than or equal
+<li><a name="index194"><code>&lt;=</code> - less than or equal
+<li><a name="index195"><code>~=</code> - general equality (using Lisp <code>equal</code>)
+<li><a name="index196"><code>&amp;</code> - logical and
+<li><a name="index197"><code>|</code> - logical or
+<li><a name="index198"><code>!</code> - logical not (unary)
+<li><a name="index199"><a name="index200"><a name="index201"><code>@</code> - time shift
+<li><a name="index202"><a name="index203"><a name="index204"><code>@@</code> - time shift to absolute time
+<li><a name="index205"><a name="index206"><code>~</code> - time stretch
+<li><a name="index207"><a name="index208"><code>~~</code> - time stretch to absolute stretch factor
 </ul>
 Again, remember that operators <i>must</i> be delimited from their operands using
 spaces or parentheses. Operator precedence is based on the following levels of 
@@ -140,7 +140,7 @@ precedence:
 
 <p>
 <a name = "53"><h5>Function Calls</h5></a>
-<a name="index208">
+<a name="index209">
 A function call is a function name followed by zero or more comma-delimited
 argument expressions
 enclosed within parentheses:
@@ -158,7 +158,7 @@ s-save(my-snd(), ny:all, "tmp.wav", play: #t, bits: 16)
 
 <p>
 <a name = "54"><h5>Array Notation</h5></a>
-<a name="index209">
+<a name="index210">
 An array reference is a variable identifier followed by an index expression
 in square brackets, e.g.:
 <pre>
@@ -167,8 +167,8 @@ x[23] + y[i]
 
 <p>
 <a name = "55"><h5>Conditional Values</h5></a>
-<a name="index210">
 <a name="index211">
+<a name="index212">
 The special operator <code>#?</code> evaluates the first argument expression. 
 If the result is <i>true</i>, the second expression is evaluated and
 its value is returned. If <i>false</i>, the third expression is evaluated
@@ -180,7 +180,7 @@ and returned (or <i>false</i> is returned if there is no third expression):
 
 <p>
 <a name = "56"><h4>SAL Statements</h4></a>
-<a name="index212">
+<a name="index213">
 SAL compiles and evaluates <i>statements</i> one at a time. You can type
 statements at the SAL prompt or load a file containing SAL statements.
 SAL statements are described below. The syntax is indicated at the
@@ -192,7 +192,7 @@ indicate optional (zero or one) syntax elements, while braces with a plus
 with a star {like this}* indicate zero or more occurrences of a syntax element: { <i>non-terminal</i> }* is equivalent to [ {<i>non-terminal</i>}+ ].
 <p>
 <a name = "57"><h5>begin and end</h5></a>
-<a name="index213"><a name="index214">
+<a name="index214"><a name="index215">
 <code>begin</code> [<i>with-stmt</i>] {<i>statement</i>}+ <code>end</code>
 <p>
 A <code>begin</code>-<code>end</code> statement 
@@ -213,7 +213,7 @@ end
 
 <p>
 <a name = "58"><h5>chdir</h5></a>
-<a name="index215">
+<a name="index216">
 <code>chdir</code> <i>expression</i>
 <p>
 The <code>chdir</code> statement changes the working directory. This statement
@@ -227,7 +227,7 @@ chdir "/Users/rbd/tmp"
 
 <p>
 <a name = "59"><h5>define variable</h5></a>
-<a name="index216"><a name="index217">
+<a name="index217"><a name="index218">
 [<code>define</code>] <code>variable</code> <i>name</i> [= <i>expression</i>] {, <i>name</i> [= <i>expression</i>]}*
 <p>
 Global variables can be declared and initialized. A list of variable names,
@@ -249,7 +249,7 @@ define variable transposition = 2,
 
 <p>
 <a name = "60"><h5>define function</h5></a>
-<a name="index218"><a name="index219">
+<a name="index219"><a name="index220">
 [<code>define</code>] <code>function</code> <i>name</i> <code>(</code> [<i>parameter</i>], {, <i>parameter</i>}* <code>)</code> <i>statement</i>
 <p>
 Before a function be called from an expression (as described above), it must
@@ -295,7 +295,7 @@ a <code>return</code> statement to return a value from the function. If <i>state
 completes without a <code>return</code>, the value false is returned.
 <p>
 <a name = "61"><h5>display</h5></a>
-<a name="index220">
+<a name="index221">
 <code>display</code> <i>string</i> {, <i>expression</i>}*
 <p>
 The <code>display</code> statement is handy for debugging. At present, it is only
@@ -315,7 +315,7 @@ SAL may print the expressions using Lisp syntax, e.g. if the expression is
 "bar + baz," do not be surprised if the output is "<code>(sum bar baz) = 28.3</code>."
 <p>
 <a name = "62"><h5>exec</h5></a>
-<a name="index221">
+<a name="index222">
 <code>exec</code> <i>expression</i>
 <p>
 Unlike most other programming languages, you cannot simply type an expression as
@@ -328,7 +328,7 @@ exec set-sound-srate(22050.0) <i>; change default sample rate</i>
 
 <p>
 <a name = "63"><h5>if</h5></a>
-<a name="index222">
+<a name="index223">
 <code>if</code> <i>test-expr</i> <code>then</code> <i>true-stmt</i> [<code>else</code> <i>false-stmt</i>]
 <p>
 An <code>if</code> statement evaluates the expression <i>test-expr</i>. If it is true,
@@ -382,7 +382,7 @@ unless count = 0 set average = sum / count
 
 <p>
 <a name = "66"><h5>load</h5></a>
-<a name="index223">
+<a name="index224">
 <code>load</code> <i>expression</i>
 <p>
 The <code>load</code> command loads a file named by <i>expression</i>, which must
@@ -393,7 +393,7 @@ contain Lisp expressions, which are evaluated by the XLISP interpreter.
 In general, SAL files should end with the extension <code>.sal</code>.
 <p>
 <a name = "67"><h5>loop</h5></a>
-<a name="index224">
+<a name="index225">
 <code>loop</code> [<i>with-stmt</i>] {<i>stepping</i>}* {<i>stopping</i>* <i>action</i>+ [<i>finally</i>] <code>end</code>
 <p>
 The <code>loop</code> statement is by far the most complex statement in SAL, but
@@ -458,7 +458,7 @@ The <i>stopping</i> clauses are the following:
 </dl>
 <p>
 The <i>finally</i> clause is defined as follows:
-<a name="index225">
+<a name="index226">
 <dl>
 <dt>
 <code>finally</code> <i>statement</i><dd>The <i>statement</i> is evaluated when one of the 
@@ -467,7 +467,7 @@ be a <code>begin</code>-<code>end</code> statement. If an <i>action</i> evaluate
 statement, the <code>finally</code> statement is not executed.
 </dl>
 <p>
-<a name="index226">Loops often fall into common patterns, such as iteratiing a fixed number of
+<a name="index227">Loops often fall into common patterns, such as iteratiing a fixed number of
 times, performing an operation on some range of integers, collecting results
 in a list, and linearly searching for a solution. These forms are illustrated
 in the examples below.
@@ -510,7 +510,7 @@ end
 
 <p>
 <a name = "68"><h5>print</h5></a>
-<a name="index227">
+<a name="index228">
 <code>print</code> <i>expr</i> {, <i>expr</i>}*
 <p>
 The <code>print</code> statement prints the values separated by
@@ -523,7 +523,7 @@ print "The value of x is", x
 
 <p>
 <a name = "69"><h5>return</h5></a>
-<a name="index228">
+<a name="index229">
 <code>return</code> <i>expression</i>
 <p>
 The <code>return</code> statement can only be used inside a function. It evaluates
@@ -531,7 +531,7 @@ The <code>return</code> statement can only be used inside a function. It evaluat
 to its caller.
 <p>
 <a name = "70"><h5>set</h5></a>
-<a name="index229">
+<a name="index230">
 <code>set</code> <i>var</i> <i>op</i> <i>expression</i> {, <i>var</i> <i>op</i> <i>expression</i>}*
 <p>
 The <code>set</code> statement changes the value of a variable <i>var</i> according
@@ -539,21 +539,21 @@ to the operator <i>op</i> and the value of the <i>expression</i>. The operators 
 <dl>
 <dt>
 <code>=</code><dd>The value of <i>expression</i> is assigned to <i>var</i>.<br><br>
-<dt><a name="index230"><code>+=</code><dd>The value of <i>expression</i> is added to <i>var</i>.<br><br>
-<dt><a name="index231"><code>*=</code><dd>The value of <i>var</i> is multiplied by the value of the expression.<br><br>
-<dt><a name="index232"><code>&amp;=</code><dd>The value of <i>expression</i> is inserted as the last element of
+<dt><a name="index231"><code>+=</code><dd>The value of <i>expression</i> is added to <i>var</i>.<br><br>
+<dt><a name="index232"><code>*=</code><dd>The value of <i>var</i> is multiplied by the value of the expression.<br><br>
+<dt><a name="index233"><code>&amp;=</code><dd>The value of <i>expression</i> is inserted as the last element of
 the list referenced by <i>var</i>. If <i>var</i> is the empty list (denoted by <code>#f</code>),
 then <i>var</i> is assigned a newly constructed list of one element, the value
 of <i>expression</i>.<br><br>
-<dt><a name="index233"><code>^=</code><dd>The value of <i>expression</i>, a list, is appended to the list referenced
+<dt><a name="index234"><code>^=</code><dd>The value of <i>expression</i>, a list, is appended to the list referenced
 by <i>var</i>. If <i>var</i> is the empty list (denoted by <code>#f</code>), then <i>var</i>
 is assigned the (list) value of <i>expression</i>.<br><br>
-<dt><a name="index234"><code>@=</code><dd>Pushes the value of <i>expression</i> onto the front of the list
+<dt><a name="index235"><code>@=</code><dd>Pushes the value of <i>expression</i> onto the front of the list
 referenced by <i>var</i>. If <i>var</i> is empty (denoted by <code>#f</code>), then <i>var</i> 
 is assigned a newly constructed list of one element, the value of <i>expression</i>.<br><br>
-<dt><a name="index235"><code>&lt;=</code><dd>Sets the new value of <i>var</i> to the minimum of the old value 
+<dt><a name="index236"><code>&lt;=</code><dd>Sets the new value of <i>var</i> to the minimum of the old value 
 of <i>var</i> and the value of <i>expression</i>.<br><br>
-<dt><a name="index236"><code>&gt;=</code><dd>Sets the new value of <i>var</i> to the maximum of the old value 
+<dt><a name="index237"><code>&gt;=</code><dd>Sets the new value of <i>var</i> to the maximum of the old value 
 of <i>var</i> and the value of <i>expression</i>.
 </dl>
 <p>
@@ -569,7 +569,7 @@ end
 
 <p>
 <a name = "71"><h5>with</h5></a>
-<a name="index237">
+<a name="index238">
 <code>with</code> <i>var</i> [= <i>expression</i>] {, <i>var</i> [= <i>expression</i>]}*
 <p>
 The <code>with</code> statement declares and initializes local variables. It 
@@ -580,7 +580,7 @@ inside the <code>begin</code>-<code>end</code> or <code>loop</code> statement wh
 are intialized only when the loop is entered, not on each iteration.
 <p>
 <a name = "72"><h5>exit</h5></a>
-<a name="index238">
+<a name="index239">
 <code>exit</code> [<code>nyquist</code>]
 <p>
 The <code>exit</code> statement is unique to Nyquist SAL. It returns from SAL 
@@ -589,7 +589,7 @@ If <code>nyquist</code> is included in the statement, then the entire Nyquist
 process will exit.
 <p>
 <a name = "73"><h3>Interoperability of SAL and XLISP</h3></a>
-<a name="index239"><a name="index240">
+<a name="index240"><a name="index241">
 
 When SAL evaluatas command or loads files, it translates SAL into XLISP.
 You can think of SAL as a program that translates everything you write

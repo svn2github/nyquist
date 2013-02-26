@@ -6,7 +6,7 @@
 wish to browse through these and move on to Chapter <a href = "part8.html#77">"Nyquist Functions"</a>, which
 is a reference section describing Nyquist functions.
 <p>
-<a name = "41"><h3>Stretching Sampled Sounds</h3></a><a name="index148">This example illustrates how to stretch a sound, resampling it in the process.
+<a name = "41"><h3>Stretching Sampled Sounds</h3></a><a name="index149">This example illustrates how to stretch a sound, resampling it in the process.
 Because sounds in Nyquist are <i>values</i> that contain the sample rate, start
 time, etc., use <code>sound</code> to convert a sound into a behavior that can be
 stretched, e.g. <code>sound(a-snd)</code>. This behavior stretches a sound according
@@ -80,7 +80,7 @@ than applying <code>force-srate</code> after <code>seq</code>.
 Notice that the overall duration of <code>sound(a-snd) ~ 0.5</code> will
 be half the duration of <code>a-snd</code>.
 <p>
-<a name = "42"><h3>Saving Sound Files</h3></a><a name="index149">So far, we have used the <code>play</code> command to play a sound.  The
+<a name = "42"><h3>Saving Sound Files</h3></a><a name="index150">So far, we have used the <code>play</code> command to play a sound.  The
 <code>play</code> command works by writing a sound to a file while 
 simultaneously playing it.
 This can be done one step at a time, and
@@ -125,7 +125,7 @@ parameter or variable.)
 <p>
 <a name = "43"><h3>Memory Space and Normalization</h3></a>
 
-<a name="index150"><a name="index151"><a name="index152"><a name="index153"><a name="index154"><a name="index155"><a name="index156"><a name="index157">
+<a name="index151"><a name="index152"><a name="index153"><a name="index154"><a name="index155"><a name="index156"><a name="index157"><a name="index158">
 Sound samples take up lots of memory, and often, there is not enough primary (RAM) memory to hold a complete composition.  For this reason, Nyquist can compute sounds incrementally, saving the final result on disk.  <i>However,</i> Nyquist can also save sounds in memory so that they can be reused efficiently.  In general, if a sound is saved in a global variable, memory will be allocated as needed to save and reuse it.
 <p>
 The standard way to compute a sound and write it to disk is to pass an expression to the <code>play</code> command:
@@ -148,12 +148,12 @@ peak value by setting <code>*autonorm-target*</code>, which is initialized to 0.
 The number of samples examined is <code>*autonorm-max-samples*</code>, initially
 1 million. You can turn this feature off by executing:
 <pre>
-exec autonorm-off()<a name="index158">
+exec autonorm-off()<a name="index159">
 </pre>
 
 and turn it back on by typing:
 <pre>
-exec autonorm-on()<a name="index159">
+exec autonorm-on()<a name="index160">
 </pre>
 
 This normalization technique is in effect when <code>*autonorm-type*</code> is 
@@ -208,7 +208,7 @@ of twice the disk space of 16-bit samples).
 You can use Nyquist to rescale a floating point file and
 convert it to 16-bit samples for playback.
 <p>
-<a name = "44"><h3>Frequency Modulation</h3></a><a name="index160">
+<a name = "44"><h3>Frequency Modulation</h3></a><a name="index161">
 The next example uses the Nyquist frequency modulation behavior <code>fmosc</code>
 to generate various sounds.  The parameters to <code>fmosc</code> are:
 <pre>
@@ -318,11 +318,11 @@ play fmosc(c4, modulator)
 
 <p>
 For more simple examples of FM in Nyquist, see 
-<a name="index161"><a name="index162"><a name="index163"><a name="index164">
+<a name="index162"><a name="index163"><a name="index164"><a name="index165">
 <code>demos/warble_tutorial.htm</code>. Another interesting FM sound 
 reminiscent of "scratching" can be found with a detailed explanation
-in <code>demos/scratch_tutorial.htm</code>.<a name="index165">
-<a name="index166"><a name="index167">.
+in <code>demos/scratch_tutorial.htm</code>.<a name="index166">
+<a name="index167"><a name="index168">.
 <p>
 <a name = "45"><h3>Building a Wavetable</h3></a>
 In Section <a href = "part2.html#9">"Waveforms"</a>, we saw how to synthesize a wavetable.   A
@@ -407,12 +407,12 @@ play reson(0.04 * noise(),
 
 <p>
 For another example with explanations, see 
-<a name="index168"><a name="index169"><a name="index170">
-<a name="index171">
+<a name="index169"><a name="index170"><a name="index171">
+<a name="index172">
 <code>demos/wind_tutorial.htm</code>.
 <p>
 <a name = "47"><h3>DSP in Lisp</h3></a>
-<a name="index172"><a name="index173">In almost any 
+<a name="index173"><a name="index174">In almost any 
 signal processing system, the vast majority of computation
 takes place in the inner loops of DSP algorithms, and Nyquist is designed so
 that these time-consuming inner loops are in highly-optimized

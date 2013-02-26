@@ -15,11 +15,11 @@
 
                            NYQUIST REFERENCE MANUAL
 
-                                 Version 3.07
+                                 Version 3.08
 
 
                      Copyright 2013 by Roger B. Dannenberg
-                               10 February 2013
+                               26 February 2013
 
 
 
@@ -620,6 +620,12 @@ you cannot drag it to a new position. The Window:Tile menu command can be  used
 to  automatically  lay  out  windows  in  a rational way. There is a preference
 setting to determine the height of the completion list relative to  the  height
 of the output window.
+
+  Many  of the key commands for editing files are standard and built into Java.
+In particular, Control-Z is the ``undo'' command, even on OS X where you  would
+expect  to  use  Command-Z.  A  special command, ``Copy to Lisp,'' or Control-U
+(Command-U on OS x)copies the selection and enters it into the input window  as
+if it had been typed there.
 
 2.2. The Button Bar
   There are a number of buttons with frequently-used operations. These are:
@@ -2870,7 +2876,7 @@ snd-maxsamp(sound) [SAL]
      self-defense  against  sounds  that  would  exhaust   available   memory.)
      Otherwise,  this  function  is  safe for ordinary use.  This function will
      probably be removed in a future version.  See peak, a replacement  (  page
-     30).
+     88).
 
 snd-play(expression) [SAL]
 (snd-play expression) [LISP]
@@ -6205,7 +6211,7 @@ Adagio, MIDI sequence data, and Xmusic score representations.
 
   Adagio  is an easy-to-use, non-procedural notation for scores.    In  Adagio,
 text commands are used to specify each note.  If you are new to Adagio, you may
-want to glance at the examples in Section  10.3  starting  on  page  37  before
+want to glance at the examples in Section 10.3  starting  on  page  109  before
 reading any further.
 
   A  note  is described in Adagio by a set of attributes, and any attribute not
@@ -12940,8 +12946,8 @@ Transformation  environment  6 Transformations 6, 26 Transpose 26 Transpose-abs
 26 Triangle oscillator 21 Triangle wave  2  Trigger  27  Trill  40  Triplet  36
 Triplet durations 2 Truncate 68 Tuba 3 Tuning 19 Tutorial, FM 11 Type-of 71
 
-  U  36  Uniform  random 42, 68 Union 50 Unless 67 Untrace 68 Unwind-protect 67
-UPIC 4 Upper-case-p 69 User name 70
+  U   36  Undo  4  Uniform  random  42,  68  Union  50  Unless  67  Untrace  68
+Unwind-protect 67 UPIC 4 Upper-case-p 69 User name 70
 
   V (Adagio Voice) 37 Variable delay 24, 29, 30 Variable-resample  function  29
 Variance  51  Variance  of  vector  data  51  Vector 65 Vector cosine 51 Vector
