@@ -580,7 +580,7 @@ public class MainFrame extends JFrame {
                     String ext = WordList.getlink(line);
                     System.out.println(line + " : " + ext);
                     String url, urlbase;
-                    
+              
                     if (prefOnlineManual) urlbase = onlineManualURL;
                     else urlbase = findManualURL("");
                     url = urlbase + ext;
@@ -589,7 +589,11 @@ public class MainFrame extends JFrame {
                         miniBrowser.setVisible(true);
                         System.out.println("Mini browser URL is: " + url);
                         miniBrowser.setPage(url);
-                    } else BareBonesBrowserLaunch.openURL(url);
+                    } else {
+                        System.out.println("BareBonesBrowserLaunch URL is: " + 
+                                           url);
+                        BareBonesBrowserLaunch.openURL(url);
+                    }
             	} else {
                     // System.out.println(e.paramString());
             		if (line.length() > 0)
