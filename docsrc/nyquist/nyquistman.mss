@@ -59,7 +59,7 @@
 @begin(titlebox)
 @blankspace(0.5 inch)
 @majorheading(Nyquist Reference Manual)
-@b(Version 3.07)
+@b(Version 3.08)
 @blankspace(0.3 inch)
 @b(Copyright 2013 by Roger B. Dannenberg)
 @value(date)

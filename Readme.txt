@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.07
-10 Feb 2013
+README file for Nyquist Version 3.08
+26 Feb 2013
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -19,6 +19,13 @@ other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.08 provides:
+    NyquistIDE opens documentation properly on default browser
+    NyquistIDE forcefully terminates nyquist process on exit if needed
+    bug fix for mixed sample rate signal handling, affects many primitives
+    timed-seq and score-play avoid stack overflow on finely spaced events
+    sampler() primitive does error checking to avoid infinite loop
+    
 Version 3.07 provides:
     Bug fixes in NyquistIDE Envelope Editor
     NyquistIDE installs symbolic links to lib and demos
