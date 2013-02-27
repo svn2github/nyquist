@@ -6,6 +6,18 @@ The simplest way to install and run Nyquist is to get the pre-compiled
 NyquistIDE application, which includes executables, documentation, and
 libraries all in one package.
 
+When the pre-compiled package is uncompressed, it produces two directories:
+     nyquist
+     NyquistIDE.app
+You should always keep these together. The nyquist directory initially 
+contains documentation, but when NyquistIDE.app is run, the nyquist
+folder is also populated with links to the lib and demos folders,
+which contain example code and more documentation. The symbolic links
+allow you to easily find these files.
+
+You can copy both nyquist and NyquistIDE.app to the /Applications folder
+if you wish, and you can add NyquistIDE.app to the Dock.
+
 You will probably run Nyquist using the NyquistIDE application, but
 you can also run nyquist from the command line. The executable is
 located in
@@ -55,7 +67,3 @@ To build Nyquist or NyquistIDE:
    To find the files Right click on the Products/NyquistIDE.app of the project 
    navigator, and select "reveal in finder". 
 
-To update FLAC static library:
- - Obtain FLAC compiled library from official website
- - Copy 32-bit FLAC lib to FLAC/libFLAC32.a
- - Copy 64-bit FLAC lib to FLAC/libFLAC64.a

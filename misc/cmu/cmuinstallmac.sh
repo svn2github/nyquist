@@ -17,7 +17,9 @@ echo "type the version string, e.g. \"232\" : "
 read versionstring
 # to get NyquistIDE.app in the right place in the zip file, move it to here
 mv ~/nyquist/macosxproject/build/Deployment/NyquistIDE.app .
-tar cvfz "nyqosx"$versionstring".tgz" NyquistIDE.app nyquist
+# add a copy of the README.txt for OSX
+cp ~/nyquist/sys/mac/README.txt .
+tar cvfz "nyqosx"$versionstring".tgz" NyquistIDE.app nyquist README.txt
 # restore NyquistIDE.app to its original location
 mv NyquistIDE.app ~/nyquist/macosxproject/build/Deployment/NyquistIDE.app
 mv nyqosx*.tgz ~/nyquist
