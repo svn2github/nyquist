@@ -50,11 +50,12 @@ public class BareBonesBrowserLaunch {
             } else if (osName.startsWith("Windows")) {
 		// The new method -- ZEYU
 		if (loadURL(url) == false) {
-		// use the old ways is unsuccessful
-                // in browser, \ is not supported. --ZEYU
-		url = url.replace('\\','/');
-		System.out.println(" Win 7 open: " + url);
-		Desktop.getDesktop().browse(java.net.URI.create(url));
+		    // use the old ways is unsuccessful
+		    // in browser, \ is not supported. --ZEYU
+		    url = url.replace('\\','/');
+		    System.out.println(" Win 7 open: " + url);
+		    Desktop.getDesktop().browse(java.net.URI.create(url));
+		}
             } else { //assume Unix or Linux
                 String[] browsers = {
                     "htmlview", "firefox", "opera", "konqueror", 
