@@ -1497,26 +1497,26 @@
 		08FB7795FE84155DC02AAC07 /* nyquist */ = {
 			isa = PBXGroup;
 			children = (
-				3DF117F516AAE2F1006EBBBB /* FLAC */,
+				F543EE570375CD5801029006 /* cmt */,
 				3D81D5F316A39A6700AED04F /* demos */,
-				F31450FE1682744400833823 /* vorbis */,
-				F31450FD1682743B00833823 /* ogg */,
+				F510BD73039FB49C01029006 /* doc */,
 				3D48B84E0F59937D0073A251 /* ffts */,
+				3DF117F516AAE2F1006EBBBB /* FLAC */,
+				F31450FD1682743B00833823 /* ogg */,
 				3D3222F00F54475600F074EF /* nylsf */,
 				3D32213D0F53D3B100F074EF /* lo */,
 				3D9E08110779F7050002CE69 /* stk */,
 				3D9E07E60779F63A0002CE69 /* portaudio */,
 				F510BCA7039F84FD01029006 /* lib */,
 				F510BCDA039F84FE01029006 /* runtime */,
-				F510BD73039FB49C01029006 /* doc */,
-				F5FF5F48039D84B901029006 /* xlisp */,
 				F5FF5F9E039D863401029006 /* tran */,
-				F543EE570375CD5801029006 /* cmt */,
 				3D35A7C405690E180002CE69 /* jnyqide */,
 				F5FF60A6039D87B001029006 /* nyqsrc */,
 				F543EF3D0375CD7101029006 /* snd */,
 				F543EF990375CD9901029006 /* sys */,
 				3DF21F3104FD526A0002CE69 /* misc */,
+				F31450FE1682744400833823 /* vorbis */,
+				F5FF5F48039D84B901029006 /* xlisp */,
 			);
 			name = nyquist;
 			path = ..;
@@ -2946,8 +2946,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# shell script goes here\ncd ..\necho \"compiling java sources\"\njavac jnyqide/*.java\n# $? returns the exit code from the last command, javac\nif [ $? -ne 0 ]   #--check if everything is OK\nthen\n    echo \"Error during Java compilation\"\n    exit 1\nfi\nif [ -f jnyqide/jnyqide.jar ]\nthen\n  echo \"removing jnyqide/jnyqide.jar\"\n  rm -f jnyqide/jnyqide.jar\nelse\n  echo \"jnyqide/jnyqide.jar does not exist\"\nfi\necho \"(re)creating jar file\"\njar -cfm jnyqide/jnyqide.jar jnyqide/manifest.txt jnyqide/*.class\nif [ -f jnyqide/jnyqide.jar ]\nthen\n    echo \"Java compilation script completed OK\"\n    exit 0\nelse\n    echo \"Error: jnyqide.jar not created\"\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
+			shellScript = "# shell script goes here\ncd ..\necho \"compiling java sources\"\necho `pwd`\njavac jnyqide/*.java\n# $? returns the exit code from the last command, javac\nif [ $? -ne 0 ]   #--check if everything is OK\nthen\n    echo \"Error during Java compilation\"\n    exit 1\nfi\nif [ -f jnyqide/jnyqide.jar ]\nthen\n  echo \"removing jnyqide/jnyqide.jar\"\n  rm -f jnyqide/jnyqide.jar\nelse\n  echo \"jnyqide/jnyqide.jar does not exist\"\nfi\necho \"(re)creating jar file\"\njar -cfm jnyqide/jnyqide.jar jnyqide/manifest.txt jnyqide/*.class\nif [ -f jnyqide/jnyqide.jar ]\nthen\n    echo \"Java compilation script completed OK\"\n    exit 0\nelse\n    echo \"Error: jnyqide.jar not created\"\n    exit 1\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3599,6 +3598,7 @@
 		3D3533870F0BD6E00059CD05 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -3619,6 +3619,7 @@
 		3D3533880F0BD6E00059CD05 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
@@ -3637,6 +3638,7 @@
 		3D3533890F0BD6E00059CD05 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = (
 					../sys/unix,
@@ -4075,6 +4077,7 @@
 		3DEBDFD3095B177A001BCCB6 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = i386;
 				CONFIGURATION_BUILD_DIR = "build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
@@ -4084,7 +4087,7 @@
 		3DEBDFD4095B177A001BCCB6 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = i386;
 				CONFIGURATION_BUILD_DIR = "build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
@@ -4094,6 +4097,7 @@
 		3DEBDFD5095B177A001BCCB6 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = i386;
 				CONFIGURATION_BUILD_DIR = "build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;

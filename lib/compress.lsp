@@ -98,9 +98,10 @@
 ; 0 
 ;   
 (defun compress-map (compress-ratio compress-threshold expand-ratio 
-                     expand-threshold &key (limit nil) (transition 0.0))
-  (display "compress-map" compress-ratio compress-threshold expand-ratio 
-                     expand-threshold limit transition)
+                     expand-threshold &key (limit nil) (transition 0.0)
+                                           (verbose t))
+  ;(display "compress-map" compress-ratio compress-threshold expand-ratio 
+  ;                   expand-threshold limit transition)
   (let (m s			; see equations above
         eupd 			; eu + d
         cupd			; ct1 + d
@@ -181,15 +182,15 @@
           (t 	 ; no hard limit, set limit to effectively infinity
            (setf lim 10000.0)))
 
-    (display "compress-map" 
-        m s			; see equations above
-        eupd 			; et1 + d
-        cupd			; ct1 + d
-        lim			; 0dB or infinity, depends on limit
-        b2			; y-intercept of the 1:1 part
-        ea eb ec ca cb cc	; polynomial coefficients
-        eu ev cu cv		; intersection points (u,v)
-        ed cd)			; d values
+    ;(display "compress-map" 
+    ;    m s			; see equations above
+    ;    eupd 			; et1 + d
+    ;    cupd			; ct1 + d
+    ;    lim			; 0dB or infinity, depends on limit
+    ;    b2			; y-intercept of the 1:1 part
+    ;    ea eb ec ca cb cc	; polynomial coefficients
+    ;    eu ev cu cv		; intersection points (u,v)
+    ;    ed cd)			; d values
 
     ; now create function that goes 100dB below expansion threshold
     ; and up to 100dB
@@ -208,7 +209,7 @@
         ; map[i] has the desired output dB, so subtract input dB to
         ; get gain:
         (setf (aref map i) (- (aref map i) x))
-        (cond ((and (> x (- eu 3)) (< x 0))
+        (cond ((and verbose (> x (- eu 3)) (< x 0))
                (format t "~A -> ~A~%" x (aref map i))))
         (setf x (+ x 1)))
     ; return a sound
@@ -247,6 +248,7 @@
     ; the average amplitude should be 1/2, so multiply by 2 so
     ; that a sine with peak amplitude of 1 will get an average of 1
     ; which will convert to 0dB
+    ; logenv is natural log(avg(x^2)), not dB
     (setf logenv (snd-log (scale 2.0 env)))
     ; tricky part: map converts dB of input to desired gain in dB
     ; this defines the character of the compressor
@@ -255,24 +257,24 @@
     ; we have log(avg(x^2)), and we want dB = 20log10(sqrt(avg(x^2)))
     ; simplify dB to 10log10(avg(x^2)) = 10log(avg(x^2))/log(10),
     ; so scale by 10/log(10) * 0.01 = 0.1/log(10)
-    (setf shaped-env (shape (setf gle (scale (/ 0.1 (log 10.0)) logenv)) map 1.0))
+    (setf shaped-env (shape (scale (/ 0.1 (log 10.0)) logenv) map 1.0))
     ; Go back to linear. To get from dB to linear, use:
-    ; 20log(linear) = dB
-    ; linear = exp(dB/20),
-    ; so scale the result by 1/20 = 0.05
-    (setf gain (snd-exp (scale 0.05 shaped-env)))
+    ; 20log10(linear) = dB
+    ; linear = 10^(dB/20) = exp(log(10) * db/20),
+    ; so scale the result by log(10)/20
+    (setf gain (snd-exp (scale (/ (log 10.0) 20) shaped-env)))
     ; return the scaled input sound,
-    ; another trick: avg signal will be delayed. Also, snd-follow
-    ; has a delayed response because it's looking ahead in sound
-    ; 20 = the number of samples of lookahead from snd-follow
-    ; 88.2 = 44,100 (sample rate) / 500 (the step-size in avg)
-    ; in other words, 44100/500 is the sample rate of the control
-    ; signal looked at by follow
-    ; "44100" should be replaced by the signal's sample rate
-    ; = (snd-srate input)
-    ; (setf gg gain)
+    ; another trick: avg signal is advanced by 1/2 window size because 
+    ; the first avg sample at 0 represents the window from 
+    ; [0, windowsize], taken to be windowsize/2. Windowsize in samples
+    ; is 1 because there is a 50% overlap of windows. Also, snd-follow
+    ; has a delayed response because it's looking ahead in sound.
+    ; The time shift is lookahead - 1 (in samples)
+    ; therefore, the response delay = (lookahead - 1) / (snd-srate avg)
     (sound-srate-abs (snd-srate input) ; set default sample rate for s-rest
-      (mult (seq (s-rest (/ 20.0 (/ (snd-srate input) 500.0))) (cue input)) gain))))
+      (mult (seq (s-rest (/ (1- lookahead) (snd-srate avg)))
+                 (cue input))
+            gain))))
 
 
  ; this is an automatic gain control using peak detection for 

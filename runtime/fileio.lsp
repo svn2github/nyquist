@@ -196,8 +196,9 @@
                 (setf *autonorm-type* 'LOOKAHEAD))))
         (t
          (format t "Peak was ~A,~%" peak)
-         (format t "     suggested normalization factor is ~A~%"
-                   (/ *autonorm-target* peak))))
+         (cond ((> peak 0.0)
+                (format t "     suggested normalization factor is ~A~%"
+                        (/ *autonorm-target* peak))))))
    peak
   )
 

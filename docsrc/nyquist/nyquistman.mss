@@ -4300,6 +4300,7 @@ and a value of 1.0 means shifted sound only (wet).
 @end(fndefs)
 
 @paragraph(Physical Models)
+@index(Physical Models)
 @begin(fndefs)
 @label(clarinet-sec)
 @codef{clarinet(@pragma(defn)@index(clarinet)@index(stk clarinet)@i(step), @i(breath-env))} @c{[sal]}@*
@@ -8131,11 +8132,11 @@ to set the overall level without clipping.
 @begin(fndefs)
 @codef{compress-map(@pragma(defn)@index(compress-map)@i(compress-ratio), 
 @i(compress-threshold), 
-@i(expand-ratio), @i(expand-ratio), limit: @i(limit), transition: 
+@i(expand-ratio), @i(expand-threshold), limit: @i(limit), transition: 
 @i(transition))} @c{[sal]}@*
 @altdef{@code{(compress-map @i(compress-ratio) @i(compress-threshold)
- @i(expand-ratio) @i(expand-ratio) :limit @i(limit) :transition
- @i(transition)])} @c{[lisp]}}@\Construct
+ @i(expand-ratio) @i(expand-threshold) [:limit @i(limit) :transition
+ @i(transition) :verbose @i(verbose)])} @c{[lisp]}}@\Construct
 a map for the compress function. The map consists of two parts: a compression
 part and an expansion part.
 The intended use is to compress everything above compress-threshold by
@@ -8153,6 +8154,11 @@ thresholds (in dB) that a smooth transition starts. The default is 0,
 meaning that there is no smooth transition. The smooth transition is a
 2nd-order polynomial that matches the slopes of the straight-line compression
 curve and interpolates between them.
+
+If verbose is true (this is the default), the map is printed, showing,
+for each dB value below zero of this input, what is the gain (in dB) 
+indicated by the output. Only regions where the map is changing are 
+printed because at lower values, the dB gain is constant.
 
 It is assumed that expand-threshold <= compress-threshold <= 0
 The gain is unity at 0dB so if compression-ratio > 1, then gain

@@ -665,11 +665,25 @@ loop
 ; extract - start is stretched and shifted as is stop
 ;  result is shifted to start at local time zero
 (defun extract (start stop sound)
-  (snd-xform sound (snd-srate sound) (local-to-global 0) 
-         (local-to-global start) (local-to-global stop) 1.0))
+  (extract-abs (local-to-global start) (local-to-global stop) sound
+               (local-to-global 0)))
 
-(defun extract-abs (start stop sound)
-  (snd-xform sound (snd-srate sound) 0 start stop 1.0))
+; extract-abs - return sound between start and stop
+;  start-time is optional (to aid the implementation of
+;  extract) and gives the start time of the result, normally 0.
+;  There is a problem if sound t0 is not equal to start-time.
+;  E.g. if sound was created with AT, its t0 might be
+;  in the future, but snd-xform works by first shifting
+;  t0 to local time zero, so we need to be very careful.
+;  The solution is that if t0 > start_time, subtract the difference
+;  from start and stop to shift them appropriately.
+(defun extract-abs (start stop sound &optional (start-time 0))
+  (let ((t0 (snd-t0 sound)) offset)
+    (cond ((/= t0 start-time)
+           (setf offset (- t0 start-time))
+           (setf start (- start offset))
+           (setf stop (- stop offset))))
+    (snd-xform sound (snd-srate sound) start-time start stop 1.0)))
      
 
 (defun local-to-global (local-time)
