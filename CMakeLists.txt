@@ -623,16 +623,16 @@ else()
   set(CMAKE_JAVA_JAR_ENTRY_POINT jnyqide/Main)
   # add_jar(jnyqide SOURCES ${jnyqide_SRCS} ${jnyqide_RES} ${jnyqide_RES2})
   add_jar(jnyqide SOURCES ${jnyqide_SRCS} )
-
+  add_dependencies(jnyqide nyquist)
+  
 endif()
 
 # APPLE NyquistIde.app
 
 if(APPLE)
-  add_custom_target(nyquistide-app
-    COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/create-osx-app.sh ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS nyquist jnyqide)
-
+  add_custom_command(TARGET jnyqide 
+    POST_BUILD
+    COMMAND sh ARGS ${CMAKE_CURRENT_SOURCE_DIR}/create-osx-app.sh ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 
@@ -644,9 +644,6 @@ message("=====================\nConfiguration Report:\n=====================\n")
 message("    * nyquist build target enabled")
 if(Java_JAVAC_EXECUTABLE)
   message("    * jnyqide build target enabled")
-  if(APPLE)
-    message("\n    (To build NyquistIde.app, use 'nyquistide-app' target)")
-  endif()
 else()
   message("    * jnyqide build target disabled")
 endif()
