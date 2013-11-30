@@ -3,6 +3,7 @@ package jnyqide;
 
 import javax.swing.UIManager;
 import java.awt.*;
+import java.util.Locale;
 
 /**
  * @author unascribed
@@ -18,6 +19,8 @@ public class Main {
 	public Main() {
 		String osName = System.getProperty("os.name");
 		System.out.println(osName);
+		Locale loc = Locale.getDefault();
+		System.out.println("lLocale is " + loc.toString());
 		if (osName.startsWith("Linux")) {
 			// motif style has some extra buttons to iconify internal frames
 			// but this obscures windows, and metal looks better anyway
@@ -42,18 +45,18 @@ public class Main {
 		Dimension frameSize = frame.getSize();
 		// subtract 20 here because otherwise Mac OS X frames will be too tall
 		// to access resize nbutton
-		System.out.print("initial frame height ");
-		System.out.println(frameSize.height);
-		System.out.print("screen height ");
-		System.out.println(screenSize.height);
+		//System.out.print("initial frame height ");
+		//System.out.println(frameSize.height);
+		//System.out.print("screen height ");
+		//System.out.println(screenSize.height);
 		if (frameSize.height > screenSize.height) {
 			frameSize.height = screenSize.height - 40;
 		}
 		if (frameSize.width > screenSize.width) {
 			frameSize.width = screenSize.width;
 		}
-		System.out.print("finall frame height ");
-		System.out.println(frameSize.height);
+		//System.out.print("finall frame height ");
+		//System.out.println(frameSize.height);
 		frame.setSize(frameSize);
 		frame.setLocation((screenSize.width - frameSize.width) / 2,
 				(screenSize.height - frameSize.height) / 2);

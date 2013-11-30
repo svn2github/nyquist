@@ -127,6 +127,7 @@ import java.util.Enumeration;
 import java.io.File;
 import java.lang.Math.*;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.beans.PropertyChangeEvent;
@@ -243,6 +244,13 @@ public class EnvelopeFrame extends JNonHideableInternalFrame implements
                 canvas.history.save(canvas.data);
             }
         };
+
+	// since form is static, there's probably a better way or place for this:
+	// fix format to use "." as decimal point for XLISP compatibility
+	DecimalFormatSymbols symbols = form.getDecimalFormatSymbols();
+	symbols.setDecimalSeparator('.');
+	symbols.setGroupingSeparator(','); // should never be used
+	form.setDecimalFormatSymbols(symbols);
 
         constructComponents();
         setSize(500, 515);
