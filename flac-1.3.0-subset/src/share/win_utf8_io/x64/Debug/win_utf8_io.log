@@ -1,0 +1,14 @@
+﻿Build started 1/9/2014 1:34:09 AM.
+Project "C:\Users\Roger\research\flac\src\share\win_utf8_io\win_utf8_io.vcxproj" on node 2 (Rebuild target(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I.\include /I..\..\..\include /I..\..\..\include\share /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _LIB /D FLAC__NO_DLL /D DEBUG /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TC /wd4267 /wd4996 /errorReport:prompt win_utf8_io.c
+  win_utf8_io.c
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1354,5): warning MSB8012: TargetPath(C:\Users\Roger\research\flac\x64\Debug\win_utf8_io.lib) does not match the Library's OutputFile property value (C:\Users\Roger\research\flac\objs\debug\lib\win_utf8_io.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+Lib:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\Lib.exe /OUT:"..\..\..\objs\debug\lib\win_utf8_io.lib" /NOLOGO /MACHINE:X64 x64\Debug\win_utf8_io.obj
+  win_utf8_io.vcxproj -> C:\Users\Roger\research\flac\x64\Debug\win_utf8_io.lib
+Done Building Project "C:\Users\Roger\research\flac\src\share\win_utf8_io\win_utf8_io.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.37
