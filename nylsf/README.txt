@@ -18,3 +18,14 @@ I performed the following steps:
 
 10) modify config.h, replacing CPU_IS_LITTLE_ENDIAN and
     CPU_IS_BIG_ENDIAN code to use defines
+
+The file export-nylsf.bat makes a standalone library appart from Nyquist.
+I tried to get everything, but flac will not build on x64 architecture.
+To work around that, I took out the FLAC library code that's contained
+in Nyquist (at present, Jan 2014) and downloaded FLAC 1.3.0. That also
+has problems: It complained about ogg/ogg.h. Rather than provide it,
+I took out FLAC_HAS_OGG and I added some #if FLAC_HAS_OGG around ENTIRE
+ogg*.c files (equivalent to removing source from project).
+
+After building nylsf, run copylibs.bat to put libraries in findable
+places expected by Dannenberg's applications.

@@ -18,10 +18,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -45,6 +47,8 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\FLAC\win32;..\..\..\Win32\Release;..\..\..\liblo\lib\Release;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\Win32\Debug;..\..\..\liblo\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Roger\research\nyquist\cmt;C:\Users\Roger\research\nyquist\sys\win\msvc;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Roger\research\nyquist\cmt;C:\Users\Roger\research\nyquist\sys\win\msvc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -58,7 +62,7 @@
       <AdditionalIncludeDirectories>..\..\..\xlisp;..\..\..\snd;..\..\..\nyqsrc;..\..\..\tran;..\..\..\cmt;..\..\..\liblo;..\..\..\nyqstk;..\..\..\nyqstk\include;..\..\..\sys\win\msvc;..\..\..\ffts\src;..\..\..\portaudio\include;..\..\..\nylsf;..\..\..\portaudio\src\common;..\..\..\liblo\pthreads.2;..\..\..\FLAC\include;..\..\..\libogg\include;..\..\..\libvorbis\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OSC;WIN32;CMTSTUFF;_CONSOLE;NDEBUG;FLAC__NO_DLL;PA_USE_WMME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>..\..\..\WinRel/nyquist.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>..\..\..\WinRel/</AssemblerListingLocation>
@@ -74,7 +78,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/VERBOSE:LIB %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;libFLAC_static.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;liblo_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;libFLAC_static.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;liblo_static.lib;libportaudio_static.lib;libsndfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\..\..\WinRel/nyquist.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>..\..\..\WinRel/nyquist.pdb</ProgramDatabaseFile>
@@ -83,7 +87,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <Bscmake>
@@ -121,9 +126,8 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/VERBOSE:LIB </AdditionalOptions>
-      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;libFLAC_static.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;liblo_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wsock32.lib;winmm.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;setupapi.lib;libFLAC_static.lib;libogg_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;liblo_static.lib;libsndfile_static.lib;libportaudio_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>..\..\..\WinDebug/nyquist.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -141,9 +145,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\nylsf\ogg_pcm.c" />
-    <ClCompile Include="..\..\..\nylsf\ogg_speex.c" />
-    <ClCompile Include="..\..\..\nylsf\ogg_vorbis.c" />
     <ClCompile Include="..\..\..\nyqsrc\sliderdata.c" />
     <ClCompile Include="..\..\..\nyqsrc\sndsliders.c" />
     <ClCompile Include="..\..\..\tran\abs.c">
@@ -152,12 +153,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\GSM610\add.c">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
     <ClCompile Include="..\..\..\nyqsrc\add.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -165,8 +160,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\..\nyqstk\src\ADSR.cpp" />
-    <ClCompile Include="..\..\..\nylsf\aiff.c" />
-    <ClCompile Include="..\..\..\nylsf\alaw.c" />
     <ClCompile Include="..\..\..\tran\allpoles.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -233,35 +226,29 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\au.c" />
-    <ClCompile Include="..\..\..\nylsf\audio_detect.c" />
     <ClCompile Include="..\..\..\nyqsrc\avg.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\avr.c" />
     <ClCompile Include="..\..\..\nyqstk\src\BandedWG.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\BiQuad.cpp" />
     <ClCompile Include="..\..\..\tran\biquadfilt.c" />
     <ClCompile Include="..\..\..\nyqstk\src\Bowed.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\BowTable.cpp" />
-    <ClCompile Include="..\..\..\nylsf\broadcast.c" />
     <ClCompile Include="..\..\..\tran\buzz.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\caf.c" />
     <ClCompile Include="..\..\..\cmt\cext.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\chanmap.c" />
     <ClCompile Include="..\..\..\tran\chase.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -269,7 +256,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\..\nyqstk\src\Chorus.cpp" />
-    <ClCompile Include="..\..\..\nylsf\chunk.c" />
     <ClCompile Include="..\..\..\nyqstk\src\Clarinet.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -300,9 +286,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\GSM610\code.c" />
-    <ClCompile Include="..\..\..\nylsf\command.c" />
-    <ClCompile Include="..\..\..\nylsf\common.c" />
     <ClCompile Include="..\..\..\nyqsrc\compose.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -339,7 +322,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\GSM610\decode.c" />
     <ClCompile Include="..\..\..\nyqstk\src\Delay.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -365,16 +347,12 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\dither.c" />
-    <ClCompile Include="..\..\..\nylsf\double64.c" />
     <ClCompile Include="..\..\..\nyqsrc\downsample.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\dwd.c" />
-    <ClCompile Include="..\..\..\nylsf\dwvw.c" />
     <ClCompile Include="..\..\..\nyqstk\src\Effect.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\Envelope.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -420,7 +398,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\ffts\src\fftext.c" />
     <ClCompile Include="..\..\..\ffts\src\fftlib.c" />
-    <ClCompile Include="..\..\..\nylsf\file_io.c" />
     <ClCompile Include="..\..\..\nyqstk\src\FileRead.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\FileWvIn.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\Filter.cpp">
@@ -429,8 +406,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\flac.c" />
-    <ClCompile Include="..\..\..\nylsf\float32.c" />
     <ClCompile Include="..\..\..\nyqstk\src\Flute.cpp" />
     <ClCompile Include="..\..\..\tran\fmfb.c" />
     <ClCompile Include="..\..\..\tran\fmfbv.c" />
@@ -459,17 +434,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\..\nyqstk\src\Function.cpp" />
-    <ClCompile Include="..\..\..\nylsf\G72x\g721.c" />
-    <ClCompile Include="..\..\..\nylsf\G72x\g723_16.c" />
-    <ClCompile Include="..\..\..\nylsf\G72x\g723_24.c" />
-    <ClCompile Include="..\..\..\nylsf\G72x\g723_40.c" />
-    <ClCompile Include="..\..\..\nylsf\G72x\g72x.c">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\g72x.c" />
     <ClCompile Include="..\..\..\tran\gate.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -477,21 +441,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\..\nyqstk\src\Generator.cpp" />
-    <ClCompile Include="..\..\..\nylsf\gsm610.c" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\gsm_create.c" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\gsm_decode.c" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\gsm_destroy.c" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\gsm_encode.c" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\gsm_option.c" />
     <ClCompile Include="..\..\..\nyqsrc\handlers.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\htk.c" />
-    <ClCompile Include="..\..\..\nylsf\id3.c" />
-    <ClCompile Include="..\..\..\snd\ieeecvt.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -503,8 +453,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\ima_adpcm.c" />
-    <ClCompile Include="..\..\..\nylsf\ima_oki_adpcm.c" />
     <ClCompile Include="..\..\..\nyqstk\instr.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -568,14 +516,12 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\interleave.c" />
     <ClCompile Include="..\..\..\nyqsrc\inverse.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\ircam.c" />
     <ClCompile Include="..\..\..\nyqstk\src\JCRev.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\JetTable.cpp" />
     <ClCompile Include="..\..\..\nyqsrc\local.c">
@@ -590,26 +536,19 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\GSM610\long_term.c" />
     <ClCompile Include="..\..\..\nyqsrc\lpanal.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\GSM610\lpc.c" />
     <ClCompile Include="..\..\..\tran\lpreson.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\macbinary3.c" />
-    <ClCompile Include="..\..\..\nylsf\macos.c" />
     <ClCompile Include="..\..\..\nyqstk\src\Mandolin.cpp" />
-    <ClCompile Include="..\..\..\nylsf\mat4.c" />
-    <ClCompile Include="..\..\..\nylsf\mat5.c" />
-    <ClCompile Include="..\..\..\ffts\src\matlib.c" />
     <ClCompile Include="..\..\..\tran\maxv.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -642,8 +581,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\mpc2k.c" />
-    <ClCompile Include="..\..\..\nylsf\ms_adpcm.c" />
     <ClCompile Include="..\..\..\nyqsrc\multiread.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -656,7 +593,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\nist.c" />
     <ClCompile Include="..\..\..\nyqstk\src\Noise.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -676,7 +612,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\ogg.c" />
     <ClCompile Include="..\..\..\nyqstk\src\OnePole.cpp" />
     <ClCompile Include="..\..\..\tran\oneshot.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -696,7 +631,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\paf.c" />
     <ClCompile Include="..\..\..\tran\partial.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -709,7 +643,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\pcm.c" />
     <ClCompile Include="..\..\..\nyqsrc\phasevocoder.c" />
     <ClCompile Include="..\..\..\nyqstk\src\PitShift.cpp" />
     <ClCompile Include="..\..\..\tran\pluck.c">
@@ -721,14 +654,12 @@
     <ClCompile Include="..\..\..\nyqstk\src\PluckTwo.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\PoleZero.cpp" />
     <ClCompile Include="..\..\..\nyqstk\src\PRCRev.cpp" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\preprocess.c" />
     <ClCompile Include="..\..\..\tran\prod.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\pvf.c" />
     <ClCompile Include="..\..\..\nyqsrc\pvshell.c" />
     <ClCompile Include="..\..\..\tran\pwl.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -742,7 +673,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\raw.c" />
     <ClCompile Include="..\..\..\tran\recip.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -792,9 +722,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\rf64.c" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\rpe.c" />
-    <ClCompile Include="..\..\..\nylsf\rx2.c" />
     <ClCompile Include="..\..\..\tran\sampler.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -819,8 +746,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\sd2.c" />
-    <ClCompile Include="..\..\..\nylsf\sds.c" />
     <ClCompile Include="..\..\..\cmt\seq.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -875,7 +800,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\GSM610\short_term.c" />
     <ClCompile Include="..\..\..\tran\sine.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -896,7 +820,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\sndfile.c" />
     <ClCompile Include="..\..\..\nyqsrc\sndfnint.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -916,12 +839,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\..\nyqsrc\sndseq.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <ClCompile Include="..\..\..\snd\sndwin32.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -967,9 +884,6 @@
     <ClCompile Include="..\..\..\nyqstk\stkint.cpp" />
     <ClCompile Include="..\..\..\tran\stkpitshift.c" />
     <ClCompile Include="..\..\..\tran\stkrev.c" />
-    <ClCompile Include="..\..\..\nylsf\strings.c" />
-    <ClCompile Include="..\..\..\nylsf\svx.c" />
-    <ClCompile Include="..\..\..\nylsf\GSM610\table.c" />
     <ClCompile Include="..\..\..\tran\tapf.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1007,8 +921,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\..\nyqsrc\trigger.c" />
-    <ClCompile Include="..\..\..\nylsf\txw.c" />
-    <ClCompile Include="..\..\..\nylsf\ulaw.c" />
     <ClCompile Include="..\..\..\tran\upsample.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1021,11 +933,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\voc.c" />
-    <ClCompile Include="..\..\..\nylsf\vox_adpcm.c" />
-    <ClCompile Include="..\..\..\nylsf\w64.c" />
-    <ClCompile Include="..\..\..\nylsf\wav.c" />
-    <ClCompile Include="..\..\..\nylsf\wav_w64.c" />
     <ClCompile Include="..\..\..\nyqstk\src\WaveLoop.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1050,14 +957,12 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\wve.c" />
     <ClCompile Include="..\..\..\nyqstk\src\WvIn.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\nylsf\xi.c" />
     <ClCompile Include="..\..\..\xlisp\xlbfun.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1202,23 +1107,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_allocation.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_converters.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_cpuload.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_debugprint.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_dither.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_front.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_process.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_ringbuffer.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_stream.c" />
-    <ClCompile Include="..\..\..\portaudio\src\common\pa_trace.c" />
-    <ClCompile Include="..\..\..\portaudio\src\hostapi\wdmks\pa_win_wdmks.c" />
-    <ClCompile Include="..\..\..\portaudio\src\hostapi\wmme\pa_win_wmme.c" />
-    <ClCompile Include="..\..\..\portaudio\src\os\win\pa_win_hostapis.c" />
-    <ClCompile Include="..\..\..\portaudio\src\os\win\pa_win_util.c" />
-    <ClCompile Include="..\..\..\portaudio\src\os\win\pa_win_waveformat.c" />
-    <ClCompile Include="..\..\..\portaudio\src\os\win\pa_win_wdmks_utils.c" />
-    <ClCompile Include="..\..\..\portaudio\src\os\win\pa_x86_plain_converters.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\tran\abs.h" />
@@ -1233,8 +1121,6 @@
     <ClInclude Include="..\..\..\tran\aresonvv.h" />
     <ClInclude Include="..\..\..\tran\atone.h" />
     <ClInclude Include="..\..\..\tran\atonev.h" />
-    <ClInclude Include="..\..\..\snd\audiont.h" />
-    <ClInclude Include="..\..\..\snd\audiowin32.h" />
     <ClInclude Include="..\..\..\nyqsrc\avg.h" />
     <ClInclude Include="..\..\..\nyqstk\include\BandedWG.h" />
     <ClInclude Include="..\..\..\nyqstk\include\BiQuad.h" />
@@ -1250,16 +1136,12 @@
     <ClInclude Include="..\..\..\tran\clip.h" />
     <ClInclude Include="..\..\..\cmt\cmdline.h" />
     <ClInclude Include="..\..\..\cmt\cmtcmd.h" />
-    <ClInclude Include="..\..\..\nylsf\common.h" />
     <ClInclude Include="..\..\..\nyqsrc\compose.h" />
-    <ClInclude Include="..\..\..\nylsf\config.h" />
-    <ClInclude Include="..\..\..\nylsf\GSM610\config.h" />
     <ClInclude Include="..\..\..\tran\congen.h" />
     <ClInclude Include="..\..\..\tran\const.h" />
     <ClInclude Include="..\..\..\nyqsrc\convolve.h" />
     <ClInclude Include="..\..\..\tran\coterm.h" />
     <ClInclude Include="..\..\..\nyqsrc\debug.h" />
-    <ClInclude Include="..\..\..\tran\delay.h" />
     <ClInclude Include="..\..\..\nyqstk\include\Delay.h" />
     <ClInclude Include="..\..\..\tran\delaycc.h" />
     <ClInclude Include="..\..\..\tran\delaycv.h" />
@@ -1273,19 +1155,13 @@
     <ClInclude Include="..\..\..\nyqsrc\fft.h" />
     <ClInclude Include="..\..\..\fft\fftn.h" />
     <ClInclude Include="..\..\..\nyqstk\include\Filter.h" />
-    <ClInclude Include="..\..\..\nylsf\float_cast.h" />
     <ClInclude Include="..\..\..\nyqstk\include\Flute.h" />
     <ClInclude Include="..\..\..\tran\fmosc.h" />
     <ClInclude Include="..\..\..\tran\follow.h" />
     <ClInclude Include="..\..\..\tran\fromarraystream.h" />
     <ClInclude Include="..\..\..\tran\fromobject.h" />
-    <ClInclude Include="..\..\..\nylsf\G72x\g72x.h" />
-    <ClInclude Include="..\..\..\nylsf\G72x\g72x_priv.h" />
     <ClInclude Include="..\..\..\tran\gate.h" />
     <ClInclude Include="..\..\..\nyqstk\globals.h" />
-    <ClInclude Include="..\..\..\nylsf\GSM610\gsm.h" />
-    <ClInclude Include="..\..\..\nylsf\GSM610\gsm610_priv.h" />
-    <ClInclude Include="..\..\..\snd\ieeecvt.h" />
     <ClInclude Include="..\..\..\tran\ifft.h" />
     <ClInclude Include="..\..\..\nyqstk\instr.h" />
     <ClInclude Include="..\..\..\tran\instrbanded.h" />
@@ -1330,7 +1206,6 @@
     <ClInclude Include="..\..\..\nyqsrc\phasevocoder.h" />
     <ClInclude Include="..\..\..\nyqstk\include\PitShift.h" />
     <ClInclude Include="..\..\..\nyqstk\include\PluckTwo.h" />
-    <ClInclude Include="..\..\..\nylsf\ppc-config.h" />
     <ClInclude Include="..\..\..\nyqstk\include\PRCRev.h" />
     <ClInclude Include="..\..\..\tran\prod.h" />
     <ClInclude Include="..\..\..\nyqsrc\pvshell.h" />
@@ -1356,20 +1231,15 @@
     <ClInclude Include="..\..\..\cmt\seqmwrite.h" />
     <ClInclude Include="..\..\..\cmt\seqread.h" />
     <ClInclude Include="..\..\..\cmt\seqwrite.h" />
-    <ClInclude Include="..\..\..\nylsf\sf_unistd.h" />
-    <ClInclude Include="..\..\..\nylsf\sfconfig.h" />
-    <ClInclude Include="..\..\..\nylsf\sfendian.h" />
     <ClInclude Include="..\..\..\tran\shape.h" />
     <ClInclude Include="..\..\..\tran\sine.h" />
     <ClInclude Include="..\..\..\tran\siosc.h" />
     <ClInclude Include="..\..\..\tran\slope.h" />
     <ClInclude Include="..\..\..\snd\snd.h" />
-    <ClInclude Include="..\..\..\nylsf\sndfile.h" />
     <ClInclude Include="..\..\..\snd\sndheader.h" />
     <ClInclude Include="..\..\..\nyqsrc\sndmax.h" />
     <ClInclude Include="..\..\..\nyqsrc\sndread.h" />
     <ClInclude Include="..\..\..\nyqsrc\sndseq.h" />
-    <ClInclude Include="..\..\..\snd\sndwin32.h" />
     <ClInclude Include="..\..\..\nyqsrc\sndwrite.h" />
     <ClInclude Include="..\..\..\nyqsrc\sound.h" />
     <ClInclude Include="..\..\..\tran\sqrt.h" />
@@ -1387,32 +1257,12 @@
     <ClInclude Include="..\..\..\nyqsrc\trigger.h" />
     <ClInclude Include="..\..\..\tran\upsample.h" />
     <ClInclude Include="..\..\..\cmt\userio.h" />
-    <ClInclude Include="..\..\..\nylsf\wav_w64.h" />
     <ClInclude Include="..\..\..\nyqstk\include\WaveLoop.h" />
     <ClInclude Include="..\..\..\tran\white.h" />
     <ClInclude Include="..\..\..\sys\win\msvc\winfun.h" />
     <ClInclude Include="..\..\..\nyqstk\include\WvIn.h" />
     <ClInclude Include="..\..\..\xlisp\xldmem.h" />
     <ClInclude Include="..\..\..\xlisp\xlisp.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_allocation.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_converters.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_cpuload.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_debugprint.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_dither.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_endianness.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_hostapi.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_process.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_ringbuffer.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_stream.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_trace.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_types.h" />
-    <ClInclude Include="..\..\..\portaudio\src\common\pa_util.h" />
-    <ClInclude Include="..\..\..\portaudio\src\os\win\pa_win_wdmks_utils.h" />
-    <ClInclude Include="..\..\..\portaudio\src\os\win\pa_x86_plain_converters.h" />
-    <ClInclude Include="..\..\..\portaudio\include\pa_win_ds.h" />
-    <ClInclude Include="..\..\..\portaudio\include\pa_win_waveformat.h" />
-    <ClInclude Include="..\..\..\portaudio\include\pa_win_wmme.h" />
-    <ClInclude Include="..\..\..\portaudio\include\portaudio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

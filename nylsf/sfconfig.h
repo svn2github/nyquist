@@ -119,6 +119,9 @@
 #endif
 
 #include <math.h>
+// Under VS 2013, the _asm keyword does not work for x64. I'm avoiding
+// the error and we'll see if lrint is defined anywhere else
+#ifndef _M_X64
 /* Win32 doesn't seem to have these functions.
 ** Therefore implement inline versions of these functions here.
 */
@@ -146,6 +149,6 @@ lrintf (float flt)
   return intgr ;
 }
 #endif
-
+#endif
 #endif
 
