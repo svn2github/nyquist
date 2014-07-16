@@ -248,7 +248,11 @@ FILE *read_by_xlisp = NULL;
 
 LVAL xstartrecordio()
 {
+    to_input_buffer = NULL;
+    if (ok_to_open("to-input-buffer.txt", "w"))
 	to_input_buffer = fopen("to-input-buffer.txt", "w");
+    read_by_xlisp = NULL;
+    if (ok_to_open("read-by-xlisp.txt", "w"))
 	read_by_xlisp = fopen("read-by-xlisp.txt", "w");
 	if (!to_input_buffer || !read_by_xlisp) {
 		return NIL;

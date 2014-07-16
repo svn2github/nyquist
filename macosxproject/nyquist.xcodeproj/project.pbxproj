@@ -397,6 +397,8 @@
 		3D7DA83316B2C0630001DFF2 /* sliderdata.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D7DA83116B2C0630001DFF2 /* sliderdata.c */; };
 		3D7DA83616B2C1160001DFF2 /* sndsliders.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D7DA83416B2C1160001DFF2 /* sndsliders.c */; };
 		3D81D5F416A39A7900AED04F /* demos in Copy Java Resources */ = {isa = PBXBuildFile; fileRef = 3D81D5F316A39A6700AED04F /* demos */; };
+		3D93DFDD1975678C0046108D /* security.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D93DFDC1975678C0046108D /* security.c */; };
+		3D93DFDE1975708E0046108D /* security.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D93DFDC1975678C0046108D /* security.c */; };
 		3DA1194A0D2DE1BF00948714 /* DelayA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119350D2DE1BF00948714 /* DelayA.cpp */; };
 		3DA1194B0D2DE1BF00948714 /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119360D2DE1BF00948714 /* Effect.cpp */; };
 		3DA1194C0D2DE1BF00948714 /* FileRead.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA119370D2DE1BF00948714 /* FileRead.cpp */; };
@@ -836,6 +838,7 @@
 		3D7E29000B3EC8F90078F9A3 /* Jslide.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = Jslide.java; sourceTree = "<group>"; };
 		3D81D5F316A39A6700AED04F /* demos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = demos; sourceTree = "<group>"; };
 		3D91FF8B0B97CB3300565C3F /* BareBonesBrowserLaunch.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = BareBonesBrowserLaunch.java; sourceTree = "<group>"; };
+		3D93DFDC1975678C0046108D /* security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = security.c; sourceTree = "<group>"; };
 		3D9867CC04FFDD3C0002CE69 /* tapf.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = tapf.c; sourceTree = "<group>"; };
 		3D9867CE04FFDD6B0002CE69 /* tapf.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tapf.h; sourceTree = "<group>"; };
 		3D9867D304FFE8E20002CE69 /* term.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = term.c; sourceTree = "<group>"; };
@@ -2245,6 +2248,7 @@
 		F5FF5F48039D84B901029006 /* xlisp */ = {
 			isa = PBXGroup;
 			children = (
+				3D93DFDC1975678C0046108D /* security.c */,
 				F5FF5F49039D84B901029006 /* extern.c */,
 				F5FF5F4A039D84B901029006 /* extern.h */,
 				F5FF5F4B039D84B901029006 /* osdefs.h */,
@@ -2956,6 +2960,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D0817D40AD02A210051B745 /* test-client.c in Sources */,
+				3D93DFDD1975678C0046108D /* security.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3082,6 +3087,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D93DFDE1975708E0046108D /* security.c in Sources */,
 				3D5CD8340B5BC75E00DF426B /* osstuff.c in Sources */,
 				3D5CD8350B5BC75E00DF426B /* extern.c in Sources */,
 				3D5CD8360B5BC75E00DF426B /* xldmem.c in Sources */,

@@ -329,6 +329,7 @@ double sound_save(
     SNDFILE *sndfile = NULL;
     SF_INFO sf_info;
     PaStream *audio_stream = NULL;
+    if (SAFE_NYQUIST) play = FALSE;
     
     gc();
     
@@ -355,7 +356,9 @@ double sound_save(
          * write the file if (filename[0])
          */ 
         if (filename[0]) {
-            sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
+            sndfile = NULL;
+            if (ok_to_open((char *) filename, "wb"))
+                sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
             if (sndfile) {
                 /* use proper scale factor: 8000 vs 7FFF */
                 sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
@@ -380,7 +383,9 @@ double sound_save(
         sf_info.samplerate = ROUND((getsound(result))->sr);
         *sr = sf_info.samplerate;
         if (filename[0]) {
-            sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
+            sndfile = NULL;
+            if (ok_to_open((char *) filename, "wb"))
+                sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
             if (sndfile) {
                 /* use proper scale factor: 8000 vs 7FFF */
                 sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
@@ -435,7 +440,9 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     } else {
         sf_info->format = 0;
     }
-    sndfile = sf_open((const char *) filename, direction, sf_info); 
+    sndfile = NULL;
+    if (ok_to_open((char *) filename, "w"))
+        sndfile = sf_open((const char *) filename, direction, sf_info);
 
     if (!sndfile) {
         snprintf(error, sizeof(error), "snd_overwrite: cannot open file %s", filename);
@@ -499,7 +506,9 @@ double sound_overwrite(
     long flags;
     */
     // first check if sound file exists, do not create new file
-    FILE *file = fopen((char *) filename, "rb");
+    FILE *file = NULL;
+    if (ok_to_open((char *) filename, "rb"))
+        file = fopen((char *) filename, "rb");
     // if not then fail
     if (!file) {
         *duration = 0;

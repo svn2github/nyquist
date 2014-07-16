@@ -21,6 +21,9 @@
 #include "sndfileio.h"
 #include "sndheader.h"
 
+I have not updated this file to follow the restrictions
+implied by SAFE_NYQUIST and SECURE_NYQUIST. -RBD
+
 static int snd_initialized = FALSE;
 
 typedef struct {

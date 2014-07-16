@@ -55,6 +55,8 @@ define function read-labels(filename, start-time: 0, stop-time: nil)
   end
 
 ;; write labels to a file
+;;
+;; input is list of lists ((start end label-string) ...)
 ;; 
 ;; returns t on success, string on error
 ;;

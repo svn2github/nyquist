@@ -170,8 +170,10 @@ LVAL snd_make_read(
         susp->sf_info.format |= format;
     }
 
-    susp->sndfile = sf_open((const char *) filename, SFM_READ, 
-                            &(susp->sf_info));
+    susp->sndfile = NULL;
+    if (ok_to_open((const char *) filename, "rb"))
+        susp->sndfile = sf_open((const char *) filename, SFM_READ,
+                                &(susp->sf_info));
 
     if (!susp->sndfile) {
         char error[240];

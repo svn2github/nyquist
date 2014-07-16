@@ -218,6 +218,17 @@ svn co svn://svn.code.sf.net/p/nyquist/code/trunk/nyquist nyquist
 or by checking out nyquist using a graphical interface svn client such as 
 TortoiseSVN for Windows.
 
+@subsection(Troubleshooting)
+All versions of Nyquist includes a Readme.txt file with additional information. 
+Additional information and instructions on installation can be found in:
+@begin(unnumbered)
+@t(sys/win/README.txt)
+
+@t(sys/mac/README.txt)
+
+@t(sys/unix/README.txt)
+@end(unnumbered)
+
 @begin(comment)
 @subsection(Unix Installation)
 For Unix systems, Nyquist is distributed as a compressed tar file named @code(nyqsrc3@i(nn).zip),
@@ -1248,7 +1259,7 @@ current @code(*warp*) and return the sum of the results. (In SAL, the
 @code(sim) function applied to sounds is equivalent to adding them
 with the infix @code(+) operator. The following section
 illustrates two concepts: first, a @i(sound) is not a
-@i(behavior), and second, the @code(sim) operator and and the @code(at) 
+@i(behavior), and second, the @code(sim) operator and the @code(at) 
 transformation can be used to place sounds in time.
 
 @section(Sounds vs. Behaviors)@index(Sounds vs. Behaviors)
@@ -2610,7 +2621,7 @@ define variable transposition = 2,
 
 @paragraph(define function)
 @index(function, sal)@index(define function)
-[@code(define)] @code(function) @i(name) @code[(] [@i(parameter)], {, @i(parameter)}* @code[)] @i(statement)
+[@code(define)] @code(function) @i(name) @code[(] [@i(parameter)] {, @i(parameter)}* @code[)] @i(statement)
 
 Before a function be called from an expression (as described above), it must
 be defined. A function definition gives the function @i(name), a list of
@@ -2747,7 +2758,7 @@ In general, SAL files should end with the extension @code(.sal).
 
 @paragraph(loop)
 @index(loop statement, sal)
-@code(loop) [@i(with-stmt)] {@i(stepping)}* {@i(stopping)* @i(action)+ [@i(finally)] @code(end)
+@code(loop) [@i(with-stmt)] {@i(stepping)}* {@i(stopping)}* {@i(action)}+ [@i(finally)] @code(end)
 
 The @code(loop) statement is by far the most complex statement in SAL, but
 it offers great flexibility for just about any kind of iteration. The basic
@@ -2801,7 +2812,7 @@ less than the value of @i(to-expr) if there is a @code(downto) clause,
 or less than or equal to the value of @i(to-expr) if there is a @code(above)
 clause. (In the cases of @i(downto) and @i(above), the default increment value
 is -1. If there
-is no @code(to), @code(below), @code(downto), @code(above), or @code(below) clause, no interation stop test is created for this
+is no @code(to), @code(below), @code(downto), or @code(above) clause, no iteration stop test is created for this
 stepping clause.
 @end(description)
 
@@ -2821,7 +2832,7 @@ be a @code(begin)-@code(end) statement. If an @i(action) evaluates a @code(retur
 statement, the @code(finally) statement is not executed.
 @end(description)
 
-@index(loop examples, sal)Loops often fall into common patterns, such as iteratiing a fixed number of
+@index(loop examples, sal)Loops often fall into common patterns, such as iterating a fixed number of
 times, performing an operation on some range of integers, collecting results
 in a list, and linearly searching for a solution. These forms are illustrated
 in the examples below.
@@ -2844,11 +2855,11 @@ end
 @i(; collect even numbers in a list)
 loop
   with lis
-  for i = 0 to 10 by 2
+  for i from 0 to 10 by 2
   set lis @@= i @i(; push integers on front of list,)
                @i(; which is much faster than append,)
                @i(; but list is built in reverse)
-  finally result = reverse(lis)
+  finally set result = reverse(lis)
 end
 @i(; now, the variable result has a list of evens)
 
@@ -7889,9 +7900,16 @@ any notes are played. This, however, is a fairly common practice. Note that
 the list returned as @code(*rslt*) can be passed 
 to @code(score-write-smf), described below.
 
+@codef{score-read(@pragma(defn)@index(score-read)@index(midi file)@i(filename))} @c{[sal]}@*
+@altdef{@code[(score-read @i(filename))] @c{[lisp]}}@\Read an Adagio 
+file from @i(filename). Return an Xmusic score, or @code(nil)
+if the file could not be opened.  See Chapter @ref(adagio-chap) for details on 
+Adagio, a text-based score language.  See @code(score-read-smf) for 
+details on handling program changes.
+
 @codef{score-write-smf(@pragma(defn)@index(score-write-smf)@index(midi file)@i(score), @i(filename),
-[@i(programs)])} @c{[sal]}@*
-@altdef{@code[(score-write-smf @i(score) @i(filename) @i(programs))] @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
+[@i(programs) @i(as-adagio)])} @c{[sal]}@*
+@altdef{@code{(score-write-smf @i(score) @i(filename) [@i(programs)) @i(as-adagio)]} @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
 with notes in @i(score). In this function,
 @i(every) event in the score with a @code(pitch:) attribute, regardless of the
 ``instrument'' (or function name), generates a
@@ -7912,8 +7930,16 @@ order is undefined, and the note may be cut off by an immediately
 following program change. Therefore, program changes should occur slightly,
 e.g. 1 ms, before any notes. @i(Program numbers and channels are numbered
 starting at zero, matching the internal MIDI representation. This may be
-one less than displayed on MIDI hardware, sequencers, etc.)
+one less than displayed on MIDI hardware, sequencers, etc.) The 
+ @i[as-adagio] optional parameter should normally be omitted. 
+If non-nil, the file is written in Adagio format, but if you 
+want to do that, call @code(score-write) instead.
 @end(fndefs)
+
+@codef{score-write(@pragma(defn)@index(score-write)@index(midi file)@i(score), @i(filename),
+[@i(programs)])} @c{[sal]}@*
+@altdef{@code{(score-write @i(score) @i(filename) [@i(programs)]} @c{[lisp]}}@\Write an Adagioformat file to @i(filename) with notes in @i(score). See Chapter @ref(adagio-chap) for details on Adagio, a text-based score language. See @code(score-write-smf) for details on MIDI program changes.
+
 
 @subsection(Workspaces)
 @label(workspaces-sec)

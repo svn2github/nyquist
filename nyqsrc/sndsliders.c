@@ -28,7 +28,7 @@ LVAL xosc_enable(void)
 #ifdef OSC
     LVAL arg = 
 #endif
-               xlgetarg();
+    xlgetarg();
     xllastarg();
 #ifdef OSC
     if (nosc_enabled == !null(arg)) {

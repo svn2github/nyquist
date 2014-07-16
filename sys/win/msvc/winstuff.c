@@ -217,13 +217,23 @@ void osinit (char *banner)
 }
 
 FILE *osaopen (char *name, char *mode) {
-    return fopen (name, mode);
+    FILE *fp = NULL;
+#ifdef SAFE_NYQUIST
+    if (ok_to_open(name, mode))
+#endif
+      fp = fopen (name, mode);
+    return fp;
 }
 
 FILE *osbopen (char *name, char *mode) {
+    FILE *fp = NULL;
     char nmode[4];
     strcpy (nmode, mode); strcat (nmode, "b");
-    return (fopen (name, nmode));
+#ifdef SAFE_NYQUIST
+    if (ok_to_open(name, mode))
+#endif
+      fp = fopen (name, mode);
+    return fp;
 }
 
 int osclose (FILE *fp) { return (fclose (fp)); }
@@ -351,6 +361,7 @@ static char osdir_path[OSDIR_MAX_PATH];
 // osdir_list_start -- prepare to list a directory
 int osdir_list_start(char *path)
 {
+    if (!ok_to_open(path, "r")) return FALSE;
     if (strlen(path) >= OSDIR_MAX_PATH - 2) {
         xlcerror("LISTDIR path too big", "return nil", NULL);
         return FALSE;

@@ -651,7 +651,7 @@ LOCAL LVAL prog(int pflag)
 
     /* establish a new execution context */
     xlbegin(&cntxt,CF_RETURN,NIL);
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else {
 
@@ -824,7 +824,7 @@ LVAL xloop(void)
 
     /* establish a new execution context */
     xlbegin(&cntxt,CF_RETURN,NIL);
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else
         for (argv = xlargv, argc = xlargc; ; xlargv = argv, xlargc = argc)
@@ -876,7 +876,7 @@ LOCAL LVAL doloop(int pflag)
 
     /* establish a new execution context */
     xlbegin(&cntxt,CF_RETURN,NIL);
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else {
 
@@ -936,7 +936,7 @@ LVAL xdolist(void)
 
     /* establish a new execution context */
     xlbegin(&cntxt,CF_RETURN,NIL);
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else {
 
@@ -989,7 +989,7 @@ LVAL xdotimes(void)
     xlenv = xlframe(xlenv);
     xlbind(sym,NIL);
 
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else {
 
@@ -1031,7 +1031,7 @@ LVAL xblock(void)
 
     /* execute the block */
     xlbegin(&cntxt,CF_RETURN,name);
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else
         for (val = NIL; moreargs(); )
@@ -1065,7 +1065,7 @@ LVAL xcatch(void)
     xlbegin(&cntxt,CF_THROW,tag);
 
     /* check for 'throw' */
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
 
     /* otherwise, evaluate the remainder of the arguments */
@@ -1116,7 +1116,7 @@ LVAL xunwindprotect(void)
 
     /* evaluate the protected expression */
     xlbegin(&cntxt,CF_UNWIND,NIL);
-    if ((sts = setjmp(cntxt.c_jmpbuf))) {
+    if ((sts = _setjmp(cntxt.c_jmpbuf))) {
         target = xltarget;
         mask = xlmask;
         val = xlvalue;
@@ -1155,7 +1155,7 @@ LVAL xerrset(void)
     xlbegin(&cntxt,CF_ERROR,flag);
 
     /* check for error */
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         val = NIL;
 
     /* otherwise, evaluate the expression */
@@ -1305,7 +1305,7 @@ LOCAL void tagbody(void)
     argv = xlargv;
 
     /* check for a 'go' */
-    if (setjmp(cntxt.c_jmpbuf)) {
+    if (_setjmp(cntxt.c_jmpbuf)) {
         cntxt.c_xlargc = argc;
         cntxt.c_xlargv = argv;
     }

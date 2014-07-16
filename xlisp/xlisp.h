@@ -243,7 +243,9 @@ extern long ptrtoabs();
    characters, so I picked a bigger value. -RBD */
 
 #define HSIZE		1499		/* symbol hash table size */
-#define SAMPLE		1000		/* control character sample rate */
+#define SAMPLE		50000		/* control character sample rate */
+/* Jul 2014: Under Xcode, debug, 2.4 GHz Intel Core i7: oscheck rate is
+   about 66Hz */
 
 /* function table offsets for the initialization functions */
 #define FT_RMHASH	0
@@ -384,7 +386,7 @@ typedef struct {
 typedef struct context {
     int c_flags;			/* context type flags */
     LVAL c_expr;			/* expression (type dependant) */
-    jmp_buf c_jmpbuf;			/* longjmp context */
+    jmp_buf c_jmpbuf;			/* _longjmp context */
     struct context *c_xlcontext;	/* old value of xlcontext */
     LVAL **c_xlstack;			/* old value of xlstack */
     LVAL *c_xlargv;			/* old value of xlargv */
@@ -975,6 +977,12 @@ LVAL xaddrs(void);
 
 extern const char os_pathchar;
 extern const char os_sepchar;
+
+/* security.c */
+extern char *secure_read_path;
+extern char *safe_write_path;
+#define SAFE_NYQUIST (safe_write_path != NULL)
+int ok_to_open(const char *filename, const char *mode);
 
 void osinit(const char *banner);
 void oserror(const char *msg);

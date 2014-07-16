@@ -32,6 +32,9 @@ static const char os_sepchar = ',';
 int isascii (char c) { return 1; }  /* every char is an ascii char, isn't it? */
 
 void osinit (char *banner) {
+#ifdef SAFE_NYQUIST
+SAFE_NYQUIST is not supported in macstuff.c
+#endif
     int i;
     char version[] = "\nMacintosh interface by Brian Kendig, Erik A. Dahl, and Dominic Mazzoni.\n";
     InitMac ();  /* initialize the mac interface routines */

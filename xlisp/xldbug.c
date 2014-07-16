@@ -136,7 +136,7 @@ LOCAL void breakloop(const char *hdr, const char *cmsg,
     for (type = 0; type == 0; ) {
 
         /* setup the continue trap */
-        if ((type = setjmp(cntxt.c_jmpbuf)))
+        if ((type = _setjmp(cntxt.c_jmpbuf)))
             switch (type) {
             case CF_CLEANUP:
                 continue;

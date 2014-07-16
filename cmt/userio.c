@@ -537,8 +537,14 @@ FILE *fileopen(deflt, extension, mode, prompt)
             strcpy(extname, fileopen_name);
             strcat(extname, ".");
             strcat(extname, extension);
-            fp = fopen(fileopen_name, mode);
-            fpext = fopen(extname, mode);
+            fp = NULL;
+            fpext = NULL;
+            if (ok_to_open(fileopen_name, mode)) {
+                fp = fopen(fileopen_name, mode);
+            }
+            if (ok_to_open(extname, mode)) {
+                fpext = fopen(extname, mode);
+            }
             if (fp != NULL && fpext != NULL) {
                 gprintf(TRANS,
                 "warning: both %s and %s exist.     %s will be used.\n",
@@ -566,7 +572,9 @@ FILE *fileopen(deflt, extension, mode, prompt)
                 && added_extension
 #endif
                 ) {
-                fp = fopen(fileopen_name, "r");
+                fp = NULL;
+                if (ok_to_open(fileopen_name, "r"))
+                    fp = fopen(fileopen_name, "r");
                 if (fp != NULL) {
                     char question[100];
                     fclose(fp);
@@ -579,7 +587,9 @@ FILE *fileopen(deflt, extension, mode, prompt)
                     }
                 }
             }
-            fp = fopen(fileopen_name, mode);
+            fp = NULL;
+            if (ok_to_open(fileopen_name, mode))
+                fp = fopen(fileopen_name, mode);
             if (fp == NULL) problem = "Couldn't create %s.\n";
         }
   tryagain:
@@ -591,7 +601,6 @@ FILE *fileopen(deflt, extension, mode, prompt)
     }
     return fp;
 }
-
 
 #ifdef MACINTOSH
 

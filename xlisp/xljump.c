@@ -148,7 +148,7 @@ void xljump(XLCONTEXT *target, int mask, LVAL val)
     xlvalue = val;
 
     /* call the handler */
-    longjmp(xlcontext->c_jmpbuf,mask);
+    _longjmp(xlcontext->c_jmpbuf,mask);
 }
 
 /* findandjump - find a target context frame and jump to it */

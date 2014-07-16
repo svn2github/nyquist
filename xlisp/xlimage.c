@@ -398,7 +398,7 @@ LOCAL OFFTYPE cvoptr(LVAL p)
     /* pointer not within any segment */
     xlerror("bad pointer found during image save",p);
     /* this point will never be reached because xlerror() does a
-       longjmp(). The return is added to avoid false positive 
+       _longjmp(). The return is added to avoid false positive 
        error messages from static analyzers and compilers */
     return ((OFFTYPE)NIL);
 }

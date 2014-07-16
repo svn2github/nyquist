@@ -109,7 +109,6 @@ const char os_sepchar = ':';
 void osinit(const char *banner)
 {	
     printf("%s\n",banner);
-
     /* start the random number generator. Older version was srand(1)
        seed of 1 makes the sequence repeatable. Random gives better
        pseudo randomness than does rand().
@@ -149,8 +148,9 @@ void oserror(const char *msg) {printf("error: %s\n",msg);}
 
 /* osaopen - open an ascii file */
 FILE *osaopen(name,mode) const char *name,*mode; {
-    FILE *fp;
-    fp = fopen(name,mode);
+    FILE *fp = NULL;
+    if (ok_to_open(name, mode))
+        fp = fopen(name,mode);
 #ifdef DEBUG_INPUT
     printf("osaopen on %s yields %x\n", name, fp);
     if (strcmp(name, "/home/rbd/nyquist/lib/xm-test.lsp") == 0) {
@@ -166,9 +166,10 @@ FILE *osaopen(name,mode) const char *name,*mode; {
 /* osbopen - open a binary file */
 FILE *osbopen(name,mode) const char *name,*mode;
  {  char bmode[10];
-    FILE *fp;
+    FILE *fp = NULL;
     strcpy(bmode,mode); strcat(bmode,"b");
-    fp = fopen(name,bmode);
+    if (ok_to_open(name, bmode))
+        fp = fopen(name,bmode);
     return fp;
  }
 
@@ -654,7 +655,10 @@ void oscheck(void)
     // when compute-bound, count is incremented by 10000 in about 15s, so
     // that's about 700 Hz. We want to flush any output at about 2Hz, so 
     // we'll pick 400 as a round number.
-    if (count % 400 == 0) {
+    // It's 2014, and now I'm seeing 3000 Hz. That's very high, so I 
+    // changed SAMPLE to get this down to about 66Hz. Using % 30 to get
+    // 2Hz flush rate.
+    if (count % 30 == 0) {
         fflush(stdout);
     }
 }
@@ -670,7 +674,7 @@ LOCAL void xflush()
 LVAL xsystem()
 {   /*LVAL strval;*/
     unsigned char *cmd = NULL;
-
+    if (SAFE_NYQUIST) return NULL;
     if (moreargs())
         cmd = (unsigned char *)getstring(xlgastring());
     xllastarg();
@@ -682,14 +686,15 @@ LVAL xsystem()
 LVAL xsetdir()
 {
     char *dir = (char *)getstring(xlgastring());
-    int result;
+    int result = -1;
     LVAL cwd = NULL;
     int verbose = TRUE;
     if (moreargs()) {
         verbose = (xlgetarg() != NIL);
     }
     xllastarg();
-    result = chdir(dir);
+    if (ok_to_open(dir, "r"))
+        result = chdir(dir);
     if (result) {
         /* perror("SETDIR"); -- Nyquist uses SETDIR to search for directories
          * at startup, so failures are normal, and seeing error messages
@@ -749,7 +754,9 @@ int osdir_list_start(const char *path)
     if (osdir_list_status != OSDIR_LIST_READY) {
         osdir_list_finish(); /* close current listing */
     }
-    osdir_dir = opendir(path);
+    osdir_dir = NULL;
+    if (ok_to_open(path, "r"))
+        osdir_dir = opendir(path);
     if (!osdir_dir) {
         return FALSE;
     }

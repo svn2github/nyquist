@@ -50,13 +50,19 @@ void osinit(const char *banner) {
 
 
 FILE *osaopen (const char *name, const char *mode) {
-    return fopen (name, mode);
+    FILE *fp = NULL;
+    if (ok_to_open(name, mode))
+        fp = fopen (name, mode);
+    return fp;
 }
 
 FILE *osbopen (const char *name, const char *mode) {
+    FILE *fp = NULL;
     char nmode[4];
     strcpy (nmode, mode); strcat (nmode, "b");
-    return (fopen (name, nmode));
+    if (ok_to_open(name, mode))
+        fp = fopen (name, mode);
+    return fp;
 }
 
 int osclose (FILE *fp) { return (fclose (fp)); }
@@ -302,6 +308,7 @@ int osdir_list_start(const char *path)
         xlcerror("LISTDIR path too big", "return nil", NULL);
         return FALSE;
     }
+    if (!ok_to_open(path, "r")) return FALSE;
     strcpy(osdir_path, path);
     strcat(osdir_path, "/*"); // make a pattern to match all files
     if (osdir_list_status != OSDIR_LIST_READY) {

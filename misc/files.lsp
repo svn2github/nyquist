@@ -70,7 +70,7 @@
   "xlbfun" "xlcont" "xldbug" "xleval"
   "xlfio" "xlftab" "xlglob" "xlimage" "xlinit" "xlio" "xlisp"
   "xljump" "xllist" "xlmath" "xlobj" "xlpp" "xlprin" "xlread"
-  "xlstr" "xlsubr" "xlsym" "xlsys" "path"))
+  "xlstr" "xlsubr" "xlsym" "xlsys" "path" "security"))
 
 ;; xlfiles-h - .h files from /xlisp, note that xlisp does not
 ;; generally have a .h file for each .c file, hence the separate

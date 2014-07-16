@@ -64,14 +64,16 @@ static int wii_orientation_handler(const char *path, const char *types,
 
 int nosc_init()
 {
-    the_server = lo_server_new("7770", error);
-    /* add method that will match the path /slider, with two numbers, coerced
-     * to int and float */
-    lo_server_add_method(the_server, "/slider", "if", slider_handler, NULL);
-    lo_server_add_method(the_server, "/wii/orientation", "ff", 
-                         wii_orientation_handler, NULL);
-    lo_fd = lo_server_get_socket_fd(the_server);
-    nosc_enabled = true;
+    if (!SAFE_NYQUIST) {
+        the_server = lo_server_new("7770", error);
+        /* add method that will match the path /slider, with two numbers, coerced
+         * to int and float */
+        lo_server_add_method(the_server, "/slider", "if", slider_handler, NULL);
+        lo_server_add_method(the_server, "/wii/orientation", "ff",
+                             wii_orientation_handler, NULL);
+        lo_fd = lo_server_get_socket_fd(the_server);
+        nosc_enabled = true;
+    }
     return 0;
 }
 
@@ -82,6 +84,7 @@ int nosc_poll()
     struct timeval tv;
     int retval;
 
+    if (SAFE_NYQUIST) return 0;
     // loop, receiving all pending OSC messages
     while (true) {
         FD_ZERO(&rfds);
@@ -100,13 +103,16 @@ int nosc_poll()
         	return 0;
         }
     }
+    return 0;
 }
 
 
 void nosc_finish()
 {
-    lo_server_free(the_server);
-    nosc_enabled = false;
+    if (!SAFE_NYQUIST) {
+        lo_server_free(the_server);
+        nosc_enabled = false;
+    }
 }
 
 #endif

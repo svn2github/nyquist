@@ -2152,6 +2152,18 @@ pattern argument (by default).
           (t nil))))
 
 
+;; SCORE-READ -- read a standard MIDI file to a score
+;;
+(defun score-read (filename)
+  (let ((seq (seq-create))
+        (file (open filename)))
+    (cond (file
+           (seq-read seq file)
+           (close file)
+           (score-from-seq seq))
+          (t nil))))
+
+
 ;; SET-PROGRAM-TO -- a helper function to set a list value
 (defun set-program-to (lis index value default)
   ;; if length or lis <= index, extend the lis with default
@@ -2195,8 +2207,12 @@ exit
     (return (score-sort score))))
 
 
-(defun score-write-smf (score filename &optional programs)
-  (let ((file (open-binary filename :direction :output))
+(defun score-write (score filename &optional programs)
+  (score-write-smf score filename programs t))
+
+(defun score-write-smf (score filename &optional programs &optional as-adagio)
+  (let ((file (if as-adagio (open filename :direction :output)
+                            (open-binary filename :direction :output)))
         (seq (seq-create))
         (chan 1))
     (cond (file
@@ -2227,7 +2243,7 @@ exit
                       (seq-insert-note seq (round (* time 1000))
                                        0 (1+ chan) (round pitch)
                                        (round (* dur 1000)) (round vel))))))
-           (seq-write-smf seq file)
+           (if as-adagio (seq-write seq file) (seq-write-smf seq file))
            (close file)))))
 
 

@@ -367,7 +367,9 @@ void indirect_command(filename, argvp, argcp, oldarg0)
     int *argcp;
     char *oldarg0;
 {
-    FILE *argfile = fopen(filename, "r");
+    FILE *argfile =
+    if (ok_to_open(filenane, "r"))
+        argfile = fopen(filename, "r");
     if (!argfile) {
             *argvp = (char **) malloc(sizeof(char *));
         (*argvp)[0] = oldarg0;

@@ -116,6 +116,14 @@ void xlisp_main_init(int argc, char *argv[])
             case 'V':
                 verbose = TRUE;
                 break;
+            case 'r':
+            case 'R':
+                secure_read_path = &argv[i][2];
+                break;
+            case 'w':
+	    case 'W':
+	        safe_write_path = &argv[i][2];
+                break;
             }
 #endif
 
@@ -124,9 +132,9 @@ void xlisp_main_init(int argc, char *argv[])
 
     /* setup initialization error handler */
     xlbegin(&cntxt,CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL,(LVAL)1);
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         xlfatal("fatal initialization error");
-    if (setjmp(top_level))
+    if (_setjmp(top_level))
         xlfatal("RESTORE not allowed during initialization");
 
     /* initialize xlisp */
@@ -148,17 +156,17 @@ void xlisp_main_init(int argc, char *argv[])
     }
 
     /* load "init.lsp" */
-	if (setjmp(cntxt.c_jmpbuf) == 0) {
+	if (_setjmp(cntxt.c_jmpbuf) == 0) {
         xlload("init.lsp",TRUE,FALSE);
 	}
 
     /* load any files mentioned on the command line */
-    if (setjmp(cntxt.c_jmpbuf) == 0)
+    if (_setjmp(cntxt.c_jmpbuf) == 0)
         for (i = 1; i < argc; i++)
             if (argv[i][0] != '-' && !xlload(argv[i],TRUE,verbose))
                 xlerror("can't load file",cvstring(argv[i]));
     xlend(&cntxt);
-    if (setjmp(top_level))
+    if (_setjmp(top_level))
         xlfatal("RESTORE not allowed out of read-eval-print loop");
 }
 
@@ -172,7 +180,7 @@ LVAL xlisp_eval(LVAL expr)
     if (in_a_context == FALSE) {
         /* create an execution context */
         xlbegin(&cntxt,CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL,s_true);
-        if (setjmp(cntxt.c_jmpbuf)) {
+        if (_setjmp(cntxt.c_jmpbuf)) {
             setvalue(s_evalhook,NIL);
             setvalue(s_applyhook,NIL);
             xltrcindent = 0;
@@ -206,7 +214,7 @@ void xlisp_main()
     in_a_context = TRUE;
 
     /* target for restore */
-    if (setjmp(top_level))
+    if (_setjmp(top_level))
         xlbegin(&cntxt,CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL,s_true);
 
     /* protect some pointers */
@@ -216,7 +224,7 @@ void xlisp_main()
     for (xl_main_loop = TRUE; xl_main_loop;) {
 
         /* setup the error return */
-        if (setjmp(cntxt.c_jmpbuf)) {
+        if (_setjmp(cntxt.c_jmpbuf)) {
             setvalue(s_evalhook,NIL);
             setvalue(s_applyhook,NIL);
             xltrcindent = 0;

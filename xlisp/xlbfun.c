@@ -612,7 +612,7 @@ LVAL xtoplevel(void)
     xllastarg();
     xltoplevel();
     /* this point will never be reached because xltoplevel() does a
-       longjmp(). The return is added to avoid false positive 
+       _longjmp(). The return is added to avoid false positive 
        error messages from static analyzers and compilers */
     return (NIL); 
 }

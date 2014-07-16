@@ -701,7 +701,7 @@ LVAL xrestore(void)
 
     /* return directly to the top level */
     stdputstr("[ returning to the top level ]\n");
-    longjmp(top_level,1);
+    _longjmp(top_level,1);
 }
 #endif
 

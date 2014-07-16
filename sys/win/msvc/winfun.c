@@ -21,14 +21,16 @@ LVAL xsetdir() {
         verbose = (xlgetarg() != NIL);
     }
     xllastarg();
-    if (SetCurrentDirectory(ssCurDir)) {
-        if (GetCurrentDirectory(
-            sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {
-            return cvstring(szCurDir);
-        /* create the result string
-            stdputstr("Current Directory: ");
-            stdputstr(szCurDir);
-            stdputstr("\n"); */
+    if (ok_to_open(ssCurDir, "r"))
+        if (SetCurrentDirectory(ssCurDir)) {
+            if (GetCurrentDirectory(
+                sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {
+                return cvstring(szCurDir);
+            /* create the result string
+                stdputstr("Current Directory: ");
+                stdputstr(szCurDir);
+                stdputstr("\n"); */
+	    }
         }	
     }
     if (verbose) stdputstr("Directory Setting Error\n");
