@@ -2210,7 +2210,7 @@ exit
 (defun score-write (score filename &optional programs)
   (score-write-smf score filename programs t))
 
-(defun score-write-smf (score filename &optional programs &optional as-adagio)
+(defun score-write-smf (score filename &optional programs as-adagio)
   (let ((file (if as-adagio (open filename :direction :output)
                             (open-binary filename :direction :output)))
         (seq (seq-create))
