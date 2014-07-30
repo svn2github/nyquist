@@ -419,6 +419,36 @@ When Nyquist starts it normally enters SAL mode automatically, but certain error
 
 In SAL mode, you type commands in the SAL programming language. Nyquist reads the commands, compiles them into Lisp, and evaluates the commands. Commands can be entered manually by typing into the upper left text box in NyquistIDE.
 
+@section(Command Line)
+@index(Command Line)@index(security)@index(protected files)
+When run from the command line, Nyquist (usually the command is @t(ny)) looks 
+for some options and some files to load. There are two options. The
+ @t(-R)@i(paths) option gives Nyquist a list of paths (separated by 
+semicolons) to directories where Nyquist is allowed to read files. Files in any 
+subdirectories of the listed directories can also be read, along with the 
+directories themselves. This option can be used to restrict access to files.
+The @t(-R)@paths) option gives Nyquist a list of paths (separated by semicolons)
+to directories where Nyquist is allowed to write files (including sound files).
+If @t(-W) is used, Nyquist will not open audio output to play sounds and will
+not allow access to Open Sound Control. This option can be used to protect files
+from accidentally malicious code. (If you are truly worried about Nyquist code,
+you should run Nyquist in a virtual machine or other isolated machine. It is
+unlikely that Nyquist is secure from all attacks.)
+
+
+Additionally, the command line can name files to be loaded. Nyquist begins by 
+loading @t(init.lsp), which by default is in the @t(nyquist/runtime) directory.
+This file loads all the standard Nyquist functions. After that, Nyquist will
+load any other files named on the command line.
+
+Finally, Nyquist expects to find search paths in the @t(XLISPPATH) environment
+variable (or for Windows, see installation instructions; the path is saved
+in the Windows Registry). Normally, you must set @t(XLISPPATH) for Nyquist to
+find @t(init.lsp) and the definitions of most Nyquist functions.
+Be sure you have @t(system.lsp) in @t(nyquist/runtime). Part of the installation
+process copies the appropriate @t(system.lsp) from @t(nyquist/sys/*) to 
+@t(nyquist/runtime) where it can be found and loaded by @t(init.lsp).
+
 @section(Helpful Hints)
 Under Win95 and Win98, the console sometimes locks up. Activating another window and then reactivating the Nyquist window should unlock the output. 
 (We suggest you use JNyqIDE, the interactive development environment rather than a console window.)
