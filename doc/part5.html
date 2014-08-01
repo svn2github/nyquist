@@ -2,7 +2,7 @@
 <body bgcolor="ffffff">
 <a href = "part4.html">Previous Section</a> | <a href = "part6.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "35"><h2>Continuous Transformations and Time Warps</h2></a>
+<a name = "37"><h2>Continuous Transformations and Time Warps</h2></a>
 
 Nyquist transformations were discussed in the previous chapter, but all of
 the examples used scalar values.  For example, we saw the <code>loud</code>
@@ -28,7 +28,7 @@ transformation.  Nyquist is designed so that the default transformation is
 usually the right one, but it is always possible to override the default
 transformation to achieve a particular effect.
 <p>
-<a name = "36"><h3>Simple Transformations</h3></a>
+<a name = "38"><h3>Simple Transformations</h3></a>
 The "simple" transformations affect some parameter, but have no effect on time itself.  The simple transformations that support continuously changing parameters are: <code>sustain</code>, <code>loud</code>, and <code>transpose</code>.
 <p>
 As a first example, Let us use <code>transpose</code> to create a chromatic scale.
@@ -94,7 +94,7 @@ pitch rise rather than a continuous glissando?  This all relates to the idea
 of behavioral abstraction.  It is possible to design sounds that <i>do</i>
 glissando under the transpose transform, and you can even make sounds that
 <i>ignore</i> transpose altogether.  As explained in Chapter 
-<a href = "part4.html#24">"Behavioral Abstraction"</a>, the transformations modify the
+<a href = "part4.html#26">"Behavioral Abstraction"</a>, the transformations modify the
 environment, and behaviors can reference the environment to determine what
 signals to generate.  All built-in functions, such as <code>osc</code>, have a
 default behavior.
@@ -115,7 +115,7 @@ from the modulation signal, so they may indirectly depend upon the sustain.)
 Loud applies to <code>osc</code>, <code>sampler</code>, <code>cue</code>, <code>sound</code>,
 <code>fmosc</code>, and <code>amosc</code>. (But not <code>pwl</code> or <code>env</code>.)
 <p>
-<a name = "37"><h3>Time Warps</h3></a>
+<a name = "39"><h3>Time Warps</h3></a>
 The most interesting transformations have to do with transforming time
 itself.  The <code>warp</code> transformation provides a mapping function from
 logical (score) time to real time.  The slope of this function tells us how
@@ -155,13 +155,13 @@ location (4, 4).  Nyquist sounds are ordinarily open on the right.
 
 <hr>
 <p>
-Figure <a href = "#37">2</a> shows a plot of this warp function.  Now, we can
+Figure <a href = "#39">2</a> shows a plot of this warp function.  Now, we can
 warp the tempo of the <code>tone-seq</code> defined above using <code>warp4</code>:
 <pre>
 play warp(warp4(), tone-seq())
 </pre>
 
-Figure <a href = "#37">3</a> shows the result graphically.  Notice that the
+Figure <a href = "#39">3</a> shows the result graphically.  Notice that the
 durations of the tones are warped as well as their onsets.  Envelopes are 
 not shown in detail in the figure.  Because of the way <code>env</code> is
 defined, the tones will have constant attack and decay times, and the
@@ -176,7 +176,7 @@ sustain will be adjusted to fit the available time.
 
 <hr>
 <p>
-<a name = "38"><h3>Abstract Time Warps</h3></a>
+<a name = "40"><h3>Abstract Time Warps</h3></a>
 We have seen a number of examples where the default behavior did the
 "right thing," making the code straightforward.  This is not always the
 case.  Suppose we want to warp the note onsets but not the durations.  We
@@ -240,7 +240,7 @@ time to 0.25 result in a tempo change?  When used within a <code>warp</code>
 transformation, the second argument to <code>set-logical-stop</code> refers to
 <i>score</i> time rather than <i>real</i> time.  Therefore, the score duration of
 0.25 is warped into real time, producing tempo changes according to the
-enviroment.  Figure <a href = "#38">4</a> illustrates the result graphically.
+enviroment.  Figure <a href = "#40">4</a> illustrates the result graphically.
 <p>
 <hr>
 <blockquote></blockquote> 
@@ -254,7 +254,7 @@ causes notes to overlap.  Nyquist will sum (mix) them.
 
 <hr>
 <p>
-<a name = "39"><h3>Nested Transformations</h3></a>
+<a name = "41"><h3>Nested Transformations</h3></a>
 Transformations can be nested.  In particular, a simple transformation such
 as transpose can be nested within a time warp transformation.  Suppose we
 want to warp our chromatic scale example with the <code>warp4</code> time warp

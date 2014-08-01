@@ -19,7 +19,7 @@
 
 
                      Copyright 2013 by Roger B. Dannenberg
-                               26 February 2013
+                                 1 August 2014
 
 
 
@@ -182,6 +182,17 @@ source code can be obtained via Subversion (svn) using the following:
 or by checking out nyquist using a  graphical  interface  svn  client  such  as
 TortoiseSVN for Windows.
 
+
+
+1.1.1. Troubleshooting
+  All   versions   of  Nyquist  includes  a  Readme.txt  file  with  additional
+information.  Additional information and instructions on  installation  can  be
+found in:  sys/win/README.txt
+
+  sys/mac/README.txt
+
+  sys/unix/README.txt
+
 1.2. Using NyquistIDE
   The program named NyquistIDE is an ``integrated development environment'' for
 Nyquist. When you run NyquistIDE, it starts the Nyquist  program  and  displays
@@ -210,7 +221,54 @@ may exit SAL mode. You can reenter SAL  mode  by  typing  the  Lisp  expression
 the commands, compiles them into Lisp, and evaluates the commands. Commands can
 be entered manually by typing into the upper left text box in NyquistIDE.
 
-1.4. Helpful Hints
+1.4. Command Line
+  When run from the command line, Nyquist (usually the command is ny) looks for
+some options and some files to load. There are several options.
+
+  The -Rpaths option gives Nyquist a list of paths (separated by semicolons) to
+directories where Nyquist is allowed to read files. Files in any subdirectories
+of the listed  directories  can  also  be  read,  along  with  the  directories
+themselves. This option can be used to restrict access to files.
+
+  The -Wpaths option gives Nyquist a list of paths (separated by semicolons) to
+directories where Nyquist is allowed to write files  (including  sound  files).
+If  -W  is used, Nyquist will not open audio output to play sounds and will not
+allow access to Open Sound Control. This option can be used  to  protect  files
+from accidentally malicious code. (If you are truly worried about Nyquist code,
+you should run Nyquist in a virtual machine or other isolated  machine.  It  is
+unlikely that Nyquist is secure from all attacks.)
+
+  The  -Lrun-time-limit  option gives Nyquist a run time limit. If the limit is
+exceeded, Nyquist prints an error message and  exits.  The  time  is  based  on
+actual  work  rather  than CPU seconds or wall time. One unit of run time is on
+the order of 10ms of CPU time (for a medium speed computer in  2014),  but  you
+can  use the GET-RUN-TIME function to read the internal run-time counter to see
+how much computation you have done.
+
+  The -Mmemory-limit option gives Nyquist a memory  limit.  If  the  limit  (in
+megabytes)  is  exceeded,  Nyquist prints an error message and exits. The limit
+includes all XLISP data (cons cells, strings,  etc.)  plus  sample  blocks  and
+tables allocated for signal processing.
+
+  The -Ttranscript-file-name option copies console output to a transcript file.
+
+  The  -V option  sets verbose mode. If set, any files specified on the command
+line to be loaded are loaded with the verbose option.
+
+  Additionally, the command line can name files to be loaded. Nyquist begins by
+loading  init.lsp,  which by default is in the nyquist/runtime directory.  This
+file loads all the standard Nyquist functions. After that,  Nyquist  will  load
+any other files named on the command line.
+
+  Finally,  Nyquist  expects  to find search paths in the XLISPPATH environment
+variable (or for Windows, see installation instructions; the path is  saved  in
+the  Windows  Registry).  Normally,  you must set XLISPPATH for Nyquist to find
+init.lsp and the definitions of most Nyquist  functions.    Be  sure  you  have
+system.lsp  in  nyquist/runtime.  Part  of  the installation process copies the
+appropriate system.lsp from nyquist/sys/* to nyquist/runtime where  it  can  be
+found and loaded by init.lsp.
+
+1.5. Helpful Hints
   Under  Win95  and  Win98,  the console sometimes locks up. Activating another
 window and then reactivating the Nyquist window should unlock the output.   (We
 suggest  you use JNyqIDE, the interactive development environment rather than a
@@ -248,7 +306,7 @@ tell  where  the  last  unbalanced  expression  starts.    Alternatively,  type
 read  and  print  expressions  from  the file, reporting an error when an extra
 paren or end-of-file is reached unexpectedly.
 
-1.5. Using Lisp
+1.6. Using Lisp
   Lisp mode means that Nyquist reads and evaluates Nyquist expressions in  Lisp
 syntax. Since Nyquist is build on a Lisp interpreter, this is the ``native'' or
 machine language of Nyquist, and certain errors and functions may break out  of
@@ -257,7 +315,7 @@ Alternatively, you can exit SAL simply by typing exit to get a Lisp  prompt  (>
 ).  Commands  can be entered manually by typing into the upper left text box in
 NyquistIDE.
 
-1.6. Examples
+1.7. Examples
   We will begin with some simple Nyquist programs. Throughout  the  manual,  we
 will assume SAL mode and give examples in SAL, but it should be emphasized that
 all of these examples can be performed using Lisp syntax. See  Section  6.2  on
@@ -296,7 +354,7 @@ ranges from +1 to -1, will play as a full-scale 16-bit audio signal.
 
 
 
-1.6.1. Waveforms
+1.7.1. Waveforms
   Our next example will be presented in several steps.  The goal is to create a
 sound using a wavetable consisting of several harmonics as opposed to a  simple
 sinusoid.    In  order to build a table, we will use a function that computes a
@@ -338,7 +396,7 @@ true, so mkwave will not be invoked:
 
 
 
-1.6.2. Wavetables
+1.7.2. Wavetables
   When  Nyquist  starts,  several  waveforms  are  created and stored in global
 variables  for  convenience.   They   are:   *sine-table*,   *saw-table*,   and
 *tri-table*, implementing sinusoid, sawtooth, and triangle waves, respectively.
@@ -354,7 +412,7 @@ characters for names, and their use is purely a convention.
 
 
 
-1.6.3. Sequences
+1.7.3. Sequences
   Finally, we define my-note to use the waveform, and play several notes  in  a
 simple  score.  Note  that  the function my-note has only one command (a return
 command), so it is not necessary to use begin and end. These are only necessary
@@ -373,7 +431,7 @@ to do the work of generating a waveform, using *table* as a wave table.
   The seq function is used to invoke a sequence of behaviors.    Each  note  is
 started  at the time the previous note finishes.  The parameters to my-note are
 predefined in Nyquist: c4 is middle C, i (for eIghth note) is 0.5, and  q  (for
-Quarter  note) is 1.0.  See Section 1.7 for a complete description.  The result
+Quarter  note) is 1.0.  See Section 1.8 for a complete description.  The result
 is the sum of all the computed sounds.
 
   Sequences can also be constructed using the at transformation to specify time
@@ -382,7 +440,7 @@ explanation.
 
 
 
-1.6.4. Envelopes
+1.7.4. Envelopes
   The next example will illustrate the use of envelopes.  In Nyquist, envelopes
 are  just  ordinary sounds (although they normally have a low sample rate).  An
 envelope is applied to another sound by multiplication using the mult function.
@@ -440,7 +498,7 @@ further elaboration can be found elsewhere [Dannenberg 89].
 
 
 
-1.6.5. Piece-wise Linear Functions
+1.7.5. Piece-wise Linear Functions
   It is often convenient to construct signals in Nyquist using a list of (time,
 value) breakpoints which are linearly interpolated to  form  a  smooth  signal.
 Envelopes  created  by  env  are  a special case of the more general piece-wise
@@ -487,7 +545,7 @@ implicit.  Here are some examples:
     ; RAMP is based on PWL; it is defined in nyquist.lsp.
     ;
 
-1.7. Predefined Constants
+1.8. Predefined Constants
   For  convenience  and readability, Nyquist pre-defines some constants, mostly
 based on the notation of the Adagio score language, as follows:
 
@@ -549,7 +607,7 @@ based on the notation of the Adagio score language, as follows:
 
          ny:all = ``all the samples'' (i.e. a big number) = 1000000000
 
-1.8. More Examples
+1.9. More Examples
   More  examples  can  be  found  in  the directory demos, part of the standard
 Nyquist release. The file demos/examples_home.htm is an index to all  the  demo
 descriptions. In this directory, you will find the following and more:
@@ -834,7 +892,7 @@ You can play the data by writing
 
 If you created your own names for waveforms or envelopes, you must be sure that
 these exist before calling the upic function. Each waveform must be the name of
-a variable which is set to  a  Nyquist  wave  table.  (See  Section  1.6.1  for
+a variable which is set to  a  Nyquist  wave  table.  (See  Section  1.7.1  for
 information  on  how  to  create a wave table.) Also, each envelope must name a
 function with no  parameters  that  will  return  an  amplitude  envelope.  The
 following is the built-in definition for upic-env:
@@ -1000,7 +1058,7 @@ will play both notes starting at the same time.
 and return the sum of the results. (In SAL, the sim function applied to  sounds
 is  equivalent  to adding them with the infix + operator. The following section
 illustrates two concepts: first, a sound is not a behavior, and second, the sim
-operator and and the at transformation can be used to place sounds in time.
+operator and the at transformation can be used to place sounds in time.
 
 3.4. Sounds vs. Behaviors
   The  following example loads a sound from a file in the current directory and
@@ -1808,7 +1866,7 @@ Another interesting FM sound reminiscent of ``scratching'' can be found with  a
 detailed explanation in demos/scratch_tutorial.htm..
 
 5.5. Building a Wavetable
-  In  Section 1.6.1, we saw how to synthesize a wavetable.  A wavetable for osc
+  In  Section 1.7.1, we saw how to synthesize a wavetable.  A wavetable for osc
 also can be extracted from any sound.  This is especially  interesting  if  the
 sound  is digitized from some external sound source and loaded using the s-read
 function.  Recall that a table is a list consisting of a sound,  the  pitch  of
@@ -2263,7 +2321,7 @@ initial value into your program.
 
 
 6.1.2.4. define function
-  [define] function name ( [parameter], {, parameter}* ) statement
+  [define] function name ( [parameter] {, parameter}* ) statement
 
   Before  a function be called from an expression (as described above), it must
 be  defined.  A  function  definition  gives  the  function  name,  a  list  of
@@ -2392,7 +2450,7 @@ extension .sal.
 
 
 6.1.2.11. loop
-  loop [with-stmt] {stepping}* {stopping* action+ [finally] end
+  loop [with-stmt] {stepping}* {stopping}* {action}+ [finally] end
 
   The loop statement is by far the most complex statement in SAL, but it offers
 great flexibility for just about any kind of iteration. The basic function of a
@@ -2448,8 +2506,8 @@ for var [from from-expr] [[to | below | downto | above] to-expr] [by step-expr]
                 there is a downto clause, or less than or equal to the value of
                 to-expr if there is a above clause. (In the cases of downto and
                 above, the default increment value is -1. If there  is  no  to,
-                below,  downto, above, or below clause, no interation stop test
-                is created for this stepping clause.
+                below,  downto,  or  above  clause,  no  iteration stop test is
+                created for this stepping clause.
 
   The stopping clauses are the following:
 
@@ -2468,7 +2526,7 @@ finally statement
                 statement. If an  action  evaluates  a  return  statement,  the
                 finally statement is not executed.
 
-  Loops  often  fall into common patterns, such as iteratiing a fixed number of
+  Loops  often  fall  into common patterns, such as iterating a fixed number of
 times, performing an operation on some range of integers, collecting results in
 a  list,  and linearly searching for a solution. These forms are illustrated in
 the examples below.
@@ -2490,11 +2548,11 @@ the examples below.
     ; collect even numbers in a list
     loop
       with lis
-      for i = 0 to 10 by 2
+      for i from 0 to 10 by 2
       set lis @= i ; push integers on front of list,
                    ; which is much faster than append,
                    ; but list is built in reverse
-      finally result = reverse(lis)
+      finally set result = reverse(lis)
     end
     ; now, the variable result has a list of evens
 
@@ -2685,7 +2743,7 @@ frequency is the standard exponential conversion, and fractional pitch  numbers
                                 (pitch-69)/12
 are  allowed:    frequency=440*2             .  There are many predefined pitch
 names.  By default these are tuned in equal temperament, with A4 =  440Hz,  but
-these may be changed.  (See Section 1.7).
+these may be changed.  (See Section 1.8).
 
 7.1. Sounds
   A  sound  is a primitive data type in Nyquist.  Sounds can be created, passed
@@ -2876,7 +2934,7 @@ snd-maxsamp(sound) [SAL]
      self-defense  against  sounds  that  would  exhaust   available   memory.)
      Otherwise,  this  function  is  safe for ordinary use.  This function will
      probably be removed in a future version.  See peak, a replacement  (  page
-     88).
+     30).
 
 snd-play(expression) [SAL]
 (snd-play expression) [LISP]
@@ -3295,7 +3353,7 @@ build-harmonic(n, table-size) [SAL]
      Intended for constructing wavetables, this function  returns  a  sound  of
      length  table-size  samples containing n periods of a sinusoid.  These can
      be scaled and summed to form a waveform with the desired harmonic content.
-     See page 1 for an example.
+     See page 2 for an example.
 
 control-warp(warp-fn, signal, [wrate]) [SAL]
 (control-warp warp-fn signal wrate) [LISP]
@@ -6115,7 +6173,7 @@ Environment variables
                     environment for behaviors. In general, you should never set
                     or access these variables directly.
 
-Various constants   See Section 1.7 for definitions of predefined constants for
+Various constants   See Section 1.8 for definitions of predefined constants for
                     loudness, duration, and pitch.
 9. Time/Frequency Transformation
   Nyquist  provides  functions for FFT and inverse FFT operations on streams of
@@ -6211,7 +6269,7 @@ Adagio, MIDI sequence data, and Xmusic score representations.
 
   Adagio  is an easy-to-use, non-procedural notation for scores.    In  Adagio,
 text commands are used to specify each note.  If you are new to Adagio, you may
-want to glance at the examples in Section 10.3  starting  on  page  109  before
+want to glance at the examples in Section  10.3  starting  on  page  37  before
 reading any further.
 
   A  note  is described in Adagio by a set of attributes, and any attribute not
@@ -8771,66 +8829,83 @@ score-read-smf(filename) [SAL]
      however, is a fairly common practice.  Note  that  the  list  returned  as
      *rslt* can be passed to score-write-smf, described below.
 
-score-write-smf(score, filename, [programs]) [SAL]
-(score-write-smf score filename programs) [LISP]
-     Write  a  standard  MIDI  file  to  filename  with notes in score. In this
-     function, every event in the score with a pitch: attribute, regardless  of
-     the  ``instrument''  (or  function name), generates a MIDI note, using the
-     chan: attribute for the channel (default 0) and  the  vel:  attribute  for
-     velocity   (default   100).   There   is   no  facility  (in  the  current
-     implementation)  to  issue  control  changes,  but  to   allow   different
-     instruments,  MIDI  programs  may  be  set in two ways. The simplest is to
-     associate programs with channels using the  optional  programs  parameter,
-     which  is  simply  a  list of up to 16 MIDI program numbers. Corresponding
-     program change commands are added to the beginning of the  MIDI  file.  If
-     programs  has less than 16 elements, program change commands are only sent
-     on the first n channels. The second way to issue MIDI program  changes  is
+score-read(filename) [SAL]
+(score-read filename) [LISP]
+     Read  an  Adagio file from filename. Return an Xmusic score, or nil if the
+     file could not be opened.   See  Chapter  10  for  details  on  Adagio,  a
+     text-based  score  language.    See score-read-smf for details on handling
+     program changes.
+
+score-write-smf(score, filename, [programs as-adagio]) [SAL]
+(score-write-smf score filename [programs) as-adagio] [LISP]
+     Write a standard MIDI file to  filename  with  notes  in  score.  In  this
+     function,  every event in the score with a pitch: attribute, regardless of
+     the ``instrument'' (or function name), generates a MIDI  note,  using  the
+     chan:  attribute  for  the  channel (default 0) and the vel: attribute for
+     velocity  (default  100).  There  is   no   facility   (in   the   current
+     implementation)   to   issue  control  changes,  but  to  allow  different
+     instruments, MIDI programs may be set in two  ways.  The  simplest  is  to
+     associate  programs  with  channels using the optional programs parameter,
+     which is simply a list of up to 16  MIDI  program  numbers.  Corresponding
+     program  change  commands  are added to the beginning of the MIDI file. If
+     programs has less than 16 elements, program change commands are only  sent
+     on  the  first n channels. The second way to issue MIDI program changes is
      to add a program: keyword parameter to a note in the score. Typically, the
-     note will have a pitch: of nil so that no actual MIDI note-on  message  is
-     generated.  If  program  changes  and  notes have the same starting times,
+     note  will  have a pitch: of nil so that no actual MIDI note-on message is
+     generated. If program changes and notes  have  the  same  starting  times,
      their relative playback order is undefined, and the note may be cut off by
      an immediately following program change. Therefore, program changes should
-     occur slightly, e.g. 1 ms, before any notes. Program numbers and  channels
-     are  numbered starting at zero, matching the internal MIDI representation.
-     This may be one less than displayed on MIDI hardware, sequencers, etc.
+     occur  slightly, e.g. 1 ms, before any notes. Program numbers and channels
+     are numbered starting at zero, matching the internal MIDI  representation.
+     This may be one less than displayed on MIDI hardware, sequencers, etc. The
+     as-adagio optional parameter should normally be omitted.  If non-nil,  the
+     file  is  written  in  Adagio  format,  but  if  you want to do that, call
+     score-write instead.
+
+  score-write(score, filename, [programs]) [SAL]
+(score-write score filename [programs] [LISP]
+
+Write  an Adagioformat file to filename with notes in score. See Chapter 10 for
+details on Adagio, a text-based score language. See score-write-smf for details
+on MIDI program changes.
 
 
 
 13.4.5. Workspaces
-  When working with scores, you may find it necessary to  save  them  in  files
-between  work  sessions.  This  is not an issue with functions because they are
-normally edited in files and loaded from them. In contrast, scores are  created
-as  Lisp  data,  and  unless you take care to save them, they will be destroyed
+  When  working  with  scores,  you may find it necessary to save them in files
+between work sessions. This is not an issue with  functions  because  they  are
+normally  edited in files and loaded from them. In contrast, scores are created
+as Lisp data, and unless you take care to save them,  they  will  be  destroyed
 when you exit the Nyquist program.
 
-  A simple mechanism called a workspace has been created to manage scores  (and
-any  other  Lisp  data,  for  that  matter).  A workspace is just a set of lisp
-global variables. These variables are stored in the file  workspace.lsp.    For
-simplicity,  there  is  only  one  workspace,  and  no  backups or versions are
-maintained, but the user is free to make backups and copies  of  workspace.lsp.
+  A  simple mechanism called a workspace has been created to manage scores (and
+any other Lisp data, for that matter).  A workspace  is  just  a  set  of  lisp
+global  variables.  These  variables are stored in the file workspace.lsp.  For
+simplicity, there is only  one  workspace,  and  no  backups  or  versions  are
+maintained,  but  the user is free to make backups and copies of workspace.lsp.
 To help remember what each variable is for, you can also associate and retrieve
 a text string with each variable.  The following functions manage workspaces.
 
-  In addition, when a workspace is loaded, you can request  that  functions  be
-called.  For  example,  the  workspace  might store descriptions of a graphical
-interface. When the workspace is loaded, a function might run to convert  saved
+  In  addition,  when  a workspace is loaded, you can request that functions be
+called. For example, the workspace might  store  descriptions  of  a  graphical
+interface.  When the workspace is loaded, a function might run to convert saved
 data into a graphical interface. (This is how sliders are saved by the IDE.)
 
 add-to-workspace(symbol) [SAL]
 (add-to-workspace symbol) [LISP]
-     Adds  a  global variable to the workspace. The symbol should be a (quoted)
+     Adds a global variable to the workspace. The symbol should be  a  (quoted)
      symbol.
 
 save-workspace() [SAL]
 (save-workspace) [LISP]
-     All global variables in the workspace are saved to workspace.lsp  (in  the
+     All  global  variables in the workspace are saved to workspace.lsp (in the
      current directory), overwriting the previous file.
 
 describe(symbol [, description]) [SAL]
 (describe symbol [description)] [LISP]
-     If  description, a text string, is present, associate description with the
-     variable named by the symbol. If symbol is not already in  the  workspace,
-     it  is  added. If description is omitted, the function returns the current
+     If description, a text string, is present, associate description with  the
+     variable  named  by the symbol. If symbol is not already in the workspace,
+     it is added. If description is omitted, the function returns  the  current
      description (from a previous call) for symbol.
 
 add-action-to-workspace(symbol) [SAL]
@@ -8838,23 +8913,23 @@ add-action-to-workspace(symbol) [SAL]
      Requests that the function named by symbol be called when the workspace is
      loaded (if the function is defined).
 
-  To  restore  a workspace, use the command load "workspace". This restores the
-values of the workspace variables to the values they  had  when  save-workspace
-was  last  called.  It  also  restores  the  documentation  strings, if set, by
-describe. If you load two or more workspace.lsp files, the  variables  will  be
-merged  into  a  single  workspace.  The current set of workspace variables are
-saved in the list *workspace*. To clear the workspace, set *workspace* to  nil.
-This  does  not delete any variables, but means that no variables will be saved
+  To restore a workspace, use the command load "workspace". This  restores  the
+values  of  the  workspace variables to the values they had when save-workspace
+was last called. It  also  restores  the  documentation  strings,  if  set,  by
+describe.  If  you  load two or more workspace.lsp files, the variables will be
+merged into a single workspace. The current  set  of  workspace  variables  are
+saved  in the list *workspace*. To clear the workspace, set *workspace* to nil.
+This does not delete any variables, but means that no variables will  be  saved
 by save-workspace until variables are added again.
 
-  Functions to be called are saved in the list *workspace-actions*.   to  clear
-the  functions,  set *workspace-actions* to nil.  Restore functions to the list
+  Functions  to  be called are saved in the list *workspace-actions*.  to clear
+the functions, set *workspace-actions* to nil.  Restore functions to  the  list
 with add-action-to-workspace.
 
 
 
 13.4.6. Utility Functions
-  This chapter concludes with details of various utility  functions  for  score
+  This  chapter  concludes  with details of various utility functions for score
 manipulation.
 
 patternp(expression) [SAL]
@@ -8863,18 +8938,18 @@ patternp(expression) [SAL]
 
 params-transpose(params, keyword, amount) [SAL]
 (params-transpose params keyword amount) [LISP]
-     Add  a  transposition  amount  to  a  score  event  parameter.  The params
-     parameter is a list of keyword/value pairs (not  preceded  by  a  function
-     name).   The keyword is the keyword of the value to be altered, and amount
+     Add a  transposition  amount  to  a  score  event  parameter.  The  params
+     parameter  is  a  list  of keyword/value pairs (not preceded by a function
+     name).  The keyword is the keyword of the value to be altered, and  amount
      is a number to be added to the value. If no matching keyword is present in
-     params,  then  params  is  returned.  Otherwise,  a  new parameter list is
+     params, then params is  returned.  Otherwise,  a  new  parameter  list  is
      constructed and returned. The original params is not changed.
 
 params-scale(params, keyword, amount) [SAL]
 (params-scale params keyword amount) [LISP]
-     Scale  a  score  event  parameter   by   some   factor.   This   is   like
-     params-transpose,  only using multiplication. The params list is a list of
-     keyword/value pairs, keyword is the parameter keyword, and amount  is  the
+     Scale   a   score   event   parameter   by   some  factor.  This  is  like
+     params-transpose, only using multiplication. The params list is a list  of
+     keyword/value  pairs,  keyword is the parameter keyword, and amount is the
      scale factor.
 
 interpolate(x, x1, y1, x2, y2) [SAL]
@@ -8896,35 +8971,35 @@ set-difference(a, b) [SAL]
 
 subsetp(a, b) [SAL]
 (subsetp a b) [LISP]
-     Returns true iff a is a subset of b, that is,  each  element  of  a  is  a
+     Returns  true  iff  a  is  a  subset of b, that is, each element of a is a
      member of b.
 14. Nyquist Libraries
-  Nyquist  is  always  growing  with  new  functions.  Functions  that are most
-fundamental are added to the core language. These functions  are  automatically
-loaded  when  you  start  Nyquist,  and  they  are  documented in the preceding
-chapters. Other functions seem less central and are implemented as  lisp  files
-that  you  can load. These are called library functions, and they are described
+  Nyquist is always  growing  with  new  functions.  Functions  that  are  most
+fundamental  are  added to the core language. These functions are automatically
+loaded when you start  Nyquist,  and  they  are  documented  in  the  preceding
+chapters.  Other  functions seem less central and are implemented as lisp files
+that you can load. These are called library functions, and they  are  described
 here.
 
-  To use a library function, you  must  first  load  the  library,  e.g.  (load
+  To  use  a  library  function,  you  must  first load the library, e.g. (load
 "pianosyn") loads the piano synthesis library. The libraries are all located in
-the lib directory, and you should therefore  include  this  directory  on  your
-XLISPPATH  variable.  (See Section 1.) Each library is documented in one of the
-following sections. When you load the library described  by  the  section,  all
+the  lib  directory,  and  you  should therefore include this directory on your
+XLISPPATH variable. (See Section 1.) Each library is documented in one  of  the
+following  sections.  When  you  load the library described by the section, all
 functions documented in that section become available.
 
 14.1. Statistics
-  The  file  statistics.lsp  defines  a  class  and functions to compute simple
-statistics, histograms, correlation, and some other tests. See the source  code
+  The file statistics.lsp defines a  class  and  functions  to  compute  simple
+statistics,  histograms, correlation, and some other tests. See the source code
 for complete details.
 
 14.2. Plots
-  The  Nyquist  IDE  has  a  simple facility to plot signals. For more advanced
-plotting, you can use gnuplot.sal to generate plots for  gnuplot,  a  separate,
+  The Nyquist IDE has a simple facility to  plot  signals.  For  more  advanced
+plotting,  you  can  use gnuplot.sal to generate plots for gnuplot, a separate,
 but free program. See the source for details.
 
 14.3. Labeling Audio Events, Marking Audio Times, Displaying Marked Audio Times
-  The  labels.sal  program  can convert lists to label files and label files to
+  The labels.sal program can convert lists to label files and  label  files  to
 lists. Label files can be loaded along with audio in Audacity to show metadata.
 See the source for details.
 
@@ -8932,23 +9007,23 @@ See the source for details.
   See regression.sal for simple linear regression functions.
 
 14.5. Vector Math, Linear Algebra
-  See  vectors.lsp  for  a simple implementation of vector arithmetic and other
+  See vectors.lsp for a simple implementation of vector  arithmetic  and  other
 vector functions.
 
 14.6. Piano Synthesizer
-  The piano synthesizer (library  name  is  pianosyn.lsp)  generates  realistic
-piano  tones  using a multiple wavetable implementation by Zheng (Geoffrey) Hua
-and Jim  Beauchamp,  University  of  Illinois.  Please  see  the  notice  about
-acknowledgements  that  prints when you load the file. Further informations and
-example code can be  found  in  demos/piano.htm.    There  are  several  useful
+  The  piano  synthesizer  (library  name  is pianosyn.lsp) generates realistic
+piano tones using a multiple wavetable implementation by Zheng  (Geoffrey)  Hua
+and  Jim  Beauchamp,  University  of  Illinois.  Please  see  the  notice about
+acknowledgements that prints when you load the file. Further  informations  and
+example  code  can  be  found  in  demos/piano.htm.    There are several useful
 functions in this library:
 
 piano-note(duration, step, dynamic) [SAL]
 (piano-note duration step dynamic) [LISP]
-     Synthesizes  a  piano  tone.  Duration is the duration to the point of key
-     release, after which there is a rapid decay. Step is  the  pitch  in  half
-     steps,  and  dynamic  is  approximately  equivalent to a MIDI key velocity
-     parameter. Use a value near 100 for a loud sound and near 10  for  a  soft
+     Synthesizes a piano tone. Duration is the duration to  the  point  of  key
+     release,  after  which  there  is a rapid decay. Step is the pitch in half
+     steps, and dynamic is approximately equivalent  to  a  MIDI  key  velocity
+     parameter.  Use  a  value near 100 for a loud sound and near 10 for a soft
      sound.
 
 piano-note-2(step, dynamic) [SAL]
@@ -8962,56 +9037,61 @@ piano-midi(midi-file-name) [SAL]
 
 piano-midi2file(midi-file-name, sound-file-name) [SAL]
 (piano-midi2file midi-file-name sound-file-name) [LISP]
-     Use the piano synthesizer to play a MIDI file. The MIDI file is  given  by
-     midi-file-name  and  the  (monophonic) result is written to the file named
+     Use  the  piano synthesizer to play a MIDI file. The MIDI file is given by
+     midi-file-name and the (monophonic) result is written to  the  file  named
      sound-file-name.
 
 14.7. Dymanics Compression
   To use these functions, load the file compress.lsp. This library implements a
-compressor  originally intended for noisy speech audio, but usable in a variety
-of situations.  There are actually two compressors that can be used in  series.
-The  first, compress, is a fairly standard one: it detects signal level with an
-RMS detector and uses table-lookup to determine how much gain to place  on  the
-original  signal  at  that  point.  One  bit of cleverness here is that the RMS
-envelope is ``followed'' or enveloped using snd-follow, which  does  look-ahead
+compressor originally intended for noisy speech audio, but usable in a  variety
+of  situations.  There are actually two compressors that can be used in series.
+The first, compress, is a fairly standard one: it detects signal level with  an
+RMS  detector  and uses table-lookup to determine how much gain to place on the
+original signal at that point. One bit of  cleverness  here  is  that  the  RMS
+envelope  is  ``followed'' or enveloped using snd-follow, which does look-ahead
 to anticipate peaks before they happen.
 
   The other interesting feature is compress-map, which builds a map in terms of
-compression and expansion. For speech, the recommended procedure is  to  figure
+compression  and  expansion. For speech, the recommended procedure is to figure
 out the noise floor on the signal you are compressing (for example, look at the
-signal where the speaker is not talking).  Use a compression  map  that  leaves
-the  noise  alone and boosts signals that are well above the noise floor. Alas,
-the  compress-map  function  is  not  written   in   these   terms,   so   some
+signal  where  the  speaker is not talking).  Use a compression map that leaves
+the noise alone and boosts signals that are well above the noise  floor.  Alas,
+the   compress-map   function   is   not   written  in  these  terms,  so  some
 head-scratching is involved, but the results are quite good.
 
   The second compressor is called agc, and it implements automatic gain control
-that keeps peaks at or below 1.0.  By  combining  compress  and  agc,  you  can
-process  poorly  recorded  speech for playback on low-quality speakers in noisy
-environments. The  compress  function  modulates  the  short-term  gain  to  to
+that  keeps  peaks  at  or  below  1.0.  By combining compress and agc, you can
+process poorly recorded speech for playback on low-quality  speakers  in  noisy
+environments.  The  compress  function  modulates  the  short-term  gain  to to
 minimize the total dynamic range, keeping the speech at a generally loud level,
-and the agc function rides the long-term gain to set the overall level  without
+and  the agc function rides the long-term gain to set the overall level without
 clipping.
 
-compress-map(compress-ratio,  compress-threshold,  expand-ratio,  expand-ratio,
-     limit: limit, transition:  transition) [SAL]
-(compress-map  compress-ratio  compress-threshold   expand-ratio   expand-ratio
-     :limit limit :transition transition]) [LISP]
-     Construct  a map for the compress function. The map consists of two parts:
+compress-map(compress-ratio,         compress-threshold,          expand-ratio,
+     expand-threshold, limit: limit, transition:  transition) [SAL]
+(compress-map  compress-ratio  compress-threshold expand-ratio expand-threshold
+     [:limit limit :transition transition :verbose verbose]) [LISP]
+     Construct a map for the compress function. The map consists of two  parts:
      a compression part and an expansion part.  The intended use is to compress
-     everything  above  compress-threshold  by  compress-ratio, and to downward
-     expand everything below expand-ratio by expand-ratio.  Thresholds  are  in
-     dB  and  ratios are dB-per-dB.  0dB corresponds to a peak amplitude of 1.0
-     or rms amplitude of 0.7 If the  input  goes  above  0dB,  the  output  can
-     optionally  be limited by setting limit: (a keyword parameter) to T.  This
-     effectively changes the compression ratio to infinity at 0dB.   If  limit:
-     is  nil (the default), then the compression-ratio continues to apply above
+     everything above compress-threshold by  compress-ratio,  and  to  downward
+     expand  everything  below expand-ratio by expand-ratio.  Thresholds are in
+     dB and ratios are dB-per-dB.  0dB corresponds to a peak amplitude  of  1.0
+     or  rms  amplitude  of  0.7  If  the  input goes above 0dB, the output can
+     optionally be limited by setting limit: (a keyword parameter) to T.   This
+     effectively  changes  the compression ratio to infinity at 0dB.  If limit:
+     is nil (the default), then the compression-ratio continues to apply  above
      0dB.
 
-Another keyword parameter, transition:, sets the amount  below  the  thresholds
-     (in  dB)  that  a smooth transition starts. The default is 0, meaning that
-     there is no smooth  transition.  The  smooth  transition  is  a  2nd-order
-     polynomial  that matches the slopes of the straight-line compression curve
+Another  keyword  parameter,  transition:, sets the amount below the thresholds
+     (in dB) that a smooth transition starts. The default is  0,  meaning  that
+     there  is  no  smooth  transition.  The  smooth  transition is a 2nd-order
+     polynomial that matches the slopes of the straight-line compression  curve
      and interpolates between them.
+
+If verbose is true (this is the default), the map is printed, showing, for each
+     dB value below zero of this input, what is the gain (in dB)  indicated  by
+     the  output. Only regions where the map is changing are printed because at
+     lower values, the dB gain is constant.
 
 It is assumed that expand-threshold <= compress-threshold  <=  0  The  gain  is
      unity  at  0dB so if compression-ratio > 1, then gain will be greater than
@@ -9496,6 +9576,9 @@ volume-osc2 (1)
 volume-osc3 (1)
 These  parameters  control the relative volume of each oscillator. The range is
 any FLONUM greater than or equal to zero.
+
+
+
 14.19.2. Noise Parameters
   noiselevel (.05)
 This parameter controls the relative volume of the noise source. The  range  is
@@ -12669,7 +12752,7 @@ distribution  46 Bernoulli-dist 46 Beta distribution 46 Beta-dist 46 Big endian
 dist  45  Binary  files  70 Binomial distribution 46 Binomial-dist 46 Biquad 23
 Biquad-m 23 Bitwise Logical Functions 68  Blank  36  Block  67  Both-case-p  69
 Boundp  66  Bowed  24  Bowed-freq  24 Brass sound 3 Break 62, 68 Break button 4
-Browse button 4 Browser, jnyqide 4 Build-harmonic 1, 20 Button bar 4 Buzz 21
+Browse button 4 Browser, jnyqide 4 Build-harmonic 2, 20 Button bar 4 Buzz 21
 
   Call command 40 Car 65 Case  36,  67  Case-insensitive  13  Catch  67  Cauchy
 distribution  45  Cauchy-dist  45  Cdr 65 Cerror 68 Change directory 70 Char 69
@@ -12680,10 +12763,10 @@ Character  Functions  69  Characterp  66  Chdir,  sal  14 Chorus 24, 29, 32, 52
 Clarinet 24 Clarinet sound 3 Clarinet-all 24 Clarinet-freq 24  Class  64  Class
 class  64  Clean-up  68 Clip 10, 25, 29 Clipping 34 Clipping repair 51 Clock 39
 Clock command 39 Close 70 Co-termination 29 Code-char 69 Comb 22 Comb filter 22
-Combination  26  Command  Loop  62  Commas 38 Comment 36 Comments 13 Compose 29
-Compress 51 Compress-map 51  Compressor  18  Concatenate  strings  69  Cond  67
-Conditional  expression,  sal 13 Configure nyquist 1 Congen 22 Cons 65 Console,
-XLISP   71   Consp   66   Const   19   Constant   function   19   Continue   68
+Combination  26 Command Line 1 Command Loop 62 Commas 38 Comment 36 Comments 13
+Compose 29 Compress 51 Compress-map 51 Compressor  18  Concatenate  strings  69
+Cond  67  Conditional  expression, sal 13 Configure nyquist 1 Congen 22 Cons 65
+Console,  XLISP  71  Consp  66  Const  19  Constant  function  19  Continue  68
 Continuous-control-warp   26  Continuous-sound-warp  26  Contour  generator  22
 Control 19 Control change 38 Control characters, XLISP 62 Control Constructs 67
 Control-A  27  Control-srate-abs  26  Control-warp 20 Convert sound to array 18
@@ -12692,7 +12775,7 @@ vector  51 Cue 19 Cue-file 19 Current-path 42 Curve fitting 51 Cxxr 65 Cxxxr 65
 Cxxxxr 65 Cycle pattern 43
 
   DarwiinRemoteOsc 19 Data Types 62 Db-average 51 Db-to-linear 18 Db-to-vel 18,
-19  DB0  2  DB1  2 DB10 2 Debugging 18, 28, 42, 68 Decf 42 Decrement 42 Default
+19  DB0  3  DB1  3 DB10 3 Debugging 18, 28, 42, 68 Decf 42 Decrement 42 Default
 durations 37 Default 37 Default sample rate 7 Default sound file  directory  27
 Default  time  36  Define  function  14 Define variable 14 Defining Behaviors 7
 Defmacro 64 Defun 64 Delay 23 Delay, variable 29, 30  Delete  66  Delete-if  66
@@ -12707,15 +12790,15 @@ code 42 Diff 27 Difference 50 Difference of sounds 27 Difference of vector data
 51  Digit-char 69 Digit-char-p 69 Directory listing 70 Directory, default sound
 file 27  Display  statement,  sal  14  Distortion  tutorial  23  Distributions,
 probability  45  Division  25 Do 67 Do* 67 Dolby Pro-Logic 52 Dolby Surround 52
-Dolist 67 Doppler effect 53 Dot 36 Dotimes 67 Dotted  durations  2  Dribble  71
+Dolist 67 Doppler effect 53 Dot 36 Dotimes 67 Dotted  durations  3  Dribble  71
 Drum samples 3 Drum 53 Drum machine 3, 53 Drum sound 3 Drum-loop 53 DSP in Lisp
-3, 11 Dtmf 52 Dtmf-tone  52  Dubugging  30  Duration  36  Duration  notation  2
+3, 11 Dtmf 52 Dtmf-tone  52  Dubugging  30  Duration  36  Duration  notation  3
 Duration of another sound 29 DX7 36 Dynamic markings 37
 
   Echo  23  Echoenabled  71 Editor for envelopes 4 Effect, reverberation 24, 24
 Effect, chorus 24, 32, 52 Effect, flange 52 Effect, pitch shift 24, 32  Effect,
 reverberation  32,  52  Effect,  stereo  52  Effect, stereo pan 52 Effect, swap
-channels 52 Effect, widen 52 Effects, phaser 52 EIghth note 2, 36 Elapsed audio
+channels 52 Effect, widen 52 Effects, phaser 52 EIghth note 3, 36 Elapsed audio
 time 27 Emacs, using Nyquist with 71 Empty list 13 End 13 End command 40 Endian
 71 Endless tones 3 Endp 66 Env 2, 19 Env-note 2 Envedit  button  4  Envelope  2
 Envelope  editor  4  Envelope follower 18, 30 Envelope generator 22 Envelopes 2
@@ -12753,16 +12836,16 @@ Get-sustain 19 Get-temp-path 70 Get-transpose 19 Get-user 70 Get-warp 19 Getenv
 Granular  synthesis  52  Graphical  envelope  editor 4 Graphical equalization 4
 Graphical equalizer 51 Grindef 42
 
-  H (Adagio Half note) 36 H 2 Half note 2, 36 Harmonic 20 Hash 65 Hd  2  Header
+  H (Adagio Half note) 36 H 3 Half note 3, 36 Harmonic 20 Hash 65 Hd  3  Header
 file  format  59  Heap pattern 44 High-pass filter 23 Highpass2 23 Highpass4 24
-Highpass6 24 Highpass8 24 Histogram 51 Hp 23  Ht  2  Hyperbolic-cosine-dist  45
+Highpass6 24 Highpass8 24 Histogram 51 Hp 23  Ht  3  Hyperbolic-cosine-dist  45
 Hz-to-step 18 Hzosc 21
 
-  I  (Adagio eIght note) 36 I 2 Iannis Xenakis 4 Id 2 IDE 1 If 67 If statement,
+  I  (Adagio eIght note) 36 I 3 Iannis Xenakis 4 Id 3 IDE 1 If 67 If statement,
 sal 14 Ifft 35 Incf 42 Increment 42 Info 71 Info button 4 Input from a File  72
 Input/Output  Functions  70 Installation 1 Int-char 70 Integerp 66 Integrate 20
 Integrated Development Environment 1 Intern 65 Interoperability, sal  and  lisp
-15 Interpolate 50 Intersection 50 Intgen 59 Inverse 30 Inverse fft 35 It 2
+15 Interpolate 50 Intersection 50 Intgen 59 Inverse 30 Inverse fft 35 It 3
 
   Jcrev 24 Jitter 49
 
@@ -12771,22 +12854,22 @@ parameters 47 Kurtosis, statistics 51
 
   Label files 51 Labels 67 Lambda 64 Lambda Lists 63 Last 65 Latency 19  Legato
 26,  37  Length  65 Length pattern 44 Length-of-beat 53 Let 67 Let* 67 Levene's
-test 51 Lexical conventions 62 LF (Adagio dynamic) 37 Lf 2 LFF (Adagio dynamic)
-37  Lff  2 LFFF (Adagio dynamic) 37 Lfff 2 Lfo 20 Libraries 51 Limit 25 Limiter
+test 51 Lexical conventions 62 LF (Adagio dynamic) 37 Lf 3 LFF (Adagio dynamic)
+37  Lff  3 LFFF (Adagio dynamic) 37 Lfff 3 Lfo 20 Libraries 51 Limit 25 Limiter
 18  Line  pattern  43  Linear  algegra  51  Linear   distribution   45   Linear
 interpolation  50  Linear  Prediction  41  Linear prediction tutorial 41 Linear
 regression 51 Linear-dist 45 Linear-to-db 18 Linear-to-vel 18, 19 Lisp button 4
 Lisp  DSP  3, 11 Lisp Include Files 60 List 65 List directory 70 List Functions
 65 Listdir 70 Listing of lisp function 42 Listp 66 Little endian 71 LMF (Adagio
-dynamic) 37 Lmf 2 LMP (Adagio dynamic) 37 Lmp 2 Load 71 Load button 4 Load file
+dynamic) 37 Lmf 3 LMP (Adagio dynamic) 37 Lmp 3 Load 71 Load button 4 Load file
 conditionally 42 Load statement, sal 14 Local-to-global 19 Log 18 Log  function
 18  Logand  68 Logical-stop 17 Logior 69 Logistic distribution 46 Logistic-dist
 46 Lognot 69 Logorithm 25  Logxor  69  Loop  67  Loop  examples,  sal  15  Loop
 statement,  sal  14  Looping  Constructs 67 Loud 26 Loud-abs 26 Loudness 36, 37
 Low-frequency oscillator 20 Low-pass filter 23, 32 Lower-case-p 69 Lowpass2  23
-Lowpass4  23 Lowpass6 23 Lowpass8 23 LP (Adagio dynamic) 37 Lp 2, 23 LPC 41 Lpc
+Lowpass4  23 Lowpass6 23 Lowpass8 23 LP (Adagio dynamic) 37 Lp 3, 23 LPC 41 Lpc
 tutorial  41  Lpc-frame-err  41  Lpc-frame-filter-coefs  41  Lpc-frame-rms1  41
-Lpc-frame-rms2 41 LPP (Adagio dynamic) 37 Lpp 2 LPPP (Adagio dynamic) 37 Lppp 2
+Lpc-frame-rms2 41 LPP (Adagio dynamic) 37 Lpp 3 LPPP (Adagio dynamic) 37 Lppp 3
 Lpreson 41
 
   M  (Adagio  control)  38  Macroexpand  64  Macroexpand-1   64   Macrolet   67
@@ -12802,7 +12885,7 @@ Mean 51 Mean of vector 51 Median of vector data 51 Median, statistics 51 Member
 65 Memory usage 18 MF (Adagio dynamic) 37 Middle C 36 MIDI  36  MIDI  Clock  39
 MIDI  file 49, 50 MIDI program 37 Midi-show 52 Midi-show-file 52 Mikrokosmos 38
 Min 68 Min, statistics 51 Minimoog 53 Minimum 25, 68 Minusp 66 Mix  27  Mix  to
-file  28 Mkwave 1 Modalbar 25 Modulation wheel 38 Modulo (rem 68 Mono to stereo
+file  28 Mkwave 2 Modalbar 25 Modulation wheel 38 Modulo (rem 68 Mono to stereo
 52 Moog 53 Moving average 29 MP (Adagio dynamic) 37 Mult 2, 20, 27 Multichannel
 Sounds  17  Multiple  band  effects  52  Multiple commands 38 Multiple tempi 39
 Multiplication 30 Multiply signals 27 My-note 2
@@ -12818,7 +12901,7 @@ Ny:all 3 NyquistIDE 1
   O (Adagio control) 38 Object 64 Object Class 64 Objectp 66 Objects 63  Octave
 specification  36  Oddp 67 Offset 49 Offset to a sound 29 Omissions iii Oneshot
 30 Open 70 Open sound control 19, 58 Open-binary 70 Openfile button 4 Or 67 Osc
-1,  19,  20 Osc-enable 19 Osc-note 25 Osc-pulse 21 Osc-saw 21 Osc-tri 21 Output
+2,  19,  20 Osc-enable 19 Osc-note 25 Osc-pulse 21 Osc-saw 21 Osc-tri 21 Output
 samples to file 27 Output to a File 72 Overlap 26 Overwrite samples 28
 
   P (Adagio dynamic) 37 P (Adagio Pitch) 36 Palindrome pattern 43  Pan  20,  52
@@ -12829,24 +12912,24 @@ Pattern, eval 44 Pattern, expression 44  Pattern,  heap  44  Pattern,  line  43
 Pattern,  markov  44 Pattern, palindrome 43 Pattern, product 44 Pattern, random
 43 Pattern, sum 44  Patternp  50  Peak  30  Peak  amplitude  10  Peak,  maximum
 amplitude  30  Pearson correlation 51 Peek 71 Peek-char 70 Period estimation 25
-Phaser 52 Physical model 3 Piano synthesizer 51 Piano synthesizer  tutorial  51
-Piano-midi  51  Piano-midi2file  51 Piano-note 51 Piano-note-2 51 Piece-wise 21
-Piece-wise linear 30 Pitch 36 Pitch bend 38 Pitch detection 25 Pitch notation 2
-Pitch  shift  24,  32  Pitch shifting 29 Pitshift 24 Pl-center 52 Pl-doppler 53
-Pl-left 52 Pl-pan2d 53 Pl-position 53 Pl-rear 53 Pl-right 53 Play 1, 27 Play in
-reverse  51  Play-file  27 Plot 28 Plots 51 Pluck 21 Plucked string 21 Plusp 66
-Poisson distribution 47 Poisson-dist 47 Poke 71 Polyrhythm 39 Pop 42 Portamento
-switch  38  Power  42  PP (Adagio dynamic) 37 PPP (Adagio dynamic) 37 Pprint 70
-Prcrev 24 Predicate Functions 66 Preset 37 Prin1 70 Princ  70  Print  70  Print
-midi  file  52  Print  statement,  sal  15 Probability distributions 45 Prod 20
-Product 27 Product pattern 44 Profile 68 Profiling 64 Prog 67 Prog* 67 Prog1 67
-Prog2  67  Progn  68 Program 38 Program change 36 Progv 67 Prologic 52 Property
-List Functions 65 Psetq 64 Pulse oscillator 21 Pulse-width modulation  21  Push
-42  Putprop  65  Pwe  22  Pwe-list 22 Pwer 22 Pwer-list 22 Pwev 22 Pwev-list 22
-Pwevr 22 Pwevr-list 22 Pwl  22  Pwl-list  22  Pwlr  22  Pwlr-list  22  Pwlv  22
-Pwlv-list 22 Pwlvr 22 Pwlvr-list 22
+Phaser 52 Physical model 3  Physical  Models  24  Piano  synthesizer  51  Piano
+synthesizer   tutorial  51  Piano-midi  51  Piano-midi2file  51  Piano-note  51
+Piano-note-2 51 Piece-wise 21 Piece-wise linear 30 Pitch 36 Pitch bend 38 Pitch
+detection  25 Pitch notation 3 Pitch shift 24, 32 Pitch shifting 29 Pitshift 24
+Pl-center 53 Pl-doppler 53 Pl-left 52 Pl-pan2d 53  Pl-position  53  Pl-rear  53
+Pl-right  53  Play 2, 27 Play in reverse 51 Play-file 27 Plot 28 Plots 51 Pluck
+21 Plucked string 21 Plusp 66 Poisson distribution 47 Poisson-dist 47  Poke  71
+Polyrhythm  39  Pop 42 Portamento switch 38 Power 42 PP (Adagio dynamic) 37 PPP
+(Adagio dynamic) 37 Pprint 70 Prcrev 24 Predicate Functions 66 Preset 37  Prin1
+70  Princ  70  Print  70 Print midi file 52 Print statement, sal 15 Probability
+distributions 45 Prod 20 Product 27 Product pattern 44 Profile 68 Profiling  64
+Prog  67 Prog* 67 Prog1 67 Prog2 67 Progn 68 Program 38 Program change 36 Progv
+67 Prologic 52 Property List Functions 65 Protected  files  1  Psetq  64  Pulse
+oscillator  21  Pulse-width modulation 21 Push 42 Putprop 65 Pwe 22 Pwe-list 22
+Pwer 22 Pwer-list 22 Pwev 22  Pwev-list  22  Pwevr  22  Pwevr-list  22  Pwl  22
+Pwl-list 22 Pwlr 22 Pwlr-list 22 Pwlv 22 Pwlv-list 22 Pwlvr 22 Pwlvr-list 22
 
-  Q (Adagio Quarter note) 36 Q 2 Qd 2 Qt 2 Quantize 25 Quarter note 2, 36 Quote
+  Q (Adagio Quarter note) 36 Q 3 Qd 3 Qt 3 Quantize 25 Quarter note 3, 36 Quote
 64
 
   R (Adagio Rest) 36 Ramp 25 Random 42, 45, 68 Random pattern 43  Rate  36,  37
@@ -12860,7 +12943,7 @@ Return  67 Return statement, sal 15 Return-from 67 Reverb 24, 32, 52 Reverse 65
 Reverse, sound 51 Ring modulation 2 Risset 3 Rms  25,  29  Room  71  Rplaca  66
 Rplacd 66 Rrandom 68
 
-  S  (Adagio  Sharp)  36  S (Adagio Sixteenth note) 36 S 2 S-abs 25 S-add-to 28
+  S  (Adagio  Sharp)  36  S (Adagio Sixteenth note) 36 S 3 S-abs 25 S-add-to 28
 S-exp 25 S-log  25  S-max  10,  25  S-min  10,  25  S-overwrite  28  S-plot  28
 S-print-tree  28  S-read  28 S-read-reverse 51 S-rest 25 S-reverse 51 S-save 27
 S-sqrt 25 SAL 13 Sal and lisp  15  SAL  button  4  Sal  expressions  13  Sample
@@ -12873,97 +12956,98 @@ Score, musical  2  Score-adjacent-events  49  Score-append  49  Score-apply  49
 Score-filter  49  Score-filter-length  49  Score-filter-overlap 49 Score-gen 47
 Score-get-begin 49 Score-get-end  49  Score-indexof  49  Score-last-indexof  49
 Score-merge  49  Score-must-have-begin-end  49  Score-play  49  Score-print  49
-Score-randomize-start 49  Score-read-smf  49  Score-repeat  49  Score-scale  49
-Score-select  49  Score-set-begin 49 Score-set-end 49 Score-shift 48 Score-sort
-48 Score-sorted 48 Score-stretch 48 Score-stretch-to-length 49 Score-sustain 49
-Score-transpose  48  Score-voice  49  Score-write-smf  50 Scratch sound 11 Sd 2
-Second 65 Sections, Adagio 38 Self 64 Semicolon, Adagio 38  Seq  26  Seqrep  26
-Sequences  2,  36  Sequence_example.htm  2  Sequential  behavior  6  Set 64 Set
-intersection 50 Set statement, sal 15 Set  union  50  Set-control-srate  7,  19
-Set-difference  50 Set-logical-stop 27 Set-pitch-names 19 Set-sound-srate 7, 19
-Setdir 70 Setf 64 Seti commnad 40 Setq 64 Setup nyquist 1 Setup-console 71 Setv
-command  40  Sf-granulate  52  Sf-info 28 Shape 23 Sharp 36 Shepard tones 3, 23
-Shift-time 20 Show midi file 52 Show-lpc-data  41  Signal  composition  29,  30
-Signal  multiplication  30  Signal-start  17 Signal-stop 17 Sim 1, 26 Simrep 27
-Simultaneous Behavior 6 Sin 68 Sine 21 Siosc 21 Sitar 25 Sixteenth note  2,  36
-Sixtyfourth  note  36  Slope 20 Smooth 20 Snd-abs 29 Snd-add 29 Snd-allpoles 41
-Snd-alpass 31 Snd-alpasscv  31  Snd-alpassvv  31  Snd-amosc  32  Snd-areson  31
-Snd-aresoncv  31  Snd-aresonvc  31  Snd-aresonvv  31 Snd-atone 31 Snd-atonev 31
-Snd-avg 29  Snd-bandedwg  33  Snd-biquad  31  Snd-bowed  33  Snd-bowed-freq  33
-Snd-buzz  32 Snd-chase 31 Snd-clarinet 33 Snd-clarinet-all 33 Snd-clarinet-freq
-33 Snd-clip 29 Snd-compose  29  Snd-congen  31  Snd-const  28  Snd-convolve  31
-Snd-copy  30  Snd-coterm  29 Snd-delay 31 Snd-delaycv 31 Snd-down 30 Snd-exp 30
-Snd-extent 17  Snd-fetch  17  Snd-fetch-array  17  Snd-fft  35  Snd-flatten  17
-Snd-flute  33  Snd-flute-all  33  Snd-flute-freq  33  Snd-fmfb  32 Snd-fmfbv 32
-Snd-fmosc  32  Snd-follow   30   Snd-from-array   17   Snd-fromarraystream   17
-Snd-fromobject  17 Snd-gate 30 Snd-ifft 35 Snd-inverse 30 Snd-length 18 Snd-log
-30 Snd-lpanal 41 Snd-lpreson 41  Snd-mandolin  33  Snd-max  30  Snd-maxsamp  18
-Snd-maxv  30  Snd-modalbar  33  Snd-multiseq  33 Snd-normalize 30 Snd-offset 29
+Score-randomize-start  49  Score-read  50  Score-read-smf  49  Score-repeat  49
+Score-scale  49 Score-select 49 Score-set-begin 49 Score-set-end 49 Score-shift
+48 Score-sort 48 Score-sorted 48 Score-stretch  48  Score-stretch-to-length  49
+Score-sustain   49   Score-transpose   48   Score-voice   49   Score-write   50
+Score-write-smf 50 Scratch sound 11 Sd 3 Second 65 Sections, Adagio 38 Security
+1   Self   64   Semicolon,   Adagio  38  Seq  26  Seqrep  26  Sequences  2,  36
+Sequence_example.htm 2 Sequential behavior 6 Set 64  Set  intersection  50  Set
+statement,  sal  15  Set  union  50  Set-control-srate  7, 19 Set-difference 50
+Set-logical-stop 27 Set-pitch-names 19 Set-sound-srate 7, 19 Setdir 70 Setf  64
+Seti  commnad  40  Setq  64  Setup  nyquist  1 Setup-console 71 Setv command 40
+Sf-granulate 52 Sf-info 28 Shape 23 Sharp 36 Shepard tones 3, 23 Shift-time  20
+Show   midi   file  52  Show-lpc-data  41  Signal  composition  29,  30  Signal
+multiplication  30  Signal-start  17  Signal-stop  17  Sim  2,  26  Simrep   27
+Simultaneous  Behavior  6 Sin 68 Sine 21 Siosc 21 Sitar 25 Sixteenth note 3, 36
+Sixtyfourth note 36 Slope 20 Smooth 20 Snd-abs 29 Snd-add  29  Snd-allpoles  41
+Snd-alpass  31  Snd-alpasscv  31  Snd-alpassvv  31  Snd-amosc  32 Snd-areson 31
+Snd-aresoncv 31 Snd-aresonvc 31 Snd-aresonvv  31  Snd-atone  31  Snd-atonev  31
+Snd-avg  29  Snd-bandedwg  33  Snd-biquad  31  Snd-bowed  33  Snd-bowed-freq 33
+Snd-buzz 32 Snd-chase 31 Snd-clarinet 33 Snd-clarinet-all 33  Snd-clarinet-freq
+33  Snd-clip  29  Snd-compose  29  Snd-congen  31  Snd-const 28 Snd-convolve 31
+Snd-copy 30 Snd-coterm 29 Snd-delay 31 Snd-delaycv 31 Snd-down  30  Snd-exp  30
+Snd-extent  17  Snd-fetch  17  Snd-fetch-array  17  Snd-fft  35  Snd-flatten 17
+Snd-flute 33 Snd-flute-all  33  Snd-flute-freq  33  Snd-fmfb  32  Snd-fmfbv  32
+Snd-fmosc   32   Snd-follow   30   Snd-from-array   17  Snd-fromarraystream  17
+Snd-fromobject 17 Snd-gate 30 Snd-ifft 35 Snd-inverse 30 Snd-length 18  Snd-log
+30  Snd-lpanal  41  Snd-lpreson  41  Snd-mandolin  33 Snd-max 30 Snd-maxsamp 18
+Snd-maxv 30 Snd-modalbar 33 Snd-multiseq  33  Snd-normalize  30  Snd-offset  29
 Snd-oneshot 30 Snd-osc 32 Snd-overwrite 29 Snd-partial 32 Snd-play 18 Snd-pluck
-32  Snd-print  18  Snd-print-tree 18, 28 Snd-prod 30 Snd-pwl 30 Snd-quantize 30
+32 Snd-print 18 Snd-print-tree 18, 28 Snd-prod 30 Snd-pwl  30  Snd-quantize  30
 Snd-read  28  Snd-recip  30  Snd-resample  30  Snd-resamplev  30  Snd-reson  31
-Snd-resoncv  31  Snd-resonvc  31  Snd-resonvv  31 Snd-sampler 32 Snd-samples 18
-Snd-save 29 Snd-sax 33 Snd-sax-all 33 Snd-sax-freq 33 Snd-scale 31  Snd-seq  33
-Snd-set-latency  19  Snd-set-logical-stop 18 Snd-shape 31 Snd-sine 32 Snd-siosc
-32  Snd-sitar  33  Snd-slider  29  Snd-sqrt  29  Snd-srate   18   Snd-sref   18
-Snd-stkchorus  32  Snd-stkpitshift  32 Snd-stkrev 32 Snd-stop-time 18 Snd-t0 18
-Snd-tapf 30 Snd-tapv 29 Snd-time 18 Snd-tone 32  Snd-tonev  32  Snd-trigger  33
-Snd-up  31  Snd-white 29 Snd-xform 31 Snd-yin 31 Snd-zero 29 Soften-clipping 51
+Snd-resoncv 31 Snd-resonvc 31 Snd-resonvv  31  Snd-sampler  32  Snd-samples  18
+Snd-save  29  Snd-sax 33 Snd-sax-all 33 Snd-sax-freq 33 Snd-scale 31 Snd-seq 33
+Snd-set-latency 19 Snd-set-logical-stop 18 Snd-shape 31 Snd-sine  32  Snd-siosc
+32   Snd-sitar   33   Snd-slider  29  Snd-sqrt  29  Snd-srate  18  Snd-sref  18
+Snd-stkchorus 32 Snd-stkpitshift 32 Snd-stkrev 32 Snd-stop-time  18  Snd-t0  18
+Snd-tapf  30  Snd-tapv  29  Snd-time 18 Snd-tone 32 Snd-tonev 32 Snd-trigger 33
+Snd-up 31 Snd-white 29 Snd-xform 31 Snd-yin 31 Snd-zero 29  Soften-clipping  51
 Sort 66 Sound 19    accessing point 17    creating from array 17 Sound browser,
-jnyqide  4 Sound file directory default 27 Sound file I/O 27 Sound file info 28
-Sound from Lisp data 17 Sound-off 27 Sound-on 27 Sound-srate-abs 26  Sound-warp
-20  Soundfilename  28  Soundp  18  Sounds  17  Sounds  vs.  Behaviors 6 Span 52
-Spatialization 52 Special command 36 Spectral interpolation  21  Speed-dial  52
-Splines  21  Sqrt  68  Square oscillator 21 Square root 25, 29 Srate 17 Sref 17
-Sref-inverse 17 St 2 Stacatto 26 Staccato 37 Stack trace 68 Standard  deviation
-51  Standard  deviation  of  vector 51 Standard MIDI File 49 Statements, sal 13
-Statistics 51 Stats 18 Step-to-hz 19 Stereo 52 Stereo pan 52 Stereo panning  20
-Stereo-chorus  52  Stereoize  52 STK banded waveguide 33 Stk bowed 33 STK bowed
+jnyqide 4 Sound file directory default 27 Sound file I/O 27 Sound file info  28
+Sound  from Lisp data 17 Sound-off 27 Sound-on 27 Sound-srate-abs 26 Sound-warp
+20 Soundfilename 28 Soundp  18  Sounds  17  Sounds  vs.  Behaviors  6  Span  52
+Spatialization  52  Special  command 36 Spectral interpolation 21 Speed-dial 52
+Splines 21 Sqrt 68 Square oscillator 21 Square root 25, 29  Srate  17  Sref  17
+Sref-inverse  17 St 3 Stacatto 26 Staccato 37 Stack trace 68 Standard deviation
+51 Standard deviation of vector 51 Standard MIDI File  49  Statements,  sal  13
+Statistics  51 Stats 18 Step-to-hz 19 Stereo 52 Stereo pan 52 Stereo panning 20
+Stereo-chorus 52 Stereoize 52 STK banded waveguide 33 Stk bowed  33  STK  bowed
 string 24 STK bowed-freq 24 STK chorus 24, 32 Stk clarinet 24, 33 STK flute 24,
-33  STK  glass harmonica 25 STK jcreverb 24 STK mandolin 33 STK mandolon 24 STK
-modal bar 25, 33 STK nreverb 24 STK pitch shift 24, 32  STK  prcreverb  24  STK
-reverb  32 Stk sax 24, 33 STK sitar 25, 33 STK tibetan bowl 25 STK tuned bar 25
-STK uniform bar 24 Stkchorus 24 Stochastic functions 45 Strcat  69  Streamp  66
+33 STK glass harmonica 25 STK jcreverb 24 STK mandolin 33 STK mandolon  24  STK
+modal  bar  25,  33  STK nreverb 24 STK pitch shift 24, 32 STK prcreverb 24 STK
+reverb 32 Stk sax 24, 33 STK sitar 25, 33 STK tibetan bowl 25 STK tuned bar  25
+STK  uniform  bar  24 Stkchorus 24 Stochastic functions 45 Strcat 69 Streamp 66
 Stretch  2,  26  Stretch  Transformation  7  Stretch,  sal  13  Stretch-abs  26
-Stretching Sampled Sounds 10  String  69  String  Functions  69  String  Stream
-Functions   71   String   synthesis   21  String-downcase  69  String-equal  69
-String-greaterp 69 String-left-trim  69  String-lessp  69  String-not-equal  69
-String-not-greaterp  69  String-not-lessp 69 String-right-trim 69 String-search
-69 String-trim 69 String-upcase 69 String/= 69 String< 69 String<=  69  String=
-69  String>  69 String>= 69 Stringp 66 Sublis 66 Subseq 69 Subset 50 Subsetp 50
-Subst 66 Suggestions iii Sum pattern 44 Sum 27 Surround  Sound  52  Sustain  26
-Sustain-abs   26   Swap   channels  52  Swapchannels  52  Symbol  Functions  64
-Symbol-function 65 Symbol-name 65 Symbol-plist 65 Symbol-value  65  Symbolp  66
+Stretching  Sampled  Sounds  10  String  69  String  Functions 69 String Stream
+Functions  71  String  synthesis  21   String-downcase   69   String-equal   69
+String-greaterp  69  String-left-trim  69  String-lessp  69 String-not-equal 69
+String-not-greaterp 69 String-not-lessp 69 String-right-trim  69  String-search
+69  String-trim  69 String-upcase 69 String/= 69 String< 69 String<= 69 String=
+69 String> 69 String>= 69 Stringp 66 Sublis 66 Subseq 69 Subset 50  Subsetp  50
+Subst  66  Suggestions  iii  Sum pattern 44 Sum 27 Surround Sound 52 Sustain 26
+Sustain-abs  26  Swap  channels  52  Swapchannels  52   Symbol   Functions   64
+Symbol-function  65  Symbol-name  65 Symbol-plist 65 Symbol-value 65 Symbolp 66
 Symbols 64 Synchronization 39 System Functions 71
 
-  T  (Adagio  Triplet)  36  T 36 T-test, statistics 51 Table 23 Table memory 18
-Tagbody 67 Tan 68 Tap 29 Tapped delay 24 Tapv 24 Temp  file  70  Tempo  36,  37
-Temporary  files  70  Temporary  sound  files directory 27 Terpri 70 The Format
-Function 70 The Program Feature 67 Third 65 Thirtysecond note 36  Threshold  30
-Throw  67  Time  36,  37  Time  shift,  sal  13 Time Structure 26 Time units 38
-Timed-seq 27 Tone 23  Top  button  4  Top-level  68  Touch  tone  52  Trace  68
-Transformation  environment  6 Transformations 6, 26 Transpose 26 Transpose-abs
-26 Triangle oscillator 21 Triangle wave  2  Trigger  27  Trill  40  Triplet  36
-Triplet durations 2 Truncate 68 Tuba 3 Tuning 19 Tutorial, FM 11 Type-of 71
+  T (Adagio Triplet) 36 T 36 T-test, statistics 51 Table  23  Table  memory  18
+Tagbody  67  Tan  68  Tap  29 Tapped delay 24 Tapv 24 Temp file 70 Tempo 36, 37
+Temporary files 70 Temporary sound files directory  27  Terpri  70  The  Format
+Function  70  The Program Feature 67 Third 65 Thirtysecond note 36 Threshold 30
+Throw 67 Time 36, 37 Time shift,  sal  13  Time  Structure  26  Time  units  38
+Timed-seq  27  Tone  23  Top  button  4  Top-level  68  Touch  tone 52 Trace 68
+Transformation environment 6 Transformations 6, 26 Transpose  26  Transpose-abs
+26  Triangle  oscillator  21  Triangle  wave  2  Trigger 27 Trill 40 Triplet 36
+Triplet durations 3 Truncate 68 Tuba 3 Tuning 19 Tutorial, FM 11 Type-of 71
 
-  U   36  Undo  4  Uniform  random  42,  68  Union  50  Unless  67  Untrace  68
+  U  36  Undo  4  Uniform  random  42,  68  Union  50  Unless  67  Untrace   68
 Unwind-protect 67 UPIC 4 Upper-case-p 69 User name 70
 
-  V (Adagio Voice) 37 Variable delay 24, 29, 30 Variable-resample  function  29
-Variance  51  Variance  of  vector  data  51  Vector 65 Vector cosine 51 Vector
-difference 51  Vector  median  51  Vector  norm  51  Vectors  51  Vel-to-db  19
-Vel-to-linear  19 Velocity 37 Vinal scratch 11 Vocal sound 3 Voice 36, 37 Voice
+  V  (Adagio  Voice) 37 Variable delay 24, 29, 30 Variable-resample function 29
+Variance 51 Variance of vector data  51  Vector  65  Vector  cosine  51  Vector
+difference  51  Vector  median  51  Vector  norm  51  Vectors  51  Vel-to-db 19
+Vel-to-linear 19 Velocity 37 Vinal scratch 11 Vocal sound 3 Voice 36, 37  Voice
 synthesis 23 Volume 38
 
-  W (Adagio Whole note) 36 W 2 Warble 11 Warp 26 Warp-abs 26  Waveforms  2,  20
-Waveshaping  23  Wavetables  2,  20  Wd  2  Welch's  t-test 51 Wg-glass-harm 25
+  W  (Adagio  Whole  note) 36 W 3 Warble 11 Warp 26 Warp-abs 26 Waveforms 2, 20
+Waveshaping 23 Wavetables 2,  20  Wd  3  Welch's  t-test  51  Wg-glass-harm  25
 Wg-tibetan-bowl 25 Wg-tuned-bar 25 Wg-uniform-bar 24 When 42, 67 While 42 Whole
-note  2,  36  Widen 52 Wii Controller 19 Wind sound 11 Window initialization 71
+note 3, 36 Widen 52 Wii Controller 19 Wind sound 11  Window  initialization  71
 Window pattern 44 Wind_tutorial.htm 11 With statement, sal 15 Wood drum sound 3
 Workspace  4,  50  Write  samples  to  file  27  Write-byte  71  Write-char  70
-Write-float 71 Write-int 70 Wt 2
+Write-float 71 Write-int 70 Wt 3
 
-  X (Adagio control) 38 Xenakis 4 XLISP Command Loop 62  XLISP  Data  Types  62
+  X  (Adagio  control)  38  Xenakis 4 XLISP Command Loop 62 XLISP Data Types 62
 XLISP evaluator 62 XLISP Lexical Conventions 62 Xmusic 43
 
   Y (Adagio control) 38 Yin 25
@@ -12980,18 +13064,20 @@ Preface                                                                     iii
 1. Introduction and Overview                                                  1
 
    1.1. Installation                                                          1
+       1.1.1. Troubleshooting                                                 1
    1.2. Using NyquistIDE                                                      1
    1.3. Using SAL                                                             1
-   1.4. Helpful Hints                                                         1
-   1.5. Using Lisp                                                            1
-   1.6. Examples                                                              1
-       1.6.1. Waveforms                                                       1
-       1.6.2. Wavetables                                                      2
-       1.6.3. Sequences                                                       2
-       1.6.4. Envelopes                                                       2
-       1.6.5. Piece-wise Linear Functions                                     2
-   1.7. Predefined Constants                                                  2
-   1.8. More Examples                                                         3
+   1.4. Command Line                                                          1
+   1.5. Helpful Hints                                                         1
+   1.6. Using Lisp                                                            1
+   1.7. Examples                                                              1
+       1.7.1. Waveforms                                                       2
+       1.7.2. Wavetables                                                      2
+       1.7.3. Sequences                                                       2
+       1.7.4. Envelopes                                                       2
+       1.7.5. Piece-wise Linear Functions                                     2
+   1.8. Predefined Constants                                                  3
+   1.9. More Examples                                                         3
 
 2. The NyquistIDE Program                                                     4
 

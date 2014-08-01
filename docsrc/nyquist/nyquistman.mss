@@ -221,13 +221,13 @@ TortoiseSVN for Windows.
 @subsection(Troubleshooting)
 All versions of Nyquist includes a Readme.txt file with additional information. 
 Additional information and instructions on installation can be found in:
-@begin(unnumbered)
+@begin(itemize)
 @t(sys/win/README.txt)
 
 @t(sys/mac/README.txt)
 
 @t(sys/unix/README.txt)
-@end(unnumbered)
+@end(itemize)
 
 @begin(comment)
 @subsection(Unix Installation)
@@ -453,7 +453,7 @@ and tables allocated for signal processing.
 The @t(-T)@i(transcript-file-name) option copies console output to a transcript
 file.
 
-The @t(-V)@ option sets verbose mode. If set, any files specified on
+The @t(-V) option sets verbose mode. If set, any files specified on
 the command line to be loaded are loaded with the verbose option.
 
 Additionally, the command line can name files to be loaded. Nyquist begins by 

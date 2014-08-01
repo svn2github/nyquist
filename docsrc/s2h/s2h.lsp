@@ -1308,7 +1308,8 @@ ret
 		    (setf last prev))
 		   (t
 		    (setf last prev))))))
-    (setf *rslt* (strcat (string first) "-" (string last)))
+    ;; nil if first and last are not defined
+    (setf *rslt* (and first last (strcat (string first) "-" (string last))))
     rslt))
 	
 
@@ -1326,7 +1327,7 @@ ret
     (setf *index-chars* (reverse *index-chars*))
     (setf *index-chars* (find-alpha-and-non-alpha *index-chars*))
     (setf *index-chars* (reverse *index-chars*))
-    (push *rslt* *index-chars*)))
+    (if *rslt* (push *rslt* *index-chars*))))
 
 
 (defun generate-guide (dest)
