@@ -15,6 +15,7 @@
 #include "sliders.h" /* define sliders */
 #include "sound.h" /* define nosc_enabled */
 #endif
+#include "falloc.h" /* define table_memory */
 
 const char os_pathchar = '\\';
 const char os_sepchar = ',';
@@ -256,7 +257,8 @@ void osflush (void) {
 
 extern int abort_flag;
 
-void oscheck (void) {
+void oscheck (void) 
+{
 
 #if OSC
     if (nosc_enabled) nosc_poll();
@@ -272,6 +274,19 @@ void oscheck (void) {
         osflush();
         xlbreak("BREAK",s_unbound);
     }
+    run_time++;
+    if (run_time % 30 == 0) {
+        // maybe we should call fflush here like in Unix; I'm not sure if this is 
+	// a bug or it is not necessary for Windows - RBD
+        if (run_time_limit > 0 && run_time > run_time_limit) {
+            xlfatal("Run time limit exceeded");
+        }
+	if (memory_limit > 0 &&  
+	    npools * MAXPOOLSIZE + table_memory + total > 
+	    memory_limit * 1000000) {
+            xlfatal("Memory limit exceeded");
+	}
+    }	
 }
 
 void oserror(const char *msg) {

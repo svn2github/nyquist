@@ -13,6 +13,30 @@ static int in_tree(const char *fullname, char *secure_read_path);
 static int full_name(const char *filename);
 static int file_sep(char c);
 
+/* run_time_limit is a feature to shut down infinite loops
+ * calls to oscheck are counted. These occur at around 66Hz
+ * on a 2010 vintage laptop, so a value of 66 is roughly 1 CPU
+ * second of computation. The rate fluctuates depending on
+ * the computation, so it is a very rough guide, but then if
+ * you are restricting CPU time, you'll probably want to pad
+ * the expected time by a factor of at least 2, so hopefully
+ * exact numbers are not important. The default is 0, meaning
+ * no limit. Set the limit from the command line with -L. 
+ * Read the current run time by calling (GET-RUN-TIME) 
+ */
+int run_time_limit = 0;
+
+/* memory_limit is a feature to shut down rampant memory
+ * allocation which tends to lead to thrashing on a virtual
+ * (memory) machine. The number is roughly the number of
+ * megabytes of sample and cons cell memory that can be
+ * allocated. The default is 0 which means no limit.
+ */
+int memory_limit = 0;
+
+/* run_time is the current run time -- incremented by oscheck() */
+int run_time = 0;
+
 /* secure_read_path is NULL if reading any file is permitted
  * o.w. secure_read_path is a semicolon-separated list of 
  * paths to directory trees that are readable

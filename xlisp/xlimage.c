@@ -11,7 +11,7 @@
 
 /* external variables */
 extern LVAL obarray,s_gchook,s_gcflag;
-extern long nnodes,nfree,total;
+extern long nnodes,nfree;
 extern int anodes,nsegs,gccalls;
 extern struct segment *segs,*lastseg,*fixseg,*charseg;
 extern XLCONTEXT *xlcontext;

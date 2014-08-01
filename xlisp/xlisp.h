@@ -582,6 +582,7 @@ void xldinit(void);
 void close_loadingfiles(void);
 
 /* xldmem.c */
+extern long total; /* total bytes allocated by xlisp */
 
 LVAL cons(LVAL x, LVAL y);
 LVAL cvstring(const char *str);
@@ -972,6 +973,7 @@ LVAL xexit(void);
 LVAL xpeek(void);
 LVAL xpoke(void);
 LVAL xaddrs(void);
+LVAL xgetruntime(void);
 
 /* macstuff, unixstuff, winstuff */
 
@@ -981,6 +983,9 @@ extern const char os_sepchar;
 /* security.c */
 extern char *secure_read_path;
 extern char *safe_write_path;
+extern int run_time_limit;
+extern int run_time;
+extern int memory_limit;
 #define SAFE_NYQUIST (safe_write_path != NULL)
 int ok_to_open(const char *filename, const char *mode);
 

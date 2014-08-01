@@ -384,15 +384,18 @@ double sound_save(
         *sr = sf_info.samplerate;
         if (filename[0]) {
             sndfile = NULL;
-            if (ok_to_open((char *) filename, "wb"))
+            if (ok_to_open((char *) filename, "wb")) {
                 sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
-            if (sndfile) {
-                /* use proper scale factor: 8000 vs 7FFF */
-                sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
+                if (sndfile) {
+                    /* use proper scale factor: 8000 vs 7FFF */
+                    sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
+                } else {
+                    char error[240];
+                    sprintf(error, "snd_save -- %s", sf_error_number(sf_error(sndfile)));
+                    xlabort(error);
+                }
             } else {
-                char error[240];
-                sprintf(error, "snd_save -- %s", sf_error_number(sf_error(sndfile)));
-                xlabort(error);
+                xlabort("snd_save -- write not permitted by -W option");
             }
         }
         if (play)

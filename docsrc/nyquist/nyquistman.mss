@@ -422,12 +422,15 @@ In SAL mode, you type commands in the SAL programming language. Nyquist reads th
 @section(Command Line)
 @index(Command Line)@index(security)@index(protected files)
 When run from the command line, Nyquist (usually the command is @t(ny)) looks 
-for some options and some files to load. There are two options. The
+for some options and some files to load. There are several options.
+
+The
  @t(-R)@i(paths) option gives Nyquist a list of paths (separated by 
 semicolons) to directories where Nyquist is allowed to read files. Files in any 
 subdirectories of the listed directories can also be read, along with the 
 directories themselves. This option can be used to restrict access to files.
-The @t(-R)@paths) option gives Nyquist a list of paths (separated by semicolons)
+
+The @t(-W)@i(paths) option gives Nyquist a list of paths (separated by semicolons)
 to directories where Nyquist is allowed to write files (including sound files).
 If @t(-W) is used, Nyquist will not open audio output to play sounds and will
 not allow access to Open Sound Control. This option can be used to protect files
@@ -435,6 +438,23 @@ from accidentally malicious code. (If you are truly worried about Nyquist code,
 you should run Nyquist in a virtual machine or other isolated machine. It is
 unlikely that Nyquist is secure from all attacks.)
 
+The @t(-L)@i(run-time-limit) option gives Nyquist a run time limit. If the limit
+is exceeded, Nyquist prints an error message and exits. The time is based on 
+actual work rather than CPU seconds or wall time. One unit of run time is on the 
+order of 10ms of CPU time (for a medium speed computer in 2014), but you can use
+the @code(GET-RUN-TIME) function to read the internal run-time counter to see
+how much computation you have done.
+
+The @t(-M)@i(memory-limit) option gives Nyquist a memory limit. If the limit
+(in megabytes) is exceeded, Nyquist prints an error message and exits. The
+limit includes all XLISP data (cons cells, strings, etc.) plus sample blocks
+and tables allocated for signal processing.
+
+The @t(-T)@i(transcript-file-name) option copies console output to a transcript
+file.
+
+The @t(-V)@ option sets verbose mode. If set, any files specified on
+the command line to be loaded are loaded with the verbose option.
 
 Additionally, the command line can name files to be loaded. Nyquist begins by 
 loading @t(init.lsp), which by default is in the @t(nyquist/runtime) directory.

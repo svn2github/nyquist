@@ -56,6 +56,7 @@
 #include "nyq-osc-server.h"
 #include "sliderdata.h" /* define sliders -- not just for OSC */
 #include "sound.h" /* define nosc_enabled and mark_sound_time */
+#include "falloc.h" /* define table_memory */
 #define LBSIZE 200
 
 /* external variables */
@@ -602,7 +603,6 @@ LOCAL void hidden_msg()
 void oscheck(void)
 {
     int ch;
-    static int count = 0;
 		
 #if OSC
     if (nosc_enabled) nosc_poll();
@@ -651,15 +651,23 @@ void oscheck(void)
         }
     }
 
-    count++;
-    // when compute-bound, count is incremented by 10000 in about 15s, so
+    run_time++;
+    // when compute-bound, run_time is incremented by 10000 in about 15s, so
     // that's about 700 Hz. We want to flush any output at about 2Hz, so 
     // we'll pick 400 as a round number.
     // It's 2014, and now I'm seeing 3000 Hz. That's very high, so I 
     // changed SAMPLE to get this down to about 66Hz. Using % 30 to get
     // 2Hz flush rate.
-    if (count % 30 == 0) {
+    if (run_time % 30 == 0) {
         fflush(stdout);
+        if (run_time_limit > 0 && run_time > run_time_limit) {
+            xlfatal("Run time limit exceeded");
+        }
+	if (memory_limit > 0 &&  
+	    npools * MAXPOOLSIZE + table_memory + total > 
+	    memory_limit * 1000000) {
+            xlfatal("Memory limit exceeded");
+	}
     }
 }
 

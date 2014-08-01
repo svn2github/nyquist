@@ -61,6 +61,7 @@ const char os_sepchar = ',';
 #include "userio.h"
 #include "sliderdata.h"
 #include "sound.h" /* define nosc_enabled */
+#include "falloc.h" /* define table_memory */
 
 /* externals */
 extern FILE *tfp;  /* transcript file pointer */
@@ -295,7 +296,7 @@ void osflush (void) {
 }
 
 
-void oscheck (void) {				
+void oscheck (void) {
     MSG lpMsg;
 
 #if OSC
@@ -327,6 +328,19 @@ void oscheck (void) {
         osflush();
         xlbreak("BREAK", s_unbound);
     }
+    run_time++;
+    if (run_time % 30 == 0) {
+        // maybe we should call fflush here like in Unix; I'm not sure if this is 
+	// a bug or it is not necessary for Windows - RBD
+        if (run_time_limit > 0 && run_time > run_time_limit) {
+            xlfatal("Run time limit exceeded");
+        }
+	if (memory_limit > 0 &&  
+	    npools * MAXPOOLSIZE + table_memory + total > 
+	    memory_limit * 1000000) {
+            xlfatal("Memory limit exceeded");
+	}
+    }	
 }
 //Update end
 

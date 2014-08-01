@@ -124,6 +124,14 @@ void xlisp_main_init(int argc, char *argv[])
 	    case 'W':
 	        safe_write_path = &argv[i][2];
                 break;
+            case 'l':
+            case 'L':
+                run_time_limit = atoi(&argv[i][2]);
+                break;
+            case 'm':
+            case 'M':
+                memory_limit = atoi(&argv[i][2]);
+                break;
             }
 #endif
 

@@ -272,4 +272,9 @@ LVAL xstoprecordio()
 
 #endif
 
-
+/* xgetruntime - get current run_time */
+LVAL xgetruntime(void)
+{
+    /* return the value at that address */
+    return cvfixnum((FIXTYPE) run_time);
+}
