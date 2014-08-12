@@ -49,7 +49,7 @@ jnyqide/jNyqIDE.jar: $(JAVASRC)
 INCL = -Inyqsrc -Itran -Ixlisp -Isys/unix -Icmt -Iffts/src \
    -Inyqstk/include -Inyqstk -Iportaudio/include -Iportaudio/src/common \
    -Iportaudio/src/os/unix \
-   -Iliblo -Inylsf -IFLAC/include -Ilibogg/include
+   -Iliblo -Inylsf -IFLAC/include -Ilibogg/include -Ilibvorbis/include
 
 # system dependent stuff for alsa:
 
@@ -226,7 +226,7 @@ portaudio/Makefile:
 	cd portaudio; make clean
 
 $(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
-	cd portaudio; make
+	cd portaudio; make lib/libportaudio.la
 
 libogg/Makefile:
 	cd libogg; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
