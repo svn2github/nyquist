@@ -51,8 +51,8 @@
     (:/ "/" /)
     (:% "%" rem)
     (:^ "^" expt)
-    (:= "=" eql)   ; equality and assigment
-    (:!= "!=" not-eql)
+    (:= "=" sal-equal)   ; equality and assigment
+    (:!= "!=" not-sal-equal)
     (:< "<" <)
     (:> ">" >)
     (:<= "<=" <=) ; leq and assignment minimization

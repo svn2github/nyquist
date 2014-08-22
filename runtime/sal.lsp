@@ -586,3 +586,7 @@
     (and (stringp input)
          (> (length input) i)
          (eq (char input i) #\())))
+
+(defun sal-equal (a b)
+  (or (and (numberp a) (numberp b) (= a b)) 
+      (equal a b))))

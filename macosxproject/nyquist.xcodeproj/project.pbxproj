@@ -506,7 +506,7 @@
 		F314516B168276EE00833823 /* vorbisfile.h in Headers */ = {isa = PBXBuildFile; fileRef = F3145165168276B800833823 /* vorbisfile.h */; };
 		F314516E168276FA00833823 /* vorbisenc.h in Headers */ = {isa = PBXBuildFile; fileRef = F3145164168276B800833823 /* vorbisenc.h */; };
 		F314516F1682771C00833823 /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F31451031682749C00833823 /* libogg.a */; };
-		F31451B31682796900833823 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3145119168275F900833823 /* libvorbis.a */; };
+		F31451B31682796900833823 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3145119168275F900833823 /* libvorbis.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		F31451B41682796900833823 /* libvorbisenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F314514D1682765700833823 /* libvorbisenc.a */; };
 		F31451B51682796900833823 /* libvorbisfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F31451591682767A00833823 /* libvorbisfile.a */; };
 /* End PBXBuildFile section */
