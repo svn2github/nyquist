@@ -589,7 +589,7 @@
 
 (defun sal-equal (a b)
   (or (and (numberp a) (numberp b) (= a b)) 
-      (equal a b))))
+      (equal a b)))
 
 (defun not-sal-equal (a b)
   (not (sal-equal a b)))
