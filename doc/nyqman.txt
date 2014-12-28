@@ -15,11 +15,11 @@
 
                            NYQUIST REFERENCE MANUAL
 
-                                 Version 3.08
+                                 Version 3.09
 
 
                      Copyright 2013 by Roger B. Dannenberg
-                                 1 August 2014
+                               27 December 2014
 
 
 
@@ -187,11 +187,13 @@ TortoiseSVN for Windows.
 1.1.1. Troubleshooting
   All   versions   of  Nyquist  includes  a  Readme.txt  file  with  additional
 information.  Additional information and instructions on  installation  can  be
-found in:  sys/win/README.txt
+found in:
 
-  sys/mac/README.txt
+   - sys/win/README.txt
 
-  sys/unix/README.txt
+   - sys/mac/README.txt
+
+   - sys/unix/README.txt
 
 1.2. Using NyquistIDE
   The program named NyquistIDE is an ``integrated development environment'' for
@@ -252,7 +254,7 @@ tables allocated for signal processing.
 
   The -Ttranscript-file-name option copies console output to a transcript file.
 
-  The  -V option  sets verbose mode. If set, any files specified on the command
+  The  -V  option sets verbose mode. If set, any files specified on the command
 line to be loaded are loaded with the verbose option.
 
   Additionally, the command line can name files to be loaded. Nyquist begins by

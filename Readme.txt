@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.08
-26 Feb 2013
+README file for Nyquist Version 3.09
+28 Dec 2014
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -18,6 +18,12 @@ other versions of Unix. For details, see one of these files:
 
 IMPLEMENTATION STATUS
 =====================
+
+Version 3.09 provides:
+    Various bug fixes
+    OS X version is significantly faster
+    Security features added to limit CPU, memory, file access (default
+        is still unrestricted; this feature is to protect servers)
 
 Version 3.08 provides:
     NyquistIDE opens documentation properly on default browser
