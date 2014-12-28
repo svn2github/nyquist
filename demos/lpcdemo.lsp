@@ -56,8 +56,8 @@
 
 
 (defun do-lpc-analysis ()
-  (let ((myfile (strcat *lpc-path* "a-snd-file.snd")))
-    (save-lpc-file (make-lpanal-iterator (s-read *myfile*) 0.08 0.04 50) 
+  (let ((myfile (strcat *lpc-path* "demo-snd.aiff")))
+    (save-lpc-file (make-lpanal-iterator (s-read myfile) 0.08 0.04 50) 
                    "temp.dat")))
 
 
