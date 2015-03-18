@@ -1122,7 +1122,8 @@ Your id please: ")
             (setf (aref result i) 
               (force-srate (aref srs i) (aref snd i))))
        result))
-    (t (error "arguments not compatible"))))
+    (t (error (format nil "In force-srates: arguments not compatible. srs is ~A, snd is ~A. Perhaps you are constructing a sequence using both mono and multi-channel sounds."
+               (type-of srs) (type-of snd))))))
 
 
 ;; (breakpoints-convert (t1 x1 t2 x2 ... tn) t0)

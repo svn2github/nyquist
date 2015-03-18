@@ -1,5 +1,26 @@
 README.txt -- information on Nyquist for Mac OS X 
 
+IMPORTANT
+---------
+You may get the message "NyquistIDE is damaged and can't be opened. 
+You should move it to the Trash" from the Finder. This appears to 
+be a deliberately incorrect statement from Apple. Here is what to do:
+
+1) Go to Preferences, Security & Privacy
+2) Unlock (requires password)
+3) Allow apps downloaded from: Anywhere
+4) Control-click on the NyquistIDE icon and select open
+5) Tell the Finder yes, you really want to open this application
+6) Nyquist should run
+7) Close Nyquist (maybe not necessary)
+8) Now, you can go back to Security & Privacy and revert back 
+    to the original policy, e.g. "Mac App Store and identified
+    developers" if you wish (a reasonable precaution)
+9) Lock the settings in Security & Privacy (click the lock icon)
+10) Test: You should now be able to click to start Nyquist; it 
+    should start without any false claims about file damage or 
+    even warning messages.
+
 Installation
 ------------
 The simplest way to install and run Nyquist is to get the pre-compiled

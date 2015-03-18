@@ -23,10 +23,10 @@
          (nyq:reverse-some-samples snd 0 len))))
 
 (defun nyq:reverse-some-samples (snd offset len)
-  (display "reverse-some-samples" (snd-length snd 20000) offset len)
+  ; (display "reverse-some-samples" (snd-length snd 20000) offset len)
   (let ((samps (snd-samples  (nyq:extract-samples snd offset len) len))
         (i2 (1- len)))
-    (display "reverse-some-samples" (length samps))
+    ; (display "reverse-some-samples" (length samps))
     (dotimes (i1 (/ len 2))
       (let ((s1 (aref samps i1))
             (s2 (aref samps i2)))
@@ -39,7 +39,7 @@
   (let (start stop)
     (setf start (/ offset (snd-srate snd)))
     (setf stop (+ start (/ len (snd-srate snd))))
-    (display "nyq:extract-samples" start stop (snd-t0 snd))
+    ; (display "nyq:extract-samples" start stop (snd-t0 snd))
     (extract-abs start stop snd)))
 
 ;(play (s-reverse (s-read "sample.wav")))
@@ -57,7 +57,7 @@
     (setf channels (cadr *rslt*))
     (setf *rslt* (cddddr *rslt*))
     (setf fsrate (cadr *rslt*))
-    (display "s-read-reverse" filename srate channels)
+    ; (display "s-read-reverse" filename srate channels)
     (setf fdur (caddr *rslt*))
     (setf time-offset (max 0 (min fdur time-offset)))
     (setf dur (max 0 (min (- fdur time-offset) dur)))
@@ -88,8 +88,9 @@
               0 *reverse-blocksize*)
              (nyq:s-reverse-file filename time-offset srate (- dur blockdur)
                       nchans format mode bits endian chan))
-        (nyq:s-read-chan filename time-offset srate dur nchans format
-                 mode bits endian chan))))
+        (nyq:s-reverse 
+         (nyq:s-read-chan filename time-offset srate dur nchans format
+                          mode bits endian chan)))))
 
 
 ;; nyq:s-read-chan -- grab some samples from one channel of a file

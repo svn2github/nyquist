@@ -37,16 +37,16 @@
             (cond ((arrayp first%sound)
                    (snd-multiseq (prog1 first%sound (setf first%sound nil))
                      #'(lambda (t0)
-                        (format t "MULTISEQ's 2nd behavior: ~A~%" ',(cadr list))
+;                       (format t "MULTISEQ's 2nd behavior: ~A~%" ',(cadr list))
                         (with%environment ',(nyq:the-environment)
-;			    (display "MULTISEQ 1" t0)
+;                           (display "MULTISEQ 1" t0)
                             (at-abs t0
                                 (force-srates s%rate ,(cadr list)))))))
                   (t
                    ; allow gc of first%sound:
                    (snd-seq (prog1 first%sound (setf first%sound nil))
                      #'(lambda (t0) 
-;                        (format t "SEQ's 2nd behavior: ~A~%" ',(cadr list))
+;                       (format t "SEQ's 2nd behavior: ~A~%" ',(cadr list))
                         (with%environment ',(nyq:the-environment)
                             (at-abs t0
                                 (force-srate s%rate ,(cadr list))))))))))
@@ -57,12 +57,12 @@
                  (s%rate (get-srates first%sound))
                  (seq%environment (getenv)))
             (cond ((arrayp first%sound)
-;		   (print "calling snd-multiseq")
+;                   (print "calling snd-multiseq")
                    (snd-multiseq (prog1 first%sound (setf first%sound nil))
                      #'(lambda (t0)
                         (multiseq-iterate ,(cdr list)))))
                   (t 
-;		   (print "calling snd-seq")
+;                   (print "calling snd-seq")
                    ; allow gc of first%sound:
                    (snd-seq (prog1 first%sound (setf first%sound nil))
                      #'(lambda (t0)
@@ -90,7 +90,7 @@
         (t
          `(snd-multiseq (eval-multiseq-behavior ,(car behavior-list))
                    (evalhook '#'(lambda (t0) 
-                                  ; (format t "lambda depth ~A~%" (envdepth (getenv)))
+;                                 (format t "lambda depth ~A~%" (envdepth (getenv)))
                                   (multiseq-iterate ,(cdr behavior-list)))
                              nil nil seq%environment)))))
 
@@ -101,7 +101,7 @@
 
 (defmacro eval-multiseq-behavior (beh)
   `(with%environment nyq%environment 
-;			    (display "MULTISEQ 2" t0)
+;                    (display "MULTISEQ 2" t0)
                      (at-abs t0
                              (force-srates s%rate ,beh))))
 
@@ -121,7 +121,7 @@
             (error "bad argument type" loop%count))
            (t
             (setf seqrep%closure #'(lambda (t0)
-;	      (display "SEQREP" loop%count ,(car pair))
+;             (display "SEQREP" loop%count ,(car pair))
               (cond ((< ,(car pair) loop%count)
                      (setf first%sound 
                            (with%environment nyq%environment
@@ -159,7 +159,7 @@
 (defmacro trigger (input beh)
   `(let ((nyq%environment (nyq:the-environment)))
      (snd-trigger ,input #'(lambda (t0) (with%environment nyq%environment
-					        (at-abs t0 ,beh))))))
+                                                (at-abs t0 ,beh))))))
 
 ;; EVENT-EXPRESSION -- the sound of the event
 ;;
@@ -179,12 +179,12 @@
 
 (defun list-set-attr-value (lis attr value)
   (cond ((null lis) (list attr value))
-	((eq (car lis) attr)
-	 (cons attr (cons value (cddr lis))))
-	(t
-	 (cons (car lis)
-	   (cons (cadr lis) 
-		 (list-set-attr-value (cddr lis) attr value))))))
+        ((eq (car lis) attr)
+         (cons attr (cons value (cddr lis))))
+        (t
+         (cons (car lis)
+           (cons (cadr lis) 
+                 (list-set-attr-value (cddr lis) attr value))))))
 
 
 ;; EXPAND-AND-EVAL-EXPR -- evaluate a note, chord, or rest for timed-seq
@@ -192,11 +192,11 @@
 (defun expand-and-eval-expr (expr)
   (let ((pitch (member :pitch expr)))
     (cond ((and pitch (cdr pitch) (listp (cadr pitch)))
-	   (setf pitch (cadr pitch))
-	   (simrep (i (length pitch))
-	     (eval (expr-set-attr expr :pitch (nth i pitch)))))
-	  (t
-	   (eval expr)))))
+           (setf pitch (cadr pitch))
+           (simrep (i (length pitch))
+             (eval (expr-set-attr expr :pitch (nth i pitch)))))
+          (t
+           (eval expr)))))
 
 
 ;; (timed-seq '((time1 stretch1 expr1) (time2 stretch2 expr2) ...))
@@ -264,8 +264,8 @@
     (setf score (score-select score #'(lambda (tim dur evt)
                                        (expr-get-attr evt :pitch t))))
     (cond ((and score (car score) 
-		(eq (car (event-expression (car score))) 'score-begin-end))
-	   (setf score (cdr score)))) ; skip score-begin-end data
+                (eq (car (event-expression (car score))) 'score-begin-end))
+           (setf score (cdr score)))) ; skip score-begin-end data
     ; (score-print score) ;; debugging
     (cond ((null score) (s-rest 0))
           (t
@@ -277,7 +277,7 @@
                             (set-logical-stop
                               (stretch (cadar score)
                                 (setf event (expand-and-eval-expr
-					     (caddar score))))
+                                             (caddar score))))
                               (- (caadr score) (caar score)))
                             ;(display "timed-seq" (caddar score) 
                             ;                     (local-to-global 0)
@@ -287,7 +287,4 @@
                             (setf score (cdr score)))))
                          (t
                           (stretch (cadar score) (expand-and-eval-expr
-						  (caddar score)))))))))))
-
-
-
+                                                  (caddar score)))))))))))

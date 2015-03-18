@@ -1786,7 +1786,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @begin(fgroup)@xlcode{eql(@i(expr1), @i(expr2))} @c{[sal]}
 
-        @xlcode{(eql@pragma(defn)@index(eql) @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions identical? (works with all numbers)
+        @xlcode{(eql@pragma(defn)@index(eql) @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions identical? (@xlcode(eql) ``works'' with all numbers, but a FIXNUM is never eql to a FLONUM, i.e. @xlcode{(eql 1 1.0)} is false.)
 @end(fgroup)
 @begin(pdescription)
             @i<expr1> @itemsep    the first expression

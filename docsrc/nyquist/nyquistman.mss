@@ -2059,7 +2059,7 @@ convert it to 16-bit samples for playback.
 The next example uses the Nyquist frequency modulation behavior @code(fmosc)
 to generate various sounds.  The parameters to @code(fmosc) are:
 @begin(example)
-fmosc(@i(pitch) @i(modulator) @i(table) @i(phase))
+fmosc(@i(pitch), @i(modulator), @i(table), @i(phase))
 @end(example)
 Note that pitch is the number of half-steps, e.g. @code(c4) has the value of 60 which is middle-C, and phase is in degrees.  Only the first two parameters are required:
 @begin(example)
@@ -4083,7 +4083,7 @@ argument stack.  Instead, call @code(pwl-list), passing one argument, the
 list of breakpoints.
 
 @codef{pwlv(@pragma(defn)@index(pwlv)@i(l@-[1]), @i(t@-[2]), @i(l@-[2]), @i(t@-[3]), @i(t@-[3]), ... @i(t@-[n]), @i(l@-[n]))} @c{[sal]}@*
-@altdef{@code[(pwlv @i(l@-[1]) @i(t@-[2]) @i(l@-[2]) @i(t@-[3]) @i(t@-[3]) @r(...) @i(t@-[n]) @i(l@-[n]))] @c{[lisp]}}@\Creates
+@altdef{@code[(pwlv @i(l@-[1]) @i(t@-[2]) @i(l@-[2]) @i(t@-[3]) @i(l@-[3]) @r(...) @i(t@-[n]) @i(l@-[n]))] @c{[lisp]}}@\Creates
 a piece-wise linear envelope with breakpoints at (0, l@-[1]), (@i(t@-[2]), @i(l@-[2])), etc., ending with (@i(t@-[n], @i(l@-[n])).  Otherwise, the behavior is like that of @code(pwl).
 
 @codef{pwlv-list(@pragma(defn)@index(pwlv-list)@i(breakpoints))} @c{[sal]}@*
@@ -4196,8 +4196,8 @@ coefficients (requiring trig functions) are recomputed at the sample rate of
 @altdef{@code[(atone @i(sound) @i(cutoff))] @c{[lisp]}}@\No longer defined; use @code(hp) instead, or define it by adding @code[(setfn atone hp)] to your program.
 
 @label(reson-sec)
-@codef{reson(@pragma(defn)@index(reson)@index(bandpass filter)@i(sound), @i(center), @i(bandwidth), @i(n))} @c{[sal]}@*
-@altdef{@code[(reson @i(sound) @i(center) @i(bandwidth) @i(n))] @c{[lisp]}}@\Apply
+@codef{reson(@pragma(defn)@index(reson)@index(bandpass filter)@i(sound), @i(center), @i(bandwidth) [, @i(n)])} @c{[sal]}@*
+@altdef{@code[(reson @i(sound) @i(center) @i(bandwidth) [@i(n)])] @c{[lisp]}}@\Apply
 a resonating filter to @i(sound) with center frequency @i(center) (in hertz),
 which may be a float or a signal.  @i(Bandwidth) is the filter bandwidth (in
 hertz), which may also be a signal.  Filter coefficients (requiring trig
@@ -4214,8 +4214,8 @@ See @code(demos/voice_synthesis.htm)@index(voice synthesis)@index(demos, voice s
 for sample code and documentation.
 
 @label(areson-sec)
-@codef{areson(@pragma(defn)@index(areson)@index(notch filter)@i(sound), @i(center), @i(bandwidth), @i(n))} @c{[sal]}@*
-@altdef{@code[(areson @i(sound) @i(center) @i(bandwidth) @i(n))] @c{[lisp]}}@\The @code(areson) filter is an exact
+@codef{areson(@pragma(defn)@index(areson)@index(notch filter)@i(sound), @i(center), @i(bandwidth) [, @i(n)])} @c{[sal]}@*
+@altdef{@code[(areson @i(sound) @i(center) @i(bandwidth) [@i(n)])] @c{[lisp]}}@\The @code(areson) filter is an exact
 complement of @code(reson) such that if both are applied to the
 same signal with the same parameters, the sum of the results yeilds
 the original signal.
@@ -4273,7 +4273,7 @@ Shepard tones in @code(demos/shepard.lsp).@index(Shepard tones)@index(demos, She
 
 @label(eq-band-sec)
 @codef{eq-band(@pragma(defn)@index(eq-band)@index(equalization)@i(signal), @i(hz), @i(gain), @i(width))} @c{[sal]}@*
-@altdef{@code[(eq-band @i(signal) @i(hz) @i(gain) @i(width))] @c{[lisp]}}@\A fixed- or variable-parameter, second-order midrange equalization (EQ) filter based on @code(snd-biquad), @code(snd-eqbandcv) and @code(snd-eqbandvvv). The @i(hz) parameter (a @code(FLONUM)) is the center frequency, @i(gain) (a @code(FLONUM)) is the boost (or cut) in dB, and @i(width) (a @code(FLONUM)) is the half-gain width in octaves. Alternatively, @i(hz), @i(gain), and @i(width) may be @code(SOUND)s, but they must all have the same sample rate, e.g. they should all run at the control rate or at the sample rate.
+@altdef{@code[(eq-band @i(signal) @i(hz) @i(gain) @i(width))] @c{[lisp]}}@\A fixed- or variable-parameter, second-order midrange equalization (EQ) filter based on @code(snd-biquad), @code(eq-band-ccc) and @code(eq-band-vvv). The @i(hz) parameter (a @code(FLONUM)) is the center frequency, @i(gain) (a @code(FLONUM)) is the boost (or cut) in dB, and @i(width) (a @code(FLONUM)) is the half-gain width in octaves. Alternatively, @i(hz), @i(gain), and @i(width) may be @code(SOUND)s, but they must all have the same sample rate, e.g. they should all run at the control rate or at the sample rate.
 
 @label(lowpass4-sec)
 @codef{lowpass4(@pragma(defn)@index(lowpass4)@i(signal), @i(hz))} @c{[sal]}@*
@@ -5450,7 +5450,7 @@ follower. The basic goal of this function is to generate a smooth signal
 that rides on the peaks of the input signal. The usual objective is to 
 produce an amplitude envelope given a low-sample rate (control rate) 
 signal representing local RMS measurements. The first argument is the 
-input signal. The @i(floor) is the minimum output value. The @i(risetime) is the time (in seconds) it takes for the output to rise (exponentially) from @i(floor) to unity (1.0) and the @i(falltime) is the time it takes for the output to fall (exponentially) from unity to @i(floor). The algorithm looks ahead for peaks and will begin to increase the output signal according to @i(risetime) in anticipation of a peak. The amount of anticipation (in sampless) is given by @i(lookahead).  The algorithm is as follows: the output value is allowed to increase according to @i(risetime) or decrease according to @i(falltime). If the next input sample is in this range, that sample is simply output as the next output sample.  If the next input sample is too large, the algorithm goes back in time as far as necessary to compute an envelope that rises according to @i(risetime) to meet the new value. The algorithm will only work backward as far as @i(lookahead).  If that is not far enough, then there is a final forward pass computing a rising signal from the earliest output sample. In this case, the output signal will be at least momentarily less than the input signal and will continue to rise exponentially until it intersects the input signal. If the input signal falls faster than indicated by @i(falltime), the output fall rate will be limited by @i(falltime), and the fall in output will stop when the output reaches @i(floor). This algorithm can make two passes througth the buffer on sharply rising inputs, so it is not particularly fast. With short buffers and low sample rates this should not matter. See @code(snd-avg) above for a function that can help to generate a low-sample-rate input for @code(snd-follow). See @code(snd-chase) in Section @ref(snd-chase-sec) for a related filter.
+input signal. The @i(floor) is the minimum output value. The @i(risetime) is the time (in seconds) it takes for the output to rise (exponentially) from @i(floor) to unity (1.0) and the @i(falltime) is the time it takes for the output to fall (exponentially) from unity to @i(floor). The algorithm looks ahead for peaks and will begin to increase the output signal according to @i(risetime) in anticipation of a peak. The amount of anticipation (in samples) is given by @i(lookahead).  The algorithm is as follows: the output value is allowed to increase according to @i(risetime) or decrease according to @i(falltime). If the next input sample is in this range, that sample is simply output as the next output sample.  If the next input sample is too large, the algorithm goes back in time as far as necessary to compute an envelope that rises according to @i(risetime) to meet the new value. The algorithm will only work backward as far as @i(lookahead).  If that is not far enough, then there is a final forward pass computing a rising signal from the earliest output sample. In this case, the output signal will be at least momentarily less than the input signal and will continue to rise exponentially until it intersects the input signal. If the input signal falls faster than indicated by @i(falltime), the output fall rate will be limited by @i(falltime), and the fall in output will stop when the output reaches @i(floor). This algorithm can make two passes througth the buffer on sharply rising inputs, so it is not particularly fast. With short buffers and low sample rates this should not matter. See @code(snd-avg) above for a function that can help to generate a low-sample-rate input for @code(snd-follow). See @code(snd-chase) in Section @ref(snd-chase-sec) for a related filter.
 
 @codef[snd-gate(@pragma(defn)@index(snd-gate)@index(noise gate)@index(gate)@i(sound), @i(lookahead), @i(risetime), @i(falltime), @i(floor), @i(threshold))] @c{[sal]}@*
 @altdef{@code[(snd-gate @i(sound) @i(lookahead) @i(risetime) @i(falltime) @i(floor) @i(threshold))] @c{[lisp]}}@\This function generates an exponential rise and decay intended for noise gate implementation. The decay starts when the signal drops below threshold and stays there for longer than lookahead. Decay continues until the value reaches floor, at which point the decay stops and the output value is held constant. Either during the decay or after the floor is reached, if the signal goes above threshold, then the output value will rise to unity (1.0) at the point the signal crosses the threshold. Again, look-ahead is used, so the rise actually starts before the signal crosses the threshold. The rise is a constant-rate exponential and set so that a rise from @i(floor) to unity occurs in @i(risetime).  Similarly, the fall is a constant-rate exponential such that a fall from unity to @i(floor) takes @i(falltime). The result is delayed by @i(lookahead), so the output is not actually synchronized with the input. To compensate, you should drop the initial @i(lookahead) of samples. Thus, @code(snd-gate) is not recommended for direct use. Use @code(gate) instead (see Section @ref(gate-sec)).
@@ -6868,8 +6868,10 @@ generated period is (A A B A B C).
 
 @begin(fndefs)
 @codef{make-accumulation(@pragma(defn)@index(make-accumulation)@index(accumulation pattern)@index(pattern, accumulation)@i(items), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-accumulation @i(items) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\For each item, generate items from the first to
-the item including the item. The period length is (@i(n)@+(2) + @i(n)) / 2
+@altdef{@code{(make-accumulation @i(items) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Return 
+the prefixes of items, e.g. the first element followed by the
+first and second elements, then the first three, until the 
+entire list is returned. The period length is (@i(n)@+(2) + @i(n)) / 2
 where @i(n) is the length of @i(items).  If @i(items) is a pattern, a period
 from that pattern becomes the list from which items are generated,
 and a new list is generated every period. Note that this is similar in 
@@ -7074,7 +7076,7 @@ also map symbols to patterns, for example
 @code[list(quote(a), make-cycle({57 69}), quote(b), make-random({59 71}))]. The
 next item of the pattern is is generated each time the Markov model generates
 the corresponding state.  Finally, the @i(produces) keyword can be 
-@code(eval:), which means to evaluate the Markov model state. This could 
+@code(:eval), which means to evaluate the Markov model state. This could 
 be useful if states are Nyquist global variables such as 
 @code(C4, CS4, D4, ]..., which evaluate to numerical 
 values (60, 61, 62, ...).
@@ -8176,8 +8178,8 @@ named @i(sound-file-name).
 @end(fndefs)
 
 @section(Dymanics Compression)
-To use these functions, load the file @code(compress.lsp). This library 
-implements a compressor originally intended for noisy speech audio, but
+These functions
+implement a compressor originally intended for noisy speech audio, but
 usable in a variety of situations.
 There are actually two compressors that can be used in 
 series. The first, @code(compress), is
@@ -8348,21 +8350,22 @@ but feel free to modify the source code of this one-liner.
 @altdef{@code[(flange @i(snd))] @c{[lisp]}}@\A flange effect
 applied to @i(snd). To vary the rate and other parameters, see the source code.
 
-@codef[stereo-chorus(@index(chorus)@pragma(defn)@index(stereo-chorus)@i(snd))] @c{[sal]}@*
-@altdef{@code[(stereo-chorus @i(snd))] @c{[lisp]}}@\A chorus effect applied to @i(snd),
-a @code(SOUND) (monophonic). The output is a stereo sound. All parameters are built-in,
-but see the simple source code to make modifications.
+@codef[stereo-chorus(@index(chorus)@pragma(defn)@index(stereo-chorus)@i(snd), delay: @i(delay), depth: @i(depth), rate1: @i(rate1), rate2: @i(rate2) saturation: @i(saturation))] @c{[sal]}@*
+@altdef{@code[(stereo-chorus @i(snd) :delay @i(delay) :depth @i(depth) :rate1 @i(rate1) :rate2 @i(rate2) :saturation @i(saturation))] @c{[lisp]}}@\A chorus effect 
+applied to @i(snd),
+a @code(SOUND) (monophonic). The output is a stereo sound with out-of-phase chorus effects applied separately for the left and right channels. See the @code(chorus) function below for a description of the optional parameters. The @i(rate1) and @i(rate2) parameters are @i(rate) parameters for the left and right channels.
 
-@codef[chorus(@pragma(defn)@index(chorus)@index(effect, chorus)@i(snd), @i(maxdepth), @i(depth), @i(rate), 
-@i(saturation))] @c{[sal]}@*
-@altdef{@code[(chorus @i(snd) @i(maxdepth) @i(depth) @i(rate) @i(saturation))] @c{[lisp]}}@\A chorus effect applied to @i(snd). All parameters may be arrays
-as usual. The @i(maxdepth) is a @code(FLONUM) giving twice the maximum value of @i(depth), 
-which may be a @code(FLONUM) or a @code(SOUND). The chorus is implemented as a variable delay 
-modulated by a sinusoid running at @i(rate) Hz (a @code(FLONUM)). The sinusoid is 
-scaled by @i(depth) and offset by @i(maxdepth)/2. The delayed signal is mixed
-with the original, and @i(saturation) gives the fraction of the delayed signal
-(from 0 to 1) in the mix. A reasonable choice of parameter values is 
-@i(maxdepth) = 0.05, @i(depth) = 0.025, @i(rate) = 0.5, and @i(saturation) = 0.5.
+@codef[chorus(@pragma(defn)@index(chorus)@index(effect, chorus)@i(snd), delay: @i(delay), depth: @i(depth), rate: @i(rate), saturation: @i(saturation), phase: @i(phase))] @c{[sal]}@*
+@altdef{@code[(chorus @i(snd) :delay @i(delay) :depth @i(depth) :rate @i(rate) :saturation @i(saturation) :phase @i(phase))] @c{[lisp]}}@\A chorus effect applied to @i(snd). All parameters may be arrays
+as usual. The chorus is implemented as a variable delay 
+modulated by a sinusoid shifted by @i(phase) degrees (a @code(FLONUM)) oscillating
+at @i(rate) Hz (a @code(FLONUM)). The sinusoid is 
+scaled by @i(depth) (a @code(FLONUM). The delayed signal is mixed
+with the original, and @i(saturation) (a @code(FLONUM)) gives the fraction of 
+the delayed signal
+(from 0 to 1) in the mix. 
+Default values are @i(delay) 0.03, @i(depth) 0.003, @i(rate) 0.3, 
+ @i(saturation) 1.0, and @i(phase) 0.0 (degrees).
 @end(fndefs)
 
 @section(Multiple Band Effects)

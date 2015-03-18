@@ -198,6 +198,7 @@
     (setf upper-db 100.0)
     (setf map (make-array 201))
     (setf x lower-db)	; this should be an even integer
+    (if verbose (format t "COMPRESS-MAP~%Input dB -> Gain dB~%"))
     (dotimes (i (length map))
         (setf (aref map i) 
               (cond ((< x eu) (+ ev (* s (- x eu))))
@@ -209,7 +210,8 @@
         ; map[i] has the desired output dB, so subtract input dB to
         ; get gain:
         (setf (aref map i) (- (aref map i) x))
-        (cond ((and verbose (> x (- eu 3)) (< x 0))
+        (cond ((and verbose ; (> x (- eu 3)) (< x 0))
+                    (> x -30) (< x 20))
                (format t "~A -> ~A~%" x (aref map i))))
         (setf x (+ x 1)))
     ; return a sound
@@ -228,12 +230,13 @@
 (defun compress (input map rise-time fall-time &optional (lookahead 0.0))
   ; take the square of the input to get power
   (let ((in-squared (mult input input))
-        window avg env gain)
+        window avg env gain delay)
     (cond ((zerop lookahead) (setf lookahead rise-time)))
     ; compute the time-average (sort of a low-pass) of the square
     ; parameters give 50ms window and a 25ms step
     (setf window (round (* (snd-srate input) 0.05)))
     (setf avg (snd-avg in-squared window (/ window 2) op-average))
+    ; (setf *ca* avg)
     ; use follower to anticipate rise and trail off smoothly
     ; N.B.: the floor (2nd argument to snd-follow) should be the
     ; square of the noise floor, e.g. for a noise floor of 1/2^16,
@@ -241,7 +244,10 @@
     ; not get expansion below the square root of the floor parameter.
     ; set lookahead to be number of samples in rise time:
     (setf lookahead (round (* lookahead (snd-srate avg)))) 
+    ; lookahead must be at least one analysis window sample:
+    (setf lookahead (max 1 lookahead))
     (setf env (snd-follow avg 0.000001 rise-time fall-time lookahead))
+    ; (setf *ce* env)
     ; take logarithm to get dB instead of linear, also adjust for
     ; peak vs. average as follows: a sinusoid with peak of 1.0 has
     ; an average amplitude of 1/sqrt(2), we squared the signal, so
@@ -258,6 +264,7 @@
     ; simplify dB to 10log10(avg(x^2)) = 10log(avg(x^2))/log(10),
     ; so scale by 10/log(10) * 0.01 = 0.1/log(10)
     (setf shaped-env (shape (scale (/ 0.1 (log 10.0)) logenv) map 1.0))
+    ; (setf *cs* shaped-env)
     ; Go back to linear. To get from dB to linear, use:
     ; 20log10(linear) = dB
     ; linear = 10^(dB/20) = exp(log(10) * db/20),
@@ -271,9 +278,12 @@
     ; has a delayed response because it's looking ahead in sound.
     ; The time shift is lookahead - 1 (in samples)
     ; therefore, the response delay = (lookahead - 1) / (snd-srate avg)
+    (setf delay (/ (1- lookahead) (snd-srate avg)))
+    ; (display "compress" lookahead (snd-srate avg) delay)
+    (format t "COMPRESS delay is ~A seconds.~%" delay)
+    ; (setf *cg* gain)
     (sound-srate-abs (snd-srate input) ; set default sample rate for s-rest
-      (mult (seq (s-rest (/ (1- lookahead) (snd-srate avg)))
-                 (cue input))
+      (mult (seq (s-rest delay) (cue input))
             gain))))
 
 

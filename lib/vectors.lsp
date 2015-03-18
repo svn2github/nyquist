@@ -4,6 +4,14 @@
 ;; probably one should be able to use either form (list or array)
 ;; and functions should accept either
 
+(defun array-from-vector(x)
+  (let (a (n (length x)))
+    (setf a (make-array n))
+    (dotimes (i n) 
+      (setf (aref a i) (car x))
+      (setf x (cdr x)))
+    a))
+
 (defun vector-from-array (x)
   (let (v (n (length x)))
     (dotimes (i n)

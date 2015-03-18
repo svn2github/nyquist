@@ -587,9 +587,33 @@
          (> (length input) i)
          (eq (char input i) #\())))
 
+(defun sal-list-equal (a b)
+  (let ((rslt t)) ;; set to false if any element not equal
+    (dolist (x a) 
+      (if (sal-equal x (car b))
+          t ;; continue comparing
+          (return (setf rslt nil))) ;; break out of loop
+      (setf b (cdr b)))
+    (and rslt (null b)))) ;; make sure no leftovers in b
+
 (defun sal-equal (a b)
   (or (and (numberp a) (numberp b) (= a b)) 
+      (and (consp a) (consp b) (sal-list-equal a b))
       (equal a b)))
 
 (defun not-sal-equal (a b)
   (not (sal-equal a b)))
+
+(defun sal-list-about-equal (a b)
+  (let ((rslt t)) ;; set to false if any element not equal
+    (dolist (x a) 
+      (if (sal-about-equal x (car b))
+          t ;; continue comparing
+          (return (setf rslt nil))) ;; break out of loop
+      (setf b (cdr b)))
+    (and rslt (null b)))) ;; make sure no leftovers in b
+
+(defun sal-about-equal (a b)
+  (or (and (numberp a) (numberp b) (< (abs (- a b)) *~=tolerance*))
+      (and (consp a) (consp b) (sal-list-about-equal a b))
+      (equal a b)))

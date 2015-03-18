@@ -1,11 +1,14 @@
 ;; interface to gnuplot
+;; See example calls below (gptest, gphist-test)
 
 variable *gp-outf*, *gp-data*, *gp-xlabel*, *gp-ylabel*, *gp-driver*,
          *gp-output*, *gp-command*, *gp-curve*, *gp-sep*, *gp-title*,
-         *gp-style*, *label*, *gpx*, *gpy*
+         *gp-style*, *label*, *gpx*, *gpy*, *gp-fontspec* = "", 
+         *gp-xtics-fontspec*, *gp-ytics-fontspec*
 
 function gp-init(filename, driver: "aqua", output: nil, xlabel: nil, 
-                 ylabel: nil, title: nil , style: nil, xrange: nil, yrange: nil)
+                 ylabel: nil, title: nil , style: nil, xrange: nil, yrange: nil,
+                 fontsize: nil, xticsize: nil, yticsize: nil)
   begin
     set *gp-outf* = open(filename, direction: :output),
         *gp-data* = nil,
@@ -26,6 +29,13 @@ function gp-init(filename, driver: "aqua", output: nil, xlabel: nil,
         set yrange = format(nil, " [~A:~A]", first(yrange), second(yrange))
       end
     else set yrange = ""
+    if fontsize then
+      set *gp-fontspec* = format(nil, " font \",~A\"", fontsize)
+    ;; NOTE: In my gnu-plot, "Times-Roman,24" works, but ",24" does not.
+    if xticsize then
+      set *gp-xtics-fontspec* = format(nil, "Times-Roman,~A", xticsize)
+    if yticsize then
+      set *gp-ytics-fontspec* = format(nil, "Times-Roman,~A", yticsize)
     set *gp-command* = strcat("plot", xrange, yrange)    
   end
 
@@ -62,6 +72,9 @@ function gp-newcurve(title: "", color: nil , label: nil , x: nil , y: nil )
 function gp-point(x, y)
   set *gp-curve* @= list(x, y)
 
+function gp-label(text, x, y)
+   exec format(*gp-outf*, "set label \"~A\" at ~A,~A~%", text, x, y)
+
 
 function gp-endcurve()
   begin
@@ -74,13 +87,17 @@ function gp-endcurve()
 function gp-endplot()
   begin
     set *gp-data* = reverse(*gp-data*)
-    exec format(*gp-outf*, "set term ~A~%", *gp-driver*)
+    exec format(*gp-outf*, "set term ~A~A~%", *gp-driver*, *gp-fontspec*)
     if *gp-output* then
       exec format(*gp-outf*, "set output \"~A\"~%", *gp-output*)
     if *gp-xlabel* then
       exec format(*gp-outf*, "set xlabel \"~A\"~%", *gp-xlabel*)
     if *gp-ylabel* then
       exec format(*gp-outf*, "set ylabel \"~A\"~%", *gp-ylabel*)
+    if *gp-xtics-fontspec* then
+      exec format(*gp-outf*, "set xtics font \"~A\"~%", *gp-xtics-fontspec*)
+    if *gp-ytics-fontspec* then
+      exec format(*gp-outf*, "set ytics font \"~A\"~%", *gp-ytics-fontspec*)
     if *gp-title* then
       exec format(*gp-outf*, "set title \"~A\"~%", *gp-title*)
    
@@ -100,14 +117,14 @@ function gp-endplot()
       end
       exec format(*gp-outf*, "e~%")
     end
-    exec close(*gp-outf*)                                              
+    exec close(*gp-outf*)
   end
   
 ;; gptest -- exercise some features
 function gptest()
   begin
     exec gp-init("testplot.txt", xlabel: "Time", ylabel: "Tempo", 
-                 title: "This Is a Test")
+                 title: "This Is a Test", fontsize: 12)
     exec gp-newcurve(title: "curve-1", color: "black"  )
     loop
       for i from 0 below 50
@@ -121,6 +138,8 @@ function gptest()
       exec gp-point(i, 90 + 10 * sin(i / 30.0))
     end
     exec gp-endcurve()
+
+    exec gp-label("Random Label", 5, 102)
 
     exec gp-endplot()
   end

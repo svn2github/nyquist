@@ -583,7 +583,8 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
     long debug_count;   /* next point at which to print a message */
     sample_type max_sample = 0.0F;
     sample_type threshold = 0.0F;
-    /* jlh    cvtfn_type cvtfn; */
+    double sound_srate;
+
     *ntotal = 0;
     /* if snd_expr was simply a symbol, then s now points to
         a shared sound_node.  If we read samples from it, then
@@ -663,7 +664,8 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
             debug_count += debug_unit;
         }
     }
-    gprintf(TRANS, "\ntotal samples: %ld\n", *ntotal);
+    gprintf(TRANS, "\ntotal samples: %ld (%g seconds)\n", 
+            *ntotal, *ntotal / sound_srate);
     xlpop();
     return max_sample;
 }
@@ -681,7 +683,7 @@ sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info,
     long debug_count;   /* next point at which to print a message */
     sample_type max_sample = 0.0F;
     sample_type threshold = 0.0F;
-    /*    cvtfn_type cvtfn; jlh */
+    double sound_srate;
 
     *ntotal = 0;
 
@@ -820,8 +822,8 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
             debug_count += debug_unit;
         }
     }
-    gprintf(TRANS, "total samples: %ld x %ld channels\n",
-           *ntotal, chans);
+    gprintf(TRANS, "total samples: %ld x %ld channels (%g seconds)\n",
+            *ntotal, chans, *ntotal / sound_srate);
 
     /* references to sounds are shared by sa_copy and state[].
      * here, we dispose of state[], allowing GC to do the

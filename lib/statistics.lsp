@@ -102,6 +102,7 @@
 
             
 ;; The histogram-class. Make a histogram from data.
+;; Depends on "vectors.lsp" so please (load "vectors")
 ;;
 ;; To use histogram-class, first make an instance:
 ;;    (setf my-histogram (send histogram-class :new))
@@ -124,7 +125,9 @@
 ;;    (send my-histogram :make-hist)
 ;; And then you can print or plot it with:
 ;;    (send my-histogram :print-hist) or
-;;    (send my-histogram :plot-hist)
+;;    (send my-histogram :plot-hist) or
+;; If you (sal-load "gnuplot"), you can also make a plot file with:
+;;    (send my-histogram :gnu-plot filename xlabel ylabel title)
 ;; You can change the thresholds with :set-thresholds or
 ;; :configure-bins without re-inserting all the points.
 ;; You can start over by calling
@@ -194,9 +197,31 @@
 (send histogram-class :answer :plot-hist '(&optional (offset 0)) '(
     (if (null counts) (send self :make-hist))
     (s-plot (snd-from-array 0
-                            (/ (- (aref thresholds 1)
-                                  (aref thresholds 0))) 
+                            (/ (float (- (aref thresholds 1)
+                                         (aref thresholds 0))))
                             counts))))
+
+(send histogram-class :answer :gnu-plot '(filename xlabel ylabel title) '(
+  (let ((thresh-list (vector-from-array thresholds))
+        (counts-list (vector-from-array counts))
+        (low-width (- (aref thresholds 1) (aref thresholds 0)))
+        (high-width (- (aref thresholds (- (length thresholds) 1))
+                       (aref thresholds (- (length thresholds) 2)))))
+    ;; I think histogram bars on the top and bottom are the width of the
+    ;; distance to the next or previous bin, but centered on the data point,
+    ;; so we have to adjust the xrange to accommodate fat bars
+    (gp-init filename :xlabel xlabel :ylabel ylabel :title title
+             :style :histogram
+             :xrange (list (- (apply 'min thresh-list) (/ low-width 2.0))
+                           (+ (apply 'max thresh-list) (/ high-width 2.0)))
+             :yrange (list 0 (apply 'max counts-list)))
+    (gp-newcurve)
+    (dotimes (i (length counts))
+      (gp-point (pop thresh-list) (pop counts-list)))
+    (gp-endcurve)
+    (gp-endplot))))
+
+
 
 (send histogram-class :answer :get-min '() '(
     (send stats :get-min)))

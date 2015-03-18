@@ -70,7 +70,7 @@
    (sim
        (pan (chorus input-sound :delay delay :depth depth :rate rate1
                     :saturation saturation) .3)
-       (pan (chorus input-sound :delay delay :depth depth :rate rate1
+       (pan (chorus input-sound :delay delay :depth depth :rate rate2
                     :saturation saturation :phase 180.0) .7)))
 
 
