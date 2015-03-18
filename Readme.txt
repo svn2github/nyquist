@@ -8,6 +8,14 @@ WEB SITE: http://www.cs.cmu.edu/~music/nyquist
 INSTALLING NYQUIST
 ====================
 You can download pre-compiled versions for Windows and OS X.
+After downloading, please see
+      +---------------------------------------+
+      | http://www.cs.cmu.edu/~music/nyquist/ |
+      +---------------------------------------+
+for additional information, or look for one of
+      - nyquist/doc/readme-win.txt
+      - nyquist/doc/readme-mac.txt
+      - nyquist/sys/README.txt
 
 You can compile Nyquist from sources for Windows, OS X, linux, and
 other versions of Unix. For details, see one of these files:

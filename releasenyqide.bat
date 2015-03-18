@@ -5,6 +5,7 @@ del nyqrelide\runtime\CVS /q
 rmdir nyqrelide\runtime\CVS /q
 copy sys\win\msvc\system.lsp nyqrelide\runtime
 xcopy doc nyqrelide\doc /s /i
+copy sys\win\README.txt nqqrelide\doc\readme-win.txt
 del nyqrelide\doc\CVS /q
 rmdir nyqrelide\doc\CVS /q
 xcopy lib nyqrelide\lib /s /i

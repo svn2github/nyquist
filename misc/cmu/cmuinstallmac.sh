@@ -13,6 +13,7 @@ rm -rf nyquist
 mkdir nyquist
 mkdir nyquist/doc
 cp ~/nyquist/doc/* nyquist/doc
+cp ~/nyquist/sys/mac/README.txt nyquist/doc/readme-mac.txt
 echo "type the version string, e.g. \"232\" : "
 read versionstring
 # to get NyquistIDE.app in the right place in the zip file, move it to here

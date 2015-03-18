@@ -5,7 +5,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{3E29123D-0726-441C-8A38-42836B05F74C}
+AppId=3E29123D-0726-441C-8A38-42836B05F74C
 AppName=NyquistIDE
 AppVerName=NyquistIDE 3.08
 AppPublisher=Roger B. Dannenberg
@@ -19,7 +19,7 @@ InfoAfterFile=nyqrelide\Readme.txt
 OutputDir=setup
 OutputBaseFilename=setupnyqiderun
 SetupIconFile=sys\win\wingui\nycon.ico
-SourceDir=c:\Users\Roger\research\nyquist2013
+SourceDir=c:\Users\Roger\research\nyquist
 Compression=lzma
 SolidCompression=yes
 
