@@ -55,6 +55,19 @@
 ; alter *bgcolorinfo* to set background color of html documents
 ; set *8.3* to change from "indx.html" to "INDX.HTM" format for file names
 
+;; *doc-title* can be set before loading s2h to give title to PanDoc:
+(cond ((boundp '*doc-title*))
+      (t (setf *doc-title* nil)))
+(setf *need-version* nil)            ;; used to extract Version from nyquistman.mss
+(setf *capture* nil)
+(setf *captured* nil)
+(cond ((boundp '*doc-version*))
+      (t (setf *doc-version* nil)))  ;; used to extract Version from nyquistman.mss
+(cond ((boundp '*need-author*))
+      (t (setf *need-author* nil)))  ;; used to extract Author from nyquistman.mss
+(cond ((boundp '*doc-author*))
+      (t (setf *doc-author* nil)))   ;; used to extract Author from nyquistman.mss
+
 ;; label-list shall look like this:
 ;;    ((label-symbol "label text" file-name number) ...)
 ;; where label-symbol is the scribe label,
@@ -143,28 +156,37 @@ loop
 
 
 (defun write-code ()
-  (if *omit* nil (format *outf* "<code>"))
+  (cond (*omit* nil)
+        (t (format *outf* "<code>")
+           (if *md* (md-begin-code))))
   (translate)
-  (if *omit* nil (format *outf* "</code>")))
+  (cond (*omit* nil)
+        (t (format *outf* "</code>")
+           (if *md* (md-end-code)))))
 
 (defun write-codef ()
   (progv '(*codef*) '(t) (write-code) (codef-complete)))
 
 (defun write-quotation ()
   (format *outf* "<blockquote>")
+  (if *md* (md-begin-quotation))
   (translate)
-  (format *outf* "</blockquote>"))
+  (format *outf* "</blockquote>")
+  (if *md* (md-end-quotation)))
 
 (defun write-normal ()
   (format *outf* "<span style=\"font-style:normal\">")
+  (if *md* (md-begin-normal))
   (translate)
-  (format *outf* "</span>"))
+  (format *outf* "</span>")
+  (if *md* (md-end-normal)))
 
 (defun write-t ()
-  (let (paren)
     (format *outf* "<tt>")
+    (if *md* (md-begin-tt))
     (translate)
-    (format *outf* "</tt>")))
+    (format *outf* "</tt>")
+    (if *md* (md-end-tt)))
 
 (defun list-to-string (body)
   (let ((str ""))
@@ -202,7 +224,8 @@ loop
     (setf str (list-to-string body))
     (if *token-trace* (format t "Index item: ~A~%" str))
     (setf n (enter-index-item str def-flag))
-    (format *outf* "<a name=\"index~A\">" n)))
+    (format *outf* "<a name=\"index~A\">" n)
+    (if *md* (md-write-index str))))
 
 (defun index-sort-fn (a b)
   (string< (car a) (car b)))
@@ -256,7 +279,9 @@ gotone
 	     (format *outf* " <a href = \"~A#index~A\"~A>~A</a> "
 		     (car ref) (cadr ref) target n)
 	     (setf n (1+ n)))
-	   (format *outf* "<br>\n")))))
+	   (format *outf* "<br>\n")))
+    (if *md* (md-generate-index-entry entry target))
+  ))
 
 ;; HAS-ALPHA - trim non-alpha from beginning of key and capitalize
 ;;  returns: nil if no alpha chars, *rslt* = key without non-alpha prefix 
@@ -336,7 +361,8 @@ gotone
 	  (t (display "generate-index bottom" *part-number*)
 	     (write-chapter-links nil t)
 	     (format t "closing indx.html\n")
-	     (close *outf*)))))
+	     (close *outf*)))
+    (if *md* (md-generate-index))))
 
 
 ;; GENERATE-TOC-2 -- generate table of contents body
@@ -359,7 +385,8 @@ gotone
 ;      (display "part2" lis2)
       (cond (lis2
 	     (generate-toc-2 lis2 frame-flag)))))
-  (format *outf* "</ul>\n"))
+  (format *outf* "</ul>\n")
+  (if *md* (md-generate-toc-2)))
 
 
 (defun generate-toc (&optional frame-flag)
@@ -369,7 +396,8 @@ gotone
   (cond (frame-flag t)
 	(t 
 	 (format *outf* "<ul><li><a href = \"~A\">Index</a>\n</ul>" 
-		 (html-file "indx")))))
+		 (html-file "indx"))))
+  (if *md* (md-generate-toc)))
 
 
 (defun get-primary (str)
@@ -403,6 +431,7 @@ gotone
 	   (break)))
     (subseq str n m)))
 
+
 (defun write-indexsecondary ()
   (let (body str n)
     (setf body (get-body "secondaryindex" t))
@@ -410,7 +439,9 @@ gotone
     (if *token-trace* (format t "SecondaryIndex item: ~A~%" str))
     (setf str (strcat (get-primary str) ", " (get-secondary str)))
     (setf n (enter-index-item str nil))
-    (format *outf* "<a name=\"~A~A\">" str n)))
+    (format *outf* "<a name=\"~A~A\">" str n)
+    (if *md* (md-write-indexsecondary str n))
+  ))
 
 
 (defun read-begin-command ()
@@ -435,19 +466,40 @@ gotone
     (list 'end cmd)))
 
 (defun read-pragma-command ()
-  (let ((body (get-body "end" nil)) cmd)
+  (let ((body (get-body "pragma" nil)) cmd)
     (setf cmd (list-to-symbol body))
     cmd))
 
 (defun write-style (style)
     (format *outf* "<~A>" style)
+    (if *md* (md-begin-style style))
+    (cond ((and (equal style "b") (or *need-version* *need-author*))
+           (setf *capture* t)
+           (setf *captured* "")))
     (translate)
-    (format *outf* "</~A>" style))
+    (format *outf* "</~A>" style)
+    (if *md* (md-end-style style))
+    (cond ((and (equal style "b") (or *need-version* *need-author*))
+           (setf *capture* nil)
+           (cond (*need-version*
+                  (setf *doc-version* *captured*)
+                  (setf *need-version* nil)
+                  (display "write-style" *need-version*)
+                  (setf *need-author* t)
+                  (display "write-style" *need-author*)
+                  )
+                 (*need-author*
+                  (setf *doc-author* *captured*)
+                  (setf *need-author* nil)
+                  (display "write-style" *need-author*)
+                  )))))
 
 (defun write-bold-italic ()
     (format *outf* "<b><i>")
+    (if *md* (md-begin-bold-italic))
     (translate)
-    (format *outf* "</i></b>"))
+    (format *outf* "</i></b>")
+    (if *md* (md-end-bold-italic)))
 
 (defun write-superscript ()
   (output-char #\^)
@@ -462,22 +514,28 @@ gotone
   )
 
 (defun write-dd ()
-  (if (and *description* (not *omit*))
-    (format *outf* "<dd>")))
+  (cond ((and *description* (not *omit*))
+         (format *outf* "<dd>")
+         (if *md* (md-write-dd)))))
 
 (defun write-description ()
   (format *outf* "<dl>\n<dt>")
+  (if *md* (md-begin-write-description))
   (progv '(*description*) '(t)
     (translate))
-    (format *outf* "</dl>"))
+  (format *outf* "</dl>")
+  (if *md* (md-end-write-description)))
 
 (defun write-fdescription ()
   (format *outf* "<dl>\n<dt>")
+  (if *md* (md-begin-write-fdescription))
   (progv '(*fdescription*) '(t)
     (progv '(*codef*) '(t)
       (translate)
       (codef-complete)))
-  (format *outf* "</dl>"))
+  (format *outf* "</dl>")
+  (if *md* (md-end-write-fdescription)))
+
 
 (defun write-fgroup ()
   (progv '(*fgroup*) '(t)
@@ -489,12 +547,15 @@ gotone
   (let ((pdesc *pdescription*))
     (if pdesc (format *outf* "<dl>"))
     (format *outf* "<dd>")
+    (if *md* (md-begin-write-pdescription))
     (setf *pdescription* t)
     (codef-complete) ;; finish preceding function completion string
     (progv '(*codef*) '(nil)
       (translate))
     (setf *codef* t) ;; turn back on for next definition
-    (if pdesc (format *outf* "</dl>"))
+    (cond (pdesc 
+           (format *outf* "</dl>")
+           (if *md* (md-end-write-pdescription))))
     (setf *pdescription* pdesc)))
 
 (defun close-paren-p (tok)
@@ -531,24 +592,35 @@ gotone
   (translate))
 
 (defun write-majorheading ()
-  (format *outf* "<h1>")
-  (translate)
-  (format *outf* "</h1>"))
+  (let ()
+    (if *doc-title* (display "WARNING: *doc-title* is already defined" *doc-title*))
+    (setf *doc-title* (get-body "majorheading" t))
+    (setf *doc-title* (list-to-string *doc-title*))
+    (setf *need-version* t)
+    (display "write-majorheading" *need-version*)
+    (format *outf* "<h1>~A</h1>" *doc-title*)
+    (if *md* (md-majorheading *doc-title*))))
 
 (defun write-h2 ()
   (format *outf* "<h2>")
+  (if *md* (md-begin-h2))
   (translate)
-  (format *outf* "</h2>"))
+  (format *outf* "</h2>")
+  (if *md* (md-end-h2)))
 
 (defun write-h3 ()
   (format *outf* "<h3>")
+  (if *md* (md-begin-h3))
   (translate)
-  (format *outf* "</h3>"))
+  (format *outf* "</h3>")
+  (if *md* (md-end-h3)))
 
 (defun write-h4 ()
   (format *outf* "<h4>")
+  (if *md* (md-begin-h4))
   (translate)
-  (format *outf* "</h4>"))
+  (format *outf* "</h4>")
+  (if *md* (md-end-h4)))
 
 (defun write-paragraph ()
   (let ((body (get-body "paragraph" t)))
@@ -556,7 +628,9 @@ gotone
     (setf *name-reference* (format nil "\"~A\"" body))
     (setf *name-number* (1+ *name-number*))
     (push (list (list *file-name* *name-number* body)) *paragraph-list*)
-    (format *outf* "<a name = \"~A\"><h5>~A</h5></a>" *name-number* body)))
+    (format *outf* "<a name = \"~A\"><h5>~A</h5></a>" *name-number* body)
+    (if *md* (md-write-paragraph *name-number* body))
+  ))
 
 (defun finish-subsection ()
   (push *paragraph-list* *subsection-list*)
@@ -571,7 +645,8 @@ gotone
 	   (finish-subsection)))
     (setf *paragraph-list*
 	  (list (list *file-name* *name-number* body)))
-    (format *outf* "<a name = \"~A\"><h4>~A</h4></a>" *name-number* body)))
+    (format *outf* "<a name = \"~A\"><h4>~A</h4></a>" *name-number* body)
+    (if *md* (md-write-subsection *name-number* body)) ))
 
 
 (defun finish-section ()
@@ -589,7 +664,8 @@ gotone
 	   (finish-section)))
     (setf *subsection-list*
 	  (list (list *file-name* *name-number* body)))
-    (format *outf* "<a name = \"~A\"><h3>~A</h3></a>" *name-number* body)))
+    (format *outf* "<a name = \"~A\"><h3>~A</h3></a>" *name-number* body)
+    (if *md* (md-write-section *name-number* body)) ))
 
 (defun previous-part-file-name ()
   (cond ((> *part-number* 2)
@@ -605,8 +681,10 @@ gotone
   (setf *section-list* nil)
   ; *dest* links get added after table of contents
   (cond ((not (eq *outf* *rootf*))
-	 (write-chapter-links)
-	 (format *outf* "</body></html>\n") )))
+         (write-chapter-links)
+         (format *outf* "</body></html>\n")
+         (if *md* (md-finish-chapter)))))
+
 
 
 (defun write-title-page-links ()
@@ -642,8 +720,8 @@ gotone
 
 
 (defun set-html-title ()
-  (setf *title* (get-body "htmltitle" t))
-  (setf *title* (list-to-string *title*)))
+  (setf *doc-title* (get-body "htmltitle" t))
+  (setf *doc-title* (list-to-string *doc-title*)))
 
 
 (defun write-chapter ()
@@ -666,13 +744,16 @@ gotone
     (setf *part-number* (1+ *part-number*))
     (format *outf* "<html><head><title>~A</title></head>\n<body~A>\n"
 	    body *bgcolorinfo*)
+    (if *md* (md-write-chapter body))
     (write-chapter-links t)
     (format *outf* "<a name = \"~A\"><h2>~A</h2></a>" *name-number* body)))
 
 (defun write-detail ()
   (format *outf* "<small>")
+  (if *md* (md-begin-detail))
   (translate)
-  (format *outf* "</small>\n"))
+  (format *outf* "</small>\n")
+  (if *md* (md-end-detail)))
 
 (defun write-appendix ()
   (let ((body (get-body "appendix" t)))
@@ -695,19 +776,21 @@ gotone
     (setf *part-number* (1+ *part-number*))
     (write-chapter-links t)
     (format *outf* "<html><head><title>~A</title></head>\n" body)
-    (format *outf* "<a name = \"~A\"><h2>~A</h2></a>" *name-number* body)))
+    (format *outf* "<a name = \"~A\"><h2>~A</h2></a>" *name-number* body)
+    (if *md* (md-appendix *name-number* body)) ))
 
 
 (defun write-blankspace ()
   (cond (*fdescription*
-	 ; what we want is <br><br><dt> after pdescription environment
-	 ; to set up the next fdescription, but we may have output one <br>
-	 ; after the last pdescription.  By using (linebreak) we avoid a
-	 ; third <br> which would output too much space.
-	 (linebreak)
-	 (format *outf* "<br><dt>"))
-	(t
-	 (paragraph)))
+         ; what we want is <br><br><dt> after pdescription environment
+         ; to set up the next fdescription, but we may have output one <br>
+         ; after the last pdescription.  By using (linebreak) we avoid a
+         ; third <br> which would output too much space.
+         (linebreak)
+         (format *outf* "<br><dt>")
+         (if *md* (md-break-dt)))
+        (t
+         (paragraph)))
   (get-body "blankspace" t))
 
 
@@ -723,22 +806,26 @@ gotone
 ;
 (defun paragraph ()
   (cond ((null *paragraph*)
-	 (cond (*itemize*
-		(format *outf* "\n<li>"))
-	       (*description*
-		(format *outf* "<br><br>\n<dt>"))
-	       ((or *pdescription* *fgroup*)
-		(linebreak))
-	       (*fdescription*)	; and not *pdescription*: no paragraph
-	       (t
-		(format *outf* "\n<p>\n")))
-	 (setf *paragraph* t))))
+         (cond (*itemize*
+                (format *outf* "\n<li>")
+                (if *md* (md-list-paragraph)))
+               (*description*
+                (format *outf* "<br><br>\n<dt>")
+                (if *md* (md-description-paragraph)))
+               ((or *pdescription* *fgroup*)
+                (linebreak))
+               (*fdescription*)        ; and not *pdescription*: no paragraph
+               (t
+                (format *outf* "\n<p>\n")
+                (if *md* (md-paragraph))))
+         (setf *paragraph* t))))
 
 (defun linebreak ()
   (cond ((and (null *paragraph*)
-	      (null *linebreak*))
-	 (format *outf* "<br>\n")
-	 (setf *linebreak* t))))
+              (null *linebreak*))
+         (format *outf* "<br>\n")
+         (if *md* (md-linebreak))
+         (setf *linebreak* t))))
 
 (defun write-smallcaps ()
   (let ((sc *smallcap*))
@@ -754,46 +841,54 @@ gotone
     (format t "Citation: ~A ~%" body)
     (setf link (assoc body *citations*))
     (cond ((null link)
-	   (format t "Undefined citation: ~A~%" body))
-	  (t
-	   (format *outf* " <a href = \"~A\">~A</a>"
-		   (cadr link) (caddr link))))))
+           (format t "Undefined citation: ~A~%" body))
+          (t
+           (format *outf* " <a href = \"~A\">~A</a>"
+                   (cadr link) (caddr link))
+           (if *md* (md-write-cite link))) )))
 
 
 (defun write-ref ()
   (let ((body (get-body "ref" nil)) ref (file ""))
     (cond (*startref*
-	   (setf *startref* nil)
-	   (setf *omit* nil)))
+           (setf *startref* nil)
+           (setf *omit* nil)))
     (setf body (list-to-symbol body))
     (setf ref (assoc body *previous-label-list*))
     (cond ((null ref)
-	   (format t "warning: undefined label ~A~%" body))
-	  (t
-	   (cond ((not (equal (caddr ref) *file-name*))
-		       (setf file (caddr ref))))
-	   (format *outf* "<a href = \"~A#~A\">~A</a>"
-		   file (cadddr ref) (cadr ref))))))
+           (format t "warning: undefined label ~A~%" body))
+          (t
+           (cond ((not (equal (caddr ref) *file-name*))
+                       (setf file (caddr ref))))
+           (format *outf* "<a href = \"~A#~A\">~A</a>"
+                   file (cadddr ref) (cadr ref))
+           (if *md* (md-write-ref ref)) ))))
 
 (defun write-example ()
   (format *outf* "<pre>")
+  (if *md* (md-begin-example))
   (translate)
-  (format *outf* "</pre>\n"))
+  (format *outf* "</pre>\n")
+  (if *md* (md-end-example)))
 
 (defun write-enumerate ()
   (let ((itemize *itemize*))
     (format *outf* "<ol>\n<li>")
+    (if *md* (md-begin-enumerate))
     (setf *itemize* t)
     (translate)
     (format *outf* "</ol>")
+    (if *md* (md-end-enumerate))
     (setf *itemize* itemize)))
 
 (defun write-itemize ()
   (let ((itemize *itemize*))
     (format *outf* "<ul>\n<li>")
+    (if *md* (md-begin-itemize))
     (setf *itemize* t)
     (translate)
     (format *outf* "</ul>")
+    (if *md* (md-end-itemize))
     (setf *itemize* itemize)))
 
 
@@ -804,23 +899,28 @@ gotone
     (setf *display* t)
     (translate)
     (format *outf* "<p>~%") ; separate the text from what follows
+    (if *md* (md-end-write-format))
     (setf *display* display)))
 
 (defun write-display ()
   (let ((display *display*))
     (format *outf* "<blockquote>")
+    (if *md* (md-begin-blockquote))
     (setf *display* t)
     (setf *linebreak* t) ; it's automatic with blockquote,
     ; so we do this to suppress an extra <br>
     (translate)
     (format *outf* "</blockquote>")
+    (if *md* (md-end-blockquote))
     (setf *display* display)))
 
 
 (defun write-figure ()
   (format *outf* "<hr>")
+  (if *md* (md-begin-figure))
   (translate)
-  (format *outf* "<hr>"))
+  (format *outf* "<hr>")
+  (if *md* (md-end-figure)))
 
 
 (defun write-dash ()
@@ -835,25 +935,28 @@ gotone
 
 (defun write-foot ()
   (let ((outf *outf*)
-	(name (html-file "foot")))
+        (name (html-file "foot")))
     (format *outf* " <a href = \"~A#foot~A\">(Footnote ~A)</a> "
-	    name *footnote-number*  *footnote-number*)
+            name *footnote-number*  *footnote-number*)
+    (if *md* (md-write-footnote name *footnote-number*))
     (cond ((null *footnotefile*)
-	   (setf *footnotefile* (open (strcat *dest-dir* name) :direction :output))
-	   (format *footnotefile* "<html><head><title>Footnotes</title></head>\n")
-	   (format *footnotefile* "<body~A>\n<h2>Footnotes</h2>\n" *bgcolorinfo*)
-	   ))
+           (setf *footnotefile* (open (strcat *dest-dir* name) :direction :output))
+           (format *footnotefile* "<html><head><title>Footnotes</title></head>\n")
+           (format *footnotefile* "<body~A>\n<h2>Footnotes</h2>\n" *bgcolorinfo*)
+           ))
     (setf *outf* *footnotefile*)
     (format *outf* "<a name = \"foot~A\"> ~A. </a>" *footnote-number* *footnote-number*)
     (setf *footnote-number* (1+ *footnote-number*))
     (translate)
     (format *outf* "\n<P>\n")
-    (setf *outf* outf)))
+    (setf *outf* outf)
+    (if *md* (md-footnote-end))))
 
 
 (defun write-fillcaption ()
   (paragraph)
   (format *outf* "<b>Figure ~A: </b>" *figure-number*)
+  (if *md* (md-write-fillcaption *figure-number*))
   (translate))
 
 
@@ -862,27 +965,27 @@ gotone
 
 (defun write-include ()
   (let ((body (get-body "include" nil))
-	file)
+        file)
     (cond (*include*
-	   (setf *include* nil)
-	   (setf body (list-to-string body))
-	   (setf file *inf*)
-	   (setf *inf* (open (strcat *include-prefix* body)))
-	   (cond ((null *inf*)
-		  (format t "Could not open include file ~A\n" body)
-		  (break))
-		 (t
-		  (format t "Processing include file ~A\n" body)
-		  (translate)
-		  (format t "Closing include file ~A\n" body)
-		  (close *inf*)
-		  (setf *inf* file))) ))))
+           (setf *include* nil)
+           (setf body (list-to-string body))
+           (setf file *inf*)
+           (setf *inf* (open (strcat *include-prefix* body)))
+           (cond ((null *inf*)
+                  (format t "Could not open include file ~A\n" body)
+                  (break))
+                 (t
+                  (format t "Processing include file ~A\n" body)
+                  (translate)
+                  (format t "Closing include file ~A\n" body)
+                  (close *inf*)
+                  (setf *inf* file))) ))))
 
 (defun do-tag ()
   (let ((body (get-body "tag" nil)))
     (push (list (list-to-symbol body) (format nil "~A" *figure-number*)
-		*file-name* *name-number*)
-	  *label-list*)
+                *file-name* *name-number*)
+          *label-list*)
     (setf *figure-number* (1+ *figure-number*)) ))
 
 
@@ -891,8 +994,10 @@ gotone
 
 (defun write-underline ()
   (format *outf* "<u>")
+  (if *md* (md-begin-underline))
   (translate)
-  (format *outf* "</u>\n"))
+  (format *outf* "</u>\n")
+  (if *md* (md-end-underline)))
 
 ; initiated by @startscribe()
 ; and ended by @endscribe()
@@ -918,46 +1023,50 @@ loop
     (setf tok (get-comment-token))
 ;    (display "do-comment" tok paren-stack)
     (cond ((and (close-paren-p tok)
-		(paren-match tok))
-;	   (display "do-comment" paren-stack)
-	   (pop paren-stack)
-;	   (format t "do-comment done\n")
-	   (return)))
+                (paren-match tok))
+;           (display "do-comment" paren-stack)
+           (pop paren-stack)
+;           (format t "do-comment done\n")
+           (return)))
     (go loop)))
 
 
 (defun output-char (c)
   (cond (*omit* t)
-	(t
-	 (cond ((and *smallcap*
-		     (alpha-char-p c))
-		(setf c (char-upcase c))))
-	 ; (display "output-char" *display*)
-	 (cond ((and *display* (eql c #\Newline))
-		(linebreak))
-	       ((member c '(#\Space #\Newline)))
-	       (t
-		(setf *paragraph* nil)
-		(setf *linebreak* nil)))
-	 (cond (*html*) ; no translation if we're in an @html(...) section
-	       ((eq c #\<)
-		(write-char #\& *outf*)
-		(write-char #\l *outf*)
-		(write-char #\t *outf*)
-		(setf c #\;))
-	       ((eq c #\>)
-		(write-char #\& *outf*)
-		(write-char #\g *outf*)
-		(write-char #\t *outf*)
-		(setf c #\;))
-	       ((eq c #\&)
-		(write-char #\& *outf*)
-		(write-char #\a *outf*)
-		(write-char #\m *outf*)
-		(write-char #\p *outf*)
-		(setf c #\;)))
-	 ; (display "output-char" c)
-	 (write-char c *outf*))))
+        (t
+         (cond ((and *smallcap*
+                     (alpha-char-p c))
+                (setf c (char-upcase c))))
+         ; (display "output-char" *display*)
+         (cond ((and *display* (eql c #\Newline))
+                (linebreak))
+               ((member c '(#\Space #\Newline)))
+               (t
+                (setf *paragraph* nil)
+                (setf *linebreak* nil)))
+         (cond (*html*) ; no translation if we're in an @html(...) section
+               ((eq c #\<)
+                (write-char #\& *outf*)
+                (write-char #\l *outf*)
+                (write-char #\t *outf*)
+                (write-char #\; *outf*))
+               ((eq c #\>)
+                (write-char #\& *outf*)
+                (write-char #\g *outf*)
+                (write-char #\t *outf*)
+                (write-char #\; *outf*))
+               ((eq c #\&)
+                (write-char #\& *outf*)
+                (write-char #\a *outf*)
+                (write-char #\m *outf*)
+                (write-char #\p *outf*)
+                (write-char #\; *outf*)))
+         ; (display "output-char" c)
+         (cond ((and *md* (not *html*) (not *need-version*) (not *need-author*))
+                (cond ((string-search (string c) "\\`_{}[]#+!")
+                       (write-char #\\ *mdoutf*)))
+                ; (format t "[~A]" c)
+                (write-char c *mdoutf*))) )))
 
 
 (setf *translate-depth* 0)
@@ -969,172 +1078,173 @@ loop
 loop
     (setf tok (get-token))
     (cond ((and tok (symbolp tok) *token-trace*)
-	   (format t "[~A]" tok)))
+           (format t "[~A]" tok)))
     (cond ((null tok) (go ret))
-	  ((close-paren-p tok)
-	   (cond ((paren-match tok)
-		  (pop paren-stack))
-		 (t
-		  (format t "unmatched end: ~A~%" tok)
-		  (break)))
-	   (go ret))
+          ((close-paren-p tok)
+           (cond ((paren-match tok)
+                  (pop paren-stack))
+                 (t
+                  (format t "unmatched end: ~A~%" tok)
+                  (break)))
+           (go ret))
           ((eq tok 'altdef)
            (translate))
-	  ((characterp tok)
+          ((characterp tok)
            ;; output completion hints file
-	   (cond (*codef* (codef-char tok)))
-	   (output-char tok))
-	  ((eq tok 'label)
-	   (write-label))
-	  ((member tok '(code smallcode xlcode))
-	   (write-code))
+           (cond (*codef* (codef-char tok)))
+           (if *capture* (setf *captured* (strcat *captured* (string tok))))
+           (output-char tok))
+          ((eq tok 'label)
+           (write-label))
+          ((member tok '(code smallcode xlcode))
+           (write-code))
           ((eq tok 'codef)
            (write-codef))
-	  ((eq tok 'index)
-	   (write-index definition-flag)
+          ((eq tok 'index)
+           (write-index definition-flag)
            (setf definition-flag nil))
-	  ((eq tok 'indexsecondary)
-	   (write-indexsecondary))
+          ((eq tok 'indexsecondary)
+           (write-indexsecondary))
           ((eq tok 'indexdef) ;; this is obsolete now
            (write-index t))
           ((eq tok 'r)
            (write-normal))
-	  ((eq tok 'i)
-	   (write-style "i"))
-	  ((eq tok 'b)
-	   (write-style "b"))
-	  ((eq tok 'titlepage)
-	   (write-titlepage))
-	  ((eq tok 'titlebox)
-	   (write-titlebox))
-	  ((member tok '(majorheading chapnum))	; chapnum is for Tomayko
-	   (write-majorheading))
-	  ((member tok '(skip blankspace)) ; skip is for Tomayko
-	   (write-blankspace))
-	  ((member tok '(verse center))
-	   (write-display))	;; seems to be best substitute for center
-	  ((eq tok 'format)
-	   (write-format))
-	  ((eq tok 'newpage)
-	   (write-newpage))
-	  ((eq tok 'c)
-	   (write-smallcaps))
-	  ((member tok '(text quotation))
-	   (write-quotation))
-	  ((eq tok 't)
-	   (write-t))
-	  ((eq tok 'title)
-	   (write-title))
-	  ((eq tok 'htmltitle)
-	   (set-html-title))
-	  ((member tok '(chapter unnumbered))
-	   (write-chapter))
-	  ((eq tok 'appendix)
-	   (write-appendix))
-	  ((eq tok 'detail)
-	   (write-detail))
-	  ((eq tok 'section)
-	   (write-section))
-	  ((eq tok 'heading)
-	   (write-h3))
-	  ((eq tok 'subsection)
-	   (write-subsection))
-	  ((eq tok 'subheading)
-	   (write-h4))
-	  ((eq tok 'paragraph)
-	   (write-paragraph))
-	  ((eq tok 'cite)
-	   (write-cite))
-	  ((member tok '(ref pageref))
-	   (write-ref))
-	  ((eq tok 'startref)
-	   (do-startref))
-	  ((eq tok 'p)
-	   (write-bold-italic))
-	  ((eq tok 'plus)
-	   (write-superscript))
-	  ((eq tok 'minus)
-	   (write-subscript))
-	  ((eq tok 'html)	; special way to insert html
-	   (write-html))
-	  ((member tok '(example programexample))
-	   (write-example))
-	  ((eq tok 'figure)
-	   (write-figure))
-	  ((eq tok 'fillcaption)
-	   (write-fillcaption))
-	  ((eq tok 'tag)
-	   (do-tag))
-	  ((eq tok 'doinclude)
-	   (do-include))
-	  ((eq tok 'include)
-	   (write-include))
-	  ((eq tok 'backslash)
-	   (write-dd))
-	  ((eq tok 'math)
-	   (write-math))
-	  ((member tok '(foot note))	; note is for Tomayko
-	   (codef-complete)
-	   (setf *codef* nil)
-	   (write-foot))
-	  ((member tok '(description fndefs))
-	   (write-description))
-	  ((eq tok 'fdescription)
-	   (write-fdescription))
-	  ((eq tok 'pdescription)
-	   (write-pdescription))
-	  ((eq tok 'fgroup)
-	   (write-fgroup))
-	  ((eq tok 'itemize)
-	   (write-itemize))
-	  ((eq tok 'enumerate)
-	   (write-enumerate))
-	  ((eq tok 'display)
-	   (write-display))
-	  ((member tok '(subtract itemsep dash ndash))
+          ((eq tok 'i)
+           (write-style "i"))
+          ((eq tok 'b)
+           (write-style "b"))
+          ((eq tok 'titlepage)
+           (write-titlepage))
+          ((eq tok 'titlebox)
+           (write-titlebox))
+          ((member tok '(majorheading chapnum))        ; chapnum is for Tomayko
+           (write-majorheading))
+          ((member tok '(skip blankspace)) ; skip is for Tomayko
+           (write-blankspace))
+          ((member tok '(verse center))
+           (write-display))        ;; seems to be best substitute for center
+          ((eq tok 'format)
+           (write-format))
+          ((eq tok 'newpage)
+           (write-newpage))
+          ((eq tok 'c)
+           (write-smallcaps))
+          ((member tok '(text quotation))
+           (write-quotation))
+          ((eq tok 't)
+           (write-t))
+          ((eq tok 'title)
+           (write-title))
+          ((eq tok 'htmltitle)
+           (set-html-title))
+          ((member tok '(chapter unnumbered))
+           (write-chapter))
+          ((eq tok 'appendix)
+           (write-appendix))
+          ((eq tok 'detail)
+           (write-detail))
+          ((eq tok 'section)
+           (write-section))
+          ((eq tok 'heading)
+           (write-h3))
+          ((eq tok 'subsection)
+           (write-subsection))
+          ((eq tok 'subheading)
+           (write-h4))
+          ((eq tok 'paragraph)
+           (write-paragraph))
+          ((eq tok 'cite)
+           (write-cite))
+          ((member tok '(ref pageref))
+           (write-ref))
+          ((eq tok 'startref)
+           (do-startref))
+          ((eq tok 'p)
+           (write-bold-italic))
+          ((eq tok 'plus)
+           (write-superscript))
+          ((eq tok 'minus)
+           (write-subscript))
+          ((eq tok 'html)        ; special way to insert html
+           (write-html))
+          ((member tok '(example programexample))
+           (write-example))
+          ((eq tok 'figure)
+           (write-figure))
+          ((eq tok 'fillcaption)
+           (write-fillcaption))
+          ((eq tok 'tag)
+           (do-tag))
+          ((eq tok 'doinclude)
+           (do-include))
+          ((eq tok 'include)
+           (write-include))
+          ((eq tok 'backslash)
+           (write-dd))
+          ((eq tok 'math)
+           (write-math))
+          ((member tok '(foot note))        ; note is for Tomayko
+           (codef-complete)
+           (setf *codef* nil)
+           (write-foot))
+          ((member tok '(description fndefs))
+           (write-description))
+          ((eq tok 'fdescription)
+           (write-fdescription))
+          ((eq tok 'pdescription)
+           (write-pdescription))
+          ((eq tok 'fgroup)
+           (write-fgroup))
+          ((eq tok 'itemize)
+           (write-itemize))
+          ((eq tok 'enumerate)
+           (write-enumerate))
+          ((eq tok 'display)
+           (write-display))
+          ((member tok '(subtract itemsep dash ndash))
            (cond ((eq tok 'itemsep)
-		  (codef-complete)
-		  (setf *codef* nil))) ;; end completion string
-	   (write-dash))
-	  ((eq tok 'star)
-	   (linebreak))
-	  ((eq tok 'new-paragraph)
-	   (paragraph))
-	  ((member tok '(y value definefont))
-	   (format t "warning: omitting @~A[] text\n" tok)
-	   (skip-it))
-	  ((member tok '(one colon shout slash bar bibliography))
-	   (format t "ignoring ~A\n" tok))
-	  ((eq tok 'make)
-	   (do-make))
-	  ((member tok '(device libraryfile style commandstring modify define use counter pageheading set graphic mult tabset tabclear textform part))
-	   (skip-it))
-	  ((eq tok 'comment)
-	   (do-comment))
+                  (codef-complete)
+                  (setf *codef* nil))) ;; end completion string
+           (write-dash))
+          ((eq tok 'star)
+           (linebreak))
+          ((eq tok 'new-paragraph)
+           (paragraph))
+          ((member tok '(y value definefont))
+           (format t "warning: omitting @~A[] text\n" tok)
+           (skip-it))
+          ((member tok '(one colon shout slash bar bibliography))
+           (format t "ignoring ~A\n" tok))
+          ((eq tok 'make)
+           (do-make))
+          ((member tok '(device libraryfile style commandstring modify define use counter pageheading set graphic mult tabset tabclear textform part))
+           (skip-it))
+          ((eq tok 'comment)
+           (do-comment))
           ((eq tok 'defn)
            (setf definition-flag t))
-	  ((eq tok 'startscribe)
-	   (do-startscribe))
-	  ((eq tok 'endscribe)
-	   (do-endscribe))
-	  ((eq tok 'endcodef)
-	   (codef-complete))
+          ((eq tok 'startscribe)
+           (do-startscribe))
+          ((eq tok 'endscribe)
+           (do-endscribe))
+          ((eq tok 'endcodef)
+           (codef-complete))
           ((eq tok 'stopcodef)
-	   (setf *codef* nil))
+           (setf *codef* nil))
           ((eq tok 'startcodef)
-	   (setf *codef* t))
-	  ((member tok '(u ux))
-	   (write-underline))
-	  ((member tok '(group flushleft))	; ignore it, flushleft is for Tomayko
-	   (translate))
-	  (t
-	   (format t "unrecognized token: ~A~%" tok)
-	   (break)))
+           (setf *codef* t))
+          ((member tok '(u ux))
+           (write-underline))
+          ((member tok '(group flushleft))        ; ignore it, flushleft is for Tomayko
+           (translate))
+          (t
+           (format t "unrecognized token: ~A~%" tok)
+           (break)))
     (go loop)
 ret
   (if *token-trace* (format t ")"))
   (setf *translate-depth* (- *translate-depth* 1))
-	
+        
   ))
 
 (defun manualp () (eq *document-type* 'manual))
@@ -1148,6 +1258,8 @@ ret
 (format t "      [t]) ; optional flag generates html with frames\n")
 
 (defun g (sourcedir source destdir dest &optional frame-flag)
+  ;; *md* default value is false - no metadoc output
+  (cond ((not (boundp '*md*)) (setf *md* nil)))
   (setf *codef-capture* "")
   (setf *codef-list* nil)
   (setf *figure-number* 1)
@@ -1158,7 +1270,7 @@ ret
   (setf *name-number* 0)
   (setf *name-reference* nil)
   (setf *omit* nil)
-  (setf *html* nil)	; says we're in section to dump html literally
+  (setf *html* nil)        ; says we're in section to dump html literally
   (setf *include* nil) ; process include or not?
   (setf *next-tokens* nil)
   (setf *smallcap* nil)
@@ -1187,8 +1299,8 @@ ret
   (setf *chapter-list* nil)
   ; *dest* is the root HTML file
   (setf *dest* (if frame-flag
-		   (html-file "title")
-		   (html-file dest)))
+                   (html-file "title")
+                   (html-file dest)))
   ; *file-name* is the current HTML file
   (setf *file-name* *dest*)
   (format t "Destination HTML file: ~A~%" *file-name*)
@@ -1216,24 +1328,29 @@ ret
   ;; in which case *previous-label-list* has already been copied from
   ;; *label-list*
   (cond (*label-list*
-	 (setf *previous-label-list* *label-list*))
-	((not (boundp '*previous-label-list*))
-	 (setf *previous-label-list* nil)))
+         (setf *previous-label-list* *label-list*))
+        ((not (boundp '*previous-label-list*))
+         (setf *previous-label-list* nil)))
   (cond (*number-of-parts*
-	 (setf *previous-number-of-parts* *number-of-parts*)))
+         (setf *previous-number-of-parts* *number-of-parts*)))
   (cond ((not (boundp '*previous-number-of-parts*))
-	 (setf *previous-number-of-parts* 0)))
+         (setf *previous-number-of-parts* 0)))
 
   (setf *inf* (open (strcat sourcedir "/" source ".mss")))
-;	       "test.mss"))
+;               "test.mss"))
 ; "/afs/cs/user/rbd/doc/man/nyquist/nyquistman.mss"))
   (setf *include-prefix* (strcat sourcedir "/"))
   (setf *dest-dir* (strcat destdir "/"))
   (setf *outf* (open (strcat *dest-dir* *file-name*) :direction :output))
+  (cond (*md* (setf *mdoutf* (open (strcat *dest-dir* source ".md") 
+                                   :direction :output))
+              (display "opened *mdoutf*" *mdoutf*)
+              (print "******************************************************") ))
   (setf *codef-file* (open (strcat *dest-dir* "NyquistWords.txt" )
                       :direction :output))
   (setf *rootf* *outf*)
   (display "g-before translate" *outf* *rootf* *inf*)
+  (if *md* (md-start))
   (translate)
   (display "g-after translate" *outf* *rootf* *inf*)
   (format t "g: closing *inf*\n")
@@ -1242,40 +1359,44 @@ ret
   (format t "g: closing *outf*\n")
   (finish-chapter)
   (cond ((not (eq *outf* *rootf*))
-	 (close *outf*)
-	 (setf *outf* nil)))
+         (close *outf*)
+         (setf *outf* nil)))
   (cond (*footnotefile*
-	 (format *footnotefile* "</body></html>\n")
-	 (close *footnotefile*)))
+         (format *footnotefile* "</body></html>\n")
+         (close *footnotefile*)))
   (setf *footnotefile* nil)
   (setf *outf* *rootf*)
-  (display "g-before toc" *outf* *rootf* *inf*)
+  (display "g-before toc" *outf* *rootf* *inf* (manualp))
   (setf *number-of-parts* *part-number*)
   (cond ((manualp)
-	 (setf *part-number* 1) ;; reset for title page
-	 (write-title-page-links)
-	 (generate-toc)
-	 (write-chapter-links nil nil t)))
+         (setf *part-number* 1) ;; reset for title page
+         (display "g-before-write-title-page-links")
+         (write-title-page-links)
+         (display "g-before-generate-toc")
+         (generate-toc)
+         (display "g-before-chapter-links")
+         (write-chapter-links nil nil t)))
   (format *rootf* "</body></html>\n")
   (format t "g: closing *rootf*\n")
   (close *rootf*)
   (setf *outf* (setf *rootf* nil))
   (cond ((manualp)
-	 (setf *part-number* *number-of-parts*) ;; restore from above
-	 (generate-index))
-	; if this is not a manual, there are no chapters, so there are no
-	; links between chapters or table of contents, so index cannot be
-	; reached, so index is not generated.  This is bad if there really
-	; are index terms!!!!
-	(*index-list*
-	 (format t "WARNING: NO INDEX IS BEING GENERATED, THIS IS A BUG~%")))
+         (setf *part-number* *number-of-parts*) ;; restore from above
+         (generate-index))
+        ; if this is not a manual, there are no chapters, so there are no
+        ; links between chapters or table of contents, so index cannot be
+        ; reached, so index is not generated.  This is bad if there really
+        ; are index terms!!!!
+        (*index-list*
+         (format t "WARNING: NO INDEX IS BEING GENERATED, THIS IS A BUG~%")))
   (cond (frame-flag
-	 (if (not (manualp)) 
-	     (error "frame option only works with manual document types"))
-	 (generate-home *title* (strcat *dest-dir* (html-file dest)))
-	 (generate-guide (strcat *dest-dir* (html-file "guide")))
-	 ))
+         (if (not (manualp)) 
+             (error "frame option only works with manual document types"))
+         (generate-home *doc-title* (strcat *dest-dir* (html-file dest)))
+         (generate-guide (strcat *dest-dir* (html-file "guide")))
+         ))
   (codef-close)
+  (cond ((and *md* *mdoutf*) (close *mdoutf*)))
 )
 
 
@@ -1285,7 +1406,7 @@ ret
     (format outf "<frameset cols=\"1*, 2*\">~%")
     (format outf "<frame scrolling=auto src=guide.html frameborder=0>~%")
     (format outf 
-	    "<frame name=m scrolling=auto src=title.html frameborder=0>~%")
+            "<frame name=m scrolling=auto src=title.html frameborder=0>~%")
     (format outf "<noframes><body><p>This browser does not support frames.~%")
     (format outf "<p><a href=title.html>The no-frames version is here.</a>~%")
     (format outf "</body></noframes></frameset></html>~%")
@@ -1299,19 +1420,19 @@ ret
   (let (prev first last rslt)
     (dolist (c lis)
       (cond ((eql prev c))
-	    (t
-	     (setf prev c)
-	     (cond ((both-case-p prev)
-		    (push prev rslt))
-		   ((null first)
-		    (setf first prev)
-		    (setf last prev))
-		   (t
-		    (setf last prev))))))
+            (t
+             (setf prev c)
+             (cond ((both-case-p prev)
+                    (push prev rslt))
+                   ((null first)
+                    (setf first prev)
+                    (setf last prev))
+                   (t
+                    (setf last prev))))))
     ;; nil if first and last are not defined
     (setf *rslt* (and first last (strcat (string first) "-" (string last))))
     rslt))
-	
+        
 
 (defun generate-index-chars ()
   (let (term initial prev)
@@ -1321,9 +1442,9 @@ ret
       (setf term (car entry))
       (setf initial (char term 0))
       (cond ((eql prev (char term 0)))
-	    (t
-	     (setf prev initial)
-	     (push prev *index-chars*))))
+            (t
+             (setf prev initial)
+             (push prev *index-chars*))))
     (setf *index-chars* (reverse *index-chars*))
     (setf *index-chars* (find-alpha-and-non-alpha *index-chars*))
     (setf *index-chars* (reverse *index-chars*))
@@ -1339,7 +1460,7 @@ ret
       (setf c (nth n *index-chars*))
       (format *outf* "<a href=\"#index-~A\">~A</a>~%" c c)
       (if (zerop (rem (1+ n) 9))
-	  (format *outf* "<br>~%")))
+          (format *outf* "<br>~%")))
     (format *outf* "</h3>~%")
     (generate-toc t)
     (generate-index *outf*)
@@ -1350,57 +1471,57 @@ ret
 (defun alpha-char-p (c)
   (let ((cc (char-code c)))
     (or (and (>= cc (char-code #\a))
-	     (<= cc (char-code #\z)))
-	(and (>= cc (char-code #\A))
-	     (<= cc (char-code #\Z))))))
+             (<= cc (char-code #\z)))
+        (and (>= cc (char-code #\A))
+             (<= cc (char-code #\Z))))))
 
 
 (defun process-comment-at ()
   (let (c cmd)
-    (read-char *inf*)	; read the @
+    (read-char *inf*)        ; read the @
     (setf c (peek-char nil *inf*))
     (cond ((alpha-char-p c)
-	   (setf cmd (read-command))
-	   (cond ((eq cmd 'end)
-		  (open-paren)
-		  (read-end-command))
-		 (t #\z))))))
+           (setf cmd (read-command))
+           (cond ((eq cmd 'end)
+                  (open-paren)
+                  (read-end-command))
+                 (t #\z))))))
 
 
 (defun process-at ()
   (let (c cmd)
-    (read-char *inf*)	; read the @
+    (read-char *inf*)        ; read the @
     (setf c (peek-char nil *inf*))
     (cond ((eql c #\@) (read-char *inf*))
-	  ((eql c #\\) (read-char *inf*) 'backslash)
-	  ((eql c #\/) (read-char *inf*) 'slash)
-	  ((eql c #\1) (read-char *inf*) 'one)
-	  ((eql c #\+) (read-char *inf*)
-		       (open-paren)
-		       'plus)
-	  ((eql c #\*) (read-char *inf*) 'star)
-	  ((eql c #\-) (read-char *inf*)
-		       (open-paren)
-		       'minus)
-	  ((eql c #\:) (read-char *inf*) 'colon)
-	  ((eql c #\!) (read-char *inf*) 'shout)
-	  ((eql c #\|) (read-char *inf*) 'bar)
-	  ((alpha-char-p c)
-	   (setf cmd (read-command))
-	   (cond ((eq cmd 'begin)
-		  (open-paren)
-		  (read-begin-command))
-		 ((eq cmd 'end)
-		  (open-paren)
-		  (read-end-command))
-		 ((eq cmd 'pragma)
-		  (open-paren)
-		  (read-pragma-command))
-		 (t
-		  (open-paren)
-		  cmd)))
-	  (t (format t "unexpected char after @: ~A~%" c)
-	     (break)))))
+          ((eql c #\\) (read-char *inf*) 'backslash)
+          ((eql c #\/) (read-char *inf*) 'slash)
+          ((eql c #\1) (read-char *inf*) 'one)
+          ((eql c #\+) (read-char *inf*)
+                       (open-paren)
+                       'plus)
+          ((eql c #\*) (read-char *inf*) 'star)
+          ((eql c #\-) (read-char *inf*)
+                       (open-paren)
+                       'minus)
+          ((eql c #\:) (read-char *inf*) 'colon)
+          ((eql c #\!) (read-char *inf*) 'shout)
+          ((eql c #\|) (read-char *inf*) 'bar)
+          ((alpha-char-p c)
+           (setf cmd (read-command))
+           (cond ((eq cmd 'begin)
+                  (open-paren)
+                  (read-begin-command))
+                 ((eq cmd 'end)
+                  (open-paren)
+                  (read-end-command))
+                 ((eq cmd 'pragma)
+                  (open-paren)
+                  (read-pragma-command))
+                 (t
+                  (open-paren)
+                  cmd)))
+          (t (format t "unexpected char after @: ~A~%" c)
+             (break)))))
 
 
 (defun process-newline ()
@@ -1408,10 +1529,10 @@ ret
     (read-char *inf*) ; read the newline
     (setf c (peek-char nil *inf*))
     (cond ((eql c #\Newline)
-	   (while (eql (peek-char nil *inf*) #\Newline)
-		  (read-char *inf*))
-	   'new-paragraph)
-	  (t #\Newline))))
+           (while (eql (peek-char nil *inf*) #\Newline)
+                  (read-char *inf*))
+           'new-paragraph)
+          (t #\Newline))))
 
 
 ;; READ-COMMAND -- read command after an @
@@ -1419,41 +1540,41 @@ ret
 (defun read-command ()
   (let ((command ""))
     (while (alpha-char-p (peek-char nil *inf*))
-	   (setf command
-	    (strcat command (string (read-char *inf*)))))
+           (setf command
+            (strcat command (string (read-char *inf*)))))
     (intern (string-upcase command))))
 
 
 
-;;	   (read-char *inf*))
+;;           (read-char *inf*))
 
 (defun get-token ()
   (let ((c (peek-char nil *inf*))
-	result)
+        result)
 
     ;; allow others to force next token:
     (cond (*next-tokens*
-	   (setf result (car *next-tokens*))
-	   (setf *next-tokens* (cdr *next-tokens*)))
-	  (t
-	   (setf result
-		 (cond ((eql c #\@) (process-at))
-		       ((eql c #\Newline) (process-newline))
-		       ((eql c #\`) ;; double `` -> "
-			(read-char *inf*)
-			(setf c (peek-char nil *inf*))
-			(cond ((eql c #\`) 
-			       (read-char *inf*)
-			       #\")
-			      (t #\`)))
-		       ((eql c #\') ;; double '' -> "
-			(read-char *inf*)
-			(setf c (peek-char nil *inf*))
-			(cond ((eql c #\')
-			       (read-char *inf*)
-			       #\")
-			      (t #\')))
-		       (t (read-char *inf*))))))
+           (setf result (car *next-tokens*))
+           (setf *next-tokens* (cdr *next-tokens*)))
+          (t
+           (setf result
+                 (cond ((eql c #\@) (process-at))
+                       ((eql c #\Newline) (process-newline))
+                       ((eql c #\`) ;; double `` -> "
+                        (read-char *inf*)
+                        (setf c (peek-char nil *inf*))
+                        (cond ((eql c #\`) 
+                               (read-char *inf*)
+                               #\")
+                              (t #\`)))
+                       ((eql c #\') ;; double '' -> "
+                        (read-char *inf*)
+                        (setf c (peek-char nil *inf*))
+                        (cond ((eql c #\')
+                               (read-char *inf*)
+                               #\")
+                              (t #\')))
+                       (t (read-char *inf*))))))
     (if *token-trace* (format t "->~A " result))
     result
     ))
@@ -1461,10 +1582,10 @@ ret
 
 (defun get-comment-token ()
   (let ((c (peek-char nil *inf*))
-	result)
+        result)
     (setf result
-	  (cond ((eql c #\@) (process-comment-at))
-		(t (read-char *inf*))))
+          (cond ((eql c #\@) (process-comment-at))
+                (t (read-char *inf*))))
     (if *token-trace* (format t "->~A " result))
     result
     ))
@@ -1493,13 +1614,13 @@ ret
      ;; inserted space character) until nothing is found
      (setf index 0)
      (while (and (< (+ index 2) (length *codef-capture*))
-		 (setf index (string-search "..." *codef-capture* 
-					       :start (+ 2 index))))
+                 (setf index (string-search "..." *codef-capture* 
+                                               :start (+ 2 index))))
        (cond ((and index (> index 0) 
-	  	   (not (eq (char *codef-capture* (1- index)) #\Space)))
-	      (setf *codef-capture* 
-		    (strcat (subseq *codef-capture* 0 index) " "
-			    (subseq *codef-capture* index))))))
+                     (not (eq (char *codef-capture* (1- index)) #\Space)))
+              (setf *codef-capture* 
+                    (strcat (subseq *codef-capture* 0 index) " "
+                            (subseq *codef-capture* index))))))
      (if ccd (display "codef-complete 2" *codef-capture*))
      ;; trim blanks after open bracket/comma and before close paren
      (while (setf index (string-search "[, " *codef-capture*))
@@ -1516,16 +1637,16 @@ ret
    (setf *codef-capture* (string-trim " " *codef-capture*))
    ;; translate &key to example format
    (cond ((or (string-search "&key" *codef-capture*)
-	      (string-search "&optional" *codef-capture*))
+              (string-search "&optional" *codef-capture*))
           (setf *codef-capture* (codef-expand *codef-capture*))))
    (if (and (> (length *codef-capture*) 0) ; must be non-empty
-	    (not (eq (char *codef-capture* 0) #\:))) ; ignore messages
+            (not (eq (char *codef-capture* 0) #\:))) ; ignore messages
        (push (string-downcase
               (convert-sal-to-lisp *codef-capture*))
              *codef-list*))
    ;; trim leading open paren
    (if (and (> (length *codef-capture*) 0)
-	    (eq (char *codef-capture* 0) #\())
+            (eq (char *codef-capture* 0) #\())
        (setf *codef-capture* (subseq *codef-capture* 1)))
 
    (setf *codef-capture* ""))
@@ -1573,18 +1694,18 @@ ret
     (dotimes (i (length s))
       (setf c (char s i))
       (cond ((eq c #\Space)
-	     (cond ((> (length token) 0)
-		    (push token rslt)
-		    (setf token ""))))
-	    ((member c '(#\( #\)))
-	     (cond ((> (length token) 0)
-		    (push token rslt)
-		    (setf token "")))
-	     (push (string c) rslt))
-	    (t
-	     (setf token (strcat token (string c))))))
+             (cond ((> (length token) 0)
+                    (push token rslt)
+                    (setf token ""))))
+            ((member c '(#\( #\)))
+             (cond ((> (length token) 0)
+                    (push token rslt)
+                    (setf token "")))
+             (push (string c) rslt))
+            (t
+             (setf token (strcat token (string c))))))
     (cond ((> (length token) 0)
-	   (push token rslt)))
+           (push token rslt)))
     (reverse rslt)))
 
 
@@ -1604,25 +1725,25 @@ ret
     (setf words (split s))
     (dolist (word words)
       (cond ((equal word "&key")
-	     (setf mode :key))
-	    ((equal word "&optional")
-	     (setf mode :optional))
-	    ((equal word "(")
-	     (setf r (strcat r space word))
-	     (setf space ""))
-	    ((equal word ")")
-	     (setf r (strcat r word))
-	     (setf space " "))
-	    ((eq mode :key)
-	     (setf r (strcat r space "[" (colonize word) " "
-			     (uncolonize word) "]"))
-	     (setf space " "))
-	    ((eq mode :optional)
-	     (setf r (strcat r space "[" word "]"))
-	     (setf space " "))
-	    (t
-	     (setf r (strcat r space word))
-	     (setf space " "))))
+             (setf mode :key))
+            ((equal word "&optional")
+             (setf mode :optional))
+            ((equal word "(")
+             (setf r (strcat r space word))
+             (setf space ""))
+            ((equal word ")")
+             (setf r (strcat r word))
+             (setf space " "))
+            ((eq mode :key)
+             (setf r (strcat r space "[" (colonize word) " "
+                             (uncolonize word) "]"))
+             (setf space " "))
+            ((eq mode :optional)
+             (setf r (strcat r space "[" word "]"))
+             (setf space " "))
+            (t
+             (setf r (strcat r space word))
+             (setf space " "))))
     r))
 
 (defun find-url-for (item)
