@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.8.8)
 
-
 find_package(Java COMPONENTS Development)
 include(UseJava)
 
