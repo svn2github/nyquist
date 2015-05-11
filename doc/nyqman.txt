@@ -15,11 +15,11 @@
 
                            NYQUIST REFERENCE MANUAL
 
-                                 Version 3.09
+                                 Version 3.10
 
 
                      Copyright 2013 by Roger B. Dannenberg
-                               27 December 2014
+                                 18 March 2015
 
 
 
@@ -1765,7 +1765,7 @@ rescale a floating point file and convert it to 16-bit samples for playback.
   The  next  example  uses  the  Nyquist frequency modulation behavior fmosc to
 generate various sounds.  The parameters to fmosc are:
 
-    fmosc(pitch modulator table phase)
+    fmosc(pitch, modulator, table, phase)
 Note that pitch is the number of half-steps, e.g. c4 has the value of 60  which
 is  middle-C,  and  phase  is  in  degrees.   Only the first two parameters are
 required:
@@ -3752,7 +3752,7 @@ pwl-list(breakpoints) [SAL]
 
 pwlv(l , t , l , t , t , ... t , l ) [SAL]
       1   2   2   3   3       n   n
-(pwlv l  t  l  t  t  ... t  l ) [LISP]
+(pwlv l  t  l  t  l  ... t  l ) [LISP]
        1  2  2  3  3      n  n
      Creates  a  piece-wise  linear  envelope with breakpoints at (0, l ), (t ,
                                                                        1     2
@@ -3989,8 +3989,8 @@ atone(sound, cutoff) [SAL]
      No longer defined; use hp instead, or define it by adding (setfn atone hp)
      to your program.
 
-reson(sound, center, bandwidth, n) [SAL]
-(reson sound center bandwidth n) [LISP]
+reson(sound, center, bandwidth [, n]) [SAL]
+(reson sound center bandwidth [n)] [LISP]
      Apply a resonating filter  to  sound  with  center  frequency  center  (in
      hertz),  which  may  be  a  float  or  a  signal.  Bandwidth is the filter
      bandwidth (in hertz), which may also be a  signal.    Filter  coefficients
@@ -4006,8 +4006,8 @@ reson(sound, center, bandwidth, n) [SAL]
 One application of reson is to simulate resonances in the  human  vocal  tract.
      See demos/voice_synthesis.htmfor sample code and documentation.
 
-areson(sound, center, bandwidth, n) [SAL]
-(areson sound center bandwidth n) [LISP]
+areson(sound, center, bandwidth [, n]) [SAL]
+(areson sound center bandwidth [n)] [LISP]
      The  areson  filter  is an exact complement of reson such that if both are
      applied to the same signal with  the  same  parameters,  the  sum  of  the
      results yeilds the original signal.
@@ -4100,9 +4100,9 @@ eq-highshelf(signal, hz, gain [, slope]) [SAL]
 eq-band(signal, hz, gain, width) [SAL]
 (eq-band signal hz gain width) [LISP]
      A  fixed-  or  variable-parameter, second-order midrange equalization (EQ)
-     filter  based  on  snd-biquad,  snd-eqbandcv  and  snd-eqbandvvv.  The  hz
-     parameter (a FLONUM) is the center frequency, gain (a FLONUM) is the boost
-     (or cut) in dB, and width (a FLONUM) is the half-gain  width  in  octaves.
+     filter based on snd-biquad, eq-band-ccc and eq-band-vvv. The hz  parameter
+     (a  FLONUM) is the center frequency, gain (a FLONUM) is the boost (or cut)
+     in  dB,  and  width  (a  FLONUM)  is  the  half-gain  width  in   octaves.
      Alternatively,  hz,  gain, and width may be SOUNDs, but they must all have
      the same sample rate, e.g. they should all run at the control rate  or  at
      the sample rate.
@@ -5359,7 +5359,7 @@ snd-follow(sound, floor, risetime, falltime, lookahead) [SAL]
      takes for the output to fall (exponentially)  from  unity  to  floor.  The
      algorithm  looks  ahead  for  peaks  and will begin to increase the output
      signal according to risetime in anticipation of  a  peak.  The  amount  of
-     anticipation  (in  sampless)  is  given by lookahead.  The algorithm is as
+     anticipation  (in  samples)  is  given  by lookahead.  The algorithm is as
      follows: the output value is allowed to increase according to risetime  or
      decrease according to falltime. If the next input sample is in this range,
      that sample is simply output as the next output sample.  If the next input
@@ -7662,58 +7662,59 @@ the list is (A B C), each generated period is (A A B A B C).
 
 make-accumulation(items, name: name, trace: trace) [SAL]
 (make-accumulation items :name name :trace trace) [LISP]
-     For  each  item,  generate  items from the first to the item including the
-                                  2
-     item. The period length is (n  + n) / 2 where n is the  length  of  items.
-     If  items  is  a pattern, a period from that pattern becomes the list from
-     which items are generated, and a new list is generated every period.  Note
-     that this is similar in name but different from make-accumulate.
+     Return the prefixes of items, e.g. the first element followed by the first
+     and second elements, then the  first  three,  until  the  entire  list  is
+                                           2
+     returned.  The  period  length  is  (n   + n) / 2 where n is the length of
+     items.  If items is a pattern, a period from that pattern becomes the list
+     from  which items are generated, and a new list is generated every period.
+     Note that this is similar in name but different from make-accumulate.
 
 
 
 13.2.7. copier
-The  copier-class  makes  copies  of  periods from a sub-pattern.  For example,
-     three periods of make-copier(make-cycle({a  b  c},  for:  1),  repeat:  2,
-     merge:  t)  would  be  (A  A)  (B  B) (C C). Note that entire periods (not
-     individual items) are repeated, so in this example the for:   keyword  was
+The copier-class makes copies of periods from  a  sub-pattern.    For  example,
+     three  periods  of  make-copier(make-cycle({a  b  c},  for: 1), repeat: 2,
+     merge: t) would be (A A) (B B)  (C  C).  Note  that  entire  periods  (not
+     individual  items)  are repeated, so in this example the for:  keyword was
      used to force periods to be of length one so that each item is repeated by
      the repeat: count.
 
-make-copier(sub-pattern, repeat: repeat, merge: merge, for:  for,  name:  name,
+make-copier(sub-pattern,  repeat:  repeat,  merge: merge, for: for, name: name,
      trace: trace) [SAL]
 (make-copier sub-pattern :repeat repeat :merge merge :for for :name name :trace
      trace) [LISP]
      Generate a period from sub-pattern and repeat it repeat times. If merge is
-     false  (the default), each repetition of a period from sub-pattern results
-     in a period by default. If merge  is  true  (non-null),  then  all  repeat
+     false (the default), each repetition of a period from sub-pattern  results
+     in  a  period  by  default.  If  merge is true (non-null), then all repeat
      repetitions of the period are merged into one result period by default. If
-     the for: keyword is used, the same items are generated, but the items  are
-     grouped  into  periods  determined  by  the  for:  parameter.  If the for:
-     parameter is a pattern, it is evaluated every result  period.  The  repeat
-     and  merge values may be patterns that return a repeat count and a boolean
-     value, respectively.  If so, these patterns are  evaluated  initially  and
-     after  each  repeat  copies  are  made  (independent  of  the for: keyword
-     parameter, if any).  The repeat value returned by a pattern  can  also  be
-     negative.  A  negative number indicates how many periods of sub-pattern to
-     skip. After skipping these patterns,  new  repeat  and  merge  values  are
+     the  for: keyword is used, the same items are generated, but the items are
+     grouped into periods  determined  by  the  for:  parameter.  If  the  for:
+     parameter  is  a  pattern, it is evaluated every result period. The repeat
+     and merge values may be patterns that return a repeat count and a  boolean
+     value,  respectively.    If so, these patterns are evaluated initially and
+     after each repeat  copies  are  made  (independent  of  the  for:  keyword
+     parameter,  if  any).   The repeat value returned by a pattern can also be
+     negative. A negative number indicates how many periods of  sub-pattern  to
+     skip.  After  skipping  these  patterns,  new  repeat and merge values are
      generated.
 
 
 
 13.2.8. accumulate
-  The  accumulate-class  forms  the sum of numbers returned by another pattern.
-For example, each period of make-accumulate(make-cycle({1 2 -3})) is (1  3  0).
+  The accumulate-class forms the sum of numbers returned  by  another  pattern.
+For  example,  each period of make-accumulate(make-cycle({1 2 -3})) is (1 3 0).
 The default output period length is the length of the input period.
 
-make-accumulate(sub-pattern,  for: for, max: maximum, min: minimum, name: name,
+make-accumulate(sub-pattern, for: for, max: maximum, min: minimum, name:  name,
      trace: trace) [SAL]
-(make-accumulate sub-pattern :for for :max  maximum  :min  minimum  :name  name
+(make-accumulate  sub-pattern  :for  for  :max  maximum :min minimum :name name
      :trace trace) [LISP]
      Keep a running sum of numbers generated by sub-pattern. The default period
-     lengths match the period lengths from sub-pattern. If maximum  (a  pattern
-     or  a  number)  is  specified,  and  the  running sum exceeds maximum, the
-     running sum is reset to maximum. If minimum (a pattern  or  a  number)  is
-     specified,  and  the  running  sum falls below minimum, the running sum is
+     lengths  match  the period lengths from sub-pattern. If maximum (a pattern
+     or a number) is specified,  and  the  running  sum  exceeds  maximum,  the
+     running  sum  is  reset  to maximum. If minimum (a pattern or a number) is
+     specified, and the running sum falls below minimum,  the  running  sum  is
      reset to minimum. If minimum is greater than maximum, the running sum will
      be set to one of the two values. Note that this is similar in name but not
      in function to make-accumulation.
@@ -7721,61 +7722,61 @@ make-accumulate(sub-pattern,  for: for, max: maximum, min: minimum, name: name,
 
 
 13.2.9. sum
-  The sum-class forms the sum of numbers, one from each of two other  patterns.
-For  example, each period of make-sum(make-cycle({1 2 3}), make-cycle({4 5 6}))
+  The  sum-class forms the sum of numbers, one from each of two other patterns.
+For example, each period of make-sum(make-cycle({1 2 3}), make-cycle({4 5  6}))
 is (5 7 9).  The default output period length is the length of the input period
 of the first argument. Therefore, the first argument must be a pattern, but the
 second argument can be a pattern or a number.
 
 make-sum(x, y, for: for, name: name, trace: trace) [SAL]
 (make-sum x y :for for :name name :trace trace) [LISP]
-     Form sums of items (which must be numbers) from pattern x and  pattern  or
+     Form  sums  of items (which must be numbers) from pattern x and pattern or
      number y.  The default period lengths match the period lengths from x.
 
 
 
 13.2.10. product
-  The  product-class  forms  the product of numbers, one from each of two other
-patterns.  For  example,  each  period  of  make-product(make-cycle({1  2  3}),
-make-cycle({4  5  6}))  is  (4 10 18).  The default output period length is the
+  The product-class forms the product of numbers, one from each  of  two  other
+patterns.    For  example,  each  period  of  make-product(make-cycle({1 2 3}),
+make-cycle({4 5 6})) is (4 10 18).  The default output  period  length  is  the
 length of the input period of the first argument. Therefore, the first argument
 must be a pattern, but the second argument can be a pattern or a number.
 
 make-product(x, y, for: for, name: name, trace: trace) [SAL]
 (make-product x y :for for :name name :trace trace) [LISP]
-     Form  products of items (which must be numbers) from pattern x and pattern
+     Form products of items (which must be numbers) from pattern x and  pattern
      or number y.  The default period lengths match the period lengths from x.
 
 
 
 13.2.11. eval
-  The eval-class evaluates an expression to produce  each  output  item.    The
+  The  eval-class  evaluates  an  expression  to produce each output item.  The
 default output period length is 1.
 
 make-eval(expr, for: for, name: name, trace: trace) [SAL]
 (make-eval expr :for for :name name :trace trace) [LISP]
-     Evaluate  expr  to  generate each item. If expr is a pattern, each item is
+     Evaluate expr to generate each item. If expr is a pattern,  each  item  is
      generated by getting the next item from expr and evaluating it.
 
 
 
 13.2.12. length
-  The length-class  generates  periods  of  a  specified  length  from  another
-pattern.  This is similar to using the for: keyword, but for many patterns, the
-for: parameter alters the points at which other  patterns  are  generated.  For
-example,  if  the palindrome pattern has an elide: pattern parameter, the value
-will be computed every period. If there is also a for: parameter with  a  value
-of  2,  then  elide:  will  be  recomputed  every  2 items. In contrast, if the
-palindrome (without a for: parameter) is embedded in a length  pattern  with  a
-lenght  of 2, then the periods will all be of length 2, but the items will come
+  The  length-class  generates  periods  of  a  specified  length  from another
+pattern. This is similar to using the for: keyword, but for many patterns,  the
+for:  parameter  alters  the  points at which other patterns are generated. For
+example, if the palindrome pattern has an elide: pattern parameter,  the  value
+will  be  computed every period. If there is also a for: parameter with a value
+of 2, then elide: will be  recomputed  every  2  items.  In  contrast,  if  the
+palindrome  (without  a  for: parameter) is embedded in a length pattern with a
+lenght of 2, then the periods will all be of length 2, but the items will  come
 from default periods of the palindrome, and therefore the elide: values will be
 recomputed at the beginnings of default palindrome periods.
 
 make-length(pattern, length-pattern, name: name, trace: trace) [SAL]
 (make-length pattern length-pattern :name name :trace trace) [LISP]
-     Make  a  pattern  of class length-class that regroups items generated by a
-     pattern according to pattern lengths given by length-pattern.   Note  that
-     length-pattern  is not optional: There is no default pattern length and no
+     Make a pattern of class length-class that regroups items  generated  by  a
+     pattern  according  to pattern lengths given by length-pattern.  Note that
+     length-pattern is not optional: There is no default pattern length and  no
      for: keyword.
 
 
@@ -7783,123 +7784,123 @@ make-length(pattern, length-pattern, name: name, trace: trace) [SAL]
 13.2.13. window
   The window-class groups items from another pattern by using a sliding window.
 If the skip value is 1, each output period is formed by dropping the first item
-of the previous perioda and appending the next item from the pattern. The  skip
-value  and  the  output  period  length  can  change every period. For a simple
-example, if the period length is 3 and the skip  value  is  1,  and  the  input
+of  the previous perioda and appending the next item from the pattern. The skip
+value and the output period length  can  change  every  period.  For  a  simple
+example,  if  the  period  length  is  3 and the skip value is 1, and the input
 pattern generates the sequence A, B, C, ..., then the output periods will be (A
 B C), (B C D), (C D E), (D E F), ....
 
-make-window(pattern, length-pattern, skip-pattern, name:  name,  trace:  trace)
+make-window(pattern,  length-pattern,  skip-pattern,  name: name, trace: trace)
      [SAL]
-(make-window  pattern  length-pattern  skip-pattern  :name  name  :trace trace)
+(make-window pattern  length-pattern  skip-pattern  :name  name  :trace  trace)
      [LISP]
-     Make a pattern of class window-class that regroups items  generated  by  a
+     Make  a  pattern  of class window-class that regroups items generated by a
      pattern according to pattern lengths given by length-pattern and where the
-     period advances by the number of items given by skip-pattern.   Note  that
-     length-pattern  is not optional: There is no default pattern length and no
+     period  advances  by the number of items given by skip-pattern.  Note that
+     length-pattern is not optional: There is no default pattern length and  no
      for: keyword.
 
 
 
 13.2.14. markov
-  The markov-class  generates  items  from  a  Markov  model.  A  Markov  model
+  The  markov-class  generates  items  from  a  Markov  model.  A  Markov model
 generates a sequence of states according to rules which specify possible future
-states given the most recent states in the past. For example, states  might  be
-pitches,  and  each pitch might lead to a choice of pitches for the next state.
+states  given  the most recent states in the past. For example, states might be
+pitches, and each pitch might lead to a choice of pitches for the  next  state.
 In the markov-class, states can be either symbols or numbers, but not arbitrary
-values  or  patterns.  This makes it easier to specify rules.  However, symbols
-can be mapped to arbitrary values including pattern objects, and  these  become
-the  actual  generated  items.    By  default,  all  future states are weighted
-equally, but weights may be associated with future states. A Markov model  must
-be  initialized  with  a  sequence of past states using the past: keyword.  The
-most common form of Markov model is a "first order Markov model" in  which  the
+values or patterns. This makes it easier to specify rules.    However,  symbols
+can  be  mapped to arbitrary values including pattern objects, and these become
+the actual generated items.    By  default,  all  future  states  are  weighted
+equally,  but weights may be associated with future states. A Markov model must
+be initialized with a sequence of past states using the  past:  keyword.    The
+most  common  form of Markov model is a "first order Markov model" in which the
 future item depends only upon one past item. However, higher order models where
-the future items depend on two or more past items are possible. A  "zero-order"
+the  future items depend on two or more past items are possible. A "zero-order"
 Markov model, which depends on no past states, is essentially equivalent to the
-random pattern.  As an example of a first-order Markov pattern, two periods  of
-make-markov({{a  ->  b  c} {b -> c} {c -> a}}, past: {a}) might be (C A C) (A B
+random  pattern.  As an example of a first-order Markov pattern, two periods of
+make-markov({{a -> b c} {b -> c} {c -> a}}, past: {a}) might be (C A  C)  (A  B
 C).
 
 make-markov(rules, past: past, produces: produces, for: for, name: name, trace:
      trace) [SAL]
-(make-markov  rules  past  :produces produces :for for :name name :trace trace)
+(make-markov rules past :produces produces :for for :name  name  :trace  trace)
      [LISP]
-     Generate a sequence of items from a Markov process.  The  rules  parameter
-     has  the  form:    (prev1  prev2 ... prevn -> next1 next2 ... nextn) where
+     Generate  a  sequence  of items from a Markov process. The rules parameter
+     has the form:  (prev1 prev2 ... prevn ->  next1  next2  ...  nextn)  where
      prev1 through prevn represent a sequence of most recent (past) states. The
-     symbol  *  is  treated  specially: it matches any previous state. If prev1
-     through prevn (which may be just one state as in the example above)  match
-     the  previously  generated states, this rule applies. Note that every rule
-     must specify the same number of previous states; this number is  known  as
-     the  order  of  the Markov model.  The first rule in rules that applies is
-     used to select the next state. If no rule applies, the next state  is  NIL
-     (which  is  a  valid  state  that  can be used in rules).  Assuming a rule
-     applies, the list of possible next states is specified  by  next1  through
+     symbol * is treated specially: it matches any  previous  state.  If  prev1
+     through  prevn (which may be just one state as in the example above) match
+     the previously generated states, this rule applies. Note that  every  rule
+     must  specify  the same number of previous states; this number is known as
+     the order of the Markov model.  The first rule in rules  that  applies  is
+     used  to  select the next state. If no rule applies, the next state is NIL
+     (which is a valid state that can be used  in  rules).    Assuming  a  rule
+     applies,  the  list  of possible next states is specified by next1 through
      nextn. Notice that these are alternative choices for the next state, not a
-     sequence of future states, and each rule can have any number  of  choices.
-     Each  choice may be the state itself (a symbol or a number), or the choice
-     may be a list consisting of the state and a  weight.  The  weight  may  be
+     sequence  of  future states, and each rule can have any number of choices.
+     Each choice may be the state itself (a symbol or a number), or the  choice
+     may  be  a  list  consisting  of the state and a weight. The weight may be
      given by a pattern, in which case the next item of the pattern is obtained
-     every time the rule is applied. For example, this rules says that  if  the
+     every  time  the rule is applied. For example, this rules says that if the
      previous states were A and B, the next state can be A with a weight of 0.5
-     or C with an implied weight of 1: (A B -> (A 0.5) C). The  default  length
+     or  C  with an implied weight of 1: (A B -> (A 0.5) C). The default length
      of the period is the length of rules. The past parameter must be provided.
      It is a list of states whose length matches the order of the Markov model.
-     The  keyword  parameter  produces may be used to map from state symbols or
+     The keyword parameter produces may be used to map from  state  symbols  or
      numbers  to  other  values  or  patterns.  The  parameter  is  a  list  of
-     alternating  symbols  and values. For example, to map A to 69 and B to 71,
-     use list(quote(a), 69, quote(b),  71).    You  can  also  map  symbols  to
-     patterns,   for  example  list(quote(a),  make-cycle({57  69}),  quote(b),
-     make-random({59 71})). The next item of the pattern is is  generated  each
-     time  the  Markov  model  generates the corresponding state.  Finally, the
-     produces keyword can be eval:, which means to evaluate  the  Markov  model
+     alternating symbols and values. For example, to map A to 69 and B  to  71,
+     use  list(quote(a),  69,  quote(b),  71).    You  can  also map symbols to
+     patterns,  for  example  list(quote(a),  make-cycle({57  69}),   quote(b),
+     make-random({59  71})).  The next item of the pattern is is generated each
+     time the Markov model generates the corresponding  state.    Finally,  the
+     produces  keyword  can  be :eval, which means to evaluate the Markov model
      state. This could be useful if states are Nyquist global variables such as
      C4, CS4, D4, ]..., which evaluate to numerical values (60, 61, 62, ....
 
 markov-create-rules(sequence, order [, generalize]) [SAL]
 (markov-create-rules sequence order [generalize]) [LISP]
-     Generate a set  of  rules  suitable  for  the  make-markov  function.  The
-     sequence  is  a  ``typical'' sequence of states, and order is the order of
-     the Markov model. It is often the case that a  sample  sequence  will  not
+     Generate  a  set  of  rules  suitable  for  the  make-markov function. The
+     sequence is a ``typical'' sequence of states, and order is  the  order  of
+     the  Markov  model.  It  is often the case that a sample sequence will not
      have a transition from the last state to any other state, so the generated
-     Markov model can reach a ``dead end'' where no rule  applies.  This  might
+     Markov  model  can  reach a ``dead end'' where no rule applies. This might
      lead to an infinite stream of NIL's. To avoid this, the optional parameter
-     generalize can be set to t (true),  indicating  that  there  should  be  a
+     generalize  can  be  set  to  t  (true), indicating that there should be a
      fallback rule that matches any previous states and whose future states are
-     weighted according  to  their  frequency  in  sequence.  For  example,  if
-     sequence  contains 5 A's, 5 B's and 10 G's, the default rule will be (* ->
+     weighted  according  to  their  frequency  in  sequence.  For  example, if
+     sequence contains 5 A's, 5 B's and 10 G's, the default rule will be (*  ->
      (A 5) (B 5) (G 10)). This rule will be appended to the end so it will only
      apply if no other rule does.
 
 13.3. Random Number Generators
   The distributions.lsp library implements random number generators that return
 random values with various probability distributions. Without this library, you
-can   generate   random  numbers  with  uniform  distributions.  In  a  uniform
-distribution, all values are equally likely. To generate a  random  integer  in
-some  range,  use random. To generate a real number (FLONUM) in some range, use
-real-random (or rrandom if the range is 0-1). But there are  other  interesting
-distributions.  For  example,  the Gaussian distribution is often used to model
-real-world errors and fluctuations  where  values  are  clustered  around  some
-central  value  and  large  deviations  are  more unlikely than small ones. See
+can  generate  random  numbers  with  uniform  distributions.  In   a   uniform
+distribution,  all  values  are equally likely. To generate a random integer in
+some range, use random. To generate a real number (FLONUM) in some  range,  use
+real-random  (or  rrandom if the range is 0-1). But there are other interesting
+distributions. For example, the Gaussian distribution is often  used  to  model
+real-world  errors  and  fluctuations  where  values  are clustered around some
+central value and large deviations are  more  unlikely  than  small  ones.  See
 Dennis Lorrain, "A Panoply of Stochastic 'Canons'," Computer Music Journal vol.
 4, no. 1, 1980, pp. 53-81.
 
-  In  most  of the random number generators described below, there are optional
-parameters to indicate a maximum and/or minimum value. These  can  be  used  to
-truncate  the  distribution.  For  example,  if  you  basically want a Gaussian
-distribution, but you never want a value greater than 5, you can specify  5  as
-the  maximum  value.    The  upper  and  lower bounds are implemented simply by
-drawing a random number from the full distribution repeatedly  until  a  number
-falling  into  the  desired  range  is  obtained.  Therefore,  if you select an
+  In most of the random number generators described below, there  are  optional
+parameters  to  indicate  a  maximum and/or minimum value. These can be used to
+truncate the distribution. For  example,  if  you  basically  want  a  Gaussian
+distribution,  but  you never want a value greater than 5, you can specify 5 as
+the maximum value.  The upper  and  lower  bounds  are  implemented  simply  by
+drawing  a  random  number from the full distribution repeatedly until a number
+falling into the desired  range  is  obtained.  Therefore,  if  you  select  an
 acceptable range that is unlikely, it may take Nyquist a long time to find each
-acceptable  random number. The intended use of the upper and lower bounds is to
+acceptable random number. The intended use of the upper and lower bounds is  to
 weed out values that are already fairly unlikely.
 
 linear-dist(g) [SAL]
 (linear-dist g) [LISP]
      Return a FLONUM value from a linear distribution, where the probability of
      a value decreases linearly from zero to g which must be greater than zero.
-     (See Figure 7.) The linear  distribution  is  useful  for  generating  for
+     (See  Figure  7.)  The  linear  distribution  is useful for generating for
      generating time and pitch intervals.
 
 
@@ -7924,17 +7925,17 @@ linear-dist(g) [SAL]
 
 exponential-dist(delta [, high]) [SAL]
 (exponential-dist delta [high]) [LISP]
-     Return  a  FLONUM  value  from  an  exponential  distribution. The initial
-     downward slope is steeper with larger  values  of  delta,  which  must  be
-     greater  than  zero.  (See  Figure  8. The optional high parameter puts an
-     artificial upper bound on the return value.  The exponential  distribution
-     generates  values  greater  than  0,  and  can  be  used  to generate time
+     Return a FLONUM  value  from  an  exponential  distribution.  The  initial
+     downward  slope  is  steeper  with  larger  values of delta, which must be
+     greater than zero. (See Figure 8. The  optional  high  parameter  puts  an
+     artificial  upper bound on the return value.  The exponential distribution
+     generates values greater  than  0,  and  can  be  used  to  generate  time
      intervals. Natural random intervals such as the time intervals between the
-     release  of  atomic  particles  or  the  passing  of yellow volkswagons in
-     traffic have exponential distributions. The  exponential  distribution  is
-     memory-less:  knowing  that  a  random  number  from  this distribution is
-     greater than some value (e.g. a note duration is at least 1 second)  tells
-     you  nothing  new  about  how soon the note will end. This is a continuous
+     release of atomic particles  or  the  passing  of  yellow  volkswagons  in
+     traffic  have  exponential  distributions. The exponential distribution is
+     memory-less: knowing that  a  random  number  from  this  distribution  is
+     greater  than some value (e.g. a note duration is at least 1 second) tells
+     you nothing new about how soon the note will end.  This  is  a  continuous
      distribution, but geometric-dist (described below) implements the discrete
      form.
 
@@ -7961,7 +7962,7 @@ exponential-dist(delta [, high]) [SAL]
 gamma-dist(nu [, high]) [SAL]
 (gamma-dist nu [high]) [LISP]
      Return a FLONUM value from a Gamma distribution. The value is greater than
-     zero, has a mean of nu (a FIXNUM greater than zero), and a mode (peak)  of
+     zero,  has a mean of nu (a FIXNUM greater than zero), and a mode (peak) of
      around nu - 1.  The optional high parameter puts an artificial upper bound
      on the return value.
 
@@ -7987,15 +7988,15 @@ gamma-dist(nu [, high]) [SAL]
 
 bilateral-exponential-dist(xmu, tau [, low, high]) [SAL]
 (bilateral-exponential-dist xmu tau [low high]) [LISP]
-     Returns a FLONUM value from a bilateral  exponential  distribution,  where
+     Returns  a  FLONUM  value from a bilateral exponential distribution, where
      xmu is the center of the double exponential and tau controls the spread of
-     the distribution.  A  larger  tau  gives  a  wider  distribution  (greater
-     variance),  and tau must be greater than zero. The low and high parameters
-     give optional artificial bounds on the minimum and maximum output  values,
-     respectively.   This distribution is similar to the exponential, except it
-     is centered at 0  and  can  output  negative  values  as  well.  Like  the
-     exponential,  it can be used to generate time intervals; however, it might
-     be necessary to add a lower bound so as not to  compute  a  negative  time
+     the  distribution.  A  larger  tau  gives  a  wider  distribution (greater
+     variance), and tau must be greater than zero. The low and high  parameters
+     give  optional artificial bounds on the minimum and maximum output values,
+     respectively.  This distribution is similar to the exponential, except  it
+     is  centered  at  0  and  can  output  negative  values  as well. Like the
+     exponential, it can be used to generate time intervals; however, it  might
+     be  necessary  to  add  a lower bound so as not to compute a negative time
      interval.
 
 
@@ -8020,10 +8021,10 @@ bilateral-exponential-dist(xmu, tau [, low, high]) [SAL]
 
 cauchy-dist(tau [, low, high]) [SAL]
 (cauchy-dist tau [low high]) [LISP]
-     Returns  a  FLONUM  from  the Cauchy distribution, a symetric distribution
-     with a high peak at zero  and  a  width  (variance)  that  increases  with
-     parameter  tau,  which  must  be  greater  than  zero.  The  low  and high
-     parameters give optional artificial bounds  on  the  minimum  and  maximum
+     Returns a FLONUM from the Cauchy  distribution,  a  symetric  distribution
+     with  a  high  peak  at  zero  and  a width (variance) that increases with
+     parameter tau,  which  must  be  greater  than  zero.  The  low  and  high
+     parameters  give  optional  artificial  bounds  on the minimum and maximum
      output values, respectively.
 
 
@@ -8049,8 +8050,8 @@ cauchy-dist(tau [, low, high]) [SAL]
 hyperbolic-cosine-dist([low, high]) [SAL]
 (hyperbolic-cosine-dist [low high)] [LISP]
      Returns a FLONUM value from the hyperbolic cosine distribution, a symetric
-     distribution with its peak at zero.  The  low  and  high  parameters  give
-     optional  artificial  bounds  on  the  minimum  and maximum output values,
+     distribution  with  its  peak  at  zero.  The low and high parameters give
+     optional artificial bounds on  the  minimum  and  maximum  output  values,
      respectively.
 
 
@@ -8075,9 +8076,9 @@ hyperbolic-cosine-dist([low, high]) [SAL]
 
 logistic-dist(alpha, beta [, low, high]) [SAL]
 (logistic-dist alpha beta [low high]) [LISP]
-     Returns a FLONUM value from the logistic distribution, which  is  symetric
-     about   the   mean.  The  alpha  parameter  primarily  affects  dispersion
-     (variance), with larger values resulting in  values  closer  to  the  mean
+     Returns  a  FLONUM value from the logistic distribution, which is symetric
+     about  the  mean.  The  alpha  parameter  primarily   affects   dispersion
+     (variance),  with  larger  values  resulting  in values closer to the mean
      (less variance), and the beta parameter primarily influences the mean. The
      low and high parameters give optional artificial bounds on the minimum and
      maximum output values, respectively.
@@ -8104,8 +8105,8 @@ logistic-dist(alpha, beta [, low, high]) [SAL]
 
 arc-sine-dist() [SAL]
 (arc-sine-dist) [LISP]
-     Returns  a  FLONUM  value  from  the  arc sine distribution, which outputs
-     values between 0 and 1. It is symetric about the mean of 1/2, but is  more
+     Returns a FLONUM value from  the  arc  sine  distribution,  which  outputs
+     values  between 0 and 1. It is symetric about the mean of 1/2, but is more
      likely to generate values closer to 0 and 1.
 
 
@@ -8130,10 +8131,10 @@ arc-sine-dist() [SAL]
 
 gaussian-dist(xmu, sigma [, low, high]) [SAL]
 (gaussian-dist xmu sigma [low high]) [LISP]
-     Returns  a FLONUM value from the Gaussian or Gauss-Laplace distribution, a
-     linear function of the normal distribution. It is symetric about the  mean
-     of  xmu,  with  a  standard deviation of sigma, which must be greater than
-     zero. The low and high parameters give optional artificial bounds  on  the
+     Returns a FLONUM value from the Gaussian or Gauss-Laplace distribution,  a
+     linear  function of the normal distribution. It is symetric about the mean
+     of xmu, with a standard deviation of sigma, which  must  be  greater  than
+     zero.  The  low and high parameters give optional artificial bounds on the
      minimum and maximum output values, respectively.
 
 
@@ -8159,10 +8160,10 @@ gaussian-dist(xmu, sigma [, low, high]) [SAL]
 
 beta-dist(a, b) [SAL]
 (beta-dist a b) [LISP]
-     Returns a FLONUM value  from  the  Beta  distribution.  This  distribution
-     outputs  values between 0 and 1, with outputs more likely to be close to 0
-     or 1. The parameter a controls the height (probability) of the right  side
-     of  the distribution (at 1) and b controls the height of the left side (at
+     Returns  a  FLONUM  value  from  the  Beta distribution. This distribution
+     outputs values between 0 and 1, with outputs more likely to be close to  0
+     or  1. The parameter a controls the height (probability) of the right side
+     of the distribution (at 1) and b controls the height of the left side  (at
      0). The distribution is symetric about 1/2 when a = b.
 
 
@@ -8189,7 +8190,7 @@ bernoulli-dist(px1 [, x1, x2]) [SAL]
 (bernoulli-dist px1 [x1 x2]) [LISP]
      Returns either x1 (default value is 1) with probability px1 or x2 (default
      value is 0) with probability 1 - px1. The value of px1 should be between 0
-     and 1. By convention, a result of x1 is viewed as a success  while  x2  is
+     and  1.  By  convention, a result of x1 is viewed as a success while x2 is
      viewed as a failure.
 
 
@@ -8220,9 +8221,9 @@ bernoulli-dist(px1 [, x1, x2]) [SAL]
 
 binomial-dist(n, p) [SAL]
 (binomial-dist n p) [LISP]
-     Returns  a  FIXNUM  value  from  the binomial distribution, where n is the
-     number of Bernoulli trials run (a FIXNUM) and  p  is  the  probability  of
-     success  in  the  Bernoulli  trial (a FLONUM from 0 to 1). The mean is the
+     Returns a FIXNUM value from the binomial  distribution,  where  n  is  the
+     number  of  Bernoulli  trials  run  (a FIXNUM) and p is the probability of
+     success in the Bernoulli trial (a FLONUM from 0 to 1).  The  mean  is  the
      product of n and p.
 
 
@@ -8253,8 +8254,8 @@ binomial-dist(n, p) [SAL]
 
 geometric-dist(p) [SAL]
 (geometric-dist p) [LISP]
-     Returns a FIXNUM value from the geometric distribution, which  is  defined
-     as  the  number  of  failures  before a success is achieved in a Bernoulli
+     Returns  a  FIXNUM value from the geometric distribution, which is defined
+     as the number of failures before a success  is  achieved  in  a  Bernoulli
      trial with probability of success p (a FLONUM from 0 to 1).
 
 
@@ -8285,8 +8286,8 @@ geometric-dist(p) [SAL]
 
 poisson-dist(delta) [SAL]
 (poisson-dist delta) [LISP]
-     Returns a FIXNUM value from the Poisson distribution with a mean of  delta
-     (a  FIXNUM). The Poisson distribution is often used to generate a sequence
+     Returns  a FIXNUM value from the Poisson distribution with a mean of delta
+     (a FIXNUM). The Poisson distribution is often used to generate a  sequence
      of time intervals, resulting in random but often pleasing rhythms.
 
 
@@ -8316,19 +8317,19 @@ poisson-dist(delta) [SAL]
 
 
 13.4. Score Generation and Manipulation
-  A common application of pattern  generators  is  to  specify  parameters  for
-notes.  (It  should  be  understood  that  ``notes''  in this context means any
-Nyquist behavior, whether it represents a conventional note, an abstract  sound
-object,  or even some micro-sound event that is just a low-level component of a
+  A  common  application  of  pattern  generators  is to specify parameters for
+notes. (It should be understood  that  ``notes''  in  this  context  means  any
+Nyquist  behavior, whether it represents a conventional note, an abstract sound
+object, or even some micro-sound event that is just a low-level component of  a
 hierarchical sound organization. Similarly, ``score'' should be taken to mean a
 specification for a sequence of these ``notes.'')  The score-gen macro (defined
-by loading xm.lsp) establishes a convention for  representing  scores  and  for
+by  loading  xm.lsp)  establishes  a convention for representing scores and for
 generating them using patterns.
 
-  The  timed-seq  macro,  described  in  Section 7.4, already provides a way to
+  The timed-seq macro, described in Section 7.4,  already  provides  a  way  to
 represent a ``score'' as a list of expressions.  The Xmusic representation goes
-a  bit  further by specifying that all notes are specified by an alternation of
-keywords  and  values,  where  some  keywords  have   specific   meanings   and
+a bit further by specifying that all notes are specified by an  alternation  of
+keywords   and   values,   where  some  keywords  have  specific  meanings  and
 interpretations.
 
   The basic idea of score-gen is you provide a template for notes in a score as
@@ -8351,156 +8352,156 @@ generates a score of 9 notes as follows:
      (2.8 0.4 (MY-SOUND :PITCH 65))
      (3.2 0.4 (MY-SOUND :PITCH 60)))
 
-The use of keywords like :PITCH helps to  make  scores  readable  and  easy  to
-process  without specific knowledge of about the functions called in the score.
-For example, one could write a transpose operation to transform all the  :pitch
-parameters  in a score without having to know that pitch is the first parameter
-of pluck and the second parameter of piano-note. Keyword  parameters  are  also
-used  to  give  flexibility  to  note  specification with score-gen. Since this
-approach requires the use of keywords, the next section is a brief  explanation
+The  use  of  keywords  like  :PITCH  helps to make scores readable and easy to
+process without specific knowledge of about the functions called in the  score.
+For  example, one could write a transpose operation to transform all the :pitch
+parameters in a score without having to know that pitch is the first  parameter
+of  pluck  and  the second parameter of piano-note. Keyword parameters are also
+used to give flexibility to  note  specification  with  score-gen.  Since  this
+approach  requires the use of keywords, the next section is a brief explanation
 of how to define functions that use keyword parameters.
 
 
 
 13.4.1. Keyword Parameters
-  Keyword  parameters  are  parameters whose presence is indicated by a special
-symbol, called a keyword, followed by the actual parameter. Keyword  parameters
-in  SAL have default values that are used if no actual parameter is provided by
+  Keyword parameters are parameters whose presence is indicated  by  a  special
+symbol,  called a keyword, followed by the actual parameter. Keyword parameters
+in SAL have default values that are used if no actual parameter is provided  by
 the caller of the function. (See Appendix IV to learn about keywords in XLISP.)
 
   To specify that a parameter is a keyword parameter, use a keyword symbol (one
-that  ends  in  a  colon)  followed by a default value.  For example, here is a
+that ends in a colon) followed by a default value.   For  example,  here  is  a
 function that accepts keyword parameters and invokes the pluck function:
 
     define function k-pluck(pitch: 60, dur: 1)
       return pluck(pitch, dur)
 
-Now, we can call k-pluck with keyword parameters. The keywords are  simply  the
-formal  parameter  names  with  a prepended colon character (:pitch and :dur in
+Now,  we  can call k-pluck with keyword parameters. The keywords are simply the
+formal parameter names with a prepended colon character  (:pitch  and  :dur  in
 this example), so a function call would look like:
 
     k-pluck(pitch: c3, dur: 3)
 
 Usually, it is best to give keyword parameters useful default values. That way,
-if  a parameter such as dur:  is missing, a reasonable default value (1) can be
-used automatically.  It is never an error to omit a keyword parameter, but  the
-called  function  can  check to see if a keyword parameter was supplied or not.
-Because of default values, we can call k-pluck(pitch:  c3)  with  no  duration,
+if a parameter such as dur:  is missing, a reasonable default value (1) can  be
+used  automatically.  It is never an error to omit a keyword parameter, but the
+called function can check to see if a keyword parameter was  supplied  or  not.
+Because  of  default  values,  we can call k-pluck(pitch: c3) with no duration,
 k-pluck(dur: 3) with only a duration, or even k-pluck() with no parameters.
 
-  In  XLISP,  there  is  additional syntax to specify an alternate symbol to be
-used as the keyword and to allow the called function to  determine  whether  or
-not  a  keyword parameter was supplied, but these features are little-used. See
+  In XLISP, there is additional syntax to specify an  alternate  symbol  to  be
+used  as  the  keyword and to allow the called function to determine whether or
+not a keyword parameter was supplied, but these features are  little-used.  See
 the XLISP manual for details.
 
 
 
 13.4.2. Using score-gen
-  The score-gen macro computes a score  based  on  keyword  parameters.    Some
-keywords  have  a  special meaning, while others are not interpreted but merely
-placed in the score. The resulting score can  be  synthesized  using  timed-seq
+  The  score-gen  macro  computes  a  score  based on keyword parameters.  Some
+keywords have a special meaning, while others are not  interpreted  but  merely
+placed  in  the  score.  The resulting score can be synthesized using timed-seq
 (see Section 7.4).
 
   The form of a call to score-gen is simply:
 
 score-gen(k1: e1, k2: e2, ...) [SAL]
 (score-gen :k1 e1 :k2 e2 ...) [LISP]
-     where  the  k's  are  keywords  and  the  e's  are expressions. A score is
-     generated  by  evaluating  the  expressions  once  for   each   note   and
-     constructing  a  list  of  keyword-value  pairs. A number of keywords have
-     special interpretations. The rules for interpreting these parameters  will
+     where the k's are keywords  and  the  e's  are  expressions.  A  score  is
+     generated   by   evaluating   the  expressions  once  for  each  note  and
+     constructing a list of keyword-value pairs.  A  number  of  keywords  have
+     special  interpretations. The rules for interpreting these parameters will
      be explained through a set of "How do I ..."  questions below.
 
-  How  many notes will be generated? The keyword parameter score-len: specifies
-an upper bound on the number of notes. (Note:  in  LISP  syntax,  keywords  are
-always  preceded by colons, so you would write :score-len instead.) The keyword
-score-dur: specifies an upper bound on the starting time of the  last  note  in
-the  score.  (To  be  more  precise,  the  score-dur: bound is reached when the
-default starting time of the  next  note  is  greater  than  or  equal  to  the
-score-dur:  value.  This  definition  is  necessary  because note times are not
-strictly increasing.) When either bound is reached, score generation  ends.  At
-least  one  of  these  two  parameters must be specified or an error is raised.
-These keyword parameters are evaluated just once and are not  copied  into  the
+  How many notes will be generated? The keyword parameter score-len:  specifies
+an  upper  bound  on  the  number of notes. (Note: in LISP syntax, keywords are
+always preceded by colons, so you would write :score-len instead.) The  keyword
+score-dur:  specifies  an  upper bound on the starting time of the last note in
+the score. (To be more precise,  the  score-dur:  bound  is  reached  when  the
+default  starting  time  of  the  next  note  is  greater  than or equal to the
+score-dur: value. This definition is  necessary  because  note  times  are  not
+strictly  increasing.)  When either bound is reached, score generation ends. At
+least one of these two parameters must be specified  or  an  error  is  raised.
+These  keyword  parameters  are evaluated just once and are not copied into the
 parameter lists of generated notes.
 
-  What  is  the duration of generated notes? The keyword dur: defaults to 1 and
-specifies the nominal duration in seconds. Since the  generated  note  list  is
-compatible  with  timed-seq, the starting time and duration (to be precise, the
-stretch factor) are not passed  as  parameters  to  the  notes.  Instead,  they
+  What is the duration of generated notes? The keyword dur: defaults to  1  and
+specifies  the  nominal  duration  in seconds. Since the generated note list is
+compatible with timed-seq, the starting time and duration (to be  precise,  the
+stretch  factor)  are  not  passed  as  parameters  to the notes. Instead, they
 control the Nyquist environment in which the note will be evaluated.
 
   What is the start time of a note? The default start time of the first note is
-zero. Given a note, the default start time of the next note is the  start  time
-plus  the  inter-onset  time, which is given by the ioi:  parameter. If no ioi:
+zero.  Given  a note, the default start time of the next note is the start time
+plus the inter-onset time, which is given by the ioi:  parameter.  If  no  ioi:
 parameter is specified, the inter-onset time defaults to the duration, given by
-dur:.  In  all cases, the default start time of a note can be overridden by the
+dur:. In all cases, the default start time of a note can be overridden  by  the
 keyword parameter time:.
 
-  When does the score begin and end? The behavior SCORE-BEGIN-END contains  the
+  When  does the score begin and end? The behavior SCORE-BEGIN-END contains the
 beginning and ending of the score (these are used for score manipulations, e.g.
-when scores are merged, their begin times can be aligned.)  When  timed-seq  is
-used  to  synthesize  a score, the SCORE-BEGIN-END marker is not evaluated. The
+when  scores  are  merged, their begin times can be aligned.) When timed-seq is
+used to synthesize a score, the SCORE-BEGIN-END marker is  not  evaluated.  The
 score-gen macro inserts a ``note'' of the form (0 0 (SCORE-BEGIN-END begin-time
-end-time))  at  the  time  given  by  the  begin:  keyword, with begin-time and
-end-time determined by the begin: and end:  keyword  parameters,  respectively.
-If  the  begin:  keyword is not provided, the score begins at zero. If the end:
+end-time)) at the time  given  by  the  begin:  keyword,  with  begin-time  and
+end-time  determined  by the begin: and end:  keyword parameters, respectively.
+If the begin: keyword is not provided, the score begins at zero.  If  the  end:
 keyword is not provided, the score ends at the default start time of what would
 be the next note after the last note in the score (as described in the previous
-paragraph). Note: if time: is used to compute note starting  times,  and  these
-times  are not increasing, it is strongly advised to use end: to specify an end
-time for the score, because the default end time may be anywhere in the  middle
+paragraph).  Note:  if  time: is used to compute note starting times, and these
+times are not increasing, it is strongly advised to use end: to specify an  end
+time  for the score, because the default end time may be anywhere in the middle
 of the generated sequence.
 
-  What  function  is  called to synthesize the note? The name:  parameter names
+  What function is called to synthesize the note? The name:    parameter  names
 the function. Like other parameters, the value can be any expression, including
-something  like next(fn-name-pattern), allowing function names to be recomputed
+something like next(fn-name-pattern), allowing function names to be  recomputed
 for each note. The default value is note.
 
-  Can I make parameters depend upon the starting time or the  duration  of  the
-note?  Parameter  expressions can use the variable sg:start to access the start
-time of the note, sg:ioi to access the inter-onset time, and sg:dur  to  access
+  Can  I  make  parameters depend upon the starting time or the duration of the
+note? Parameter expressions can use the variable sg:start to access  the  start
+time  of  the note, sg:ioi to access the inter-onset time, and sg:dur to access
 the duration (stretch factor) of the note. Also, sg:count counts how many notes
 have been computed so far, starting at 0. The order of computation is: sg:start
-first,  then sg:ioi and sg:dur, so for example, an expression to compute sg:dur
+first, then sg:ioi and sg:dur, so for example, an expression to compute  sg:dur
 can depend on sg:ioi.
 
-  Can parameters depend  on  each  other?  The  keyword  pre:    introduces  an
+  Can  parameters  depend  on  each  other?  The  keyword  pre:   introduces an
 expression that is evaluated before each note, and post: provides an expression
-to be evaluated after each note.  The pre: expression can assign  one  or  more
+to  be  evaluated  after each note.  The pre: expression can assign one or more
 global variables which are then used in one or more expressions for parameters.
 
-  How  do  I  debug  score-gen expressions? You can set the trace: parameter to
+  How do I debug score-gen expressions? You can set  the  trace:  parameter  to
 true (t) to enable a print statement for each generated note.
 
-  How can I save scores generated by score-gen that  I  like?  If  the  keyword
-parameter  save: is set to a symbol, the global variable named by the symbol is
-set to the value of the generated sequence. Of course, the  value  returned  by
+  How  can  I  save  scores  generated by score-gen that I like? If the keyword
+parameter save: is set to a symbol, the global variable named by the symbol  is
+set  to  the  value of the generated sequence. Of course, the value returned by
 score-gen is just an ordinary list that can be saved like any other value.
 
   In summary, the following keywords have special interpretations in score-gen:
-begin:, end:, time:, dur:, name:, ioi:, trace:, save:, score-len:,  score-dur:,
-pre:,  post:.   All other keyword parameters are expressions that are evaluated
+begin:,  end:, time:, dur:, name:, ioi:, trace:, save:, score-len:, score-dur:,
+pre:, post:.  All other keyword parameters are expressions that  are  evaluated
 once for each note and become the parameters of the notes.
 
 
 
 13.4.3. Score Manipulation
-  Nyquist encourages the representation of music  as  executable  programs,  or
-behaviors,  and  there  are  various  ways  to modify behaviors, including time
+  Nyquist  encourages  the  representation  of music as executable programs, or
+behaviors, and there are various  ways  to  modify  behaviors,  including  time
 stretching, transposition, etc. An alternative to composing executable programs
-is  to  manipulate scores as editable data. Each approach has its strengths and
-weaknesses. This section describes  functions  intended  to  manipulate  Xmusic
+is to manipulate scores as editable data. Each approach has its  strengths  and
+weaknesses.  This  section  describes  functions  intended to manipulate Xmusic
 scores as generated by, or at least in the form generated by, score-gen. Recall
-that this means scores are lists of  events  (e.g.  notes),  where  events  are
+that  this  means  scores  are  lists  of events (e.g. notes), where events are
 three-element lists of the form (time duration expression, and where expression
-is a standard lisp function call where all parameters are  keyword  parameters.
-In  addition, the first ``note'' may be the special SCORE-BEGIN-END expression.
-If this is missing, the score begins at zero and ends at the end  of  the  last
+is  a  standard lisp function call where all parameters are keyword parameters.
+In addition, the first ``note'' may be the special SCORE-BEGIN-END  expression.
+If  this  is  missing, the score begins at zero and ends at the end of the last
 note.
 
   For convenience, a set of functions is offered to access properties of events
-(or notes) in scores. Although lisp functions such as car, cadr, and caddr  can
-be  used, code is more readable when more mnemonic functions are used to access
+(or  notes) in scores. Although lisp functions such as car, cadr, and caddr can
+be used, code is more readable when more mnemonic functions are used to  access
 events.
 
 event-time(event) [SAL]
@@ -8517,7 +8518,7 @@ event-dur(event) [SAL]
 
 event-set-dur(event, dur) [SAL]
 (event-set-dur event dur) [LISP]
-     Construct a new event where the duration (or stretch factor) of  event  is
+     Construct  a  new event where the duration (or stretch factor) of event is
      replaced by dur.
 
 event-expression(event) [SAL]
@@ -8526,7 +8527,7 @@ event-expression(event) [SAL]
 
 event-set-expression(event, dur) [SAL]
 (event-set-expression event dur) [LISP]
-     Construct  a  new  event  where  the  expression  of  event is replaced by
+     Construct a new event  where  the  expression  of  event  is  replaced  by
      expression.
 
 event-end(event) [SAL]
@@ -8539,7 +8540,7 @@ expr-has-attr(expression, attribute) [SAL]
 
 expr-get-attr(expression, attribute [, default]) [SAL]
 (expr-get-attr expression attribute [default]) [LISP]
-     Get the value of the given attribute from a  score  event  expression.  If
+     Get  the  value  of  the given attribute from a score event expression. If
      attribute is not present, return default if specified, and otherwise nil.
 
 expr-set-attr(expr, attribute, value) [SAL]
@@ -8553,28 +8554,28 @@ event-has-attr(event, attribute) [SAL]
 
 event-get-attr(event, attribute, [default]) [SAL]
 (event-get-attr event attribute [default]) [LISP]
-     Get the value of the given attribute from a score event's  expression.  If
+     Get  the  value of the given attribute from a score event's expression. If
      attribute is not present, return default if specified, and otherwise nil.
 
 event-set-attr(event, attribute, value) [SAL]
 (event-set-attr event attribute value) [LISP]
-     Construct  a  new  event  identical to event except that the attribute has
+     Construct a new event identical to event except  that  the  attribute  has
      value.
 
-  Functions are provided to shift the starting times of  notes,  stretch  times
-and  durations,  stretch  only durations, add an offset to a keyword parameter,
+  Functions  are  provided  to shift the starting times of notes, stretch times
+and durations, stretch only durations, add an offset to  a  keyword  parameter,
 scale a keyword parameter, and other manipulations. Functions are also provided
-to  extract  ranges of notes, notes that match criteria, and to combine scores.
-Most of these functions (listed  below  in  detail)  share  a  set  of  keyword
-parameters  that  optionally  limit  the  range  over  which the transformation
-operates. The from-index: and to-index:  parameters specify the  index  of  the
-first  note  and the index of the last note to be changed. If these numbers are
-negative, they are offsets from the end of the score, e.g. -1 denotes the  last
-note  of  the  score.  The from-time: and to-time: indicate a range of starting
+to extract ranges of notes, notes that match criteria, and to  combine  scores.
+Most  of  these  functions  (listed  below  in  detail)  share a set of keyword
+parameters that optionally  limit  the  range  over  which  the  transformation
+operates.  The  from-index:  and to-index:  parameters specify the index of the
+first note and the index of the last note to be changed. If these  numbers  are
+negative,  they are offsets from the end of the score, e.g. -1 denotes the last
+note of the score. The from-time: and to-time: indicate  a  range  of  starting
 times of notes that will be affected by the manipulation. Only notes whose time
-is  greater  than  or equal to the from-time and strictly less than the to-time
-are modified. If both index and time ranges  are  specified,  only  notes  that
-satisfy  both  constraints  are selected. (Note: in LISP syntax, colons precede
+is greater than or equal to the from-time and strictly less  than  the  to-time
+are  modified.  If  both  index  and time ranges are specified, only notes that
+satisfy both constraints are selected. (Note: in LISP  syntax,  colons  precede
 the keyword, so use :from-index, :to-index, :from-time, and :to-time.)
 
 score-sorted(score) [SAL]
@@ -8586,109 +8587,109 @@ score-sort(score [, copy-flag]) [SAL]
      Sort the notes in a score into start-time order. If copy-flag is nil, this
      is a destructive operation which should only be performed if the top-level
      score list is a fresh copy that is not shared by any other variables. (The
-     copy-flag  is  intended  for internal system use only.)  For the following
-     operations, it is assumed that  scores  are  sorted,  and  all  operations
+     copy-flag is intended for internal system use only.)   For  the  following
+     operations,  it  is  assumed  that  scores  are sorted, and all operations
      return a sorted score.
 
-score-shift(score,  offset,  from-index: i, to-index: j, from-time: x, to-time:
+score-shift(score, offset, from-index: i, to-index: j, from-time:  x,  to-time:
      y) [SAL]
-(score-shift score offset :from-index i :to-index j :from-time  x  :to-time  y)
+(score-shift  score  offset  :from-index i :to-index j :from-time x :to-time y)
      [LISP]
-     Add  a constant offset to the starting time of a set of notes in score. By
-     default, all notes are modified, but the range of  notes  can  be  limited
-     with  the  keyword parameters. The begin time of the score is not changed,
-     but the end time is increased by  offset.    The  original  score  is  not
+     Add a constant offset to the starting time of a set of notes in score.  By
+     default,  all  notes  are  modified, but the range of notes can be limited
+     with the keyword parameters. The begin time of the score is  not  changed,
+     but  the  end  time  is  increased  by  offset.  The original score is not
      modified, and a new score is returned.
 
-score-stretch(score,  factor,  dur:  dur-flag,  time: time-flag, from-index: i,
+score-stretch(score, factor, dur: dur-flag,  time:  time-flag,  from-index:  i,
      to-index: j, from-time: x, to-time: y) [SAL]
 (score-stretch  score  factor  :dur  dur-flag  :time  time-flag  :from-index  i
      :to-index j :from-time x :to-time y) [LISP]
-     Stretch  note  times  and  durations  by  factor.  The default dur-flag is
+     Stretch note times and  durations  by  factor.  The  default  dur-flag  is
      non-null, but if dur-flag is null, the original durations are retained and
-     only  times  are  stretched. Similarly, the default time-flag is non-null,
-     but if time-flag is  null,  the  original  times  are  retained  and  only
-     durations  are  stretched.  If  both  dur-flag and time-flag are null, the
-     score is not changed. If a range of notes is specified, times  are  scaled
-     within  that  range,  and  notes  after  the range are shifted so that the
-     stretched region does not create a  "hole"  or  overlap  with  notes  that
-     follow.  If  the  range  begins  or  ends  with a time (via from-time: and
-     to-time:), time stretching takes place over the  indicated  time  interval
+     only times are stretched. Similarly, the default  time-flag  is  non-null,
+     but  if  time-flag  is  null,  the  original  times  are retained and only
+     durations are stretched. If both dur-flag  and  time-flag  are  null,  the
+     score  is  not changed. If a range of notes is specified, times are scaled
+     within that range, and notes after the  range  are  shifted  so  that  the
+     stretched  region  does  not  create  a  "hole" or overlap with notes that
+     follow. If the range begins or  ends  with  a  time  (via  from-time:  and
+     to-time:),  time  stretching  takes place over the indicated time interval
      independent of whether any notes are present or where they start. In other
-     words, the ``rests'' are stretched along with the  notes.    The  original
+     words,  the  ``rests''  are  stretched along with the notes.  The original
      score is not modified, and a new score is returned.
 
-score-transpose(score,  keyword, amount, from-index: i, to-index: j, from-time:
+score-transpose(score, keyword, amount, from-index: i, to-index: j,  from-time:
      x, to-time: y) [SAL]
-(score-transpose score keyword amount :from-index i :to-index  j  :from-time  x
+(score-transpose  score  keyword  amount :from-index i :to-index j :from-time x
      :to-time y) [LISP]
-     For  each  note  in  the  score  and in any indicated range, if there is a
-     keyword parameter matching keyword and the parameter value  is  a  number,
-     increment  the parameter value by amount. For example, to tranpose up by a
-     whole step, write (score-transpose 2 :pitch score). The original score  is
+     For each note in the score and in any  indicated  range,  if  there  is  a
+     keyword  parameter  matching  keyword and the parameter value is a number,
+     increment the parameter value by amount. For example, to tranpose up by  a
+     whole  step, write (score-transpose 2 :pitch score). The original score is
      not modified, and a new score is returned.
 
-score-scale(score,  keyword,  amount, from-index: i, to-index: j, from-time: x,
+score-scale(score, keyword, amount, from-index: i, to-index: j,  from-time:  x,
      to-time: y) [SAL]
-(score-scale score keyword  amount  :from-index  i  :to-index  j  :from-time  x
+(score-scale  score  keyword  amount  :from-index  i  :to-index  j :from-time x
      :to-time y) [LISP]
-     For  each  note  in  the  score  and in any indicated range, if there is a
-     keyword parameter matching keyword and the parameter value  is  a  number,
-     multiply  the  parameter  value  by  amount.  The  original  score  is not
+     For each note in the score and in any  indicated  range,  if  there  is  a
+     keyword  parameter  matching  keyword and the parameter value is a number,
+     multiply the  parameter  value  by  amount.  The  original  score  is  not
      modified, and a new score is returned.
 
 score-sustain(score, factor, from-index: i, to-index: j, from-time: x, to-time:
      y) [SAL]
-(score-sustain  score factor :from-index i :to-index j :from-time x :to-time y)
+(score-sustain score factor :from-index i :to-index j :from-time x :to-time  y)
      [LISP]
-     For each note in the score  and  in  any  indicated  range,  multiply  the
-     duration  (stretch factor) by amount. This can be used to make notes sound
-     more legato or staccato, and does not change  their  starting  times.  The
+     For  each  note  in  the  score  and  in any indicated range, multiply the
+     duration (stretch factor) by amount. This can be used to make notes  sound
+     more  legato  or  staccato,  and does not change their starting times. The
      original score is not modified, and a new score is returned.
 
-score-voice(score,  replacement-list, from-index: i, to-index: j, from-time: x,
+score-voice(score, replacement-list, from-index: i, to-index: j, from-time:  x,
      to-time: y) [SAL]
-(score-voice score replacement-list :from-index  i  :to-index  j  :from-time  x
+(score-voice  score  replacement-list  :from-index  i  :to-index j :from-time x
      :to-time y) [LISP]
-     For  each  note  in  the  score  and  in  any indicated range, replace the
-     behavior (function) name using replacement-list,  which  has  the  format:
-     ((old1  new1)  (old2  new2)  ...), where oldi indicates a current behavior
-     name and newi is the replacement. If oldi is *, it matches anything.   For
-     example,  to  replace  my-note-1  by  trombone  and my-note-2 by horn, use
-     score-voice(score, {{my-note-1 trombone} {my-note-2  horn}}).  To  replace
-     all  instruments  with  piano,  use  score-voice(score, {{* piano}}).  The
+     For each note in the  score  and  in  any  indicated  range,  replace  the
+     behavior  (function)  name  using  replacement-list, which has the format:
+     ((old1 new1) (old2 new2) ...), where oldi  indicates  a  current  behavior
+     name  and newi is the replacement. If oldi is *, it matches anything.  For
+     example, to replace my-note-1 by  trombone  and  my-note-2  by  horn,  use
+     score-voice(score,  {{my-note-1  trombone}  {my-note-2 horn}}). To replace
+     all instruments with piano, use  score-voice(score,  {{*  piano}}).    The
      original score is not modified, and a new score is returned.
 
 score-merge(score1, score2, ...) [SAL]
 (score-merge score1 score2 ...) [LISP]
-     Create a new score containing all the notes of the parameters,  which  are
+     Create  a  new score containing all the notes of the parameters, which are
      all scores. The resulting notes retain their original times and durations.
-     The merged score begin time is the minimum  of  the  begin  times  of  the
-     parameters  and  the merged score end time is the maximum of the end times
-     of the parameters. The original scores are not modified, and a  new  score
+     The  merged  score  begin  time  is  the minimum of the begin times of the
+     parameters and the merged score end time is the maximum of the  end  times
+     of  the  parameters. The original scores are not modified, and a new score
      is returned.
 
 score-append(score1, score2, ...) [SAL]
 (score-append score1 score2 ...) [LISP]
-     Create  a  new score containing all the notes of the parameters, which are
+     Create a new score containing all the notes of the parameters,  which  are
      all scores. The begin time of the first score is unaltered. The begin time
-     of  each  other  score  is  aligned to the end time of the previous score;
-     thus, scores are ``spliced'' in sequence.  The  original  scores  are  not
+     of each other score is aligned to the end  time  of  the  previous  score;
+     thus,  scores  are  ``spliced''  in  sequence. The original scores are not
      modified, and a new score is returned.
 
 score-select(score,  predicate,  from-index:  i,  to-index:  j,  from-time:  x,
      to-time: y, reject: flag) [SAL]
 (score-select score predicate :from-index i :to-index j :from-time x :to-time y
      :reject flag) [LISP]
-     Select  (or  reject) notes to form a new score. Notes are selected if they
+     Select (or reject) notes to form a new score. Notes are selected  if  they
      fall into the given ranges of index and time and they satisfy predicate, a
-     function  of three parameters that is applied to the start time, duration,
-     and the expression  of  the  note.  Alternatively,  predicate  may  be  t,
+     function of three parameters that is applied to the start time,  duration,
+     and  the  expression  of  the  note.  Alternatively,  predicate  may be t,
      indicating that all notes in range are to be selected.  The selected notes
-     along with the existing score begin and end markers, are combined to  form
-     a  new  score.  Alternatively,  if  the reject: parameter is non-null, the
-     notes not selected form the new score (in other words the  selected  notes
-     are  rejected or removed to form the new score). The original score is not
+     along  with the existing score begin and end markers, are combined to form
+     a new score. Alternatively, if the  reject:  parameter  is  non-null,  the
+     notes  not  selected form the new score (in other words the selected notes
+     are rejected or removed to form the new score). The original score is  not
      modified, and a new score is returned.
 
 score-set-begin(score, time) [SAL]
@@ -8702,7 +8703,7 @@ score-get-begin(score) [SAL]
 
 score-set-end(score, time) [SAL]
 (score-set-end score time) [LISP]
-     The  end  time from the score's SCORE-BEGIN-END marker is set to time. The
+     The end time from the score's SCORE-BEGIN-END marker is set to  time.  The
      original score is not modified, and a new score is returned.
 
 score-get-end(score) [SAL]
@@ -8711,36 +8712,36 @@ score-get-end(score) [SAL]
 
 score-must-have-begin-end(score) [SAL]
 (score-must-have-begin-end score) [LISP]
-     If score does not have a begin and end time,  construct  a  score  with  a
+     If  score  does  not  have  a begin and end time, construct a score with a
      SCORE-BEGIN-END expression and return it. If score already has a begin and
      end time, just return the score. The orignal score is not modified.
 
 score-filter-length(score, cutoff) [SAL]
 (score-filter-length score cutoff) [LISP]
-     Remove notes that extend beyond  the  cutoff  time.  This  is  similar  to
-     score-select,  but  the here, events are removed when their nominal ending
-     time (start time plus duration) exceeds the cutoff, whereas  the  to-time:
+     Remove  notes  that  extend  beyond  the  cutoff  time. This is similar to
+     score-select, but the here, events are removed when their  nominal  ending
+     time  (start  time plus duration) exceeds the cutoff, whereas the to-time:
      parameter is compared to the note's start time.  The original score is not
      modified, and a new score is returned.
 
 score-repeat(score, n) [SAL]
 (score-repeat score n) [LISP]
-     Make a sequence of n copies of score. Each copy is shifted  to  that  it's
-     begin  time  aligns  with  the  end  time  of  the  previous  copy,  as in
-     score-append.  The original score is not modified,  and  a  new  score  is
+     Make  a  sequence  of n copies of score. Each copy is shifted to that it's
+     begin time  aligns  with  the  end  time  of  the  previous  copy,  as  in
+     score-append.    The  original  score  is not modified, and a new score is
      returned.
 
 score-stretch-to-length(score, length) [SAL]
 (score-stretch-to-length score length) [LISP]
-     Stretch  the  score so that the end time of the score is the score's begin
-     time plus length.  The original score is not modified, and a new score  is
+     Stretch the score so that the end time of the score is the  score's  begin
+     time  plus length.  The original score is not modified, and a new score is
      returned.
 
 score-filter-overlap(score) [SAL]
 (score-filter-overlap score) [LISP]
-     Remove  overlapping  notes  (based  on  the note start time and duration),
-     giving priority to the positional order within the  note  list  (which  is
-     also  time order).  The original score is not modified, and a new score is
+     Remove overlapping notes (based on the  note  start  time  and  duration),
+     giving  priority  to  the  positional order within the note list (which is
+     also time order).  The original score is not modified, and a new score  is
      returned.
 
 score-print(score) [SAL]
@@ -8749,47 +8750,47 @@ score-print(score) [SAL]
 
 score-play(score) [SAL]
 (score-play score) [LISP]
-     Play score using timed-seq to convert the score to a sound,  and  play  to
+     Play  score  using  timed-seq to convert the score to a sound, and play to
      play the sound.
 
-score-adjacent-events(score,  function,  from-index: i, to-index: j, from-time:
+score-adjacent-events(score, function, from-index: i, to-index:  j,  from-time:
      x, to-time: y) [SAL]
-(score-adjacent-events score function :from-index i :to-index  j  :from-time  x
+(score-adjacent-events  score  function  :from-index i :to-index j :from-time x
      :to-time y) [LISP]
-     Call  (function  A  B  C),  where A, B, and C are consecutive notes in the
-     score. The result replaces B. If the result is nil, B is deleted, and  the
-     next  call  will  be (function A C D), etc. The first call is to (function
-     nil A B) and the last is to (function Y Z nil). If there is just one  note
-     in  the score, (function nil A nil) is called. Function calls are not made
+     Call (function A B C), where A, B, and C  are  consecutive  notes  in  the
+     score.  The result replaces B. If the result is nil, B is deleted, and the
+     next call will be (function A C D), etc. The first call  is  to  (function
+     nil  A B) and the last is to (function Y Z nil). If there is just one note
+     in the score, (function nil A nil) is called. Function calls are not  made
      if the note is outside of the indicated range.  This function allows notes
-     and  their parameters to be adjusted according to their immediate context.
+     and their parameters to be adjusted according to their immediate  context.
      The original score is not modified, and a new score is returned.
 
 score-apply(score, function, from-index: i, to-index: j, from-time: x, to-time:
      y) [SAL]
-(score-apply  score function :from-index i :to-index j :from-time x :to-time y)
+(score-apply score function :from-index i :to-index j :from-time x :to-time  y)
      [LISP]
-     Replace each note in the score with  the  result  of  (function  time  dur
-     expression)  (in  Lisp) or function(time, dur, expression) (in SAL), where
-     time, dur, and expression are the time, duration, and  expression  of  the
+     Replace  each  note  in  the  score  with the result of (function time dur
+     expression) (in Lisp) or function(time, dur, expression) (in  SAL),  where
+     time,  dur,  and  expression are the time, duration, and expression of the
      note.  If a range is indicated, only notes in the range are replaced.  The
      original score is not modified, and a new score is returned.
 
 score-indexof(score,  function,  from-index:  i,  to-index:  j,  from-time:  x,
      to-time: y) [SAL]
-(score-indexof  score  function :from-index i :to-index j :from-time x :to-time
+(score-indexof score function :from-index i :to-index j :from-time  x  :to-time
      y) [LISP]
-     Return the index (position) of the first score event (in range) for  which
+     Return  the index (position) of the first score event (in range) for which
      applying function using (function time dur expression) returns true.
 
-score-last-indexof(score,  function,  from-index: i, to-index: j, from-time: x,
+score-last-indexof(score, function, from-index: i, to-index: j,  from-time:  x,
      to-time: y) [SAL]
-(score-last-indexof score function  :from-index  i  :to-index  j  :from-time  x
+(score-last-indexof  score  function  :from-index  i  :to-index  j :from-time x
      :to-time y) [LISP]
-     Return  the  index (position) of the last score event (in range) for which
+     Return the index (position) of the last score event (in range)  for  which
      applying function using (function time dur expression) returns true.
 
-score-randomize-start(score, amt, from-index: i,  to-index:  j,  from-time:  x,
+score-randomize-start(score,  amt,  from-index:  i,  to-index: j, from-time: x,
      to-time: y) [SAL]
 (score-randomize-start  score  amt  :from-index  i  :to-index  j  :from-time  x
      :to-time y) [LISP]
@@ -8799,115 +8800,115 @@ score-randomize-start(score, amt, from-index: i,  to-index:  j,  from-time:  x,
 
 
 13.4.4. Xmusic and Standard MIDI Files
-  Nyquist  has  a  general facility to read and write MIDI files.  You can even
-translate to and from a text representation, as described in Chapter 10. It  is
+  Nyquist has a general facility to read and write MIDI files.   You  can  even
+translate  to and from a text representation, as described in Chapter 10. It is
 also useful sometimes to read notes from Standard MIDI Files into Xmusic scores
-and vice versa. At present, Xmusic only translates notes, ignoring the  various
+and  vice versa. At present, Xmusic only translates notes, ignoring the various
 controls, program changes, pitch bends, and other messages.
 
   MIDI notes are translated to Xmusic score events as follows:
 
     (time dur (NOTE :chan channel :pitch keynum :vel velocity)),
 
-where  channel,  keynum,  and  velocity  come  directly  from  the MIDI message
-(channels are numbered starting from zero).  Note also that  note-off  messages
+where channel, keynum,  and  velocity  come  directly  from  the  MIDI  message
+(channels  are  numbered starting from zero).  Note also that note-off messages
 are implied by the stretch factor dur which is duration in seconds.
 
 score-read-smf(filename) [SAL]
 (score-read-smf filename) [LISP]
      Read a standard MIDI file from filename. Return an Xmusic score, or nil if
-     the file could not be opened. The start time is zero, and the end time  is
-     the  maximum end time of all notes. A very limited interface is offered to
-     extract MIDI program numbers from the file: The global variable *rslt*  is
-     set  to a list of MIDI program numbers for each channel. E.g. if *rslt* is
-     (0 20 77), then program for channel 0 is 0, for channel 1 is 20,  and  for
-     channel  2  is  77.  Program changes were not found on other channels. The
-     default program number is 0, so in this example, it is not  known  whether
-     the  program  0  on  channel 0 is the result of a real MIDI program change
-     command or just a default value.  If more than one program  change  exists
-     on  a  channel,  the last program number is recorded and returned, so this
-     information will only be completely  correct  when  the  MIDI  file  sends
-     single  program  change  per  channel  before  any notes are played. This,
-     however, is a fairly common practice.  Note  that  the  list  returned  as
+     the  file could not be opened. The start time is zero, and the end time is
+     the maximum end time of all notes. A very limited interface is offered  to
+     extract  MIDI program numbers from the file: The global variable *rslt* is
+     set to a list of MIDI program numbers for each channel. E.g. if *rslt*  is
+     (0  20  77), then program for channel 0 is 0, for channel 1 is 20, and for
+     channel 2 is 77.  Program changes were not found on  other  channels.  The
+     default  program  number is 0, so in this example, it is not known whether
+     the program 0 on channel 0 is the result of a  real  MIDI  program  change
+     command  or  just a default value.  If more than one program change exists
+     on a channel, the last program number is recorded and  returned,  so  this
+     information  will  only  be  completely  correct  when the MIDI file sends
+     single program change per channel  before  any  notes  are  played.  This,
+     however,  is  a  fairly  common  practice.  Note that the list returned as
      *rslt* can be passed to score-write-smf, described below.
 
 score-read(filename) [SAL]
 (score-read filename) [LISP]
-     Read  an  Adagio file from filename. Return an Xmusic score, or nil if the
-     file could not be opened.   See  Chapter  10  for  details  on  Adagio,  a
-     text-based  score  language.    See score-read-smf for details on handling
+     Read an Adagio file from filename. Return an Xmusic score, or nil  if  the
+     file  could  not  be  opened.    See  Chapter  10 for details on Adagio, a
+     text-based score language.  See score-read-smf  for  details  on  handling
      program changes.
 
 score-write-smf(score, filename, [programs as-adagio]) [SAL]
 (score-write-smf score filename [programs) as-adagio] [LISP]
-     Write a standard MIDI file to  filename  with  notes  in  score.  In  this
-     function,  every event in the score with a pitch: attribute, regardless of
-     the ``instrument'' (or function name), generates a MIDI  note,  using  the
-     chan:  attribute  for  the  channel (default 0) and the vel: attribute for
-     velocity  (default  100).  There  is   no   facility   (in   the   current
-     implementation)   to   issue  control  changes,  but  to  allow  different
-     instruments, MIDI programs may be set in two  ways.  The  simplest  is  to
-     associate  programs  with  channels using the optional programs parameter,
-     which is simply a list of up to 16  MIDI  program  numbers.  Corresponding
-     program  change  commands  are added to the beginning of the MIDI file. If
-     programs has less than 16 elements, program change commands are only  sent
-     on  the  first n channels. The second way to issue MIDI program changes is
+     Write  a  standard  MIDI  file  to  filename  with notes in score. In this
+     function, every event in the score with a pitch: attribute, regardless  of
+     the  ``instrument''  (or  function name), generates a MIDI note, using the
+     chan: attribute for the channel (default 0) and  the  vel:  attribute  for
+     velocity   (default   100).   There   is   no  facility  (in  the  current
+     implementation)  to  issue  control  changes,  but  to   allow   different
+     instruments,  MIDI  programs  may  be  set in two ways. The simplest is to
+     associate programs with channels using the  optional  programs  parameter,
+     which  is  simply  a  list of up to 16 MIDI program numbers. Corresponding
+     program change commands are added to the beginning of the  MIDI  file.  If
+     programs  has less than 16 elements, program change commands are only sent
+     on the first n channels. The second way to issue MIDI program  changes  is
      to add a program: keyword parameter to a note in the score. Typically, the
-     note  will  have a pitch: of nil so that no actual MIDI note-on message is
-     generated. If program changes and notes  have  the  same  starting  times,
+     note will have a pitch: of nil so that no actual MIDI note-on  message  is
+     generated.  If  program  changes  and  notes have the same starting times,
      their relative playback order is undefined, and the note may be cut off by
      an immediately following program change. Therefore, program changes should
-     occur  slightly, e.g. 1 ms, before any notes. Program numbers and channels
-     are numbered starting at zero, matching the internal MIDI  representation.
+     occur slightly, e.g. 1 ms, before any notes. Program numbers and  channels
+     are  numbered starting at zero, matching the internal MIDI representation.
      This may be one less than displayed on MIDI hardware, sequencers, etc. The
-     as-adagio optional parameter should normally be omitted.  If non-nil,  the
-     file  is  written  in  Adagio  format,  but  if  you want to do that, call
+     as-adagio  optional parameter should normally be omitted.  If non-nil, the
+     file is written in Adagio format,  but  if  you  want  to  do  that,  call
      score-write instead.
 
   score-write(score, filename, [programs]) [SAL]
 (score-write score filename [programs] [LISP]
 
-Write  an Adagioformat file to filename with notes in score. See Chapter 10 for
+Write an Adagioformat file to filename with notes in score. See Chapter 10  for
 details on Adagio, a text-based score language. See score-write-smf for details
 on MIDI program changes.
 
 
 
 13.4.5. Workspaces
-  When  working  with  scores,  you may find it necessary to save them in files
-between work sessions. This is not an issue with  functions  because  they  are
-normally  edited in files and loaded from them. In contrast, scores are created
-as Lisp data, and unless you take care to save them,  they  will  be  destroyed
+  When working with scores, you may find it necessary to  save  them  in  files
+between  work  sessions.  This  is not an issue with functions because they are
+normally edited in files and loaded from them. In contrast, scores are  created
+as  Lisp  data,  and  unless you take care to save them, they will be destroyed
 when you exit the Nyquist program.
 
-  A  simple mechanism called a workspace has been created to manage scores (and
-any other Lisp data, for that matter).  A workspace  is  just  a  set  of  lisp
-global  variables.  These  variables are stored in the file workspace.lsp.  For
-simplicity, there is only  one  workspace,  and  no  backups  or  versions  are
-maintained,  but  the user is free to make backups and copies of workspace.lsp.
+  A simple mechanism called a workspace has been created to manage scores  (and
+any  other  Lisp  data,  for  that  matter).  A workspace is just a set of lisp
+global variables. These variables are stored in the file  workspace.lsp.    For
+simplicity,  there  is  only  one  workspace,  and  no  backups or versions are
+maintained, but the user is free to make backups and copies  of  workspace.lsp.
 To help remember what each variable is for, you can also associate and retrieve
 a text string with each variable.  The following functions manage workspaces.
 
-  In  addition,  when  a workspace is loaded, you can request that functions be
-called. For example, the workspace might  store  descriptions  of  a  graphical
-interface.  When the workspace is loaded, a function might run to convert saved
+  In addition, when a workspace is loaded, you can request  that  functions  be
+called.  For  example,  the  workspace  might store descriptions of a graphical
+interface. When the workspace is loaded, a function might run to convert  saved
 data into a graphical interface. (This is how sliders are saved by the IDE.)
 
 add-to-workspace(symbol) [SAL]
 (add-to-workspace symbol) [LISP]
-     Adds a global variable to the workspace. The symbol should be  a  (quoted)
+     Adds  a  global variable to the workspace. The symbol should be a (quoted)
      symbol.
 
 save-workspace() [SAL]
 (save-workspace) [LISP]
-     All  global  variables in the workspace are saved to workspace.lsp (in the
+     All global variables in the workspace are saved to workspace.lsp  (in  the
      current directory), overwriting the previous file.
 
 describe(symbol [, description]) [SAL]
 (describe symbol [description)] [LISP]
-     If description, a text string, is present, associate description with  the
-     variable  named  by the symbol. If symbol is not already in the workspace,
-     it is added. If description is omitted, the function returns  the  current
+     If  description, a text string, is present, associate description with the
+     variable named by the symbol. If symbol is not already in  the  workspace,
+     it  is  added. If description is omitted, the function returns the current
      description (from a previous call) for symbol.
 
 add-action-to-workspace(symbol) [SAL]
@@ -8915,23 +8916,23 @@ add-action-to-workspace(symbol) [SAL]
      Requests that the function named by symbol be called when the workspace is
      loaded (if the function is defined).
 
-  To restore a workspace, use the command load "workspace". This  restores  the
-values  of  the  workspace variables to the values they had when save-workspace
-was last called. It  also  restores  the  documentation  strings,  if  set,  by
-describe.  If  you  load two or more workspace.lsp files, the variables will be
-merged into a single workspace. The current  set  of  workspace  variables  are
-saved  in the list *workspace*. To clear the workspace, set *workspace* to nil.
-This does not delete any variables, but means that no variables will  be  saved
+  To  restore  a workspace, use the command load "workspace". This restores the
+values of the workspace variables to the values they  had  when  save-workspace
+was  last  called.  It  also  restores  the  documentation  strings, if set, by
+describe. If you load two or more workspace.lsp files, the  variables  will  be
+merged  into  a  single  workspace.  The current set of workspace variables are
+saved in the list *workspace*. To clear the workspace, set *workspace* to  nil.
+This  does  not delete any variables, but means that no variables will be saved
 by save-workspace until variables are added again.
 
-  Functions  to  be called are saved in the list *workspace-actions*.  to clear
-the functions, set *workspace-actions* to nil.  Restore functions to  the  list
+  Functions to be called are saved in the list *workspace-actions*.   to  clear
+the  functions,  set *workspace-actions* to nil.  Restore functions to the list
 with add-action-to-workspace.
 
 
 
 13.4.6. Utility Functions
-  This  chapter  concludes  with details of various utility functions for score
+  This chapter concludes with details of various utility  functions  for  score
 manipulation.
 
 patternp(expression) [SAL]
@@ -8940,18 +8941,18 @@ patternp(expression) [SAL]
 
 params-transpose(params, keyword, amount) [SAL]
 (params-transpose params keyword amount) [LISP]
-     Add a  transposition  amount  to  a  score  event  parameter.  The  params
-     parameter  is  a  list  of keyword/value pairs (not preceded by a function
-     name).  The keyword is the keyword of the value to be altered, and  amount
+     Add  a  transposition  amount  to  a  score  event  parameter.  The params
+     parameter is a list of keyword/value pairs (not  preceded  by  a  function
+     name).   The keyword is the keyword of the value to be altered, and amount
      is a number to be added to the value. If no matching keyword is present in
-     params, then params is  returned.  Otherwise,  a  new  parameter  list  is
+     params,  then  params  is  returned.  Otherwise,  a  new parameter list is
      constructed and returned. The original params is not changed.
 
 params-scale(params, keyword, amount) [SAL]
 (params-scale params keyword amount) [LISP]
-     Scale   a   score   event   parameter   by   some  factor.  This  is  like
-     params-transpose, only using multiplication. The params list is a list  of
-     keyword/value  pairs,  keyword is the parameter keyword, and amount is the
+     Scale  a  score  event  parameter   by   some   factor.   This   is   like
+     params-transpose,  only using multiplication. The params list is a list of
+     keyword/value pairs, keyword is the parameter keyword, and amount  is  the
      scale factor.
 
 interpolate(x, x1, y1, x2, y2) [SAL]
@@ -8973,35 +8974,35 @@ set-difference(a, b) [SAL]
 
 subsetp(a, b) [SAL]
 (subsetp a b) [LISP]
-     Returns  true  iff  a  is  a  subset of b, that is, each element of a is a
+     Returns true iff a is a subset of b, that is,  each  element  of  a  is  a
      member of b.
 14. Nyquist Libraries
-  Nyquist is always  growing  with  new  functions.  Functions  that  are  most
-fundamental  are  added to the core language. These functions are automatically
-loaded when you start  Nyquist,  and  they  are  documented  in  the  preceding
-chapters.  Other  functions seem less central and are implemented as lisp files
-that you can load. These are called library functions, and they  are  described
+  Nyquist  is  always  growing  with  new  functions.  Functions  that are most
+fundamental are added to the core language. These functions  are  automatically
+loaded  when  you  start  Nyquist,  and  they  are  documented in the preceding
+chapters. Other functions seem less central and are implemented as  lisp  files
+that  you  can load. These are called library functions, and they are described
 here.
 
-  To  use  a  library  function,  you  must  first load the library, e.g. (load
+  To use a library function, you  must  first  load  the  library,  e.g.  (load
 "pianosyn") loads the piano synthesis library. The libraries are all located in
-the  lib  directory,  and  you  should therefore include this directory on your
-XLISPPATH variable. (See Section 1.) Each library is documented in one  of  the
-following  sections.  When  you  load the library described by the section, all
+the lib directory, and you should therefore  include  this  directory  on  your
+XLISPPATH  variable.  (See Section 1.) Each library is documented in one of the
+following sections. When you load the library described  by  the  section,  all
 functions documented in that section become available.
 
 14.1. Statistics
-  The file statistics.lsp defines a  class  and  functions  to  compute  simple
-statistics,  histograms, correlation, and some other tests. See the source code
+  The  file  statistics.lsp  defines  a  class  and functions to compute simple
+statistics, histograms, correlation, and some other tests. See the source  code
 for complete details.
 
 14.2. Plots
-  The Nyquist IDE has a simple facility to  plot  signals.  For  more  advanced
-plotting,  you  can  use gnuplot.sal to generate plots for gnuplot, a separate,
+  The  Nyquist  IDE  has  a  simple facility to plot signals. For more advanced
+plotting, you can use gnuplot.sal to generate plots for  gnuplot,  a  separate,
 but free program. See the source for details.
 
 14.3. Labeling Audio Events, Marking Audio Times, Displaying Marked Audio Times
-  The labels.sal program can convert lists to label files and  label  files  to
+  The  labels.sal  program  can convert lists to label files and label files to
 lists. Label files can be loaded along with audio in Audacity to show metadata.
 See the source for details.
 
@@ -9009,23 +9010,23 @@ See the source for details.
   See regression.sal for simple linear regression functions.
 
 14.5. Vector Math, Linear Algebra
-  See vectors.lsp for a simple implementation of vector  arithmetic  and  other
+  See  vectors.lsp  for  a simple implementation of vector arithmetic and other
 vector functions.
 
 14.6. Piano Synthesizer
-  The  piano  synthesizer  (library  name  is pianosyn.lsp) generates realistic
-piano tones using a multiple wavetable implementation by Zheng  (Geoffrey)  Hua
-and  Jim  Beauchamp,  University  of  Illinois.  Please  see  the  notice about
-acknowledgements that prints when you load the file. Further  informations  and
-example  code  can  be  found  in  demos/piano.htm.    There are several useful
+  The piano synthesizer (library  name  is  pianosyn.lsp)  generates  realistic
+piano  tones  using a multiple wavetable implementation by Zheng (Geoffrey) Hua
+and Jim  Beauchamp,  University  of  Illinois.  Please  see  the  notice  about
+acknowledgements  that  prints when you load the file. Further informations and
+example code can be  found  in  demos/piano.htm.    There  are  several  useful
 functions in this library:
 
 piano-note(duration, step, dynamic) [SAL]
 (piano-note duration step dynamic) [LISP]
-     Synthesizes a piano tone. Duration is the duration to  the  point  of  key
-     release,  after  which  there  is a rapid decay. Step is the pitch in half
-     steps, and dynamic is approximately equivalent  to  a  MIDI  key  velocity
-     parameter.  Use  a  value near 100 for a loud sound and near 10 for a soft
+     Synthesizes  a  piano  tone.  Duration is the duration to the point of key
+     release, after which there is a rapid decay. Step is  the  pitch  in  half
+     steps,  and  dynamic  is  approximately  equivalent to a MIDI key velocity
+     parameter. Use a value near 100 for a loud sound and near 10  for  a  soft
      sound.
 
 piano-note-2(step, dynamic) [SAL]
@@ -9039,69 +9040,69 @@ piano-midi(midi-file-name) [SAL]
 
 piano-midi2file(midi-file-name, sound-file-name) [SAL]
 (piano-midi2file midi-file-name sound-file-name) [LISP]
-     Use  the  piano synthesizer to play a MIDI file. The MIDI file is given by
-     midi-file-name and the (monophonic) result is written to  the  file  named
+     Use the piano synthesizer to play a MIDI file. The MIDI file is  given  by
+     midi-file-name  and  the  (monophonic) result is written to the file named
      sound-file-name.
 
 14.7. Dymanics Compression
-  To use these functions, load the file compress.lsp. This library implements a
-compressor originally intended for noisy speech audio, but usable in a  variety
-of  situations.  There are actually two compressors that can be used in series.
-The first, compress, is a fairly standard one: it detects signal level with  an
-RMS  detector  and uses table-lookup to determine how much gain to place on the
-original signal at that point. One bit of  cleverness  here  is  that  the  RMS
-envelope  is  ``followed'' or enveloped using snd-follow, which does look-ahead
-to anticipate peaks before they happen.
+  These functions implement a compressor originally intended for  noisy  speech
+audio,  but  usable  in  a  variety  of  situations.    There  are actually two
+compressors that can be used in  series.  The  first,  compress,  is  a  fairly
+standard   one:  it  detects  signal  level  with  an  RMS  detector  and  uses
+table-lookup to determine how much gain to place on the original signal at that
+point.  One  bit of cleverness here is that the RMS envelope is ``followed'' or
+enveloped using snd-follow, which does look-ahead to  anticipate  peaks  before
+they happen.
 
   The other interesting feature is compress-map, which builds a map in terms of
-compression  and  expansion. For speech, the recommended procedure is to figure
+compression and expansion. For speech, the recommended procedure is  to  figure
 out the noise floor on the signal you are compressing (for example, look at the
-signal  where  the  speaker is not talking).  Use a compression map that leaves
-the noise alone and boosts signals that are well above the noise  floor.  Alas,
-the   compress-map   function   is   not   written  in  these  terms,  so  some
+signal where the speaker is not talking).  Use a compression  map  that  leaves
+the  noise  alone and boosts signals that are well above the noise floor. Alas,
+the  compress-map  function  is  not  written   in   these   terms,   so   some
 head-scratching is involved, but the results are quite good.
 
   The second compressor is called agc, and it implements automatic gain control
-that  keeps  peaks  at  or  below  1.0.  By combining compress and agc, you can
-process poorly recorded speech for playback on low-quality  speakers  in  noisy
-environments.  The  compress  function  modulates  the  short-term  gain  to to
+that keeps peaks at or below 1.0.  By  combining  compress  and  agc,  you  can
+process  poorly  recorded  speech for playback on low-quality speakers in noisy
+environments. The  compress  function  modulates  the  short-term  gain  to  to
 minimize the total dynamic range, keeping the speech at a generally loud level,
-and  the agc function rides the long-term gain to set the overall level without
+and the agc function rides the long-term gain to set the overall level  without
 clipping.
 
-compress-map(compress-ratio,         compress-threshold,          expand-ratio,
+compress-map(compress-ratio,          compress-threshold,         expand-ratio,
      expand-threshold, limit: limit, transition:  transition) [SAL]
-(compress-map  compress-ratio  compress-threshold expand-ratio expand-threshold
+(compress-map compress-ratio compress-threshold  expand-ratio  expand-threshold
      [:limit limit :transition transition :verbose verbose]) [LISP]
-     Construct a map for the compress function. The map consists of two  parts:
+     Construct  a map for the compress function. The map consists of two parts:
      a compression part and an expansion part.  The intended use is to compress
-     everything above compress-threshold by  compress-ratio,  and  to  downward
-     expand  everything  below expand-ratio by expand-ratio.  Thresholds are in
-     dB and ratios are dB-per-dB.  0dB corresponds to a peak amplitude  of  1.0
-     or  rms  amplitude  of  0.7  If  the  input goes above 0dB, the output can
-     optionally be limited by setting limit: (a keyword parameter) to T.   This
-     effectively  changes  the compression ratio to infinity at 0dB.  If limit:
-     is nil (the default), then the compression-ratio continues to apply  above
+     everything  above  compress-threshold  by  compress-ratio, and to downward
+     expand everything below expand-ratio by expand-ratio.  Thresholds  are  in
+     dB  and  ratios are dB-per-dB.  0dB corresponds to a peak amplitude of 1.0
+     or rms amplitude of 0.7 If the  input  goes  above  0dB,  the  output  can
+     optionally  be limited by setting limit: (a keyword parameter) to T.  This
+     effectively changes the compression ratio to infinity at 0dB.   If  limit:
+     is  nil (the default), then the compression-ratio continues to apply above
      0dB.
 
-Another  keyword  parameter,  transition:, sets the amount below the thresholds
-     (in dB) that a smooth transition starts. The default is  0,  meaning  that
-     there  is  no  smooth  transition.  The  smooth  transition is a 2nd-order
-     polynomial that matches the slopes of the straight-line compression  curve
+Another keyword parameter, transition:, sets the amount  below  the  thresholds
+     (in  dB)  that  a smooth transition starts. The default is 0, meaning that
+     there is no smooth  transition.  The  smooth  transition  is  a  2nd-order
+     polynomial  that matches the slopes of the straight-line compression curve
      and interpolates between them.
 
 If verbose is true (this is the default), the map is printed, showing, for each
-     dB value below zero of this input, what is the gain (in dB)  indicated  by
-     the  output. Only regions where the map is changing are printed because at
+     dB  value  below zero of this input, what is the gain (in dB) indicated by
+     the output. Only regions where the map is changing are printed because  at
      lower values, the dB gain is constant.
 
-It is assumed that expand-threshold <= compress-threshold  <=  0  The  gain  is
-     unity  at  0dB so if compression-ratio > 1, then gain will be greater than
+It  is  assumed  that  expand-threshold  <= compress-threshold <= 0 The gain is
+     unity at 0dB so if compression-ratio > 1, then gain will be  greater  than
      unity below 0dB.
 
-The result returned by this function is a sound for use in the shape  function.
-     The  sound  maps  input  dB to gain. Time 1.0 corresponds to 0dB, time 0.0
-     corresponds to -100 dB, and time 2.0 corresponds to +100dB, so this  is  a
+The  result returned by this function is a sound for use in the shape function.
+     The sound maps input dB to gain. Time 1.0 corresponds  to  0dB,  time  0.0
+     corresponds  to  -100 dB, and time 2.0 corresponds to +100dB, so this is a
      100hz ``sample rate'' sound. The sound gives gain in dB.
 
 db-average(input) [SAL]
@@ -9110,56 +9111,56 @@ db-average(input) [SAL]
 
 compress(input, map, rise-time, fall-time [, lookahead]) [SAL]
 (compress input map rise-time fall-time [lookahead)] [LISP]
-     Compress  input  using  map,  a  compression  curve  probably generated by
+     Compress input using  map,  a  compression  curve  probably  generated  by
      compress-map (see above). Adjustments in gain have the given rise-time and
-     fall-time.  Lookahead  tells  how  far ahead to look at the signal, and is
+     fall-time. Lookahead tells how far ahead to look at  the  signal,  and  is
      rise-time by default.
 
 agc(input, range, rise-time, fall-time [, lookahead]) [SAL]
 (agc input range rise-time fall-time [lookahead]) [LISP]
-     An automatic gain control applied to input. The  maximum  gain  in  dB  is
-     range.  Peaks are attenuated to 1.0, and gain is controlled with the given
+     An  automatic  gain  control  applied  to input. The maximum gain in dB is
+     range. Peaks are attenuated to 1.0, and gain is controlled with the  given
      rise-time and fall-time. The look-ahead time default is rise-time.
 
 14.8. Clipping Softener
-  This library, in soften.lsp, was written to improve  the  quality  of  poorly
+  This  library,  in  soften.lsp,  was written to improve the quality of poorly
 recorded speech. In recordings of speech, extreme clipping generates harsh high
-frequency noise. This can sound particulary bad on  small  speakers  that  will
-emphasize  high  frequencies.  This  problem  can  be  ameliorated  by low-pass
-filtering regions where clipping occurs.  The  effect  is  to  dull  the  harsh
-clipping.  Intelligibility  is not affected by much, and the result can be much
-more pleasant on the ears. Clipping is detected simply  by  looking  for  large
+frequency  noise.  This  can  sound particulary bad on small speakers that will
+emphasize high  frequencies.  This  problem  can  be  ameliorated  by  low-pass
+filtering  regions  where  clipping  occurs.  The  effect  is to dull the harsh
+clipping. Intelligibility is not affected by much, and the result can  be  much
+more  pleasant  on  the  ears. Clipping is detected simply by looking for large
 signal values. Assuming 8-bit recording, this level is set to 126/127.
 
-  The  function  works by cross-fading between the normal signal and a filtered
+  The function works by cross-fading between the normal signal and  a  filtered
 signal as opposed to changing filter coefficients.
 
 soften-clipping(snd, cutoff) [SAL]
 (soften-clipping snd cutoff) [LISP]
-     Filter the loud regions of a signal  where  clipping  is  likely  to  have
-     generated  additional high frequencies. The input signal is snd and cutoff
+     Filter  the  loud  regions  of  a  signal where clipping is likely to have
+     generated additional high frequencies. The input signal is snd and  cutoff
      is the filter cutoff frequency (4 kHz is recommended for speech).
 
 14.9. Graphical Equalizer
-  There's nothing really ``graphical'' about this  library  (grapheq.lsp),  but
-this  is  a  common  term  for  multi-band equalizers. This implementation uses
+  There's  nothing  really  ``graphical'' about this library (grapheq.lsp), but
+this is a common term  for  multi-band  equalizers.  This  implementation  uses
 Nyquist's  eq-band  function  to  split  the  incoming  signal  into  different
-frequency  bands.  Bands  are spaced geometrically, e.g. each band could be one
+frequency bands. Bands are spaced geometrically, e.g. each band  could  be  one
 octave,  meaning  that  each  successive  band  has  twice  the  bandwidth.  An
-interesting  possibility  is  using  computed  control  functions  to  make the
+interesting possibility  is  using  computed  control  functions  to  make  the
 equalization change over time.
 
 nband-range(input, gains, lowf, highf) [SAL]
 (nband-range input gains lowf highf) [LISP]
-     A graphical equalizer applied to input (a SOUND). The  gain  controls  and
-     number  of  bands is given by gains, an ARRAY of SOUNDs (in other words, a
-     Nyquist multichannel SOUND). Any sound in the array may be replaced  by  a
-     FLONUM.  The  bands  are  geometrically  equally  spaced  from  the lowest
+     A  graphical  equalizer  applied to input (a SOUND). The gain controls and
+     number of bands is given by gains, an ARRAY of SOUNDs (in other  words,  a
+     Nyquist  multichannel  SOUND). Any sound in the array may be replaced by a
+     FLONUM. The  bands  are  geometrically  equally  spaced  from  the  lowest
      frequency lowf to the highest frequency highf (both are FLONUMs).
 
 nband(input, gains) [SAL]
 (nband input gains) [LISP]
-     A graphical equalizer, identical to nband-range with  a  range  of  20  to
+     A  graphical  equalizer,  identical  to  nband-range with a range of 20 to
      20,000 Hz.
 
 14.10. Sound Reversal
@@ -9167,22 +9168,22 @@ nband(input, gains) [SAL]
 
 s-reverse(snd) [SAL]
 (s-reverse snd) [LISP]
-     Reverses  snd (a SOUND). Sound must be shorter than *max-reverse-samples*,
-     which is currently initialized to 25 million samples.  Reversal  allocates
-     about  4  bytes  per  sample. This function uses XLISP in the inner sample
-     loop, so do not be surprised if it calls the garbage collector a  lot  and
-     runs  slowly.  The result starts at the starting time given by the current
-     environment (not necessarily  the  starting  time  of  snd).  If  snd  has
+     Reverses snd (a SOUND). Sound must be shorter than  *max-reverse-samples*,
+     which  is  currently initialized to 25 million samples. Reversal allocates
+     about 4 bytes per sample. This function uses XLISP  in  the  inner  sample
+     loop,  so  do not be surprised if it calls the garbage collector a lot and
+     runs slowly. The result starts at the starting time given by  the  current
+     environment  (not  necessarily  the  starting  time  of  snd).  If snd has
      multiple channels, a multiple channel, reversed sound is returned.
 
-s-read-reverse(filename,  time-offset:  offset,  srate:  sr,  dur: dur, nchans:
+s-read-reverse(filename, time-offset: offset,  srate:  sr,  dur:  dur,  nchans:
      chans, format: format, mode: mode, bits: n, swap: flag) [SAL]
-(s-read-reverse filename :time-offset offset :srate sr :dur dur  :nchans  chans
+(s-read-reverse  filename  :time-offset offset :srate sr :dur dur :nchans chans
      :format format :mode mode :bits n :swap flag) [LISP]
-     This  function  is  identical  to  s-read  (see  7.5), except it reads the
+     This function is identical to  s-read  (see  7.5),  except  it  reads  the
      indicated samples in reverse. Like s-reverse (see above), it uses XLISP in
-     the  inner  loop,  so it is slow.  Unlike s-reverse, s-read-reverse uses a
-     fixed amount of memory  that  is  independent  of  how  many  samples  are
+     the inner loop, so it is slow.  Unlike s-reverse,  s-read-reverse  uses  a
+     fixed  amount  of  memory  that  is  independent  of  how many samples are
      computed. Multiple channels are handled.
 
 14.11. Time Delay Functions
@@ -9190,7 +9191,7 @@ s-read-reverse(filename,  time-offset:  offset,  srate:  sr,  dur: dur, nchans:
 
 phaser(snd) [SAL]
 (phaser snd) [LISP]
-     A  phaser  effect  applied  to snd (a SOUND). There are no parameters, but
+     A phaser effect applied to snd (a SOUND). There  are  no  parameters,  but
      feel free to modify the source code of this one-liner.
 
 flange(snd) [SAL]
@@ -9198,22 +9199,27 @@ flange(snd) [SAL]
      A flange effect applied to snd. To vary the rate and other parameters, see
      the source code.
 
-stereo-chorus(snd) [SAL]
-(stereo-chorus snd) [LISP]
-     A  chorus  effect  applied  to  snd, a SOUND (monophonic). The output is a
-     stereo sound. All parameters are built-in, but see the simple source  code
-     to make modifications.
+stereo-chorus(snd, delay: delay,  depth:  depth,  rate1:  rate1,  rate2:  rate2
+     saturation: saturation) [SAL]
+(stereo-chorus  snd  :delay  delay  :depth  depth  :rate1  rate1  :rate2  rate2
+     :saturation saturation) [LISP]
+     A chorus effect applied to snd, a SOUND  (monophonic).  The  output  is  a
+     stereo  sound  with out-of-phase chorus effects applied separately for the
+     left and right channels. See the chorus function below for  a  description
+     of  the  optional  parameters.  The  rate1  and  rate2 parameters are rate
+     parameters for the left and right channels.
 
-chorus(snd, maxdepth, depth, rate, saturation) [SAL]
-(chorus snd maxdepth depth rate saturation) [LISP]
+chorus(snd, delay: delay, depth: depth,  rate:  rate,  saturation:  saturation,
+     phase: phase) [SAL]
+(chorus  snd :delay delay :depth depth :rate rate :saturation saturation :phase
+     phase) [LISP]
      A chorus effect applied to snd. All parameters may be arrays as usual. The
-     maxdepth is a FLONUM giving twice the maximum value of depth, which may be
-     a  FLONUM  or  a  SOUND.  The  chorus  is  implemented as a variable delay
-     modulated by a sinusoid running at rate Hz (a  FLONUM).  The  sinusoid  is
-     scaled by depth and offset by maxdepth/2. The delayed signal is mixed with
-     the original, and saturation gives the  fraction  of  the  delayed  signal
-     (from  0  to  1)  in  the  mix. A reasonable choice of parameter values is
-     maxdepth = 0.05, depth = 0.025, rate = 0.5, and saturation = 0.5.
+     chorus  is implemented as a variable delay modulated by a sinusoid shifted
+     by phase degrees (a  FLONUM)  oscillating  at  rate  Hz  (a  FLONUM).  The
+     sinusoid  is  scaled  by depth (a FLONUM. The delayed signal is mixed with
+     the original, and saturation (a FLONUM) gives the fraction of the  delayed
+     signal  (from  0  to  1) in the mix.  Default values are delay 0.03, depth
+     0.003, rate 0.3, saturation 1.0, and phase 0.0 (degrees).
 
 14.12. Multiple Band Effects
   The bandfx.lsp library implements several effects based on multiple frequency
@@ -11595,8 +11601,9 @@ eq(expr1, expr2) [SAL]
      returns M t if they are equal, nil otherwise
 
 eql(expr1, expr2) [SAL]
-(eql  expr1  expr2)  [LISP]  M  are  the expressions identical? (works with all
-     numbers)
+(eql  expr1  expr2) [LISP] M are the expressions identical? (eql ``works'' with
+     all numbers, but a FIXNUM is never eql to a FLONUM, i.e. (eql  1  1.0)  is
+     false.)
      expr1 M the first expression
      expr2 M the second expression
      returns M t if they are equal, nil otherwise
@@ -11620,15 +11627,15 @@ IV.23. Control Constructs
 and(expr...) [SAL]
 (and expr...) [LISP] M the logical and of a list of expressions
      expr M the expressions to be anded
-     returns M nil if any expression evaluates to nil, otherwise the  value  of
-          the  last expression (evaluation of expressions stops after the first
+     returns  M  nil if any expression evaluates to nil, otherwise the value of
+          the last expression (evaluation of expressions stops after the  first
           expression that evaluates to nil)
 
 or(expr...) [SAL]
 (or expr...) [LISP] M the logical or of a list of expressions
      expr M the expressions to be ored
-     returns M nil if all expressions evaluate to nil, otherwise the  value  of
-          the  first  non-nil expression (evaluation of expressions stops after
+     returns  M  nil if all expressions evaluate to nil, otherwise the value of
+          the first non-nil expression (evaluation of expressions  stops  after
           the first expression that does not evaluate to nil)
 
 if(texpr, expr1 [, expr2]) [SAL]
@@ -11663,7 +11670,7 @@ unless(texpr, expr...) [SAL]
 (let* (binding...) expr...) [LISP] M let with sequential binding
      binding M the variable bindings each of which is either:
           1) a symbol (which is initialized to nil)
-          2) a list whose car is a symbol and whose cadr is  an  initialization
+          2)  a  list whose car is a symbol and whose cadr is an initialization
                expression
      expr M the expressions to be evaluated
      returns M the value of the last expression
@@ -11697,8 +11704,8 @@ unwind-protect(expr, cexpr...) [SAL]
      expr M the expression to protect
      cexpr M the cleanup expressions
      returns M the value of the expression
-     Note:    unwind-protect guarantees to execute the cleanup expressions even
-          if a non-local  exit  terminates  the  evaluation  of  the  protected
+     Note:  unwind-protect guarantees to execute the cleanup  expressions  even
+          if  a  non-local  exit  terminates  the  evaluation  of the protected
           expression
 
 
@@ -11707,7 +11714,7 @@ IV.24. Looping Constructs
      expr M the body of the loop
      returns M never returns (must use non-local exit)
 
-(do  (binding...)  (texpr  rexpr...)  expr...)  [LISP] (do* (binding...) (texpr
+(do (binding...) (texpr rexpr...)  expr...)  [LISP]  (do*  (binding...)  (texpr
      rexpr...) expr...) [LISP]
      binding M the variable bindings each of which is either:
           1) a symbol (which is initialized to nil)
@@ -11738,7 +11745,7 @@ IV.25. The Program Feature
 (prog* (binding...) expr...) [LISP] M prog with sequential binding
      binding M the variable bindings each of which is either:
           1) a symbol (which is initialized to nil)
-          2) a list whose car is a symbol and whose cadr is  an  initialization
+          2)  a  list whose car is a symbol and whose cadr is an initialization
                expression
      expr M expressions to evaluate or tags (symbols)
      returns M nil or the argument passed to the return function
@@ -11780,7 +11787,6 @@ prog1(expr1, expr...) [SAL]
      expr1 M the first expression to evaluate
      expr M the remaining expressions to evaluate
      returns M the value of the first expression
-
 prog2(expr1, expr2, expr...) [SAL]
 (prog2 expr1 expr2 expr...) [LISP] M execute expressions sequentially
      expr1 M the first expression to evaluate
@@ -11851,7 +11857,7 @@ break([bmsg [, arg]]) [SAL]
      returns M the result of evaluating the expression
 
 profile(flag) [SAL]
-(profile  flag)  [LISP](This  is  not  a  standard XLISP 2.0 function.)  M turn
+(profile flag) [LISP](This is not a standard  XLISP  2.0  function.)    M  turn
      profiling on or off.
      flag M nil turns profiling off, otherwise on
      returns M the previous state of profiling.
@@ -11944,7 +11950,7 @@ tan(expr) [SAL]
      returns M the tangent of the number
 
 atan(expr [, expr2]) [SAL]
-(atan  expr  [expr2])  [LISP](This  is  not  a standard XLISP 2.0 function.)  M
+(atan expr [expr2]) [LISP](This is not a  standard  XLISP  2.0  function.)    M
      compute the arctangent
      expr M the value of x
      expr2 M the value of y (default value is 1.0)
@@ -11974,10 +11980,8 @@ sqrt(expr) [SAL]
 (> n1 n2...) [LISP] M test for greater than
      n1 M the first number to compare
      n2 M the second number to compare
-     returns M t if the results of comparing n1 with n2, n2 with n3, etc.,  are
+     returns  M t if the results of comparing n1 with n2, n2 with n3, etc., are
           all true.
-
-
 IV.28. Bitwise Logical Functions
 logand(expr...) [SAL]
 (logand expr...) [LISP] M the bitwise and of a list of numbers
@@ -12003,12 +12007,12 @@ lognot(expr) [SAL]
 IV.29. String Functions
 string(expr) [SAL]
 (string expr) [LISP] M make a string from a value
-     expr  M  an  integer  (which  is  first converted into its ASCII character
+     expr M an integer (which is  first  converted  into  its  ASCII  character
           value), string, character, or symbol
      returns M the string representation of the argument
 
 string-search(pat, str, start: start, end: end) [SAL]
-(string-search pat str &key :start :end) [LISP](This is not  a  standard  XLISP
+(string-search  pat  str  &key :start :end) [LISP](This is not a standard XLISP
      2.0 function.)  M search for pattern in string
      pat M a string to search for
      str M the string to be searched
@@ -12074,22 +12078,22 @@ subseq(string, start [, end]) [SAL]
      end M the ending position + 1 (defaults to end)
      returns M substring between start and end
 
-string<(str1,  str2,  start1:  start1,  end1: end1, start2: start2, end2: end2)
+string<(str1, str2, start1: start1, end1: end1,  start2:  start2,  end2:  end2)
      [SAL]
 (string< str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string<=(str1, str2, start1: start1, end1: end1, start2:  start2,  end2:  end2)
+string<=(str1,  str2,  start1:  start1, end1: end1, start2: start2, end2: end2)
      [SAL]
 (string<= str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string=(str1,  str2,  start1:  start1,  end1: end1, start2: start2, end2: end2)
+string=(str1, str2, start1: start1, end1: end1,  start2:  start2,  end2:  end2)
      [SAL]
 (string= str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string/=(str1, str2, start1: start1, end1: end1, start2:  start2,  end2:  end2)
+string/=(str1,  str2,  start1:  start1, end1: end1, start2: start2, end2: end2)
      [SAL]
 (string/= str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string>=(str1,  str2,  start1:  start1, end1: end1, start2: start2, end2: end2)
+string>=(str1, str2, start1: start1, end1: end1, start2:  start2,  end2:  end2)
      [SAL]
 (string>= str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string>(str1, str2, start1: start1, end1: end1,  start2:  start2,  end2:  end2)
+string>(str1,  str2,  start1:  start1,  end1: end1, start2: start2, end2: end2)
      [SAL]
 (string> str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
      str1 M the first string to compare
@@ -12101,22 +12105,22 @@ string>(str1, str2, start1: start1, end1: end1,  start2:  start2,  end2:  end2)
      returns M t if predicate is true, nil otherwise
      Note: case is significant with these comparison functions.
 
-string-lessp(str1,  str2,  start1:  start1,  end1:  end1, start2: start2, end2:
+string-lessp(str1, str2, start1: start1,  end1:  end1,  start2:  start2,  end2:
      end2) [SAL]
 (string-lessp str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string-not-greaterp(str1, str2, start1: start1,  end1:  end1,  start2:  start2,
+string-not-greaterp(str1,  str2,  start1:  start1,  end1: end1, start2: start2,
      end2: end2) [SAL]
 (string-not-greaterp str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string-equal(str1,  str2,  start1:  start1,  end1:  end1, start2: start2, end2:
+string-equal(str1, str2, start1: start1,  end1:  end1,  start2:  start2,  end2:
      end2) [SAL]
 (string-equal str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string-not-equal(str1, str2, start1: start1, end1: end1, start2: start2,  end2:
+string-not-equal(str1,  str2, start1: start1, end1: end1, start2: start2, end2:
      end2) [SAL]
 (string-not-equal str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string-not-lessp(str1,  str2, start1: start1, end1: end1, start2: start2, end2:
+string-not-lessp(str1, str2, start1: start1, end1: end1, start2: start2,  end2:
      end2) [SAL]
 (string-not-lessp str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
-string-greaterp(str1, str2, start1: start1, end1: end1, start2:  start2,  end2:
+string-greaterp(str1,  str2,  start1: start1, end1: end1, start2: start2, end2:
      end2) [SAL]
 (string-greaterp str1 str2 &key :start1 :end1 :start2 :end2) [LISP]
      str1 M the first string to compare
@@ -12282,7 +12286,7 @@ output
      arg M the format arguments
      returns M output string if stream is nil, nil otherwise
 
-  The  format  string  can contain characters that should be copied directly to
+  The format string can contain characters that should be  copied  directly  to
 the output and formatting directives.  The formatting directives are:
 
     ~A M print next argument using princ
@@ -12314,42 +12318,42 @@ close(stream) [SAL]
      returns M nil
 
 setdir(path [, verbose]) [SAL]
-(setdir  path  [verbose])  [LISP](This is not a standard XLISP 2.0 function.) M
+(setdir path [verbose]) [LISP](This is not a standard XLISP  2.0  function.)  M
      set current directory
      path M the path of the new directory
-     verbose M print error message if current directory cannot  be  changed  to
+     verbose  M  print  error message if current directory cannot be changed to
           path
-     returns  M  the  resulting  full  path, e.g. (setdir ".") gets the current
+     returns M the resulting full path, e.g.  (setdir  ".")  gets  the  current
           working directory, or nil if an error occurs
 
 listdir(path) [SAL]
-(listdir path) [LISP](This is not a standard  XLISP  2.0  function.)  M  get  a
+(listdir  path)  [LISP](This  is  not  a  standard XLISP 2.0 function.) M get a
      directory listing
      path M the path of the directory to be listed
      returns M list of filenames in the directory
 
 get-temp-path() [SAL]
 (get-temp-path) [LISP](This is not a standard XLISP 2.0 function.) M get a path
-     where a temporary file can be created. Under Windows,  this  is  based  on
-     environment  variables.  If XLISP is running as a sub-process to Java, the
-     environment may not exist,  in  which  case  the  default  result  is  the
+     where  a  temporary  file  can be created. Under Windows, this is based on
+     environment variables. If XLISP is running as a sub-process to  Java,  the
+     environment  may  not  exist,  in  which  case  the  default result is the
      unfortunate choice c:\windows\.
      returns M the resulting full path as a string
 
 get-user() [SAL]
-(get-user)  [LISP](This  is  not a standard XLISP 2.0 function.) M get the user
-     ID. In Unix systems (including OS X and Linux), this is the value  of  the
+(get-user) [LISP](This is not a standard XLISP 2.0 function.) M  get  the  user
+     ID.  In  Unix systems (including OS X and Linux), this is the value of the
      USER environment variable. In Windows, this is currently just ``nyquist'',
-     which is also returned if the environment  variable  cannot  be  accessed.
+     which  is  also  returned  if the environment variable cannot be accessed.
      This function is used to avoid the case of two users creating files of the
      same name in the same temp directory.
      returns M the string naming the user
 
 find-in-xlisp-path(filename) [SAL]
-(find-in-xlisp-path  filename)  [LISP](This  is  not  a  standard   XLISP   2.0
-     function.)  M  search  the  XLISP  search  path  (e.g.  XLISPPATH from the
+(find-in-xlisp-path   filename)   [LISP](This  is  not  a  standard  XLISP  2.0
+     function.) M search  the  XLISP  search  path  (e.g.  XLISPPATH  from  the
      environment) for filename. If filename is not found as is, and there is no
-     file  extension,  append  ".lsp" to filename and search again. The current
+     file extension, append ".lsp" to filename and search  again.  The  current
      directory is not searched.
      filename M the name of the file to search for
      returns M a full path name to the first occurrence found
@@ -12376,9 +12380,9 @@ read-int([stream [, length]]) [SAL]
      stream M the input stream (default is standard input)
      length M the length of the integer in bytes (default is 4)
      returns M the integer
-     Note: Integers are assumed to be big-endian (high-order  byte  first)  and
+     Note:  Integers  are  assumed to be big-endian (high-order byte first) and
           signed, regardless of the platform. To read little-endian format, use
-          a negative number for  the  length,  e.g.  -4  indicates  a  4-bytes,
+          a  negative  number  for  the  length,  e.g.  -4 indicates a 4-bytes,
           low-order byte first. The file should be opened in binary mode.
 
 write-int(ch [, stream [, length]]) [SAL]
@@ -12387,34 +12391,34 @@ write-int(ch [, stream [, length]]) [SAL]
      stream M the output stream (default is standard output)
      length M the length of the integer in bytes (default is 4)
      returns M the integer
-     Note:  Integers  are  assumed to be big-endian (high-order byte first) and
+     Note: Integers are assumed to be big-endian (high-order  byte  first)  and
           signed, regardless of the platform. To write in little-endian format,
-          use  a  negative  number for the length, e.g. -4 indicates a 4-bytes,
+          use a negative number for the length, e.g. -4  indicates  a  4-bytes,
           low-order byte first. The file should be opened in binary mode.
 
 read-float([stream [, length]]) [SAL]
-(read-float [stream [length]]) [LISP] M read  a  binary  floating-point  number
+(read-float  [stream  [length]])  [LISP]  M read a binary floating-point number
      from a stream
      stream M the input stream (default is standard input)
-     length  M the length of the float in bytes (default is 4, legal values are
-          -4, -8, 4, and 8)
-     returns M the integer
-     Note: Floats are assumed to be  big-endian  (high-order  byte  first)  and
-          signed, regardless of the platform. To read little-endian format, use
-          a negative number for  the  length,  e.g.  -4  indicates  a  4-bytes,
-          low-order byte first. The file should be opened in binary mode.
-
-write-float(ch [, stream [, length]]) [SAL]
-(write-float  ch  [stream  [length]])  [LISP]  M  write a binary floating-point
-     number to a stream
-     ch M the character to write
-     stream M the output stream (default is standard output)
      length M the length of the float in bytes (default is 4, legal values  are
           -4, -8, 4, and 8)
      returns M the integer
      Note:  Floats  are  assumed  to  be big-endian (high-order byte first) and
+          signed, regardless of the platform. To read little-endian format, use
+          a  negative  number  for  the  length,  e.g.  -4 indicates a 4-bytes,
+          low-order byte first. The file should be opened in binary mode.
+
+write-float(ch [, stream [, length]]) [SAL]
+(write-float ch [stream [length]])  [LISP]  M  write  a  binary  floating-point
+     number to a stream
+     ch M the character to write
+     stream M the output stream (default is standard output)
+     length  M the length of the float in bytes (default is 4, legal values are
+          -4, -8, 4, and 8)
+     returns M the integer
+     Note: Floats are assumed to be  big-endian  (high-order  byte  first)  and
           signed, regardless of the platform. To write in little-endian format,
-          use  a  negative  number for the length, e.g. -4 indicates a 4-bytes,
+          use a negative number for the length, e.g. -4  indicates  a  4-bytes,
           low-order byte first. The file should be opened in binary mode.
 
 read-line([stream]) [SAL]
@@ -12435,13 +12439,13 @@ write-byte(byte [, stream]) [SAL]
 
 
 IV.34. String Stream Functions
-  These functions operate  on  unnamed  streams.    An  unnamed  output  stream
+  These  functions  operate  on  unnamed  streams.    An  unnamed output stream
 collects characters sent to it when it is used as the destination of any output
-function.  The functions  get-output-stream-string  and  get-output-stream-list
+function.    The  functions get-output-stream-string and get-output-stream-list
 return a string or a list of characters.
 
-  An  unnamed  input stream is setup with the make-string-input-stream function
-and returns each character of the string when it is used as the source  of  any
+  An unnamed input stream is setup with the  make-string-input-stream  function
+and  returns  each character of the string when it is used as the source of any
 input function.
 
 make-string-input-stream(str [, start [, end]]) [SAL]
@@ -12469,16 +12473,16 @@ get-output-stream-list(stream) [SAL]
 
 
 IV.35. System Functions
-  Note:  the  load  function  first  tries  to  load  a  file  from the current
-directory. A .lsp extension is added if there is not  already  an  alphanumeric
+  Note: the load  function  first  tries  to  load  a  file  from  the  current
+directory.  A  .lsp  extension is added if there is not already an alphanumeric
 extension following a period.  If that fails, XLISP searches the path, which is
-obtained   from   the   XLISPPATH   environment   variable    in    Unix    and
-HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH  under  Win32. (The Macintosh
+obtained    from    the    XLISPPATH   environment   variable   in   Unix   and
+HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH under Win32.  (The  Macintosh
 version has no search path.)
 get-env(name) [SAL]
 (get-env name) [LISP] M get from an environment variable
      name M the name of the environment variable
-     returns M string value of the environment variable, nil if  variable  does
+     returns  M  string value of the environment variable, nil if variable does
           not exist
 
 (load fname &key :verbose :print) [LISP] M load a source file
@@ -12556,7 +12560,7 @@ poke(addrs, value) [SAL]
 bigendianp() [SAL]
 (bigendianp) [LISP] M is this a big-endian machine?
      returns M T if this a big-endian architecture, storing the high-order byte
-          of an integer at the lowest byte address of the  integer;  otherwise,
+          of  an  integer at the lowest byte address of the integer; otherwise,
           NIL.  (This is not a standard XLISP 2.0 function.)
 
 address-of(expr) [SAL]
@@ -12565,29 +12569,29 @@ address-of(expr) [SAL]
      returns M the address of the node (integer)
 
 exit() [SAL]
-(exit)  [LISP]  M  exit  xlisp.  (Note: in Audacity plug-ins, exit is undefined
+(exit) [LISP] M exit xlisp. (Note: in  Audacity  plug-ins,  exit  is  undefined
      because exiting would terminate Audacity.)
      returns M never returns
 
 setup-console() [SAL]
 (setup-console) [LISP] M set default console attributes
      returns M NIL
-     Note: Under Windows, Nyquist normally starts up in a medium-sized  console
+     Note:  Under Windows, Nyquist normally starts up in a medium-sized console
           window with black text and a white background, with a window title of
-          ``Nyquist.'' This is normally accomplished by  calling  setup-console
-          in  system.lsp.  In  Nyquist,  you can avoid this behavior by setting
+          ``Nyquist.''  This  is normally accomplished by calling setup-console
+          in system.lsp. In Nyquist, you can avoid  this  behavior  by  setting
           *setup-console* to NIL in your init.lsp file. If setup-console is not
-          called,  Nyquist  uses  standard input and output as is. This is what
+          called, Nyquist uses standard input and output as is.  This  is  what
           you want if you are running Nyquist inside of emacs, for example.
 
 echoenabled(flag) [SAL]
 (echoenabled flag) [LISP] M turn console input echoing on or off
      flag M T to enable echo, NIL to disable
      returns M NIL
-     Note: This function is only implemented under  Linux  and  Mac  OS  X.  If
+     Note:  This  function  is  only  implemented  under Linux and Mac OS X. If
           Nyquist I/O is redirected through pipes, the Windows version does not
-          echo the input, but the Linux and Mac versions do. You can  turn  off
-          echoing  with  this  function.  Under  windows  it  is  defined to do
+          echo  the  input, but the Linux and Mac versions do. You can turn off
+          echoing with this  function.  Under  windows  it  is  defined  to  do
           nothing.
 
 IV.36. File I/O Functions
@@ -12595,37 +12599,37 @@ IV.36. File I/O Functions
 
 
 IV.36.1. Input from a File
-  To open a file for input, use the open function  with  the  keyword  argument
-:direction  set  to  :input.   To open a file for output, use the open function
+  To  open  a  file  for input, use the open function with the keyword argument
+:direction set to :input.  To open a file for output,  use  the  open  function
 with the keyword argument :direction set to :output.  The open function takes a
 single required argument which is the name of the file to be opened.  This name
-can be in the form of a string or a symbol.    The  open  function  returns  an
-object  of  type  FILE-STREAM if it succeeds in opening the specified file.  It
-returns the value nil if it fails.  In order to  manipulate  the  file,  it  is
-necessary  to  save  the  value returned by the open function.  This is usually
-done by assigning it to a variable with the setq special form or by binding  it
+can  be  in  the  form  of  a string or a symbol.  The open function returns an
+object of type FILE-STREAM if it succeeds in opening the specified  file.    It
+returns  the  value  nil  if  it fails.  In order to manipulate the file, it is
+necessary to save the value returned by the open function.    This  is  usually
+done  by assigning it to a variable with the setq special form or by binding it
 using let or let*.  Here is an example:
 
     (setq fp (open "init.lsp" :direction :input))
 
-Evaluating  this expression will result in the file init.lsp being opened.  The
-file object that will be returned by the open function will be assigned to  the
+Evaluating this expression will result in the file init.lsp being opened.   The
+file  object that will be returned by the open function will be assigned to the
 variable fp.
 
   It is now possible to use the file for input.  To read an expression from the
-file, just supply the value of the fp variable as the optional stream  argument
+file,  just supply the value of the fp variable as the optional stream argument
 to read.
 
     (read fp)
 
 Evaluating this expression will result in reading the first expression from the
-file init.lsp.  The expression will be returned  as  the  result  of  the  read
-function.    More  expressions can be read from the file using further calls to
-the read function.  When there are  no  more  expressions  to  read,  the  read
+file  init.lsp.    The  expression  will  be returned as the result of the read
+function.  More expressions can be read from the file using  further  calls  to
+the  read  function.    When  there  are  no more expressions to read, the read
 function will return nil (or whatever value was supplied as the second argument
 to read).
 
-  Once you are done reading from the file, you should close it.  To  close  the
+  Once  you  are done reading from the file, you should close it.  To close the
 file, use the following expression:
 
     (close fp)
@@ -12635,27 +12639,27 @@ Evaluating this expression will cause the file to be closed.
 
 
 IV.36.2. Output to a File
-  Writing  to  a file is pretty much the same as reading from one.  You need to
-open the file first.  This time you should use the open  function  to  indicate
+  Writing to a file is pretty much the same as reading from one.  You  need  to
+open  the  file  first.  This time you should use the open function to indicate
 that you will do output to the file.  For example:
 
     (setq fp (open "test.dat" :direction :output))
 
 Evaluating this expression will open the file test.dat for output.  If the file
-already exists, its current contents will be discarded.  If it doesn't  already
-exist,  it will be created.  In any case, a FILE-STREAM object will be returned
+already  exists, its current contents will be discarded.  If it doesn't already
+exist, it will be created.  In any case, a FILE-STREAM object will be  returned
 by the OPEN function.  This file object will be assigned to the fp variable.
 
-  It is now possible to write to this file by supplying the  value  of  the  fp
+  It  is  now  possible  to write to this file by supplying the value of the fp
 variable as the optional stream parameter in the print function.
 
     (print "Hello there" fp)
 
-Evaluating  this  expression  will  result  in the string ``Hello there'' being
-written to the file test.dat.  More data can be written to the file  using  the
+Evaluating this expression will result in  the  string  ``Hello  there''  being
+written  to  the file test.dat.  More data can be written to the file using the
 same technique.
 
-  Once  you  are  done  writing  to  the file, you should close it.  Closing an
+  Once you are done writing to the file, you  should  close  it.    Closing  an
 output file is just like closing an input file.
 
     (close fp)
@@ -12665,8 +12669,8 @@ Evaluating this expression will close the output file and make it permanent.
 
 
 IV.36.3. A Slightly More Complicated File Example
-  This example shows how to open a file, read each  Lisp  expression  from  the
-file  and  print  it.    It  demonstrates  the  use of files and the use of the
+  This  example  shows  how  to open a file, read each Lisp expression from the
+file and print it.  It demonstrates the  use  of  files  and  the  use  of  the
 optional stream argument to the read function.
 
     (do* ((fp (open "test.dat" :direction :input))
@@ -12684,7 +12688,7 @@ Francisco, 1989.
 
 [Touretzky 84] Touretzky, David S.  LISP: a gentle introduction to symbolic
 computation.  Harper & Row, New York, 1984.
-  ! 13, 36 != 13 !Call 40 !Clock 39 !csec 38 !Def 39 !End 40 !msec 38 !Ramp  39
+  !  13, 36 != 13 !Call 40 !Clock 39 !csec 38 !Def 39 !End 40 !msec 38 !Ramp 39
 !Rate 37 !Seti 40 !Setv 40 !Tempo 37
 
   # (Adagio articulation) 37 #?, sal 13 #define'd macros 59 #f 13 #t 13
@@ -12694,15 +12698,15 @@ computation.  Harper & Row, New York, 1984.
   & 13 &= 15
 
   * 13, 68 *= 15 *A4-Hertz* 19, 34 *applyhook* 64 *audio-markers* 27 *autonorm*
-34 *autonorm-max-samples* 34 *autonorm-previous-peak* 34  *autonorm-target*  34
-*autonorm-type*  34 *autonormflag* 34 *breakenable* 34, 62, 64 *clipping-error*
-34  *clipping-threshold*  34  *control-srate*   6,   26,   34   *debug-io*   64
-*default-control-srate*   34   *default-plot-file*   28   *default-sf-bits*  34
+34  *autonorm-max-samples*  34 *autonorm-previous-peak* 34 *autonorm-target* 34
+*autonorm-type* 34 *autonormflag* 34 *breakenable* 34, 62, 64  *clipping-error*
+34   *clipping-threshold*   34   *control-srate*   6,   26,  34  *debug-io*  64
+*default-control-srate*  34   *default-plot-file*   28   *default-sf-bits*   34
 *default-sf-dir*  27,  34  *default-sf-format*  34  *default-sf-srate*  28,  34
-*default-sound-srate*  34  *error-output*  64 *evalhook* 64 *file-separator* 34
-*float-format* 64 *gc-flag*  64  *gc-hook*  64  *integer-format*  64  *loud*  6
-*obarray*  64 *print-case* 64 *readtable* 63, 64 *rslt* 34, 59 *sound-srate* 6,
-26, 34 *soundenable* 34 *standard-input*  64  *standard-output*  64  *start*  6
+*default-sound-srate* 34 *error-output* 64 *evalhook*  64  *file-separator*  34
+*float-format*  64  *gc-flag*  64  *gc-hook*  64  *integer-format*  64 *loud* 6
+*obarray* 64 *print-case* 64 *readtable* 63, 64 *rslt* 34, 59 *sound-srate*  6,
+26,  34  *soundenable*  34  *standard-input*  64 *standard-output* 64 *start* 6
 *stop*  6  *sustain*  6  *table*  34  *trace-output*  64  *tracelimit*  62,  64
 *tracelist* 64 *tracenable* 34, 62, 64 *transpose* 6 *unbound* 64 *warp* 6, 26
 
@@ -12730,326 +12734,326 @@ computation.  Harper & Row, New York, 1984.
 
   @ 13 @= 15 @@ 13
 
-  A440 19 Abs 68 Abs-env 26 Absolute stretch, sal 13 Absolute time  shift,  sal
+  A440  19  Abs 68 Abs-env 26 Absolute stretch, sal 13 Absolute time shift, sal
 13 Absolute value 25, 29 Access samples 17 Accidentals 36 Accumulate pattern 44
 Accumulation pattern 44 Adagio 36 Add offset to sound 29 Add to file samples 28
-Add-action-to-workspace  50  Add-to-workspace  50  Additive  synthesis, gongs 3
-Address-of 71 Aftertouch 38 Agc 51 Algorithmic Composition 43 All  pass  filter
-22  Alloc  71 Allpass2 23 Allpoles-from-lpc 41 Alpass 22 Alpass filter 22 Amosc
-21 Analog synthesizer 53 And  67  Annotation,  audio  51  Append  65  Apply  64
-Apply-banded-bass-boost  52  Apply-banded-delay 52 Apply-banded-treble-boost 52
-Approximation 21 Arc-sine-dist 46 Arcsine distribution 46  Aref  65  Areson  23
-Args  42  Arguments to a lisp function 42 Arithmetic Functions 68 Arpeggiator 3
-Array from sound 18 Array  Functions  65  Array  notation,  sal  13  Arrayp  66
-Articulation  36,  37 Assoc 65 Asterisk 36 At 26 At Transformation 7 At, sal 13
-At-abs 26 At-abs, sal 13 Atan 68 Atom 66 Atone 23  Attributes  36  Audacity  51
-Audio  annotation  51  Audio  markers  27  Autocorrelation  of  vector  data 51
+Add-action-to-workspace 50 Add-to-workspace  50  Additive  synthesis,  gongs  3
+Address-of  71  Aftertouch 38 Agc 51 Algorithmic Composition 43 All pass filter
+22 Alloc 71 Allpass2 23 Allpoles-from-lpc 41 Alpass 22 Alpass filter  22  Amosc
+21  Analog  synthesizer  53  And  67  Annotation,  audio  51 Append 65 Apply 64
+Apply-banded-bass-boost 52 Apply-banded-delay 52  Apply-banded-treble-boost  52
+Approximation  21  Arc-sine-dist  46  Arcsine distribution 46 Aref 65 Areson 23
+Args 42 Arguments to a lisp function 42 Arithmetic Functions 68  Arpeggiator  3
+Array  from  sound  18  Array  Functions  65  Array  notation, sal 13 Arrayp 66
+Articulation 36, 37 Assoc 65 Asterisk 36 At 26 At Transformation 7 At,  sal  13
+At-abs  26  At-abs,  sal  13 Atan 68 Atom 66 Atone 23 Attributes 36 Audacity 51
+Audio annotation  51  Audio  markers  27  Autocorrelation  of  vector  data  51
 Automatic gain control 51 Autonorm-off 10, 27 Autonorm-on 10, 27 Average 29
 
-  Backquote 64 Backward 51 Baktrace 68 Banded bass boost  52  Banded  delay  52
-Banded  treble boost 52 Bandfx.lsp 52 Bandpass filter 23 Bandpass2 23 Bartok 38
+  Backquote  64  Backward  51  Baktrace 68 Banded bass boost 52 Banded delay 52
+Banded treble boost 52 Bandfx.lsp 52 Bandpass filter 23 Bandpass2 23 Bartok  38
 Begin  13  Behavioral  abstraction  6  Behaviors  19  Bell  sound  3  Bernoulli
-distribution  46 Bernoulli-dist 46 Beta distribution 46 Beta-dist 46 Big endian
-71 Bigendianp 71 Bilateral exponential distribution  45  Bilateral-exponential-
-dist  45  Binary  files  70 Binomial distribution 46 Binomial-dist 46 Biquad 23
-Biquad-m 23 Bitwise Logical Functions 68  Blank  36  Block  67  Both-case-p  69
-Boundp  66  Bowed  24  Bowed-freq  24 Brass sound 3 Break 62, 68 Break button 4
+distribution 46 Bernoulli-dist 46 Beta distribution 46 Beta-dist 46 Big  endian
+71  Bigendianp  71 Bilateral exponential distribution 45 Bilateral-exponential-
+dist 45 Binary files 70 Binomial distribution 46  Binomial-dist  46  Biquad  23
+Biquad-m  23  Bitwise  Logical  Functions  69  Blank 36 Block 67 Both-case-p 69
+Boundp 66 Bowed 24 Bowed-freq 24 Brass sound 3 Break  62,  68  Break  button  4
 Browse button 4 Browser, jnyqide 4 Build-harmonic 2, 20 Button bar 4 Buzz 21
 
-  Call command 40 Car 65 Case  36,  67  Case-insensitive  13  Catch  67  Cauchy
-distribution  45  Cauchy-dist  45  Cdr 65 Cerror 68 Change directory 70 Char 69
-Char-code 69 Char-downcase  69  Char-equal  70  Char-greaterp  70  Char-int  69
-Char-lessp   70   Char-not-equal  70  Char-not-greaterp  70  Char-not-lessp  70
-Char-upcase 69 Char/= 70 Char< 70  Char<=  70  Char=  70  Char>  70  Char>=  70
-Character  Functions  69  Characterp  66  Chdir,  sal  14 Chorus 24, 29, 32, 52
-Clarinet 24 Clarinet sound 3 Clarinet-all 24 Clarinet-freq 24  Class  64  Class
-class  64  Clean-up  68 Clip 10, 25, 29 Clipping 34 Clipping repair 51 Clock 39
+  Call  command  40  Car  65  Case  36,  67 Case-insensitive 13 Catch 67 Cauchy
+distribution 45 Cauchy-dist 45 Cdr 65 Cerror 68 Change  directory  70  Char  69
+Char-code  69  Char-downcase  69  Char-equal  70  Char-greaterp  70 Char-int 70
+Char-lessp  70  Char-not-equal  70  Char-not-greaterp  70   Char-not-lessp   70
+Char-upcase  69  Char/=  70  Char<  70  Char<=  70  Char= 70 Char> 70 Char>= 70
+Character Functions 69 Characterp 66 Chdir,  sal  14  Chorus  24,  29,  32,  52
+Clarinet  24  Clarinet  sound 3 Clarinet-all 24 Clarinet-freq 24 Class 64 Class
+class 64 Clean-up 68 Clip 10, 25, 29 Clipping 34 Clipping repair  51  Clock  39
 Clock command 39 Close 70 Co-termination 29 Code-char 69 Comb 22 Comb filter 22
-Combination  26 Command Line 1 Command Loop 62 Commas 38 Comment 36 Comments 13
-Compose 29 Compress 51 Compress-map 51 Compressor  18  Concatenate  strings  69
-Cond  67  Conditional  expression, sal 13 Configure nyquist 1 Congen 22 Cons 65
-Console,  XLISP  71  Consp  66  Const  19  Constant  function  19  Continue  68
-Continuous-control-warp   26  Continuous-sound-warp  26  Contour  generator  22
+Combination 26 Command Line 1 Command Loop 62 Commas 38 Comment 36 Comments  13
+Compose  29  Compress  51  Compress-map 51 Compressor 18 Concatenate strings 69
+Cond 67 Conditional expression, sal 13 Configure nyquist 1 Congen  22  Cons  65
+Console,  XLISP  72  Consp  66  Const  19  Constant  function  19  Continue  68
+Continuous-control-warp  26  Continuous-sound-warp  26  Contour  generator   22
 Control 19 Control change 38 Control characters, XLISP 62 Control Constructs 67
-Control-A  27  Control-srate-abs  26  Control-warp 20 Convert sound to array 18
-Convolution 23 Convolve 23 Copier pattern 44  Correlation  51  Cos  68  Cosine,
-vector  51 Cue 19 Cue-file 19 Current-path 42 Curve fitting 51 Cxxr 65 Cxxxr 65
+Control-A 27 Control-srate-abs 26 Control-warp 20 Convert  sound  to  array  18
+Convolution  23  Convolve  23  Copier  pattern 44 Correlation 51 Cos 68 Cosine,
+vector 51 Cue 19 Cue-file 19 Current-path 42 Curve fitting 51 Cxxr 65 Cxxxr  65
 Cxxxxr 65 Cycle pattern 43
 
   DarwiinRemoteOsc 19 Data Types 62 Db-average 51 Db-to-linear 18 Db-to-vel 18,
-19  DB0  3  DB1  3 DB10 3 Debugging 18, 28, 42, 68 Decf 42 Decrement 42 Default
-durations 37 Default 37 Default sample rate 7 Default sound file  directory  27
-Default  time  36  Define  function  14 Define variable 14 Defining Behaviors 7
-Defmacro 64 Defun 64 Delay 23 Delay, variable 29, 30  Delete  66  Delete-if  66
+19 DB0 3 DB1 3 DB10 3 Debugging 18, 28, 42, 68 Decf  42  Decrement  42  Default
+durations  37  Default 37 Default sample rate 7 Default sound file directory 27
+Default time 36 Define function 14 Define  variable  14  Defining  Behaviors  7
+Defmacro  64  Defun  64  Delay 23 Delay, variable 29, 30 Delete 66 Delete-if 66
 Delete-if-not 66 Demos, bell sound 3 Demos, distortion 23 Demos, drum machine 3
-Demos, drum sound 3 Demos, fft 35 Demos, FM 11 Demos,  FM  synthesis  3  Demos,
-formants  3  Demos,  gong  sound 3 Demos, lpc 41 Demos, midi 36 Demos, piano 51
-Demos, pitch change 29 Demos, rhythmic  pattern  3  Demos,  ring  modulation  2
-Demos,  sample-by-sample  3  Demos, scratch tutorial 11 Demos, Shepard tones 23
-Demos, spectral analysis of a chord 3 Demos, voice  synthesis  23  Demos,  wind
-sound  11  Derivative  20  Describe 50 Destructive List Functions 66 Developing
+Demos,  drum  sound  3  Demos, fft 35 Demos, FM 11 Demos, FM synthesis 3 Demos,
+formants 3 Demos, gong sound 3 Demos, lpc 41 Demos, midi  36  Demos,  piano  51
+Demos,  pitch  change  29  Demos,  rhythmic  pattern 3 Demos, ring modulation 2
+Demos, sample-by-sample 3 Demos, scratch tutorial 11 Demos,  Shepard  tones  23
+Demos,  spectral  analysis  of  a chord 3 Demos, voice synthesis 23 Demos, wind
+sound 11 Derivative 20 Describe 50 Destructive  List  Functions  66  Developing
 code 42 Diff 27 Difference 50 Difference of sounds 27 Difference of vector data
-51  Digit-char 69 Digit-char-p 69 Directory listing 70 Directory, default sound
-file 27  Display  statement,  sal  14  Distortion  tutorial  23  Distributions,
-probability  45  Division  25 Do 67 Do* 67 Dolby Pro-Logic 52 Dolby Surround 52
-Dolist 67 Doppler effect 53 Dot 36 Dotimes 67 Dotted  durations  3  Dribble  71
+51 Digit-char 69 Digit-char-p 69 Directory listing 70 Directory, default  sound
+file  27  Display  statement,  sal  14  Distortion  tutorial  23 Distributions,
+probability 45 Division 25 Do 67 Do* 67 Dolby Pro-Logic 52  Dolby  Surround  52
+Dolist  67  Doppler  effect  53 Dot 36 Dotimes 67 Dotted durations 3 Dribble 71
 Drum samples 3 Drum 53 Drum machine 3, 53 Drum sound 3 Drum-loop 53 DSP in Lisp
-3, 11 Dtmf 52 Dtmf-tone  52  Dubugging  30  Duration  36  Duration  notation  3
+3,  11  Dtmf  52  Dtmf-tone  52  Dubugging  30  Duration 36 Duration notation 3
 Duration of another sound 29 DX7 36 Dynamic markings 37
 
-  Echo  23  Echoenabled  71 Editor for envelopes 4 Effect, reverberation 24, 24
-Effect, chorus 24, 32, 52 Effect, flange 52 Effect, pitch shift 24, 32  Effect,
-reverberation  32,  52  Effect,  stereo  52  Effect, stereo pan 52 Effect, swap
+  Echo 23 Echoenabled 72 Editor for envelopes 4 Effect,  reverberation  24,  24
+Effect,  chorus 24, 32, 52 Effect, flange 52 Effect, pitch shift 24, 32 Effect,
+reverberation 32, 52 Effect, stereo 52  Effect,  stereo  pan  52  Effect,  swap
 channels 52 Effect, widen 52 Effects, phaser 52 EIghth note 3, 36 Elapsed audio
 time 27 Emacs, using Nyquist with 71 Empty list 13 End 13 End command 40 Endian
-71 Endless tones 3 Endp 66 Env 2, 19 Env-note 2 Envedit  button  4  Envelope  2
-Envelope  editor  4  Envelope follower 18, 30 Envelope generator 22 Envelopes 2
-Environment  6  Environment  variables  71  Eq  67  Eq  button  4  Eq-band   23
+71  Endless  tones  3  Endp 66 Env 2, 19 Env-note 2 Envedit button 4 Envelope 2
+Envelope editor 4 Envelope follower 18, 30 Envelope generator  22  Envelopes  2
+Environment   6  Environment  variables  71  Eq  67  Eq  button  4  Eq-band  23
 Eq-highshelf 23 Eq-lowshelf 23 Eql 67 Equal 67 Equalization 23, 51 Equalization
-editor 4 Error 68 Error Handling 68 Errors iii Errset 68 Estimate frequency  25
-Eval  64 Eval pattern 44 Evalhook 68 Evaluation functions 64 Evaluator 62 Evenp
-66  Event-dur  48  Event-end   48   Event-expression   48   Event-get-attr   48
-Event-has-attr  48  Event-set-attr  48 Event-set-dur 48 Event-set-expression 48
-Event-set-time 48 Event-time 48 Exclamation point 36  Exec  statement,  sal  14
-Exit  71  Exit  statement,  sal  15  Exp  68  Exp-dec  19 Expand 71 Exponent 42
-Exponential  25   Exponential   distribution   45   Exponential   envelope   19
-Exponential-dist   45   Expr-get-attr  48  Expr-has-attr  48  Expr-set-attr  48
+editor  4 Error 68 Error Handling 68 Errors iii Errset 68 Estimate frequency 25
+Eval 64 Eval pattern 44 Evalhook 68 Evaluation functions 64 Evaluator 62  Evenp
+66   Event-dur   48   Event-end   48   Event-expression  48  Event-get-attr  48
+Event-has-attr 48 Event-set-attr 48 Event-set-dur  48  Event-set-expression  48
+Event-set-time  48  Event-time  48  Exclamation point 36 Exec statement, sal 14
+Exit 71 Exit statement, sal  15  Exp  68  Exp-dec  19  Expand  71  Exponent  42
+Exponential   25   Exponential   distribution   45   Exponential   envelope  19
+Exponential-dist  45  Expr-get-attr  48  Expr-has-attr  48   Expr-set-attr   48
 Expression pattern 44 Expressions, sal 13 Expt 68 Extending Xlisp 59 Extract 26
 Extract-abs 26
 
-  F  (Adagio  dynamic) 37 F (Adagio Flat) 36 Fast fourier transform tutorial 35
-Fboundp 66 Feedback FM Oscillator  21  Feedback-delay  23  Feel  factor  49  FF
-(Adagio  dynamic)  37  FFF  (Adagio dynamic) 37 Fft 35 Fft tutorial 35 File I/O
-Functions 70, 72 Filep 66 Filter example 11 Finally clause, sal 15 Find  string
-69  Find-in-xlisp-path  70 FIR filter 23 First 65 First derivative 20 Flange 52
-Flange effect 52 Flat 36 Flatc 70 Flatsize 70 Flet 67 Float 68 Floatp 66  Flute
-24  Flute  sound  3 Flute-all 24 Flute-freq 24 FM synthesis 11 Fmfb 21 Fmlfo 20
-Fmosc 21 Fn button 4 Follow 18 Follower 30 Force-srate 20 Format 70  Fourth  65
-Frequency  analysis  25  Frequency  Modulation  10 Full path name 42 Funcall 64
-Function 64 Function calls,  sal  13  Function,  sal  14  Fundamenal  frequency
+  F (Adagio dynamic) 37 F (Adagio Flat) 36 Fast fourier transform  tutorial  35
+Fboundp  66  Feedback  FM  Oscillator  21  Feedback-delay  23 Feel factor 49 FF
+(Adagio dynamic) 37 FFF (Adagio dynamic) 37 Fft 35 Fft  tutorial  35  File  I/O
+Functions  70, 72 Filep 66 Filter example 11 Finally clause, sal 15 Find string
+69 Find-in-xlisp-path 70 FIR filter 23 First 65 First derivative 20  Flange  52
+Flange  effect 52 Flat 36 Flatc 70 Flatsize 70 Flet 67 Float 68 Floatp 66 Flute
+24 Flute sound 3 Flute-all 24 Flute-freq 24 FM synthesis 11 Fmfb  21  Fmlfo  20
+Fmosc  21  Fn button 4 Follow 18 Follower 30 Force-srate 20 Format 70 Fourth 65
+Frequency analysis 25 Frequency Modulation 10 Full  path  name  42  Funcall  64
+Function  64  Function  calls,  sal  13  Function,  sal 14 Fundamenal frequency
 estimation 25
 
-  Gain  51  Gamma-dist 45 Gate 18, 30 Gaussian distribution 46 Gaussian-dist 46
+  Gain 51 Gamma-dist 45 Gate 18, 30 Gaussian distribution 46  Gaussian-dist  46
 Gc 71 Gcd 68 GEN05 22 Gensym 65 Geometric distribution 46 Geometric-dist 46 Get
-65  Get char 70 Get-duration 19 Get-env 71 Get-lambda-expression 64 Get-loud 19
-Get-output-stream-list  71  Get-output-stream-string  71  Get-slider-value   29
+65 Get char 70 Get-duration 19 Get-env 71 Get-lambda-expression 64 Get-loud  19
+Get-output-stream-list   71  Get-output-stream-string  71  Get-slider-value  29
 Get-sustain 19 Get-temp-path 70 Get-transpose 19 Get-user 70 Get-warp 19 Getenv
-71 Global Variables 34 Global variables, sal 14 Gnuplot 51 Go 67 Gong sounds  3
-Granular  synthesis  52  Graphical  envelope  editor 4 Graphical equalization 4
+71  Global Variables 34 Global variables, sal 14 Gnuplot 51 Go 67 Gong sounds 3
+Granular synthesis 52 Graphical envelope  editor  4  Graphical  equalization  4
 Graphical equalizer 51 Grindef 42
 
-  H (Adagio Half note) 36 H 3 Half note 3, 36 Harmonic 20 Hash 65 Hd  3  Header
-file  format  59  Heap pattern 44 High-pass filter 23 Highpass2 23 Highpass4 24
-Highpass6 24 Highpass8 24 Histogram 51 Hp 23  Ht  3  Hyperbolic-cosine-dist  45
+  H  (Adagio  Half note) 36 H 3 Half note 3, 36 Harmonic 20 Hash 65 Hd 3 Header
+file format 59 Heap pattern 44 High-pass filter 23 Highpass2  23  Highpass4  24
+Highpass6  24  Highpass8  24  Histogram 51 Hp 23 Ht 3 Hyperbolic-cosine-dist 46
 Hz-to-step 18 Hzosc 21
 
-  I  (Adagio eIght note) 36 I 3 Iannis Xenakis 4 Id 3 IDE 1 If 67 If statement,
-sal 14 Ifft 35 Incf 42 Increment 42 Info 71 Info button 4 Input from a File  72
-Input/Output  Functions  70 Installation 1 Int-char 70 Integerp 66 Integrate 20
-Integrated Development Environment 1 Intern 65 Interoperability, sal  and  lisp
+  I (Adagio eIght note) 36 I 3 Iannis Xenakis 4 Id 3 IDE 1 If 67 If  statement,
+sal  14 Ifft 35 Incf 42 Increment 42 Info 71 Info button 4 Input from a File 72
+Input/Output Functions 70 Installation 1 Int-char 70 Integerp 66  Integrate  20
+Integrated  Development  Environment 1 Intern 65 Interoperability, sal and lisp
 15 Interpolate 50 Intersection 50 Intgen 59 Inverse 30 Inverse fft 35 It 3
 
   Jcrev 24 Jitter 49
 
-  K  (Adagio  control)  38 Karplus-Strong 21 Karplus-Strong synthesis 3 Keyword
+  K (Adagio control) 38 Karplus-Strong 21 Karplus-Strong  synthesis  3  Keyword
 parameters 47 Kurtosis, statistics 51
 
-  Label files 51 Labels 67 Lambda 64 Lambda Lists 63 Last 65 Latency 19  Legato
-26,  37  Length  65 Length pattern 44 Length-of-beat 53 Let 67 Let* 67 Levene's
+  Label  files 51 Labels 67 Lambda 64 Lambda Lists 63 Last 65 Latency 19 Legato
+26, 37 Length 65 Length pattern 44 Length-of-beat 53 Let 67  Let*  67  Levene's
 test 51 Lexical conventions 62 LF (Adagio dynamic) 37 Lf 3 LFF (Adagio dynamic)
-37  Lff  3 LFFF (Adagio dynamic) 37 Lfff 3 Lfo 20 Libraries 51 Limit 25 Limiter
-18  Line  pattern  43  Linear  algegra  51  Linear   distribution   45   Linear
-interpolation  50  Linear  Prediction  41  Linear prediction tutorial 41 Linear
+37 Lff 3 LFFF (Adagio dynamic) 37 Lfff 3 Lfo 20 Libraries 51 Limit  25  Limiter
+18   Line   pattern   43  Linear  algegra  51  Linear  distribution  45  Linear
+interpolation 50 Linear Prediction 41  Linear  prediction  tutorial  41  Linear
 regression 51 Linear-dist 45 Linear-to-db 18 Linear-to-vel 18, 19 Lisp button 4
-Lisp  DSP  3, 11 Lisp Include Files 60 List 65 List directory 70 List Functions
+Lisp DSP 3, 11 Lisp Include Files 60 List 65 List directory 70  List  Functions
 65 Listdir 70 Listing of lisp function 42 Listp 66 Little endian 71 LMF (Adagio
 dynamic) 37 Lmf 3 LMP (Adagio dynamic) 37 Lmp 3 Load 71 Load button 4 Load file
-conditionally 42 Load statement, sal 14 Local-to-global 19 Log 18 Log  function
-18  Logand  68 Logical-stop 17 Logior 69 Logistic distribution 46 Logistic-dist
-46 Lognot 69 Logorithm 25  Logxor  69  Loop  67  Loop  examples,  sal  15  Loop
-statement,  sal  14  Looping  Constructs 67 Loud 26 Loud-abs 26 Loudness 36, 37
-Low-frequency oscillator 20 Low-pass filter 23, 32 Lower-case-p 69 Lowpass2  23
-Lowpass4  23 Lowpass6 23 Lowpass8 23 LP (Adagio dynamic) 37 Lp 3, 23 LPC 41 Lpc
+conditionally  42 Load statement, sal 14 Local-to-global 19 Log 18 Log function
+18 Logand 69 Logical-stop 17 Logior 69 Logistic distribution  46  Logistic-dist
+46  Lognot  69  Logorithm  25  Logxor  69  Loop  67  Loop examples, sal 15 Loop
+statement, sal 14 Looping Constructs 67 Loud 26 Loud-abs  26  Loudness  36,  37
+Low-frequency  oscillator 20 Low-pass filter 23, 32 Lower-case-p 69 Lowpass2 23
+Lowpass4 23 Lowpass6 23 Lowpass8 23 LP (Adagio dynamic) 37 Lp 3, 23 LPC 41  Lpc
 tutorial  41  Lpc-frame-err  41  Lpc-frame-filter-coefs  41  Lpc-frame-rms1  41
 Lpc-frame-rms2 41 LPP (Adagio dynamic) 37 Lpp 3 LPPP (Adagio dynamic) 37 Lppp 3
 Lpreson 41
 
-  M  (Adagio  control)  38  Macroexpand  64  Macroexpand-1   64   Macrolet   67
+  M   (Adagio   control)   38  Macroexpand  64  Macroexpand-1  64  Macrolet  67
 Make-accumulate 44 Make-accumulation 44 Make-array 65 Make-copier 44 Make-cycle
-43 Make-eval 44 Make-heap 44 Make-length 44 Make-line  43  Make-lpanal-iterator
-41  Make-lpc-file-iterator 41 Make-markov 44 Make-palindrome 43 Make-product 44
-Make-random  43  Make-string-input-stream   71   Make-string-output-stream   71
+43  Make-eval  44 Make-heap 44 Make-length 44 Make-line 43 Make-lpanal-iterator
+41 Make-lpc-file-iterator 41 Make-markov 44 Make-palindrome 43 Make-product  44
+Make-random   43   Make-string-input-stream   71  Make-string-output-stream  71
 Make-sum 44 Make-symbol 65 Make-window 44 Maketable 20 Mandolin 24 Manipulation
-of scores 48 Mapc 66 Mapcar 66 Mapl 66 Maplist 66 Mark button 4 Markers,  audio
-27  Markov  analysis  45  Markov  pattern 44 Markov-create-rules 45 Max 68 Max,
-statistics 51 Maximum 25, 68 Maximum amplitude 10, 30 Maximum of two sounds  30
+of  scores 48 Mapc 66 Mapcar 66 Mapl 66 Maplist 66 Mark button 4 Markers, audio
+27 Markov analysis 45 Markov pattern 44  Markov-create-rules  45  Max  68  Max,
+statistics  51 Maximum 25, 68 Maximum amplitude 10, 30 Maximum of two sounds 30
 Mean 51 Mean of vector 51 Median of vector data 51 Median, statistics 51 Member
-65 Memory usage 18 MF (Adagio dynamic) 37 Middle C 36 MIDI  36  MIDI  Clock  39
-MIDI  file 49, 50 MIDI program 37 Midi-show 52 Midi-show-file 52 Mikrokosmos 38
-Min 68 Min, statistics 51 Minimoog 53 Minimum 25, 68 Minusp 66 Mix  27  Mix  to
-file  28 Mkwave 2 Modalbar 25 Modulation wheel 38 Modulo (rem 68 Mono to stereo
+65  Memory  usage  18  MF (Adagio dynamic) 37 Middle C 36 MIDI 36 MIDI Clock 39
+MIDI file 49, 50 MIDI program 37 Midi-show 52 Midi-show-file 52 Mikrokosmos  38
+Min  68  Min,  statistics 51 Minimoog 53 Minimum 25, 68 Minusp 66 Mix 27 Mix to
+file 28 Mkwave 2 Modalbar 25 Modulation wheel 38 Modulo (rem 68 Mono to  stereo
 52 Moog 53 Moving average 29 MP (Adagio dynamic) 37 Mult 2, 20, 27 Multichannel
-Sounds  17  Multiple  band  effects  52  Multiple commands 38 Multiple tempi 39
+Sounds 17 Multiple band effects 52  Multiple  commands  38  Multiple  tempi  39
 Multiplication 30 Multiply signals 27 My-note 2
 
   N (Adagio Next) 36 Natural 36 Natural log 25 Nband 51 Nband-range 51 Nconc 66
-Nested  Transformations  7  Newfile  button  4  Next  Adagio command 36 Next in
-pattern 43 Next  pattern  43  Nintendo  WiiMote  19  Noise  25  Noise  gate  30
-Noise-gate  18  Norm of vector 51 Normalization 10 Not 66 Not enough memory for
-normalization  10  Notch  filter  23  Notch2  23   Note   list   27   Nrev   24
-Nstring-downcase  69  Nstring-upcase  69  Nth  65  Nthcdr 65 Null 66 Numberp 66
+Nested Transformations 7 Newfile button  4  Next  Adagio  command  36  Next  in
+pattern  43  Next  pattern  43  Nintendo  WiiMote  19  Noise  25  Noise gate 30
+Noise-gate 18 Norm of vector 51 Normalization 10 Not 66 Not enough  memory  for
+normalization   10   Notch   filter   23   Notch2  23  Note  list  27  Nrev  24
+Nstring-downcase 69 Nstring-upcase 69 Nth 65  Nthcdr  65  Null  66  Numberp  66
 Ny:all 3 NyquistIDE 1
 
-  O (Adagio control) 38 Object 64 Object Class 64 Objectp 66 Objects 63  Octave
-specification  36  Oddp 67 Offset 49 Offset to a sound 29 Omissions iii Oneshot
+  O  (Adagio control) 38 Object 64 Object Class 64 Objectp 66 Objects 63 Octave
+specification 36 Oddp 67 Offset 49 Offset to a sound 29 Omissions  iii  Oneshot
 30 Open 70 Open sound control 19, 58 Open-binary 70 Openfile button 4 Or 67 Osc
-2,  19,  20 Osc-enable 19 Osc-note 25 Osc-pulse 21 Osc-saw 21 Osc-tri 21 Output
+2, 19, 20 Osc-enable 19 Osc-note 25 Osc-pulse 21 Osc-saw 21 Osc-tri  21  Output
 samples to file 27 Output to a File 72 Overlap 26 Overwrite samples 28
 
-  P (Adagio dynamic) 37 P (Adagio Pitch) 36 Palindrome pattern 43  Pan  20,  52
-Pan,  stereo  52  Parameters,  keyword  47  Params-scale 50 Params-transpose 50
-Partial 21 Path, current 42 Pattern, length  44  Pattern,  window  44  Pattern,
-accumulate  44  Pattern,  accumulation  44 Pattern, copier 44 Pattern, cycle 43
-Pattern, eval 44 Pattern, expression 44  Pattern,  heap  44  Pattern,  line  43
-Pattern,  markov  44 Pattern, palindrome 43 Pattern, product 44 Pattern, random
-43 Pattern, sum 44  Patternp  50  Peak  30  Peak  amplitude  10  Peak,  maximum
-amplitude  30  Pearson correlation 51 Peek 71 Peek-char 70 Period estimation 25
-Phaser 52 Physical model 3  Physical  Models  24  Piano  synthesizer  51  Piano
-synthesizer   tutorial  51  Piano-midi  51  Piano-midi2file  51  Piano-note  51
+  P  (Adagio  dynamic)  37 P (Adagio Pitch) 36 Palindrome pattern 43 Pan 20, 52
+Pan, stereo 52 Parameters,  keyword  47  Params-scale  50  Params-transpose  50
+Partial  21  Path,  current  42  Pattern, length 44 Pattern, window 44 Pattern,
+accumulate 44 Pattern, accumulation 44 Pattern, copier  44  Pattern,  cycle  43
+Pattern,  eval  44  Pattern,  expression  44  Pattern, heap 44 Pattern, line 43
+Pattern, markov 44 Pattern, palindrome 43 Pattern, product 44  Pattern,  random
+43  Pattern,  sum  44  Patternp  50  Peak  30  Peak  amplitude 10 Peak, maximum
+amplitude 30 Pearson correlation 51 Peek 71 Peek-char 70 Period  estimation  25
+Phaser  52  Physical  model  3  Physical  Models  24 Piano synthesizer 51 Piano
+synthesizer  tutorial  51  Piano-midi  51  Piano-midi2file  51  Piano-note   51
 Piano-note-2 51 Piece-wise 21 Piece-wise linear 30 Pitch 36 Pitch bend 38 Pitch
-detection  25 Pitch notation 3 Pitch shift 24, 32 Pitch shifting 29 Pitshift 24
-Pl-center 53 Pl-doppler 53 Pl-left 52 Pl-pan2d 53  Pl-position  53  Pl-rear  53
-Pl-right  53  Play 2, 27 Play in reverse 51 Play-file 27 Plot 28 Plots 51 Pluck
-21 Plucked string 21 Plusp 66 Poisson distribution 47 Poisson-dist 47  Poke  71
-Polyrhythm  39  Pop 42 Portamento switch 38 Power 42 PP (Adagio dynamic) 37 PPP
-(Adagio dynamic) 37 Pprint 70 Prcrev 24 Predicate Functions 66 Preset 37  Prin1
-70  Princ  70  Print  70 Print midi file 52 Print statement, sal 15 Probability
-distributions 45 Prod 20 Product 27 Product pattern 44 Profile 68 Profiling  64
-Prog  67 Prog* 67 Prog1 67 Prog2 67 Progn 68 Program 38 Program change 36 Progv
-67 Prologic 52 Property List Functions 65 Protected  files  1  Psetq  64  Pulse
-oscillator  21  Pulse-width modulation 21 Push 42 Putprop 65 Pwe 22 Pwe-list 22
-Pwer 22 Pwer-list 22 Pwev 22  Pwev-list  22  Pwevr  22  Pwevr-list  22  Pwl  22
+detection 25 Pitch notation 3 Pitch shift 24, 32 Pitch shifting 29 Pitshift  24
+Pl-center  53  Pl-doppler  53  Pl-left 53 Pl-pan2d 53 Pl-position 53 Pl-rear 53
+Pl-right 53 Play 2, 27 Play in reverse 51 Play-file 27 Plot 28 Plots  51  Pluck
+21  Plucked  string 21 Plusp 66 Poisson distribution 47 Poisson-dist 47 Poke 71
+Polyrhythm 39 Pop 42 Portamento switch 38 Power 42 PP (Adagio dynamic)  37  PPP
+(Adagio  dynamic) 37 Pprint 70 Prcrev 24 Predicate Functions 66 Preset 37 Prin1
+70 Princ 70 Print 70 Print midi file 52 Print  statement,  sal  15  Probability
+distributions  45 Prod 20 Product 27 Product pattern 44 Profile 68 Profiling 64
+Prog 67 Prog* 67 Prog1 67 Prog2 68 Progn 68 Program 38 Program change 36  Progv
+67  Prologic  52  Property  List  Functions 65 Protected files 1 Psetq 64 Pulse
+oscillator 21 Pulse-width modulation 21 Push 42 Putprop 65 Pwe 22  Pwe-list  22
+Pwer  22  Pwer-list  22  Pwev  22  Pwev-list  22  Pwevr 22 Pwevr-list 22 Pwl 22
 Pwl-list 22 Pwlr 22 Pwlr-list 22 Pwlv 22 Pwlv-list 22 Pwlvr 22 Pwlvr-list 22
 
   Q (Adagio Quarter note) 36 Q 3 Qd 3 Qt 3 Quantize 25 Quarter note 3, 36 Quote
 64
 
-  R (Adagio Rest) 36 Ramp 25 Random 42, 45, 68 Random pattern 43  Rate  36,  37
+  R  (Adagio  Rest)  36 Ramp 25 Random 42, 45, 68 Random pattern 43 Rate 36, 37
 Read 70 Read directory 70 Read macros 63 Read samples 17 Read samples from file
-28 Read samples in reverse 51 Read-byte 71 Read-char 70 Read-float 71  Read-int
-70  Read-line 71 Readtables 63 Real-random 42 Recip 25 Reciprocal 25 Regression
-51 Rem 68 Remainder 68 Remove 65  Remove-if  65  Remove-if-not  65  Remprop  65
-Replace  file samples 28 Replay button 4 Require-from 42 Resample 20 Resampling
-20, 29 Rescaling 10 Resolution 38 Reson 23 Rest 25,  65  Restore  71  Rests  36
-Return  67 Return statement, sal 15 Return-from 67 Reverb 24, 32, 52 Reverse 65
-Reverse, sound 51 Ring modulation 2 Risset 3 Rms  25,  29  Room  71  Rplaca  66
+28  Read samples in reverse 51 Read-byte 71 Read-char 70 Read-float 71 Read-int
+70 Read-line 71 Readtables 63 Real-random 42 Recip 25 Reciprocal 25  Regression
+51  Rem  68  Remainder  68  Remove  65 Remove-if 65 Remove-if-not 65 Remprop 65
+Replace file samples 28 Replay button 4 Require-from 42 Resample 20  Resampling
+20,  29  Rescaling  10  Resolution  38 Reson 23 Rest 25, 65 Restore 71 Rests 36
+Return 67 Return statement, sal 15 Return-from 67 Reverb 24, 32, 52 Reverse  65
+Reverse,  sound  51  Ring  modulation  2  Risset 3 Rms 25, 29 Room 71 Rplaca 66
 Rplacd 66 Rrandom 68
 
-  S  (Adagio  Sharp)  36  S (Adagio Sixteenth note) 36 S 3 S-abs 25 S-add-to 28
-S-exp 25 S-log  25  S-max  10,  25  S-min  10,  25  S-overwrite  28  S-plot  28
-S-print-tree  28  S-read  28 S-read-reverse 51 S-rest 25 S-reverse 51 S-save 27
-S-sqrt 25 SAL 13 Sal and lisp  15  SAL  button  4  Sal  expressions  13  Sample
-interpolation  30 Sample rate, forcing 20 Sample rates 7 Sampler 21 Samples 17,
-18 Samples, reading 17 Sampling rate  19  Save  71  Save  samples  to  file  27
-Save-lpc-file  41  Save-workspace  50  Savefile  button 4 Saving Sound Files 10
-Sawtooth oscillator 21 Sawtooth wave 2 Sax 24 Sax-all 24 Sax-freq 24  Scale  20
-Scale-db  20  Scale-srate  20  Scan directory 70 Score 27 Score manipulation 48
-Score, musical  2  Score-adjacent-events  49  Score-append  49  Score-apply  49
-Score-filter  49  Score-filter-length  49  Score-filter-overlap 49 Score-gen 47
-Score-get-begin 49 Score-get-end  49  Score-indexof  49  Score-last-indexof  49
+  S (Adagio Sharp) 36 S (Adagio Sixteenth note) 36 S 3  S-abs  25  S-add-to  28
+S-exp  25  S-log  25  S-max  10,  25  S-min  10,  25  S-overwrite  28 S-plot 28
+S-print-tree 28 S-read 28 S-read-reverse 51 S-rest 25 S-reverse  51  S-save  27
+S-sqrt  25  SAL  13  Sal  and  lisp  15  SAL button 4 Sal expressions 13 Sample
+interpolation 30 Sample rate, forcing 20 Sample rates 7 Sampler 21 Samples  17,
+18  Samples,  reading  17  Sampling  rate  19  Save  71 Save samples to file 27
+Save-lpc-file 41 Save-workspace 50 Savefile button  4  Saving  Sound  Files  10
+Sawtooth  oscillator  21 Sawtooth wave 2 Sax 24 Sax-all 24 Sax-freq 24 Scale 20
+Scale-db 20 Scale-srate 20 Scan directory 70 Score  27  Score  manipulation  48
+Score,  musical  2  Score-adjacent-events  49  Score-append  49  Score-apply 49
+Score-filter 49 Score-filter-length 49  Score-filter-overlap  49  Score-gen  47
+Score-get-begin  49  Score-get-end  49  Score-indexof  49 Score-last-indexof 49
 Score-merge  49  Score-must-have-begin-end  49  Score-play  49  Score-print  49
 Score-randomize-start  49  Score-read  50  Score-read-smf  49  Score-repeat  49
-Score-scale  49 Score-select 49 Score-set-begin 49 Score-set-end 49 Score-shift
-48 Score-sort 48 Score-sorted 48 Score-stretch  48  Score-stretch-to-length  49
+Score-scale 49 Score-select 49 Score-set-begin 49 Score-set-end 49  Score-shift
+48  Score-sort  48  Score-sorted 48 Score-stretch 48 Score-stretch-to-length 49
 Score-sustain   49   Score-transpose   48   Score-voice   49   Score-write   50
 Score-write-smf 50 Scratch sound 11 Sd 3 Second 65 Sections, Adagio 38 Security
-1   Self   64   Semicolon,   Adagio  38  Seq  26  Seqrep  26  Sequences  2,  36
-Sequence_example.htm 2 Sequential behavior 6 Set 64  Set  intersection  50  Set
-statement,  sal  15  Set  union  50  Set-control-srate  7, 19 Set-difference 50
-Set-logical-stop 27 Set-pitch-names 19 Set-sound-srate 7, 19 Setdir 70 Setf  64
-Seti  commnad  40  Setq  64  Setup  nyquist  1 Setup-console 71 Setv command 40
-Sf-granulate 52 Sf-info 28 Shape 23 Sharp 36 Shepard tones 3, 23 Shift-time  20
-Show   midi   file  52  Show-lpc-data  41  Signal  composition  29,  30  Signal
-multiplication  30  Signal-start  17  Signal-stop  17  Sim  2,  26  Simrep   27
-Simultaneous  Behavior  6 Sin 68 Sine 21 Siosc 21 Sitar 25 Sixteenth note 3, 36
-Sixtyfourth note 36 Slope 20 Smooth 20 Snd-abs 29 Snd-add  29  Snd-allpoles  41
-Snd-alpass  31  Snd-alpasscv  31  Snd-alpassvv  31  Snd-amosc  32 Snd-areson 31
-Snd-aresoncv 31 Snd-aresonvc 31 Snd-aresonvv  31  Snd-atone  31  Snd-atonev  31
-Snd-avg  29  Snd-bandedwg  33  Snd-biquad  31  Snd-bowed  33  Snd-bowed-freq 33
-Snd-buzz 32 Snd-chase 31 Snd-clarinet 33 Snd-clarinet-all 33  Snd-clarinet-freq
-33  Snd-clip  29  Snd-compose  29  Snd-congen  31  Snd-const 28 Snd-convolve 31
-Snd-copy 30 Snd-coterm 29 Snd-delay 31 Snd-delaycv 31 Snd-down  30  Snd-exp  30
-Snd-extent  17  Snd-fetch  17  Snd-fetch-array  17  Snd-fft  35  Snd-flatten 17
-Snd-flute 33 Snd-flute-all  33  Snd-flute-freq  33  Snd-fmfb  32  Snd-fmfbv  32
-Snd-fmosc   32   Snd-follow   30   Snd-from-array   17  Snd-fromarraystream  17
-Snd-fromobject 17 Snd-gate 30 Snd-ifft 35 Snd-inverse 30 Snd-length 18  Snd-log
-30  Snd-lpanal  41  Snd-lpreson  41  Snd-mandolin  33 Snd-max 30 Snd-maxsamp 18
-Snd-maxv 30 Snd-modalbar 33 Snd-multiseq  33  Snd-normalize  30  Snd-offset  29
+1  Self  64  Semicolon,  Adagio  38  Seq  26  Seqrep   26   Sequences   2,   36
+Sequence_example.htm  2  Sequential  behavior  6 Set 64 Set intersection 50 Set
+statement, sal 15 Set  union  50  Set-control-srate  7,  19  Set-difference  50
+Set-logical-stop  27 Set-pitch-names 19 Set-sound-srate 7, 19 Setdir 70 Setf 64
+Seti commnad 40 Setq 64 Setup  nyquist  1  Setup-console  71  Setv  command  40
+Sf-granulate  52 Sf-info 28 Shape 23 Sharp 36 Shepard tones 3, 23 Shift-time 20
+Show  midi  file  52  Show-lpc-data  41  Signal  composition  29,   30   Signal
+multiplication   30  Signal-start  17  Signal-stop  17  Sim  2,  26  Simrep  27
+Simultaneous Behavior 6 Sin 68 Sine 21 Siosc 21 Sitar 25 Sixteenth note  3,  36
+Sixtyfourth  note  36  Slope 20 Smooth 20 Snd-abs 29 Snd-add 29 Snd-allpoles 41
+Snd-alpass 31 Snd-alpasscv  31  Snd-alpassvv  31  Snd-amosc  32  Snd-areson  31
+Snd-aresoncv  31  Snd-aresonvc  31  Snd-aresonvv  31 Snd-atone 31 Snd-atonev 31
+Snd-avg 29  Snd-bandedwg  33  Snd-biquad  31  Snd-bowed  33  Snd-bowed-freq  33
+Snd-buzz  32 Snd-chase 31 Snd-clarinet 33 Snd-clarinet-all 33 Snd-clarinet-freq
+33 Snd-clip 29 Snd-compose  29  Snd-congen  31  Snd-const  28  Snd-convolve  31
+Snd-copy  30  Snd-coterm  29 Snd-delay 31 Snd-delaycv 31 Snd-down 30 Snd-exp 30
+Snd-extent 17  Snd-fetch  17  Snd-fetch-array  17  Snd-fft  35  Snd-flatten  17
+Snd-flute  33  Snd-flute-all  33  Snd-flute-freq  33  Snd-fmfb  32 Snd-fmfbv 32
+Snd-fmosc  32  Snd-follow   30   Snd-from-array   17   Snd-fromarraystream   17
+Snd-fromobject  17 Snd-gate 30 Snd-ifft 35 Snd-inverse 30 Snd-length 18 Snd-log
+30 Snd-lpanal 41 Snd-lpreson 41  Snd-mandolin  33  Snd-max  30  Snd-maxsamp  18
+Snd-maxv  30  Snd-modalbar  33  Snd-multiseq  33 Snd-normalize 30 Snd-offset 29
 Snd-oneshot 30 Snd-osc 32 Snd-overwrite 29 Snd-partial 32 Snd-play 18 Snd-pluck
-32 Snd-print 18 Snd-print-tree 18, 28 Snd-prod 30 Snd-pwl  30  Snd-quantize  30
+32  Snd-print  18  Snd-print-tree 18, 28 Snd-prod 30 Snd-pwl 30 Snd-quantize 30
 Snd-read  28  Snd-recip  30  Snd-resample  30  Snd-resamplev  30  Snd-reson  31
-Snd-resoncv 31 Snd-resonvc 31 Snd-resonvv  31  Snd-sampler  32  Snd-samples  18
-Snd-save  29  Snd-sax 33 Snd-sax-all 33 Snd-sax-freq 33 Snd-scale 31 Snd-seq 33
-Snd-set-latency 19 Snd-set-logical-stop 18 Snd-shape 31 Snd-sine  32  Snd-siosc
-32   Snd-sitar   33   Snd-slider  29  Snd-sqrt  29  Snd-srate  18  Snd-sref  18
-Snd-stkchorus 32 Snd-stkpitshift 32 Snd-stkrev 32 Snd-stop-time  18  Snd-t0  18
-Snd-tapf  30  Snd-tapv  29  Snd-time 18 Snd-tone 32 Snd-tonev 32 Snd-trigger 33
-Snd-up 31 Snd-white 29 Snd-xform 31 Snd-yin 31 Snd-zero 29  Soften-clipping  51
+Snd-resoncv  31  Snd-resonvc  31  Snd-resonvv  31 Snd-sampler 32 Snd-samples 18
+Snd-save 29 Snd-sax 33 Snd-sax-all 33 Snd-sax-freq 33 Snd-scale 31  Snd-seq  33
+Snd-set-latency  19  Snd-set-logical-stop 18 Snd-shape 31 Snd-sine 32 Snd-siosc
+32  Snd-sitar  33  Snd-slider  29  Snd-sqrt  29  Snd-srate   18   Snd-sref   18
+Snd-stkchorus  32  Snd-stkpitshift  32 Snd-stkrev 32 Snd-stop-time 18 Snd-t0 18
+Snd-tapf 30 Snd-tapv 29 Snd-time 18 Snd-tone 32  Snd-tonev  32  Snd-trigger  33
+Snd-up  31  Snd-white 29 Snd-xform 31 Snd-yin 31 Snd-zero 29 Soften-clipping 51
 Sort 66 Sound 19    accessing point 17    creating from array 17 Sound browser,
-jnyqide 4 Sound file directory default 27 Sound file I/O 27 Sound file info  28
-Sound  from Lisp data 17 Sound-off 27 Sound-on 27 Sound-srate-abs 26 Sound-warp
-20 Soundfilename 28 Soundp  18  Sounds  17  Sounds  vs.  Behaviors  6  Span  52
-Spatialization  52  Special  command 36 Spectral interpolation 21 Speed-dial 52
-Splines 21 Sqrt 68 Square oscillator 21 Square root 25, 29  Srate  17  Sref  17
-Sref-inverse  17 St 3 Stacatto 26 Staccato 37 Stack trace 68 Standard deviation
-51 Standard deviation of vector 51 Standard MIDI File  49  Statements,  sal  13
-Statistics  51 Stats 18 Step-to-hz 19 Stereo 52 Stereo pan 52 Stereo panning 20
-Stereo-chorus 52 Stereoize 52 STK banded waveguide 33 Stk bowed  33  STK  bowed
+jnyqide  4 Sound file directory default 27 Sound file I/O 27 Sound file info 28
+Sound from Lisp data 17 Sound-off 27 Sound-on 27 Sound-srate-abs 26  Sound-warp
+20  Soundfilename  28  Soundp  18  Sounds  17  Sounds  vs.  Behaviors 6 Span 52
+Spatialization 52 Special command 36 Spectral interpolation  21  Speed-dial  52
+Splines  21  Sqrt  68  Square oscillator 21 Square root 25, 29 Srate 17 Sref 17
+Sref-inverse 17 St 3 Stacatto 26 Staccato 37 Stack trace 68 Standard  deviation
+51  Standard  deviation  of  vector 51 Standard MIDI File 49 Statements, sal 13
+Statistics 51 Stats 18 Step-to-hz 19 Stereo 52 Stereo pan 52 Stereo panning  20
+Stereo-chorus  52  Stereoize  52 STK banded waveguide 33 Stk bowed 33 STK bowed
 string 24 STK bowed-freq 24 STK chorus 24, 32 Stk clarinet 24, 33 STK flute 24,
-33 STK glass harmonica 25 STK jcreverb 24 STK mandolin 33 STK mandolon  24  STK
-modal  bar  25,  33  STK nreverb 24 STK pitch shift 24, 32 STK prcreverb 24 STK
-reverb 32 Stk sax 24, 33 STK sitar 25, 33 STK tibetan bowl 25 STK tuned bar  25
-STK  uniform  bar  24 Stkchorus 24 Stochastic functions 45 Strcat 69 Streamp 66
+33  STK  glass harmonica 25 STK jcreverb 24 STK mandolin 33 STK mandolon 24 STK
+modal bar 25, 33 STK nreverb 24 STK pitch shift 24, 32  STK  prcreverb  24  STK
+reverb  32 Stk sax 24, 33 STK sitar 25, 33 STK tibetan bowl 25 STK tuned bar 25
+STK uniform bar 24 Stkchorus 24 Stochastic functions 45 Strcat  69  Streamp  66
 Stretch  2,  26  Stretch  Transformation  7  Stretch,  sal  13  Stretch-abs  26
-Stretching  Sampled  Sounds  10  String  69  String  Functions 69 String Stream
-Functions  71  String  synthesis  21   String-downcase   69   String-equal   69
-String-greaterp  69  String-left-trim  69  String-lessp  69 String-not-equal 69
-String-not-greaterp 69 String-not-lessp 69 String-right-trim  69  String-search
-69  String-trim  69 String-upcase 69 String/= 69 String< 69 String<= 69 String=
-69 String> 69 String>= 69 Stringp 66 Sublis 66 Subseq 69 Subset 50  Subsetp  50
-Subst  66  Suggestions  iii  Sum pattern 44 Sum 27 Surround Sound 52 Sustain 26
-Sustain-abs  26  Swap  channels  52  Swapchannels  52   Symbol   Functions   64
-Symbol-function  65  Symbol-name  65 Symbol-plist 65 Symbol-value 65 Symbolp 66
+Stretching Sampled Sounds 10  String  69  String  Functions  69  String  Stream
+Functions   71   String   synthesis   21  String-downcase  69  String-equal  69
+String-greaterp 69 String-left-trim  69  String-lessp  69  String-not-equal  69
+String-not-greaterp  69  String-not-lessp 69 String-right-trim 69 String-search
+69 String-trim 69 String-upcase 69 String/= 69 String< 69 String<=  69  String=
+69  String>  69 String>= 69 Stringp 66 Sublis 66 Subseq 69 Subset 50 Subsetp 50
+Subst 66 Suggestions iii Sum pattern 44 Sum 27 Surround  Sound  52  Sustain  26
+Sustain-abs   26   Swap   channels  52  Swapchannels  52  Symbol  Functions  64
+Symbol-function 65 Symbol-name 65 Symbol-plist 65 Symbol-value  65  Symbolp  66
 Symbols 64 Synchronization 39 System Functions 71
 
-  T (Adagio Triplet) 36 T 36 T-test, statistics 51 Table  23  Table  memory  18
-Tagbody  67  Tan  68  Tap  29 Tapped delay 24 Tapv 24 Temp file 70 Tempo 36, 37
-Temporary files 70 Temporary sound files directory  27  Terpri  70  The  Format
-Function  70  The Program Feature 67 Third 65 Thirtysecond note 36 Threshold 30
-Throw 67 Time 36, 37 Time shift,  sal  13  Time  Structure  26  Time  units  38
-Timed-seq  27  Tone  23  Top  button  4  Top-level  68  Touch  tone 52 Trace 68
-Transformation environment 6 Transformations 6, 26 Transpose  26  Transpose-abs
-26  Triangle  oscillator  21  Triangle  wave  2  Trigger 27 Trill 40 Triplet 36
+  T  (Adagio  Triplet)  36  T 36 T-test, statistics 51 Table 23 Table memory 18
+Tagbody 67 Tan 68 Tap 29 Tapped delay 24 Tapv 24 Temp  file  70  Tempo  36,  37
+Temporary  files  70  Temporary  sound  files directory 27 Terpri 70 The Format
+Function 70 The Program Feature 67 Third 65 Thirtysecond note 36  Threshold  30
+Throw  67  Time  36,  37  Time  shift,  sal  13 Time Structure 26 Time units 38
+Timed-seq 27 Tone 23  Top  button  4  Top-level  68  Touch  tone  52  Trace  68
+Transformation  environment  6 Transformations 6, 26 Transpose 26 Transpose-abs
+26 Triangle oscillator 21 Triangle wave  2  Trigger  27  Trill  40  Triplet  36
 Triplet durations 3 Truncate 68 Tuba 3 Tuning 19 Tutorial, FM 11 Type-of 71
 
-  U  36  Undo  4  Uniform  random  42,  68  Union  50  Unless  67  Untrace   68
+  U   36  Undo  4  Uniform  random  42,  68  Union  50  Unless  67  Untrace  68
 Unwind-protect 67 UPIC 4 Upper-case-p 69 User name 70
 
-  V  (Adagio  Voice) 37 Variable delay 24, 29, 30 Variable-resample function 29
-Variance 51 Variance of vector data  51  Vector  65  Vector  cosine  51  Vector
-difference  51  Vector  median  51  Vector  norm  51  Vectors  51  Vel-to-db 19
-Vel-to-linear 19 Velocity 37 Vinal scratch 11 Vocal sound 3 Voice 36, 37  Voice
+  V (Adagio Voice) 37 Variable delay 24, 29, 30 Variable-resample  function  29
+Variance  51  Variance  of  vector  data  51  Vector 65 Vector cosine 51 Vector
+difference 51  Vector  median  51  Vector  norm  51  Vectors  51  Vel-to-db  19
+Vel-to-linear  19 Velocity 37 Vinal scratch 11 Vocal sound 3 Voice 36, 37 Voice
 synthesis 23 Volume 38
 
-  W  (Adagio  Whole  note) 36 W 3 Warble 11 Warp 26 Warp-abs 26 Waveforms 2, 20
-Waveshaping 23 Wavetables 2,  20  Wd  3  Welch's  t-test  51  Wg-glass-harm  25
+  W (Adagio Whole note) 36 W 3 Warble 11 Warp 26 Warp-abs 26  Waveforms  2,  20
+Waveshaping  23  Wavetables  2,  20  Wd  3  Welch's  t-test 51 Wg-glass-harm 25
 Wg-tibetan-bowl 25 Wg-tuned-bar 25 Wg-uniform-bar 24 When 42, 67 While 42 Whole
-note 3, 36 Widen 52 Wii Controller 19 Wind sound 11  Window  initialization  71
+note  3,  36  Widen 52 Wii Controller 19 Wind sound 11 Window initialization 71
 Window pattern 44 Wind_tutorial.htm 11 With statement, sal 15 Wood drum sound 3
 Workspace  4,  50  Write  samples  to  file  27  Write-byte  71  Write-char  70
-Write-float 71 Write-int 70 Wt 3
+Write-float 71 Write-int 71 Wt 3
 
-  X  (Adagio  control)  38  Xenakis 4 XLISP Command Loop 62 XLISP Data Types 62
+  X (Adagio control) 38 Xenakis 4 XLISP Command Loop 62  XLISP  Data  Types  62
 XLISP evaluator 62 XLISP Lexical Conventions 62 Xmusic 43
 
   Y (Adagio control) 38 Yin 25
@@ -13332,7 +13336,7 @@ IV. XLISP: An Object-oriented Lisp                                           61
    IV.25. The Program Feature                                                67
    IV.26. Debugging and Error Handling                                       68
    IV.27. Arithmetic Functions                                               68
-   IV.28. Bitwise Logical Functions                                          68
+   IV.28. Bitwise Logical Functions                                          69
    IV.29. String Functions                                                   69
    IV.30. Character Functions                                                69
    IV.31. Input/Output Functions                                             70

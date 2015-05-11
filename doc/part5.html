@@ -1,4 +1,6 @@
-<html><head><title>Continuous Transformations and Time Warps</title></head>
+<html><head><title>Continuous Transformations and Time Warps</title>
+<link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+</head>
 <body bgcolor="ffffff">
 <a href = "part4.html">Previous Section</a> | <a href = "part6.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
@@ -38,17 +40,18 @@ by evaluating an expression multiple times. Here, <code>i</code> takes on 16 val
 from 0 to 15, and the expression for the sound could potentially use <code>i</code>.
 Technically, <code>seqrep</code> is not really a function but an abbreviation for
 a special kind of loop construct.
-<pre>
+<p><pre>
 define function tone-seq()
   return seqrep(i, 16,
                 osc-note(c4) ~ 0.25)
-</pre>
+</pre></p>
 
 Now define a linearly increasing ramp to serve as a transposition function:
-<code>
+<p><pre>
 define function pitch-rise()
   return sustain-abs(1.0, 16 * ramp() ~ 4)
-</code>
+</pre></p>
+
 This ramp has a duration of 4 seconds, and over that interval it rises from
 0 to 16 (corresponding to the 16 semitones we want to transpose). The ramp
 is inside a <code>sustain-abs</code> transformation, which prevents a <code>sustain</code>
@@ -57,19 +60,21 @@ behavioral abstraction is that built-in behaviors sometimes do the wrong
 thing implicitly, requiring some explicit correction to turn off the 
 unwanted transformation.) Now,
 <code>pitch-rise</code> is used to transpose <code>tone-seq</code>:
-<code>
+<p><pre>
 define function chromatic-scale()
   return transpose(pitch-rise(), tone-seq())
-</code>
+</pre></p>
+
 <p>
 Similar transformations can be constructed to change the sustain or "duty
 factor" of notes and their loudness.  The following expression plays the
 <code>chromatic-scale</code> behavior with increasing note durations.  The
 rhythm is unchanged, but the note length changes from staccato to legato:
-<code>
+<p><pre>
 play sustain((0.2 + ramp()) ~ 4,
              chromatic-scale())
-</code>
+</pre></p>
+
 The resulting sustain function will ramp from 0.2 to 1.2.  A sustain of 1.2
 denotes a 20 percent overlap between notes.  The <code>sum</code> has a stretch
 factor of 4, so it will extend over the 4 second duration of
@@ -84,10 +89,11 @@ ramp from 0 to 16 becomes a 0.8s ramp. To fix this problem, we need to
 shield <code>pitch-rise</code> from the effect of <code>sustain</code> using the
 <code>sustain-abs</code> transformation. Here is a corrected version of 
 <code>chromatic-scale</code>:
-<code>
+<p><pre>
 define function chromatic-scale()
   return transpose(sustain-abs(1, pitch-rise()), tone-seq())
-</code>
+</pre></p>
+
 <p>
 What do these transformations mean?  How did the system know to produce a
 pitch rise rather than a continuous glissando?  This all relates to the idea
@@ -124,10 +130,10 @@ proportional to 1/tempo.  A higher slope corresponds to a slower tempo.
 <p>
 To demonstrate <code>warp</code>, we will define a time warp function using
 <code>pwl</code>:
-<pre>
+<p><pre>
 define function warper()
   return pwl(0.25, .4, .75, .6, 1.0, 1.0, 2.0, 2.0, 2.0)
-</pre>
+</pre></p>
 
 This function has an initial slope of .4/.25 = 1.6.  It may be easier to
 think in reciprocal terms: the initial tempo is .25/.4 = .625.  Between 0.25
@@ -137,14 +143,15 @@ interest (in our case it will be 0 to 1), and it is safest to extend a bit
 beyond the interval, so we extend the function on to 2.0 with a
 tempo of 1.0.  Next, we stretch and scale the <code>warper</code> function to
 cover 4 seconds of score time and 4 seconds of real time:
-<pre>
+<p><pre>
 define function warp4()
   return 4 * warper() ~ 4
-</pre>
+</pre></p>
 
 <p>
 <hr>
-<blockquote></blockquote>
+<blockquote>
+</blockquote>
 <img src="fig2.gif"><br><br>
 
 <p>
@@ -157,9 +164,9 @@ location (4, 4).  Nyquist sounds are ordinarily open on the right.
 <p>
 Figure <a href = "#39">2</a> shows a plot of this warp function.  Now, we can
 warp the tempo of the <code>tone-seq</code> defined above using <code>warp4</code>:
-<pre>
+<p><pre>
 play warp(warp4(), tone-seq())
-</pre>
+</pre></p>
 
 Figure <a href = "#39">3</a> shows the result graphically.  Notice that the
 durations of the tones are warped as well as their onsets.  Envelopes are 
@@ -168,7 +175,8 @@ defined, the tones will have constant attack and decay times, and the
 sustain will be adjusted to fit the available time.
 <p>
 <hr>
-<blockquote></blockquote>
+<blockquote>
+</blockquote>
 <img src="fig3.gif"><br><br>
 
 <p>
@@ -197,13 +205,13 @@ A consequence of the default behavior is that notes stretch when the tempo
 slows down.  Returning to our example, recall that we want to warp only the
 note onset times and not the duration.  One would think that the following
 would work:
-<pre>
+<p><pre>
 define function tone-seq-2 ()
   return seqrep(i, 16,
                 osc-note(c4) ~~ 0.25)
-<p>
+
 play warp(warp4(), tone-seq-2())
-</pre>
+</pre></p>
 
 Here, we have redefined <code>tone-seq</code>, renaming it to <code>tone-seq-2</code>
 and changing the stretch (<code>~</code>) to absolute stretch (<code>~~</code>).  The
@@ -223,13 +231,13 @@ Now let us design a proper solution.  The trick is to use absolute
 stretch (<code>~~</code>)
 as before to control the duration, but to restore the logical stop time to a
 value that results in the proper inter-onset time interval:
-<pre>
+<p><pre>
 define function tone-seq-3()
   return seqrep(i, 16,
                 set-logical-stop(osc-note(c4) ~~ 0.25, 0.25))
-<p>
+
 play warp(warp4(), tone-seq-3())
-</pre>
+</pre></p>
 
 Notice the addition of <code>set-logical-stop</code> enclosing the
 absolute stretch (<code>~~</code>) expression to set the logical
@@ -243,7 +251,8 @@ transformation, the second argument to <code>set-logical-stop</code> refers to
 enviroment.  Figure <a href = "#40">4</a> illustrates the result graphically.
 <p>
 <hr>
-<blockquote></blockquote> 
+<blockquote>
+</blockquote>
 <img src="fig4.gif"><br><br>
 
 <p>
@@ -263,10 +272,10 @@ solution followed by a correct one.
 <p>
 The simplest approach to a nested transformation is to simply combine them
 and hope for the best:
-<pre>
+<p><pre>
 play warp(warp4(),
           transpose(pitch-rise(), tone-seq()))
-</pre>
+</pre></p>
 
 This example will not work the way you might expect.  Here is why: the warp
 transformation applies to the <code>(pitch-rise)</code> expression, which is
@@ -283,13 +292,13 @@ This will lead to a correct solution.
 Here is the modified code to properly warp a transposed sequence.  Note that
 the original sequence is used without modification.  The only complication
 is producing a properly warped transposition function:
-<pre>
+<p><pre>
   play warp(warp4(),
             transpose(
               control-warp(get-warp(),
                            warp-abs(nil, pitch-rise())),
               tone-seq()))
-</pre>
+</pre></p>
 
 To properly warp the <code>pitch-rise</code> transposition function, we use
 <code>control-warp</code>, which applies a warp function to a function of score time,

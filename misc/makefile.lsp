@@ -2,7 +2,7 @@
 
 (load "misc/files.lsp") ; just to make sure we're current
 
-(setf system-types '(alsa nonalsa))
+(setf system-types '(alsa nonalsa alsa64 nonalsa64))
 
 (if (not (boundp 'system-type)) (setf system-type nil))
 (if (not (boundp 'target-file)) (setf target-file "ny"))
@@ -95,6 +95,7 @@
 ;;
 (defun command-filelist (separator)
   (let ()
+    (setf filelist nil)
     (setf filelist (append filelist 
 			   (command-prefix "nyqsrc" nyqsrcfiles)))
     (display "after nyqsrc" filelist nyqsrcfiles)
@@ -102,7 +103,7 @@
     ;;(setf filelist (append filelist '(("~" "nyqsrc" "sndheader"))))
     (setf filelist (append filelist (command-prefix "tran" transfiles)))
     (cons (strcat "nyqsrc" separator "sndfnint") 
-          (insert-separator separator filelist))))
+          (insert-separator "" separator filelist))))
 
 
 ;; COMMANDLINE -- build sndfn.cl and sndfn.wcl for mac and windows
@@ -153,8 +154,11 @@
           (setf system-type nil))))
     (setf system-name (string-downcase
       (symbol-name system-type)))
+    (setf *isalsa* (member system-type '(alsa alsa64)))
+    (setf *is64* (member system-type '(alsa64 nonalsa64)))
+    (init-defs) ;; system dependencies
     (setf portaudio-host-flag 
-	  (if (eq system-type 'ALSA) "--with-alsa" "--with-oss"))
+	  (if *isalsa* "--with-alsa" "--with-oss"))
     (setf outf-name (strcat "sys/unix/" system-name "/Makefile"))
     (format t "Opening for output: ~A\n" outf-name)
     (setf outf (open outf-name :direction :output))
@@ -174,7 +178,7 @@
 # This is the resulting executable (normally \"ny\"):
 NY = ~A
 
-OPT = -O2 -m32
+OPT = -O2 ~A
 # OPT = -g -m32
 
 EVERYTHING = $(NY) runtime/system.lsp jnyqide/jNyqIDE.jar \\
@@ -186,7 +190,7 @@ current: $(CURRENT)
 
 onlyny: $(NY) runtime/system.lsp
 
-" system-type target-file)
+" system-type target-file (if *is64* "" "-m32"))
 
    (write-file-list outf "JAVASRC = "
     (add-prefix "jnyqide/" (add-suffix javafiles ".java")) #\\)
@@ -224,10 +228,12 @@ INTGEN = misc/intgen
     (seqfnint-headers outf)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+    (setf cflags (if *is64* "" "CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32"))
+
     (format outf "
 
 liblo/Makefile:
-\tcd liblo; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+\tcd liblo; ./configure ~A --enable-static --disable-shared
 \t# sometimes, residual files cause problems
 \tcd liblo; make clean
 
@@ -248,7 +254,7 @@ bin/test-client: $(LIBLO_PATH)/liblo.a
 
 portaudio/Makefile:
 \t# note: without-jack avoids 32/64-bit link error on Debian
-\tcd portaudio; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared --without-jack ~A
+\tcd portaudio; ./configure ~A --enable-static --disable-shared --without-jack ~A
 \t# sometimes, residual files cause problems
 \tcd portaudio; make clean
 
@@ -256,7 +262,7 @@ $(LIBPA_PATH)/libportaudio.a: portaudio/Makefile
 \tcd portaudio; make lib/libportaudio.la
 
 libogg/Makefile:
-	cd libogg; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+	cd libogg; ./configure ~A --enable-static --disable-shared
 
 $(LIBOGG_PATH)/libogg.a: libogg/Makefile
 	cd libogg; make
@@ -272,7 +278,7 @@ $(LIBOGG_PATH)/libogg.a: libogg/Makefile
 #  32-bit code including 32-bit libogg.a
 
 libvorbis/Makefile:
-	cd libvorbis; ./configure CFLAGS=-m32 LDFLAGS=-m32 CXXFLAGS=-m32 --enable-static --disable-shared
+	cd libvorbis; ./configure ~A --enable-static --disable-shared
 
 $(LIBVORBIS_PATH)/libvorbis.a: libvorbis/Makefile
 	cd libvorbis; make
@@ -302,7 +308,7 @@ runtime/system.lsp: sys/unix/~A/system.lsp
 \tcp -p sys/unix/~A/system.lsp runtime/system.lsp
 \tchmod -w runtime/system.lsp
 
-" portaudio-host-flag system-name system-name)
+" cflags cflags portaudio-host-flag cflags cflags system-name system-name)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (format outf "NYQDEP = nyqsrc/sound.h nyqsrc/falloc.h nyqsrc/cque.h~%~%")
@@ -421,6 +427,9 @@ cleaner: clean
     (format outf "~A~%~%" str)))
 
 
+YOU ARE HERE: need a function to get flist, then print it into makefile and also 
+into sndfn.cl and sndfn.wcl
+
 (defun sndfnint-headers (outf)
   (let ((flist (append
                 (list "nyqsrc/sndfmt" "nylsf/sndfile")
@@ -486,10 +495,15 @@ cleaner: clean
 ;; SYSTEM DEPENDENCIES
 ;;===================================================
 
-;; linux-defs - definitions for Makefile that are common to ALSA and NONALSA.
-;;    we have NONALSA because Debian cannot link with -lasound. The NONALSA
-;;    makefile omits -lasound.
-(setf linux-defs "
+(defun init-defs ()
+  ;; this depends on *is64* which is computed in MAKEFILE, so we wrap
+  ;; all this initialization here so we can call it after defining
+  ;; *is64*
+  ;;
+  ;; linux-defs - definitions for Makefile that are common to ALSA and NONALSA.
+  ;;    we have NONALSA because Debian cannot link with -lasound. The NONALSA
+  ;;    makefile omits -lasound.
+  (setf linux-defs (strcat "
 CC = gcc
 
 LIBPA_PATH = portaudio/lib/.libs
@@ -505,7 +519,7 @@ CFLAGS = -DOSC -DCMTSTUFF $(OPT) $(INCL) \\
     -DHAVE_LIBPTHREAD=1 -D_FILE_OFFSET_BITS=64 \\
     -DSTK_NYQUIST -DUSE_VSPRINTF \\
     -DHAVE_CONFIG_H
-LN = g++ -m32
+LN = g++ " (if *is64* "" "-m32") "
 AR = ar
 # to enable command line editing, insert -lreadline -lcurses
 LFLAGS = -L/usr/lib32 $(LIBPA_PATH)/libportaudio.a \\
@@ -519,15 +533,15 @@ TAGS:
 	find . \( -name \"*.c\" -o -name \"*.h\" \) -print | etags -
 
 tags: TAGS
-")
+"))
 
-(setf alsa-defs (strcat "
+  (setf alsa-defs (strcat "
 AUDIOLIBS = -lasound
 " linux-defs))
 
-(setf nonalsa-defs (strcat "
+  (setf nonalsa-defs (strcat "
 AUDIOLIBS =
-" linux-defs))
+" linux-defs)))
 
 (format t "loaded makefile.lsp")
  

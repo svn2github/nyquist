@@ -1,216 +1,159 @@
-<html><head><title>Developing and Debugging in Nyquist</title></head>
+<html><head><title>Linear Prediction Analysis and Synthesis</title>
+<link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+</head>
 <body bgcolor="ffffff">
 <a href = "part12.html">Previous Section</a> | <a href = "part14.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "135"><h2>Developing and Debugging in Nyquist</h2></a>
-<a name="index994"><a name="index995">
-There are a number of tools, functions, and techniques that can help to debug Nyquist programs. Since these are described in many places 
-throughout this manual, this chapter brings together many suggestions and techniques for developing code and debugging. You <i>really</i> 
-should read this chapter before you spend too much time with Nyquist. Many problems that you will certainly run into are addressed here.
+<a name = "141"><h2>Linear Prediction Analysis and Synthesis</h2></a>
+<a name="index995"></a><a name="index996"></a>
+Nyquist provides functions to perform Linear Prediction Coding (LPC) 
+analysis and synthesis. In simple terms, LPC analysis assumes that a
+sound is the result of an all-pole filter applied to a source with a 
+flat spectrum. LPC is good for characterizing the general spectral 
+shape of a signal, which may be time-varying as in speech sounds.
+For synthesis, any source can be filtered, allowing the general 
+spectral shape of one signal (used in analysis) to be applied to
+any source (used in synthesis). A popular effect is to give vowel-like
+spectra to musical tones, creating an artificial (or sometimes natural)
+singing voice.
 <p>
-<a name = "136"><h3>Debugging</h3></a>
-Probably the most important debugging tool is the backtrace. There are
-two kinds of backtrace: one for SAL, and one for Lisp.
+Examples of LPC analysis and synthesis can be found in the file 
+<code>lpc_tutorial.htm</code><a name="index997"></a><a name="index998"></a><a name="index999"></a>,
+which is part of the standard Nyquist release.
 <p>
-SAL mode is actually just an XLISP function (<code>sal</code>) that reads
-input and evaluates it. When SAL encounters an error, it normally
-prints a trace of the SAL stack (all the active functions written in SAL),
-exists the current command, and reads the next command.
+As with FFT processing, LPC analysis takes a sound as input and returns 
+a stream of frames. Frames are returned from an object using the <code>:next</code>
+selector just as with FFT frames. An LPC frame is a list consisting of:
+<i>RMS1</i>, the energy of the input signal, <i>RMS2</i>, the energy of the
+residual signal, <i>ERR</i>, the square root of <i>RMS1</i>/<i>RMS2</i>, and 
+<i>FILTER-COEFS</i>, an array of filter coefficients. To make code more
+readable and to avoid code dependence on the exact format of a frame, 
+the functions <code>lpc-frame-rms1</code><a name="index1000"></a>, 
+<code>lpc-frame-rms2</code><a name="index1001"></a>, 
+<code>lpc-frame-err</code><a name="index1002"></a>, and
+<code>lpc-frame-filter-coefs</code><a name="index1003"></a> can be
+applied to a frame to obtain the respective fields.
 <p>
-If you call XLISP functions from SAL, including most Nyquist sound 
-processing functions, and an error occurs within these XLISP functions,
-you will only see the SAL function that called the XLISP functions
-listed in the stack trace. Sometimes you need more details.
+The <i>z</i> transform
+of the filter is <i>H</i>(<i>z</i>) = 1/<i>A</i>(<i>z</i>), where <i>A</i>(<i>z</i>) is a
+polynomial of the form <i>A</i>(<i>z</i>) = 1 + <i>a<sub>1</sub></i><i>z</i> + 
+<i>a<sub>2</sub></i><i>z</i> + ... + <i>a<sub>p</sub></i><i>z</i>. The <i>FILTER-COEFS</i> array has
+the form <code>#(</code><i>a<sub>p</sub></i> <i>a<sub>p-1</sub></i> ... <i>a<sub>3</sub></i> 
+<i>a<sub>2</sub></i> <i>a<sub>1</sub></i><code>)</code>.
 <p>
-When Nyquist encounters an error when it is not running SAL, it 
-normally suspends execution and prints an 
-error message. To find out where in the program the error occurred 
-and how you got there, start by typing <code>(bt)</code>. This will print 
-out the last several function calls and their arguments, which is 
-usually sufficient to see what is going on.
+The file <code>lpc.lsp</code> defines some useful classes and functions. The file
+is <i>not</i> automatically loaded with Nyquist, so you must execute 
+<code>(load "lpc")</code> before using them.
 <p>
-In order for <code>(bt)</code> to work, you must have a couple of global 
-variables set: <code>*tracenable*</code> is ordinarily set to <code>NIL</code>.  
-If it is true, then a backtrace is automatically printed when an 
-error occurs; <code>*breakenable*</code> must be set to <code>T</code>, as 
-it enables the execution to be suspended when an error is 
-encountered. If <code>*breakenable*</code> is <code>NIL</code> (false), 
-then execution stops when an error occurs but the stack is 
-not saved and you cannot get a backtrace. Finally, <code>bt</code> 
-is just a macro to save typing.  The actual backtrace function 
-is <code>baktrace</code>, which takes an integer argument telling how 
-many levels to print.  All of these things are set up by default 
-when you start Nyquist.
-<p>
-To get this XLISP backtrace behavior when SAL encounters an error,
-you need to have <code>*breakenable*</code> set while SAL is running. The
-best way to do this is to run within the NyquistIDE program,
-open the Preferences dialog, and choose the desired settings, e.g.
-"Enable XLISP break on SAL error."
-<p>
-Since Nyquist sounds are executed with a lazy evaluation scheme, some
-errors are encountered when samples are being generated.  In this
-case, it may not be clear which expression is in error. Sometimes, it
-is best to explore a function or set of functions by examining
-intermediate results. Any expression that yields a sound can be
-assigned to a variable and examined using one or more of:
-<code>s-plot</code>, <code>snd-print-tree</code>, and of course <code>play</code>. The
-<code>snd-print-tree</code> function prints a lot of detail about the inner
-representaion of the sound. Keep in mind that if you assign a sound
-to a global variable and then look at the samples (e.g. with 
-<code>play</code> or <code>s-plot</code>), the samples will be retained in
-memory. At 4 bytes per sample, a big sound may use all of your 
-memory and cause a crash.
-<p>
-Another technique is to use low sample rates so that it is easier to 
-plot results or look at samples directly. The calls:
-<pre>
-set-sound-srate(100)
-set-control-srate(100)
-</pre>
-
-set the default sample rates to 100, which is too slow for audio, but useful for examining programs and results. The function
-<pre>
-snd-samples(<i>sound</i>, <i>limit</i>)
-</pre>
-
-will convert up to <i>limit</i> samples from <i>sound</i> into a Lisp 
-array. This is another way to look at results in detail.
-<p>
-The <code>trace</code> function is sometimes useful.  It prints the name of
-a function and its arguments everytimg the function is called, and the
-result is printed when the function exits.  To trace the osc function,
-type:
-<pre>
-trace(osc)
-</pre>
-
-and to stop tracing, type <code>untrace(osc)</code>.
-<p>
-If a variable needs a value or a function is undefined, and if <code>*breakenable*</code> was set, you will get a prompt where you can fix
-the error (by setting the variable or loading the function definition)
-and keep going.  At the debug (or break) prompt, your input must 
-be in XLISP, not SAL syntax. Use <code>(co)</code>, short for <code>(continue)</code> to
-reevaluate the variable or function and continue execution.
-<p>
-When you finish debugging a particular call, you can "pop" 
-up to the top level by typing <code>(top)</code>, a short name for <code>(top-level)</code>.
-There is a button named "Top" in the NyquistIDE that takes you back to the
-top level (ready to accept XLISP expressions), 
-and another button named "SAL" that puts you back in SAL mode.
-<p>
-<a name = "137"><h3>Useful Functions</h3></a>
+<a name = "142"><h3>LPC Classes and Functions</h3></a>
 <dl>
 <dt>
-<code>grindef(<a name="index996"><a name="index997"><i>name</i>)</code> [SAL]<br>
+<code>make-lpanal-iterator(<a name="index1004"></a><i>sound</i>, <i>framedur</i>, <i>skiptime</i>, <i>npoles</i>)</code> [SAL]<br>
 
-<code>(grindef <i>name</i>)</code> [LISP]<dd>Prints
-a formatted listing of a lisp function. This is often useful to quickly inspect
-a function without searching for it in source files. Do not forget to quote the
-name, e.g. <code>(grindef 'prod)</code>.<br><br>
-<dt><code>args(<a name="index998"><a name="index999"><i>name</i>)</code> [SAL]<br>
+<code>(make-lpanal-iterator <i>sound</i> <i>framedur</i> <i>skiptime</i> <i>npoles</i>)</code> [LISP]<dd>Makes an iterator
+object, an instance of <code>lpanal-class</code>, 
+that returns LPC frames from successive frames of samples in
+<i>sound</i>. The duration (in seconds)
+of each frame is given by <i>framedur</i>, a 
+<code>FLONUM</code>. The skip size (in seconds) between successive frames
+is given by <i>skiptime</i>, a <code>FLONUM</code>. Typical values for
+<i>framedur</i> and <i>skiptime</i> are 0.08 and 0.04, giving 25 frames
+per second and a 50% frame overlap. The number of poles is given
+by <i>npoles</i>, a <code>FIXNUM</code>. The result is an object that
+responds to the <code>:next</code> selector by returning a frame as 
+described above. <code>NIL</code> is returned when <i>sound</i> terminates.
+(Note that one or more of the last analysis windows may be 
+padded with zeros. <code>NIL</code> is only returned when the corresponding
+window would begin after the termination time of the sound.)<br><br>
+<dt><code>make-lpc-file-iterator(<a name="index1005"></a><i>filename</i>)</code> [SAL]<br>
 
-<code>(args <i>name</i>)</code> [LISP]<dd>Similar
-to <code>grindef</code>, this function prints the arguments to a function. This may
-be faster than looking up a function in the documentation if you just need a
-reminder. For example, <code>(args 'lp)</code> prints "(LP S C)," which may help you
-to remember that the arguments are a sound (S) followed by the cutoff (C) 
-frequency.
+<code>(make-lpc-file-iterator <i>filename</i>)</code> [LISP]<dd>Another way to get LPC frames is to read them from a
+ file. This function opens an ASCII file containing LPC frames and
+ creates an iterator object, an instance of class <code>lpc-file-class</code>
+ to access them. Create a file using <code>save-lpc-file</code> (see below).<br><br>
+<dt><code>save-lpc-file(<a name="index1006"></a><i>lpc-iterator</i>, <i>filename</i>)</code> [SAL]<br>
+
+<code>(save-lpc-file <i>lpc-iterator</i> <i>filename</i>)</code> [LISP]<dd>Create a file containing LPC frames.
+This file can be read by <code>make-lpc-file-iterator</code> (see above).<br><br>
+<dt><code>show-lpc-data(<a name="index1007"></a><i>lpc-iterator</i>,
+<i>iniframe</i>, <i>endframe</i> [, <i>poles?</i>])</code> [SAL]<br>
+
+<code>(show-lpc-data <i>lpc-iterator</i> <i>iniframe</i> <i>endframe</i>
+ [<i>poles?</i>])</code> [LISP]<dd>Print values of LPC
+frames from an LPC iterator object. The object is <i>lpc-iterator</i>,
+which is typically an instance of <code>lpanal-class</code> or 
+<code>lpc-file-class</code>. Frames are numbered from zero, and only
+files starting at <i>iniframe</i> (a <code>FIXNUM</code>) and ending before
+<i>endframe</i> (also a <code>FIXNUM</code>) are printed. By default, only
+the values for <i>RMS1</i>, <i>RMS2</i>, and <i>ERR</i> are printed, but
+if optional parameter <i>poles?</i> is non-<code>NIL</code>, then
+the LPC coefficients are also printed.<br><br>
+<dt><code>allpoles-from-lpc(<a name="index1008"></a><i>snd</i>, <i>lpc-frame</i>)</code> [SAL]<br>
+
+<code>(allpoles-from-lpc <i>snd</i> <i>lpc-frame</i>)</code> [LISP]<dd>A single LPC frame defines a filter.
+Use <code>allpoles-from-lpc</code> to apply this filter to <i>snd</i>,
+a <code>SOUND</code>. To obtain <i>lpc-frame</i>, a <code>LIST</code>
+ containing an LPC frame, either send <code>:next</code> to an
+ LPC iterator, or use <code>nth-frame</code> (see below). The result
+ is a <code>SOUND</code> whose duration is the same as that of <i>snd</i>.<br><br>
+<dt><code>lpreson(<a name="index1009"></a><i>snd</i>, <i>lpc-iterator</i>, 
+<i>skiptime</i>)</code> [SAL]<br>
+
+<code>(lpreson <i>snd</i> <i>lpc-iterator</i> <i>skiptime</i>)</code> [LISP]<dd>Implements a time-varying all-pole filter 
+controlled by a sequence of LPC frames from an iterator. The
+<code>SOUND</code> to be filtered is <i>snd</i>, and the source of
+LPC frames is <i>lpc-iterator</i>, typically an instance of 
+<code>lpanal-class</code> or <code>lpc-file-class</code>. The frame 
+period (in seconds) is given by <i>skiptime</i> (a <code>FLONUM</code>).
+This number does not have to agree with the <i>skiptime</i> used
+to analyze the frames. (Greater values will cause the filter
+evolution slow down, and smaller values will cause it to
+speed up.) The result is a <code>SOUND</code>. The duration of the
+result is the minimum of the duration of <i>snd</i> and that of
+the sequence of frames. <br><br>
+<dt><code>lpc-frame-rms1(<a name="index1010"></a><i>frame</i>)</code> [SAL]<br>
+
+<code>(lpc-frame-rms1 <i>frame</i>)</code> [LISP]<dd>Get the energy of the input signal from a frame.<br><br>
+<dt><code>lpc-frame-rms2(<a name="index1011"></a><i>frame</i>)</code> [SAL]<br>
+
+<code>(lpc-frame-rms2 <i>frame</i>)</code> [LISP]<dd>Get the energy of the residual from a frame.<br><br>
+<dt><code>lpc-frame-err(<a name="index1012"></a><i>frame</i>)</code> [SAL]<br>
+
+<code>(lpc-frame-err <i>frame</i>)</code> [LISP]<dd>Get the square root of <i>RMS1</i>/<i>RMS2</i> from a frame.<br><br>
+<dt><code>lpc-frame-filter-coefs(<a name="index1013"></a><i>frame</i>)</code> [SAL]<br>
+
+<code>(lpc-frame-filter-coefs <i>frame</i>)</code> [LISP]<dd>Get the filter coefficients from a frame.
 </dl>
 <p>
-The following functions are useful short-cuts that might have been included in 
-XLISP. They are so useful that they are defined as part of Nyquist.
+<a name = "143"><h3>Low-level LPC Functions</h3></a>
+The lowest-level Nyquist functions for LPC are 
+<ul>
+<li>
+<code>snd-lpanal</code> for analysis,
+<li><code>snd-allpoles</code>, an all-pole filter with fixed coefficients, and
+<li><code>snd-lpreson</code>, an all-pole filter that takes frames from an LPC iterator.
+</ul>
 <p>
 <dl>
 <dt>
-<code>incf(<a name="index1000"><a name="index1001"><i>symbol</i>)</code> [SAL]<br>
+<code>snd-lpanal(<a name="index1014"></a><i>samps</i>, <i>npoles</i>)</code> [SAL]<br>
 
-<code>(incf <i>symbol</i>)</code> [LISP]<dd>Increment <i>symbol</i>
-by one. This is a macro, and <i>symbol</i> can be anything that can be set by
-<code>setf</code>. Typically, <i>symbol</i> is a variable: "<code>(incf i)</code>," but
-<i>symbol</i> can also be an array element: "<code>(incf (aref myarray i))</code>."<br><br>
-<dt><code>decf(<a name="index1002"><a name="index1003"><i>symbol</i>)</code> [SAL]<br>
+<code>(snd-lpanal <i>samps</i> <i>npoles</i>)</code> [LISP]<dd>Compute
+an LPC frame with <i>npoles</i> (a <code>FIXNUM</code>) poles from an 
+<code>ARRAY</code> of samples (<code>FLONUMS</code>). Note that <code>snd-fetch-array</code>
+can be used to fetch a sequence of frames from a sound. Ordinarily, you
+should not use this function. Use <code>make-lpanal-iterator</code> instead.<br><br>
+<dt><code>snd-allpoles(<a name="index1015"></a><i>snd</i>, <i>lpc-coefs</i>, <i>gain</i>)</code> [SAL]<br>
 
-<code>(decf <i>symbol</i>)</code> [LISP]<dd>Decrement <i>symbol</i>
-by one. (See <code>incf</code>, above.)<br><br>
-<dt><code>push(<a name="index1004"><i>val</i>, <i>lis</i>)</code> [SAL]<br>
+<code>(snd-allpoles <i>snd</i> <i>lpc-coefs</i> <i>gain</i>)</code> [LISP]<dd>A fixed all-pole filter. The input is
+<i>snd</i>, a <code>SOUND</code>. The filter coefficients are given by <i>lpc-coefs</i>
+(an <code>ARRAY</code>), and the filter gain is given by <i>gain</i>, a <code>FLONUM</code>.
+The result is a <code>SOUND</code> whose duration matches that of <i>snd</i>. 
+Ordinarily, you should use <code>allpoles-from-lpc</code> instead (see above).<br><br>
+<dt><code>snd-lpreson(<a name="index1016"></a><i>snd</i>, <i>lpc-iterator</i>, 
+<i>skiptime</i>)</code> [SAL]<br>
 
-<code>(push <i>val</i> <i>lis</i>)</code> [LISP]<dd>Push <i>val</i> onto <i>lis</i> (a Lisp
-list). This is a macro that is equivalent to writing (in Lisp) 
-<code>(setf <i>lis</i> (cons <i>val</i> <i>lis</i>))</code>.<br><br>
-<dt><code>pop(<a name="index1005"><i>lis</i>)</code> [SAL]<br>
-
-<code>(pop <i>lis</i>)</code> [LISP]<dd>Remove (pop) the first item from <i>lis</i> (a
-Lisp list). This is a macro that is equivalent to writing (in Lisp)
-<code>(setf <i>lis</i> (cdr <i>lis</i>))</code>. Note that the remaining list is returned,
-not the head of the list that has been popped. Retrieve the head of the list
-(i.e. the top of the stack) using <code>first</code> or, equivalently, <code>car</code>.
-</dl>
-<p>
-The following macros are useful control constructs.
-<p>
-<dl>
-<dt>
-<code>while(<a name="index1006"><i>test</i>, <i>expr1</i>, <i>expr2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
-
-<code>(while <i>test</i> <i>expr1</i> <i>expr2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>A conventional
-"while" loop. If <i>test</i> is true, evaluate expressions
- (<i>expr1</i>, <i>expr2</i>, etc.) and repeat. If <i>test</i> is false, return. This
- expression evaluates to NIL unless the expression <code>(return <i>expr</i>)</code>
- is evaluated, in which case the value of <i>expr</i> is returned. In SAL, the 
- loop statement is preferred.<br><br>
-<dt><code>when(<a name="index1007"><i>test</i>, <i>action</i>)</code> [SAL]<br>
-
-<code>(when <i>test</i> <i>action</i>)</code> [LISP]<dd>A conventional "if-then" 
-statement. If <i>test</i> is true, <i>action</i> is evaluated and returned. Otherwise,
-NIL is returned. (Use <code>if</code> or <code>cond</code> to implement
- "if-then-else" and more complex conditional forms.
-</dl>
-<p>
-It is often necessary to load a file <i>only if</i> it has not already been
-loaded. For example, the <code>pianosyn</code> library loads very slowly, so if
-some other file already loaded it, it would be good to avoid loading it
-again. How can you load a file once? Nyquist does not keep track of files
-that are loaded, but you must be loading a file to define some function,
-so the idea is to tell Nyquist "I require <i>function</i> from <i>file</i>"; if
-the function does not yet exist, Nyquist satisfies the requirement by loading
-the file.
-<dl>
-<dt>
-<code>require-from(<a name="index1008"><a name="index1009"><i>fnsymbol</i>, 
-<i>filename</i> [, <i>path</i>])</code> [SAL]<br>
-
-<code>(require-from <i>fnsymbol</i> <i>filename</i> [<i>path</i>])</code> [LISP]<dd>Tests whether <i>fnsymbol</i>, an unquoted 
-function name, is defined. If 
-not, <i>filename</i>, a <code>STRING</code>,
-is loaded. Normally <i>fnsymbol</i> is a function that will be called from
-within the current file, and <i>filename</i> is the file that defines 
-<i>fnsymbol</i>. The <i>path</i>, if a <code>STRING</code>, is prepended to <i>filename</i>.
-If <i>path</i> is <code>t</code> (true), then the directory of the current file is
-used as the path.
-</dl>
-<p>
-Sometimes it is important to load files relative to the current file. For example,
-the <code>lib/piano.lsp</code> library loads data files from the <code>lib/piano</code> directory,
-but how can we find out the full path of <code>lib</code>? The solution is:
-<dl>
-<dt>
-<code>current-path(<a name="index1010"><a name="index1011"><a name="index1012">)</code> [SAL]<br>
-
-<code>(current-path)</code> [LISP]<dd>Returns the full path name of the file that is
-currently being loaded (see <code>load</code>). Returns NIL if no file is being loaded.
-</dl> 
-<p>
-Finally, there are some helpful math functions:
-<dl>
-<dt>
-<code>real-random(<a name="index1013"><a name="index1014"><a name="index1015"><i>from</i>, <i>to</i>)</code> [SAL]<br>
-
-<code>(real-random <i>from</i> <i>to</i>)</code> [LISP]<dd>Returns a random <code>FLONUM</code> between <i>from</i> and <i>to</i>. (See also <code>rrandom</code>, which is equivalent to <code>(real-random 0 1</code>)).<br><br>
-<dt><code>power(<a name="index1016"><a name="index1017"><i>x</i>, <i>y</i>)</code> [SAL]<br>
-
-<code>(power <i>x</i> <i>y</i>)</code> [LISP]<dd>Returns <i>x</i> raised to
-the <i>y</i> power.
+<code>(snd-lpreson <i>snd</i> <i>lpc-iterator</i> <i>skiptime</i>)</code> [LISP]<dd>This function is identical to <code>lpreson</code> (see above).
 </dl>
 <p>
 <hr>

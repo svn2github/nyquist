@@ -17,7 +17,7 @@ public class SalWordList {
     public static String[] reservedWords = {
         "below", "by", "else", "finally", "for", "function", "in", "over",
         "repeat", "then", "from", "to", "unless", "until", "variable", 
-        "when", "while", "with" };
+        "when", "while", "with", "downto", "above" };
         
     public static String[] commandWords = {
         "begin", "end", "chdir", "define", "open", "exec", "exit", "display",

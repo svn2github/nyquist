@@ -26,6 +26,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private MainFrame mainFrame;
     private JScrollPane scrollPane;
     private JPanel panel;
+    private GridBagConstraints c = new GridBagConstraints();
     private JButton defaultPrefs;  // "Restore Defaults"
     private JCheckBox startInSalMode; // "Start in SAL mode (not Lisp)"
     private JCheckBox salShowLisp; // "Show translation of SAL to Lisp"
@@ -51,6 +52,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private JComboBox fontSize; // "Font Size"
     private JButton sfDirectory; // "Set Default Sound File Directory"
     private JButton initialDirectory; // "Set Initial Directory"
+    private JButton lastDirectory; // "Last Used Directory is Initial Directory"
     private JFileChooser startfd;
     private JFileChooser fd;
     private String[] audioRates = { "96000", "48000", "44100", "22050", "16000",
@@ -59,11 +61,9 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private String[] fontSizes = { "6", "7", "8", "9", "10", "11", "12", "14", 
                                    "16", "18", "20", "24", "28", "32", "36" };
     protected JCheckBox makeCheckBox(String doc, boolean val) {
-        //JPanel contentPane = (JPanel) getContentPane();
         JCheckBox cb = new JCheckBox(doc, val);
-        cb.setAlignmentX(Component.LEFT_ALIGNMENT);
-        //contentPane.add(cb);
-        panel.add(cb);
+        c.gridy += 1;
+        panel.add(cb, c);
         return cb;
     }
                                     
@@ -143,11 +143,11 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                 }
 
                 rateString = controlRate.getText();
-		rate = validate(rateString);
+                rate = validate(rateString);
                 if (rate > 0 && !rateString.equals(mainFrame.prefControlRate)) {
                     mainFrame.callFunction("set-control-srate ", rateString);
                     mainFrame.prefControlRate = rateString;
-		}
+                }
 
                 String fontString = (String) fontSize.getSelectedItem();
                 int size = validate(fontString);
@@ -209,19 +209,29 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         JPanel contentPane = (JPanel) getContentPane();
         contentPane.add(scrollPane, BorderLayout.CENTER);
         //contentPane
-        panel.setLayout(
-                new BoxLayout(panel, BoxLayout.Y_AXIS));
-                
-        panel.add(new JLabel("Preferences are updated when you close this Preferences Window"));
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.setLayout(new GridBagLayout());
+        c.fill = GridBagConstraints.VERTICAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.LINE_START;
+        panel.add(new JLabel("Preferences are updated when you close this"), c);
+
+        c.gridy += 1;
+        panel.add(new JLabel("     Preferences Window"), c);
+
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // button to restore default preferences
         defaultPrefs = new JButton("Restore Defaults");
         defaultPrefs.addActionListener(this);
-        defaultPrefs.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.add(defaultPrefs);
+        // defaultPrefs.setAlignmentX(Component.LEFT_ALIGNMENT);
+        c.gridy += 1;
+        panel.add(defaultPrefs, c);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
         
         // Start in Sal mode (not Lisp)"
         startInSalMode = makeCheckBox("Start in SAL mode (not Lisp)", 
@@ -265,19 +275,25 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         onlineManual = makeCheckBox("Use online manual instead of local copy",
                                     mainFrame.prefOnlineManual);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // Relative height of completion box (slider)
-        panel.add(new JLabel("Relative height of completion box", 
-                                    JLabel.CENTER));
+        c.gridy += 1;
+        panel.add(new JLabel("Relative height of completion box"), c);
         completionListPercent = new JScrollBar(JScrollBar.HORIZONTAL,
                     (int) mainFrame.prefCompletionListPercent, 1, 0, 100);
-        panel.add(completionListPercent);
+        c.gridy += 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(completionListPercent, c);
+        c.fill = GridBagConstraints.VERTICAL;
 
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // Audio Sample Rate (editable combobox)
-        panel.add(new JLabel("Audio Sample Rate")); 
+        c.gridy += 1;
+        panel.add(new JLabel("Audio Sample Rate"), c);
         audioRate = new JComboBox(audioRates);
         // Set correct selection
         for (int i = 0; i < audioRates.length; i++) {
@@ -290,22 +306,28 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         audioRate.setAlignmentX(Component.LEFT_ALIGNMENT);
         audioRate.setMaximumSize(
                 new Dimension(100, audioRate.getPreferredSize().height));
-        panel.add(audioRate);
+        c.gridy += 1;
+        panel.add(audioRate, c);
             
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // Control Rate (text field)
-        panel.add(new JLabel("Control Sample Rate")); 
+        c.gridy += 1;
+        panel.add(new JLabel("Control Sample Rate"), c);
         controlRate = new JTextField(mainFrame.prefControlRate);
         controlRate.setAlignmentX(Component.LEFT_ALIGNMENT);
         controlRate.setMaximumSize(
                 new Dimension(100, controlRate.getPreferredSize().height));
-        panel.add(controlRate);
+        c.gridy += 1;
+        panel.add(controlRate, c);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // Font Size (editable combobox)
-        panel.add(new JLabel("Font Size")); 
+        c.gridy += 1;
+        panel.add(new JLabel("Font Size"), c);
         fontSize = new JComboBox(fontSizes);
         // Set correct selection
         for (int i = 0; i < fontSizes.length; i++) {
@@ -318,9 +340,11 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         fontSize.setAlignmentX(Component.LEFT_ALIGNMENT);
         fontSize.setMaximumSize(
                 new Dimension(100, fontSize.getPreferredSize().height));
-        panel.add(fontSize);
+        c.gridy += 1;
+        panel.add(fontSize, c);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // Select Startup Directory (button)
         startfd = new JFileChooser("Select Initial Directory");
@@ -330,7 +354,17 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         initialDirectory = new JButton("Set Initial Directory");
         initialDirectory.addActionListener(this);
         initialDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.add(initialDirectory);
+        c.gridy += 1;
+        panel.add(initialDirectory, c);
+
+        lastDirectory = new JButton("Last Used Directory is Initial Directory");
+        lastDirectory.addActionListener(this);
+        lastDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
+        c.gridy += 1;
+        panel.add(lastDirectory, c);
+
+        c.gridy += 1;
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // Select Sound File Output Directory (button)
         fd = new JFileChooser("Select Default Soundfile Directory");
@@ -340,9 +374,11 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         sfDirectory = new JButton("Set Default Soundfile Directory");
         sfDirectory.addActionListener(this);
         sfDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.add(sfDirectory);
+        c.gridy += 1;
+        panel.add(sfDirectory, c);
         
-        panel.add(Box.createVerticalGlue());
+        c.gridy += 1;
+        panel.add(Box.createVerticalGlue(), c);
                 
         /*
         * The Nyquist IDE has a preferences dialog with a couple of things you
@@ -400,6 +436,8 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
             fd.showOpenDialog(this);
         } else if (evt.getSource() == initialDirectory) {
             startfd.showOpenDialog(this);
+        } else if (evt.getSource() == lastDirectory) {
+            startfd.setSelectedFile(null);
         } else if (evt.getSource() == defaultPrefs) {
             startInSalMode.setSelected(mainFrame.prefStartInSalModeDefault);
             salShowLisp.setSelected(mainFrame.prefSalShowLispDefault);

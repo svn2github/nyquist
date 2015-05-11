@@ -46,7 +46,9 @@
       c6 (cs6 df6) d6 (ds6 ef6) e6 f6 (fs6 gf6) g6 (gs6 af6) a6
       (as6 bf6) b6
       c7 (cs7 df7) d7 (ds7 ef7) e7 f7 (fs7 gf7) g7 (gs7 af7) a7
-      (as7 bf7) b7))
+      (as7 bf7) b7
+      c8 (cs8 df8) d8 (ds8 ef8) e8 f8 (fs8 gf8) g8 (gs8 af8) a8
+      (as8 bf8) b8))
 
    (dolist (p nyq:pitch-names)
      (cond ((atom p) (set p (np)))
@@ -208,7 +210,7 @@ functions assume durations are always positive.")))
 ;;
 ;; this code is based on FMOSC above
 ;;
-(defun fmfb (pitch index &optional dur)
+(defun fmfb (pitch index &optional (dur 1.0))
  (let ((hz (calculate-hz pitch "fmfb")))
    (setf dur (get-duration dur))
    (cond ((soundp index) (ny:fmfbv hz index))
@@ -1669,7 +1671,9 @@ loop
 ;;; operations on sounds
 
 (defun diff (x &rest y)
-  (cond (y (sum x (prod -1 (car y))))
+  (cond ((and (numberp x) (numberp (car y)) (null (cdr y)))
+         (- x y)) ;; this is a fast path for the common case
+        (y (sum x (prod -1 (car y))))
         (t (prod -1 x))))
 
 ; compare-shape is a shape table -- origin 1.

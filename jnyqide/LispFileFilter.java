@@ -1,34 +1,20 @@
 package jnyqide;
 
 
-import javax.swing.filechooser.*;
 import java.io.File;
+import java.io.FilenameFilter;
 
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
- */
+public class LispFileFilter implements FilenameFilter {
 
-public class LispFileFilter extends FileFilter {
-
-  public LispFileFilter() {
-  }
-
-  public boolean accept(File f) {
-    if (f.getName().endsWith(".lsp")) return true;
-    for (int x = 0; x < f.getName().length(); x++) {
-      if ((f.getName().charAt(x) == '.'))
-        return false;
+    public LispFileFilter() {
     }
-    return true;
-  }
 
-  public String getDescription() {
-    return "Lisp files.";
-  }
+    public boolean accept(File dir, String name) {
+        return name.endsWith(".lsp") || (name.indexOf('.') < 0);
+    }
+
+    public String getDescription() {
+        return "Lisp files.";
+    }
 }

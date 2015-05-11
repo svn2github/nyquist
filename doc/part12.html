@@ -1,156 +1,912 @@
-<html><head><title>Linear Prediction Analysis and Synthesis</title></head>
+<html><head><title>MIDI, Adagio, and Sequences</title>
+<link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+</head>
 <body bgcolor="ffffff">
 <a href = "part11.html">Previous Section</a> | <a href = "part13.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "132"><h2>Linear Prediction Analysis and Synthesis</h2></a>
-<a name="index972"><a name="index973">
-Nyquist provides functions to perform Linear Prediction Coding (LPC) 
-analysis and synthesis. In simple terms, LPC analysis assumes that a
-sound is the result of an all-pole filter applied to a source with a 
-flat spectrum. LPC is good for characterizing the general spectral 
-shape of a signal, which may be time-varying as in speech sounds.
-For synthesis, any source can be filtered, allowing the general 
-spectral shape of one signal (used in analysis) to be applied to
-any source (used in synthesis). A popular effect is to give vowel-like
-spectra to musical tones, creating an artificial (or sometimes natural)
-singing voice.
+<a name = "115"><h2>MIDI, Adagio, and Sequences</h2></a>
+
+<a name="index855"></a><a name="index856"></a>
+Nyquist includes facilities to read and write MIDI files as well as an ASCII 
+text-based score representation language, Adagio. XLISP and Nyquist can be
+used to generate MIDI files using compositional algorithms. (See also Section <a href = "part15.html#147">"Xmusic and Algorithmic Composition"</a>.)
+A tutorial on using the Adadio representation and MIDI can be found in 
+<code>demos/midi_tutorial.htm</code><a name="index857"></a>. The Adagio language is
+described below. Adagio was originally developed as part of the CMU MIDI
+Toolkit, which included a program to record and play MIDI using the 
+Adagio representation. Some of the MIDI features of Adagio may not be
+useful within Nyquist.
 <p>
-Examples of LPC analysis and synthesis can be found in the file 
-<code>lpc_tutorial.htm</code><a name="index974"><a name="index975"><a name="index976">,
-which is part of the standard Nyquist release.
+Nyquist offers a number of different score representations, and you may 
+find this confusing. In general, MIDI files are a common way to exchange
+music performance data, especially with sequencers and score notation 
+systems. The <code>demos/midi_tutorial.htm</code> examples show how to get the most 
+precise control when generating MIDI data. Adagio is most useful as a
+text-based score entry language, and it is certainly more compact 
+than Lisp expressions for MIDI-like data. The Xmusic library 
+(Chapter <a href = "part15.html#147">"Xmusic and Algorithmic Composition"</a>) is best for algorithmic generation of music
+and score manipulation. There are functions to convert between the
+Adagio, MIDI sequence data, and Xmusic score representations.
 <p>
-As with FFT processing, LPC analysis takes a sound as input and returns 
-a stream of frames. Frames are returned from an object using the <code>:next</code>
-selector just as with FFT frames. An LPC frame is a list consisting of:
-<i>RMS1</i>, the energy of the input signal, <i>RMS2</i>, the energy of the
-residual signal, <i>ERR</i>, the square root of <i>RMS1</i>/<i>RMS2</i>, and 
-<i>FILTER-COEFS</i>, an array of filter coefficients. To make code more
-readable and to avoid code dependence on the exact format of a frame, 
-the functions <code>lpc-frame-rms1</code><a name="index977">, 
-<code>lpc-frame-rms2</code><a name="index978">, 
-<code>lpc-frame-err</code><a name="index979">, and
-<code>lpc-frame-filter-coefs</code><a name="index980"> can be
-applied to a frame to obtain the respective fields.
+
+Adagio <a name="index858"></a> is an easy-to-use, non-procedural notation
+for scores.   In Adagio, text commands are used to specify each
+note.  If you are new to Adagio, you may want to glance at the
+examples in Section <a href = "#129">"Examples"</a> starting on page
+<a href = "#129">"Examples"</a> before reading any further.
 <p>
-The <i>z</i> transform
-of the filter is <i>H</i>(<i>z</i>) = 1/<i>A</i>(<i>z</i>), where <i>A</i>(<i>z</i>) is a
-polynomial of the form <i>A</i>(<i>z</i>) = 1 + <i>a1</i><i>z</i> + 
-<i>a2</i><i>z</i> + ... + <i>ap</i><i>z</i>. The <i>FILTER-COEFS</i> array has
-the form <code>#(</code><i>ap</i> <i>ap-1</i> ... <i>a3</i> 
-<i>a2</i> <i>a1</i><code>)</code>.
+A note is described in Adagio by a set of attributes<a name="index859"></a>, and
+any attribute not specified is "inherited" from the previous line.
+Attributes may appear in any order and must be separated by one or more
+blanks.  An attribute may not contain any blanks.  The attributes are:
+time<a name="index860"></a>, pitch<a name="index861"></a>, loudness<a name="index862"></a>,
+voice<a name="index863"></a> number, duration<a name="index864"></a>, and articulation<a name="index865"></a>.
 <p>
-The file <code>lpc.lsp</code> defines some useful classes and functions. The file
-is <i>not</i> automatically loaded with Nyquist, so you must execute 
-<code>(load "lpc")</code> before using them.
+Adagio has been used to program a variety of hardware and software
+synthesizers, and the Adagio compiler can be easily adapted to new
+environments.  Although not originally intended for MIDI, Adagio works quite
+well as a representation for MIDI scores.  Adagio has been extended to allow MIDI controller
+data such as modulation wheels, pitch bend, and volume, MIDI program commands to change timbre, and System Exclusive messages.
 <p>
-<a name = "133"><h3>LPC Classes and Functions</h3></a>
-<dl>
-<dt>
-<code>make-lpanal-iterator(<a name="index981"><i>sound</i>, <i>framedur</i>, <i>skiptime</i>, <i>npoles</i>)</code> [SAL]<br>
-
-<code>(make-lpanal-iterator <i>sound</i> <i>framedur</i> <i>skiptime</i> <i>npoles</i>)</code> [LISP]<dd>Makes an iterator
-object, an instance of <code>lpanal-class</code>, 
-that returns LPC frames from successive frames of samples in
-<i>sound</i>. The duration (in seconds)
-of each frame is given by <i>framedur</i>, a 
-<code>FLONUM</code>. The skip size (in seconds) between successive frames
-is given by <i>skiptime</i>, a <code>FLONUM</code>. Typical values for
-<i>framedur</i> and <i>skiptime</i> are 0.08 and 0.04, giving 25 frames
-per second and a 50% frame overlap. The number of poles is given
-by <i>npoles</i>, a <code>FIXNUM</code>. The result is an object that
-responds to the <code>:next</code> selector by returning a frame as 
-described above. <code>NIL</code> is returned when <i>sound</i> terminates.
-(Note that one or more of the last analysis windows may be 
-padded with zeros. <code>NIL</code> is only returned when the corresponding
-window would begin after the termination time of the sound.)<br><br>
-<dt><code>make-lpc-file-iterator(<a name="index982"><i>filename</i>)</code> [SAL]<br>
-
-<code>(make-lpc-file-iterator <i>filename</i>)</code> [LISP]<dd>Another way to get LPC frames is to read them from a
- file. This function opens an ASCII file containing LPC frames and
- creates an iterator object, an instance of class <code>lpc-file-class</code>
- to access them. Create a file using <code>save-lpc-file</code> (see below).<br><br>
-<dt><code>save-lpc-file(<a name="index983"><i>lpc-iterator</i>, <i>filename</i>)</code> [SAL]<br>
-
-<code>(save-lpc-file <i>lpc-iterator</i> <i>filename</i>)</code> [LISP]<dd>Create a file containing LPC frames.
-This file can be read by <code>make-lpc-file-iterator</code> (see above).<br><br>
-<dt><code>show-lpc-data(<a name="index984"><i>lpc-iterator</i>,
-<i>iniframe</i>, <i>endframe</i> [, <i>poles?</i>])</code> [SAL]<br>
-
-<code>(show-lpc-data <i>lpc-iterator</i> <i>iniframe</i> <i>endframe</i>
- [<i>poles?</i>])</code> [LISP]<dd>Print values of LPC
-frames from an LPC iterator object. The object is <i>lpc-iterator</i>,
-which is typically an instance of <code>lpanal-class</code> or 
-<code>lpc-file-class</code>. Frames are numbered from zero, and only
-files starting at <i>iniframe</i> (a <code>FIXNUM</code>) and ending before
-<i>endframe</i> (also a <code>FIXNUM</code>) are printed. By default, only
-the values for <i>RMS1</i>, <i>RMS2</i>, and <i>ERR</i> are printed, but
-if optional parameter <i>poles?</i> is non-<code>NIL</code>, then
-the LPC coefficients are also printed.<br><br>
-<dt><code>allpoles-from-lpc(<a name="index985"><i>snd</i>, <i>lpc-frame</i>)</code> [SAL]<br>
-
-<code>(allpoles-from-lpc <i>snd</i> <i>lpc-frame</i>)</code> [LISP]<dd>A single LPC frame defines a filter.
-Use <code>allpoles-from-lpc</code> to apply this filter to <i>snd</i>,
-a <code>SOUND</code>. To obtain <i>lpc-frame</i>, a <code>LIST</code>
- containing an LPC frame, either send <code>:next</code> to an
- LPC iterator, or use <code>nth-frame</code> (see below). The result
- is a <code>SOUND</code> whose duration is the same as that of <i>snd</i>.<br><br>
-<dt><code>lpreson(<a name="index986"><i>snd</i>, <i>lpc-iterator</i>, 
-<i>skiptime</i>)</code> [SAL]<br>
-
-<code>(lpreson <i>snd</i> <i>lpc-iterator</i> <i>skiptime</i>)</code> [LISP]<dd>Implements a time-varying all-pole filter 
-controlled by a sequence of LPC frames from an iterator. The
-<code>SOUND</code> to be filtered is <i>snd</i>, and the source of
-LPC frames is <i>lpc-iterator</i>, typically an instance of 
-<code>lpanal-class</code> or <code>lpc-file-class</code>. The frame 
-period (in seconds) is given by <i>skiptime</i> (a <code>FLONUM</code>).
-This number does not have to agree with the <i>skiptime</i> used
-to analyze the frames. (Greater values will cause the filter
-evolution slow down, and smaller values will cause it to
-speed up.) The result is a <code>SOUND</code>. The duration of the
-result is the minimum of the duration of <i>snd</i> and that of
-the sequence of frames. <br><br>
-<dt><code>lpc-frame-rms1(<a name="index987"><i>frame</i>)</code> [SAL]<br>
-
-<code>(lpc-frame-rms1 <i>frame</i>)</code> [LISP]<dd>Get the energy of the input signal from a frame.<br><br>
-<dt><code>lpc-frame-rms2(<a name="index988"><i>frame</i>)</code> [SAL]<br>
-
-<code>(lpc-frame-rms2 <i>frame</i>)</code> [LISP]<dd>Get the energy of the residual from a frame.<br><br>
-<dt><code>lpc-frame-err(<a name="index989"><i>frame</i>)</code> [SAL]<br>
-
-<code>(lpc-frame-err <i>frame</i>)</code> [LISP]<dd>Get the square root of <i>RMS1</i>/<i>RMS2</i> from a frame.<br><br>
-<dt><code>lpc-frame-filter-coefs(<a name="index990"><i>frame</i>)</code> [SAL]<br>
-
-<code>(lpc-frame-filter-coefs <i>frame</i>)</code> [LISP]<dd>Get the filter coefficients from a frame.<br><br>
-<dt></dl><a name = "134"><h3>Low-level LPC Functions</h3></a>
-The lowest-level Nyquist functions for LPC are 
-<ul>
+A note command in Adagio must be separated from other notes.  Usually,
+notes are distinguished by writing each one on a separate line.
+Notes can also be separated by using a comma or semicolon as will
+be described below.
+<p>
+Besides notes, there are several other types of commands:
+<ol>
 <li>
-<code>snd-lpanal</code> for analysis,
-<li><code>snd-allpoles</code>, an all-pole filter with fixed coefficients, and
-<li><code>snd-lpreson</code>, an all-pole filter that takes frames from an LPC iterator.
-</ul>
+An asterisk<a name="index866"></a> (<code>*</code>) in column one (or immediately after a comma,
+semicolon, or space) indicates that the rest of the line is a
+comment<a name="index867"></a>.  The line is ignored by Adagio, and is therefore a
+good way to insert text to be read by people.  Here are some examples:
+<p><pre>
+* This is a comment.
+T150 G4  * This is a comment too!
+T150 G4  ;* So is this.
+</pre></p>
+
+<li>An empty command (a blank<a name="index868"></a> line, for example) is ignored as if it
+were a comment<a name="index869"></a> <a href = "foot.html#foot5">(Footnote 5)</a> .
+<li>An exclamation point<a name="index870"></a><a name="index871"></a> (!) in column one (or
+immediately after a comma or semicolon) indicates a special
+command<a name="index872"></a>.  A special command does not generate a note.
+Special commands follow the "!" with no intervening spaces and extend to the end of the line, for example:
+<p><pre>
+!TEMPO 100
+</pre></p>
+
+<li>Control change commands are used to control parameters like 
+pitch bend, modulation, and program (timbre).  Control
+change commands can be specified along with notes or by
+themselves.
+A command that specifies control changes without specifying
+a pitch will not produce a note.
+</ol>
 <p>
+Adagio is insensitive to case<a name="index873"></a>,
+thus "A" is equivalent to "a", and you
+can mix upper and lower case letters freely.
+<p>
+<a name = "116"><h3>Specifying Attributes</h3></a>
+A note is indicated by a set of attributes.  Attributes are indicated by a string of characters with no intervening spaces because spaces separate  attributes.  The attributes are described below.
+<p>
+The default unit of time is  a centisecond
+(100<sup T>th</sup>'s), but this can be changed to a millisecond (1000<sup T>th</sup>'s) using the <code>!MSEC</code> command and reset to centiseconds with <code>!CSEC</code>  (see Section <a href = "#131">"Time Units and Resolution"</a>).  In the descriptions below, the term "time unit" will be used to mean whichever convention is currently in effect.
+<p>
+<a name = "117"><h4>Time</h4></a>
+<p>
+The time<a name="index874"></a> attribute specifies when to start the note.  A time is
+specified by a "T<a name="index875"></a>" followed by a number representing time units
+ or by a duration (durations are described below).  Examples:
+<p><pre>
+T150	** 1.5 sec (or .15 sec)
+TQ3	** 3 quarter note's duration
+</pre></p>
+
+If no time is specified, the default time<a name="index876"></a> is the sum of
+the time and duration attributes of the previous note.  (But see Section
+<a href = "#120">"Next Time"</a>.) Time is measured relative to the time of the
+most recent Tempo<a name="index877"></a> or Rate<a name="index878"></a> command.  (See the
+examples in Section
+<a href = "#129">"Examples"</a> for some clarification of this point.)
+<p>
+<a name = "118"><h4>Pitch</h4></a>
+<p>
+The pitch<a name="index879"></a> attribute specifies what frequency to produce.
+Standard scale pitches are named by name, using <code>S</code> for sharp<a name="index880"></a>,
+ <code>F</code> for flat<a name="index881"></a>,
+and (optionally) <code>N</code> for natural<a name="index882"></a>.
+For example, <code>C</code> and <code>CN</code> represent the same pitch, as do <code>FS</code> and <code>GF</code> (F sharp and G flat).  Note that there are no bar lines, and accidentals to not carry forward to any other notes as in common practice notation.
+<p>
+Octaves<a name="index883"></a> are specified by
+number. <code>C4</code> is middle C, and <code>B3</code> is a half step lower.  <code>F5</code> is the top line of
+the treble clef, etc.  (Adagio octave numbering follows the ISO standard, but note that this is not universal.  In particular, Yamaha refers to middle C as C3.)  Accidentals<a name="index884"></a><a name="index885"></a><a name="index886"></a> can go before or after
+the octave number, so  <code>FS3</code> and <code>F3S</code> have the same meaning.  
+<p>
+An alternate
+notation for pitch is <code>P</code><i>n</i>, where <i>n</i> is an integer representing the pitch.<a name="index887"></a>
+Middle C<a name="index888"></a> (C4) is equivalent to <code>P60</code>, <code>CS4</code> is <code>P61</code>, etc.  
+<p>
+If you do not specify an octave<a name="index889"></a>,
+Adagio will choose one for you.  This
+is done by picking the octave that will make the current pitch as close
+to the previous pitch as possible.  In the case of augmented fourths
+ or diminished fifths, there are two equally good choices.  Adagio
+chooses the lower octave.
+<p>
+<a name = "119"><h4>Duration</h4></a>
+<p>
+Duration<a name="index890"></a> is specified by a letter indicating a number of
+beats, followed by one or several modifiers.  The basic duration codes are:
+ 
+<blockquote>
+<code>W</code><a name="index891"></a>&emsp;&emsp;&emsp;(whole<a name="index892"></a>, 4 beats), <br>
+
+<code>H</code><a name="index893"></a>&emsp;&emsp;&emsp;(half<a name="index894"></a>, 2 beats), <br>
+
+<code>Q</code><a name="index895"></a>&emsp;&emsp;&emsp;(quarter<a name="index896"></a>, 1 beat), <br>
+
+<code>I</code><a name="index897"></a>&emsp;&emsp;&emsp;(eighth<a name="index898"></a>, 1/2 beat), <br>
+
+<code>S</code><a name="index899"></a>&emsp;&emsp;&emsp;(sixteenth<a name="index900"></a>, 1/4 beat), <br>
+
+<code>%</code><a name="index901"></a>&emsp;&emsp;&emsp;(thirtysecond<a name="index902"></a>, 1/8 beat), and<br>
+
+<code>^</code><a name="index903"></a>&emsp;&emsp;&emsp;(sixtyfourth<a name="index904"></a>, 1/16 beat). </blockquote> 
+ Note that <code>E</code> is a pitch, so eighth-notes use the duration code <code>I</code>.
+The default tempo is 100 beats per
+minute (see Section <a href = "#126">"Tempo"</a>).  These codes may be followed by a  <code>T</code>
+(triplet<a name="index905"></a><a name="index906"></a>), indicating a duration of 2/3 the normal.  A dot<a name="index907"></a><a name="index908"></a> (<code>.</code>) after a
+duration code extends it by half to 3/2 the normal.  An integer
+after a note multiplies its duration by the indicated value (the result is
+still just one note).  Finally, a slash followed by an integer divides
+the duration by the integer.  Like all attributes, duration attributes may not have embedded spaces.  Examples:
+
+ 
+<blockquote>
+<table>
+<tr><td><code>Q</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>1 beat (quarter note)</td></tr>
+<tr><td><code>QT</code></td><td></td><td>2/3 beat (quarter triplet)</td></tr>
+<tr><td><code>W.</code></td><td></td><td>6   beats(dotted whole note)</td></tr>
+<tr><td><code>ST6</code></td><td></td><td>1   beat (6 sixteenth triplets) </td></tr>
+<tr><td><code>H5</code></td><td></td><td>10  beats(5 half notes)</td></tr>
+<tr><td><code>Q3/7</code></td><td></td><td>3/7 beats</td></tr></table>
+</blockquote>
+
+A duration may be noted by <code>U</code><i>n</i><a name="index909"></a>, where <i>n</i> is an integer
+indicating 100<sup T>th</sup>'s of a second 
+(or 1000<sup T>th</sup>'s), see Section <a href = "#131">"Time Units and Resolution"</a>.
+For example, <code>U25</code> is twenty-five time units.
+<p>
+Durations may be combined using a plus sign: 
+<p><pre>
+Q+IT        ** a quarter tied to an eighth triplet
+Q/7+W+Q2/7  ** a 7th beat tied to a whole tied to 2/7th beat
+Q+U10       ** a quarter plus 10 time units
+</pre></p>
+ 
+<a name = "120"><h4>Next Time</h4></a>
+
+The time of the next<a name="index910"></a><a name="index911"></a> command (the next command in the Adagio
+program text) is
+normally the time of the current note command
+plus the duration of the current note.
+This can be overridden by a field consisting of the letter <code>N</code>
+followed by a number indicating time units, or followed by a
+duration as described above.  The next note will then start at the time of
+the current note plus the duration specified after <code>N</code>.  If the next note
+has an explicit time attribute (<code>T</code>), then the specified time will override
+the one based on the previous note.  Examples:
+ <p><pre>
+N0	** start the next note at the same time as this one
+N50	** start the next note 0.5 seconds after this one
+NQT	** start the next note 2/3 beat after the current one
+NU10+Q  ** start after 0.1 seconds plus a quarter
+</pre></p>
+  
+A comma has an effect similar to  <code>N0</code> and is explained in Section <a href = "#132">"Multiple Notes Per Line"</a>.  Articulation effects such as <i>staccato</i> can be produced using <code>N</code>, but it is more convenient to use the articulation attribute described in Section <a href = "#122">"Articulation"</a>.
+<p>
+<a name = "121"><h4>Rest</h4></a>
+Rests<a name="index912"></a><a name="index913"></a> are obtained by including the field <code>R</code> in a
+note command.  The effect of an <code>R</code> field is to omit the note that would
+otherwise occur as the result of the current note command.  In all other
+respects, the command is processed just like any other line.  This means that
+attributes such as duration, loudness, and pitch can be specified, and
+anything specified will be inherited by the note in the next command.
+Normally, a rest will include just <code>R</code> and a duration.  The fact that a
+note command specifies a rest is not inherited.  For example:
+ <p><pre>
+R H	** a half (two beat) rest
+RH	** illegal, R must be separated from H by space(s)
+</pre></p>
+  
+<p>
+Because some synthesizers (e.g. a DX7<a name="index914"></a>) cannot change programs
+<a name="index915"></a>
+(presets) rapidly, it may be desirable to change programs in
+a rest so that the synthesizer will be ready to play by
+the end of the rest.  See Section <a href = "#125">"Timbre (MIDI Program)"</a> for an example.
+<p>
+<a name = "122"><h4>Articulation</h4></a>
+
+Articulation<a name="index916"></a><a name="index917"></a><a name="index918"></a> in Adagio refers to the
+percentage of time a note is on relative to the indicated duration.  For
+example, to play a note <i>staccato</i>, you would normally play the note about
+half of its indicated duration.  In Adagio, articulation is indicated by
+<code>#</code><a name="index919"></a> followed by an integer number indicating a percentage.  The
+articulation attribute does not affect the time of the next command.  This
+example plays two <i>staccato</i> quarter notes:
+<p><pre>
+C Q #50
+D
+</pre></p>
+
+To produce overlapping notes, the articulation may be greater than 100.  
+<p>
+<small>
+Be aware that overlapping notes on the same pitch can be a problem for some synthesizers.  The following example illustrates this potential problem:
+<p><pre>
+!TEMPO 60
+C Q #160   * starts at time 0,   ends at 1.6 sec
+D I        * starts at time 1,   ends at 1.8 sec
+C Q        * starts at time 1.5, ends at 3.1 sec?
+</pre></p>
+
+At one beat per second (tempo 60), these three notes will start at times 0, 1, and 1.5 seconds, respectively.  Since these notes have an articulation of 160, each will be on 160% of its nominal duration, so the first note (C) will remain on until 1.6 seconds.  But the third note (another C) will start at time 1.5 seconds.  Thus, the second C will be started before the first one ends.  Depending on the synthesizer, this may cancel the first C or play a second C in unison.  In either case, a note-off message will be sent at time 1.6 seconds.  If this cancels the second C, its actual duration will be 0.1 rather than 1.6 seconds as intended.  A final note-off will be sent at time 3.1 seconds.
+</small>
+
+<p>
+<a name = "123"><h4>Loudness</h4></a>
+<p>
+Loudness<a name="index920"></a><a name="index921"></a> is indicated by an <code>L</code>
+followed by a dynamic marking from the following: <code>PPP</code><a name="index922"></a><a name="index923"></a>,
+<code>PP</code><a name="index924"></a><a name="index925"></a>, <code>P</code><a name="index926"></a><a name="index927"></a>, <code>MP</code><a name="index928"></a><a name="index929"></a>, <code>MF</code><a name="index930"></a><a name="index931"></a>, <code>F</code><a name="index932"></a><a name="index933"></a>,
+<code>FF</code><a name="index934"></a><a name="index935"></a>, <code>FFF</code><a name="index936"></a><a name="index937"></a>.  Alternatively, a number from 1 to 127 may be
+used.  The loudness attribute is the MIDI note velocity.  (Note that a MIDI velocity of 0 means "note-off," so the minimum loudness is 1.)  The
+dynamic<a name="index938"></a>
+markings are translated into numbers as follows:
+  
+<blockquote>
+<table>
+<tr><td><code>Lppp</code></td><td>&nbsp;&nbsp;</td><td>20</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><code>Lmf</code></td><td>&nbsp</td><td>58</td></tr>
+<tr><td><code>Lpp</code></td><td></td><td>26</td>
+<td></td>
+<td><code>Lf</code></td><td></td><td>75</td></tr>
+<tr><td><code>Lp</code></td><td></td><td>34</td>
+<td></td>
+<td><code>Lff</code></td><td></td><td>98</td></tr>
+<tr><td><code>Lmp</code></td><td></td><td>44</td>
+<td></td>
+<td><code>Lfff</code></td><td></td><td>127</td></tr>
+</table>
+</blockquote>
+
+<p>
+<a name = "124"><h4>Voice</h4></a>
+<p>
+The voice<a name="index939"></a><a name="index940"></a> attribute tells which of the 16 MIDI channels to use
+for the note.  The voice attribute consists of a <code>V</code> followed by
+an integer from 1 (the default) to 16.  
+<p>
+<small>
+There is a limit to how many notes
+can be played at the same time on a given voice (MIDI channel).  Since the
+limit depends upon the synthesizer, Adagio cannot tell you when you exceed
+the limit.  Similarly, Adagio cannot tell whether your synthesizer is set up
+to respond to a given channel, so there is no guarantee that what you write
+will actually be heard.
+</small>
+
+<p>
+<a name = "125"><h4>Timbre (MIDI Program)</h4></a>
+
+A MIDI program<a name="index941"></a><a name="index942"></a> (synthesizer preset<a name="index943"></a>) can be
+selected using the attribute <code>Z</code><i>n</i>, where <i>n</i>
+is the program number (from 1 to 128).
+Notice that in MIDI, changing the program on a given channel will affect
+<i>all</i> notes on that channel and possibly others.  Adagio treats MIDI program changes as a form of control change.
+<p>
+<small>
+For many synthesizers, you will not be
+able to change programs at the start of a note or during a note.  Change the
+program during a rest instead.  For example:
+<p><pre>
+R I Z23 V4	** change MIDI channel 4 to program 23 during rest
+A4		** play a note on channel 4
+</pre></p>
+
+Check how your synthesizer interprets program numbers.  For example,
+the cartridge programs on a DX7 can be accessed by adding 32 to the
+cartridge program number.  Cartridge program number 10
+is specified by <code>Z42</code>.
+</small>
+
+<p>
+As in MIDI, the Adagio timbre is a property of the voice (MIDI channel), so
+the timbre will not be inherited by notes on a different channel;
+to change the timbre on multiple voices (channels), you must explicitly
+notate each change.
+<p>
+<a name = "126"><h4>Tempo</h4></a>
+
+The length of a beat may be changed using a Tempo<a name="index944"></a> command<a name="index945"></a>:
+<p><pre>
+!TEMPO <i>n</i>
+</pre></p>
+
+where <i>n</i> indicates beats per minute.  The exclamation mark tells Adagio that
+this is a special command line rather than a note definition.  A special
+command takes the place of a note specification.
+No other attributes should be written on a line with a special command.
+The <code>!TEMPO</code> command is associated with a time, computed as if the <code>!TEMPO</code> command were a note.  The time<a name="index946"></a> attribute (<code>T</code>) of all
+succeeding notes is now measured relative to the time of the <code>!TEMPO</code> command.  The new tempo starts at the <code>!TEMPO</code> command time and
+affects all succeeding notes.  
+Durations specified in time units (for example <code>U58</code>, <code>N15</code>) are not affected by the <code>!TEMPO</code> command, and numerical times (for example  <code>T851</code>) are computed relative to the time of the last <code>!TEMPO</code> command.
+<p>
+The <code>!TEMPO</code> command is fairly clever about default durations<a name="index947"></a>.  If the last duration specified before the <code>!TEMPO</code> command is
+symbolic (using one of <code>^</code>,<code>%</code>, <code>S</code>, <code>I</code>, <code>Q</code>, <code>H</code>, or <code>W</code> ), then the default duration for the
+node after the <code>!TEMPO</code> command will be modified according to the tempo change.
+Consider the following tempo change:
+<p><pre>
+!TEMPO 60
+A4 H
+!TEMPO 120
+G
+</pre></p>
+
+In this example, the first note will last 2 seconds (2 beats at 60
+beats per minute).  The second note inherits the duration (H) from
+the first note, but at 120 beats per minute, the second note will last
+only 1 second.  If the duration had been specified <code>U200</code> (also a
+duration of 2 seconds), the second note would also last 2 seconds because the <code>!TEMPO</code> command does not affect times or durations specified numerically in time units.  If the duration is the sum of a symbolic and a numeric specification, the inherited duration after a <code>!TEMPO</code> command is undefined.
+<p>
+<a name = "127"><h4>Rate</h4></a>
+The <code>!RATE</code><a name="index948"></a><a name="index949"></a> command scales all times including those specified in
+hundredths of seconds.  A rate of 100 means no change, 200 means twice as
+fast, and 50 means half as fast.  For example, to make a piece play 10%
+faster, you can add the following command at the beginning of the score:
+<p><pre>
+!RATE 110
+</pre></p>
+
+<code>!RATE</code> and <code>!TEMPO</code> commands combine, so
+<p><pre>
+!RATE 200
+!TEMPO 70
+</pre></p>
+
+will play 70 beats per minute at double the normal speed, or 140 beats
+per minute.  Like <code>!TEMPO</code>, the time of the <code>!RATE</code> command is added to the
+time attribute of all following notes up to the next <code>!TEMPO</code>  or  <code>!RATE</code>
+command.
+<p>
+Two <code>!RATE</code> commands do not combine, so a <code>!RATE</code> command only affects the rate until the next <code>!RATE</code> command.
+<p>
+Although  <code>!TEMPO</code> and <code>!RATE</code> can occur in the middle of a note (using <code>N</code>, <code>T</code>, etc.) they do not affect a note already specified.   This property allows multiple tempi to exist simultaneously (see Section <a href = "#134">"Multiple Tempi"</a>).
+<p>
+<a name = "128"><h3>Default Attributes</h3></a>
+
+If an attribute is omitted, the previous one is used by
+default<a name="index950"></a> (with the exception of the time attribute).  The
+default values for the first note, which are inherited by succeeding notes
+until something else is specified, are given below in Adagio notation:
+  
+<blockquote>
+<table>
+<tr><td>Time        </td><td>&nbsp;&nbsp;&nbsp;</td><td><code>T0  </code></td></tr>
+<tr><td>Pitch       </td><td>                  </td><td><code>C4  </code></td></tr>
+<tr><td>Duration    </td><td>                  </td><td><code>Q   </code></td></tr>
+<tr><td>Articulation</td><td>                  </td><td><code>#100</code></td></tr>
+<tr><td>Loudness    </td><td>                  </td><td><code>LFFF</code></td></tr>
+<tr><td>Voice       </td><td>                  </td><td><code>V1  </code></td></tr>
+<tr><td>Tempo       </td><td>                  </td><td><code>!TEMPO 100</code></td></tr>
+<tr><td>Rate        </td><td>                  </td><td><code>!RATE 100</code></td></tr></table>
+</blockquote>
+
+Control changes (including timbre or MIDI program, specified by <code>Z</code>) have no default value and are only sent as specified in the score.
+<p>
+<b><i>Important:</i></b> the rules for determining when a command will play a note are as follows (and this has changed slightly from previous versions):
+<ol>
+<li>
+If a special (<code>!</code>) command or nothing is specified, e.g. a blank line, do <i>not</i> play a note.
+<li>If <code>R</code> (for "rest") is specified, do <i>not</i> play a note.
+<li>Otherwise, if a pitch is specified, <i>do</i> play a note.
+<li>Otherwise, if no control changes (or program changes) are specified (so this is a command with non-pitch attributes and no control changes), <i>do</i> play a note.
+</ol>
+Another way to say this is "Special commands and commands with rests (<code>R</code>) do not play notes.  Otherwise, play a note if a pitch is specified or if no control is specified."
+<p>
+<a name = "129"><h3>Examples</h3></a>
+
+The following plays the first two bars of "Happy Birthday".  Note that
+Adagio knows nothing of bar lines, so the fact that the first note occurs
+on beat 3 or that the meter is three-four is of no consequence:
+<p><pre>
+*Example 1 ** Happy Birthday tune (C major)
+!TEMPO 120
+G4 I. LF
+G4 S
+A4 Q
+G4
+C5
+B4 H
+</pre></p>
+
+The time attribute for the first note is zero (<code>0</code>).  The second note
+will occur a dotted eighth later, etc. 
+Notice that no timbre or rate was specified.
+Adagio will provide reasonable default
+values of 1 and 100, respectively.
+<p>
+The following example plays the first four bars of  an exercise  from
+Bartok<a name="index951"></a>'s Mikrokosmos<a name="index952"></a> (Vol.  1, No.  12).
+An extra quarter note is inserted at the beginning of each voice in order to
+allow time to change MIDI programs.  The right hand part is played on voice
+(MIDI channel) 1 and the left hand part on voice 2.  Notice the
+specification of the time attribute to indicate that voice 2 starts at time
+0.  Also, default octaves are used to reduce typing.
+<p><pre>
+*Example 2 ** Bartok
+*voice 1, right hand
+R Q Z10 V1   ** extra rest for program change
+A4 H
+B Q
+C
+D H
+C
+D Q
+C
+B
+A
+B
+C
+D
+R
+</pre></p>
+
+<p><pre>
+*voice 2, left hand
+T0 R Q Z15 V2   ** extra rest for program change
+G3 H
+F Q
+E
+D H
+E
+D Q
+E
+F
+G
+F
+E
+D
+R
+</pre></p>
+
+<p>
+
+The next example is the same piece expressed in a different manner,
+illustrating the interaction
+between the <code>!TEMPO</code>  command and the time attribute.  Recall that the
+time attribute is measured relative to the time of the last <code>!TEMPO</code> command:
+<p><pre>
+*Example 3 ** 4 measures in 2 sections
+!Tempo 100
+*Voice 1, Measures 1 &amp; 2
+R Q Z10 V1
+A4 H
+B Q
+C
+D H
+C
+</pre></p>
+
+<p><pre>
+*Voice 2, Measures 1 &amp; 2
+T0 R Q Z15 V2
+G3 H
+F Q
+E
+D H
+E H
+</pre></p>
+
+<p><pre>
+!TEMPO 100
+*Voice 1, Measures 3 &amp; 4
+* note that Z10 is still in effect for V1
+V1 D4 Q
+C
+B
+A
+B
+C
+D
+R
+</pre></p>
+
+<p><pre>
+*Voice 2, Measures 3 &amp; 4
+T0 V2 D3 Q
+E
+F
+G
+F
+E
+D
+R
+</pre></p>
+
+<p>
+The piece is written in 4 sections.  The first
+plays a rest followed by two measures, starting
+at time 0.  The next section changes the time back to
+zero and plays two measures of the left hand part (voice 2).
+The next
+command (!TEMPO 100) sets the tempo to 100 (it already is)
+<i>and</i> sets the reference time to
+be two measures into the piece.  Therefore, the next note
+<code>(D4</code>) will begin measure 3.  The <code>D3</code> that begins the last
+group of notes has a <code>T0</code> attribute, so it will also start at measure
+3.  Notice how the <code>!TEMPO</code> command can serve to divide a piece into
+sections<a name="index953"></a>.
+<p>
+The last example will show yet another way to express the same piece of
+music using the "Next" attribute.  Only the first bar of music is
+given.
+<p><pre>
+*Example 4 ** use of the Next attribute
+!Tempo 100
+R Q Z10 V1 N0
+R Q Z15 V2
+
+A4 H V1 N0
+G3   V2
+
+B4 Q V1 N0
+F3   V2
+
+C4 Q V1 N0
+E3   V2
+</pre></p>
+
+Here, each pair of 
+lines represents two simultaneous notes.  The <code>N0</code> attribute
+forces the second line to start at the same time as the first line of each
+pair.  Because of the large intervals, octave numbers (3 and 4) are
+necessary to override the default octave for these pitches.
+<p>
+<a name = "130"><h3>Advanced Features</h3></a>
+Beyond the simple notation described above, Adagio supports a number of 
+features.  (See also the next chapter.)
+<p>
+<a name = "131"><h4>Time Units and Resolution</h4></a>
+<a name="index954"></a><a name="index955"></a>
+The default time unit is 10ms (ten milliseconds or one centisecond or
+100<sup T>th</sup> of a second), but it is
+possible to change the basic unit to 1ms, or 1000<sup T>th</sup> of a second.
+The time unit can be specified by:
+   <blockquote><a name="index956"></a>
+<a name="index957"></a><table>
+<tr><td><code>!CSEC</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>centisecond time units = 100<sup T>th</sup></td></tr>
+<tr><td><code>!MSEC</code></td><td></td><td>millisecond time units = 1000<sup T>th</sup></td></tr></table>
+</blockquote>  
+The time unit remains in effect until the next <code>!CSEC</code> or <code>!MSEC</code> command.
+<p>
+<a name = "132"><h4>Multiple Notes Per Line</h4></a>
+
+<a name="index958"></a>
+Notes can be separated by commas<a name="index959"></a><a name="index960"></a> or
+semicolons<a name="index961"></a><a name="index962"></a> as well as by starting a new line.  A comma is
+equivalent to typing  <code>N0</code> and starting a new line.  In other words, the next note after a comma will start at the same time as the note before the comma.   In general, <i>use commas to separate the notes of a chord.</i>
+<p>
+A semicolon is equivalent to starting a new line.  In general, <i>use semicolons to group notes in a melody</i>.  Here is yet another rendition of the Bartok:
+<p><pre>
+*Example 5 ** use of semicolons
+!Tempo 100
+R Q Z10 V1
+A4 H; B Q; C; D H; C; D Q; C; B; A; B; C; D; R
+
+T0 R Q Z15 V2
+G3 H; F Q; E; D H; E; D Q; E; F; G; F; E; D; R
+</pre></p>
+
+This example is similar to Example 2, except semicolons are used.  Note how semicolons make the two lines of music stand out.
+The next example is similar to Example 4, except commas are used
+and four bars are notated.  The music below is treated as a sequence of 2-note chords, with each chord on a separate line:
+<p><pre>
+*Example 6 ** use of commas
+!Tempo 100
+R Q Z10 V1, R Q Z15 V2
+A4 H V1, G3 V2
+B4 Q V1, F3 V2
+C4   V1, E3 V2
+D4 H V1, D3 V2
+C4   V1, E3 V2
+D4 Q V1, D3 V2
+C4   V1, E3 V2
+B4   V1, F3 V2
+A4   V1, G3 V2
+B4   V1, F3 V2
+C4   V1, E3 V2
+D4   V1, D3 V2
+R
+</pre></p>
+
+<p>
+<a name = "133"><h4>Control Change Commands</h4></a>
+<a name="index963"></a><a name="index964"></a>
+Any control change can be specified using
+the syntax "<tt>~<i>n</i>(<i>v</i>)</tt>", where <i>n</i> is the controller number (0 - 127), and 
+<i>v</i> is the value.  In addition, Adagio has some special syntax for
+some of the commonly used control changes (note that Pitch bend, Aftertouch, and MIDI Program Change are technically not MIDI control changes but have their own 
+special message format and status bytes):
+
+ 
+<blockquote>
+<table>
+<tr><td><code>K</code></td><a name="index965"></a><a name="index966"></a><td>&nbsp;&nbsp;&nbsp;</td><td>Portamento switch</td></tr>
+<tr><td><code>M</code></td><a name="index967"></a><a name="index968"></a><td></td><td>Modulation wheel</td></tr>
+<tr><td><code>O</code></td><a name="index969"></a><a name="index970"></a><td></td><td>Aftertouch</td></tr>
+<tr><td><code>X</code></td><a name="index971"></a><a name="index972"></a><td></td><td>Volume</td></tr>
+<tr><td><code>Y</code></td><a name="index973"></a><a name="index974"></a><td></td><td>Pitch bend</td></tr>
+<tr><td><code>Z</code></td><a name="index975"></a><a name="index976"></a><td></td><td>Program Change</td></tr></table>
+</blockquote>
+
+The letter listed beside each control function is the Adagio command
+letter.  For example,  <code>M23</code> is the command for setting the modulation
+wheel to 23.  Except for pitch bend, the portamento switch, and MIDI Program Change, all
+values range from 0 to 127.  Pitch bend is "off" or centered at
+128, and has a range from 0 to 255 (MIDI allows for more precision, but
+Adagio does not).  Turn on portamento with <code>K127</code> and off with <code>K0</code>.  Programs are numbered 1 to 128 to correspond to synthesizer displays.
+<p>
+<b><i>About volume:</i></b> Midi volume is just a control, and the Midi standard does not say what it means. Typically it does what the volume pedal does; that is, it scales the amplitude in a continuously changeable fashion. In contrast, Midi velocity, which is controlled by the <code>L</code> (loudness) attribute, is part of a Midi note-on command and is fixed for the duration of the note. Typically, these two ways of controlling loudness and amplitude operate independently. In some low-cost synthesizers the numbers seem to be added together internally and volume changes are ignored after the note starts.
+<p>
+<b><i>About pitch bend:</i></b> Midi pitch bend is a number from 0 to 16383, where 8192 is the center position. To convert to Midi, Adagio simply multiplies your number by 64, giving values from 0 to 16320. Note that <code>Y128</code> translates exactly to 8192. The <i>meaning</i> of pitch bend depends upon your synthesizer and its setting. Most synthesizers let you specify a "pitch bend range." A range of one semitone means that <code>Y255</code> will produce a bend of approximately one semitone up, and <code>Y0</code> will bend one semitone down.  If the range is 12 semitones, then the same <code>Y255</code> will bend an octave. Typically, pitch bend is exponential, so each increment in the pitch bend value will bend an equal number of cents in pitch.
+<p>
+Control changes can be part of a note specification or independent.
+In the following example, a middle C is played with a modulation
+wheel setting of 50 and a pitch bend of 120.  Then, at 10 unit
+intervals, the pitch bend is decreased by 10.  The last line sets the
+portamento time (controller 5) to 80:
+<p><pre>
+*Example 7
+C4 LMF M50 Y120 U100 N10
+Y110 N10; Y100 N10; Y90 N10; Y80 N10
+Y70 N10; Y60 N10; Y50 N10
+~5(80)
+</pre></p>
+
+<p>
+See Section <a href = "#128">"Default Attributes"</a> on page <a href = "#128">"Default Attributes"</a> for rules on whether or not a command will play a note.
+<p>
+<a name = "134"><h4>Multiple Tempi</h4></a><a name="index977"></a>
+
+<a name="index978"></a>
+Writing a piece with multiple tempi requires no new commands; you
+just have to be clever in the use of Tempo and Time.  The following
+plays a 7 note diatonic scale on voice 1, and a 12 note chromatic
+scale on voice 2:
+<p><pre>
+*Example 8 ** multiple tempi
+!TEMPO 70
+V1 C4; D; E; F; G; A; B
+T0 R N0
+
+!TEMPO 120
+V2 C4; CS; D; DS; E; F; FS; G; GS; A; AS; B
+
+!TEMPO 100
+V1 C5, V2 C5
+</pre></p>
+
+The third line plays the 7-note diatonic scale on voice 1.  The
+next line contains the tricky part:  notice that the time is
+set back to zero, there is a rest, and a next (<code>N</code>) attribute is used
+to specify that the next default time will be at the same time as
+the current one.  This is tricky because a <code>!TEMPO</code> command cannot have a time (<code>T0</code>) attribute, and a <code>T0</code> by itself would create a note with a duration.  <code>T0 R N0</code> says: "go to time 0, do not play a note, and do not advance the time before the next command".
+Thus, the time of the <code>!TEMPO 120</code> command is zero.
+After the 12 note scale, the tempo is changed to 100 and a final note
+is played on each voice.  A little arithmetic will show that 7 notes
+at tempo 70 and 12 notes at tempo 120 each take 6 seconds, so the
+final notes (<code>C5</code>) of each scale will happen at the same time.
+ 
+<a name = "135"><h4>MIDI Synchronization</h4></a>
+<a name="index979"></a><a name="index980"></a><a name="index981"></a><a name="index982"></a>
+<p>
+The Adagio program (but not Nyquist) can synchronize with external devices using MIDI real time messages. Thus, Adagio has a <code>!CLOCK</code> command. This command is currently of no use to Nyquist users but is documented here for completeness (it's part of the language syntax even if it does not do anything). 
+<p>
+Since Adagio supports multiple tempi, and Midi clock is
+based on beats, it is necessary to be explicit in the score about where the
+clock should start and what is the duration of a quarter note.  The
+<code>!CLOCK</code> command<a name="index983"></a> in Adagio turns on a 24 pulse-per-quarter (PPQ) clock at
+the current tempo and time:
+<p><pre>
+!TEMPO 100
+!CLOCK
+</pre></p>
+
+A <code>!CLOCK</code> command must also be inserted for each tempo change that is to be
+reflected in the Midi clock.  Typically, each !TEMPO command will be followed by a !CLOCK command.
+<p>
+<small>
+Clock commands and thus tempo
+changes can take place at arbitrary times.  It is assumed that tempo changes
+on an exact 24<sup T>th</sup> of a beat subdivision (for example, exactly on a
+beat).  If not, the tempo change will take place on the nearest exact
+24<sup T>th</sup> of a beat subdivision.  This may be earlier or later than the
+requested time.
+</small>
+
+<p>
+<a name = "136"><h4>System Exclusive Messages</h4></a> 
+
+Adagio  has a definition facility that makes it possible to send system
+exclusive parameters.  Often, there are parameters on Midi
+synthesizers that can only be controlled by system exclusive messages.
+Examples include the FM ratio and LFO rate on a DX7 synthesizer.  The
+following example defines a macro for the DX7 LFO rate and then shows how
+the macro is used to set the LFO rate for a B-flat whole note in the score.
+The macro definition is given in hexadecimal, except <tt>v</tt> is replaced by 
+the channel (voice) and <tt>%1</tt> is replaced by the first parameter.
+A macro is invoked by writing "~" followed by the macro name and a
+list of parameters<a name="index984"></a>:
+<p><pre>
+!DEF LFO F0 43 0v 01 09 %1 F7
+Bf5 W ~LFO(25)
+</pre></p>
+
+<p>
+In general, the <tt>!DEF</tt> command can define any single MIDI message including
+a system exclusive
+message.  The message must be complete (including the status byte), and each <tt>!DEF</tt> must correspond to just one message.
+The symbol following <tt>!DEF</tt> can be any name consisting of 
+alphanumeric characters.  Following the name is a hexadecimal string
+(with optional spaces), all on one line.  Embedded in the string may
+be the following special characters:
 <dl>
 <dt>
-<code>snd-lpanal(<a name="index991"><i>samps</i>, <i>npoles</i>)</code> [SAL]<br>
-
-<code>(snd-lpanal <i>samps</i> <i>npoles</i>)</code> [LISP]<dd>Compute
-an LPC frame with <i>npoles</i> (a <code>FIXNUM</code>) poles from an 
-<code>ARRAY</code> of samples (<code>FLONUMS</code>). Note that <code>snd-fetch-array</code>
-can be used to fetch a sequence of frames from a sound. Ordinarily, you
-should not use this function. Use <code>make-lpanal-iterator</code> instead.<br><br>
-<dt><code>snd-allpoles(<a name="index992"><i>snd</i>, <i>lpc-coefs</i>, <i>gain</i>)</code> [SAL]<br>
-
-<code>(snd-allpoles <i>snd</i> <i>lpc-coefs</i> <i>gain</i>)</code> [LISP]<dd>A fixed all-pole filter. The input is
-<i>snd</i>, a <code>SOUND</code>. The filter coefficients are given by <i>lpc-coefs</i>
-(an <code>ARRAY</code>), and the filter gain is given by <i>gain</i>, a <code>FLONUM</code>.
-The result is a <code>SOUND</code> whose duration matches that of <i>snd</i>. 
-Ordinarily, you should use <code>allpoles-from-lpc</code> instead (see above).<br><br>
-<dt><code>snd-lpreson(<a name="index993"><i>snd</i>, <i>lpc-iterator</i>, 
-<i>skiptime</i>)</code> [SAL]<br>
-
-<code>(snd-lpreson <i>snd</i> <i>lpc-iterator</i> <i>skiptime</i>)</code> [LISP]<dd>This function is identical to <code>lpreson</code> (see above).
+<tt>v</tt><dd>Insert the 4-bit voice (MIDI channel) number.  If <tt>v</tt> occurs in the
+place of a high-order hexadecimal digit, replace <tt>v</tt> with <tt>0v</tt> so that
+the channel number is always placed in the low-order 4 bits of a data byte.  In other words, <tt>v</tt> is padded if necessary to fall into the low-order bits.<br><br>
+<dt><tt>%</tt><i>n</i><dd>Insert a data byte with the low-order 7 bits of 
+parameter number <i>n</i>.  Parameters are numbered 1 through 9.
+If the
+parameter value is greater than 127, the high-order bits are discarded.<br><br>
+<dt><tt>^</tt><i>n</i><dd>Insert a data byte with bits 7 through 13 of parameter number
+<i>n</i>.  In other words, shift the value right 7 places then clear all
+but the first 7 bits.  Note that 14-bit numbers can be encoded by
+referencing the same parameter twice; for example, <tt>%4^4</tt> will
+insert the low-order followed by the high-order parts of parameter 4
+into two successive data bytes.
 </dl>
+<p>
+Parameters are separated by commas, but there may be no spaces.  The
+maximum number of parameters allowed is 9.  Here
+is an example of definitions to send a full-resolution pitch
+bend command and to send a system exclusive command to change a DX7 
+parameter <a href = "foot.html#foot6">(Footnote 6)</a> . 
+<p>
+<p><pre>
+* Define macro for pitch bend commands:
+!DEF bend Ev %1 ^1
+
+A ~bend(8192)  ** 8192 is "pitch bend off"
+
+* Change the LFO SPEED:
+*  SYSEX = F0, Yamaha = 43, Substatus/Channel = 1v, 
+*  Group# = 01, Parameter# = 9, Data = 0-99, EOX = F7
+!DEF lfospeed F0 43 1v 01 09 %1 F7
+
+* now use the definitions:
+G4 ~bend(7567) N40
+~lfospeed(30) N35
+
+</pre></p>
+
+<p>
+<a name = "137"><h4>Control Ramps</h4></a>
+
+The <tt>!RAMP</tt> command<a name="index985"></a> can specify a smooth control change from one
+value to another.  It consists of a specification of the starting and
+ending values of some control change, a duration specifying how often
+to send a new value, and a duration specifying the total length of the ramp.
+<p><pre>
+!RAMP X10 X100 Q W2
+!RAMP ~23(10) ~23(50) U20 W
+!RAMP ~lfo(15) ~lfo(35) U10
+</pre></p>
+
+The first line says to ramp the volume control (controller number 7)
+from 10 to 100, changing at each quarter note for the duration of two
+whole notes.
+The second line says to ramp controller number 23 from value 10 to value 50,
+sending a new control change message every 20 time units.  The overall
+duration of the ramp should be equivalent to a whole note (<tt>W</tt>).
+As shown in the third line, even system exclusive messages controlled by
+parameters can be specified.  If the system exclusive message has more
+than one parameter, only one parameter may be "ramped"; the others must
+remain the same.  For example, the following would ramp the second parameter:
+<p><pre>
+!RAMP ~mysysex(4,23,75) ~mysysex(4,100,75) U10 W
+</pre></p>
+
+<p>
+<small>
+A rather curious and extreme use of macros and ramps is illustrated in the
+following example.  The <tt>noteon</tt> macro starts a note, and <tt>noteoff</tt> ends it.  Ramps can now be used to emit a series of notes with changing pitches or velocities.  Since Adagio has no idea that these macros are turning on notes, it is up to the programmer to turn them off!
+<p><pre>
+!DEF noteon 9v %1 %2
+!DEF noteoff 8v %1 %2
+~noteon(48,125)
+~noteoff(48,126)
+* turn on some notes
+!RAMP ~noteon(36,125) ~noteon(60,125) Q W NW
+* turn them off
+!RAMP ~noteoff(60,50) ~noteoff(36,50) Q W NW
+</pre></p>
+
+</small>
+
+<p>
+<a name = "138"><h4>The !End Command</h4></a>
+<a name="index986"></a><a name="index987"></a>
+The special command  <code>!END</code> marks the end of a score.  Everything beyond that
+is ignored, for example:
+<p><pre>
+* this is a score
+C; D; E; F; G W
+!END
+since the score has ended, this text will be ignored
+</pre></p>
+
+<p>
+<a name = "139"><h4>Calling C Routines</h4></a>
+
+It is possible to call C routines from within Adagio scores when using
+specially linked versions, but this feature is disabled in Nyquist. The
+syntax is described here for completeness.
+<p>
+The <code>!CALL</code> command<a name="index988"></a><a name="index989"></a> calls a C routine that can in turn invoke a
+complex sequence of operations.  Below is a call to a trill<a name="index990"></a> routine,
+which is a standard routine in Adagio.  The parameters are the base
+pitch of the trill, the total duration of the trill, the interval in semitones, the
+duration of each note of the trill, and the loudness.  Notice
+that both numbers and Adagio notation can be used as parameters:
+<p><pre>
+!CALL trill(A5,W,2,S,Lmf)  T278 V1
+</pre></p>
+
+<i>The parameter list should have no spaces</i>, and parameters are separated
+by commas.  Following the close parenthesis, you may specify other
+attributes such as the starting time and voice as shown in the example above.
+<p>
+A parameter may be an Adagio pitch specification, an Adagio duration,
+an Adagio loudness, a number, or an ASCII character within single
+quotes, e.g. <tt>'a'</tt> is equivalent to <tt>97</tt> because 97 is the decimal
+encoding of "a" in ASCII.
+<p>
+The <code>!CALL</code> may be followed by a limited set of attributes.  These are time (<tt>T</tt>), voice (<tt>V</tt>), and next time (<tt>N</tt>).  The <code>!CALL</code> is made at the current time if no time is specified, and the time of the next adagio command is the time of the  <code>!CALL</code> unless a next time is specified.  In other words, the default is <tt>N0</tt>.
+<p>
+<a name = "140"><h4>Setting C Variables</h4></a>
+In addition to calling C routines, there is another way in which scores
+can communicate with C.  As with <code>!CALL</code>, specific C code must be linked before these commands can be used, and this is not supported in Nyquist.  
+The  <code>!SETI</code> command<a name="index991"></a><a name="index992"></a> sets an integer variable
+to a value, and the <code>!SETV</code> command<a name="index993"></a><a name="index994"></a> sets an element of an integer array.  
+For example, the next line sets the variable <tt>delay</tt> to 200 and sets
+<tt>transposition[5]</tt> to -4 at time 200:
+<p><pre>
+!SETI delay 200
+!SETV transposition 5 -4  T200
+</pre></p>
+
+As with the <code>!CALL</code> command, these commands perform their operations at
+particular times according to their place in the Adagio score.  This makes
+it very easy to implement time-varying parameters that control various
+aspects of an interactive music system.  
+<p>
+
 <p>
 <hr>
 <a href = "part11.html">Previous Section</a> | <a href = "part13.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>

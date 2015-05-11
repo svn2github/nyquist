@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="NyquistIDE" default="default" basedir=".">        
+    <import file="nyproject/build-impl.xml"/>
+
+    <taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"   
+             classpath="lib/appbundler-1.0.jar" />
+
+    <target name="bundle-nyquist">
+        <bundleapp outputdirectory="."
+            name="NyquistIDE"
+            displayname="NyquistIDE"
+            identifier="NyquistIDE"
+            icon="../macosxproject/Nyquist.icns"
+            mainclassname="jnyqide.Main">
+            <option value="-Dapple.laf.useScreenMenuBar=true"/>
+            <option value="-DisOSXbundle=true"/>
+            <classpath file="jnyqide.jar" />
+        </bundleapp>
+    </target>
+
+</project>

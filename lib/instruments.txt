@@ -42,7 +42,7 @@ NOT PART OF THE BASIC NYQUIST DISTRIBUTION, BUT
 YOU CAN DOWNLOAD IT")
            nil)))
 SAL-SOURCE
-if ! boundp(quote(*plight-drum-path*)) then
+if ! fboundp(quote(plight-drum-example)) then
   if ! #load("../demos/plight/drum.lsp") then
     exec princ("COULD NOT FIND DRUM.LSP -- THE PLIGHT-DRUM PACKAGE IS
 NOT PART OF THE BASIC NYQUIST DISTRIBUTION, BUT

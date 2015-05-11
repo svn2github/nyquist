@@ -16,6 +16,8 @@
  (Whittington "../JITLBIB.HTM#whittington" "(Whittington 1989)")
 
  (touretzky  "musicbib.html#touretzky" "(Touretzky 1984)")
- (icmcfugue "http://www.cs.cmu.edu/~rbd/bib-arctic.html#icmcfugue" "(Dannenberg and Frayley 1989)")))
+ (icmcfugue "http://www.cs.cmu.edu/~rbd/bib-arctic.html#icmcfugue" "(Dannenberg and Frayley 1989)")
+ (simoni "http://www.algocompbook.com/" "(Simoni and Dannenberg 2013)")))
+
 
 

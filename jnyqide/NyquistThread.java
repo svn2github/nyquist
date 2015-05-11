@@ -15,13 +15,12 @@ import javax.swing.*;
 
 public class NyquistThread extends Thread {
     public Process myProcess;
-	public boolean nyquist_is_running;
+    public boolean nyquist_is_running;
     InputStream stdout;
     InputStreamReader isrStdout;
     BufferedReader brStdout;
     OutputStream stdin;
     byte b[];
-//  JTextPane textIn;
     JTextArea textOut;
     Runnable update;
     String plotFilename;
@@ -41,19 +40,14 @@ public class NyquistThread extends Thread {
     public NyquistThread() {
     }
 
-/*  public void setInputArea( JTextPane in )
-  {
-    textIn = in;
-  }*/
-
     public String StringFromFile(String filename, String default_string) {
-	try {
-	    BufferedReader br = new BufferedReader(new FileReader(filename));
-	    default_string = br.readLine();
-	    br.close();
-	} catch (Exception e) {
-	    // do nothing
-	}
+    try {
+        BufferedReader br = new BufferedReader(new FileReader(filename));
+        default_string = br.readLine();
+        br.close();
+    } catch (Exception e) {
+        // do nothing
+    }
         return default_string;
     }
 
@@ -75,25 +69,29 @@ public class NyquistThread extends Thread {
             // the code above works, but the following is simpler:
 
             // find full path to instruments.txt
-            String cwd = System.getProperty("user.dir");
-            soundBrowser = cwd.concat("/lib/instruments.txt");
+            String cwd = main.currentDir;
+            if (cwd.equals("")) {
+                cwd = System.getProperty("user.dir");
+            }
+            soundBrowser = main.nyquistDir + "lib/instruments.txt";
             System.out.println("soundBrowser file is " + soundBrowser);
 
             // build XLISPPATH environment specification
             String path = System.getenv("XLISPPATH"); // use getenv
             if (path == null) { // getenv failed, use a default setting
-                path = cwd + "/lib/;" + cwd + "/runtime/;";
+                path = cwd + "/lib/;" + cwd + "/runtime/;" + cwd + "/demos/;";
             }
             // if xlisppath file exists, use it instead
             path = "XLISPPATH=" + StringFromFile("xlisppath", path);
+            System.out.println("XLISPPATH will be: " + path);
             
-	    // build TEMP environment specification
-	    String temp = System.getenv("TEMP"); // use getenv
-	    if (temp == null) { // getenv failed, use a default setting
-		temp = "./";
-	    }
-	    // if temp file exists, use it instead
-	    temp = "TEMP=" + StringFromFile("temp", temp);
+            // build TEMP environment specification
+            String temp = System.getenv("TEMP"); // use getenv
+            if (temp == null) { // getenv failed, use a default setting
+                temp = "./";
+            }
+            // if temp file exists, use it instead
+            temp = "TEMP=" + StringFromFile("temp", temp);
 
             // construct SystemRoot for environment from file
             String systemroot = StringFromFile("systemroot", "SystemRoot=C:/windows");
@@ -101,31 +99,34 @@ public class NyquistThread extends Thread {
             // See if we can get the USER
             String user = System.getenv("USER");
             if (user == null) user = System.getenv("USERNAME");
-	    if (user == null) user = "";
+            if (user == null) user = "";
             user = StringFromFile("user", user); // file value overrides all
-            if (user == "") user = "IGNORE="; // default value
+            if (user.equals("")) user = "IGNORE="; // default value
             else user = "USER=" + user;
             
             // Construct the environment for nyquist subprocess
             System.out.println(path);
             System.out.println(user);
-	    System.out.println(temp);
-	    System.out.println(systemroot);
+            System.out.println(temp);
+            System.out.println(systemroot);
 
             // make environment from 3 strings
-	    String[] envp = {path, user, systemroot, temp};
-
+            String[] envp = {path, user, systemroot, temp};
+            
+            File cwdFile = new File(main.nyquistDir);
             try {
-                myProcess = Runtime.getRuntime().exec( "./ny", envp );
+                myProcess = Runtime.getRuntime().exec("./ny", envp, cwdFile);
             } catch (Exception e3) {
-                System.out.println("no ./ny found, trying ./nyquist");
+                System.out.println("no ./ny found in " + main.currentDir + 
+                                   ", trying ./nyquist");
                 try {
-                    myProcess = Runtime.getRuntime().exec("./nyquist", envp);
+                    myProcess = Runtime.getRuntime().exec("./nyquist", 
+                                                          envp, cwdFile);
                 } catch (Exception e4) {
                     System.out.println("no ./nyquist found, trying ny");
                     // try using PATH to find ny (for linux systems where
                     // ny is installed)
-                    myProcess = Runtime.getRuntime().exec("ny", envp);
+                    myProcess = Runtime.getRuntime().exec("ny", envp, cwdFile);
                     // if this one fails, we'll take the exception below
                 }
             }
@@ -139,7 +140,7 @@ public class NyquistThread extends Thread {
             stdin.flush();
         }
         catch( Exception e2 ) { System.out.println(e2); }
-
+        
         b = new byte[1000];
         if (brStdout != null) {
             super.start();
@@ -147,7 +148,7 @@ public class NyquistThread extends Thread {
             textOut.append("Nyquist (ny or nyquist) not found or could not be started.");
         }
     }
-
+    
     public void run() {
         final int max_buf_len = 256;
         StringBuffer buffer = new StringBuffer(max_buf_len);
@@ -172,8 +173,8 @@ public class NyquistThread extends Thread {
         //   if we have a newline, reset the buffer
 
         String line = null;
-		//String debug_strings[] = new String[100];
-		//int debug_strings_x = 0;
+        //String debug_strings[] = new String[100];
+        //int debug_strings_x = 0;
         while (nyquist_is_running) {
             try {
                 // initialLoad is true when we see text that indicates
@@ -204,7 +205,7 @@ public class NyquistThread extends Thread {
                 }
                 if ((char) ic == '\n') {
                     line = new String(buffer);
-                    testForPlot(line);
+                    testForCmd(line);
                 } else if (buffer.length() >= max_buf_len) {
                     // pretend we found a line in order to flush 
                     // characters building up in buffer
@@ -255,10 +256,62 @@ public class NyquistThread extends Thread {
     }
 
 
-    // testForPlot looks for Nyquist output that the jNyqIDE wants to know
+    class StringParser { // used to parse input strings; see below
+        String s;
+        int pos;
+
+        public StringParser(String textToParse, int initialPos) {
+            s = textToParse;
+            pos = initialPos;
+        }
+
+        public void skipSpace() {
+            while (pos < s.length() && s.charAt(pos) == ' ') pos++;
+        }
+
+        public String getQuotedString() {
+            // get what's between " and " -- quotes are required
+            // note: this does not handle embedded quotes
+            skipSpace();
+            if (pos >= s.length()) return null;
+            if (s.charAt(pos) != '"') return null;
+            pos++;
+            int start = pos;
+            pos = s.indexOf('"', pos);
+            if (pos < 0) {
+                pos = start;
+                return null;
+            }
+            pos = pos + 1;
+            return s.substring(start, pos - 1);
+        }
+
+        public Integer getInteger() {
+            skipSpace();
+            int start = pos;
+            while (pos < s.length() && Character.isDigit(s.charAt(pos))) {
+                pos++;
+            }
+            if (start == pos) return null;
+            return Integer.parseInt(s.substring(start, pos));
+        }
+
+        public Double getDouble() {
+            skipSpace();
+            int start = pos;
+            while (pos < s.length() &&
+                   (Character.isDigit(s.charAt(pos)) || s.charAt(pos) == '.')) {
+                pos++;
+            }
+            if (start == pos) return null;
+            return Double.parseDouble(s.substring(start, pos));
+        }
+    }
+
+    // testForCmd looks for Nyquist output that the jNyqIDE wants to know
     // about -- originally just plot command output, but now there are many
     // Lisp functions that communicate and synchronize with the jNyqIDE
-    public void testForPlot(String output) {
+    public void testForCmd(String output) {
         int iNameStart;
         int iNameStop;
         //System.out.print("plot's text output:");
@@ -293,6 +346,44 @@ public class NyquistThread extends Thread {
             mainFrame.workspaceLoaded = true;
         } else if (output.indexOf("workspace saved") >= 0) { 
             mainFrame.workspaceSaved = true;
+        } else if ((iNameStart = output.indexOf("slider-panel-create: \"")) >= 0) {
+            StringParser sp = new StringParser(output, iNameStart + 21);
+            String panelName = sp.getQuotedString();
+            Integer color = sp.getInteger();
+            System.out.println("panel create " + panelName + " " + color);
+            if (panelName != null && color != null) {
+                mainFrame.createSliderPanel(panelName, color);
+            }
+        } else if ((iNameStart = output.indexOf("slider-panel-close: \"")) >= 0) {
+            StringParser sp = new StringParser(output, iNameStart + 21);
+            String panelName = sp.getQuotedString();
+            System.out.println("panel delete " + panelName);
+            if (panelName != null) {
+                mainFrame.deleteSliderPanel(panelName);
+            }
+        } else if ((iNameStart = output.indexOf("slider-create: \"")) >= 0) {
+            StringParser sp = new StringParser(output, iNameStart + 15);
+            String sliderName = sp.getQuotedString();
+            Integer num = sp.getInteger();
+            Double init = sp.getDouble();
+            Double low = sp.getDouble();
+            Double high = sp.getDouble();
+            System.out.println("slider create " + sliderName + " " + num +
+                               " " + init + " " + low + " " + high);
+            if (sliderName != null && num != null && init != null && 
+                low != null && high != null) {
+                mainFrame.createSlider(sliderName, num, init, low, high);
+            }
+        } else if ((iNameStart = output.indexOf("button-create: \"")) >= 0) {
+            StringParser sp = new StringParser(output, iNameStart + 15);
+            String buttonName = sp.getQuotedString();
+            Integer num = sp.getInteger();
+            Integer normal = sp.getInteger();
+            System.out.println("button create " + buttonName + " " + num +
+                               " " + normal);
+            if (buttonName != null && num != null && normal != null) {
+                mainFrame.createButton(buttonName, num, normal);
+            }
         } else if (!envelopeNow) { // test for envelope data
             int index = output.indexOf("get-env-data: begin");
             if (index >= 0) {

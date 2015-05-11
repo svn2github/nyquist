@@ -1,864 +1,1569 @@
-<html><head><title>Nyquist Libraries</title></head>
+<html><head><title>Xmusic and Algorithmic Composition</title>
+<link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+</head>
 <body bgcolor="ffffff">
 <a href = "part14.html">Previous Section</a> | <a href = "part16.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "163"><h2>Nyquist Libraries</h2></a>
-<a name="index1177">
-Nyquist is always growing with new functions. Functions that are most fundamental
-are added to the core language. These functions are automatically loaded when you 
-start Nyquist, and they are documented in the preceding chapters. Other functions seem
-less central and are implemented as lisp files that you can load. These are called
-library functions, and they are described here. 
+<a name = "147"><h2>Xmusic and Algorithmic Composition</h2></a>
+
+<a name="index1041"></a><a name="index1042"></a>
+Several Nyquist libraries offer support for algorithmic composition. Xmusic 
+is a library for generating sequences and patterns of data. Included in Xmusic 
+are:
+<ul>
+<li>
+pattern objects, used to generate interesting sequences of parameter values,
+<li>random number generators, used to create random sequences from
+different distributions (contained in the <code>distributions.lsp</code>
+library) 
+<li>a standard representation for "note lists" called <i>scores</i> and
+functions to render them as sounds, 
+<li>the <code>score-gen</code> macro which helps to generate scores from patterns, 
+<li>score manipulation functions to select, transform, shift, and perform
+other operations on scores. 
+</ul>
 <p>
-To use a library function, you
-must first load the library, e.g. <code>(load "pianosyn")</code> loads the piano synthesis
-library. The libraries are all located in the <code>lib</code> directory, and you 
-should therefore include this directory on your <code>XLISPPATH</code> variable. (See 
-Section <a href = "part2.html#2">"Introduction and Overview"</a>.) Each library is documented in one of the following
-sections. When you load the library described by the section, all functions
-documented in that section become available.
+<a name = "148"><h3>Xmusic Basics</h3></a>
+Xmusic is inspired by and based on Common Music by Rick Taube. 
+Common Music supports MIDI and
+various other synthesis languages and includes a graphical interface, some
+visualization tools, and many other features. Common Music runs in Common
+Lisp and Scheme, but not XLISP (the base language for Nyquist). 
 <p>
-<a name = "164"><h3>Statistics</h3></a>
-<a name="index1178"><a name="index1179"><a name="index1180"><a name="index1181"><a name="index1182"><a name="index1183"><a name="index1184"><a name="index1185"><a name="index1186"><a name="index1187"><a name="index1188"><a name="index1189"><a name="index1190"><a name="index1191">
-The file <code>statistics.lsp</code> defines a class and functions to compute simple statistics, histograms, correlation, and some other tests. See the source code for complete details.
+The Xmusic libraries in Nyquist offer an interesting subset of the
+tools in Common Music. One important feature of Xmusic is that it is
+integrated with all of the Nyquist synthesis functions, so you can use
+Xmusic patterns and scores to control fine details of sound
+synthesis. 
 <p>
-<a name = "165"><h3>Plots</h3></a>
-<a name="index1192"><a name="index1193">
-The Nyquist IDE has a simple facility to plot signals. For more advanced plotting, you can use <code>gnuplot.sal</code> to generate plots for <code>gnuplot</code>, a separate, but free program. See the source for details.
+<a name = "149"><h3>Xmusic Patterns</h3></a>
+<a name="index1043"></a>
+Xmusic patterns are objects that generate data streams. For example, 
+the <code>cycle-class</code> of objects generate cyclical patterns such as 
+"1 2 3 1 2 3 1 2 3 ...", or "1 2 3 4 3 2 1 2 3 4 ...". Patterns can
+be used to  specify pitch sequences, rhythm, loudness, and other parameters.
 <p>
-<a name = "166"><h3>Labeling Audio Events, Marking Audio Times, Displaying Marked Audio Times</h3></a>
-<a name="index1194"><a name="index1195"><a name="index1196"><a name="index1197">
-The <code>labels.sal</code> program can convert lists to label files and label files to lists. Label files can be loaded along with audio in Audacity to show metadata. See the source for details.
+Xmusic functions are automatically loaded when you start Nyquist.
+To use a pattern object, you first create the pattern, e.g.
+<p><pre>
+set pitch-source = make-cycle(list(c4, d4, e4, f4))
+</pre></p>
+
+<a name="index1044"></a><a name="index1045"></a>
+In this example, <code>pitch-source</code> is an object of class
+<code>cycle-class</code> which inherits from <code>pattern-class</code>. 
 <p>
-<a name = "167"><h3>Linear Regression</h3></a>
-<a name="index1198"><a name="index1199"><a name="index1200">
-See <code>regression.sal</code> for simple linear regression functions.
+<small>
+Because SAL is not an object-oriented language, these classes and
+their methods are not directly accessible from SAL.
+Instead, Xmusic defines a functional interface, e.g. <code>make-cycle</code>
+creates an instance of <code>cycle-class</code>, and the <code>next</code>
+function, introduced below, retrieves the next value from any instance
+of <code>pattern-class</code>. Using LISP syntax, you can have full access
+to the methods of all objects (see the source code in <code>xm.lsp</code>,
+but the functional interface described here should be sufficient and
+it is recommended that you limit your access to this interface.
+</small>
+
 <p>
-<a name = "168"><h3>Vector Math, Linear Algebra</h3></a>
-<a name="index1201"><a name="index1202"><a name="index1203"><a name="index1204"><a name="index1205"><a name="index1206"><a name="index1207"><a name="index1208"><a name="index1209"><a name="index1210"><a name="index1211"><a name="index1212"><a name="index1213"><a name="index1214">
-See <code>vectors.lsp</code> for a simple implementation of vector arithmetic and other vector functions.
+After creating the pattern, you can access it repeatedly 
+with <code>next</code><a name="index1046"></a> to generate data, e.g.
+<p><pre>
+play seqrep(i, 13, pluck(next(pitch-source), 0.2))
+</pre></p>
+
+This will create a sequence of notes with the following pitches: c, d, 
+e, f, c, d, e, f, c, d, e, f, c. If you evaluate this again, the 
+pitch sequence will continue, starting on "d".
 <p>
-<a name = "169"><h3>Piano Synthesizer</h3></a>
-The piano synthesizer (library name is <code>pianosyn.lsp</code>) generates
-realistic piano tones using a multiple wavetable implementation by Zheng (Geoffrey)
-Hua and Jim Beauchamp, University of Illinois. Please see the notice about
-acknowledgements that prints when you load the file. Further informations and
-example code can be found in 
-<code>demos/piano.htm</code><a name="index1215"><a name="index1216">. 
-There are several useful functions in this library:
+It is very important not to confuse the creation of a sequence with 
+its access. Consider this example:
+<p><pre>
+play seqrep(i, 13,
+         pluck(next(make-cycle(list(c4, d4, e4, f4))), 0.2))
+</pre></p>
+
+This looks very much like the previous example, but it only repeats notes
+on middle-C. The reason is that every time <code>pluck</code> is evaluated, 
+<code>make-cycle</code> is called and creates a new pattern object. After the 
+first item of the pattern is extracted with <code>next</code>, the cycle is not
+used again, and no other items are generated.
+<p>
+To summarize this important point, there are two steps to using a pattern.
+First, the pattern is created and stored in a
+variable using <code>setf</code>. Second, the pattern is accessed (multiple
+times) using <code>next</code>.
+<p>
+<a name = "150"><h4>Nested Patterns</h4></a>
+Patterns can be nested, that is, you can write patterns of patterns. 
+In general, the <code>next</code> function does not return patterns. Instead,
+if the next item in a pattern is a (nested) pattern, <code>next</code> recursively
+gets the next item of the nested pattern.
+<p>
+While you might expect that each call to <code>next</code> would advance the
+top-level pattern to the next item, and descend recursively if necessary
+to the inner-most nesting level, this is not how <code>next</code> works. Instead,
+<code>next</code> remembers the last top-level item, and if it was a pattern, 
+<code>next</code> continues to generate items from that same inner pattern
+until the end of the inner pattern's <i>period</i> is reached. The next 
+paragraph explains the concept of the <i>period</i>.
+<p>
+<a name = "151"><h4>Periods</h4></a>
+The data returned by a pattern object is structured into logical groups
+called <i>periods</i>. You can get an entire period (as a list) by calling
+<code>next(<i>pattern</i>, t)</code><a name="index1047"></a>. For example:
+<p><pre>
+set pitch-source = make-cycle(list(c4, d4, e4, f4))
+print next(pitch-source, t)
+</pre></p>
+
+This prints the list <code>(60 62 64 65)</code>, which is one period 
+of the cycle.
+<p>
+You can also get explicit markers that 
+delineate periods by calling <code>send(<i>pattern</i>, :next)</code>. In this 
+case, the value returned is either the next item of the pattern, or the
+symbol <code>+eop+</code> if the end of a period has been reached. What 
+determines a period? This is up to the specific pattern class, so see the
+documentation for specifics. You can override the "natural" period
+using the keyword <code>for:</code>, e.g.
+<p><pre>
+set pitch-source = make-cycle(list(c4, d4, e4, f4), for: 3)
+print next(pitch-source, t)
+print next(pitch-source, t)
+</pre></p>
+
+This prints the lists <code>(60 62 64) (65 60 62)</code>. Notice that
+these periods just restructure the stream of items 
+into groups of 3.
+<p>
+Nested patterns are probably easier to understand by example than by
+specification. Here is a simple nested pattern of cycles:
+<p><pre>
+set cycle-1 = make-cycle({a b c})
+set cycle-2 = make-cycle({x y z})
+set cycle-3 = make-cycle(list(cycle-1, cycle-2))
+exec dotimes(i, 9, format(t, "~A ", next(cycle-3)))
+</pre></p>
+
+This will print "A B C X Y Z A B C". Notice that the inner-most
+cycles <code>cycle-1</code> and <code>cycle-2</code> generate a period of items
+before the top-level <code>cycle-3</code> advances to the next pattern.
+<p>
+<a name = "152"><h4>General Parameters for Creating Pattern objects</h4></a>
+Before describing specific pattern classes, there are several optional
+parameters that apply in the creating of any pattern object. These are:
 <dl>
 <dt>
-<code>piano-note(<a name="index1217"><a name="index1218"><i>duration</i>, <i>step</i>, 
- <i>dynamic</i>)</code> [SAL]<br>
+<code>for:</code><dd>The length of a period. This overrides the default 
+by providing a numerical length. The value of this optional 
+parameter may be a pattern that generates a sequence of integers
+that determine the length of each successive period. A period 
+length may not be negative, but it may be zero.<br><br>
+<dt><code>name:</code><dd>A pattern object may be given a name. This is useful 
+if the <code>trace:</code> option is used.<br><br>
+<dt><code>trace:</code><dd>If non-null, this optional parameter causes information
+about the pattern to be printed each time an item is generated 
+from the pattern.
+</dl>
+The built-in pattern classes are described in the following section.
+<p>
+<a name = "153"><h4>cycle</h4></a>
+The <code>cycle-class</code> iterates repeatedly through a list of items. 
+For example, two periods of <code>make-cycle({a b c})</code> would be
+<code>(A B C) (A B C)</code>. 
+<p>
+<dl>
+<dt>
+<code>make-cycle(<a name="index1048"></a><a name="index1049"></a><a name="index1050"></a><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
-<code>(piano-note <i>duration</i> <i>step</i> <i>dynamic</i>)</code> [LISP]<dd>Synthesizes a piano tone. <i>Duration</i> is the duration to the point of
-key release, after which there is a rapid decay. <i>Step</i> is the pitch in half
-steps, and <i>dynamic</i> is approximately equivalent to a MIDI key velocity
-parameter. Use a value near 100 for a loud sound and near 10 for a soft sound.<br><br>
-<dt><code>piano-note-2(<a name="index1219"><i>step</i>, <i>dynamic</i>)</code> [SAL]<br>
-
-<code>(piano-note-2 <i>step</i> <i>dynamic</i>)</code> [LISP]<dd>Similar to <code>piano-note</code> except the duration is nominally 1.0.<br><br>
-<dt><code>piano-midi(<a name="index1220"><i>midi-file-name</i>)</code> [SAL]<br>
-
-<code>(piano-midi <i>midi-file-name</i>)</code> [LISP]<dd>Use the piano synthesizer 
-to play a MIDI file. The file name (a string) is given by <i>midi-file-name</i>.<br><br>
-<dt><code>piano-midi2file(<a name="index1221"><i>midi-file-name</i>, 
-<i>sound-file-name</i>)</code> [SAL]<br>
-
-<code>(piano-midi2file <i>midi-file-name</i> <i>sound-file-name</i>)</code> [LISP]<dd>Use the piano synthesizer to play a MIDI file. The MIDI file
-is given by <i>midi-file-name</i> and the (monophonic) result is written to the file
-named <i>sound-file-name</i>.
+<code>(make-cycle <i>items</i> :for <i>for</i> :name <i>name</i>
+ :trace <i>trace</i>)</code> [LISP]<dd>Make a cycle 
+pattern that iterates over <i>items</i>. The default period length is the
+length of <i>items</i>. (See above for a description of the 
+optional parameters.) If <i>items</i> is a pattern, a period of the 
+pattern becomes the list from which items are generated. The
+list is replaced every period of the cycle.
 </dl>
 <p>
-<a name = "170"><h3>Dymanics Compression</h3></a>
-To use these functions, load the file <code>compress.lsp</code>. This library 
-implements a compressor originally intended for noisy speech audio, but
-usable in a variety of situations.
-There are actually two compressors that can be used in 
-series. The first, <code>compress</code>, is
-a fairly standard one: it detects signal level with an RMS
-detector and uses table-lookup to determine how much gain
-to place on the original signal at that point. One bit of
-cleverness here is that the RMS envelope is "followed" or
-enveloped using <code>snd-follow</code>, which does look-ahead to anticipate
-peaks before they happen.
-<p>
-The other interesting feature is <code>compress-map</code>, which builds 
-a map in terms of compression and expansion. For speech, the recommended
-procedure is to figure out the noise floor on the signal you are compressing
-(for example, look at the signal where the speaker is not talking).
-Use a compression map that leaves the noise alone and boosts
-signals that are well above the noise floor. Alas, the <code>compress-map</code>
-function is not written in these terms, so some head-scratching is
-involved, but the results are quite good.
-<p>
-The second compressor is called <code>agc</code>, and it implements automatic gain
-control that keeps peaks at or below 1.0. By combining <code>compress</code> and 
-<code>agc</code>, you can process poorly recorded speech for playback on low-quality
-speakers in noisy environments. The <code>compress</code> function modulates the 
-short-term gain to to minimize the total dynamic range, keeping the speech at
-a generally loud level, and the <code>agc</code> function rides the long-term gain
-to set the overall level without clipping.
+<a name = "154"><h4>line</h4></a>
+The <code>line-class</code> is similar to the cycle class, but when it reaches the 
+end of the list of items, it simply repeats the last item in the list. 
+For example, two periods of <code>make-line({a b c})</code> would be
+<code>(A B C) (C C C)</code>. 
 <p>
 <dl>
 <dt>
-<code>compress-map(<a name="index1222"><i>compress-ratio</i>, 
-<i>compress-threshold</i>, 
-<i>expand-ratio</i>, <i>expand-threshold</i>, limit: <i>limit</i>, transition: 
-<i>transition</i>)</code> [SAL]<br>
+<code>make-line(<a name="index1051"></a><a name="index1052"></a><a name="index1053"></a><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
 
-<code>(compress-map <i>compress-ratio</i> <i>compress-threshold</i>
- <i>expand-ratio</i> <i>expand-threshold</i> [:limit <i>limit</i> :transition
- <i>transition</i> :verbose <i>verbose</i>])</code> [LISP]<dd>Construct
-a map for the compress function. The map consists of two parts: a compression
-part and an expansion part.
-The intended use is to compress everything above compress-threshold by
-compress-ratio, and to downward expand everything below expand-ratio
-by expand-ratio.  Thresholds are in dB and ratios are dB-per-dB.
-0dB corresponds to a peak amplitude of 1.0 or rms amplitude of 0.7
-If the input goes above 0dB, the output can optionally be limited
-by setting <code>limit:</code> (a keyword parameter) to <code>T</code>. 
-This effectively changes 
-the compression ratio to infinity at 0dB.  If <code>limit:</code> is <code>nil</code>
-(the default), then the compression-ratio continues to apply above 0dB.<br><br>
-<dt>Another keyword parameter, <code>transition:</code>, sets the amount below the
-thresholds (in dB) that a smooth transition starts. The default is 0,
-meaning that there is no smooth transition. The smooth transition is a
-2nd-order polynomial that matches the slopes of the straight-line compression
-curve and interpolates between them.<br><br>
-<dt>If verbose is true (this is the default), the map is printed, showing,
-for each dB value below zero of this input, what is the gain (in dB) 
-indicated by the output. Only regions where the map is changing are 
-printed because at lower values, the dB gain is constant.<br><br>
-<dt>It is assumed that expand-threshold &lt;= compress-threshold &lt;= 0
-The gain is unity at 0dB so if compression-ratio &gt; 1, then gain
-will be greater than unity below 0dB.<br><br>
-<dt>The result returned by this function is a sound for use in the <code>shape</code>
-function. The sound maps input
-dB to gain. Time 1.0 corresponds to 0dB, time 0.0 corresponds to
--100 dB, and time 2.0 corresponds to +100dB, so this is a 
-100hz "sample rate" sound. The sound gives gain in dB.<br><br>
-<dt><code>db-average(<a name="index1223"><i>input</i>)</code> [SAL]<br>
-
-<code>(db-average <i>input</i>)</code> [LISP]<dd>Compute the average amplitude 
-of <i>input</i> in dB.<br><br>
-<dt><code>compress(<a name="index1224"><i>input</i>, <i>map</i>, <i>rise-time</i>, <i>fall-time</i> [, <i>lookahead</i>])</code> [SAL]<br>
-
-<code>(compress <i>input</i> <i>map</i> <i>rise-time</i> <i>fall-time</i>
- [<i>lookahead</i></code>)] [LISP]<dd>Compress 
-<i>input</i> using <i>map</i>, a compression curve
-probably generated by <code>compress-map</code> (see above). Adjustments in gain have
-the given <i>rise-time</i> and <i>fall-time</i>. Lookahead tells how far ahead to look
-at the signal, and is <i>rise-time</i> by default.<br><br>
-<dt><code>agc(<a name="index1225"><a name="index1226"><a name="index1227"><i>input</i>,
-<i>range</i>, <i>rise-time</i>, <i>fall-time</i> [, <i>lookahead</i>])</code> [SAL]<br>
-
-<code>(agc <i>input</i> <i>range</i> <i>rise-time</i> <i>fall-time</i>
- [<i>lookahead</i>])</code> [LISP]<dd>An automatic
-gain control applied to <i>input</i>. The maximum gain in dB is <i>range</i>. Peaks
-are attenuated to 1.0, and gain is controlled with the given <i>rise-time</i> and
-<i>fall-time</i>. The look-ahead time default is <i>rise-time</i>.
+<code>(make-line <i>items</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make a line 
+pattern that iterates over <i>items</i>. The default period length is the
+length of <i>items</i>. As with <code>make-cycle</code>, <i>items</i> may be a 
+pattern. (See above for a description of the optional parameters.)
 </dl>
 <p>
-<a name = "171"><h3>Clipping Softener</h3></a>
-This library, in <code>soften.lsp</code>, was written to improve the quality of
-poorly recorded speech. In recordings of speech, extreme clipping generates
-harsh high frequency noise. This can sound particulary bad on small speakers
-that will emphasize high frequencies. This problem can be ameliorated by 
-low-pass filtering regions where clipping occurs. The effect is to dull the
-harsh clipping. Intelligibility is not affected by much, and the result can
-be much more pleasant on the ears. Clipping is detected simply by looking for
-large signal values. Assuming 8-bit recording, this level is set to 126/127.
-<p>
-The function works by cross-fading between the normal signal and a filtered 
-signal as opposed to changing filter coefficients.
+<a name = "155"><h4>random</h4></a>
+The <code>random-class</code> generates items at random from a list. The default
+selection is uniform random with replacement, but items may be further 
+specified with a weight, a minimum repetition count, and a maximum 
+repetition count. Weights give the relative probability of the selection
+of the item (with a default weight of one). The minimum count specifies how
+many times an item, once selected at random, will be repeated. The maximum
+count specifies the maximum number of times an item can be selected in a row.
+If an item has been generated <i>n</i> times in succession, and the maximum
+is equal to <i>n</i>, then the item is disqualified in the next random selection.
+Weights (but not currently minima and maxima) can be patterns. The patterns 
+(thus the weights) are recomputed every period.  
 <p>
 <dl>
 <dt>
-<code>soften-clipping(<a name="index1228"><a name="index1229"><i>snd</i>, 
+<code>make-random(<a name="index1054"></a><a name="index1055"></a><a name="index1056"></a><i>items</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-random <i>items</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make a random 
+pattern that selects from <i>items</i>. Any (or all) element(s) of <i>items</i>
+may be lists of the following form: <code>(<i>value</i> :weight <i>weight</i>
+:min <i>mincount</i> :max <i>maxcount</i>)</code>, where <i>value</i> is the item 
+(or pattern) to be generated, <i>weight</i> is the (optional) 
+relative probability of 
+selecting this item, <i>mincount</i> is the (optional) minimum number of repetitions
+when this item is selected, and <i>maxcount</i> is the (optional) maximum number of 
+repetitions allowed before selecting some other item. The default period
+length is the length of <i>items</i>. If <i>items</i> is a pattern, a period
+from that pattern becomes the list from which random selections are
+made, and a new list is generated every period.
+</dl>
+<p>
+<a name = "156"><h4>palindrome</h4></a>
+The <code>palindrome-class</code> repeatedly traverses a list forwards and then 
+backwards. For example, two periods of <code>make-palindrome({a b c})</code> 
+would be <code>(A B C C B A) (A B C C B A)</code>. The <code>elide:</code>
+keyword parameter controls whether the first and/or last elements are
+repeated:
+<p><pre>
+make-palindrome({a b c}, elide: nil)
+     ;; generates A B C C B A A B C C B A ...
+
+make-palindrome({a b c}, elide: t)
+     ;; generates A B C B A B C B ...
+
+make-palindrome({a b c}, elide: :first)
+     ;; generates A B C C B A B C C B ...
+
+make-palindrome({a b c}, elide: :last)
+     ;; generates A B C B A A B C B A ...
+</pre></p>
+
+<p>
+<dl>
+<dt>
+<code>make-palindrome(<a name="index1057"></a><a name="index1058"></a><a name="index1059"></a><i>items</i>, elide: <i>elide</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-palindrome <i>items</i> :elide <i>elide</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate items
+from list alternating in-order and reverse-order sequencing. The keyword 
+parameter <i>elide</i> can have the values <code>:first</code>, <code>:last</code>, 
+<code>t</code>, or <code>nil</code> to control repetition of the first and last elements.
+The <i>elide</i> parameter can also be a pattern, in which case it is evaluated
+every period. One period is one complete forward and backward traversal
+of the list. If <i>items</i> is a pattern, a period
+from that pattern becomes the list from which random selections are
+made, and a new list is generated every period.
+</dl>
+<p>
+<a name = "157"><h4>heap</h4></a>
+The <code>heap-class</code> selects items in random order from a list
+ without replacement, which means that all items are generated once before
+any item is repeated. For example, two periods of <code>make-heap({a b c})</code>
+ might be <code>(C A B) (B A C)</code>. Normally, repetitions can occur 
+even if all list elements are distinct. This happens when the last element
+of a period is chosen first in the next period. To avoid repetitions, the
+<code>max:</code> keyword argument can be set to 1. The <code>max:</code> keyword only
+controls repetitions from the end of one period to the beginning of the next.
+If the list contains more than one copy of the same value, it may be repeated
+within a period regardless of the value of <code>max:</code>.
+<p>
+<dl>
+<dt>
+<code>make-heap(<a name="index1060"></a><a name="index1061"></a><a name="index1062"></a><i>items</i>, for: <i>for</i>, max: <i>max</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-heap <i>items</i> :for <i>for</i> :max <i>max</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate items
+randomly from list without replacement. If <i>max</i> is 1, the first element of 
+a new period will not be the same as the last element of the previous period,
+avoiding repetition. The default value of <i>max</i> is 2, meaning repetition is
+allowed. The period length is the length
+of <i>items</i>. If <i>items</i> is a pattern, a period
+from that pattern becomes the list from which random selections are
+made, and a new list is generated every period.
+</dl>
+<p>
+<a name = "158"><h4>accumulation</h4></a>
+The <code>accumulation-class</code> takes a list of values and returns
+the first, followed by the first two, followed by the first three, 
+etc. In other words, for each list item, return all items from the
+first through the item. For example, if the list is (A B C), each
+generated period is (A A B A B C).
+<p>
+<dl>
+<dt>
+<code>make-accumulation(<a name="index1063"></a><a name="index1064"></a><a name="index1065"></a><i>items</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-accumulation <i>items</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Return 
+the prefixes of items, e.g. the first element followed by the
+first and second elements, then the first three, until the 
+entire list is returned. The period length is (<i>n</i><sup T>2</sup> + <i>n</i>) / 2
+where <i>n</i> is the length of <i>items</i>.  If <i>items</i> is a pattern, a period
+from that pattern becomes the list from which items are generated,
+and a new list is generated every period. Note that this is similar in 
+name but different from <code>make-accumulate</code>.
+</dl>
+<p>
+<a name = "159"><h4>copier</h4></a>
+The <code>copier-class</code> makes copies of periods from a sub-pattern.
+For example, three periods 
+of <code>make-copier( make-cycle({a b c}, for: 1), repeat: 2, merge: t)</code>
+would be <code>(A A) (B B) (C C)</code>. Note that entire periods (not
+individual items) are repeated, so in this example the <code>for:</code> 
+keyword was used to force periods to be of length one so that 
+each item is repeated by the <code>repeat:</code> count.
+<p>
+<dl>
+<dt>
+<code>make-copier(<a name="index1066"></a><a name="index1067"></a><a name="index1068"></a><i>sub-pattern</i>, repeat: <i>repeat</i>, merge: <i>merge</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-copier <i>sub-pattern</i> :repeat <i>repeat</i> :merge <i>merge</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate a period
+from <i>sub-pattern</i> and repeat it <i>repeat</i> times. If <i>merge</i> is false
+(the default), each repetition of a period from <i>sub-pattern</i> results
+in a period by default. If <i>merge</i> is true (non-null), then all
+ <i>repeat</i> repetitions of the period are merged into one result
+period by default. If the <code>for:</code> keyword is used, the same items
+are generated, but the items are grouped into periods determined by
+the <code>for:</code> parameter. If the <code>for:</code> parameter is a pattern,
+it is evaluated every result period. The <i>repeat</i> and <i>merge</i> values 
+may be patterns that return a repeat count and a boolean value, respectively. 
+If so, these patterns are evaluated initially and after each <i>repeat</i>
+ copies are made (independent of the <code>for:</code> keyword parameter, if any).
+The <i>repeat</i> value returned by a pattern can also be negative. A negative
+number indicates how many periods of <i>sub-pattern</i> to skip. After skipping
+these patterns, new <i>repeat</i> and <i>merge</i> values are generated.
+</dl>
+<p>
+<a name = "160"><h4>accumulate</h4></a>
+The <code>accumulate-class</code> forms the sum of numbers returned by another
+pattern.  For example, each period
+of <code>make-accumulate(make-cycle({1 2 -3}))</code> is <code>(1 3 0)</code>.
+The default output period length is the length of the input period.
+<p>
+<dl>
+<dt>
+<code>make-accumulate(<a name="index1069"></a><a name="index1070"></a><a name="index1071"></a><i>sub-pattern</i>, for: <i>for</i>, max: <i>maximum</i>, min: <i>minimum</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-accumulate <i>sub-pattern</i> :for <i>for</i> :max <i>maximum</i> :min <i>minimum</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Keep
+a running sum of numbers generated by <i>sub-pattern</i>. The default
+period lengths match the period lengths from <i>sub-pattern</i>. If <i>maximum</i> (a pattern or a number) is specified, and the running sum exceeds <i>maximum</i>, the running sum is reset to <i>maximum</i>. If <i>minimum</i> (a pattern or a number) is specified, and the running sum falls below <i>minimum</i>, the running sum is reset to <i>minimum</i>. If <i>minimum</i> is greater than <i>maximum</i>, the running sum will be set to one of the two values. Note that this is similar in name but not in function to
+<code>make-accumulation</code>.
+</dl>
+<p>
+<a name = "161"><h4>sum</h4></a>
+The <code>sum-class</code> forms the sum of numbers, one from each of two other
+patterns.  For example, each period
+of <code>make-sum(make-cycle({1 2 3}), make-cycle({4 5 6}))</code> 
+is <code>(5 7 9)</code>.
+The default output period length is the length of the input period of the 
+first argument. Therefore, the first argument must be a pattern, but the
+second argument can be a pattern or a number.
+<p>
+<dl>
+<dt>
+<code>make-sum(<a name="index1072"></a><a name="index1073"></a><a name="index1074"></a><i>x</i>, <i>y</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-sum <i>x</i> <i>y</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Form
+sums of items (which must be numbers) from pattern
+ <i>x</i> and pattern or number <i>y</i>.  The default
+period lengths match the period lengths from <i>x</i>.
+</dl>
+<p>
+<a name = "162"><h4>product</h4></a>
+The <code>product-class</code> forms the product of numbers, one
+from each of two other
+patterns.  For example, each period
+of <code>make-product(make-cycle({1 2 3}), make-cycle({4 5 6}))</code> 
+is <code>(4 10 18)</code>.
+The default output period length is the length of the input period of the 
+first argument. Therefore, the first argument must be a pattern, but the
+second argument can be a pattern or a number.
+<p>
+<dl>
+<dt>
+<code>make-product(<a name="index1075"></a><a name="index1076"></a><a name="index1077"></a><i>x</i>, <i>y</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-product <i>x</i> <i>y</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Form
+products of items (which must be numbers) from pattern
+ <i>x</i> and pattern or number <i>y</i>.  The default
+period lengths match the period lengths from <i>x</i>.
+</dl>
+<p>
+<a name = "163"><h4>eval</h4></a>
+The <code>eval-class</code> evaluates an expression to produce each output item.
+The default output period length is 1.
+<p>
+<dl>
+<dt>
+<code>make-eval(<a name="index1078"></a><a name="index1079"></a><a name="index1080"></a><a name="index1081"></a><a name="index1082"></a><i>expr</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-eval <i>expr</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Evaluate
+<i>expr</i> to generate each item. If <i>expr</i> is a pattern, each item is generated by getting the next item from <i>expr</i> and evaluating it.
+</dl>
+<p>
+<a name = "164"><h4>length</h4></a>
+The <code>length-class</code> generates periods of a specified length from 
+another pattern. This is similar to using the <code>for:</code> keyword, but
+for many patterns, the <code>for:</code> parameter alters the points at which
+other patterns are generated. For example, if the palindrome pattern
+has an <code>elide:</code> pattern parameter, the value will be computed every
+period. If there is also a <code>for:</code> parameter with a value of 2, then
+<code>elide:</code> will be recomputed every 2 items. In contrast, if the 
+palindrome (without a <code>for:</code> parameter) is embedded in a <i>length</i>
+pattern with a lenght of 2, then the periods will all be of length 2, but
+the items will come from default periods of the palindrome, and therefore
+the <code>elide:</code> values will be recomputed at the beginnings of 
+default palindrome periods.
+<p>
+<dl>
+<dt>
+<code>make-length(<a name="index1083"></a><a name="index1084"></a><a name="index1085"></a><i>pattern</i>, <i>length-pattern</i>, 
+name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-length <i>pattern</i> <i>length-pattern</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make a pattern of class
+<code>length-class</code> that regroups items generated by a
+<i>pattern</i> according to pattern lengths given by <i>length-pattern</i>.
+Note that <i>length-pattern</i> is not optional: There is no default
+pattern length and no <code>for:</code> keyword.
+</dl>
+<p>
+<a name = "165"><h4>window</h4></a>
+The <code>window-class</code> groups items from another pattern by using a sliding
+window. If the <i>skip</i> value is 1, each output period is formed
+by dropping the first item of the previous perioda and appending the next item
+from the pattern. The <i>skip</i> value and the output period length can change
+every period. For a simple example, if the period length is 3 and the 
+skip value is 1, and the input pattern generates the sequence A, B, C, ...,
+then the output periods will be (A B C), (B C D), (C D E), (D E F), ....
+<p>
+<dl>
+<dt>
+<code>make-window(<a name="index1086"></a><a name="index1087"></a><a name="index1088"></a><i>pattern</i>, <i>length-pattern</i>, 
+<i>skip-pattern</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-window <i>pattern</i> <i>length-pattern</i> <i>skip-pattern</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Make
+ a pattern of class
+<code>window-class</code> that regroups items generated by a
+<i>pattern</i> according to pattern lengths given by <i>length-pattern</i> 
+and where the period advances by the number of items given by
+<i>skip-pattern</i>.
+Note that <i>length-pattern</i> is not optional: There is no default
+pattern length and no <code>for:</code> keyword.
+</dl>
+<p>
+<a name = "166"><h4>markov</h4></a>
+The <code>markov-class</code> generates items from a Markov model. A Markov model
+generates a sequence of <i>states</i> according to rules which specify possible
+future states
+given the most recent states in the past. For example, states might be 
+pitches, and each pitch might lead to a choice of pitches for the next state.
+In the <code>markov-class</code>, states can be either symbols or numbers, but
+not arbitrary values or patterns. This makes it easier to specify rules.
+However, symbols can be mapped to arbitrary values including pattern 
+objects, and these become the actual generated items.
+By default, all future states are weighted equally, but weights
+may be associated with future states. A Markov model must be
+initialized with
+a sequence of past states using the <code>past:</code> keyword. 
+The most common form of Markov model is a "first
+order Markov model" in which the future item depends only upon one
+past item. However, higher order models where the future items depend on
+two or more past items are possible. A "zero-order" Markov model, which
+depends on no past states, is essentially equivalent to the random pattern.
+As an example of a first-order Markov pattern,
+two periods of <code>make-markov({{a -&gt; b c} {b -&gt; c} {c -&gt; a}}, past: {a})</code>
+might be <code>(C A C) (A B C)</code>.
+<p>
+<dl>
+<dt>
+<code>make-markov(<a name="index1089"></a><a name="index1090"></a><a name="index1091"></a><i>rules</i>, past: <i>past</i>, produces: <i>produces</i>, for: <i>for</i>, name: <i>name</i>, trace: <i>trace</i>)</code> [SAL]<br>
+
+<code>(make-markov <i>rules</i> <i>past</i> :produces <i>produces</i> :for <i>for</i> :name <i>name</i> :trace <i>trace</i>)</code> [LISP]<dd>Generate a sequence
+of items from a Markov process. The <i>rules</i> parameter has the form: 
+<code>(<i>prev1</i> <i>prev2</i> ... <i>prevn</i> -&gt; <i>next1</i> <i>next2</i> ... <i>nextn</i>)</code>
+where <i>prev1</i> through <i>prevn</i> represent a sequence of most recent
+(past) states. The symbol <code>*</code> is treated specially: it matches any
+previous state. If <i>prev1</i> through <i>prevn</i> (which may be just one state
+as in the example above) match the previously generated states, this
+rule applies. Note that every rule must specify the same number of previous
+states; this number is known as the order of the Markov model.
+The first rule in <i>rules</i> that applies is used to select the
+next state. If no rule applies, the next state is <code>NIL</code> (which is 
+a valid state that can be used in rules).
+Assuming a rule applies, the list of possible next
+states is specified by <i>next1</i> 
+through <i>nextn</i>. Notice that these are alternative choices for the
+next state, not a sequence of future states, and each rule can have
+any number of choices. Each choice may be the state
+itself (a symbol or a number), or the choice may be a list consisting of
+the state and a weight. The weight may be given by a pattern, in which
+case the next item of the pattern is obtained every time the rule is 
+applied. For example, this rules says that if the previous states were
+A and B, the next state can be A with a weight of 0.5 or C with an 
+implied weight of 1: <code>(A B -&gt; (A 0.5) C)</code>. The
+default length of the period is the length of <i>rules</i>. The 
+<i>past</i> parameter must be provided. It is a list of states whose length
+matches the order of the Markov model. The keyword parameter <i>produces</i>
+may be used to map from state symbols or numbers to other values or 
+patterns. The parameter is a list of alternating symbols and values. For
+example, to map A to 69 and B to 71, use <code>list(quote(a), 69, quote(b), 71)</code>.
+  You can
+also map symbols to patterns, for example
+<code>list(quote(a), make-cycle({57 69}), quote(b), make-random({59 71}))</code>. The
+next item of the pattern is is generated each time the Markov model generates
+the corresponding state.  Finally, the <i>produces</i> keyword can be 
+<code>:eval</code>, which means to evaluate the Markov model state. This could 
+be useful if states are Nyquist global variables such as 
+<code>C4, CS4, D4, ]..., which evaluate to numerical 
+values (60, 61, 62, ...</code>.<br><br>
+<dt><code>markov-create-rules(<a name="index1092"></a><a name="index1093"></a><i>sequence</i>, <i>order</i> [, <i>generalize</i>])</code> [SAL]<br>
+
+<code>(markov-create-rules <i>sequence</i> <i>order</i> [<i>generalize</i>])</code> [LISP]<dd>Generate a set of rules suitable for the 
+<code>make-markov</code> function. The <i>sequence</i> is a "typical" sequence
+of states, and <i>order</i> is the order of the Markov model. It is often the
+case that a sample sequence will not have a transition from the last state 
+to any other state, so the generated Markov model can reach a "dead end" 
+where no rule applies. This might lead to an infinite stream of NIL's. To
+avoid this, the optional parameter <i>generalize</i> can be set to <code>t</code> 
+(true), indicating that there should be a fallback rule that matches any
+previous states and whose future states are weighted according to their
+frequency in <i>sequence</i>. For example, if sequence contains 5 A's, 5 B's and
+10 G's, the default rule will be <code>(* -&gt; (A 5) (B 5) (G 10))</code>. This
+rule will be appended to the end so it will only apply if no other rule does.
+</dl>
+<p>
+<a name = "167"><h3>Random Number Generators</h3></a>
+<a name="index1094"></a><a name="index1095"></a><a name="index1096"></a><a name="index1097"></a>
+The <code>distributions.lsp</code> library implements random number generators that return random values with various probability distributions. Without this library, you can generate random numbers with <i>uniform</i> distributions. In a uniform distribution, all values are equally likely. To generate a random integer in some range, use <code>random</code>. To generate a real number (FLONUM) in some range, use <code>real-random</code> (or <code>rrandom</code> if the range is 0-1). But there are other interesting distributions. For example, the Gaussian distribution is often used to model 
+real-world errors and fluctuations where values are clustered around some central value and large deviations are more unlikely than small ones. See Dennis Lorrain, "A Panoply of Stochastic 'Canons'," <i>Computer Music Journal</i> vol. 4, no. 1, 1980, pp. 53-81.
+<p>
+In most of the random number generators described below, there are optional parameters to indicate a maximum and/or minimum value. These can be used to truncate the distribution. For example, if you basically want a Gaussian distribution, but you never want a value greater than 5, you can specify 5 as the maximum value. 
+The upper and lower bounds are implemented simply by drawing a random number from the full distribution repeatedly until a number falling into the desired range is obtained. Therefore, if you select an acceptable range that is unlikely, it may take Nyquist a long time to find each acceptable random number. The intended use of the upper and lower bounds is to weed out values that are already fairly unlikely.
+<p>
+<dl>
+<dt>
+<code>linear-dist(<a name="index1098"></a><a name="index1099"></a><i>g</i>)</code> [SAL]<br>
+
+<code>(linear-dist <i>g</i>)</code> [LISP]<dd>Return a <code>FLONUM</code> value from a linear distribution, where the probability of a value decreases linearly from zero to <i>g</i> which must be greater than zero. (See Figure <a href = "#167">7</a>.) The linear distribution is useful for generating for generating time and pitch intervals.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="linear-fig.gif"><br><br>
+
+<p>
+<b>Figure 7: </b>The Linear Distribution, <i>g</i> = 1.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>exponential-dist(<a name="index1100"></a><a name="index1101"></a><i>delta</i> [, <i>high</i>])</code> [SAL]<br>
+
+<code>(exponential-dist <i>delta</i> [<i>high</i>])</code> [LISP]<dd>Return a <code>FLONUM</code> value from an exponential distribution. The initial downward slope is steeper with larger values of <i>delta</i>, which must be greater than zero. (See Figure <a href = "#167">8</a>. The optional <i>high</i> parameter puts an artificial upper bound on the return value.
+The exponential distribution generates values greater
+than 0, and can be used to generate time intervals. Natural random intervals such as the time intervals between the release of atomic particles or the passing of yellow volkswagons in traffic have exponential distributions. The
+exponential distribution is memory-less: knowing that a random number from this distribution is greater than some value (e.g. a note duration is at least 1 second) tells you nothing new about how soon the note will end. This
+is a continuous distribution, but <code>geometric-dist</code> (described below) implements the discrete form.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="exponential-fig.gif"><br><br>
+
+<p>
+<b>Figure 8: </b>The Exponential Distribution, <i>delta</i> = 1.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>gamma-dist(<a name="index1102"></a><i>nu</i> [, <i>high</i>])</code> [SAL]<br>
+
+<code>(gamma-dist <i>nu</i> [<i>high</i>])</code> [LISP]<dd>Return a <code>FLONUM</code> value from a Gamma distribution. The value is greater than zero, has a mean of <i>nu</i> (a <code>FIXNUM</code> greater than zero), and a mode (peak) of around <i>nu</i> - 1. 
+ The optional <i>high</i> parameter puts an artificial upper bound on the return value.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="gamma-fig.gif"><br><br>
+
+<p>
+<b>Figure 9: </b>The Gamma Distribution, <i>nu</i> = 4.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>bilateral-exponential-dist(<a name="index1103"></a><a name="index1104"></a><i>xmu</i>,
+ <i>tau</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
+
+<code>(bilateral-exponential-dist <i>xmu</i> <i>tau</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> value from a bilateral exponential distribution, where <i>xmu</i> is the center of the double exponential and <i>tau</i> controls the spread of the distribution. A larger <i>tau</i> gives a wider distribution (greater variance), and <i>tau</i> must be greater than zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+This distribution is similar to the exponential, except
+it is centered at 0 and can output negative values as well. Like
+the exponential, it can be used to generate time intervals; however, it might be necessary to add a lower bound so as not to compute a negative time interval.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="bilateral-fig.gif"><br><br>
+
+<p>
+<b>Figure 10: </b>The Bilateral Exponential Distribution.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>cauchy-dist(<a name="index1105"></a><a name="index1106"></a><i>tau</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
+
+<code>(cauchy-dist <i>tau</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> from the Cauchy distribution, a symmetric distribution with a high peak at zero and a width (variance) that increases with parameter <i>tau</i>, which must be greater than zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="cauchy-fig.gif"><br><br>
+
+<p>
+<b>Figure 11: </b>The Cauchy Distribution, <i>tau</i> = 1.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>hyperbolic-cosine-dist(<a name="index1107"></a>[<i>low</i>, <i>high</i>])</code> [SAL]<br>
+
+<code>(hyperbolic-cosine-dist [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the hyperbolic cosine distribution, a symmetric distribution with its peak at zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="hyperbolic-fig.gif"><br><br>
+
+<p>
+<b>Figure 12: </b>The Hyperbolic Cosine Distribution.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>logistic-dist(<a name="index1108"></a><a name="index1109"></a><i>alpha</i>, <i>beta</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
+
+<code>(logistic-dist <i>alpha</i> <i>beta</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the logistic distribution, which is symmetric about the mean. The <i>alpha</i> parameter primarily affects dispersion (variance), with larger values resulting in values closer to the mean (less variance), and the <i>beta</i> parameter primarily influences the mean. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="logistic-fig.gif"><br><br>
+
+<p>
+<b>Figure 13: </b>The Logistic Distribution, alpha = 1, beta = 2.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>arc-sine-dist(<a name="index1110"></a><a name="index1111"></a>)</code> [SAL]<br>
+
+<code>(arc-sine-dist)</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the arc sine distribution, which outputs values between 0 and 1. It is symmetric about the mean of 1/2, but is more likely to generate values closer to 0 and 1. 
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="arcsine-fig.gif"><br><br>
+
+<p>
+<b>Figure 14: </b>The Arc Sine Distribution.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>gaussian-dist(<a name="index1112"></a><a name="index1113"></a><i>xmu</i>, <i>sigma</i> [, <i>low</i>, <i>high</i>])</code> [SAL]<br>
+
+<code>(gaussian-dist <i>xmu</i> <i>sigma</i> [<i>low</i> <i>high</i>])</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the Gaussian or Gauss-Laplace distribution, a linear function of the normal distribution. It is symmetric about the mean of <i>xmu</i>, with a standard deviation of <i>sigma</i>, which must be greater than zero. The <i>low</i> and <i>high</i> parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="gaussian-fig.gif"><br><br>
+
+<p>
+<b>Figure 15: </b>The Gauss-Laplace (Gaussian) Distribution, <i>xmu</i> = 0, <i>sigma</i> = 1.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>beta-dist(<a name="index1114"></a><a name="index1115"></a><i>a</i>, <i>b</i>)</code> [SAL]<br>
+
+<code>(beta-dist <i>a</i> <i>b</i>)</code> [LISP]<dd>Returns a <code>FLONUM</code> value from the Beta distribution. This distribution outputs values between 0 and 1, with outputs more likely to be close to 0 or 1. The parameter <i>a</i> controls the height (probability) of the right side of the distribution (at 1) and <i>b</i> controls the height of the left side (at 0). The distribution is symmetric about 1/2 when <i>a</i> = <i>b</i>.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="beta-fig.gif"><br><br>
+
+<p>
+<b>Figure 16: </b>The Beta Distribution, <i>alpha</i> = .5, <i>beta</i> = .25.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>bernoulli-dist(<a name="index1116"></a><a name="index1117"></a><i>px1</i> [, <i>x1</i>, <i>x2</i>])</code> [SAL]<br>
+
+<code>(bernoulli-dist <i>px1</i> [<i>x1</i> <i>x2</i>])</code> [LISP]<dd>Returns either <i>x1</i> (default value is 1) with probability <i>px1</i> or <i>x2</i> (default value is 0) with probability 1 - <i>px1</i>. The value of <i>px1</i> should be between 0 and 1. By
+convention, a result of <i>x1</i> is viewed as a success while <i>x2</i> is viewed as
+a failure.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="bernoulli-fig.gif"><br><br>
+
+<p>
+<b>Figure 17: </b>The Bernoulli Distribution, <i>px1</i> = .75.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>binomial-dist(<a name="index1118"></a><a name="index1119"></a><i>n</i>, <i>p</i>)</code> [SAL]<br>
+
+<code>(binomial-dist <i>n</i> <i>p</i>)</code> [LISP]<dd>Returns a <code>FIXNUM</code> value from the binomial distribution, where <i>n</i> is the number of Bernoulli trials run (a <code>FIXNUM</code>) and <i>p</i> is the probability of success in the Bernoulli trial (a <code>FLONUM</code> from 0 to 1). The mean is the product of <i>n</i> and <i>p</i>.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="binomial-fig.gif"><br><br>
+
+<p>
+<b>Figure 18: </b>The Binomial Distribution, <i>n</i> = 5, <i>p</i> = .5.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>geometric-dist(<a name="index1120"></a><a name="index1121"></a><i>p</i>)</code> [SAL]<br>
+
+<code>(geometric-dist <i>p</i>)</code> [LISP]<dd>Returns a <code>FIXNUM</code> value from the geometric distribution, which is defined as the number of failures before a success is achieved in a Bernoulli trial with probability of success <i>p</i> (a <code>FLONUM</code> from 0 to 1).
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="geometric-fig.gif"><br><br>
+
+<p>
+<b>Figure 19: </b>The Geometric Distribution, <i>p</i> = .4.
+
+<hr>
+<p>
+<dl>
+<dt>
+<code>poisson-dist(<a name="index1122"></a><a name="index1123"></a><i>delta</i>)</code> [SAL]<br>
+
+<code>(poisson-dist <i>delta</i>)</code> [LISP]<dd>Returns a <code>FIXNUM</code> value from the Poisson distribution with a mean of <i>delta</i> (a <code>FIXNUM</code>). The Poisson distribution is often used to generate a sequence of time intervals, resulting in random but often pleasing rhythms.
+</dl>
+<p>
+<hr>
+<blockquote>
+</blockquote>
+<img src="poisson-fig.gif"><br><br>
+
+<p>
+<b>Figure 20: </b>The Poisson Distribution, <i>delta</i> = 3.
+
+<hr>
+<p>
+
+<p>
+<a name = "168"><h3>Score Generation and Manipulation</h3></a>
+<p>
+A common application of pattern generators is to specify parameters 
+for notes. (It should be understood that "notes" in this context
+means any Nyquist behavior, whether it represents a conventional note,
+an abstract sound object, or even some micro-sound event that is just
+a low-level component of a hierarchical sound organization. Similarly,
+"score" should be taken to mean a specification for a 
+sequence of these "notes.") 
+The <code>score-gen</code> macro (defined by 
+loading <code>xm.lsp</code>) establishes a convention for representing 
+scores and for generating them using patterns.
+<p>
+The <code>timed-seq</code> macro, described in Section <a href = "part8.html#95">"Combination and Time Structure"</a>, 
+already provides a way to represent a "score" as a list of expressions.
+The Xmusic representation goes a bit further by specifying that
+<i>all notes are specified by an alternation of keywords and values, where
+some keywords have specific meanings and interpretations.</i>
+<p>
+The basic idea of <code>score-gen</code><a name="index1124"></a> is you provide a template for notes in 
+a score as a set of keywords and values. For example,
+<p><pre>
+set pitch-pattern = make-cycle(list(c4, d4, e4, f4))
+score-gen(dur: 0.4, name: quote(my-sound),
+          pitch: next(pitch-pattern), score-len: 9)
+</pre></p>
+
+generates a score of 9 notes as follows:
+<p><pre>
+((0 0 (SCORE-BEGIN-END 0 3.6))
+ (0 0.4 (MY-SOUND :PITCH 60))
+ (0.4 0.4 (MY-SOUND :PITCH 62))
+ (0.8 0.4 (MY-SOUND :PITCH 64))
+ (1.2 0.4 (MY-SOUND :PITCH 65))
+ (1.6 0.4 (MY-SOUND :PITCH 60))
+ (2 0.4 (MY-SOUND :PITCH 62))
+ (2.4 0.4 (MY-SOUND :PITCH 64))
+ (2.8 0.4 (MY-SOUND :PITCH 65))
+ (3.2 0.4 (MY-SOUND :PITCH 60)))
+</pre></p>
+
+The use of keywords like <code>:PITCH</code> helps to make scores
+readable and easy to process without specific knowledge of 
+about the functions called in the score. For example, one 
+could write a transpose operation to transform all the 
+<code>:pitch</code> parameters in a score without having to know 
+that pitch is the first parameter of <code>pluck</code> and the
+second parameter of <code>piano-note</code>. Keyword parameters are
+also used to give flexibility to note specification with
+<code>score-gen</code>. Since this approach requires the use of
+keywords, the next section 
+is a brief explanation of how to define functions that use
+keyword parameters.
+<p>
+<a name = "169"><h4>Keyword Parameters</h4></a>
+<a name="index1125"></a>
+<a name="index1126"></a>
+Keyword parameters are parameters whose presence is
+indicated by a special symbol, called a keyword, followed
+by the actual parameter. Keyword parameters in SAL have
+default values that are used if no actual parameter is
+provided by the caller of the function. (See Appendix
+ <a href = "part19.html#218">"XLISP: An Object-oriented Lisp"</a> to learn about keywords in XLISP.)
+<p>
+To specify that a parameter is a keyword parameter, 
+use a keyword symbol (one that ends in a colon) followed
+by a default value.
+  For example, here is a function that
+accepts keyword parameters and invokes the <code>pluck</code> 
+function:
+<p><pre>
+define function k-pluck(pitch: 60, dur: 1)
+  return pluck(pitch, dur)
+</pre></p>
+
+Now, we can call k-pluck with keyword parameters. The 
+keywords are simply the formal parameter names with
+a prepended colon character (<code>:pitch</code> and <code>:dur</code>
+in this example), so a function call would look like:
+<p><pre>
+k-pluck(pitch: c3, dur: 3)
+</pre></p>
+
+Usually, it is best to give keyword parameters useful
+default values. That way, if a parameter such as <code>dur:</code>
+is missing, a reasonable default value (1) can be used
+automatically. 
+It is never an error to omit a keyword parameter, but the
+called function can check to see if a keyword parameter 
+was supplied or not.
+Because of default values, we can call 
+<code>k-pluck(pitch: c3)</code> with no duration, 
+<code>k-pluck(dur: 3)</code> with only a duration, 
+or even <code>k-pluck()</code> with no parameters.
+<p>
+In XLISP, there is additional syntax to specify an alternate symbol
+to be used as the keyword and to allow the called function
+to determine whether or not a keyword parameter was 
+supplied, but these features are little-used. See the XLISP
+manual for details.
+<p>
+<a name = "170"><h4>Using score-gen</h4></a><a name="index1127"></a>
+The <code>score-gen</code> macro computes a score based on keyword parameters.
+Some keywords have a special meaning, while others are not interpreted
+but merely placed in the score. The resulting score can be synthesized
+using <code>timed-seq</code> (see Section <a href = "part8.html#95">"Combination and Time Structure"</a>).
+<p>
+The form of a call to <code>score-gen</code> is simply:
+<dl>
+<dt>
+<code>score-gen(<a name="index1128"></a><i>k1:</i> <i>e1</i>, <i>k2:</i> <i>e2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+
+<code>(score-gen <i>:k1</i> <i>e1</i> <i>:k2</i> <i>e2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>where the <i>k</i>'s 
+are keywords and the <i>e</i>'s are 
+expressions. A score is generated by evaluating the expressions once for 
+each note and constructing a list of keyword-value pairs. A number
+of keywords have special interpretations. The rules for interpreting
+these parameters will be explained through a set of "How do I ..." 
+questions below.
+</dl>
+<p>
+<i>How many notes will be generated?</i> The keyword 
+parameter <code>score-len:</code> specifies an upper bound on the number
+of notes. (Note: in LISP syntax, keywords
+are always <i>preceded</i> by colons, so you would write
+<code>:score-len</code> instead.) The keyword <code>score-dur:</code> specifies an upper bound
+on the starting time of the last note in the score. (To be more
+precise, the <code>score-dur:</code> bound is reached when the 
+default starting time of the next note is greater than or equal
+to the <code>score-dur:</code> value. This definition is necessary because
+note times are not strictly increasing.) When either bound
+is reached, score generation ends. At least one of these two
+parameters must be specified or an error is raised. These keyword
+parameters are evaluated just once and are not copied into the
+parameter lists of generated notes.
+<p>
+<i>What is the duration of generated notes?</i> The 
+keyword <code>dur:</code> defaults to 1 and specifies the nominal duration
+in seconds. Since the generated note list is compatible with 
+<code>timed-seq</code>, the starting time and duration (to be precise, the
+<i>stretch factor</i>) are not passed as parameters to the notes. Instead,
+they control the Nyquist environment in which the note will be evaluated.
+<p>
+<i>What is the start time of a note?</i> The default start time of the
+first note is zero. Given a note, the default start time of the next note is 
+the start time plus the inter-onset time, which is given by the <code>ioi:</code>
+parameter. If no <code>ioi:</code> parameter is specified, the inter-onset time
+defaults to the duration, given by <code>dur:</code>. In all cases, the default
+start time of a note can be overridden by the keyword parameter <code>time:</code>.
+<p>
+<i>When does the score begin and end?</i> The behavior <code>SCORE-BEGIN-END</code> 
+contains the beginning and ending of the
+score (these are used for score manipulations, e.g. when scores are merged,
+their begin times can be aligned.) When <code>timed-seq</code> is used to 
+synthesize a score, the <code>SCORE-BEGIN-END</code> marker is
+not evaluated. The <code>score-gen</code> macro inserts a "note" of the form
+<code>(0 0 (SCORE-BEGIN-END <i>begin-time</i> <i>end-time</i>))</code> 
+at the time given by the <code>begin:</code> keyword, with <i>begin-time</i> and 
+<i>end-time</i> determined by the <code>begin:</code> and <code>end:</code> 
+keyword parameters, respectively. If the <i>begin:</i> keyword is not 
+provided, the score begins at zero. If the <code>end:</code> keyword
+is not provided, the score ends at the default start time
+of what would be the next note after the last note in the score 
+(as described in the previous paragraph). Note: if <code>time:</code> is used to 
+compute note starting times, and these times are not increasing, it is
+strongly advised to use <code>end:</code> to specify an end time for the score,
+because the default end time may be anywhere in the middle of the 
+generated sequence.
+<p>
+<i>What function is called to synthesize the note?</i> The <code>name:</code> 
+parameter names the function. Like other parameters, the value can be any
+expression, including something like <code>next(fn-name-pattern)</code>,
+allowing function names to be recomputed for each note. The default value 
+is <code>note</code>.
+<p>
+<i>Can I make parameters depend upon the starting time or the duration
+of the note?</i> Parameter expressions can use the variable <code>sg:start</code> 
+to access the start time of the note, <code>sg:ioi</code> to access the 
+inter-onset time, and <code>sg:dur</code> to access the 
+duration (stretch factor) of the note. Also, <code>sg:count</code> counts how 
+many notes have been computed so far, starting at 0. The order of 
+computation is: <code>sg:start</code> first, then <code>sg:ioi</code> and <code>sg:dur</code>,
+so for example, an expression to compute <code>sg:dur</code> can 
+depend on <code>sg:ioi</code>.
+<p>
+<i>Can parameters depend on each other?</i> The keyword <code>pre:</code> 
+introduces an expression that is evaluated before each note, and 
+<code>post:</code> provides an expression to be evaluated after each note. 
+The <code>pre:</code> expression can assign one or more global variables 
+which are then used in one or more expressions for parameters.
+<p>
+<i>How do I debug <code>score-gen</code> expressions?</i> You can set the 
+<code>trace:</code> parameter to true (<code>t</code>) to enable a print statement
+for each generated note.
+<p>
+<i>How can I save scores generated by <code>score-gen</code> that I like?</i> If the
+keyword parameter <code>save:</code> is set to a symbol, the global variable
+named by the symbol is set to the value of the generated sequence. Of 
+course, the value returned by <code>score-gen</code> is just an ordinary list that
+can be saved like any other value.
+<p>
+In summary, the following keywords have special interpretations 
+in <code>score-gen</code>: 
+<code>begin:</code>, <code>end:</code>, <code>time:</code>, <code>dur:</code>, <code>name:</code>, 
+<code>ioi:</code>, <code>trace:</code>,
+<code>save:</code>, <code>score-len:</code>, <code>score-dur:</code>, <code>pre:</code>, <code>post:</code>.
+ All other keyword
+parameters are expressions that are evaluated once for each note
+and become the parameters of the notes.
+<p>
+<a name = "171"><h4>Score Manipulation</h4></a>
+<a name="index1129"></a><a name="index1130"></a>
+Nyquist encourages the representation of music as 
+executable programs, or <i>behaviors</i>, and there are various
+ways to modify behaviors, including time stretching, 
+transposition, etc. An alternative to composing executable
+programs is to manipulate scores as editable data. Each 
+approach has its strengths and weaknesses. This section 
+describes functions intended to manipulate Xmusic scores
+as generated by, or at least in the form generated by, 
+<code>score-gen</code>. Recall that this means scores are lists
+of events (e.g. notes), where events are three-element lists of the form
+(<i>time</i> <i>duration</i> <i>expression</i>, and where <i>expression</i>
+is a standard lisp function call where all parameters are
+keyword parameters. In addition, the first "note" may be
+the special <code>SCORE-BEGIN-END</code> expression. If this is 
+missing, the score begins at zero and ends at the end of the
+last note.
+<p>
+For convenience, a set of functions is offered to access properties
+of events (or notes) in scores. Although lisp functions such as 
+<code>car</code>, <code>cadr</code>, and <code>caddr</code> can be used, code is more
+readable when more mnemonic functions are used to access events.
+<p>
+<dl>
+<dt>
+<code>event-time(<a name="index1131"></a><i>event</i>)</code> [SAL]<br>
+
+<code>(event-time <i>event</i>)</code> [LISP]<dd>Retrieve the time field from 
+an event.<br><br>
+<dt><code>event-set-time(<a name="index1132"></a><i>event</i>, <i>time</i>)</code> [SAL]<br>
+
+<code>(event-set-time <i>event</i> <i>time</i>)</code> [LISP]<dd>Construct
+a new event where the time of <i>event</i> is replaced by <i>time</i>.<br><br>
+<dt><code>event-dur(<a name="index1133"></a><i>event</i>)</code> [SAL]<br>
+
+<code>(event-dur <i>event</i>)</code> [LISP]<dd>Retrieve the duration 
+(i.e. the stretch factor) field from an event.<br><br>
+<dt><code>event-set-dur(<a name="index1134"></a><i>event</i>, <i>dur</i>)</code> [SAL]<br>
+
+<code>(event-set-dur <i>event</i> <i>dur</i>)</code> [LISP]<dd>Construct
+a new event where the duration (or stretch factor) of <i>event</i> is
+replaced by <i>dur</i>.<br><br>
+<dt><code>event-expression(<a name="index1135"></a><i>event</i>)</code> [SAL]<br>
+
+<code>(event-expression <i>event</i>)</code> [LISP]<dd>Retrieve the expression 
+field from an event.<br><br>
+<dt><code>event-set-expression(<a name="index1136"></a><i>event</i>, 
+<i>dur</i>)</code> [SAL]<br>
+
+<code>(event-set-expression <i>event</i> <i>dur</i>)</code> [LISP]<dd>Construct
+a new event where the expression of <i>event</i> is replaced by <i>expression</i>.<br><br>
+<dt><code>event-end(<a name="index1137"></a><i>event</i>)</code> [SAL]<br>
+
+<code>(event-end <i>event</i>)</code> [LISP]<dd>Retrieve the end time 
+of <i>event</i>, its time plus its duration.<br><br>
+<dt><code>expr-has-attr(<a name="index1138"></a><i>expression</i>, <i>attribute</i>)</code> [SAL]<br>
+
+<code>(expr-has-attr <i>expression</i> <i>attribute</i>)</code> [LISP]<dd>Test 
+whether a score event <i>expression</i> has the given <i>attribute</i>.<br><br>
+<dt><code>expr-get-attr(<a name="index1139"></a><i>expression</i>, <i>attribute</i> [, <i>default</i>])</code> [SAL]<br>
+
+<code>(expr-get-attr <i>expression</i> <i>attribute</i> [<i>default</i>])</code> [LISP]<dd>Get the value of the given <i>attribute</i> from a score event
+<i>expression</i>. If <i>attribute</i> is not present, return <i>default</i> if
+specified, and otherwise <code>nil</code>.<br><br>
+<dt><code>expr-set-attr(<a name="index1140"></a><i>expr</i>, <i>attribute</i>, <i>value</i>)</code> [SAL]<br>
+
+<code>(expr-set-attr <i>expr</i> <i>attribute</i> <i>value</i>)</code> [LISP]<dd>Construct a new expression identical to <i>expr</i> except that the <i>attribute</i> has <i>value</i>.<br><br>
+<dt><code>event-has-attr(<a name="index1141"></a><i>event</i>, <i>attribute</i>)</code> [SAL]<br>
+
+<code>(event-has-attr <i>event</i> <i>attribute</i>)</code> [LISP]<dd>Test 
+whether a given score <i>event</i>'s expression has the given <i>attribute</i>.<br><br>
+<dt><code>event-get-attr(<a name="index1142"></a><i>event</i>, <i>attribute</i>, 
+[<i>default</i>])</code> [SAL]<br>
+
+<code>(event-get-attr <i>event</i> <i>attribute</i> [<i>default</i>])</code> [LISP]<dd>Get the value of the given <i>attribute</i> from a score 
+<i>event</i>'s expression. If <i>attribute</i> is not present, return <i>default</i> if
+specified, and otherwise <code>nil</code>.<br><br>
+<dt><code>event-set-attr(<a name="index1143"></a><i>event</i>, <i>attribute</i>, <i>value</i>)</code> [SAL]<br>
+
+<code>(event-set-attr <i>event</i> <i>attribute</i> <i>value</i>)</code> [LISP]<dd>Construct a new event identical to <i>event</i> except that the <i>attribute</i> has <i>value</i>.
+</dl>
+<p>
+Functions are provided to shift the starting times of notes,
+stretch times and durations, stretch only durations,
+add an offset to a keyword parameter, scale a keyword parameter, and
+other manipulations. Functions are also provided to extract 
+ranges of notes, notes that match criteria, and to combine scores.
+Most of these functions (listed below in detail)
+share a set of keyword parameters that optionally limit the range over which 
+the transformation operates. The <code>from-index:</code> and <code>to-index:</code> 
+parameters specify the index of the first note and the index of the
+last note to be changed. If these numbers are negative, they are offsets 
+from the end of the score, e.g. -1 denotes the last note of the score. The
+<code>from-time:</code> and <code>to-time:</code> indicate a range of starting times
+of notes that will be affected by the manipulation. Only notes whose time
+is greater than or equal to the <i>from-time</i> and <i>strictly less than</i>
+ the <i>to-time</i> are modified. If both index and time ranges are specified,
+only notes that satisfy <i>both</i> constraints are selected. (Note: in
+LISP syntax, colons <i>precede</i> the keyword, so use
+<code>:from-index</code>, <code>:to-index</code>, <code>:from-time</code>, and <code>:to-time</code>.)
+<p>
+<dl>
+<dt>
+<code>score-sorted(<a name="index1144"></a><i>score</i>)</code> [SAL]<br>
+
+<code>(score-sorted <i>score</i>)</code> [LISP]<dd>Test if <i>score</i> is sorted.<br><br>
+<dt><code>score-sort(<a name="index1145"></a><i>score</i> [, <i>copy-flag</i>])</code> [SAL]<br>
+
+<code>(score-sort <i>score</i> [<i>copy-flag</i>])</code> [LISP]<dd>Sort
+ the notes in a 
+score into start-time order. If copy-flag is nil, this is a destructive
+operation which should only be performed if the top-level score list
+is a fresh copy that is not shared by any other variables. (The 
+<i>copy-flag</i> is intended for internal system use only.)
+ For the following operations, it is assumed
+that scores are sorted, and all operations return a sorted score.<br><br>
+<dt><code>score-shift(<a name="index1146"></a><i>score</i>, <i>offset</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+ to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-shift <i>score</i> <i>offset</i>
+ :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i>
+ :to-time <i>y</i>)</code> [LISP]<dd>Add a constant 
+<i>offset</i> to the starting time of a set of notes in <i>score</i>. By default,
+all notes are modified, but the range of notes can be limited with the
+keyword parameters. The begin time of the score is not changed, but the 
+end time is increased by <i>offset</i>.
+The original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-stretch(<a name="index1147"></a><i>score</i>, <i>factor</i>, dur: <i>dur-flag</i>, time: <i>time-flag</i>, from-index: <i>i</i>,
+ to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-stretch <i>score</i> <i>factor</i>
+ :dur <i>dur-flag</i> :time <i>time-flag</i> :from-index <i>i</i>
+ :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>Stretch  
+note times and durations by <i>factor</i>. The default <i>dur-flag</i> is 
+non-null, but if <i>dur-flag</i> is null, the original durations are retained
+and only times are stretched. Similarly, the default <i>time-flag</i> is 
+non-null, but if <i>time-flag</i> is null, the original times are retained
+and only durations are stretched. If both <i>dur-flag</i> and <i>time-flag</i>
+are null, the score is not changed. If a range
+of notes is specified, times are scaled within that range, and 
+notes after the range are shifted so that the stretched region does not
+create a "hole" or overlap with notes that follow. If the range begins
+or ends with a time (via <code>from-time:</code> and <code>to-time:</code>), time
+stretching
+takes place over the indicated time interval independent of whether 
+any notes are present or where they start. In other words, the 
+"rests" are stretched along with the notes.
+The original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-transpose(<a name="index1148"></a><i>score</i>,
+ <i>keyword</i>,  <i>amount</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-transpose <i>score</i>
+ <i>keyword</i> <i>amount</i> :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>For 
+ each note in the score and in any indicated range, if there is a keyword
+ parameter matching <i>keyword</i> and the
+parameter value is a number, increment
+the parameter value by <i>amount</i>. For example, to tranpose up by a whole
+step, write <code>(score-transpose 2 :pitch <i>score</i>)</code>. The 
+original score is not modified, and a new score 
+is returned.<br><br>
+<dt><code>score-scale(<a name="index1149"></a><i>score</i>, <i>keyword</i>, <i>amount</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+ to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-scale <i>score</i> <i>keyword</i> <i>amount</i>
+ :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i>
+ :to-time <i>y</i>)</code> [LISP]<dd>For each note
+in the score and in any indicated range, if there is a keyword 
+parameter matching <i>keyword</i> and the
+parameter value is a number, multiply
+the parameter value by <i>amount</i>. The original score is not modified, 
+and a new score is returned.<br><br>
+<dt><code>score-sustain(<a name="index1150"></a><i>score</i>, <i>factor</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+ to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-sustain <i>score</i> <i>factor</i>
+ :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i>
+ :to-time <i>y</i>)</code> [LISP]<dd>For each note
+in the score and in any indicated range, multiply
+the duration (stretch factor) by <i>amount</i>. This can be used to
+make notes sound more legato or staccato, and does not change their 
+starting times. The original score is not modified, and 
+a new score is returned.<br><br>
+<dt><code>score-voice(<a name="index1151"></a><i>score</i>,
+ <i>replacement-list</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-voice <i>score</i>
+ <i>replacement-list</i> :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>For each note
+in the score and in any indicated range, replace the behavior (function)
+name using <i>replacement-list</i>, which has the format: 
+<code>((<i>old1 new1</i>) (<i>old2 new2</i>) <span style="font-style:normal">...</span>)</code>, where <i>oldi</i> indicates
+a current behavior name and <i>newi</i> is the replacement. If <i>oldi</i> 
+is <code>*</code>, it matches anything.  For example, to 
+replace <code>my-note-1</code> by <code>trombone</code> and <code>my-note-2</code> by
+<code>horn</code>, use <code>score-voice(<i>score</i>, {{my-note-1 trombone}
+{my-note-2 horn}})</code>. To replace all instruments with 
+<code>piano</code>, use <code>score-voice(<i>score</i>, {{* piano}})</code>. 
+The original score is not modified, and a
+ new score is returned.<br><br>
+<dt><code>score-merge(<a name="index1152"></a><i>score1</i>, <i>score2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+
+<code>(score-merge <i>score1</i> <i>score2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>Create
+a new score containing all the notes of the parameters, which are all
+scores. The resulting notes retain their original times and durations. The
+merged score begin time is the minimum of the begin times of the parameters
+and the merged score end time is the maximum of the end times of 
+the parameters. The original scores are not modified, and a new 
+score is returned.<br><br>
+<dt><code>score-append(<a name="index1153"></a><i>score1</i>, <i>score2</i>, <span style="font-style:normal">...</span>)</code> [SAL]<br>
+
+<code>(score-append <i>score1</i> <i>score2</i> <span style="font-style:normal">...</span>)</code> [LISP]<dd>Create
+a new score containing all the notes of the parameters, which are all
+scores. The begin time of the first score is unaltered. The begin time of
+ each other score is aligned to the end time of the
+previous score; thus, scores are "spliced" in sequence. The original 
+scores are not modified, and a new score is returned.<br><br>
+<dt><code>score-select(<a name="index1154"></a><a name="index1155"></a><i>score</i>,
+ <i>predicate</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+ to-time: <i>y</i>, reject: <i>flag</i>)</code> [SAL]<br>
+
+<code>(score-select <i>score</i>
+ <i>predicate</i> :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i>
+ :to-time <i>y</i> :reject <i>flag</i>)</code> [LISP]<dd>Select (or reject)
+notes to form a new score. Notes are selected if they fall into the
+given ranges of index and time <i>and</i> they satisfy <i>predicate</i>, a function
+of three parameters that is applied to the start time, duration, and the 
+expression of the note. Alternatively, <i>predicate</i> may be <code>t</code>, 
+indicating that all notes in range are to be selected. 
+The selected notes along with the existing score begin and end markers, are combined to form a new score. Alternatively, if
+the <code>reject:</code> parameter is non-null, the notes <i>not</i> selected form
+ the new score (in other words the selected notes are rejected or removed to
+ form the new score). The original score is not modified, and a
+ new score is returned.<br><br>
+<dt><code>score-set-begin(<a name="index1156"></a><i>score</i>, <i>time</i>)</code> [SAL]<br>
+
+<code>(score-set-begin <i>score</i> <i>time</i>)</code> [LISP]<dd>The begin 
+time
+ from the <i>score</i>'s <code>SCORE-BEGIN-END</code> marker is set to <i>time</i>. The 
+original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-get-begin(<a name="index1157"></a><i>score</i>)</code> [SAL]<br>
+
+<code>(score-get-begin <i>score</i>)</code> [LISP]<dd>Return the begin
+time of the <i>score</i>.<br><br>
+<dt><code>score-set-end(<a name="index1158"></a><i>score</i>, <i>time</i>)</code> [SAL]<br>
+
+<code>(score-set-end <i>score</i> <i>time</i>)</code> [LISP]<dd>The end time
+ from the <i>score</i>'s <code>SCORE-BEGIN-END</code> marker is set to <i>time</i>. The 
+original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-get-end(<a name="index1159"></a><i>score</i>)</code> [SAL]<br>
+
+<code>(score-get-end <i>score</i>)</code> [LISP]<dd>Return the end
+time of the <i>score</i>.<br><br>
+<dt><code>score-must-have-begin-end(<a name="index1160"></a><i>score</i>)</code> [SAL]<br>
+
+<code>(score-must-have-begin-end <i>score</i>)</code> [LISP]<dd>If 
+ <i>score</i> does not have a begin and end time, construct a score with a
+ <code>SCORE-BEGIN-END</code> expression and return it. If score already has a begin
+and end time, just return the score. The orignal score is not modified.<br><br>
+<dt><code>score-filter-length(<a name="index1161"></a><i>score</i>, 
 <i>cutoff</i>)</code> [SAL]<br>
 
-<code>(soften-clipping <i>snd</i> <i>cutoff</i>)</code> [LISP]<dd>Filter the loud regions of a signal where clipping is likely
-to have generated additional high frequencies. The input signal is <i>snd</i>
-and <i>cutoff</i> is the filter cutoff frequency
-(4 kHz is recommended for speech).
+<code>(score-filter-length <i>score</i> <i>cutoff</i>)</code> [LISP]<dd>Remove notes that extend beyond the <i>cutoff</i> time. This
+is similar to <code>score-select</code>, but the here, events are removed when
+their nominal ending time (start time plus duration) exceeds the <i>cutoff</i>,
+whereas the <code>to-time:</code> parameter is compared to the note's start time.
+The original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-repeat(<a name="index1162"></a><i>score</i>, <i>n</i>)</code> [SAL]<br>
+
+<code>(score-repeat <i>score</i> <i>n</i>)</code> [LISP]<dd>Make a sequence
+of <i>n</i> copies of <i>score</i>. Each copy is shifted to that it's begin
+time aligns with the end time of the previous copy, as in <code>score-append</code>.
+The original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-stretch-to-length(<a name="index1163"></a><i>score</i>, 
+<i>length</i>)</code> [SAL]<br>
+
+<code>(score-stretch-to-length <i>score</i> <i>length</i>)</code> [LISP]<dd>Stretch the score so that the end time of the score is
+the score's begin time plus <i>length</i>. 
+The original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-filter-overlap(<a name="index1164"></a><i>score</i>)</code> [SAL]<br>
+
+<code>(score-filter-overlap <i>score</i>)</code> [LISP]<dd>Remove
+overlapping notes (based on the note start time and duration), giving
+priority to the
+positional order within the note list (which is also time order). 
+The original score is not modified, 
+and a new score is returned.<br><br>
+<dt><code>score-print(<a name="index1165"></a><i>score</i>)</code> [SAL]<br>
+
+<code>(score-print <i>score</i>)</code> [LISP]<dd>Print a score with
+one note per line. Returns <code>nil</code>.<br><br>
+<dt><code>score-play(<a name="index1166"></a><i>score</i>)</code> [SAL]<br>
+
+<code>(score-play <i>score</i>)</code> [LISP]<dd>Play <i>score</i>
+using <code>timed-seq</code> to convert the score to a sound, and 
+ <code>play</code> to play the sound.<br><br>
+<dt><code>score-adjacent-events(<a name="index1167"></a><i>score</i>,
+ <i>function</i>,
+ from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-adjacent-events <i>score</i> <i>function</i> :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>Call
+ <code>(<i>function</i> <i>A</i> <i>B</i> <i>C</i>)</code>, where
+<i>A</i>, <i>B</i>, and <i>C</i> are consecutive notes in the score. The result
+replaces <i>B</i>. If the result is <code>nil</code>, <i>B</i> is deleted, and the
+next call will be <code>(<i>function A C D</i>)</code>, etc. The first call is
+to <code>(<i>function</i> nil <i>A B</i>)</code> and the last is to 
+<code>(<i>function</i> <i>Y Z</i> nil)</code>. If there is just one note in the
+score, <code>(<i>function</i> nil <i>A</i> nil)</code> is called. Function calls 
+are not made if the note is outside of the indicated range.
+This function 
+allows notes and their parameters to be adjusted according to their 
+immediate context. The original score is not modified, 
+and a new score is returned.<br><br>
+<dt><code>score-apply(<a name="index1168"></a><i>score</i>, <i>function</i>,
+ from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> 
+[SAL]<br>
+
+<code>(score-apply <i>score</i> <i>function</i> :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>Replace
+each note in the score with the result of
+ <code>(<i>function time dur expression</i>)</code> (in Lisp) or
+ <code><i>function</i>(<i>time</i>, <i>dur</i>, <i>expression</i>)</code> (in SAL), 
+where <i>time</i>, <i>dur</i>, 
+and <i>expression</i> are the time, duration, and expression of the note.
+If a range is indicated, only notes in the range are replaced.
+The original score is not modified, and a new score is returned.<br><br>
+<dt><code>score-indexof(<a name="index1169"></a><i>score</i>, <i>function</i>,
+ from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-indexof <i>score</i> <i>function</i> :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>Return the index (position)
+of the first score event (in range) for which applying <i>function</i> 
+using <code>(<i>function time dur expression</i>)</code> returns true.<br><br>
+<dt><code>score-last-indexof(<a name="index1170"></a><i>score</i>,
+ <i>function</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>, 
+to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-last-indexof <i>score</i> <i>function</i>
+ :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i> :to-time <i>y</i>)</code> [LISP]<dd>Return 
+the index (position)
+of the last score event (in range) for which applying <i>function</i> 
+using <code>(<i>function time dur expression</i>)</code> returns true.<br><br>
+<dt><code>score-randomize-start(<a name="index1171"></a><a name="index1172"></a><a name="index1173"></a><a name="index1174"></a><i>score</i>, <i>amt</i>, from-index: <i>i</i>, to-index: <i>j</i>, from-time: <i>x</i>,
+ to-time: <i>y</i>)</code> [SAL]<br>
+
+<code>(score-randomize-start <i>score</i> <i>amt</i>
+ :from-index <i>i</i> :to-index <i>j</i> :from-time <i>x</i>
+ :to-time <i>y</i>)</code> [LISP]<dd>Alter the start times of notes by a 
+random amount up to plus or minus <i>amt</i>.
+The original score is not modified, and a new score is returned.
 </dl>
 <p>
-<a name = "172"><h3>Graphical Equalizer</h3></a>
-There's nothing really "graphical" about this library (<code>grapheq.lsp</code>), but 
-this is a common term for multi-band equalizers. This implementation uses
-Nyquist's <code>eq-band</code> function to split the incoming signal into different
-frequency bands. Bands are spaced geometrically, e.g. each band could be one
-octave, meaning that each successive band has twice the bandwidth. An interesting
-possibility is using computed control functions to make the equalization change
-over time.
+<a name = "172"><h4>Xmusic and Standard MIDI Files</h4></a>
+<a name="index1175"></a><a name="index1176"></a>
+Nyquist has a general facility to read and write MIDI files. 
+You can even translate to and from a text representation, as described
+in Chapter <a href = "part12.html#115">"MIDI, Adagio, and Sequences"</a>. It is also useful sometimes to read notes
+from Standard MIDI Files into Xmusic scores and vice versa. At present,
+Xmusic only translates notes, ignoring the various controls, program
+changes, pitch bends, and other messages.
 <p>
-<dl>
-<dt>
-<code>nband-range(<a name="index1230"><a name="index1231"><a name="index1232"><i>input</i>, <i>gains</i>, <i>lowf</i>, <i>highf</i>)</code> [SAL]<br>
-
-<code>(nband-range <i>input</i> <i>gains</i> <i>lowf</i> <i>highf</i>)</code> [LISP]<dd>A graphical equalizer applied to 
-<i>input</i> (a <code>SOUND</code>). The gain controls and number of bands is given by <i>gains</i>, an
-ARRAY of <code>SOUND</code>s (in other words, a Nyquist multichannel <code>SOUND</code>). Any sound in the
-array may be replaced by a <code>FLONUM</code>. The bands are
-geometrically equally spaced from the lowest frequency <i>lowf</i> to the
-highest frequency <i>highf</i> (both are <code>FLONUM</code>s).<br><br>
-<dt><code>nband(<a name="index1233"><i>input</i>, <i>gains</i>)</code> [SAL]<br>
-
-<code>(nband <i>input</i> <i>gains</i>)</code> [LISP]<dd>A graphical equalizer, identical 
-to <code>nband-range</code> with a range of 20 to 20,000 Hz.
-</dl>
-<p>
-<a name = "173"><h3>Sound Reversal</h3></a>
-The <code>reverse.lsp</code> library implements functions to play sounds in reverse.
-<p>
-<dl>
-<dt>
-<code>s-reverse(<a name="index1234"><a name="index1235"><a name="index1236"><a name="index1237"><i>snd</i>)</code> [SAL]<br>
-
-<code>(s-reverse <i>snd</i>)</code> [LISP]<dd>Reverses <i>snd</i> (a <code>SOUND</code>). Sound must be shorter
-than <code>*max-reverse-samples*</code>, which is currently initialized to 
-25 million samples. Reversal allocates about 4 bytes per sample. This function
-uses XLISP in the inner sample loop, so do not be surprised if it calls the 
-garbage collector a lot and runs slowly. The result starts at the starting
-time given by the current environment (not necessarily the starting time 
-of <i>snd</i>). If <i>snd</i> has multiple channels, a multiple channel, 
-reversed sound is returned.<br><br>
-<dt><code>s-read-reverse(<a name="index1238"><a name="index1239"><i>filename</i>, time-offset: <i>offset</i>, srate: <i>sr</i>, dur: <i>dur</i>, nchans: <i>chans</i>, format: <i>format</i>, mode: <i>mode</i>, bits: <i>n</i>, swap: <i>flag</i>)</code> [SAL]<br>
-
-<code>(s-read-reverse <i>filename</i> :time-offset <i>offset</i>
- :srate <i>sr</i> :dur <i>dur</i> :nchans <i>chans</i> :format <i>format</i> :mode <i>mode</i> :bits <i>n</i> :swap <i>flag</i>)</code> [LISP]<dd>This function is identical to <code>s-read</code> (see <a href = "part8.html#96">"Sound File Input and Output"</a>), except it reads the indicated samples in reverse. Like
-<code>s-reverse</code> (see above), it uses XLISP in the inner loop, so it is slow.
-Unlike <code>s-reverse</code>, <code>s-read-reverse</code> uses a fixed amount of 
-memory that is independent of how many samples are computed. Multiple channels
-are handled. 
-</dl>
-<p>
-<a name = "174"><h3>Time Delay Functions</h3></a>
-The <code>time-delay-fns.lsp</code> library implements chorus, phaser, and flange effects.
-<p>
-<dl>
-<dt>
-<code>phaser(<a name="index1240"><a name="index1241"><i>snd</i>)</code> [SAL]<br>
-
-<code>(phaser <i>snd</i>)</code> [LISP]<dd>A phaser effect
-applied to <i>snd</i> (a <code>SOUND</code>). There are no parameters, 
-but feel free to modify the source code of this one-liner.<br><br>
-<dt><code>flange(<a name="index1242"><a name="index1243"><a name="index1244"><i>snd</i>)</code> [SAL]<br>
-
-<code>(flange <i>snd</i>)</code> [LISP]<dd>A flange effect
-applied to <i>snd</i>. To vary the rate and other parameters, see the source code.<br><br>
-<dt><code>stereo-chorus(<a name="index1245"><a name="index1246"><i>snd</i>)</code> [SAL]<br>
-
-<code>(stereo-chorus <i>snd</i>)</code> [LISP]<dd>A chorus effect applied to <i>snd</i>,
-a <code>SOUND</code> (monophonic). The output is a stereo sound. All parameters are built-in,
-but see the simple source code to make modifications.<br><br>
-<dt><code>chorus(<a name="index1247"><a name="index1248"><i>snd</i>, <i>maxdepth</i>, <i>depth</i>, <i>rate</i>, 
-<i>saturation</i>)</code> [SAL]<br>
-
-<code>(chorus <i>snd</i> <i>maxdepth</i> <i>depth</i> <i>rate</i> <i>saturation</i>)</code> [LISP]<dd>A chorus effect applied to <i>snd</i>. All parameters may be arrays
-as usual. The <i>maxdepth</i> is a <code>FLONUM</code> giving twice the maximum value of <i>depth</i>, 
-which may be a <code>FLONUM</code> or a <code>SOUND</code>. The chorus is implemented as a variable delay 
-modulated by a sinusoid running at <i>rate</i> Hz (a <code>FLONUM</code>). The sinusoid is 
-scaled by <i>depth</i> and offset by <i>maxdepth</i>/2. The delayed signal is mixed
-with the original, and <i>saturation</i> gives the fraction of the delayed signal
-(from 0 to 1) in the mix. A reasonable choice of parameter values is 
-<i>maxdepth</i> = 0.05, <i>depth</i> = 0.025, <i>rate</i> = 0.5, and <i>saturation</i> = 0.5.
-</dl>
-<p>
-<a name = "175"><h3>Multiple Band Effects</h3></a>
-<a name="index1249"><a name="index1250">
-The <code>bandfx.lsp</code> library implements several effects based on multiple
-frequency bands. The idea is to separate a signal into different frequency
-bands, apply a slightly different effect to each band, and sum the effected
-bands back together to form the result. This file includes its own set of
-examples. After loading the file, try <code>f2()</code>, <code>f3()</code>, <code>f4()</code>,
-and <code>f5()</code> to hear them.
-<p>
-There is much room for expansion and experimentation with this library. Other
-effects might include distortion in certain bands (for example, there are
-commercial effects that add distortion to low frequencies to enhance the sound
-of the bass), separating bands into different channels for stereo or multi-channel
-effects, adding frequency-dependent reverb, and performing dynamic compression, 
-limiting, or noise gate functions on each band. There are also opportunities for
-cross-synthesis: using the content of bands extracted from one signal to modify
-the bands of another. The simplest of these would be to apply amplitude envelopes
-of one sound to another. Please contact us (dannenberg@cs.cmu.edu) if you 
-are interested in working on this library.
-<p>
-<dl>
-<dt>
-<code>apply-banded-delay(<a name="index1251"><a name="index1252"><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>lowd</i>, <i>highd</i>, <i>fb</i>, <i>wet</i>)</code> [SAL]<br>
-
-<code>(apply-banded-delay <i>s</i> <i>lowp</i> <i>highp</i> <i>num-bands</i> <i>lowd</i> <i>highd</i> <i>fb</i> <i>wet</i>)</code> [LISP]<dd>Separates
-input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> bands from a low frequency
-of <i>lowp</i> to a high frequency of <i>highp</i> (these are <code>FLONUMS</code> that specify
-steps, not Hz), and applies a delay to each band. The delay for the lowest band is
-given by the <code>FLONUM</code> <i>lowd</i> (in seconds) and the delay for the highest band
-is given by the <code>FLONUM</code> <i>highd</i>. The delays for other bands are linearly
-interpolated between these values. Each delay has feedback gain controlled by
-<code>FLONUM</code> <i>fb</i>. The delayed bands are scaled by <code>FLONUM</code> <i>wet</i>, and 
-the original sound is scaled by 1 - <i>wet</i>. All are summed to form the result, 
-a <code>SOUND</code>.<br><br>
-<dt><code>apply-banded-bass-boost(<a name="index1253"><a name="index1254"><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code> [SAL]<br>
-
-<code>(apply-banded-bass-boost <i>s</i> <i>lowp</i> <i>highp</i> <i>num-bands</i> <i>num-boost</i> <i>gain</i>)</code> [LISP]<dd>Applies a boost to 
-low frequencies. Separates
-input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> bands from a low frequency
-of <i>lowp</i> to a high frequency of <i>highp</i> (these are <code>FLONUMS</code> that specify
-steps, not Hz), and scales the lowest <i>num-boost</i> (a <code>FIXNUM</code>) bands by <i>gain</i>,
-a <code>FLONUM</code>. The bands are summed to form the result, a <code>SOUND</code>.<br><br>
-<dt><code>apply-banded-treble-boost(<a name="index1255"><a name="index1256"><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code> [SAL]<br>
-
-<code>(apply-banded-treble-boost <i>s</i> <i>lowp</i> <i>highp</i> <i>num-bands</i> <i>num-boost</i> <i>gain</i>)</code> [LISP]<dd>Applies a boost to 
-high frequencies. Separates
-input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> bands from a low frequency
-of <i>lowp</i> to a high frequency of <i>highp</i> (these are <code>FLONUMS</code> that specify
-steps, not Hz), and scales the highest <i>num-boost</i> (a <code>FIXNUM</code>) bands by <i>gain</i>,
-a <code>FLONUM</code>. The bands are summed to form the result, a <code>SOUND</code>.
-</dl>
-<p>
-<a name = "176"><h3>Granular Synthesis</h3></a>
-Some granular synthesis functions are implemented in the <code>gran.lsp</code> library
-file. There are many variations and control schemes one could adopt for granular
-synthesis, so it is impossible to create a single universal granular synthesis
-function. One of the advantages of Nyquist is the integration of control and
-synthesis functions, and users are encouraged to build their own granular synthesis
-functions incorporating their own control schemes. The <code>gran.lsp</code> file
-includes many comments and is intended to be a useful starting point. Another 
-possibility is to construct a score with an event for each grain. Estimate a
-few hundred bytes per score event (obviously, size depends on the number of
-parameters) and avoid using all of your computer's memory.
-<p>
-<dl>
-<dt>
-<code>sf-granulate(<a name="index1257"><a name="index1258"><i>filename</i>, <i>grain-dur</i>, <i>grain-dev</i>, <i>ioi</i>, <i>ioi-dev</i>, <i>pitch-dev</i>,
-[<i>file-start</i>, <i>file-end</i>])</code> [SAL]<br>
-
-<code>(sf-granulate <i>filename</i> <i>grain-dur</i> <i>grain-dev</i> <i>ioi</i> <i>ioi-dev</i> <i>pitch-dev</i> [<i>file-start</i> <i>file-end</i>])</code> [LISP]<dd>Granular synthesis using a sound file
-named <i>filename</i> as the source for grains. Grains are extracted from
-a sound file named by <i>filename</i> by stepping through the file in equal
-increments. Each grain duration is the 
-sum of <i>grain-dur</i> and a random number from 0 to <i>grain-dev</i>. Grains are 
-then multiplied by a raised cosine smoothing window and resampled at a ratio
-between 1.0 and <i>pitch-dev</i>. If <i>pitch-dev</i> is greater than one, grains are
-stretched and the pitch (if any) goes down. If <i>pitch-dev</i> is less than one,
-grains are shortened and the pitch goes up. Grains are then output
-with an 
-inter-onset interval between successive grains (which may overlap) 
-determined by the sum of
-<i>ioi</i> and a random number from 0 to <i>ioi-dev</i>. 
-The duration of the resulting sound is determined by
-the stretch factor (not by the sound file). The number of grains is
-the total sound duration (determined by the stretch factor)
-divided by the mean inter-onset interval, 
-which is <i>ioi</i> + <i>ioi-dev</i> * 0.5. 
-The grains are taken from equally-spaced starting points in <i>filename</i>,
-and depending on grain size and number, the grains may or may not overlap.
-The output duration will simply be the sum of the inter-onset intervals
-and the duration of the last grain. If <i>ioi-dev</i> is non-zero, the
-output duration will vary, but the expected value of the duration is
-the stretch factor.
-To achieve a rich granular synthesis effect, it is often a good idea to
-sum four or more copies of <code>sf-granulate</code> together. (See the <code>gran-test</code>
-function in <code>gran.lsp</code>.)
-</dl>
-<p>
-<a name = "177"><h3>MIDI Utilities</h3></a>
-The <code>midishow.lsp</code> library has functions that can print the contents fo MIDI
-files. This intended as a debugging aid.
-<p>
-<dl>
-<dt>
-<code>midi-show-file(<a name="index1259"><a name="index1260"><a name="index1261"><i>file-name</i>)</code> [SAL]<br>
-
-<code>(midi-show-file <i>file-name</i>)</code> [LISP]<dd>Print the contents of a MIDI file to the console.<br><br>
-<dt><code>midi-show(<a name="index1262"><i>the-seq</i> [, <i>out-file</i>])</code> [SAL]<br>
-
-<code>(midi-show <i>the-seq</i> [<i>out-file</i>])</code> [LISP]<dd>Print the
-contents of the sequence <i>the-seq</i> to the file <i>out-file</i> (whose default value
-is the console.)
-</dl>
-<p>
-<a name = "178"><h3>Reverberation</h3></a>
-The <code>reverb.lsp</code> library implements artificial reverberation.
-<p>
-<dl>
-<dt>
-<code>reverb(<a name="index1263"><a name="index1264"><i>snd</i>, 
-<i>time</i>)</code> [SAL]<br>
-
-<code>(reverb <i>snd</i> <i>time</i>)</code> [LISP]<dd>Artificial reverberation applied to <i>snd</i> with a decay time of
-<i>time</i>.
-</dl>
-<p>
-<a name = "179"><h3>DTMF Encoding</h3></a>
-<a name="index1265"><a name="index1266">
-The <code>dtmf.lsp</code> library implements DTMF encoding. DTMF is the 
-"touch tone" code used by telephones.
-<p>
-<dl>
-<dt>
-<code>dtmf-tone(<a name="index1267"><i>key</i>, <i>len</i>, <i>space</i>)</code> [SAL]<br>
-
-<code>(dtmf-tone <i>key</i> <i>len</i> <i>space</i>)</code> [LISP]<dd>Generate a
-single DTMF tone. The <i>key</i> parameter is either a digit (a <code>FIXNUM</code>
-from 0 through 9) or the atom <code>STAR</code> or <code>POUND</code>. The duration of
-the done is given by <i>len</i> (a <code>FLONUM</code>) and the tone is followed by
-silence of duration <i>space</i> (a <code>FLONUM</code>).<br><br>
-<dt><code>speed-dial(<a name="index1268"><i>thelist</i>)</code> [SAL]<br>
-
-<code>(speed-dial <i>thelist</i>)</code> [LISP]<dd>Generates a sequence
-of DTMF tones using the keys in <i>thelist</i> (a <code>LIST</code> of keys as
-described above under <code>dtmf-tone</code>). The duration of each tone is 0.2
-seconds, and the space between tones is 0.1 second. Use <code>stretch</code> to
-change the "dialing" speed.
-</dl>
-<p>
-<a name = "180"><h3>Dolby Surround(R), Stereo and Spatialization Effects</h3></a>
-<a name="index1269"><a name="index1270"><a name="index1271"><a name="index1272">The <code>spatial.lsp</code> library implements various functions for stereo
-manipulation and spatialization. It also includes some functions for
-Dolby Pro-Logic panning, which encodes left, right, center, and surround 
-channels into stereo. The stereo signal can then be played through
-a Dolby decoder to drive a surround speaker array. This library has
-a somewhat simplified encoder, so you should certainly test the
-output. Consider using a high-end encoder for critical work. There
-are a number of functions in <code>spatial.lsp</code> for testing. See the
-source code for comments about these.
-<p>
-<dl>
-<dt>
-<code>stereoize(<a name="index1273"><a name="index1274"><a name="index1275"><i>snd</i>)</code> [SAL]<br>
-
-<code>(stereoize <i>snd</i>)</code> [LISP]<dd>Convert a mono sound, <i>snd</i>, to stereo. Four bands of 
-equalization and some delay are used to create a stereo effect.<br><br>
-<dt><code>widen(<a name="index1276"><a name="index1277"><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
-
-<code>(widen <i>snd</i> <i>amt</i>)</code> [LISP]<dd>Artificially
-widen the stereo field in <i>snd</i>, a two-channel sound. The amount of widening
-is <i>amt</i>, which varies from 0 (<i>snd</i> is unchanged) to 1 (maximum widening).
-The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
-<dt><code>span(<a name="index1278"><a name="index1279"><a name="index1280"><a name="index1281"><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
-
-<code>(span <i>snd</i> <i>amt</i>)</code> [LISP]<dd>Pan the virtual center channel of a stereo sound, <i>snd</i>,
-by <i>amt</i>, where 0 pans all the way to the left, while 1 pans all the way 
-to the right. The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
-<dt><code>swapchannels(<a name="index1282"><a name="index1283"><a name="index1284"><i>snd</i>)</code> [SAL]<br>
-
-<code>(swapchannels <i>snd</i>)</code> [LISP]<dd>Swap left and right channels in <i>snd</i>, a stereo sound.<br><br>
-<dt><code>prologic(<a name="index1285"><a name="index1286"><a name="index1287"><i>l</i>, <i>c</i>, 
-<i>r</i>, <i>s</i>)</code> [SAL]<br>
-
-<code>(prologic <i>l</i> <i>c</i> <i>r</i> <i>s</i>)</code> [LISP]<dd>Encode four monaural <code>SOUND</code>s representing the front-left,
-front-center, front-right, and rear channels, respectively. 
-The return value is a stereo sound, which is a Dolby-encoded mix of the
-four input sounds. <br><br>
-<dt><code>pl-left(<a name="index1288"><i>snd</i>)</code> [SAL]<br>
-
-<code>(pl-left <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
-signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front left channel.<br><br>
-<dt><code>pl-center(<a name="index1289"><i>snd</i>)</code> [SAL]<br>
-
-<code>(pl-center <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
-signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front center channel.<br><br>
-<dt><code>pl-right(<a name="index1290"><i>snd</i>)</code> [SAL]<br>
-
-<code>(pl-right <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
-signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front right channel.<br><br>
-<dt><code>pl-rear(<a name="index1291"><i>snd</i>)</code> [SAL]<br>
-
-<code>(pl-rear <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
-signal with <i>snd</i>, a <code>SOUND</code>, encoded as the rear, or surround, channel.<br><br>
-<dt><code>pl-pan2d(<a name="index1292"><i>snd</i>, <i>x</i>, <i>y</i>)</code> [SAL]<br>
-
-<code>(pl-pan2d <i>snd</i> <i>x</i> <i>y</i>)</code> [LISP]<dd>Comparable to Nyquist's
-existing pan function, <code>pl-pan2d</code> provides not only left-to-right
-panning, but front-to-back panning as well. The function
-accepts three parameters: <i>snd</i> is the (monophonic) input <code>SOUND</code>, 
-<i>x</i> is a left-to-right position, and <i>y</i> is a front-to-back position.
-Both position parameters may be numbers or <code>SOUND</code>s. An <i>x</i> value 
-of 0 means left, and 1 means right. Intermediate values map linearly
-between these extremes. Similarly, a <i>y</i> value of 0 causes the sound
-to play entirely through the front speakers(s), while 1 causes it to play
-entirely through the rear. Intermediate values map linearly.
-Note that, although there are usually two rear speakers in Pro-Logic systems,
-they are both driven by the same signal. Therefore any sound that is
-panned totally to the rear will be played over both rear speakers. For
-example, it is not possible to play a sound exclusively through the 
-rear left speaker.<br><br>
-<dt><code>pl-position(<a name="index1293"><i>snd</i>, <i>x</i>, <i>y</i>, <i>config</i>)</code> [SAL]<br>
-
-<code>(pl-position <i>snd</i> <i>x</i> <i>y</i> <i>config</i>)</code> [LISP]<dd>The
-position function builds upon speaker panning to allow more abstract
-placement of sounds. Like <code>pl-pan2d</code>, it accepts a (monaural) input
-sound as well as left-to-right (<i>x</i>) and front-to-back (<i>y</i>) coordinates,
-which may be <code>FLONUM</code>s or <code>SOUND</code>s. A fourth parameter <i>config</i> 
-specifies the distance from listeners to the speakers (in meters). Current
-settings assume this to be constant for all speakers, but this assumption 
-can be changed easily (see comments in the code for more detail).
-There are several important differences between <code>pl-position</code> and 
-<code>pl-pan2d</code>. First, <code>pl-position</code> uses a Cartesian coordinate 
-system that allows x and y coordinates outside of the
-range (0, 1). This model assumes a listener position of (0,0). Each speaker
-has a predefined position as well. The input sound's position,
-relative to the listener, is given by the vector (<i>x</i>,<i>y</i>).<br><br>
-<dt><code>pl-doppler(<a name="index1294"><a name="index1295"><i>snd</i>, 
-<i>r</i>)</code> [SAL]<br>
-
-<code>(pl-doppler <i>snd</i> <i>r</i>)</code> [LISP]<dd>Pitch-shift moving sounds according to the equation: <i>fr</i> =
-<i>f0</i>((<i>c</i>+<i>vr</i>)/<i>c</i>), where <i>fr</i> is the output frequency, 
-<i>f0</i> is the emitted (source) 
-frequency, <i>c</i> is the speed of sound (assumed to be 344.31 m/s), and 
-<i>vr</i> is the speed at which the emitter approaches the receiver. (<i>vr</i>
-is the first derivative of parameter <i>r</i>, the distance from the listener
-in meters.<br><br>
-<dt></dl><a name = "181"><h3>Drum Machine</h3></a>
-<a name="index1296">The drum machine software in <code>demos/plight</code> deserves further explanation. 
-to use the software, load the code by evaluating:
-<pre>
-load "../demos/plight/drum.lsp"
-exec load-props-file(strcat(*plight-drum-path*, 
-                            "beats.props"))
-exec create-drum-patches()
-exec create-patterns()
-</pre>
-
-<p>
-Drum sounds and patterns are specified in the <code>beats.props</code> file (or
-whatever name you give to <code>load-props-file</code>). This file
-contains two types of specifications. First, there are sound file specifications.
-Sound files are located by a line of the form:
-<pre>
-set sound-directory = "kit/"
-</pre>
-
-This gives the name of the sound file directory, relative to the 
- <code>beats.props</code> file. Then, for each sound file, there should be a line of
-the form:
-<pre>
-track.2.5 = big-tom-5.wav
-</pre>
-
-This says that on track 2, a velocity value of 5 means to play the sound file
- <code>big-tom-5.wav</code>. (Tracks and velocity values are described below.) 
-The <code>beats.props</code> file contains specifications for all the sound files
-in <code>demos/plight/kit</code> using 8 tracks. If you make your own specifications
-file, tracks should be numbered consecutively from 1, and velocities should be
-in the range of 1 to 9.
-<p>
-The second set of specifications is of beat patterns. A beat pattern is given
-by a line in the following form:
-<pre>
-beats.5 = 2--32--43-4-5---
-</pre>
-
-The number after <code>beats</code> is just a pattern number. Each pattern
-is given a unique number. After the equal sign, the digits and dashes are
-velocity values where a dash means "no sound." Beat patterns should be
-numbered consecutively from 1.
-<p>
-Once data is loaded, there are several functions to access drum patterns and 
-create drum sounds (described below). The <code>demos/plight/drums.lsp</code> file
-contains an example function <code>plight-drum-example</code> to play some drums.
-There is also the file <code>demos/plight/beats.props</code> to serve as an
-example of how to specify sound files and beat patterns.
-<p>
-<dl>
-<dt>
-<code>drum(<a name="index1297"><i>tracknum</i>, <i>patternnum</i>, <i>bpm</i>)</code> [SAL]<br>
-
-<code>(drum <i>tracknum</i> <i>patternnum</i> <i>bpm</i>)</code> [LISP]<dd>Create
-a sound by playing drums sounds associated with track <i>tracknum</i> (a 
-FIXNUM) using pattern <i>patternnum</i>. The tempo is given by <i>bpm</i> in
-beats per minute. Normally patterns are a sequence of sixteenth notes, so
-the tempo is in <i>sixteenth notes per minute</i>. For example,
-if <i>patternnum</i> is 10,
-then use the pattern specified for <code>beats.10</code>. If the third character
-of this pattern is 3 and <i>tracknum</i> is 5, then on the third beat, play
-the soundfile assigned to <code>track.5.3</code>. This function returns a <code>SOUND</code>.<br><br>
-<dt><code>drum-loop(<a name="index1298"><i>snd</i>, <i>duration</i>, <i>numtimes</i>)</code> [SAL]<br>
-
-<code>(drum-loop <i>snd</i> <i>duration</i> <i>numtimes</i>)</code> [LISP]<dd>Repeat the sound given by <i>snd</i> <i>numtimes</i> times. The repetitions occur at a time offset of <i>duration</i>, regardless of the actual duration of <i>snd</i>. A <code>SOUND</code> is returned.<br><br>
-<dt><code>length-of-beat(<a name="index1299"><i>bpm</i>)</code> [SAL]<br>
-
-<code>(length-of-beat <i>bpm</i>)</code> [LISP]<dd>Given a tempo of 
-<i>bpm</i>, return the duration of the beat in seconds. Note that this software
-has no real notion of beat. A "beat" is just the duration of each character
-in the beat pattern strings. This function returns a <code>FLONUM</code>.
-</dl>
-<p>
-<a name = "182"><h3>Minimoog-inspired Synthesis</h3></a>
-<a name="index1300"><a name="index1301"><a name="index1302">The <code>moog.lsp</code> library gives the Nyquist user easy access to "classic"
-synthesizer sounds through an emulation of the Minimoog Synthesizer.
-Unlike modular Moogs that were very large, the Minimoog was the first
-successful and commonly used portable synthesizer. The trademark filter attack
-was unique and easily recognizable. The goal of this Nyquist instrument is not
-only to provide the user with default sounds, but also to give control over
-many of the "knobs" found on the Minimoog. In this implementation, these
-parameters are controlled using keywords. The input to the <code>moog</code> 
-instrument is a user-defined sequence of notes, durations, and articulations
-that simulate notes played on a keyboard. These are translated into 
-control voltages that drive multiple oscillators, similar to the Voltage
-Controlled Oscillator or VCO found in the original analog Moog.
-<p>
-The basic functionality of the Minimoog has been implemented, including the
-often-used "glide". The glide feature essentially low-pass filters the control
-voltage sequence in order to create sweeps between notes. 
-Figure <a href = "#182">21</a> is a simplified schematic of the data flow in the Moog. 
-The control lines have been omitted.
-<p>
-<hr>
-<blockquote></blockquote>
-<img src="moog-fig.gif" width=558><br><br>
-
-<p>
-<b>Figure 21: </b>System diagram for Minimoog emulator.
-
-<hr>
-<p>
-The most recognizable feature of the Minimoog is its resonant filter, a 
-Four-Pole Ladder Filter invented by Robert Moog. It is simply implemented 
-in a circuit with four transistors and provides an outstanding 24 dB/octave 
-rolloff. It is modeled here using the built-in Nyquist resonant filter. 
-One of the Moog filter features is a constant Q, or center frequency to 
-bandwidth ratio. This is implemented and the user can control the Q. 
-<p>
-The user can control many parameters using keywords. Their default values,
-acceptable ranges, and descriptions are shown below. The defaults were
-obtained by experimenting with the official Minimoog software synthesizer
-by Arturia.
-<p>
-<a name = "183"><h4>Oscillator Parameters</h4></a>
-<code>range-osc1</code> (2)<br>
-
-<code>range-osc2</code> (1)<br>
-
-<code>range-osc3</code> (3)<br>
-
-These parameters control the octave of each oscillator. A value of 1
-corresponds to the octave indicated by the input note. A value of 3
-is two octaves above the fundamental. The allowable range is 1 to 7.
-<p>
-<code>detun2</code> (-.035861)<br>
-
-<code>detun3</code> (.0768)<br>
-
-Detuning of two oscillators adds depth to the sound. A value of 1 corresponds
-to an increase of a single semitone and a -1 corresponds to a decrease
-in a semitone. The range is -1 to 1.
-<p>
-<code>shape-osc1</code> (<code>*saw-table*</code>)<br>
-
-<code>shape-osc2</code> (<code>*saw-table*</code>)<br>
-
-<code>shape-osc3</code> (<code>*saw-table*</code>)<br>
-
-Oscilators can use any wave shape. The default sawtooth waveform is
-a built-in Nyquist variable. Other waveforms can be defined by the user.
-<p>
-<code>volume-osc1</code> (1)<br>
-
-<code>volume-osc2</code> (1)<br>
-
-<code>volume-osc3</code> (1)<br>
-
-These parameters control the relative volume of each oscillator. The range
-is any <code>FLONUM</code> greater than or equal to zero.
-<p>
-<a name = "184"><h4>Noise Parameters</h4></a>
-<code>noiselevel</code> (.05)<br>
-
-This parameter controls the relative volume of the noise source. The range
-is any <code>FLONUM</code> greater than or equal to zero.
-	
-<a name = "185"><h4>Filter Parameters</h4></a>
-<code>filter-cutoff</code> (768)<br>
-
-The cutoff frequency of the filter in given in Hz. The range is zero
-to 20,000 Hz.
-<p>
-<code>Q</code> (2)<br>
-
-Q is the ratio of center frequency to bandwidth. It is held constant by
-making the bandwidth a function of frequency. The range is any
-<code>FLONUM</code> greater than zero.
-<p>
-<code>contour</code> (.65)<br>
-
-Contour controls the range of the transient frequency sweep from a high
-to low cutoff frequency when a 	note is played. The high frequency is
-proportional to contour. A contour of 0 removes this sweep. The range
-is 0 to 1.
-<p>
-<code>filter-attack</code> (.0001)<br>
-
-Filter attack controls the attack time of the filter, i.e. the time to
-reach the high cutoff frequency. The range is any <code>FLONUM</code> greater
-than zero (seconds).
-<p>
-<code>filter-decay</code> (.5)<br>
-
-Filter decay controls the decay time of the filter, i.e. the time of the
-sweep from the high to low cutoff frequency. The range is 
-any <code>FLONUM</code> greater than zero (seconds).
-<p>
-<code>filter-sustain</code> (.8)<br>
-
-Filter sustain controls the percentage of the filter cutoff frequency that
-the filter settles on following the sweep. The range is 0 to 1.
-	
-<a name = "186"><h4>Amplitude Parameters</h4></a>
-<code>amp-attack</code> (.01)<br>
-
-This parameter controls the amplitude envelope attack time, i.e. the time to
-reach maximum amplitude. The range is 
-any <code>FLONUM</code> greater than zero (seconds).
-<p>
-<code>amp-decay</code> (1)<br>
-
-This parameter controls the amplitude envelope decay time, i.e. the time
-between the maximum and sustain volumes. The range is
-any <code>FLONUM</code> greater than zero (seconds).
-<p>
-<code>amp-sustain</code> (1)<br>
-
-This parameter controls the amplitude envelope sustain volume, a fraction
-of the maximum. The range is 0 to 1.
-<p>
-<code>amp-release</code> (0)<br>
-
-This parameter controls the amplitude envelope release time, i.e. the time
-it takes between the sustain volume and 0 once the note ends. 
-The duration controls the overall length of the sound. The range of <code>amp-release</code> is any <code>FLONUM</code> greater than zero (seconds).
-<p>
-<a name = "187"><h4>Other Parameters</h4></a>
-<code>glide</code> (0)<br>
-
-Glide controls the low-pass filter on the control voltages. This models the
-glide knob on a Minimoog. A higher value corresponds to a lower cutoff
-frequency and hence a longer "glide" between notes. A value of 0
-corresponds to no glide. The range is zero to 10.
-<p>
-<a name = "188"><h4>Input Format</h4></a>
-A single note or a series of notes can be input to the Moog instrument
-by defining a list with the following format:
-<pre>
-list(list(<i>frequency</i>, <i>duration</i>, <i>articulation</i>), <span style="font-style:normal">...</span> )
-</pre>
-
-where <i>frequency</i> is a <code>FLONUM</code> in steps, <i>duration</i> is the duration
-of each note in seconds (regardless of the release time of the amplifier), 
-and <i>articulation</i> is a percentage of the duration that a sound will be
-played, representing the amount of time that a key is pressed. The filter 
-and amplitude envelopes are only triggered if a note is played when
-the articulation of the previous note is less than 1, or a key is not down at
-the same time. This Moog instrument is a monophonic instrument, so only
-one note can sound at a time. The release section of the amplifier is
-triggered when the articulation is less than 1 at the time 
-(<i>duration</i> * <i>articulation</i>).
-<p>
-<a name = "189"><h4>Sample Code/Sounds</h4></a><b>Sound 1 (default parameters):</b>
+MIDI notes are translated to Xmusic score events as follows:
 <blockquote>
-<code>
-set s = {{24 .5 .99} {26 .5 .99} {28 .5 .99} <br>
+<code>(<i>time</i> <i>dur</i> (NOTE :chan <i>channel</i> :pitch <i>keynum</i> :vel <i>velocity</i>))</code>,<br>
 
-         {29 .5 .99} {31 2 1}}<br>
-
-play moog(s)<br>
-
-</code>
-</blockquote>
+</blockquote> where <i>channel</i>, <i>keynum</i>, and <i>velocity</i> come directly 
+from the MIDI message (channels are numbered starting from zero).
+Note also that note-off messages are implied by the stretch factor 
+<i>dur</i> which is duration in seconds.
 <p>
-<b>Sound 2 (articulation, with amplitude release):</b>
-<blockquote>
-<code>
-set s = {{24 .5 .5} {26 .5 1} {28 .5 .25} {29 .5 1} {31 1 .8}}<br>
+<dl>
+<dt>
+<code>score-read-smf(<a name="index1177"></a><a name="index1178"></a><i>filename</i>)</code> [SAL]<br>
 
-play moog(s, amp-release: .2)<br>
+<code>(score-read-smf <i>filename</i>)</code> [LISP]<dd>Read a 
+standard MIDI file from <i>filename</i>. Return an Xmusic score, or <code>nil</code>
+if the file could not be opened. The
+start time is zero, and the end time is the maximum end time of all
+notes. A very limited interface is offered to extract MIDI program numbers
+from the file: The global variable <code>*rslt*</code> is set to a list of MIDI
+program numbers for each channel. E.g. if <code>*rslt*</code> is <code>(0 20 77)</code>, 
+then program for channel 0 is 0, for channel 1 is 20, and for channel 2 is 77. 
+Program changes were not found on other channels. The default program number is
+0, so in this example, it is not known whether the program 0 on channel 0 
+is the result of a real MIDI program change command or just a default value. 
+If more than one program change exists on a channel, the <i>last</i> program 
+number is recorded and returned, so this information will only be completely
+correct when the MIDI file sends single program change per channel before
+any notes are played. This, however, is a fairly common practice. Note that 
+the list returned as <code>*rslt*</code> can be passed 
+to <code>score-write-smf</code>, described below.<br><br>
+<dt><code>score-read(<a name="index1179"></a><a name="index1180"></a><i>filename</i>)</code> [SAL]<br>
 
-</code>
-</blockquote>
+<code>(score-read <i>filename</i>)</code> [LISP]<dd>Read an Adagio 
+file from <i>filename</i>. Return an Xmusic score, or <code>nil</code>
+if the file could not be opened.  See Chapter <a href = "part12.html#115">"MIDI, Adagio, and Sequences"</a> for details on 
+Adagio, a text-based score language.  See <code>score-read-smf</code> for 
+details on handling program changes.<br><br>
+<dt><code>score-write-smf(<a name="index1181"></a><a name="index1182"></a><i>score</i>, <i>filename</i>,
+[<i>programs</i> <i>as-adagio</i>])</code> [SAL]<br>
+
+<code>(score-write-smf <i>score</i> <i>filename</i> [<i>programs</i>]) <i>as-adagio</i>]</code> [LISP]<dd>Write a standard MIDI file to <i>filename</i> 
+with notes in <i>score</i>. In this function,
+<i>every</i> event in the score with a <code>pitch:</code> attribute, regardless of the
+"instrument" (or function name), generates a
+MIDI note, using the <code>chan:</code> attribute for the channel (default 0) and
+the <code>vel:</code> attribute for velocity (default 100). There is no facility
+(in the current implementation) to issue control changes, but to allow
+different instruments, MIDI programs may be set in two ways. The simplest is
+to associate programs with channels using
+the optional <i>programs</i> parameter, which is simply a list of up to 16 MIDI
+program numbers. Corresponding program change commands are added to the 
+beginning of the MIDI file. If <i>programs</i> has less than 16 elements, program
+change commands are only sent on the first <i>n</i> channels. The second way to 
+issue MIDI program changes is to add a <code>program:</code> keyword parameter to 
+a note in the score. Typically, the note will have a <code>pitch:</code> of 
+<code>nil</code> so that no actual MIDI note-on message is generated. If program 
+changes and notes have the same starting times, their relative playback
+order is undefined, and the note may be cut off by an immediately 
+following program change. Therefore, program changes should occur slightly,
+e.g. 1 ms, before any notes. <i>Program numbers and channels are numbered
+starting at zero, matching the internal MIDI representation. This may be
+one less than displayed on MIDI hardware, sequencers, etc.</i> The 
+ <i>as-adagio</i> optional parameter should normally be omitted. 
+If non-nil, the file is written in Adagio format, but if you 
+want to do that, call <code>score-write</code> instead.<br><br>
+<dt><code>score-write(<a name="index1183"></a><a name="index1184"></a><i>score</i>, <i>filename</i>,
+[<i>programs</i>])</code> [SAL]<br>
+
+<code>(score-write <i>score</i> <i>filename</i> [<i>programs</i>]</code> [LISP]<dd>Write an Adagioformat file to <i>filename</i> with notes in <i>score</i>. See Chapter <a href = "part12.html#115">"MIDI, Adagio, and Sequences"</a> for details on Adagio, a text-based score language. See <code>score-write-smf</code> for details on MIDI program changes.
+</dl>
 <p>
-<b>Sound 3 (glide):</b>
-<blockquote>
-<code>
-set s = {{24 .5 .5} {38 .5 1} {40 .5 .25}<br>
+<a name = "173"><h4>Workspaces</h4></a>
 
-         {53 .5 1} {55 2 1} {31 2 .8} {36 2 .8}}<br>
-
-play moog(s, amp-release: .2, glide: .5)<br>
-
-</code>
-</blockquote>
+<a name="index1185"></a>
+When working with scores, you may find it necessary to save 
+them in files between work sessions. This is not an issue
+with functions because they are 
+normally edited in files and loaded from them. In contrast,
+scores are created as Lisp data, and unless you take care to
+save them, they will be destroyed when you exit the Nyquist 
+program.
 <p>
-<b>Sound 4 (keyword parameters):</b> Filter attack and decay are purposely
-longer than notes being played with articulation equal to 1.
-<blockquote>
-<code>
-set s = {{20 .5 1} {27 .5 1} {26 .5 1} {21 .5 1}<br>
-
-         {20 .5 1} {27 .5 1} {26 .5 1} {21 .5 1}}<br>
-
-play moog(s, shape-osc1: *tri-table*, shape-osc2: *tri-table*,<br>
-
-             filter-attack: 2, filter-decay: 2,<br>
-
-             filter-cutoff: 300, contour: .8, glide: .2, Q: 8)<br>
-
-</code>
-</blockquote>
+A simple mechanism called a workspace has been created
+to manage scores (and any other Lisp data, for that matter).
+A workspace is just a set of lisp global variables. These
+variables are stored in the file <code>workspace.lsp</code>. 
+For simplicity, there is only one workspace, and no backups
+or versions are maintained, but the user is free to make
+backups and copies of <code>workspace.lsp</code>.
+To help remember what each variable is for, you can also
+associate and retrieve a text string with each variable.
+The following functions manage workspaces.
 <p>
-<b>Sound 5:</b> This example illustrates the ability to completely define a new 
-synthesizer with different parameters creating a drastically different
-sound. Sine waves are used for wavetables. There is a high value for glide.
-<blockquote>
-<code>
-define function my-moog(freq) <br>
-
-  return moog(freq,<br>
-
-    range-osc1: 3, range-osc2: 2, range-osc3: 4,<br>
-
-    detun2: -.043155, detun3: .015016,<br>
-
-    noiselevel: 0,<br>
-
-    filter-cutoff: 400, Q: .1, contour: .0000001,<br>
-
-    filter-attack: 0, filter-decay: .01, filter-sustain: 1,<br>
-
-    shape-osc1: *sine-table*, shape-osc2: *sine-table*,<br>
-
-    shape-osc3: *sine-table*, volume-osc1: 1, volume-osc2: 1,<br>
-
-    volume-osc3: .1, amp-attack: .1, amp-decay: 0,<br>
-
-    amp-sustain: 1, amp-release: .3, glide: 2)
+In addition, when a workspace is loaded, you can request that
+functions be called. For example, the workspace might store
+descriptions of a graphical interface. When the workspace is
+loaded, a function might run to convert saved data into a 
+graphical interface. (This is how sliders are saved by the IDE.)
 <p>
-set s = {{80 .4 .75} {28 .2 1} {70 .5 1} {38 1 .5}}<br>
+<dl>
+<dt>
+<code>add-to-workspace(<a name="index1186"></a><i>symbol</i>)</code> [SAL]<br>
 
-play my-moog(s)<br>
+<code>(add-to-workspace <i>symbol</i>)</code> [LISP]<dd>Adds 
+a global variable to the workspace. The <i>symbol</i> should be a (quoted)
+symbol.<br><br>
+<dt><code>save-workspace(<a name="index1187"></a>)</code> [SAL]<br>
 
-</code>
-</blockquote>
+<code>(save-workspace)</code> [LISP]<dd>All global variables
+in the workspace are saved to <code>workspace.lsp</code> (in the current
+directory), overwriting the previous file.<br><br>
+<dt><code>describe(<a name="index1188"></a><i>symbol</i> [, <i>description</i>])</code>
+ [SAL]<br>
+
+<code>(describe <i>symbol</i> [<i>description</i>])</code> [LISP]<dd>If <i>description</i>, a text string, is present, 
+associate <i>description</i> with the variable named by the
+<i>symbol</i>. If <i>symbol</i> is not already in the workspace, 
+it is added. If <i>description</i> is omitted, the function returns
+the current description (from a previous call) for <i>symbol</i>.<br><br>
+<dt><code>add-action-to-workspace(<a name="index1189"></a><i>symbol</i>)</code> [SAL]<br>
+
+<code>(add-action-to-workspace <i>symbol</i>)</code> [LISP]<dd>Requests that the function named by <i>symbol</i> be
+called when the workspace is loaded (if the function is defined).
+</dl>
 <p>
-<b>Sound 6:</b> This example has another variation on the default
- parameters.
-<blockquote>
-<code>
-set s = {{24 .5 .99} {26 .5 .99} {28 .5 .99} <br>
-
-         {29 .5 .99} {31 2 1}}<br>
-
-play moog(s, shape-osc1: *tri-table*, shape-osc2: *tri-table*,<br>
-
-             filter-attack: .5, contour: .5)<br>
-
-</code>
-</blockquote>
+To restore a workspace, use the command <code>load "workspace"</code>. This restores
+the values of the workspace variables to the values they had when
+<code>save-workspace</code> was last called. It also restores the documentation
+strings, if set, by <code>describe</code>. If you load two or more
+<code>workspace.lsp</code> files, the variables will be merged into a
+single workspace. The current set of workspace variables are saved in
+the list <code>*workspace*</code>. To clear the workspace, set <code>*workspace*</code> 
+to <code>nil</code>. This does not delete any variables, but means that
+no variables will be saved by <code>save-workspace</code> until variables are
+added again.
 <p>
+Functions to be called are saved in the list <code>*workspace-actions*</code>.
+to clear the functions, set <code>*workspace-actions*</code> to <code>nil</code>.
+Restore functions to the list with <code>add-action-to-workspace</code>.
+<p>
+<a name = "174"><h4>Utility Functions</h4></a>
+This chapter concludes with details of various utility functions for score 
+manipulation.
+<p>
+<dl>
+<dt>
+<code>patternp(<a name="index1190"></a><i>expression</i>)</code> [SAL]<br>
 
+<code>(patternp <i>expression</i>)</code> [LISP]<dd>Test if <i>expression</i> is 
+an Xmusic pattern.<br><br>
+<dt><code>params-transpose(<a name="index1191"></a><i>params</i>, <i>keyword</i>, 
+ <i>amount</i>)</code> [SAL]<br>
 
+<code>(params-transpose <i>params</i> <i>keyword</i> <i>amount</i>)</code> [LISP]<dd>Add a transposition amount to a score event parameter. The 
+<i>params</i>
+parameter is a list of keyword/value pairs (not preceded by a function name). 
+The <i>keyword</i> is the keyword of the value to be altered, and <i>amount</i>
+is a number to be added to the value. If no matching keyword is present 
+in <i>params</i>, then <i>params</i> is returned. Otherwise, a new parameter 
+list is constructed and returned. The original <i>params</i> is not changed.<br><br>
+<dt><code>params-scale(<a name="index1192"></a><i>params</i>, <i>keyword</i>,
+ <i>amount</i>)</code> [SAL]<br>
+
+<code>(params-scale <i>params</i> <i>keyword</i> <i>amount</i>)</code> [LISP]<dd>Scale a score event parameter by some factor. This is like 
+ <code>params-transpose</code>, only using multiplication. The <i>params</i> 
+list is a list of 
+keyword/value pairs, <i>keyword</i> is the parameter keyword, 
+and <i>amount</i> is the scale factor. <br><br>
+<dt><code>interpolate(<a name="index1193"></a><a name="index1194"></a><i>x</i>, <i>x1</i>, <i>y1</i>, <i>x2</i>, <i>y2</i>)</code> [SAL]<br>
+
+<code>(interpolate <i>x</i> <i>x1</i> <i>y1</i> <i>x2</i> <i>y2</i>)</code> [LISP]<dd>Linearly interpolate (or extrapolate)
+ between points
+(<i>x1</i>, <i>y1</i>) and (<i>x2</i>, <i>y2</i>) to compute the y value
+ corresponding to <i>x</i>.<br><br>
+<dt><code>intersection(<a name="index1195"></a><a name="index1196"></a><i>a</i>,
+ <i>b</i>)</code> [SAL]<br>
+
+<code>(intersection <i>a</i> <i>b</i>)</code> [LISP]<dd>Compute the set intersection of lists <i>a</i> and <i>b</i>.<br><br>
+<dt><code>union(<a name="index1197"></a><a name="index1198"></a><i>a</i>, <i>b</i>)</code> [SAL]<br>
+
+<code>(union <i>a</i> <i>b</i>)</code> [LISP]<dd>Compute 
+the set union of lists <i>a</i> and <i>b</i>.<br><br>
+<dt><code>set-difference(<a name="index1199"></a><a name="index1200"></a><i>a</i>,
+ <i>b</i>)</code> [SAL]<br>
+
+<code>(set-difference <i>a</i> <i>b</i>)</code> [LISP]<dd>Compute the set of all elements that are in <i>a</i> but not in <i>b</i>.<br><br>
+<dt><code>subsetp(<a name="index1201"></a><a name="index1202"></a><i>a</i>, <i>b</i>)</code> [SAL]<br>
+
+<code>(subsetp <i>a</i> <i>b</i>)</code> [LISP]<dd>Returns true iff
+<i>a</i> is a subset of <i>b</i>, that is, each element of <i>a</i> is a member 
+of <i>b</i>.
+</dl>
+<p>
 <hr>
 <a href = "part14.html">Previous Section</a> | <a href = "part16.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 </body></html>

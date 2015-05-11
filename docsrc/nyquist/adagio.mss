@@ -116,7 +116,7 @@ beats, followed by one or several modifiers.  The basic duration codes are:
 @code(I)@Index[I (Adagio eIght note)] (eighth@Index(eighth note), 1/2 beat), 
 @code(S)@Index[S (Adagio Sixteenth note)] (sixteenth@Index(sixteenth note), 1/4 beat), 
 @code(%)@Index[% (Adagio thirtysecond note)] (thirtysecond@index(thirtysecond note), 1/8 beat), and
-@code(^)@index[^ (Adagio sixtyfourth note)] (sixtyfourth@index(sixtyfourth note), 1/16 beat). 
+@code(^)@index[^ (Adagio sixtyfourth note)] (sixtyfourth@index(sixtyfourth note), 1/16 beat).
 @end(display)
 Note that @code(E) is a pitch, so eighth-notes use the duration code @code(I).
 The default tempo is 100 beats per
@@ -143,9 +143,9 @@ For example, @code(U25) is twenty-five time units.
 
 Durations may be combined using a plus sign:
 @begin(programexample)
-Q+IT	    ** a quarter tied to an eighth triplet
+Q+IT        ** a quarter tied to an eighth triplet
 Q/7+W+Q2/7  ** a 7th beat tied to a whole tied to 2/7th beat
-Q+U10	    ** a quarter plus 10 time units
+Q+U10       ** a quarter plus 10 time units
 @end(programexample)
 
 @subsection(Next Time)
@@ -333,14 +333,14 @@ until something else is specified, are given below in Adagio notation:
 @begin(display)
 @tabclear
 @tabset(1.5 inch)
-Time@\@code(T0)
-Pitch@\@code(C4)
-Duration@\@code(Q)
-Articulation@\@code(#100)
-Loudness@\@code(LFFF)
-Voice@\@code(V1)
-Tempo@\@code(!TEMPO 100)
-Rate@\@code(!RATE 100)
+Time  @\@code(T0)
+Pitch  @\@code(C4)
+Duration  @\@code(Q)
+Articulation  @\@code(#100)
+Loudness  @\@code(LFFF)
+Voice  @\@code(V1)
+Tempo  @\@code(!TEMPO 100)
+Rate  @\@code(!RATE 100)
 @end(display)
 Control changes (including timbre or MIDI program, specified by @code(Z)) have no default value and are only sent as specified in the score.
 
@@ -570,13 +570,13 @@ some of the commonly used control changes (note that Pitch bend, Aftertouch, and
 special message format and status bytes):
 @begin(display)
 @tabclear
-@tabset(0.5 inch)						
-K@\Portamento switch@Index(Portamento switch)@Index[K (Adagio control)]
-M@\Modulation wheel@Index(Modulation wheel)@Index[M (Adagio control)]
-O@\Aftertouch@Index(Aftertouch)@Index[O (Adagio control)]
-X@\Volume@Index(Volume)@Index[X (Adagio control)]
-Y@\Pitch bend@Index(Pitch bend)@Index[Y (Adagio control)]
-Z@\Program Change@Index(Program)@Index[Z (Adagio program)]
+@tabset(0.5 inch)
+K@\Portamento switch@Index(Portamento switch)@Index[K (Adagio control)]@*
+M@\Modulation wheel@Index(Modulation wheel)@Index[M (Adagio control)]@*
+O@\Aftertouch@Index(Aftertouch)@Index[O (Adagio control)]@*
+X@\Volume@Index(Volume)@Index[X (Adagio control)]@*
+Y@\Pitch bend@Index(Pitch bend)@Index[Y (Adagio control)]@*
+Z@\Program Change@Index(Program)@Index[Z (Adagio program)]@*
 @end(display)
 The letter listed beside each control function is the Adagio command
 letter.  For example,  @code(M23) is the command for setting the modulation

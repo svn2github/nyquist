@@ -1,76 +1,413 @@
-<html><head><title>Time/Frequency Transformation</title></head>
+<html><head><title>Interactive Nyquist</title>
+<link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+</head>
 <body bgcolor="ffffff">
 <a href = "part9.html">Previous Section</a> | <a href = "part11.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "105"><h2>Time/Frequency Transformation</h2></a>
-Nyquist provides functions for FFT and inverse FFT operations on streams of audio data.
-Because sounds can be of any length, but an FFT operates on a fixed amount of data, FFT
-processing is typically done in short blocks or windows that move through the audio. Thus,
-a stream of samples is converted in to a sequence of FFT frames representing short-term
-spectra. 
+<a name = "105"><h2>Interactive Nyquist</h2></a><a name="index823"></a>
+
 <p>
-Nyquist does not have a special data type corresponding to a sequence of FFT frames.
-This would be nice, but it would require creating a large set of operations suitable for
-processing frame sequences. Another approach, and perhaps the most "pure" would
-be to convert a single sound into a multichannel sound, with one channel per bin of the
-FFT. 
+Nyquist is not intended for real-time performance, but it has some
+features that allow you to adjust parameters interactively. The basic
+idea is that there is an array of 1000 floating point values, called
+sliders, that can be accessed while synthesizing sounds in
+Nyquist. The <code>slider</code> unit generator returns a signal that copies
+the current value of a slider value. You can change the slider value
+while playing sounds using either Open Sound Control or the NyquistIDE.
 <p>
-Instead, Nyquist violates its "pure" functional model and resorts to objects
-for FFT processing. A sequence of frames is represented by an XLISP object. Whenever you
-send the selector <code>:next</code> to the object, you get back either NIL, indicating the
-end of the sequence, or you get an array of FFT coefficients. 
+<small>
+Sounds are normally computed on demand. So the result returned by
+<code>slider</code> does not immediately compute any samples. Samples
+are only computed when something tries to use this signal. At that
+time, the slider value is read. Normally, if the slider is used to
+control a sound, you will hear changes in the sound pretty soon after
+the slider value changes. However, one thing that can interfere with
+this is that <code>SOUND</code> samples are computed in blocks of about 1000
+samples. When the slider value is read, the same value is used to fill
+a block of 1000 samples, so even if the sample rate is 44,100 Hz, the
+effective slider sample rate is 44,100/1000, or 44.1 Hz. If you give
+the slider a very low sample rate, say 1000, then slider value changes
+will only be noticed by Nyquist approximately once per second. For
+this reason, you should normally use the audio sample rate (typically
+44,100 Hz) for the rate of the <code>snd-slider</code> output
+<code>SOUND</code>. (Yes, this is terribly wasteful to represent each slider
+value with 1000 samples, but Nyquist was not designed for low-latency
+computation, and this is an expedient work-around.) 
 <p>
-The Nyquist function <code>snd-fft</code> (mnemonic, isn't it?) returns one of the frame sequence
-generating objects. You can pass any frame sequence generating object to another function,
-<code>snd-ifft</code>, and turn the sequence back into audio. 
+When you load
+<code>sliders.lsp</code>, which defines a number of slider functions, two
+important settings may be changed. First <code>autonorm-off</code> is
+called. The problem with auto-normalization is that it works by
+computing 1 million samples ahead of real time to determine a
+normalization factor. If Nyquist computes ahead, it will be unable to
+respond to control changes until the million samples (about 20
+seconds) have been played. Secondly, <code>snd-set-latency</code> is used to
+set the audio latency to 0.02s (20 milliseconds). Normally, Nyquist
+uses a generous 0.3s latency which allows Nyquist to stop computing
+audio and run garbage collection without breaks in the audio
+output. At 20ms, interactivity is greatly enhanced because changes do
+not sit in audio buffers for 300ms, but you may notices some break-up
+in the audio, especially when garbage collection takes place. The
+latency can be changed to any value you like after you load
+<code>sliders.lsp</code>.
+</small>
+
 <p>
-With <code>snd-fft</code> and <code>snd-ifft</code>, you can create all sorts of interesting processes. The main
-idea is to create intermediate objects that both accept and generate sequences of frames.
-These objects can operate on the frames to implement the desired spectral-domain
-processes. Examples of this can be found in the file 
-<code>fft_tutorial.htm</code><a name="index824"><a name="index825"><a name="index826">,
-which is part of the standard Nyquist release. The documentation for <code>snd-fft</code> and
-<code>snd-ifft</code> follows.
+In addition to reading sliders as continually changing <code>SOUND</code>s,
+you can get the slider value as a Lisp <code>FLONUM</code> (a floating point
+number) using <code>get-slider-value</code>. This might be
+useful if you are computing 
+a sequence of many notes (or other sound events) and want to apply the
+current slider value to the whole note or sound event.
+<p>
+Other unit generators exist to instantiate behaviors and to stop
+sounds according to slider values. These will be described below.
+<p>
+<a name = "106"><h3>Interactive Control with the NyquistIDE</h3></a>
+To control sounds interactively using the NyquistIDE, you first create
+a control panel, then populate the panel with sliders and buttons.
+These will send values into the sliders array in the Nyquist
+process. To control a sound, you use built-in functions to retrieve
+real-time values from the sliders array as sound is being played.
+<p>
+<a name = "107"><h4>Creating a Control Panel</h4></a>
+A control panel is created with <code>make-slider-panel</code>, which takes
+a panel name and color as parameters. Control panels <i>can only be
+created by executing code in Nyquist.</i> There is no way to configure
+control panels directly using the NyquistIDE. Control panels can be
+deleted interactively using the close button on the panel or through
+code by calling <code>close-slider-panel</code>.
 <p>
 <dl>
 <dt>
-<code>snd-fft(<a name="index827"><a name="index828"><i>sound</i>, <i>length</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
+<code>make-slider-panel(<a name="index824"></a><a name="index825"></a><a name="index826"></a><i>name</i>, <i>color</i>)</code> [SAL]<br>
 
-<code>(snd-fft <i>sound</i> <i>length</i> <i>skip</i> <i>window</i>)</code> [LISP]<dd>This
-function performs an FFT on the first samples in <i>sound</i> and returns a Lisp array of <code>FLONUM</code>s. 
-The function modifies the <i>sound</i>, violating the normal rule that sounds are immutable in Nyquist, so 
-it is advised that you copy the sound using <code>snd-copy</code> if there are any other references to 
-<i>sound</i>. The length of the FFT is specified by <i>length</i>, a <code>FIXNUM</code> (integer) which must
-be a power of 2. After 
-each FFT, the sound is advanced by <i>skip</i> samples, also of type <code>FIXNUM</code>. Overlapping FFTs, 
-where <i>skip</i> is less than <i>length</i>, are allowed. If <i>window</i> is not <code>NIL</code>, it must be a sound. 
-The first <i>length</i> samples of <i>window</i> are multiplied by <i>length</i> samples of <i>sound</i> before
-performing the FFT. When there are no more samples in <i>sound</i> to transform,
-this function returns <code>NIL</code>. The coefficients in the returned array, in order, are the DC coefficient,
-the first real, the first imaginary, the second real, the second imaginary, etc. 
-The last array element corresponds to the real coefficient at the Nyquist frequency.<br><br>
-<dt><code>snd-ifft(<a name="index829"><a name="index830"><a name="index831"><i>time</i>, <i>srate</i>, <i>iterator</i>, <i>skip</i>, <i>window</i>)</code> [SAL]<br>
+<code>(make-slider-panel <i>name</i> <i>color</i>)</code> [LISP]<dd>Create
+a control panel in the IDE. The title of the control panel window is
+given by <i>name</i>, a STRING. The color of the panel is given by
+<i>color</i>, a FIXNUM from 0 through 12. The color 0 is gray. Other
+colors are implementation-dependent, but different numbers give
+distinguishable colors. You must load <code>sliders.lsp</code> to access
+this function.<br><br>
+<dt><code>close-slider-panel(<a name="index827"></a><i>name</i>)</code> [SAL]<br>
 
-<code>(snd-ifft <i>time</i> <i>srate</i> <i>iterator</i> <i>skip</i> <i>window</i>)</code> [LISP]<dd>This function performs an IFFT on a sequence of spectral frames obtained from <i>iterator</i> 
-and returns a sound. The start time of the sound is given by <i>time</i>. Typically, this would be computed 
-by calling <code>(local-to-global 0)</code>. The sample rate is given by <i>srate</i>. Typically, this would 
-be <code>*sound-srate*</code>, but it might also depend upon the sample rate of the sound from which the 
-spectral frames were derived. To obtain each frame, the function sends the message <code>:next</code> to the 
-<i>iterator</i> object, using XLISP's primitives for objects and message passing. The object should return
-an array in the same format as obtained from <code>snd-fft</code>, and the object should return <code>NIL</code>
-when the end of the sound is reached. After each frame is inverse transformed into the time domain, it is 
-added to the resulting sound. Each successive frame is added with a sample offset specified by <i>skip</i> 
-relative to the previous frame. This must be an integer greater than zero. If <i>window</i> is 
-not <code>NIL</code>, it must be a sound. This window signal is multiplied by the inverse transformed frame 
-before the frame is added to the output sound. The length of each frame should be the same power of 2. 
-The length
-is implied by the array returned by <i>iterator</i>, so it does not appear as a parameter. This length
-is also the number of samples used from <i>window</i>. Extra samples are ignored, and window is padded
-with zeros if necessary, so be sure <i>window</i> is the right length. The resulting sound is computed on
-demand as with other Nyquist sounds, so <code>:next</code> messages are sent to <i>iterator</i> only when new
-frames are needed. One should be careful not to reuse or modify <i>iterator</i> once it is passed to
-<code>snd-ifft</code>.
+<code>(close-slider-panel <i>name</i>)</code>
+[LISP]<dd>Close 
+a control panel in the NyquistIDE named by <i>name</i>, a STRING. Any
+embedded controls (sliders or buttons) are also destroyed. You must
+load <code>sliders.lsp</code> to access this function.
 </dl>
+<p>
+<a name = "108"><h4>Creating Controls</h4></a>
+You can create slider and button controls. A slider control adjusts a
+floating point value in the sliders array and accessible as a
+time-varying signal (a SOUND) or as a FLONUM. A button control sets a
+floating point value in the sliders array to zero (0.0) or one (1.0).
+The value changes when the left mouse button is pressed over the button control
+and changes back when the mouse button is released.
+<p>
+<dl>
+<dt>
+<code>make-slider(<a name="index828"></a><a name="index829"></a><i>name</i>,
+<i>init</i>, <i>low</i>, <i>high</i>)</code> [SAL]<br>
+
+<code>(make-slider <i>name</i> <i>init</i> <i>low</i> <i>high</i>)</code> [LISP]<dd>Create
+a slider in the most recently created control panel. (Thus, you should
+populate a control panel with sliders and buttons before creating
+another control panel.) Sliders have a label specified by <i>name</i>, a
+STRING, an initial value specified by <i>init</i>, a FLONUM, a minimum
+value specified by <i>low</i>, a FLONUM, and a maximum value specified by
+<i>high</i>, a FLONUM. Sliders are added to the current panel in order from top
+to bottom. You must
+load <code>sliders.lsp</code> to access this function.<br><br>
+<dt><code>make-button(<a name="index830"></a><a name="index831"></a><i>name</i>
+[, <i>normal</i>])</code> [SAL]<br>
+
+<code>(make-button <i>name</i> [<i>normal</i>])</code> 
+[LISP]<dd>Create a button in the most
+recently created control panel. Buttons have a label specified by
+<i>name</i>, a STRING, and a "normal value" specified by 0 or 1 (a
+FIXNUM). If 0 is specified, the value controlled by the button is 0
+when the button is released and 1 when the button is pressed. If 1 is
+specified, the normal value is 1 changing to 0 when the button is
+pressed. Buttons are added to the control panel in order from top to
+bottom. You must
+load <code>sliders.lsp</code> to access this function.
+</dl>
+<p>
+<a name = "109"><h4>Accessing Control Values</h4></a>
+Each control created by <code>make-slider</code> or <code>make-button</code> is
+assigned a slider index from 10 to 999. Control changes are passed via
+hidden text input from the NyquistIDE to the nyquist process, where
+the values are converted to floats and stored in the slider array. You
+can then access these values with either <code>slider</code>,
+<code>lpslider</code>, or <code>get-slider-value</code>.
+<p>
+<dl>
+<dt>
+<code>slider(<a name="index832"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
+
+<code>slider(<i>name</i> [, <i>dur</i>])</code> [SAL]<br>
+
+<code>slider(<i>panel</i>, <i>name</i> [, <i>dur</i>])</code> [SAL]<br>
+
+<code>(slider <i>number</i> [<i>dur</i>])</code> [LISP]<br>
+
+<code>(slider <i>name</i> [<i>dur</i>])</code> [LISP]<br>
+
+<code>(slider <i>panel</i> <i>name</i> [<i>dur</i>])</code>
+[LISP]<dd>Create a <code>SOUND</code> that reads signal values
+from the slider array. In the first form, the first parameter is the
+index (a FIXNUM) of the value in the slider array. In the second form,
+the slider value will be controlled by the NyquistIDE control created
+by <code>make-slider</code> or <code>make-button</code> using the same <i>name</i>, a
+STRING. The control must be in the most recently created panel. In the
+third form, the panel named <i>panel</i> is searched for the control
+named <i>name</i> to determine the value. In all cases, the optional
+<i>dur</i>, a FLONUM, is used to determine the duration of the
+sound. This duration is scaled by the environment in the usual way. You must
+load <code>sliders.lsp</code> to access this function.<br><br>
+<dt><code>lpslider(<a name="index833"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
+
+<code>lpslider(<i>name</i> [, <i>dur</i>])</code> [SAL]<br>
+
+<code>lpslider(<i>panel</i>, <i>name</i> [, <i>dur</i>])</code> [SAL] <br>
+
+<code>(lpslider <i>number</i> [<i>dur</i>])</code> [LISP]<br>
+
+<code>(lpslider <i>name</i> [<i>dur</i>])</code> [LISP]<br>
+
+<code>(lpslider <i>panel</i> <i>name</i> [<i>dur</i>])</code>
+[LISP]<dd>Create a <code>SOUND</code> based on the value of
+an interactive control. This function is exactly like <code>slider</code>,
+except the sound is low-pass filtered to avoid sudden jumps when the
+control value is adjusted. The low-pass filter cutoff is determined by
+<code>*lpslider-cutoff*</code>, which is initialized to 20Hz when
+<code>slider.lsp</code> is loaded. You must
+load <code>sliders.lsp</code> to access this function.<br><br>
+<dt><code>get-slider-value(<a name="index834"></a><i>number</i>)</code> [SAL]<br>
+
+<code>get-slider-value(<i>name</i>)</code> [SAL]<br>
+
+<code>get-slider-value(<i>panel</i>, <i>name</i> [, <i>dur</i>])</code> [SAL]<br>
+
+<code>(get-slider-value <i>number</i>)</code> [LISP]<br>
+
+<code>(get-slider-value <i>name</i>)</code> [LISP]<br>
+
+<code>(get-slider-value <i>panel</i> <i>name</i>)</code>
+[LISP]<dd>Get a value (a FLONUM) stored in the 
+slider array. The array is accessed directly if the parameter is
+<i>number</i>, a FIXNUM. The index can be determined by searching the
+most recently created control panel by <i>name</i>, a STRING, if only
+<i>name</i> is given. If both <i>panel</i> and <i>name</i> are given (STRINGS),
+the named panel is searched for the named control. The result is a FLONUM.
+You must
+load <code>sliders.lsp</code> to access this function.<br><br>
+<dt><code>snd-slider(<a name="index835"></a><i>index</i>, <i>t0</i>, <i>srate</i>, <i>duration</i>)</code> [SAL]<br>
+
+<code>(snd-slider <i>index</i> <i>t0</i> <i>srate</i> <i>duration</i>)</code> [LISP]<dd>Create
+a sound controlled by the slider named by <i>index</i> (an integer 
+index into the array of sliders).
+The function returns a sound. Since Nyquist sounds are computed in blocks of samples, 
+and each block is computed at once, each block will contain copies of
+the current slider 
+value. Normally, you would call <code>slider</code> (see above) rather than
+this low-level function.
+</dl>
+<p>
+<a name = "110"><h4>Starting and Stopping Sounds</h4></a>
+All Nyquist sounds have a duration. Even the <code>slider</code> unit
+generator has a duration and terminates at the end of that
+duration. In most cases, you will instead want interactive functions to run
+until you interactively ask them to stop. The <code>stop-on-zero</code>
+function terminates when an input signal (typically a slider) goes to
+zero. This can be used to terminate a complex
+interatively controlled sound. For example, here is a tone that
+terminates when the Stop button is pressed:
+<p><pre>
+exec make-button("Stop", 1)
+
+function can-stop()
+  play (hzosc(1000) * stop-on-zero(slider("Stop"))) ~ 100
+</pre></p>
+
+The stretch factor of 100 will cause this tone to play for 100
+seconds. However, if the button named "Stop" is pressed, it will
+change value from the "normal" value 1 to 0. When the signal goes to
+zero, <code>stop-on-zero</code> will terminate. The multiplication then
+immediately terminates (because anything multiplied by zero will be
+zero; termination is just an efficient way to return zeros from now
+on). Since the multiplication is the top-level sound being played, the
+play stops.
+<p>
+Another thing you might want to do with interactive control is start
+some sound. The <code>trigger</code> function computes an instance of a
+behavior each time an input <code>SOUND</code> goes from zero to
+greater-than-zero. This can be used, for example, to create a
+sequence of sound events interactively. For example:
+<p><pre>
+exec make-button("Trigger", 0)
+
+function trigger-me()
+  play trigger(slider("Trigger", 100), pluck(c3))
+</pre></p>
+
+Here, a button control changes value from 0 to 1 when the button is
+  pressed. This value is retrieved by the <code>slider</code> function,
+  which runs for 100 seconds. When the button and hence the
+  <code>slider</code> goes from 0 to 1, the behavior, <code>pluck(c3)</code> is
+  instantiated. Many instances can be triggered by the button.
+<p>
+<dl>
+<dt>
+<code>stop-on-zero(<a name="index836"></a><i>s</i>)</code> [SAL]<br>
+
+<code>(stop-on-zero <i>s</i>)</code>
+[LISP]<dd>Return a <code>SOUND</code> that is identical
+to <i>s</i>, a <code>SOUND</code>, except the returned sound terminates when <i>s</i>
+first goes to zero. When a sound terminates, it remains at zero. A
+<code>SOUND</code> multiplication terminates when either parameter terminates, so
+multiplying by <code>stop-on-zero</code> is a way to terminate a sound
+interactively. (See the example above.)
+You must
+load <code>sliders.lsp</code> to access this function.<br><br>
+<dt><code>trigger(<a name="index837"></a><i>s</i> <i>behavior</i>)</code> [SAL]<br>
+
+<code>(trigger <i>s</i> <i>behavior</i>)</code>
+[LISP]<dd>Instantiate a behavior each time a signal
+becomes positive: Each time <i>s</i>, a <code>SOUND</code>, makes a transition from
+zero or less to greater than zero, <i>behavior</i>, an expression, is
+evaluated at the current time and must return a
+<code>SOUND</code>. (Multi-channel behaviors are not allowed.)
+ The result is the sum of all
+instantiated behaviors (which may overlap in time). (See the example above.)
+The stop time of the result is the maximum stop time of <i>s</i> and
+all sounds returned by instances of the behavior. 
+The sample rate of the return value is
+the sample rate of <i>s</i>, and the sounds returned by the closure must all
+have that same sample rate. Do not call this function. <br><br>
+<dt><code>snd-stoponzero(<a name="index838"></a><i>s</i>)</code> [SAL]<br>
+
+<code>(snd-stoponzero <i>s</i>)</code>
+[LISP]<dd>This function is identical to
+<code>stop-on-zero</code>. You should use <code>stop-on-zero</code> instead.<br><br>
+<dt><code>snd-trigger(<a name="index839"></a><i>s</i>, <i>closure</i>)</code> [SAL]<br>
+
+<code>(snd-trigger <i>s</i> <i>closure</i>)</code> [LISP]<dd>This is one of
+the only ways in which a behavior instance can be created by changes in a
+signal. When <i>s</i> (a <code>SOUND</code>) makes a transition from less than or 
+equal to zero to greater than zero, the closure, which takes a starting
+time parameter, is evaluated. The closure must return a <code>SOUND</code>. The
+sum of all these sounds is returned. If there are no sounds, the result will
+be zero. The stop time of the result is the maximum stop time of <i>s</i> and
+all sounds returned by the closure. The sample rate of the return value is
+the sample rate of <i>s</i>, and the sounds returned by the closure must all
+have that same sample rate. Do not call this function. 
+Use <code>trigger</code>, described above.
+<p>
+<small>
+An implementation note: There is no way to have <code>snd-trigger</code> return
+a multichannel sound. An alternative implementation would be a built-in
+function to scan ahead in a sound to find the time of the next zero crossing.
+This could be combined with some LISP code similar to <code>seq</code> to sum up
+instances of the closure. However, this would force arbitrary look-ahead
+and therefore would not work with real-time inputs, which was the motivation
+for <code>snd-trigger</code> in the first place.
+</small>
+
+</dl>
+<p>
+<a name = "111"><h3>Using Open Sound Control</h3></a><a name="index840"></a>
+
+Open Sound Control (OSC) is a simple protocol for communicating music
+control parameters between software applications and across
+networks. For more information, see <a
+href="http://wwww.cnmat.berkeley.edu/OpenSoundControl"><code>http://www.cnmat.berkeley.edu/OpenSoundControl/</code></a>. The
+Nyquist implementation of Open Sound Control is simple: an array of
+floats can be set by OSC messages and read by Nyquist functions. That
+is about all there is to it. 
+<p>
+The <code>slider</code> and
+<code>get-slider-value</code> functions, described above, can be used to
+access these values within Nyquist. Each of these functions can take a
+slider array index to specify which value to use. Since
+<code>make-slider</code> allocates slider indices starting at 10, it is
+recommended that you control sliders 0 through 9 via OSC. If you
+change a slider array value via OSC that is already controlled by a
+graphical slider in the NyquistIDE, the graphical slider will not be
+updated or synchronized to the OSC value. (And there is no current way
+to send OSC command to the NyquistIDE.)
+<p>
+Note: Open Sound Control must be enabled by calling
+<code>osc-enable(t)</code>. If this fails under Windows, see the
+installation instructions in <code>sys/win/README.txt</code> regarding
+<code>SystemRoot</code>.
+<p>
+<code>osc-enable(<a name="index841"></a><a name="index842"></a><a name="index843"></a><i>flag</i>)</code> [SAL]<br>
+
+<code>(osc-enable <i>flag</i>)</code> [LISP]Enable or disable Open Sound Control.
+(See Section <a href = "#111">"Using Open Sound Control"</a>.)
+Enabling creates a socket and a service that listens for UDP 
+packets on port 7770. Currently, only two messages are accepted 
+by Nyquist. The first is of the form <code>/slider</code>
+with an integer index and a floating point value. These set internal 
+slider values accessed by the <code>slider</code> and
+<code>get-slider-value</code> functions. The second is of the form
+<code>/wii/orientation</code> with 
+two floating point values. This message is a special case to 
+support the DarwiinRemoteOsc<a name="index844"></a> program
+ which can relay data from
+a Nintendo<a name="index845"></a> WiiMote<a name="index846"></a>
+ device to Nyquist via OSC. The two orientation
+values control sliders 0 and 1.
+Disabling terminates the service (polling for messages) 
+and closes the socket. The <i>previous</i> state of enablement
+is returned, e.g. if OSC is enabled and <i>flag</i> is <i>nil</i>, 
+OSC is disabled and <code>T</code> (true) is returned because OSC 
+was enabled at the time of the call. This function only exists 
+if Nyquist is compiled with the compiler flag <code>OSC</code>. 
+Otherwise, the function 
+exists but always returns the symbol <code>DISABLED</code>. 
+<i>Warning:</i> there is the potential for 
+network-based attacks using OSC. It is tempting to add the 
+ability to evaluate XLISP expressions sent via OSC, but 
+this would create
+unlimited and unprotected access to OSC clients. For now, 
+it is unlikely that an attacker could do more than 
+manipulate slider values.
+<p>
+<a name = "112"><h4>Sending Open Sound Control Messages</h4></a>
+A variety of programs support OSC. The only OSC message interpreted by Nyquist has an address of <code>/slider</code>, and two parameters: an integer slider number and a float value, nominally from 0.0 to 1.0. 
+<p>
+Two small programs are included in the Nyquist distribution for sending OSC messages. (Both can be found in the same directory as the nyquist executable.) The first one, <code>osc-test-client</code> sends a sequence of messages that just cause slider 0 to ramp slowly up and down. If you run this on a command line, you can use "?" or "h" to get help information. There is an interactive mode that lets you send each OSC message by typing RETURN.
+<p>
+<a name = "113"><h4>The ser-to-osc Program</h4></a>
+The second program is <code>ser-to-osc</code>, a program that reads serial input (for example from a PIC-based microcontroller) and sends OSC messages. Run this command-line program from a shell (a terminal window under OS X or Linux; use the CMD program under Windows). You must name the serial input device on the command line, e.g. under OS X, you might run:
+<p><pre>
+./ser-to-osc /dev/tty.usbserial-0000103D
+</pre></p>
+
+(Note that the program name is preceded by "<code>./</code>". This tells the shell exactly where to find the executable program in case the current directory is not on the search path for executable programs.)
+Under Windows, you might run:
+<p><pre>
+ser-to-osc com4
+</pre></p>
+
+(Note that you do not type "<code>./</code>" in front of a windows program.)
+<p>
+To use <code>ser-to-osc</code>, you will have to find the serial device. On the Macintosh and Linux, try the following:
+<p><pre>
+ls /dev/*usb*
+</pre></p>
+
+This will list all serial devices with "usb" in their names. Probably, one will be a name similar to <code>/dev/tty.usbserial-0000103D</code>. The <code>ser-to-osc</code> program will echo data that it receives, so you should know if things are working correctly.
+<p>
+Under Windows, open Control Panel from the Start menu, and open the System control panel. Select the Hardware tab and click the Device Manager button. Look in the device list under Ports (COM &amp; LPT). When you plug in your serial or USB device, you should see a new entry appear, e.g. <code>COM4</code>. This is the device name you need.
+<p>
+The format for the serial input is: any non-whitespace character(s), a slider number, a slider value, and a newline (control-j or ASCII 0x0A). These fields need to be separated by tabs or spaces. An optional carriage return (control-m or ASCII 0x0D) preceding the ASCII 0x0A is ignored. The slider number should be in decimal, and theh slider value is a decimal number from 0 to 255. This is scaled to the range 0.0 to 1.0 (so an input of 255 translates to 1.0).
+<p>
+There is a simple test program in <code>demos/osc-test.lsp</code> you can run to try out control with Open Sound Control. There are two examples in that file. One uses <code>snd-slider</code> to control the frequency of an oscillator. The other uses <code>get-slider-value</code> to control the pitch of grains in a granular synthesis process.
 <p>
 <hr>
 <a href = "part9.html">Previous Section</a> | <a href = "part11.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>

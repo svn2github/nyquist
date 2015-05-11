@@ -1,70 +1,441 @@
 <a href = "part16.html">Previous Section</a> | <a href = "part18.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<html><head><title>Appendix 2: Open Sound Control and Nyquist</title></head>
-<a name = "199"><h2>Appendix 2: Open Sound Control and Nyquist</h2></a><a name="index1303">
+<html><head><title>Appendix 1: Extending Nyquist</title>
+<link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+</head>
+<a name = "202"><h2>Appendix 1: Extending Nyquist</h2></a>
 
-Open Sound Control (OSC) is a simple protocol for communicating music
-control parameters between software applications and across
-networks. For more information, see <a
-href="http://wwww.cnmat.berkeley.edu/OpenSoundControl"><code>http://www.cnmat.berkeley.edu/OpenSoundControl/</code></a>. The
-Nyquist implementation of Open Sound Control is simple: an array of
-floats can be set by OSC messages and read by Nyquist functions. That
-is about all there is to it. 
+<b><i>WARNING:</i></b>
+Nyquist sound functions look almost like a human wrote them; they even have
+a fair number of comments for human readers.  Don't be fooled: virtually all 
+Nyquist functions are written by a special translator.  If you try to write
+a new function by hand, you will probably not succeed, and even if you do,
+you will waste a great deal of time.  (End of Warning.)
 <p>
-Note: Open Sound Control must be enabled by calling
-<code>osc-enable(t)</code>. If this fails under Windows, see the
-installation instructions in <code>sys/win/README.txt</code> regarding
-<code>SystemRoot</code>.
+<a name = "203"><h3>Translating Descriptions to C Code</h3></a>
 <p>
-To control something in (near) real-time, you need to access a slider value as if it a signal, or more properly, a Nyquist <code>SOUND</code> type. The function <code>snd-slider</code>, described in Section <a href = "part8.html#98">"Creating Sounds"</a>, takes a slider number and returns a <code>SOUND</code> type representing the current value of the slider. To fully understand this function, you need to know something about how Nyquist is actually computing sounds.
+The translator code used to extend Nyquist resides in the <code>trnsrc</code>
+directory.  This directory also contains a special <code>init.lsp</code>, so if
+you start XLisp or Nyquist in this directory, it will automatically read
+<code>init.lsp</code>, which in turn will load the translator code (which resides
+in several files).
 <p>
-Sounds are normally computed on demand. So the result returned by <code>snd-slider</code> does not immediately compute any samples. Samples are only computed when something tries to use this signal. At that time, the slider value is read. Normally, if the slider is used to control a sound, you will hear changes in the sound pretty soon after the slider value changes. However, one thing that can interfere with this is that <code>SOUND</code> samples are computed in blocks of about 1000 samples. When the slider value is read, the same value is used to fill a block of 1000 samples, so even if the sample rate is 44,100 Hz, the effective slider sample rate is 44,100/1000, or 44.1 Hz. If you give the slider a very low sample rate, say 1000, then slider value changes will only be noticed by Nyquist approximately once per second. For this reason, you should normally use the audio sample rate (typically 44,100 Hz) for the rate of the <code>snd-slider</code> output <code>SOUND</code>. (Yes, this is terribly wasteful to represent each slider value with 1000 samples, but Nyquist was not designed for low-latency computation, and this is an expedient work-around.)
+Also in the <code>trnsrc</code> directory are a number of <code>.alg</code> files, which
+contain the source code for the translator (more on these will follow), and
+a number of corresponding <code>.h</code> and <code>.c</code> files.  
 <p>
-In addition to reading sliders as continually changing <code>SOUND</code>s, you can get the slider value as a Lisp <code>FLONUM</code> (a floating point number) using <code>get-slider-value</code>, described in Section <a href = "part8.html#98">"Creating Sounds"</a>. This might be useful if you are computing a sequence of many notes (or other sound events) and want to apply the current slider value to the whole note or sound event.
-<p>
-Note that if you store the value returned by <code>snd-slider</code> in a variable, you will capture the history of the slider changes. This will take a lot of memory, so be careful.
-<p>
-Suppose you write a simple expression such as <code>(hzosc (mult 1000 (snd-slider 0 <span style="font-style:normal">...</span>)))</code> (or in SAL, <code>hzosc(1000 * snd-slider(0 <span style="font-style:normal">...</span>))</code>) to control an oscillator frequency with a slider. How long does this sound last? The duration of <code>hzosc</code> is the duration of the frequency control, so what is the duration of a slider? To avoid infinitely long signals, you must specify a duration as one of the parameters of <code>snd-slider</code>.
-<p>
-You might be thinking, what if I just want to tell the slider when to stop? At present, you cannot do that, but in the future there should be a function that stops when its input goes to zero. Then, moving a slider to zero could end the signal (and if you multiplied a complex sound by one of these ending functions, everything in the sound would end and be garbage collected).
-<p>
-Another thing you might want to do with interactive control is start some sound. The <code>trigger</code> function computes an instance of a behavior each time an input <code>SOUND</code> goes from zero to greater-than-zero. This could be used, for example, to create a sequence of notes.
-<p>
-The <code>snd-slider</code> function has some parameters that may be unfamiliar. The second parameter, <i>t0</i>, is the starting time of the sound. This should normally be <code>local-to-global(0)</code>, an expression that computes the instantiation time of the current expression. This will often be zero, but if you call <code>snd-slider</code> from inside a <code>seq</code> or <code>seq-rep</code>, the starting time may not be zero. 
-<p>
-The <i>srate</i> parameter is the sample rate to return. This should normally be the audio sample rate you are working with, which is typically <code>*default-sound-srate*</code>.
-<p>
-<a name = "200"><h3>Sending Open Sound Control Messages</h3></a>
-A variety of programs support OSC. The only OSC message interpreted by Nyquist has an address of <code>/slider</code>, and two parameters: an integer slider number and a float value, nominally from 0.0 to 1.0. 
-<p>
-Two small programs are included in the Nyquist distribution for sending OSC messages. (Both can be found in the same directory as the nyquist executable.) The first one, <code>osc-test-client</code> sends a sequence of messages that just cause slider 0 to ramp slowly up and down. If you run this on a command line, you can use "?" or "h" to get help information. There is an interactive mode that lets you send each OSC message by typing RETURN.
-<p>
-<a name = "201"><h3>The ser-to-osc Program</h3></a>
-The second program is <code>ser-to-osc</code>, a program that reads serial input (for example from a PIC-based microcontroller) and sends OSC messages. Run this command-line program from a shell (a terminal window under OS X or Linux; use the CMD program under Windows). You must name the serial input device on the command line, e.g. under OS X, you might run:
-<blockquote>
-<code>./ser-to-osc /dev/tty.usbserial-0000103D</code><br>
+To translate a <code>.alg</code> file to <code>.c</code> and <code>.h</code> files, you start
+XLisp or Nyquist in the <code>trnsrc</code> directory and type
+<p><pre>
+(translate "prod")
+</pre></p>
 
-</blockquote>
-(Note that the program name is preceded by "<code>./</code>". This tells the shell exactly where to find the executable program in case the current directory is not on the search path for executable programs.)
-Under Windows, you might run:
-<blockquote>
-<code>ser-to-osc com4</code><br>
+where <code>"prod"</code> should really be replaced by the filename (without a
+suffix) you want to translate.  Be sure you have a saved, working copy of
+Nyquist or Xlisp before you recompile!  
+<p>
+<b><i>Note:</i></b> On the Macintosh, just run Nyquist out of the <code>runtime</code> directory and then use the <code>Load</code> menu command to load <code>init.lsp</code> from the <code>trnsrc</code> directory.  This will load the translation code and change Nyquist's current directory to <code>trnsrc</code> so that commands like <code>(translate "prod")</code> will work.
+<p>
+<a name = "204"><h3>Rebuilding Nyquist</h3></a>
+<p>
+After generating <code>prod.c</code> and 
+<code>prod.h</code>, you need to recompile Nyquist.  For Unix systems, you will
+want to generate a new Makefile.  Modify <code>transfiles.lsp</code> in your main
+Nyquist directory, run Xlisp or Nyquist and load <code>makefile.lsp</code>.
+Follow the instructions to set your machine type, etc., and 
+execute <code>(makesrc)</code> and <code>(makefile)</code>.
+<p>
 
-</blockquote>
-(Note that you do not type "<code>./</code>" in front of a windows program.)
 <p>
-To use <code>ser-to-osc</code>, you will have to find the serial device. On the Macintosh and Linux, try the following:
-<blockquote>
-<code>ls /dev/*usb*</code><br>
+<a name = "205"><h3>Accessing the New Function</h3></a>
+<p>
+The new Lisp function will generally be named with a <code>snd-</code> prefix,
+e.g. <code>snd-prod</code>.  You can test this by running Nyquist.  Debugging is
+usually a combination of calling the code from within the interpreter,
+reading the generated code when things go wrong, and using a C debugger to
+step through the inner loop of the generated code.  An approach I like is to
+set the default sample rate to 10 hertz.  Then, a one-second sound has only
+10 samples, which are easy to print and study on a text console.
+<p>
+For some functions,
+you must write some Lisp code to impose
+ordinary Nyquist behaviors such as stretching and time shifting.  A
+good approach is to find some structurally similar functions and see how
+they are implemented.  Most of the Lisp code for Nyquist is in
+<code>nyquist.lsp</code>.
+<p>
+Finally, do not forget to write up some documentation.  Also, contributions are
+welcome.  Send your <code>.alg</code> file, documentation, Lisp support
+functions for <code>nyquist.lsp</code>, and examples or test programs
+to <code>rbd@cs.cmu.edu</code>.  I will either put them in the next release or
+make them available at a public ftp site.
+<p>
+<a name = "206"><h3>Why Translation?</h3></a>
+Many of the Nyquist signal processing operations are similar in form, but
+they differ in details. This code is complicated by many factors: Nyquist
+uses lazy evaluation, so the operator must check to see that input samples
+are available before trying to access them. Nyquist signals can have
+different sample rates, different block sizes, different block boundaries,
+and different start times, all of which must be taken into account.  The
+number of software tests is enormous. (This may sound like a lot of
+overhead, but the overhead is amortized over many iterations of the inner
+loop. Of course setting up the inner loop to run efficiently is one more
+programming task.)
+<p>
+The main idea behind the translation is that all of the checks and setup
+code are similar and relatively easy to generate automatically. Programmers
+often use macros for this sort of task, but the C macro processor is too
+limited for the complex translation required here. To tell the translator
+how to generate code, you write <code>.alg</code> files, which provide many
+details about the operation in a declarative style.  For example, the code
+generator can make some optimizations if you declare that two input signals
+are commutative (they can be exchanged with one another). The main part of
+the <code>.alg</code> file is the inner loop which is the heart of the signal
+processing code.
+<p>
+<a name = "207"><h3>Writing a .alg File</h3></a>
+<b><i>WARNING:</i></b> Translation relies heavily on string substitution, which
+is fragile. In particular, variables with names that are substrings of
+other variables will cause problems. For example if you declare STATE
+variables "phase" and "iphase", then the translator will globally
+substitute "phase_reg" for "phase", converting "phase" to "phase_reg"
+and iphase" to "iphase_reg". Then it will substitute "iphase_reg" for
+iphase" which will convert the existing "iphase_reg" to
+"iphase_reg_reg". This will be confusing and will not compile.
+(End of WARNING)
+<p>
+To give you some idea how functions are specified, here is the
+specification for <code>snd-prod</code>, which generates over 250 lines of C code:
+<p><pre>
+(PROD-ALG
+  (NAME "prod")
+  (ARGUMENTS ("sound_type" "s1") ("sound_type" "s2"))
+  (START (MAX s1 s2))
+  (COMMUTATIVE (s1 s2))
+  (INNER-LOOP "output = s1 * s2")
+  (LINEAR s1 s2)
+  (TERMINATE (MIN s1 s2))
+  (LOGICAL-STOP (MIN s1 s2))
+)
+</pre></p>
 
-</blockquote>
-This will list all serial devices with "usb" in their names. Probably, one will be a name similar to <code>/dev/tty.usbserial-0000103D</code>. The <code>ser-to-osc</code> program will echo data that it receives, so you should know if things are working correctly.
+A <code>.alg</code> file is always of the form:
+<p><pre>
+(<i>name</i>
+  (<i>attribute</i> <i>value</i>)
+  (<i>attribute</i> <i>value</i>)
+  ...
+)
+</pre></p>
+
+There should be just one of these algorithms descriptions per file.
+The <i>name</i> field is arbitrary: it is a Lisp symbol whose property list is
+used to save the following attribute/value pairs.  There are many
+attributes described below. For more examples, see the <code>.alg</code> files in
+the <code>trnsrc</code> directory.
 <p>
-Under Windows, open Control Panel from the Start menu, and open the System control panel. Select the Hardware tab and click the Device Manager button. Look in the device list under Ports (COM &amp; LPT). When you plug in your serial or USB device, you should see a new entry appear, e.g. <code>COM4</code>. This is the device name you need.
+Understanding what the attributes do is not
+easy, so here are three recommendations for implementors.  First, if there is
+an existing Nyquist operator that is structurally similar to something you
+want to implement, make a copy of the corresponding <code>.alg</code> file and
+work from there. In some cases, you can merely rename the parameters and
+substitute a new inner loop.  Second, read the generated code, especially
+the generated inner loop.  It may not all make sense, but sometimes you can
+spot obvious errors and work your way back to the error in the <code>.alg</code>
+file.  Third, if you know where something bad is generated, see if you can 
+find where the code is generated.  (The code generator files are listed in
+<code>init.lsp</code>.)  This code is poorly written and poorly documented, but in
+some cases it is fairly straightforward to determine what attribute in the
+<code>.alg</code> file is responsible for the erroneous output.
 <p>
-The format for the serial input is: any non-whitespace character(s), a slider number, a slider value, and a newline (control-j or ASCII 0x0A). These fields need to be separated by tabs or spaces. An optional carriage return (control-m or ASCII 0x0D) preceding the ASCII 0x0A is ignored. The slider number should be in decimal, and theh slider value is a decimal number from 0 to 255. This is scaled to the range 0.0 to 1.0 (so an input of 255 translates to 1.0).
+<a name = "208"><h3>Attributes</h3></a>
+Here are the attributes used for code generation. Attributes and values may
+be specified in any order.
+<dl>
+<dt>
+<code>(NAME "<i>string</i>")</code><dd>specifies a base name for many identifiers.  In
+particular, the generated filenames will be <i>string</i><code>.c</code> and
+<i>string</i><code>.h</code>, and the XLisp function generated will be
+<code>snd-</code><i>string</i>.<br><br>
+<dt><code>(ARGUMENTS <i>arglist</i>)</code><dd>describes the arguments to be passed from
+XLisp. <i>Arglist</i> has the form: <code>(<i>type1</i> <i>name1</i>) (<i>type2</i>
+<i>name2</i>) ...</code>, where <i>type</i> and <i>name</i> are strings in double quotes,
+e.g. ("sound_type" "s") specifies a SOUND parameter named <code>s</code>.  Note that <i>arglist</i> is not surrounded by parentheses.  As seen
+in this example, the type names and parameter names are C identifiers. Since
+the parameters are passed in from XLisp, they must be chosen from a
+restricted set.  Valid type names are: <code>"sound_type"</code>, <code>"rate_type"</code>, <code>"double"</code>,
+<code>"long"</code>, <code>"string"</code>, and <code>"LVAL"</code>.<br><br>
+<dt><code>(STATE <i>statelist</i>)</code><dd>describes additional state (variables) needed
+to perform the computation.  A <i>statelist</i> is similar to an <i>arglist</i>
+(see <code>ARGUMENTS</code> above), and has the form: <code>(<i>type1</i> <i>name1</i>
+<i>init1</i> [TEMP]) (<i>type2</i> <i>name2</i> <i>init2</i> [TEMP]) ...</code>. 
+The types and names are as
+in <i>arglist</i>, and the "inits" are double-quoted initial values.  Initial
+values may be any C expression.  State is initialized in the order implied by 
+<i>statelist</i> when the operation is first called from XLisp.  If <code>TEMP</code>
+is omitted the state is preserved in a structure until the sound computation
+completes.  Otherwise, the state variable only exists at state
+initialization time.<br><br>
+<dt><code>(INNER-LOOP <i>innerloop-code</i>)</code><dd>describes the inner loop, written as
+C code. The <i>innerloop-code</i> is in double quotes, and may extend over
+multiple lines.  To make generated code extra-beautiful, prefix each line of
+<i>innerloop-code</i> with 12 spaces.  Temporary variables should not
+be declared at the beginning of <i>innerloop-code</i>. Use the
+<code>INNER-LOOP-LOCALS</code> attribute instead.  Within <i>innerloop-code</i>,
+<i>each ARGUMENT of type sound_type</i> <b><i>must</i></b> <i>be referenced exactly one
+time.</i> If you need to use a signal value twice, assign it once to a
+temporary and use the temporary twice.  The inner loop must also assign
+<i>one</i> time to the psuedo-variable <i>output</i>.  The model here is that the
+name of a sound argument denotes the value of the corresponding signal at
+the current output sample time.  The inner loop code will be called once for
+each output sample.  In practice, the code generator will substitute some
+expression for each signal name. For example,
+<code>prod.alg</code> specifies
+<blockquote><code>(INNER-LOOP "output = s1 * s2")</code></blockquote>
+(<code>s1</code> and <code>s2</code> are <code>ARGUMENTS</code>.)  This expands to the
+following inner loop in <code>prod.c</code>:
+<blockquote><code>*out_ptr_reg++ = *s1_ptr_reg++ * *s2_ptr_reg++;</code></blockquote>
+In cases where arguments have different sample rates, sample interpolation
+is in-lined, and the expressions can get very complex. The translator is
+currently very simple-minded about substituting access code in the place of
+parameter names, and <i>this is a frequent source of bugs.</i>  Simple string
+substitution is performed, so <i>you must not use a parameter or state name
+that is a substring of another</i>.  For example, if two sound parameters were
+named <code>s</code> and <code>s2</code>, the translator might substitute for "s" in two
+places rather than one.  If this problem occurs, you will almost certainly
+get a C compiler syntax error.  The fix is to use "more unique" parameter
+and state variable names.<br><br>
+<dt><code>(INNER-LOOP-LOCALS "<i>innerloop-code</i>")</code><dd>The <i>innerloop-code</i>
+contains C declarations of local variables set and referenced in the inner
+loop.<br><br>
+<dt><code>(SAMPLE-RATE "<i>expr</i>")</code><dd>specifies the output sample rate; <i>expr</i>
+can be any C expression, including a parameter from the <code>ARGUMENTS</code>
+list. You can also write <code>(SAMPLE-RATE (MAX <i>name1</i> <i>name2</i> ...))</code>
+where names are unquoted names of arguments.<br><br>
+<dt><code>(SUPPORT-HEADER "<i>c-code</i>")</code><dd>specifies arbitrary C code to be
+inserted in the generated <code>.h</code> file. The code typically contains
+auxiliarly function declarations and definitions of constants.<br><br>
+<dt><code>(SUPPORT-FUNCTIONS "<i>c-code</i>")</code><dd>specifies arbitrary C code to be
+inserted in the generated <code>.c</code> file. The code typically contains
+auxiliarly functions and definitions of constants.<br><br>
+<dt><code>(FINALIZATION "<i>c-code</i>")</code><dd>specifies code to execute when the sound
+has been fully computed and the state variables are about to be
+decallocated.  This is the place to deallocate buffer memory, etc.<br><br>
+<dt><code>(CONSTANT "<i>name1</i>" "<i>name2</i>" ...)</code><dd>specifies state variables that
+do not change value in the inner loop.  The values of state
+variables are loaded into registers before entering the inner loop so that
+access will be fast within the loop.  On exiting the inner loop, the final
+register values are preserved in a "suspension" structure.  If state
+values do not change in the inner loop, this <code>CONSTANT</code> declaration can
+eliminate the overhead of storing these registers.<br><br>
+<dt><code>(START <i>spec</i>)</code><dd>specifies when the output sound should start (a
+sound is zero and no processing is done before the start time). The <i>spec</i>
+can take several forms: <code>(MIN <i>name1</i> <i>name2</i> ...)</code> means the start
+time is the minimum of the start times of input signals <i>name1</i>,
+<i>name2</i>, ....  Note that these names are not quoted.<br><br>
+<dt><code>(TERMINATE <i>spec</i>)</code><dd>specifies when the output
+sound terminates (a sound is
+zero after this termination time and no more samples are computed).  The
+<i>spec</i> can take several forms: <code>(MIN <i>name1</i> <i>name2</i> ...)</code> means
+the terminate time is the minimum of the terminate times of input arguments
+<i>name1</i>, <i>name2</i>, ....  Note that these names are not quoted.  To
+terminate at the time of a single argument <code>s1</code>, specify <code>(MIN
+s1)</code>.  To terminate after a specific duration, use <code>(AFTER "<i>c-expr</i>")</code>,
+where <i>c-expr</i> is a C variable or expression.  To terminate at a
+particular time, use <code>(AT "<i>c-expr</i>")</code>.  <i>spec</i> may also be
+<code>COMPUTED</code>, which means to use the maximum sample rate of any input
+signal.<br><br>
+<dt><code>(LOGICAL-STOP <i>spec</i>)</code><dd>specifies the logical stop time of the output
+sound.  This <i>spec</i> is just like the one for <code>TERMINATE</code>.  If no
+<code>LOGICAL-STOP</code> attribute is present, the logical stop will coincide
+with the terminate time.<br><br>
+<dt><code>(ALWAYS-SCALE <i>name1</i> <i>name2</i> ...)</code><dd>says that the named sound
+arguments (not in quotes) should always be multiplied by a scale factor.
+This is a space-time tradeoff. When Nyquist sounds are scaled, the scale
+factor is merely stored in a structure.  It is the responsibility of
+the user of the samples to actually scale them (unless the scale factor is
+exactly 1.0).  The default is to generate code with and without scaling and
+to select the appropriate code at run time.  If there are N signal inputs,
+this will generate 2<sup T>N</sup> versions of the code.  To avoid this code
+explosion, use the <code>ALWAYS-SCALE</code> attribute.<br><br>
+<dt><code>(INLINE-INTERPOLATION <i>flag</i>)</code><dd>controls when sample rate interpolation
+should be performed in-line in the inner loop. There are two forms of sample
+rate interpolation.  One is intended for use when the rate change is large
+and many points will be interpolated.  This form uses a divide instruction
+and some setup at the low sample rate, 
+but the inner loop overhead is just an add. The
+other form, intended for less drastic sample rate changes, performs
+interpolation with 2 multiplies and several adds per sample at the high
+sample rate.  If inline interpolation is enabled, Nyquist generates various 
+inner loops and selects the appropriate one at run-time. (This can cause a
+combinatorial explosion if there are multiple sound arguments.) If inline
+interpolation is not enabled, much less code is generated and interpolation
+is performed as necessary
+by instantiating a separate signal processing operation. The value of <i>flag</i>
+is <code>YES</code> to generate inline interpolation, <code>NO</code> to disable
+inline interpolation, and <code>NIL</code> to take the default set by the 
+global variable <code>*INLINE-INTERPOLATION*</code>. The default is also taken
+if no <i>INLINE-INTERPOLATION</i> attribute is specified.<br><br>
+<dt><code>(STEP-FUNCTION <i>name1</i> <i>name2</i> ...)</code><dd>Normally all argument 
+signals are
+linearly interpolated to the output sample rate.  The linear interpolation
+can be turned off with this attribute. This is used, for example, in Nyquist
+variable filters so that filter coefficients are computed at low sample
+rates.  In fact, this attribute was added for the special case of filters.<br><br>
+<dt><code>(DEPENDS <i>spec1</i> <i>spec2</i> ...)</code><dd>Specifies dependencies.  This
+attribute was also introduced to handle the case of filter coefficients (but
+may have other applications.)  Use it when a state variable is a function of
+a potentially low-sample-rate input where the input is in the
+<code>STEP-FUNCTION</code> list.  Consider a filter coefficient that depends upon
+an input signal such as bandwidth.  In this case, you want to compute the
+filter coefficient only when the input signal changes rather than every
+output sample, since output may occur at a much higher sample rate.  A
+<i>spec</i> is of the form 
+<blockquote><code>("<i>name</i>" "<i>arg</i>" "<i>expr</i>" [TEMP <i>"type"</i>])</code></blockquote>
+which is interpreted as follows: <i>name</i> depends upon <i>arg</i>; when <i>arg</i>
+changes, recompute <i>expr</i> and assign it to <i>name</i>. The <i>name</i> must be
+declared as a <code>STATE</code> variable unless <code>TEMP</code> is present, in which
+case <i>name</i> is not preserved and is used only to compute other state.
+Variables are updated in the order of the <code>DEPENDS</code> list.<br><br>
+<dt><code>(FORCE-INTO-REGISTER <i>name1</i> <i>name2</i> ...)</code><dd>causes <i>name1</i>,
+<i>name2</i>, ... to be loaded into registers before entering the inner loop.
+If the inner loop references a state variable or argument, this happens
+automatically. Use this attribute only if references are "hidden" in a
+<code>#define</code>'d macro or referenced in a <code>DEPENDS</code> specification. <br><br>
+<dt><code>(NOT-REGISTER <i>name1</i> <i>name2</i> ...)</code><dd>specifies state and arguments
+that should not be loaded into registers before entering an inner loop.
+This is sometimes an optimization for infrequently accessed state.<br><br>
+<dt><code>(NOT-IN-INNER-LOOP "<i>name1</i>" "<i>name2</i>" ...)</code><dd>says that certain
+arguments are not used in the inner loop.  Nyquist assumes all arguments
+are used in the inner loop, so specify them here if not.  For example,
+tables are passed into functions as sounds, but these sounds are not read
+sample-by-sample in the inner loop, so they should be listed here.<br><br>
+<dt><code>(MAINTAIN ("<i>name1</i>" "<i>expr1</i>") ("<i>name2</i>" "<i>expr2</i>") ...
+)</code><dd>Sometimes the IBM XLC compiler generates better loop code if a variable
+referenced in the loop is not referenced outside of the loop after the loop
+exit.  Technically, optimization is better when variables are dead upon loop
+exit. Sometimes, there is an efficient way to compute the final value of a
+state variable without actually referencing it, in which case the variable
+and the computation method are given as a pair in the <code>MAINTAIN</code>
+attribute.  This suppresses a store of the value of the named variable,
+making it a dead variable.  Where the store would have been, the expression
+is computed and assigned to the named variable.  See <code>partial.alg</code> for
+an example.  This optimization is never necessary and is only for
+fine-tuning.<br><br>
+<dt><code>(LINEAR <i>name1</i> <i>name2</i> ...)</code><dd>specifies that named arguments
+(without quotes) are linear with respect to the output.  What this
+<i>really</i> means is that it is numerically OK to eliminate a scale factor from
+the named argument and store it in the output sound descriptor, avoiding a
+potential multiply in this inner loop.  For example, both arguments to
+<code>snd-prod</code> (signal multiplication) are "linear."  The inner loop has
+a single multiplication operator to multiply samples vs. a potential 3
+multiplies if each sample were also scaled.  To handle scale factors on the
+input signals, the scale factors are automatically multiplied and the
+product becomes the scale factor of the resulting output.  (This effectively
+"passes the buck" to some other, or perhaps more than one,  signal
+processing function, which is not always optimal. On the other hand, it
+works great if you multiply a number of scaled signals together: all the
+scale factors are ultimately handled with a single multiply.)<br><br>
+<dt><code>(INTERNAL-SCALING <i>name1</i> <i>name2</i> ...)</code><dd>indicates that scaling is
+handled in code that is hidden from the code generator for <i>name1</i>,
+<i>name2</i>, ..., which are sound arguments. Although it is the responsibility
+of the reader of samples to apply any given scale factor, sometimes scaling
+can be had for free.  For example, the <code>snd-recip</code> operation computes
+the reciprocal of the input samples by peforming a division.  The simple
+approach would be to specify an inner loop of <code>output = 1.0/s1</code>, where
+<code>s1</code> is the input.  With scaling, this would generate an inner loop
+something like this:
+<blockquote><code>*output++ = 1.0 / (s1_scale_factor * *s1++);</code></blockquote>
+but a much better approach would be the following:
+<blockquote><code>*output++ = my_scale_factor / *s1++</code></blockquote>
+where <code>my_scale_factor</code> is initialized to <code>1.0 / s1-&gt;scale</code>.
+Working backward from the desired inner loop to the <code>.alg</code> inner loop
+specification, a first attempt might be to specify:
+<blockquote><code>(INNER-LOOP "output = my_scale_factor / s1")</code></blockquote>
+but this will generate the following:
+<blockquote><code>*output++=my_scale_factor/(s1_scale_factor * *s1++);</code></blockquote>
+Since the code generator does not know that scaling is handled elsewhere,
+the scaling is done twice!  The solution is to put <code>s1</code> in the
+<code>INTERNAL-SCALING</code> list, which essentially means "I've already
+incorporated scaling into the algorithm, so suppress the multiplication by a
+scale factor."<br><br>
+<dt><code>(COMMUTATIVE (<i>name1</i> <i>name2</i> ...))</code><dd>specifies that the results
+will not be affected by interchanging any of the listed arguments.  When
+arguments are commutative, Nyquist rearranges them at run-time into
+decreasing order of sample rates.  If interpolation is in-line, this can
+dramatically reduce the amount of code generated to handle all the different
+cases.  The prime example is <code>prod.alg</code>.<br><br>
+<dt><code>(TYPE-CHECK "<i>code</i>")</code><dd>specifies checking code to be inserted after
+argument type checking at initialization time. See <code>downproto.alg</code> for
+an example where a check is made to guarantee that the output sample rate is
+not greater than the input sample rate.  Otherwise an error is raised.
+</dl>
 <p>
-There is a simple test program in <code>demos/osc-test.lsp</code> you can run to try out control with Open Sound Control. There are two examples in that file. One uses <code>snd-slider</code> to control the frequency of an oscillator. The other uses <code>get-slider-value</code> to control the pitch of grains in a granular synthesis process.
+<a name = "209"><h3>Generated Names</h3></a>
+The resulting <code>.c</code> file defines a number of procedures. The procedures
+that do actual sample computation are named something like
+<i>name</i>_<i>interp-spec</i>_FETCH, where <i>name</i> is the NAME
+attribute from the <code>.alg</code> file, and <i>interp-spec</i> is an interpolation
+specification composed of a string of the following letters: n, s, i, and r.
+One letter corresponds to each sound argument, indicating no interpolation
+(r), scaling only (s), ordinary linear interpolation with scaling (i), and
+ramp (incremental) interpolation with scaling (r).  The code generator
+determines all the combinations of n, s, i, and r that are necessary and
+generates a separate fetch function for each.
+<p>
+Another function is <i>name</i><code>_toss_fetch</code>, which is called when sounds
+are not time-aligned and some initial samples must be discarded from one or
+more inputs.
+<p>
+The function that creates a sound is <code>snd_make_</code><i>name</i>.  This is
+where state allocation and initialization takes place.  The proper fetch
+function is selected based on the sample rates and scale factors of the
+sound arguments, and a <code>sound_type</code> is returned.
+<p>
+Since Nyquist is a functional language, sound operations are not normally allowed to
+modify their arguments through side effects, but even reading samples from a
+<code>sound_type</code> causes side effects. To hide these from the Nyquist
+programmer, <code>sound_type</code> arguments are first copied (this only copies a small structure. The samples themselves are on a shared list). The function
+<code>snd_</code><i>name</i> performs the necessary copies and calls
+<code>snd_make_</code><i>name</i>.  It is the <code>snd_</code><i>name</i> function that is
+called by XLisp.  The XLisp name for the function is <code>SND-</code><i>NAME</i>.
+Notice that the underscore in C is converted to a dash in XLisp.  Also,
+XLisp converts identifiers to upper case when they are read, so normally,
+you would type <code>snd</code>-<i>name</i> to call the function.
+<p>
+<a name = "210"><h3>Scalar Arguments</h3></a>
+If you want the option of passing either a number (scalar) or a signal as
+one of the arguments, you have two choices, neither of which is automated.
+Choice 1 is to coerce the constant into a signal from within XLisp.  The
+naming convention would be to <code>DEFUN</code> a new function named
+<i>NAME</i> or <code>S-</code><i>NAME</i> for ordinary use.  The <i>NAME</i> function tests
+the arguments using XLisp functions such as <code>TYPE-OF</code>, <code>NUMBERP</code>,
+and <code>SOUNDP</code>.  Any number is converted to a <code>SOUND</code>, e.g. using
+<code>CONST</code>.  Then <code>SND-</code><i>NAME</i> is called with all sound arguments.
+The disadvantage of this scheme is that scalars are expanded into a sample
+stream, which is slower than having a special inner loop where the scalar
+is simply kept in a register, avoiding loads, stores, and addressing
+overhead.
+<p>
+Choice 2 is to generate a different sound operator for each case.  The
+naming convention here is to append a string of c's and v's, indicating
+constant (scalar) or variable (signal) inputs.  For example, the
+<code>reson</code> operator comes in four variations: <code>reson</code>,
+<code>resoncv</code>, <code>resonvc</code>, and <code>resonvv</code>.  The <code>resonvc</code>
+version implements a resonating filter with a variable center frequency (a
+sound type) and a constant bandwidth (a <code>FLONUM</code>).  The <code>RESON</code>
+function in Nyquist is an ordinary Lisp function that checks types and calls
+one of <code>SND-RESON</code>, <code>SND-RESONCV</code>, <code>SND-RESONVC</code>, or
+<code>SND-RESONVV</code>.  
+<p>
+Since each of these <code>SND-</code> functions performs further selection of
+implementation based on sample rates and the need for scaling, there are 25
+different functions for computing RESON!  So far, however, Nyquist is
+smaller than Common Lisp and it's about half the size of Microsoft Word.
+Hopefully, exponential growth in memory density will outpace linear (as a
+function of programming effort) growth of Nyquist.
+<p>
+
 <p>
 <hr>
 <a href = "part16.html">Previous Section</a> | <a href = "part18.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>

@@ -1,0 +1,27 @@
+<project>
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac includeantruntime="false" srcdir="." debug="true" 
+               destdir="build/classes"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="."/>
+        <jar destfile="jnyqide.jar" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="jnyqide.Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="jnyqide.jar" fork="true">
+          <sysproperty key="apple.laf.useScreenMenuBar" value="true" />
+        </java>
+    </target>
+
+</project>

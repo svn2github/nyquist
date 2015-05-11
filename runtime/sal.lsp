@@ -613,7 +613,9 @@
       (setf b (cdr b)))
     (and rslt (null b)))) ;; make sure no leftovers in b
 
-(defun sal-about-equal (a b)
+(setf *~=tolerance* 0.000001)
+
+(defun sal-almost-equal (a b)
   (or (and (numberp a) (numberp b) (< (abs (- a b)) *~=tolerance*))
       (and (consp a) (consp b) (sal-list-about-equal a b))
       (equal a b)))

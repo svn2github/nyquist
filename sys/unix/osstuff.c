@@ -70,7 +70,9 @@ static int lposition;
 static int line_edit = TRUE;
 
 #ifndef READ_LINE
-#define typeahead_max 128
+// typeahead is high for humans but allows NyquistIDE to 
+// send envelope data and preferences
+#define typeahead_max 1024
 static char typeahead[typeahead_max];
 static int typeahead_tail = 0;
 static int typeahead_head = 0;

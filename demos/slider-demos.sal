@@ -1,0 +1,144 @@
+;; slider-demos.sal -- examples using sliders for real-time control
+;;
+;; Roger B. Dannenberg
+;; April 2015
+;;
+
+;; To use sliders, load the sliders.lsp code:
+;;
+load "sliders.lsp"
+;; sliders.lsp sets the audio latency to 20ms
+;; to lower the latency of controls. This may
+;; lead to some audio dropouts.
+;; Longer latency reduces drop-outs but makes 
+;; the response to sliders sluggish. 
+;; (The default audio latency is 0.3 seconds = 300ms.)
+;;
+;; sliders.lsp also sets (autonorm-off); otherwise,
+;; initial sound samples are computed about 20s in 
+;; advance so real-time control changes will not 
+;; apply until after 20s or so.
+;;
+;; Termination: The STOP-ON-ZERO function terminates
+;; when the sound input goes to zero. We use as input
+;; a slider value controlled by a button that is 
+;; initially 1. When the "Stop" button is pressed,
+;; the slider goes to zero, STOP-ON-ZERO terminates,
+;; and the entire example sound, which is being
+;; multiplied, also terminates.
+;;
+;; For the Inter-Onset Interval example, we test
+;; the slider before each note in the sequence, and
+;; if the slider value is zero, the recursive call
+;; to continue the sequence is not made, ending the
+;; sequence.
+
+
+;; snd-stoponzero test 
+;;
+function soz-test()
+  begin
+    ; first test our basic code without snd-stoponzero
+    ; we should hear the sound ramp down to zero, then ramp
+    ; back up and play until 5 seconds:
+    play osc(a4, 5) * pwlv(0.1, 1, 0, 2, 0, 3, 0.1, 5, 0.1)
+    ; Now, run the pwlv through snd-stoponzero.  If 
+    ; snd-stoponzero works, it will terminate when pwlv goes
+    ; to zero at time 1. Otherwise, the pwlv will ramp back up
+    ; and we'll here the tone again until it ends at 5s as before.
+    play osc(a4, 5) * snd-stoponzero(pwlv(0.1, 1, 0, 2, 0, 3, 0.1, 5, 0.1))
+  end
+
+;; for these demos, we'll create control panels first, then
+;; access them when you generate sound
+
+;; Create a slider panel named "Simple Sine Tone":
+set SST = "Simple Sine Tone: F2" ;; the panel name
+exec make-slider-panel(SST)
+;; Sliders have name, initial value, low bound, high bound:
+exec make-slider("Hz", 500, 200, 2000)
+exec make-slider("Amp") ;; defaults: intially 0.5, range 0 to 1
+exec make-button("Stop", 1)
+
+
+;; Simple Sine Tone synthesis
+function f2()
+  begin
+    ;; lpslider low-passes (smooths) input from the sliders:
+    play (hzosc(lpslider(SST, "Hz")) * lpslider(SST, "Amp") *
+          stop-on-zero(slider(SST, "Stop"))) ~ 100
+  end
+
+;; the optional parameter (from 0 to 12) specifies a background
+;; color to help you distinguish all the slider panels.
+set SFM = "Simple FM: F3"
+exec make-slider-panel(SFM, 1)
+exec make-slider("Hz", 880, 0, 1000)
+exec make-slider("Depth", 0, 0, 1000)
+exec make-slider("CM Ratio", 1.0, 0.5, 5.0)
+exec make-button("Stop", 1)
+
+;; We want to divide by CM ratio, but there is no signal 
+;; division. Instead we multiply by the reciprocal, 
+;; computed by snd-recip(). In case the slider is initially 
+;; 0, use s-max to avoid a divide-by-zero problem.
+;;
+function mc-ratio()
+    return snd-recip(s-max(lpslider(SFM, "CM Ratio"), const(0.5)))
+
+function f3()
+  play (hzosc(lpslider(SFM, "Hz") + 
+              hzosc(lpslider(SFM, "Hz") * mc-ratio()) * 
+              lpslider(SFM, "Depth")) *
+        stop-on-zero(slider(SFM, "Stop"))) ~ 100
+
+;; Inter-Onset Interval
+set IOI = "Inter-Onset Interval: F4"
+exec make-slider-panel(IOI, 2)
+exec make-slider("IOI", 0.5, 0.05, 1.0)
+exec make-slider("Pitch", c4, c2, c6)
+exec make-button("Stop", 1)
+
+function ioi-seq()
+  return seq(set-logical-stop(pluck(random(12) + 
+                                    round(get-slider-value(IOI, "Pitch"))),
+                              max(0.01, get-slider-value(IOI, "IOI"))),
+             #?(get-slider-value(IOI, "Stop") > 0, ioi-seq(), s-rest(0.001)))
+
+function f4()
+  play ioi-seq() * const(0.1, 100)
+ 
+
+;; Trigger Demo
+set TD = "Trigger Demo: F5"
+exec make-slider-panel(TD, 3)
+exec make-slider("Dur", 3.0, 0.1, 10.0)
+exec make-slider("Freq", 400, 50.0, 2000.0)
+exec make-button("Trigger", 0)
+exec make-button("Stop", 1)
+
+;; This function shows how to use trigger. The expression RISSET-BELL(...)
+;; is instantiated each time the "Trigger" button is pressed. The "Trigger"
+;; button remains active as long as the trigger has input, which in this
+;; case is up to 100 seconds. However, the playback can be stopped by the
+;; "Stop" button which feeds into the stop-on-zero function. Note that
+;; the slider functions have duration parameters. Without them, the 
+;; sliders and all output would stop after 1 second.
+;;
+function f5()
+  begin
+    if ! fboundp(quote(risset-bell)) then load "../demos/pmorales/b3.lsp"
+    play trigger(slider(TD, "Trigger", 100), 
+                 risset-bell(1.0, get-slider-value(TD, "Dur"), 
+                                  get-slider-value(TD, "Freq")) *
+         stop-on-zero(slider(TD, "Stop", 100))
+  end
+
+
+
+print "!!!  Slider Demos -- play sounds with F2, F3, ... Buttons !!!"
+;; the panel titles contain the instructions, so just print the panel titles
+print SST
+print SFM
+print IOI
+

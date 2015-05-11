@@ -20,14 +20,17 @@ import jnyqide.*;
 import java.lang.reflect.*; // import Constructor class
 import java.util.prefs.*;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.net.URL;
+import java.net.URLDecoder;
 import javax.swing.border.EmptyBorder;
 /* DO NOT EXIST FOR JAVA 6 -- SEE "SymbolicLink" BELOW 
 import java.nio.file.Path;
 import java.nio.file.Files;
 */
-import java.lang.Runtime;
-
+import java.nio.file.Paths;
+import java.lang.ProcessBuilder;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -83,7 +86,9 @@ public class MainFrame extends JFrame {
     JInternalFrame jFrame;
     // used by TextColor to communicate result back to MainFrame
     // public static boolean evenParens;
-    String currentDir = "";
+    public static String currentDir = "";
+    public static String nyquistDir = "";
+    public static String docDir = "";
     Runnable update = new ScrollUpdate(this);
     PlotFrame plotFrame;
     File homeDir = new File(".");
@@ -134,7 +139,10 @@ public class MainFrame extends JFrame {
     public static String prefAudioRate = prefAudioRateDefault;
     public static String prefControlRate = prefControlRateDefault;
     public static String prefFontSize = prefFontSizeDefault;
-    public static String prefDirectory = "";
+    public static String prefDirectory = "";  // starting directory in prefs
+    // directory when Nyquist was last closed: If starting directory is not
+    //   given, we'll open the directory in use the last time NyquistIDE ran:
+    public static String lastDirectory = "";
     public static String prefSFDirectory = "";
 
     public static boolean prefsHaveBeenSet = false;
@@ -213,7 +221,7 @@ public class MainFrame extends JFrame {
             return(false); 
         }
         System.out.println("strOS " + strOS);
-        return(strOS.indexOf("Mac OS") >= 0);
+        return(strOS != null && strOS.indexOf("Mac OS") >= 0);
     }
 
     PreferencesDialog preferencesDialog;
@@ -311,6 +319,8 @@ public class MainFrame extends JFrame {
 	}
 	*/
 
+    private boolean isTrue(String s) { return s != null && s.equals("true"); }
+
     //Component initialization
     private void mainFrameInit()  throws Exception  {
         // if this is a Mac, we want some menu items on the application menu, 
@@ -330,8 +340,30 @@ public class MainFrame extends JFrame {
 		// normally created to hold documentation. Add links in nyquist
 		// to lib and demo
 		//
+        System.out.println("This is a test of output" + "\n");
+        System.out.println("isMac(): " + isMac() + "\n");
         if (isMac()) {
             hasRightMouseButton = false;
+            // set current working directory if we are in an application bundle
+            currentDir = Paths.get(MainFrame.class.getProtectionDomain().
+                    getCodeSource().getLocation().toURI()).getParent().
+                    toString() + "/";
+            if (isTrue(System.getProperty("isOSXbundle"))) {
+                System.out.println("isOSXbundle: true\n");
+                nyquistDir = currentDir;
+                docDir = new File(currentDir + "../../../nyquist/doc").
+                         getCanonicalPath() + "/";
+            } else { // running from command line, 
+                nyquistDir = new File(currentDir + "..").getCanonicalPath() +
+                             "/";
+                docDir = nyquistDir + "doc/";
+            }
+            // Debugging:
+            System.out.println("currentDir: |" + currentDir + "|");
+            System.out.println("nyquistDir: |" + nyquistDir + "|");
+            System.out.println("docDir: |" + docDir + "|");
+            // try to load special mac-specific code that won't even compile
+            // on windows or linux
             try {
                 Object[] args = { this };
                 Class[] arglist = { MainFrame.class };
@@ -372,9 +404,12 @@ public class MainFrame extends JFrame {
 					}
 				}
 				*/
-				Process process = Runtime.getRuntime().exec(
-						"/bin/sh ./mac-os-x-link-script.sh");
-				int result = process.waitFor();
+				ProcessBuilder process = new ProcessBuilder(
+                        "/bin/sh", "mac-os-x-link-script.sh");
+                process.redirectErrorStream(true).inheritIO();
+                process.directory(new File(currentDir));
+                Process p = process.start();
+				int result = p.waitFor();
 				// if this fails, something is wrong, but it would be annoying to
 				// pop up a dialog box every time the user starts NyquistIDE, so 
 				// we'll just print the error to aid with debugging and ignore the
@@ -414,6 +449,7 @@ public class MainFrame extends JFrame {
         prefControlRate = prefs.get("control-rate", prefControlRate);
         prefFontSize = prefs.get("font-size", prefFontSize);
         prefDirectory = prefs.get("initial-directory", prefDirectory);
+        lastDirectory = prefs.get("last-directory", lastDirectory);
         prefSFDirectory = prefs.get("default-sf-directory", prefSFDirectory);
         prefsHaveBeenSet = false;
 
@@ -522,7 +558,8 @@ public class MainFrame extends JFrame {
         buttonInit("Save File", "Save File", menuButtonListener);
         buttonInit("Load", "Load File into Nyquist", menuButtonListener);
         buttonInit("Mark", "Get elapsed audio play time", menuButtonListener);
-        
+        buttonInit("Test", "This should not be in released version.", menuButtonListener);
+
         jMenuBar1.add(jMenuFile);
         jMenuBar1.add(jMenuEdit);
         jMenuBar1.add(jMenuProcess);
@@ -538,9 +575,12 @@ public class MainFrame extends JFrame {
         jOutputArea.setEditable(false);
         jOutputPane = new JScrollPane( jOutputArea );
         jOutputPane.setHorizontalScrollBarPolicy(
-                                                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jOutputPane.setVerticalScrollBarPolicy( 
-                                               JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        jOutputArea.append("currentDir: |" + currentDir + "|\n");
+        jOutputArea.append("nyquistDir: |" + nyquistDir + "|\n");
+        jOutputArea.append("docDir: |" + docDir + "|\n");
         
         jListOutputArea = new JTextArea();
         jListOutputArea.setLineWrap(true);
@@ -687,7 +727,7 @@ public class MainFrame extends JFrame {
                     }
                     return true;
                 } catch (Exception e) {
-                   System.out.println("Drop failed: "+e.getMessage());
+                   System.out.println("Drop failed: " + e.getMessage());
                 }
                 return false;
             }
@@ -696,6 +736,12 @@ public class MainFrame extends JFrame {
         // now this is done in Main after making desktop visible (otherwise
         // you can't get dimensions of the desktop and layout is faulty)
         // tileCompletion(); 
+
+        // set directory according to preferences or user.dir:
+        if (lastDirectory.length() == 0) {
+            lastDirectory = System.getProperty("user.dir");
+            System.out.println("lastDirectory was empty, set to " + lastDirectory);
+        }
     }
     
     
@@ -714,9 +760,14 @@ public class MainFrame extends JFrame {
         callFunction("set-sound-srate", prefAudioRate);
         callFunction("set-control-srate", prefControlRate);
         setFontSize(Integer.parseInt(prefFontSize));
-        if (prefDirectory != null && prefDirectory.length() > 0) {
+        if (prefDirectory.length() > 0) {
             changeDirectory(prefDirectory);
+        } else if (lastDirectory.length() > 0) {
+            changeDirectory(lastDirectory);
         }
+        System.out.println("sendPreferenceData: prefDir " + prefDirectory + 
+                           " lastDir " + lastDirectory);
+
         if (prefSFDirectory != null && prefSFDirectory.length() > 0) {
             String dirString = escape_backslashes(prefSFDirectory);
             setVariable("*default-sf-dir*", "\"" + dirString + "\"");
@@ -743,45 +794,47 @@ public class MainFrame extends JFrame {
     //File | Exit action performed
     public void menuButtonHandler(ActionEvent e) {
         String cmd = e.getActionCommand();
-        if (cmd == "New" || cmd == "New File") doFileNew(e);
-        else if (cmd == "Open" || cmd == "Open File") doFileOpen(e);
-        else if (cmd == "Save" || cmd == "Save File") doFileSave(e);
-        else if (cmd == "Save As...") doFileSaveAs(e);
-        else if (cmd == "Load" || cmd == "Load...") doFileLoad(e);
-        else if (cmd == "Mark") doProcessMark(e);
-        else if (cmd == "Preferences...") Prefs();
-        else if (cmd == "Exit") {
+        if (cmd.equals("New") || cmd.equals("New File")) doFileNew(e);
+        else if (cmd.equals("Open") || cmd.equals("Open File")) doFileOpen(e);
+        else if (cmd.equals("Save") || cmd.equals("Save File")) doFileSave(e);
+        else if (cmd.equals("Save As...")) doFileSaveAs(e);
+        else if (cmd.equals("Load") || cmd.equals("Load...")) doFileLoad(e);
+        else if (cmd.equals("Mark")) doProcessMark(e);
+        else if (cmd.equals("Test")) doProcessTest(e);
+        else if (cmd.equals("Preferences...")) Prefs();
+        else if (cmd.equals("Exit")) {
             SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         Quit();
                     }
                 });
             // throw new IllegalStateException("Let the quit handler do it");
-        } else if (cmd == "Find...") doEditFind(e);
-        else if (cmd == "Replace...") doEditReplace(e);
-        else if (cmd == "Previous") doEditPrevious(e);
-        else if (cmd == "Next") doEditNext(e);
-        else if (cmd == "Select Expression") doEditSelectExpression(e);
-        else if (cmd == "About") About();
-        else if (cmd == "Manual") doHelpManual(e);
-        else if (cmd == "Replay") doProcessReplay(e);
-        else if (cmd == "Plot") doProcessPlot(e);
-        else if (cmd == "Tile") doWindowTile(e);
-        else if (cmd == "Browse") doWindowBrowse(e);
-        else if (cmd == "EQ") doWindowEQ(e);
-        else if (cmd == "EnvEdit" || cmd == "Envelope Edit") doWindowEnvelope(e);
-        // else if (cmd == "Nyquistlator") doNyquistlator(e);
+        } else if (cmd.equals("Find...")) doEditFind(e);
+        else if (cmd.equals("Replace...")) doEditReplace(e);
+        else if (cmd.equals("Previous")) doEditPrevious(e);
+        else if (cmd.equals("Next")) doEditNext(e);
+        else if (cmd.equals("Select Expression")) doEditSelectExpression(e);
+        else if (cmd.equals("About")) About();
+        else if (cmd.equals("Manual")) doHelpManual(e);
+        else if (cmd.equals("Replay")) doProcessReplay(e);
+        else if (cmd.equals("Plot")) doProcessPlot(e);
+        else if (cmd.equals("Tile")) doWindowTile(e);
+        else if (cmd.equals("Browse")) doWindowBrowse(e);
+        else if (cmd.equals("EQ")) doWindowEQ(e);
+        else if (cmd.equals("EnvEdit") || cmd.equals("Envelope Edit")) 
+            doWindowEnvelope(e);
+        // else if (cmd.equals("Nyquistlator")) doNyquistlator(e);
         /* BEGIN UPIC */
-        else if (cmd == "UPIC Edit") doWindowUPIC(e);
+        else if (cmd.equals("UPIC Edit")) doWindowUPIC(e);
         /* END UPIC */
-        else if (cmd == "Info") doProcessInfo(e);
-        else if (cmd == "Break") doProcessBreak(e);
-        else if (cmd == "Up") doProcessUp(e);
-        else if (cmd == "Cont") doProcessCont(e);
-        else if (cmd == "Top") doProcessTop(e);
-        else if (cmd == "Lisp") doProcessLisp(e);
-        else if (cmd == "Sal") doProcessSal(e);
-        else if (cmd == "Copy to Lisp") doProcessCopyToLisp(e);
+        else if (cmd.equals("Info")) doProcessInfo(e);
+        else if (cmd.equals("Break")) doProcessBreak(e);
+        else if (cmd.equals("Up")) doProcessUp(e);
+        else if (cmd.equals("Cont")) doProcessCont(e);
+        else if (cmd.equals("Top")) doProcessTop(e);
+        else if (cmd.equals("Lisp")) doProcessLisp(e);
+        else if (cmd.equals("Sal")) doProcessSal(e);
+        else if (cmd.equals("Copy to Lisp")) doProcessCopyToLisp(e);
         // do this last so other commands starting with "F" get handled
         else if (cmd.charAt(0) == 'F') doProcessFn(e);
         else System.out.println("menu or button command not expected: " + cmd);
@@ -817,6 +870,7 @@ public class MainFrame extends JFrame {
             prefs.put("control-rate", prefControlRate);
             prefs.put("font-size", prefFontSize);
             prefs.put("initial-directory", prefDirectory);
+            prefs.put("last-directory", currentDir);
             prefs.put("default-sf-directory", prefSFDirectory);
             prefsHaveBeenSet = false;
         }
@@ -933,28 +987,22 @@ public class MainFrame extends JFrame {
     
     //File | Exit action performed
     public void doFileOpen(ActionEvent e) {
-        JFileChooser chooser = new JFileChooser();
-        LispFileFilter lispFilter = new LispFileFilter();
-        SalFileFilter salFilter = new SalFileFilter();
-        // last one seems to be the default setting for user, so set according
-        // to current mode
-        if (codeInputPane.isSal) {
-            chooser.setFileFilter(lispFilter);
-            chooser.addChoosableFileFilter(salFilter);
-        } else {
-            chooser.setFileFilter(salFilter);
-            chooser.addChoosableFileFilter(lispFilter);
-        }
+        FileDialog fileDialog = new FileDialog(this, "Select a File to Open",
+                                               FileDialog.LOAD);
+        NyquistFileFilter nyquistFilter = new NyquistFileFilter();
+        fileDialog.setFile("*.sal");
+        fileDialog.setFilenameFilter(nyquistFilter);
         // note if current directory setting fails on some platform,
         // consider this code using getCanonicalPath():
         //      File f = new File(new File(".").getCanonicalPath());
-        File curdir = new File(currentDir);
-        chooser.setCurrentDirectory(curdir);
-        int returnVal = chooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            System.out.println("You chose to open this file: " +
-                               chooser.getSelectedFile().getAbsoluteFile());
-            openFile(chooser.getSelectedFile());
+        fileDialog.setDirectory(currentDir);
+        fileDialog.setVisible(true);
+        if (fileDialog.getDirectory() != null && fileDialog.getFile() != null) {
+            String path = fileDialog.getDirectory() + 
+                    System.getProperty("file.separator") + 
+                    fileDialog.getFile();
+            System.out.println("You chose to open this file: " + path);
+            openFile(new File(path));
         }
     }
 
@@ -1109,32 +1157,13 @@ public class MainFrame extends JFrame {
     }
     
     public String findManualURL(String ext) {
-        String url = "";
-        try { 
-            url = homeDir.getCanonicalPath();
-        } catch (Exception e) { 
-            System.out.println("findManualURL exception: " + e);
-        }
         String osName = System.getProperty("os.name");
-        if (osName.startsWith("Mac OS")) {
-            // from ./NyquistIDE.app/Contents/Resources/Java to .
-            // note: I tried this using homeDir.getParentFile(), but
-            // it always returns null, so I'm string parsing instead
-            int i;
-            for (i = 0;  i <  4; i++) {
-                int pos = url.lastIndexOf('/');
-                if (pos >= 0) {
-                    url = url.substring(0, pos);
-                }
-                System.out.println(url);
-            }
-            url += "/nyquist";
+        if (osName != null && osName.startsWith("Mac OS")) {
+            System.out.println("This is a Mac");
         } else if (osName.startsWith("Windows")) {
-	    // file://C:/ does not work, file:///C:/ does work 
-	    url = "/" + url;
-	}
-        url = "file://" + url + "/doc/" + ext;
-        return url;
+            System.out.println("This is Windows");
+        }
+        return "file://" + docDir + ext;
     }
     
     public void doHelpManual(ActionEvent e) {
@@ -1369,18 +1398,50 @@ public class MainFrame extends JFrame {
         sendInput(Character.toString('\001'), true); 
     }
 
-    /* this is an old test function to simulate a slider change...
-    public void doProcessTest(ActionEvent e)
-    {
-        sendInput(Character.toString('\016'), true); // begin message
-        sendInput("S", true); // command is "slider change"
-        test_value += 1.0;
-        sendInput("5 ", true); // which slider
-        sendInput(Float.toString(test_value), true); // new value
-        sendInput(Character.toString('\021'), true); // end message
+    // Slider panel management
+    HashMap<String, Nsliders> sliderPanels = new HashMap<String, Nsliders>();
+    Nsliders activeSliderPanel;
+    String activeSliderPanelName;
+
+    /* this is a test function to simulate creating a slider panel */
+    public void doProcessTest(ActionEvent e) {
+        createSliderPanel("PanelName2", 3);
+        createSlider("S1", 10, 0.3, 0.0, 2.0);
+        createSlider("S2Long", 11, 0.3, 0.0, 1.0);
     }
-    */
-    
+
+    public void createSliderPanel(String name, int color) {
+        Nsliders old = sliderPanels.get(name);
+        if (old != null) { // already exists: get rid of it
+            old.dispose();
+        }
+        activeSliderPanel = new Nsliders(name, color, this);
+        sliderPanels.put(name, activeSliderPanel);
+        jDesktop.add((JInternalFrame) activeSliderPanel);
+    }
+
+    public void deleteSliderPanel(String name) {
+        Nsliders old = sliderPanels.get(name);
+        if (old != null) { // already exists: get rid of it
+            old.dispose();
+        }
+    }
+
+    public void createSlider(String name, int num, double init, 
+                             double low, double high)
+    {
+        if (activeSliderPanel == null) return;
+        activeSliderPanel.addSlider(name, num, init, low, high);
+    }        
+
+
+    public void createButton(String name, int num, int normal)
+    {
+        if (activeSliderPanel == null) return;
+        activeSliderPanel.addButton(name, num, normal);
+    }        
+
+
     public void doProcessFn(ActionEvent e)
     {
         callFunction(e.getActionCommand(), "");
@@ -1504,10 +1565,15 @@ public class MainFrame extends JFrame {
     
     // set current directory
     public void changeDirectory(String dir) {
+        // currentDir must be "" or end in "/"
+        if (dir.length() > 0 && dir.charAt(dir.length() - 1) != '/') {
+            dir = dir + "/";
+        }
         System.out.println("changeDirectory: currentDir " + currentDir +
                            " to " + dir);
         if (!currentDir.equals(dir)) {
             currentDir = dir;
+            prefsHaveBeenSet = true;
             String escapedDir = escape_backslashes(dir);
             callFunction("setdir", "\"" + escapedDir + "\"");
         }

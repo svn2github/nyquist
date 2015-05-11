@@ -109,6 +109,7 @@ chooses the lower octave.
 
 Duration@Index(duration) is specified by a letter indicating a number of
 beats, followed by one or several modifiers.  The basic duration codes are:
+@pragma(startscribe)
 @begin(display)
 @code(W)@Index[W (Adagio Whole note)] (whole@index(whole note), 4 beats), 
 @code(H)@Index[H (Adagio Half note)] (half@index(half note), 2 beats), 
@@ -116,9 +117,29 @@ beats, followed by one or several modifiers.  The basic duration codes are:
 @code(I)@Index[I (Adagio eIght note)] (eighth@Index(eighth note), 1/2 beat), 
 @code(S)@Index[S (Adagio Sixteenth note)] (sixteenth@Index(sixteenth note), 1/4 beat), 
 @code(%)@Index[% (Adagio thirtysecond note)] (thirtysecond@index(thirtysecond note), 1/8 beat), and
-@code(^)@index[^ (Adagio sixtyfourth note)] (sixtyfourth@index(sixtyfourth note), 1/16 beat). 
-@end(display)
-Note that @code(E) is a pitch, so eighth-notes use the duration code @code(I).
+@code(^)@index[^ (Adagio sixtyfourth note)] (sixtyfourth@index(sixtyfourth note), 1/16 beat). @end(display) 
+@pragma(endscribe) @begin(latex)
+\begin{quote}
+\begin{tabbing}
+\hspace*{2.5em} \= \kill
+\begin{tt}W\end{tt}\index{W (adagio whole note)} \> (whole\index{Whole note}, 4 beats), \\
+\begin{tt}H\end{tt}\index{H (adagio half note)} \> (half\index{Half note}, 2 beats), \\
+\begin{tt}Q\end{tt}\index{Q (adagio quarter note)} \> (quarter\index{Quarter note}, 1 beat), \\
+\begin{tt}I\end{tt}\index{I (adagio eight note)} \> (eighth\index{Eighth note}, 1/2 beat), \\
+\begin{tt}S\end{tt}\index{S (adagio sixteenth note)} \> (sixteenth\index{Sixteenth note}, 1/4 beat), \\
+\begin{tt}\%\end{tt}\index{\% (adagio thirtysecond note)} \> (thirtysecond\index{Thirtysecond note}, 1/8 beat), and\\
+\begin{tt}\textasciicircum \end{tt}\index{\textasciicircum  \> (adagio sixtyfourth note)} \> (sixtyfourth\index{Sixtyfourth note}, 1/16 beat). 
+\end{tabbing}
+\end{quote} @end(latex)@pragma(htmlonly)
+@begin(display)
+@code(W)@Index[W (Adagio Whole note)]@html(&emsp;&emsp;&emsp;)(whole@index(whole note), 4 beats), 
+@code(H)@Index[H (Adagio Half note)]@html(&emsp;&emsp;&emsp;)(half@index(half note), 2 beats), 
+@code(Q)@Index[Q (Adagio Quarter note)]@html(&emsp;&emsp;&emsp;)(quarter@index(quarter note), 1 beat), 
+@code(I)@Index[I (Adagio eIght note)]@html(&emsp;&emsp;&emsp;)(eighth@Index(eighth note), 1/2 beat), 
+@code(S)@Index[S (Adagio Sixteenth note)]@html(&emsp;&emsp;&emsp;)(sixteenth@Index(sixteenth note), 1/4 beat), 
+@code(%)@Index[% (Adagio thirtysecond note)]@html(&emsp;&emsp;&emsp;)(thirtysecond@index(thirtysecond note), 1/8 beat), and
+@code(^)@index[^ (Adagio sixtyfourth note)]@html(&emsp;&emsp;&emsp;)(sixtyfourth@index(sixtyfourth note), 1/16 beat). @end(display) 
+@pragma(all)@pragma(debugoff) Note that @code(E) is a pitch, so eighth-notes use the duration code @code(I).
 The default tempo is 100 beats per
 minute (see Section @ref(tempo-sec)).  These codes may be followed by a  @code(T)
 (triplet@Index(triplet)@index[T (Adagio Triplet)]), indicating a duration of 2/3 the normal.  A dot@Index(dot)@index[. (Adagio)] (@code(.)) after a
@@ -126,6 +147,7 @@ duration code extends it by half to 3/2 the normal.  An integer
 after a note multiplies its duration by the indicated value (the result is
 still just one note).  Finally, a slash followed by an integer divides
 the duration by the integer.  Like all attributes, duration attributes may not have embedded spaces.  Examples:
+@pragma(startscribe)
 @begin(display)
 @tabclear
 @tabset(.5 inches)
@@ -136,18 +158,48 @@ the duration by the integer.  Like all attributes, duration attributes may not h
 @code(H5)@\10  beats(5 half notes)
 @code(Q3/7)@\3/7 beats
 @end(display)
+@pragma(endscribe)
+@begin(latex)
+\begin{quote}
+\begin{tabbing}
+\hspace*{2.5em} \= \kill
+\texttt{Q} \> 1 beat (quarter note) \\
+\texttt{QT} \> 2/3 beat (quarter triplet) \\
+\texttt{W.} \> 6 beats(dotted whole note) \\
+\texttt{ST6} \> 1 beat (6 sixteenth triplets) \\ 
+\texttt{H5} \> 10 beats(5 half notes) \\
+\texttt{Q3/7} \> 3/7 beats
+\end{tabbing}
+\end{quote}
+@end(latex) @begin(html)
+<blockquote>
+<table>
+<tr><td><code>Q</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>1 beat (quarter note)</td></tr>
+<tr><td><code>QT</code></td><td></td><td>2/3 beat (quarter triplet)</td></tr>
+<tr><td><code>W.</code></td><td></td><td>6   beats(dotted whole note)</td></tr>
+<tr><td><code>ST6</code></td><td></td><td>1   beat (6 sixteenth triplets) </td></tr>
+<tr><td><code>H5</code></td><td></td><td>10  beats(5 half notes)</td></tr>
+<tr><td><code>Q3/7</code></td><td></td><td>3/7 beats</td></tr></table>
+</blockquote>
+@end(html)
 A duration may be noted by @code(U)@i(n)@Index(U), where @i(n) is an integer
 indicating 100@+[th]'s of a second 
 (or 1000@+[th]'s), see Section @ref(millisec-sec).
 For example, @code(U25) is twenty-five time units.
 
-Durations may be combined using a plus sign:
+Durations may be combined using a plus sign: @pragma(htmlonly)
 @begin(programexample)
-Q+IT	    ** a quarter tied to an eighth triplet
+Q+IT        ** a quarter tied to an eighth triplet
 Q/7+W+Q2/7  ** a 7th beat tied to a whole tied to 2/7th beat
-Q+U10	    ** a quarter plus 10 time units
-@end(programexample)
-
+Q+U10       ** a quarter plus 10 time units
+@end(programexample)@pragma(all) @begin(latex) \begin{quote}
+\begin{tabbing}
+\hspace*{6em} \= \kill
+\texttt{Q+IT} \> a quarter tied to an eighth triplet \\
+\texttt{Q/7+W+Q2/7} \> a 7th beat tied to a whole tied to 2/7th beat \\
+\texttt{Q+U10} \> a quarter plus 10 time units
+\end{tabbing}
+\end{quote} @end(latex)
 @subsection(Next Time)
 @label(next-time-sec)
 The time of the next@Index(next Adagio command)@index[N (Adagio Next)] command (the next command in the Adagio
@@ -160,12 +212,20 @@ duration as described above.  The next note will then start at the time of
 the current note plus the duration specified after @code(N).  If the next note
 has an explicit time attribute (@code(T)), then the specified time will override
 the one based on the previous note.  Examples:
-@begin(programexample)
+@pragma(htmlonly) @begin(programexample)
 N0	** start the next note at the same time as this one
 N50	** start the next note 0.5 seconds after this one
 NQT	** start the next note 2/3 beat after the current one
 NU10+Q  ** start after 0.1 seconds plus a quarter
-@end(programexample)
+@end(programexample) @pragma(all) @begin(latex)  \begin{quote}
+\begin{tabbing}
+\hspace*{6em} \= \kill
+\texttt{N0} \> start the next note at the same time as this one \\
+\texttt{N50} \>	start the next note 0.5 seconds after this one \\
+\texttt{NQT} \> start the next note 2/3 beat after the current one \\
+\texttt{NU10+Q} \> start after 0.1 seconds plus a quarter
+\end{tabbing}
+\end{quote} @end(latex)
 A comma has an effect similar to  @code(N0) and is explained in Section @ref(comma-sec).  Articulation effects such as @i(staccato) can be produced using @code(N), but it is more convenient to use the articulation attribute described in Section @ref(articulation-sec).
 
 @subsection(Rest)
@@ -177,10 +237,17 @@ attributes such as duration, loudness, and pitch can be specified, and
 anything specified will be inherited by the note in the next command.
 Normally, a rest will include just @code(R) and a duration.  The fact that a
 note command specifies a rest is not inherited.  For example:
-@begin(programexample)
+@pragma(htmlonly) @begin(programexample)
 R H	** a half (two beat) rest
 RH	** illegal, R must be separated from H by space(s)
-@end(programexample)
+@end(programexample) @pragma(all) @begin(latex)  \begin{quote}
+\begin{tabbing}
+\hspace*{6em} \= \kill
+\texttt{R H} \> a half (two beat) rest \\
+\texttt{RH} \> illegal, R must be separated from H by space(s)
+\end{tabbing}
+\end{quote} @end(latex)
+
 Because some synthesizers (e.g. a DX7@Index(DX7)) cannot change programs
 @Index(program change)
 (presets) rapidly, it may be desirable to change programs in
@@ -222,6 +289,7 @@ followed by a dynamic marking from the following: @code(PPP)@Index[PPP (Adagio d
 used.  The loudness attribute is the MIDI note velocity.  (Note that a MIDI velocity of 0 means ``note-off,'' so the minimum loudness is 1.)  The
 dynamic@Index(dynamic markings)
 markings are translated into numbers as follows:
+@pragma(startscribe)
 @begin(display)
 @tabclear
 @tabset(0.8 in, 3 in, 3.8 in)
@@ -229,13 +297,39 @@ markings are translated into numbers as follows:
 @code(Lpp)@\26@\@code(Lf)@\75
 @code(Lp)@\34@\@code(Lff)@\98
 @code(Lmp)@\44@\@code(Lfff)@\127
-@end(display)
+@end(display) @pragma(endscribe) @begin(latex)  \begin{quote}
+\begin{tabbing}
+\hspace*{2.5em} \= \hspace*{3em} \= \hspace*{2.5em} \= \kill
+\texttt{Lppp} \> 20 \> \texttt{Lmf} \> 58 \\
+\texttt{Lpp} \> 26 \> \texttt{Lf} \> 75 \\
+\texttt{Lp} \> 34 \> \texttt{Lff} \> 98 \\
+\texttt{Lmp} \> 44 \> \texttt{Lfff} \> 127
+\end{tabbing} 
+\end{quote} @end(latex) @begin(html)
+<blockquote>
+<table>
+<tr><td><code>Lppp</code></td><td>&nbsp;&nbsp;</td><td>20</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><code>Lmf</code></td><td>&nbsp</td><td>58</td></tr>
+<tr><td><code>Lpp</code></td><td></td><td>26</td>
+<td></td>
+<td><code>Lf</code></td><td></td><td>75</td></tr>
+<tr><td><code>Lp</code></td><td></td><td>34</td>
+<td></td>
+<td><code>Lff</code></td><td></td><td>98</td></tr>
+<tr><td><code>Lmp</code></td><td></td><td>44</td>
+<td></td>
+<td><code>Lfff</code></td><td></td><td>127</td></tr>
+</table>
+</blockquote>
+@end(html)
 
 @subsection[Voice]
 
 The voice@Index(voice)@index[V (Adagio Voice)] attribute tells which of the 16 MIDI channels to use
 for the note.  The voice attribute consists of a @code(V) followed by
 an integer from 1 (the default) to 16.  
+
 @begin(detail)
 There is a limit to how many notes
 can be played at the same time on a given voice (MIDI channel).  Since the
@@ -252,6 +346,7 @@ selected using the attribute @code(Z)@i(n), where @i(n)
 is the program number (from 1 to 128).
 Notice that in MIDI, changing the program on a given channel will affect
 @i(all) notes on that channel and possibly others.  Adagio treats MIDI program changes as a form of control change.
+
 @begin(detail)
 For many synthesizers, you will not be
 able to change programs at the start of a note or during a note.  Change the
@@ -331,7 +426,7 @@ If an attribute is omitted, the previous one is used by
 default@Index(default) (with the exception of the time attribute).  The
 default values for the first note, which are inherited by succeeding notes
 until something else is specified, are given below in Adagio notation:
-@begin(display)
+@pragma(startscribe) @begin(display)
 @tabclear
 @tabset(1.5 inch)
 Time  @\@code(T0)
@@ -343,6 +438,31 @@ Voice  @\@code(V1)
 Tempo  @\@code(!TEMPO 100)
 Rate  @\@code(!RATE 100)
 @end(display)
+@pragma(endscribe) @begin(latex)  \begin{quote}
+\begin{tabbing}
+\hspace*{10em} \= \kill
+Time  \> \texttt{T0} \\
+Pitch  \> \texttt{C4} \\
+Duration  \> \texttt{Q} \\
+Articulation  \> \texttt{\#100} \\
+Loudness  \> \texttt{LFFF} \\
+Voice  \> \texttt{V1} \\
+Tempo  \> \texttt{!TEMPO 100} \\
+Rate  \> \texttt{!RATE 100}
+\end{tabbing} 
+\end{quote} @end(latex) @begin(html)
+<blockquote>
+<table>
+<tr><td>Time        </td><td>&nbsp;&nbsp;&nbsp;</td><td><code>T0  </code></td></tr>
+<tr><td>Pitch       </td><td>                  </td><td><code>C4  </code></td></tr>
+<tr><td>Duration    </td><td>                  </td><td><code>Q   </code></td></tr>
+<tr><td>Articulation</td><td>                  </td><td><code>#100</code></td></tr>
+<tr><td>Loudness    </td><td>                  </td><td><code>LFFF</code></td></tr>
+<tr><td>Voice       </td><td>                  </td><td><code>V1  </code></td></tr>
+<tr><td>Tempo       </td><td>                  </td><td><code>!TEMPO 100</code></td></tr>
+<tr><td>Rate        </td><td>                  </td><td><code>!RATE 100</code></td></tr></table>
+</blockquote>
+@end(html)
 Control changes (including timbre or MIDI program, specified by @code(Z)) have no default value and are only sent as specified in the score.
 
 @p(Important:) the rules for determining when a command will play a note are as follows (and this has changed slightly from previous versions):
@@ -403,7 +523,8 @@ B
 C
 D
 R
-
+@end(programexample)
+@begin(programexample)
 *voice 2, left hand
 T0 R Q Z15 V2   ** extra rest for program change
 G3 H
@@ -421,6 +542,7 @@ D
 R
 @end(programexample)
 
+@begin(latex)\needspace{3\baselineskip}@end(latex)
 The next example is the same piece expressed in a different manner,
 illustrating the interaction
 between the @code(!TEMPO)  command and the time attribute.  Recall that the
@@ -435,7 +557,8 @@ B Q
 C
 D H
 C
-
+@end(programexample)
+@begin(programexample)
 *Voice 2, Measures 1 & 2
 T0 R Q Z15 V2
 G3 H
@@ -443,7 +566,8 @@ F Q
 E
 D H
 E H
-
+@end(programexample)
+@begin(programexample)
 !TEMPO 100
 *Voice 1, Measures 3 & 4
 * note that Z10 is still in effect for V1
@@ -455,7 +579,8 @@ B
 C
 D
 R
-
+@end(programexample)
+@begin(programexample)
 *Voice 2, Measures 3 & 4
 T0 V2 D3 Q
 E
@@ -515,12 +640,23 @@ The default time unit is 10ms (ten milliseconds or one centisecond or
 100@+(th) of a second), but it is
 possible to change the basic unit to 1ms, or 1000@+(th) of a second.
 The time unit can be specified by:
+@pragma(startscribe) 
 @begin(display)
 @tabclear
 @tabset(0.8 inches)
 @t(!CSEC)@index(!csec)@\centisecond time units = 100@+(th) 
 @t(!MSEC)@index(!msec)@\millisecond time units = 1000@+(th)
-@end(display)
+@end(display) @pragma(endscribe) @begin(latex)  \begin{quote}
+\begin{tabbing}
+\hspace*{10em} \= \kill
+\texttt{!CSEC}\index{!csec} \> centisecond time units = 100\textsuperscript{th} \\
+\texttt{!MSEC}\index{!msec} \> millisecond time units = 1000\textsuperscript{th}
+\end{tabbing} 
+\end{quote} @end(latex) @begin(html) <blockquote>@end(html)@htmlindex(!csec)
+@htmlindex(!msec)@begin(html)<table>
+<tr><td><code>!CSEC</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>centisecond time units = 100@+(th)</td></tr>
+<tr><td><code>!MSEC</code></td><td></td><td>millisecond time units = 1000@+(th)</td></tr></table>
+</blockquote> @end(html) 
 The time unit remains in effect until the next @code(!CSEC) or @code(!MSEC) command.
 
 @subsection(Multiple Notes Per Line)
@@ -569,16 +705,40 @@ the syntax ``@t[~@i(n)(@i(v))]'', where @i(n) is the controller number (0 - 127)
 @i(v) is the value.  In addition, Adagio has some special syntax for
 some of the commonly used control changes (note that Pitch bend, Aftertouch, and MIDI Program Change are technically not MIDI control changes but have their own 
 special message format and status bytes):
+@pragma(startscribe)
 @begin(display)
 @tabclear
 @tabset(0.5 inch)						
-K@\Portamento switch@Index(Portamento switch)@Index[K (Adagio control)]@*
-M@\Modulation wheel@Index(Modulation wheel)@Index[M (Adagio control)]@*
-O@\Aftertouch@Index(Aftertouch)@Index[O (Adagio control)]@*
-X@\Volume@Index(Volume)@Index[X (Adagio control)]@* 
-Y@\Pitch bend@Index(Pitch bend)@Index[Y (Adagio control)]@*
-Z@\Program Change@Index(Program)@Index[Z (Adagio program)]@* 
-@end(display)
+K@\Portamento switch@Index(Portamento switch)@Index[K (Adagio control)]
+M@\Modulation wheel@Index(Modulation wheel)@Index[M (Adagio control)]
+O@\Aftertouch@Index(Aftertouch)@Index[O (Adagio control)]
+X@\Volume@Index(Volume)@Index[X (Adagio control)]
+Y@\Pitch bend@Index(Pitch Bend)@Index[Y (Adagio control)]
+Z@\Program Change@Index(Program)@Index[Z (Adagio program)] @end(display) 
+@pragma(endscribe)
+@begin(latex)
+\begin{quote}
+\begin{tabbing}
+\hspace*{2.5em} \= \kill
+\texttt{K} \> Portamento switch \\
+\texttt{M} \> Modulation wheel \\
+\texttt{O} \> Aftertouch \\
+\texttt{X} \> Volume \\
+\texttt{Y} \> Pitch Bend \\
+\texttt{Z} \> Program Change
+\end{tabbing}
+\end{quote}
+@end(latex) @begin(html)
+<blockquote>
+<table>
+<tr><td><code>K</code></td>@end(html)@htmlindex(Portamento switch)@htmlindex[K (Adagio control)]@begin(html)<td>&nbsp;&nbsp;&nbsp;</td><td>Portamento switch</td></tr>
+<tr><td><code>M</code></td>@end(html)@htmlindex(Modulation wheel)@htmlindex[M (Adagio control)]@begin(html)<td></td><td>Modulation wheel</td></tr>
+<tr><td><code>O</code></td>@end(html)@htmlindex(Aftertouch)@htmlindex[O (Adagio control)]@begin(html)<td></td><td>Aftertouch</td></tr>
+<tr><td><code>X</code></td>@end(html)@htmlindex(Volume)@htmlindex[X (Adagio control)]@begin(html)<td></td><td>Volume</td></tr>
+<tr><td><code>Y</code></td>@end(html)@htmlindex(Pitch bend)@htmlindex[Y (Adagio control)]@begin(html)<td></td><td>Pitch bend</td></tr>
+<tr><td><code>Z</code></td>@end(html)@htmlindex(Program)@htmlindex[Z (Adagio control)]@begin(html)<td></td><td>Program Change</td></tr></table>
+</blockquote>
+@end(html)
 The letter listed beside each control function is the Adagio command
 letter.  For example,  @code(M23) is the command for setting the modulation
 wheel to 23.  Except for pitch bend, the portamento switch, and MIDI Program Change, all
@@ -651,6 +811,7 @@ the current tempo and time:
 @end(programexample)
 A @code(!CLOCK) command must also be inserted for each tempo change that is to be
 reflected in the Midi clock.  Typically, each !TEMPO command will be followed by a !CLOCK command.
+
 @begin(detail)
 Clock commands and thus tempo
 changes can take place at arbitrary times.  It is assumed that tempo changes

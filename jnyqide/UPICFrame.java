@@ -89,6 +89,7 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
     private JTextPane jInputArea;
     private PiecewiseCanvas canvas;
     
+    private JMenuItem showPictureItem;
     private JTextField jMaxT;
     private double maxT;
     private JTextField jMinHz;
@@ -112,7 +113,7 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
     // avoid this, the "saving" flag is used to disable the check.
     private boolean saving = false;
     private File file; // the file backing the current data
-    private String name; // name of file
+    private String fileName; // name of file
             
     //hashtable for storing envelopes
     private Hashtable<String, String> envColl;
@@ -135,16 +136,16 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
         return b;
     }
 
-    private void AddMenuItem(JMenu menu, String name, String cmd, int code) {
-        AddMenuItem(menu, name, cmd, code, false, false);
+    private JMenuItem AddMenuItem(JMenu menu, String name, String cmd, int code) {
+        return AddMenuItem(menu, name, cmd, code, false, false);
     }
 
-    private void AddMenuItem(JMenu menu, String name, String cmd, int code, 
+    private JMenuItem AddMenuItem(JMenu menu, String name, String cmd, int code, 
                              boolean shift) {
-        AddMenuItem(menu, name, cmd, code, shift, false);
+        return AddMenuItem(menu, name, cmd, code, shift, false);
     }
 
-    private void AddMenuItem(JMenu menu, String name, String cmd, 
+    private JMenuItem AddMenuItem(JMenu menu, String name, String cmd, 
                              int code, boolean shift, boolean check) {
         int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
         JMenuItem item;
@@ -160,6 +161,7 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
                     (shift ? java.awt.event.InputEvent.SHIFT_MASK : 0)));
         }
         menu.add(item);
+        return item;
     }
 
     private JComboBox MakeCombo(String cmd) {
@@ -179,7 +181,7 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
         mainPanel = (JPanel) getContentPane();
                         
         envColl = new Hashtable<String, String>();
-        name = "UPIC Editor";
+        String name = "UPIC Editor";
         setTitle(name);
         setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
         final UPICFrame upicFrame = this;
@@ -252,7 +254,9 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
                     java.awt.event.KeyEvent.VK_F, false, true);
         AddMenuItem(backgroundMenu, "Grand Staff", "showGrandStaff", 
                     java.awt.event.KeyEvent.VK_G, false, true);
-        AddMenuItem(backgroundMenu, "Show Picture", "showPicture",
+        
+        showPictureItem = 
+                AddMenuItem(backgroundMenu, "Show Picture", "showPicture",
                     java.awt.event.KeyEvent.VK_P, false, true);
         AddMenuItem(backgroundMenu, "Load Picture...", "loadPicture", -1);
 
@@ -320,6 +324,15 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
         jMaxHz = new JTextField("2000.0", 5);
         maxHz = 2000;
         jLinear = new JCheckBox("linear", true);
+        jLinear.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {            
+                setModified();
+                isLinear = getLinear();
+                canvas.history.save(canvas);
+                canvas.repaint();
+            }
+            });
+    
         showCs = false;
         showGrandStaff = false;
         showPicture = false;
@@ -523,38 +536,35 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
 
     // prompt for a file name and write the data
     public boolean saveUpicDataAs() {
-	// select a file and write to it. Return true if success.
-        JFileChooser chooser = new JFileChooser();
+        // select a file and write to it. Return true if success.
+        FileDialog fileDialog = new FileDialog(mainframe, "Save UPIC Data",
+                                               FileDialog.SAVE);
         SalFileFilter salFilter = new SalFileFilter();
-        chooser.setFileFilter(salFilter);
-        File tmpfile;
-        String tmp;
-
-	File curdir = new File(mainframe.currentDir);
-	chooser.setCurrentDirectory(curdir);
+        fileDialog.setFilenameFilter(salFilter);
+        String name;
+        fileDialog.setDirectory(mainframe.currentDir);
         
         while (true) { // loop until file is chosen
-            int returnVal = chooser.showSaveDialog(this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                tmpfile = chooser.getSelectedFile();
-                tmp = tmpfile.getName();
-                System.out.println("You chose to save this file: " + tmp);
-                tmp = tmp.toLowerCase();
-                if (tmp.endsWith(".sal")) break;
+            fileDialog.setVisible(true);
+            if (fileDialog.getDirectory() != null && 
+                fileDialog.getFile() != null) {
+                name = fileDialog.getDirectory() + fileDialog.getFile();
+                System.out.println("You chose to save this file: " + name);
+                String lower = name.toLowerCase();
+                if (lower.endsWith(".sal")) break;
                 JOptionPane dialog = new JOptionPane();
-                System.out.println("creating dialog");
                 int result = dialog.showConfirmDialog(this, 
                          "Do you really want to save a file without a " +
-                         ".lsp or .sal extension?", "Warning", 
+                         ".sal extension?", "Warning", 
                          JOptionPane.YES_NO_OPTION);
                 System.out.println("return from dialog " + result);
                 if (result == JOptionPane.YES_OPTION) break;
             } else { // file chooser cancel, early return
-	        return false;
+                return false;
             }
-	}
-        name = tmp;
-        file = tmpfile;
+        }
+        fileName = name;
+        file = new File(name);
         mainframe.changeDirectory(mainframe.fileDirectory(file));
         modified = true; // for saveUpicData, do not need to add "*"
         return saveUpicData();
@@ -563,12 +573,12 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
 
     private void setModified() {
         if (modified) return;
-        setTitle(name + "*");
+        setTitle(fileName + "*");
         modified = true;
     }
 
     public boolean saveUpicData()
-    // saves the file if there is a file name, otherwise calls saveAs.
+    // saves the file if there is a file name, otherwise calls saveUpicDataAs.
     // returns false if the operation fails or is cancelled.
     // returns true if save succeeds or if file is unmodified.
     {
@@ -601,15 +611,15 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
                     out.close();
                 }
                 catch(Exception e) { 
-		    System.out.println("exception in saveUpicData" + e);
-		    return false; // did not save file
-		}
+                    System.out.println("exception in saveUpicData" + e);
+                    return false; // did not save file
+                }
                 
                 modified = false;
-                setTitle(name);
+                setTitle(fileName);
             }
         }
-	return true;
+        return true;
     }
 
 
@@ -652,7 +662,11 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
             canvas.repaint();
         } else if (cmd.equals("loadPicture")) {
             canvas.loadPicture();
+            // if you load a picture, show it automatically
+            ((JCheckBoxMenuItem) showPictureItem).setState(true);
+            showPicture = true;
             canvas.repaint();
+            System.out.println("loadPicture command done, after repaint()");
         } else if (cmd.equals("undo")) {
             canvas.history.undo();
             canvas.restore();
@@ -692,8 +706,8 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
 
     public void readUpicData(File fileToOpen) {
         clearUpicData(false);
-        name = fileToOpen.getName();
-        setTitle(name);
+        fileName = fileToOpen.getName();
+        setTitle(fileName);
         double maxt = 20, minhz = 0, maxhz = 2000;
         boolean islinear = true;
         // this disabled saving state for undo:
@@ -772,18 +786,19 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
             
 
     public void openUpicData() {
-        JFileChooser chooser = new JFileChooser();
+        FileDialog fileDialog = new FileDialog(mainframe, 
+                                               "Select a File to Open",
+                                               FileDialog.LOAD);
         SalFileFilter salFilter = new SalFileFilter();
-        chooser.addChoosableFileFilter(salFilter);
-        File curdir = new File(mainframe.currentDir);
-        chooser.setCurrentDirectory(curdir);
-        int returnVal = chooser.showOpenDialog(this);
-        System.out.println("openUpicData chooser returns " + returnVal);
-        file = null; // in case open fails
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            file = chooser.getSelectedFile();
+        fileDialog.setFile("*.sal");
+        fileDialog.setFilenameFilter(salFilter);
+        fileDialog.setDirectory(mainframe.currentDir);
+        fileDialog.setVisible(true);
+        if (fileDialog.getDirectory() != null && fileDialog.getFile() != null) {
+            String path = fileDialog.getDirectory() + fileDialog.getFile();
+            File file = new File(path);
             mainframe.changeDirectory(mainframe.fileDirectory(file));
-            System.out.println("reading from " + file);
+            System.out.println("You chose to open this file: " + path);
             readUpicData(file);
             modified = false;
         }
@@ -1007,17 +1022,21 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
         
             
         public void loadPicture() {
-            JFileChooser chooser = new JFileChooser();
-            File curdir = new File(mainframe.currentDir);
-            chooser.setCurrentDirectory(curdir);
-            int returnVal = chooser.showOpenDialog(this);
+            FileDialog fileDialog = new FileDialog(mainframe, 
+                          "Select a Picture", FileDialog.LOAD);
+            fileDialog.setDirectory(mainframe.currentDir);
+            fileDialog.setVisible(true);
             File file = null; // in case open fails
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                file = chooser.getSelectedFile();
+            if (fileDialog.getDirectory() != null && 
+                fileDialog.getFile() != null) {
+                String path = fileDialog.getDirectory() + fileDialog.getFile();
+                System.out.println("Opening image: " + path);
+                file = new File(path);
                 mainframe.changeDirectory(mainframe.fileDirectory(file));
-                System.out.println("reading image from " + file);
                 try {
+                    System.out.println("Trying ImageIO.read");
                     background = ImageIO.read(file);
+                    System.out.println("   returned " + background);
                 } catch (Exception e) {
                     System.out.println("Image read failed " + e);
                     JOptionPane.showMessageDialog(this, 
@@ -1025,6 +1044,7 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
                     background = null;
                 }
             }
+            System.out.println("loadPicture returns");
         }
     
 
@@ -1113,6 +1133,7 @@ public class UPICFrame extends JNonHideableInternalFrame implements ActionListen
         //draw the canvas image
         public void paint(Graphics g) {
             super.paint(g); 
+            isLinear = getLinear();
         
             Graphics2D drawArea = (Graphics2D) g;
             if (showCs) { // draw line for C in all octaves

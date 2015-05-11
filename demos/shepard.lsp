@@ -193,3 +193,4 @@
 			 &optional (duration 1) (wavetable *sine-table*))
   (mapcar (lambda (x y) (play (sheptone x y duration 12 4 wavetable)))
 	  scaleseq (reverse scaleseq)))
+ 

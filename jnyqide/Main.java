@@ -25,8 +25,8 @@ public class Main {
 			// motif style has some extra buttons to iconify internal frames
 			// but this obscures windows, and metal looks better anyway
 			try {
-				UIManager
-						.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+				UIManager.setLookAndFeel(
+                        "javax.swing.plaf.metal.MetalLookAndFeel");
 			} catch (Exception e) {
 				System.out.println(e);
 			}

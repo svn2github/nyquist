@@ -33,6 +33,7 @@
   (cond ((equal *default-sf-dir* "") (setf *default-sf-dir* path))))
 
 ;; s-save -- saves a file
+(setf *in-s-save* nil)
 (setf NY:ALL 1000000000)	; 1GIG constant for maxlen
 (defmacro s-save (expression &optional (maxlen NY:ALL) filename 
                   &key (format '*default-sf-format*)
@@ -43,26 +44,30 @@
          (ny:maxlen ,maxlen)
          (ny:endian ,endian)
          (ny:swap 0))
-     ; allow caller to omit maxlen, in which case the filename will
-     ; be a string in the maxlen parameter position and filename will be null
-     (cond ((null ny:fname)
-                 (cond ((stringp ny:maxlen)
-                            (setf ny:fname ny:maxlen)
-                            (setf ny:maxlen NY:ALL))
-                           (t
-                            (setf ny:fname *default-sound-file*)))))
+     (cond (*in-s-save*
+            (error "Recursive call to s-save (maybe play?) detected!")))
+     (progv '(*in-s-save*) '(t)
+       ; allow caller to omit maxlen, in which case the filename will
+       ; be a string in the maxlen parameter position and filename will be null
+       (cond ((null ny:fname)
+              (cond ((stringp ny:maxlen)
+                     (setf ny:fname ny:maxlen)
+                     (setf ny:maxlen NY:ALL))
+                    (t
+                     (setf ny:fname *default-sound-file*)))))
      
-     (cond ((equal ny:fname "")
-                 (cond ((not ,play)
-                       (format t "s-save: no file to write! play option is off!\n"))))
-           (t
-            (setf ny:fname (soundfilename ny:fname))
-            (format t "Saving sound file to ~A~%" ny:fname)))
-	 (cond ((eq ny:endian :big)
-	        (setf ny:swap (if (bigendianp) 0 1)))
-		   ((eq ny:endian :little)
-			(setf ny:swap (if (bigendianp) 1 0))))
-     (snd-save ',expression ny:maxlen ny:fname ,format ,mode ,bits ny:swap ,play)))
+       (cond ((equal ny:fname "")
+              (cond ((not ,play)
+                     (format t "s-save: no file to write! play option is off!\n"))))
+             (t
+              (setf ny:fname (soundfilename ny:fname))
+              (format t "Saving sound file to ~A~%" ny:fname)))
+       (cond ((eq ny:endian :big)
+              (setf ny:swap (if (bigendianp) 0 1)))
+             ((eq ny:endian :little)
+              (setf ny:swap (if (bigendianp) 1 0))))
+       (snd-save ',expression ny:maxlen ny:fname ,format 
+                 ,mode ,bits ny:swap ,play))))
 
 ;; MULTICHANNEL-MAX -- find peak over all channels
 ;;
@@ -328,7 +333,7 @@
                                           :time-offset ny:offset)
                                          ny:addend)
                                     ny:addend))
-                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0 0.0))
+                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 
@@ -340,7 +345,7 @@
     (format t "Overwriting ~A at offset ~A~%" ny:fname ny:offset)
     (setf ny:offset (s-read-byte-offset ny:rslt))
     (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ny:offset
-                   SND-HEAD-NONE 0 0 0 0.0))
+                   SND-HEAD-NONE 0 0 0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 

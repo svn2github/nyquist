@@ -152,7 +152,7 @@ arc-sine-dist )
 part14.html#index1084
 aref array n)
 part19.html#index1393
-areson sound center bandwidth n)
+areson sound center bandwidth [n])
 part8.html#index433
 args name)
 part13.html#index998
@@ -258,7 +258,7 @@ char>= chr1 chr2 ...)
 part19.html#index1593
 characterp expr)
 part19.html#index1446
-chorus snd maxdepth depth rate saturation)
+chorus snd :delay delay :depth depth :rate rate :saturation saturation :phase phase)
 part15.html#index1247
 clarinet step breath-env)
 part8.html#index485
@@ -924,7 +924,7 @@ require-from fnsymbol filename [path])
 part13.html#index1008
 resample sound srate)
 part8.html#index354
-reson sound center bandwidth n)
+reson sound center bandwidth [n])
 part8.html#index429
 rest expr)
 part19.html#index1406
@@ -1380,7 +1380,7 @@ stats )
 part8.html#index284
 step-to-hz pitch)
 part8.html#index308
-stereo-chorus snd)
+stereo-chorus snd :delay delay :depth depth :rate1 rate1 :rate2 rate2 :saturation saturation)
 part15.html#index1246
 stereoize snd)
 part15.html#index1273

@@ -822,7 +822,7 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
             debug_count += debug_unit;
         }
     }
-    gprintf(TRANS, "total samples: %ld x %ld channels (%g seconds)\n",
+    gprintf(TRANS, "\ntotal samples: %ld x %ld channels (%g seconds)\n",
             *ntotal, chans, *ntotal / sound_srate);
 
     /* references to sounds are shared by sa_copy and state[].

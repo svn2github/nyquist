@@ -1,0 +1,152 @@
+;; FM-voices-Chowning.sal -- example code for generating FM synthesis voices using John Chowning's scaling 
+;; techniques from MAX patch FM-ExpandedDemoTaiwanPoly-22.maxpat, including some example presets from 
+;; John Chowning's patch to generate human singing voices
+;;
+;; Jorge Sastre
+;; Visiting Scholar from Universitat Politècnica de València (Spain)
+;; R. Dannenberg's Computer Music Group
+;; Computer Science Department
+;; Carnegie Mellon University
+;; July 2013
+
+;; Function fm-voice() produces fm voices for one given pitch using the same input parameters as 
+;; John Chowning's MAX patch FM-ExpandedDemoTaiwanPoly-22.maxpat 
+;; Function fm-voice-preset(preset: 23, repeat-number: 3) provides the predefined presets 23, 33, 39 and 40 from the 
+;; set of jc-resonamces-1 presets from John Chowning's patch, where repeat-number indicates how many times the 
+;; corresponding preset melody is repeated (in the patch this number is infinite)
+;;
+;; fm-voice() parameters (default values correspond to preset 23):
+;; pitch: Pitch, dur: Duration, amp-dB: Amplitude in dB 
+;; car1: Carrier-1-freq / pitch-freq, car2: Carrier-2-freq / pitch-freq, mod: Modulating-freq / pitch-freq
+;; index1, index2: Modulation indexes for carrier 1 and 2, respectively
+;; vib-depth: Depth of vibrato in percentage, vib-rate: Freq of vibrato 
+;; ran-depth: Depth of random variations in vibrato in percentage, ran-rate: Freq of random variations in vibrato
+;; Freq-skew-list: List of freq skew nodes such that Freq-skew = pwlv(Freq-skew-list) (normalized to duration 1 sec)
+;; Index-Env-mod-list: List of nodes for the mod envelope such that Index-Env-mod = pwlv-list(Index-Env-mod-list) 
+;;                     (normalized to duration 1 sec)
+;; amp1, Amp-Env-car1-list: Amplitude and list of nodes to generate carrier 1 envelope as 
+;;                          amp1 * pwl-list(Amp-Env-car1-list) (normalized to duration 1 sec)
+;; amp2, Amp-Env-car2-list: Amplitude and list of nodes to generate carrier 2 envelope as 
+;;                          amp2 * pwl-list(Amp-Env-car2-list) (normalized to duration 1 sec)
+;; note-duration-proportional-to-dynamics: If #t then dur *= sqrt(db-to-linear(amp-dB)) 
+;; indexes-vibrato-proportional-to-dynamics: If #t then vibrato scaling = power(db-to-linear(amp-dB), 1. / 3.), 
+;;                                           and index scaling = sqrt(db-to-linear(amp-dB)) 
+;; scale-indexes-by-midi-note: If #t then indexi = indexi * scale-indexes-table[pitch] * 0.01, i = 1, 2
+;; scale-indexes-table-provided: If #t the user must provide the 1-dimensional vector with the 128 values of the  
+;;                               scaling of the indexes for the 128 midi notes in variable scale-indexes-table
+;; scale-indexes-value: value used to generate automatically scale-indexes-table as scale-indexes-table[i]
+;;                      = 100 * power(1.5, i * 50.0 / 127.0 / scale-indexes-value) + 1.0, i = 0, 1, ..., 127
+;; scale-indexes-table: 1-dimensional vector with the 128 values of the scaling of the indexes for the 128 midi notes 
+;; scale-duration-by-midi-note: If #t then dur *= scale-duration-table[pitch] * 0.01
+;; scale-duration-table-provided: If true the user has to provide the 1-dimensional vector with the 128 values of the  
+;;                                scaling of the indexes for the 128 midi notes in variable scale-indexes-table
+;; scale-duration-value: value used to generate automatically scale-duration-table as scale-duration-table[i]
+;;                      = 100 * power(1.5, i * 50.0 / 127.0 / scale-duration-value) + 1.0, i = 0, 1, ..., 127 
+;; scale-duration-table: 1-dimensional vector with the 128 values of the scaling of the duration for the 128 midi notes
+
+function fm-voice(pitch: c4, dur: 3, amp-dB: 0, 
+                  car1: 1, car2: 7, mod: 1, index1: 1.12, index2: 0.15,   
+                  vib-depth: 5, vib-rate: 6, ran-depth: 1, ran-rate: 20,
+                  Freq-skew-list: list(0.951, 0.190265, 1.012, 1, 1), 
+                  Index-Env-mod-list: list(0.902, 0.061947, 1, 0.769912, 1, 1, 0.787),
+                  amp1: 0.938,
+                  Amp-Env-car1-list: list(0.207965, 0.877, 0.915929, 1, 1), 
+                  amp2: 0.021,
+                  Amp-Env-car2-list: list(0.234513, 0.803, 0.907080, 1, 1), 
+                  note-duration-proportional-to-dynamics: #f, 
+                  indexes-vibrato-proportional-to-dynamics: #t, 
+                  scale-indexes-by-midi-note: #t,
+                  scale-indexes-table-provided: #f, 
+                  scale-indexes-value: -55.47863, 
+                  scale-indexes-table: make-array(128), 
+                  scale-duration-by-midi-note: #f,
+                  scale-duration-table-provided: #f, 
+                  scale-duration-value: -15.9573, 
+                  scale-duration-table: make-array(128)
+)
+  begin
+    with vrs
+    set pitch = round(pitch)
+    if (scale-indexes-by-midi-note & (! scale-indexes-table-provided)) then
+      begin
+        loop
+          for i below 128
+          set scale-indexes-table[i] = 100 * power(1.5, i * 50.0 / 127.0 / scale-indexes-value) + 1.0
+        end
+        set index1 = index1 * scale-indexes-table[pitch] * 0.01
+        set index2 = index2 * scale-indexes-table[pitch] * 0.01
+      end
+    if (scale-duration-by-midi-note & (! scale-duration-table-provided)) then
+      begin
+        loop
+          for i below 128
+          set scale-duration-table[i] = 100 * power(1.5, i * 50.0 / 127.0 / scale-duration-value) + 1.0
+        end
+        set dur *= scale-duration-table[pitch] * 0.01
+      end
+    if indexes-vibrato-proportional-to-dynamics then
+      begin
+        with vib-scaling = power(db-to-linear(amp-dB), 1. / 3.), 
+             index-scaling = sqrt(db-to-linear(amp-dB))
+        set vib-depth *= vib-scaling
+        set vib-rate *= vib-scaling
+        set index1 *= index-scaling
+        set index2 *= index-scaling
+      end
+    if note-duration-proportional-to-dynamics then
+      begin
+        set dur *= sqrt(db-to-linear(amp-dB))
+      end
+    set vrs = (sound-srate-abs(*default-control-srate*, vib-depth / 100.0 * hzosc(vib-rate)) 
+               + sound-srate-abs(ran-rate, ran-depth / 100.0 * noise()) + pwlv-list(Freq-skew-list)) ~ dur
+    return db-to-linear(amp-dB) * (amp1 * pwl-list(Amp-Env-car1-list) * hzosc(car1 * step-to-hz(pitch) * vrs 
+                                   + index1 * pwlv-list(Index-Env-mod-list) * mod * step-to-hz(pitch) * hzosc(mod * step-to-hz(pitch) * vrs)) 
+                                   + amp2 * pwl-list(Amp-Env-car2-list) * hzosc(car2 * step-to-hz(pitch) * vrs 
+                                   + index2 * pwlv-list(Index-Env-mod-list) * step-to-hz(pitch) * hzosc(mod * step-to-hz(pitch) * vrs))) ~ dur
+  end
+
+function fm-voice-preset(preset: 23, repeat-number: 3)
+  if preset = 23 then
+    begin
+      with midi-notes = list(62, 68, 69, 70, 73, 76, 77, 36, 69, 71, 72, 39),  
+           dynamics = list(-18, -12, -6, -6)
+      play simrep(i, (length(midi-notes) + 1) * repeat-number, fm-voice(pitch: nth(i % length(midi-notes), midi-notes), 
+                                                                        amp-dB: nth(i % length(dynamics), dynamics)) @ (i * 0.9))
+    end
+  else if preset = 33 then
+     begin
+       with midi-notes = list(62, 68, 69, 70, 73, 76, 77, 60, 69, 71, 72, 63, 62),
+            dynamics = list(-18, -12, -6, -6)
+       play simrep(i, (length(midi-notes) + 1) * repeat-number, fm-voice(pitch: nth(i % length(midi-notes), midi-notes), 
+                                                                         amp-dB: nth(i % length(dynamics), dynamics),  
+                                                                         note-duration-proportional-to-dynamics: #t) @ (i * 0.9))       
+       end  
+  else if preset = 39 then
+     begin
+       with midi-notes = list(62, 68, 69, 70, 73, 76, 77, 48, 69, 71, 72, 47),
+            dynamics = list(-18, -12, -6, -6, 0)
+       play simrep(i, (length(midi-notes) + 1) * repeat-number, fm-voice(pitch: nth(i % length(midi-notes), midi-notes), 
+                                                                         amp-dB: nth(i % length(dynamics), dynamics),
+                                                                         index1: 2,
+                                                                         note-duration-proportional-to-dynamics: #t, 
+                                                                         Freq-skew-list: list(0.951, 0.079805, 1.805, 0.252717, 1.012, 1, 1)) @ (i * 1))       
+     end
+  else if preset = 40 then
+     begin
+       with midi-notes = list(62, 68, 69, 70, 73, 76, 77, 48, 69, 71, 72, 47),
+            dynamics = list(-18, -12, -6, -6, 0)
+       play simrep(i, (length(midi-notes) + 1) * repeat-number, fm-voice(pitch: nth(i % length(midi-notes), midi-notes), 
+                                                                        amp-dB: nth(i % length(dynamics), dynamics), 
+                                                                        Freq-skew-list: list(0.951, 0.380531, 1.707, 1, 1)) @ (i * 0.9))       
+     end      
+        
+define function fm-voice-demo()
+  begin
+    exec fm-voice-preset(preset: 23, repeat-number: 2)
+    exec fm-voice-preset(preset: 33, repeat-number: 2)
+    exec fm-voice-preset(preset: 39, repeat-number: 3)
+    exec fm-voice-preset(preset: 40, repeat-number: 3)
+  end
+
+;; fm-voice-demo()
+print "Enter \"exec fm-voice-demo()\" to hear a demo"

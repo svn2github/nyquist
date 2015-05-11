@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.8)
 
+
 find_package(Java COMPONENTS Development)
 include(UseJava)
 
@@ -7,7 +8,7 @@ include(UseJava)
 # OPTIONS #
 ###########
 
-option(USE_SOURCE_LIBS "Enabling this will disable searching for system installed libraries and instead use source-compiled versions" OFF)
+option(USE_SOURCE_LIBS "Enabling this will disable searching for system installed libraries and instead use source-compiled versions" ON)
 
 ################
 # DEPENDENCIES #
@@ -17,60 +18,60 @@ if(USE_SOURCE_LIBS)
 
 # sndfile
 set(ogg_SRCS
-  libogg/src/bitwise.c
-  libogg/src/framing.c)
+   libogg/src/bitwise.c
+   libogg/src/framing.c)
 
 add_library(ogg_static STATIC ${ogg_SRCS})
 set_property(TARGET ogg_static 
-  PROPERTY INCLUDE_DIRECTORIES
-  ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include)
+PROPERTY INCLUDE_DIRECTORIES
+${CMAKE_CURRENT_SOURCE_DIR}/libogg/include)
 
 set(vorbis_SRCS
-  libvorbis/lib/mdct.c
-  libvorbis/lib/smallft.c
-  libvorbis/lib/block.c
-  libvorbis/lib/envelope.c
-  libvorbis/lib/window.c
-  libvorbis/lib/lsp.c
-  libvorbis/lib/lpc.c
-  libvorbis/lib/analysis.c
-  libvorbis/lib/synthesis.c
-  libvorbis/lib/psy.c
-  libvorbis/lib/info.c
-  libvorbis/lib/floor1.c
-  libvorbis/lib/floor0.c
-  libvorbis/lib/res0.c
-  libvorbis/lib/mapping0.c
-  libvorbis/lib/registry.c
-  libvorbis/lib/codebook.c
-  libvorbis/lib/sharedbook.c
-  libvorbis/lib/lookup.c
-  libvorbis/lib/bitrate.c
-  )
+libvorbis/lib/mdct.c
+libvorbis/lib/smallft.c
+libvorbis/lib/block.c
+libvorbis/lib/envelope.c
+libvorbis/lib/window.c
+libvorbis/lib/lsp.c
+libvorbis/lib/lpc.c
+libvorbis/lib/analysis.c
+libvorbis/lib/synthesis.c
+libvorbis/lib/psy.c
+libvorbis/lib/info.c
+libvorbis/lib/floor1.c
+libvorbis/lib/floor0.c
+libvorbis/lib/res0.c
+libvorbis/lib/mapping0.c
+libvorbis/lib/registry.c
+libvorbis/lib/codebook.c
+libvorbis/lib/sharedbook.c
+libvorbis/lib/lookup.c
+libvorbis/lib/bitrate.c
+)
 
 add_library(vorbis_static STATIC ${vorbis_SRCS})
 set_property(TARGET vorbis_static 
-  PROPERTY INCLUDE_DIRECTORIES
-  ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include)
+PROPERTY INCLUDE_DIRECTORIES
+${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
+${CMAKE_CURRENT_SOURCE_DIR}/libogg/include)
 
 set(vorbisenc_SRCS
-  libvorbis/lib/vorbisenc.c)
+libvorbis/lib/vorbisenc.c)
 add_library(vorbisenc_static STATIC ${vorbisenc_SRCS})
 set_property(TARGET vorbisenc_static 
-  PROPERTY INCLUDE_DIRECTORIES
-  ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
+PROPERTY INCLUDE_DIRECTORIES
+${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
+${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
+${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
 
 set(vorbisfile_SRCS
-  libvorbis/lib/vorbisfile.c)
+libvorbis/lib/vorbisfile.c)
 add_library(vorbisfile_static STATIC ${vorbisfile_SRCS})
 set_property(TARGET vorbisfile_static 
-  PROPERTY INCLUDE_DIRECTORIES
-  ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
+PROPERTY INCLUDE_DIRECTORIES
+${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
+${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
+${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
 
 set(flac_SRCS
   FLAC/src/libFLAC/bitmath.c
@@ -98,11 +99,10 @@ set(flac_SRCS
   FLAC/src/libFLAC/stream_decoder.c
   FLAC/src/libFLAC/stream_encoder_framing.c
   FLAC/src/libFLAC/stream_encoder.c
-  FLAC/src/libFLAC/window.c
-  )
+  FLAC/src/libFLAC/window.c)
 
 add_library(flac_static STATIC ${flac_SRCS})
-set_target_properties(flac_static PROPERTIES COMPILE_FLAGS -DVERSION=\\"1.2.1\\") 
+set_target_properties(flac_static PROPERTIES COMPILE_FLAGS -DVERSION=\\\\\"1.2.1\\\\\") 
 set_property(TARGET flac_static APPEND PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/src/libFLAC/include/ 
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/include/ 
@@ -333,7 +333,7 @@ find_library(LIBLO_LIBRARY lo)
 if(NOT LIBLO_LIBRARY)
   message(FATAL_ERROR "Nyquist requires the liblo library")
 endif()
-
+ 
 endif()
 
 #######################
@@ -368,11 +368,16 @@ set(xlisp_SRCS
   xlisp/xlsym.c
   xlisp/xlsys.c
   xlisp/path.c
+  xlisp/security.c
   )
 
 set(tran_SRCS
   tran/abs.c
-  tran/alpass.c
+  tran/allpoles.c 
+  tran/alpass.c 
+  tran/alpasscv.c 
+  tran/alpassvc.c 
+  tran/alpassvv.c 
   tran/amosc.c
   tran/areson.c
   tran/aresoncv.c
@@ -380,22 +385,43 @@ set(tran_SRCS
   tran/aresonvv.c
   tran/atone.c
   tran/atonev.c
+  tran/biquadfilt.c 
   tran/buzz.c
   tran/chase.c
   tran/clip.c
   tran/congen.c
   tran/const.c
   tran/coterm.c
+  tran/delaycc.c 
   tran/delaycv.c
+  tran/eqbandvvv.c 
   tran/exp.c
+  tran/fmfb.c 
+  tran/fmfbv.c 
   tran/fmosc.c
-  tran/follow.c
+  tran/follow.c 
   tran/fromarraystream.c
-  tran/fromobject.c
+  tran/fromobject.c 
   tran/gate.c
   tran/ifft.c
-  tran/integrate.c
-  tran/log.c
+  tran/instrbanded.c 
+  tran/instrbow.c 
+  tran/instrbowedfreq.c 
+  tran/instrclar.c 
+  tran/instrclarall.c 
+  tran/instrclarfreq.c 
+  tran/instrflute.c 
+  tran/instrfluteall.c 
+  tran/instrflutefreq.c 
+  tran/instrmandolin.c 
+  tran/instrmodalbar.c 
+  tran/instrsax.c 
+  tran/instrsaxall.c 
+  tran/instrsaxfreq.c 
+  tran/instrsitar.c 
+  tran/integrate.c 
+  tran/log.c 
+  tran/lpreson.c 
   tran/maxv.c
   tran/offset.c
   tran/oneshot.c
@@ -417,40 +443,27 @@ set(tran_SRCS
   tran/siosc.c
   tran/slope.c
   tran/sqrt.c
+  tran/tapf.c 
   tran/tapv.c
-  tran/tone.c
+  tran/tone.c 
   tran/tonev.c
   tran/upsample.c
   tran/white.c
-  tran/tapf.c
-  tran/alpasscv.c
-  tran/alpassvv.c
-  tran/eqbandvvv.c
-  tran/delaycc.c
-  tran/alpassvc.c
-  tran/allpoles.c
-  tran/instrclar.c
-  tran/instrsaxall.c
-  tran/lpreson.c
-  tran/instrclarall.c
-  tran/instrsaxfreq.c
-  tran/instrclarfreq.c
-  tran/instrsax.c
-  tran/instrbanded.c
-  tran/instrbow.c
-  tran/instrbowedfreq.c
-  tran/instrflute.c
-  tran/instrfluteall.c
-  tran/instrflutefreq.c
-  tran/instrsitar.c
-  tran/stkpitshift.c
-  tran/stkrev.c
-  tran/biquadfilt.c
-  tran/stkchorus.c
-  tran/instrmandolin.c
-  tran/instrmodalbar.c
-  tran/fmfb.c
-  tran/fmfbv.c)
+  tran/stkpitshift.c 
+  tran/stkrev.c 
+  tran/stkchorus.c)
+
+set(seq_SRCS
+# out of alphabetical order because seqext.h needed 
+# before we generate interface for seq.c:
+  nyqsrc/seqext.c 
+  cmt/seq.c 
+  nyqsrc/seqinterf.c 
+  cmt/seqmread.c 
+  cmt/seqmwrite.c 
+  cmt/seqread.c 
+  cmt/seqwrite.c )
+
 
 set(cmt_SRCS
   cmt/cext.c
@@ -462,11 +475,6 @@ set(cmt_SRCS
   cmt/midifile.c
   cmt/midifns.c
   cmt/record.c
-  cmt/seq.c
-  cmt/seqmread.c
-  cmt/seqmwrite.c
-  cmt/seqread.c
-  cmt/seqwrite.c
   cmt/tempomap.c
   cmt/timebase.c
   cmt/userio.c)
@@ -524,45 +532,48 @@ set(liblo_SRCS
   liblo/src/send.c
   liblo/src/timetag.c)
 
+set(nyqsrc_SRCS
+# put sound.c first (out of alphabetical order) because of dependencies
+  nyqsrc/sound.c 
+  nyqsrc/add.c 
+  nyqsrc/avg.c 
+  nyqsrc/compose.c 
+  nyqsrc/convolve.c 
+  nyqsrc/downsample.c 
+  nyqsrc/fft.c 
+  nyqsrc/inverse.c 
+  nyqsrc/lpanal.c 
+  nyqsrc/multiseq.c 
+  nyqsrc/nyq-osc-server.c 
+  nyqsrc/resamp.c 
+  nyqsrc/resampv.c 
+  nyqsrc/samples.c 
+  nyqsrc/sliderdata.c 
+  nyqsrc/sndmax.c 
+  nyqsrc/sndread.c 
+  nyqsrc/sndseq.c 
+  nyqsrc/sndsliders.c 
+  nyqsrc/stoponzero.c 
+  nyqsrc/trigger.c
+  nyqsrc/yin.c 
+)
+
 set(nyquist_SRCS
   sys/unix/osstuff.c
   sys/unix/term.c
   nyqsrc/debug.c
   nyqsrc/falloc.c
-  nyqsrc/add.c
   nyqsrc/local.c
-  nyqsrc/downsample.c
   nyqsrc/handlers.c
   nyqsrc/multiread.c
-  nyqsrc/multiseq.c
-  nyqsrc/samples.c
-  nyqsrc/seqext.c
-  nyqsrc/seqinterf.c
-  nyqsrc/sndread.c
-  nyqsrc/sndseq.c
-  nyqsrc/sndwritepa.c
-  nyqsrc/sndmax.c
-  nyqsrc/sound.c
+  nyqsrc/phasevocoder.c 
+  nyqsrc/pvshell.c 
   nyqsrc/stats.c
-  nyqsrc/compose.c
-  nyqsrc/inverse.c
-  nyqsrc/resamp.c
-  nyqsrc/resampv.c
   nyqsrc/ffilterkit.c
-  nyqsrc/avg.c
-  nyqsrc/fft.c
   nyqsrc/seqfnint.c
   nyqsrc/sndfnint.c
-  nyqsrc/yin.c
-  nyqsrc/convolve.c
-  nyqsrc/nyq-osc-server.c
-  nyqsrc/pvshell.c
-  nyqsrc/phasevocoder.c
-  nyqsrc/sliderdata.c
-  nyqsrc/sndsliders.c
-  nyqsrc/lpanal.c
+  nyqsrc/sndwritepa.c 
   nyqsrc/f0.cpp
-  nyqsrc/trigger.c
   ffts/src/fftlib.c
   ffts/src/fftext.c
   ffts/src/matlib.c
@@ -570,8 +581,8 @@ set(nyquist_SRCS
 
 
 list(APPEND nyquist_SRCS 
-  ${xlisp_SRCS} ${tran_SRCS} ${cmt_SRCS} ${nyqstk_SRCS}
-  ${liblo_SRCS})
+  ${xlisp_SRCS} ${tran_SRCS} ${cmt_SRCS} ${seq_SRCS} 
+  ${nyqsrc_SRCS} ${nyqstk_SRCS} ${liblo_SRCS})
 
 # Add headers using GLOB
 
@@ -579,8 +590,11 @@ file(GLOB xlisp_headers "${CMAKE_CURRENT_SOURCE_DIR}/xlisp/*.h")
 file(GLOB tran_headers "${CMAKE_CURRENT_SOURCE_DIR}/tran/*.h")
 file(GLOB cmt_headers "${CMAKE_CURRENT_SOURCE_DIR}/cmt/*.h")
 file(GLOB nyqstk_headers "${CMAKE_CURRENT_SOURCE_DIR}/nyqstk/*.h")
-file(GLOB liblo_headers "${CMAKE_CURRENT_SOURCE_DIR}/liblo/*.h")
 file(GLOB nyquist_headers "${CMAKE_CURRENT_SOURCE_DIR}/nyqsrc/*.h")
+
+#file(GLOB liblo_headers "${CMAKE_CURRENT_SOURCE_DIR}/liblo/*.h")  
+#file(GLOB sndfile_headers "${CMAKE_CURRENT_SOURCE_DIR}/nylsf/sndfile.h")
+
 
 list(APPEND nyquist_SRCS 
   ${xlisp_headers} ${tran_headers} ${cmt_headers} 
@@ -588,13 +602,16 @@ list(APPEND nyquist_SRCS
 
 
 #include directories
-include_directories(ffts/src snd cmt sys/unix xlisp tran nyqsrc nyqstk nyqstk/include portaudio/include liblo)
+include_directories(ffts/src snd cmt sys/unix xlisp tran nyqsrc nyqstk 
+                    nyqstk/include)
 
 
 # Create executables
 add_executable(nyquist ${nyquist_SRCS})
 
+
 if(USE_SOURCE_LIBS)
+  include_directories(nylsf liblo portaudio/include)
   target_link_libraries(nyquist ogg_static)
   target_link_libraries(nyquist vorbis_static)
   target_link_libraries(nyquist vorbisenc_static)
@@ -616,36 +633,108 @@ if(NOT Java_JAVAC_EXECUTABLE)
 
 else()
   file(GLOB jnyqide_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.java")
-  file(GLOB jnyqide_RES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.txt")
-  file(GLOB jnyqide_RES2 RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.gif")
+  file(GLOB jnyqide_RES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" 
+            "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.txt")
+  file(GLOB jnyqide_RES2 RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" 
+            "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.gif")
 
   set(CMAKE_JAVA_COMPILE_FLAGS -target 1.6 -source 1.6)
   set(CMAKE_JAVA_JAR_ENTRY_POINT jnyqide/Main)
-  add_jar(jnyqide SOURCES ${jnyqide_SRCS} ${jnyqide_RES} ${jnyqide_RES2})
-  #add_jar(jnyqide SOURCES ${jnyqide_SRCS} )
-  add_dependencies(jnyqide nyquist)
+  # add_jar didn't work because it wants to copy jnyqide/keywords.txt
+  # to jnyqide/keywords.txt in the temp directory for making the jar,
+  # but jnyqide is not there. It should just be keywords that goes there
+  #add_jar(jnyqide SOURCES ${jnyqide_SRCS})
+  # I could not figure out how to use java, jar, and appbundler
+  # directly, so I'm using ant based on Oracle appbundler example
+  add_custom_target(NyquistIDE ALL ant jar
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide
+    COMMENT "Building jnyqide.jar"
+  )     
+  add_dependencies(NyquistIDE nyquist)
   
 endif()
 
 # APPLE NyquistIde.app
 
 if(APPLE)
-  add_custom_command(TARGET jnyqide 
+  add_custom_command(TARGET NyquistIDE 
     POST_BUILD
-    COMMAND sh ARGS ${CMAKE_CURRENT_SOURCE_DIR}/create-osx-app.sh ${CMAKE_CURRENT_SOURCE_DIR})
+    COMMAND ant bundle-nyquist
+    COMMAND sh ./finish-osx-app.sh
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide)
 endif()
 
+add_definitions("-DPA_USE_COREAUDIO")
+add_definitions("-DCMTSTUFF")
+add_definitions("-Dmacintosh")
+add_definitions("-DOSC")
+add_definitions("-DSTK_NYQUIST")
 
-################
-# FINAL REPORT #
-################
+if(UNIX)
+  if(APPLE)
+    include_directories(${CMAKE_OSX_SYSROOT}/Developer/Headers/FlatCarbon
+                        src/sys/mac)
+    set(FRAMEWORK_PATH ${CMAKE_OSX_SYSROOT}/System/Library/Frameworks
+        CACHE INTERNAL " " FORCE)
+    set(COREAUDIO_LIB "${FRAMEWORK_PATH}/CoreAudio.framework")
+    set(COREFOUNDATION_LIB "${FRAMEWORK_PATH}/CoreFoundation.framework")
+    set(CORESERVICES_LIB "${FRAMEWORK_PATH}/CoreServices.framework")
+    set(AUDIOTOOLBOX_LIB "${FRAMEWORK_PATH}/AudioToolbox.framework")
+    set(AUDIOUNIT_LIB "${FRAMEWORK_PATH}/AudioUnit.framework")
+    set(EXTRA_NEEDED_LIBS ${COREAUDIO_LIB} ${COREFOUNDATION_LIB}
+                       ${CORESERVICES_LIB}
+                       ${AUDIOTOOLBOX_LIB} ${AUDIOUNIT_LIB})
+  else(APPLE)
+    set(EXTRA_NEEDED_LIBS asound)
+  endif(APPLE)
+  # useing ../liblo/liblo_s.a. The builder must explicitly make a 
+  # static liblo library with --enable-static and copy the result,
+  # ../liblo/src/.libs/liblo.a, to ../liblo/liblo_s.a. Otherwise,
+  # at least XCode might try to link with /usr/local/lib/liblo.dylib
+  # By renaming, we gain confidence as to what is actually being linked.
+  #set(LO lo_s) 
+  #set(LO_PATH ../liblo)
+  #set(PORTMIDI_DBG portmidi_s)
+  #set(PORTMIDI_OPT portmidi_s)
+else(UNIX)
+  # the liblo project builds liblo.lib, not lo.lib
+  #set(LO liblo)
+  #set(LO_PATH ../liblo)
+  set(EXTRA_NEEDED_LIBS winmm.lib ws2_32.lib)
+  # I think this distinction is necessary to keep the C runtime
+  #   libraries consistent with wxWindows, which is dll for debug and
+  #   static for optimized versions.
+  #set(PORTMIDI_DBG portmidi.lib)
+  #set(PORTMIDI_OPT portmidi_s.lib)
+endif(UNIX)
 
-message("=====================\nConfiguration Report:\n=====================\n")
-message("    * nyquist build target enabled")
-if(Java_JAVAC_EXECUTABLE)
-  message("    * jnyqide build target enabled")
-  message("      (Note: This target must be run twice after CMake is first run.")
-  message("      After the second run, it will build correctly thereafter.)\n")
-else()
-  message("    * jnyqide build target disabled")
-endif()
+target_link_libraries(nyquist ${EXTRA_NEEDED_LIBS})
+
+# Create args for intgen  
+set(sndfnint_args "")  
+foreach(arg ${nyqsrc_SRCS} ${tran_SRCS}) 
+   string(REPLACE ".c" ".h" arg_h ${arg}) 
+    set(sndfnint_args ${sndfnint_args} ${arg_h}) 
+endforeach(arg ${nyqsrc_SRCS}) 
+# some extra .h files, order is important due to dependencies:
+set(sndfnint_args nylsf/sndfile.h ${sndfnint_args} 
+                  nyqsrc/sndfmt.h nyqsrc/sndwrite.h) 
+# message(status "sndfnint_args: ${sndfnint_args}")  
+
+# Create args for intgen  
+set(seqfnint_args "")  
+foreach(arg ${seq_SRCS})
+   string(REPLACE ".c" ".h" arg_h ${arg}) 
+    set(seqfnint_args ${seqfnint_args} ${arg_h}) 
+endforeach(arg ${nyqsrc_SRCS}) 
+# seqdecls.h has no corresponding .c files, so add
+#   them here:
+set(seqfnint_args cmt/seqdecls.h ${seqfnint_args}) 
+# message(status "seqfnint_args: ${seqfnint_args}")  
+
+add_executable(intgen misc/intgen2.c misc/cmdline.c)
+
+add_custom_target(XLISP_C_Interfaces
+  intgen nyqsrc/sndfnint ${sndfnint_args}
+  COMMAND intgen nyqsrc/seqfnint ${seqfnint_args}
+  SOURCES ${sndfnint_args} ${seqfnint_args})

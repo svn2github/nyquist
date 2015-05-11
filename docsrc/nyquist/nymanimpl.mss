@@ -405,7 +405,6 @@ cases.  The prime example is @code(prod.alg).
 argument type checking at initialization time. See @code(downproto.alg) for
 an example where a check is made to guarantee that the output sample rate is
 not greater than the input sample rate.  Otherwise an error is raised.
-
 @end(description)
 
 @section(Generated Names)

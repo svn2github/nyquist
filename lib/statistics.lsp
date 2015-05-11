@@ -195,11 +195,20 @@
                      (aref counts i)))))
 
 (send histogram-class :answer :plot-hist '(&optional (offset 0)) '(
+  (let (args time cnt) ; compute args in order, push, then reverse
     (if (null counts) (send self :make-hist))
-    (s-plot (snd-from-array 0
-                            (/ (float (- (aref thresholds 1)
-                                         (aref thresholds 0))))
-                            counts))))
+    ;; make arguments for pwl-list
+    (setf time (float (aref thresholds 0)))
+    (setf args (list time))
+    (setf args (cons 0.0 args))
+    (dotimes (i (length counts))
+      (setf cnt (float (aref counts i)))
+      (setf args (cons time args))
+      (setf args (cons cnt args))
+      (setf time (float (aref thresholds (1+ i))))
+      (setf args (cons time args))
+      (setf args (cons cnt args)))
+    (s-plot (pwl-list (reverse args)) time))))
 
 (send histogram-class :answer :gnu-plot '(filename xlabel ylabel title) '(
   (let ((thresh-list (vector-from-array thresholds))

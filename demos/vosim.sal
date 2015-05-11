@@ -1,0 +1,99 @@
+;; vosim.sal -- Vosim demo
+;;
+;; Roger B. Dannenberg
+;; March, 2013, revised March 2015
+;;
+;; This is a simple program intended to demonstrate Vosim. 
+;; It could form the basis for a more capable implementation.
+;; Uncomment the calls to test1, test2, and test3, at the end,
+;; or just run "exec test1()" etc. to hear some Vosim sounds.
+
+;; "Real" Vosim is a series of sine-squared pulses of decreasing
+;; amplitude. This requires sub-sample spacing of pulses to get 
+;; good frequency control, so instead, I make a continuous 
+;; sine-squared signal and multiply by a decreasing exponential
+
+;; Vosim "grains" should start on sub-sample boundaries, but this 
+;; is tricky too, so I  will instead use a granular synthesis 
+;; approach. Nyquist will quantize each grain to a sample boundary,
+;; so there will be some frequency jitter. My guess is this will 
+;; make the result slightly richer, so it might be a "feature" 
+;; rather than a bug.
+
+;; The parameters are:
+;;   hz: the fundamental frequency
+;;   amp: the peak amplitude
+;;   fhz: the "formant" frequency
+;;   decay: an amplitude scale factor applied to each successive
+;;          pulse to achieve an exponential decay
+;;   count: the number of pulses
+;; Unlike "true" Vosim, the period is controlled with the hz 
+;; parameter rather than simply summing up the durations of the
+;; pulses and adding a delay.
+
+;; The computation is as follows:
+;;   vosim() computes a sequence of grains. The number of grains
+;; is estimated using the initial value of the hz parameter and
+;; calculating how many periods are needed to obtain the duration
+;; (duration comes from get-duration(1) as usual). Thus, the 
+;; actual duration might not match get-duration(1) if hz is a 
+;; signal that increases or decreases.
+;;   vosim-grain() computes each grain. Grains may overlap (as in
+;; FOF synthesis -- again, this is not exactly like the original
+;; Vosim). Each grain is a sequence of fixed-frequency 
+;; sine-squared pulses. The frequency is the current value of fhz.
+;; There are count sine-squared pulses. They are scaled by an
+;; exponential envelope that decreases to a factor of decay every
+;; pulse period. E.g. if decay = 0.6, then each pulse will be 0.6
+;; times the height of the previous pulse. Unlike true Vosim, the 
+;; decay is continuous rather than taking a step every pulse 
+;; period.
+;;   The hz and fhz controls may be SOUNDS, but amp, decay, and 
+;; count are numbers, and count must be a FIXNUM (integer).
+
+function vosim-grain(hz, amp, fhz, decay, count)
+  begin
+    with fperiod = #?(numberp(fhz), 1.0 / fhz, 1.0 / sref(fhz, 0)),
+         period = #?(numberp(hz), 1.0 / hz, 1.0 / sref(hz, 0)),
+         dur = fperiod * count,
+         f = hzosc(fhz * 0.5) ~~ dur, ;; sine-squared doubles fhz
+         final-amp = power(decay, count) * amp,
+         decay-env = pwev(amp, dur, final-amp),
+         rslt = set-logical-stop(f * f * decay-env, period)
+    ;display "vosim-grain", period, fperiod, snd-length(rslt, 100000)
+    return rslt
+  end
+
+; exec s-plot(vosim-grain(50, 0.9, 1000, 0.9, 20))
+
+function vosim(hz, amp, fhz, decay, count)
+  begin
+    with hz-estimate = #?(numberp(hz), hz, sref(hz, 0))
+    return seqrep(i, round(get-duration(1) * hz-estimate),
+                  vosim-grain(hz, amp, fhz, decay, count) ~~ 1.0)
+  end
+
+;exec s-plot(vosim(100, 0.9, 1000, 0.8, 5) ~ 0.03)
+;exec s-plot(vosim(100, 0.9, pwlv(1000, 1, 4000), 0.8, 5) ~ 0.03)  
+
+function test1()
+  play vosim(100, 0.9, pwlv(200, 0.5, 4000, 1, 200), 0.8, 5) ~ 4
+
+function test2() ;; try "oo" with formants at 300, 890
+  begin
+    with freq = 50 + lfo(4, 4) * 0.5
+    play (pwl(0.03, 1, 0.9, 1, 1) * 
+          (vosim(freq, 0.9, 300, 0.95, 20) + 
+           vosim(freq, 0.9, 890, 0.95, 20))) ~ 4
+  end
+
+function test3() ;; just 890 Hz formant sounds a bit like "ah"
+  begin
+    with freq = 50 + lfo(4, 4) * 0.5
+    play (pwl(0.03, 1, 0.9, 1, 1) * 
+          (vosim(freq, 0.9, 890, 0.8, 10))) ~ 4
+  end
+
+;exec test1()
+;exec test2()
+;exec test3()

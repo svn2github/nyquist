@@ -2,13 +2,6 @@ moving code into libsndfile_static -- need to copy search paths from nyquist
 
 then test to see if libsndfile_static can be linked into scorealign
 
-
-
-
-Manual should explain how to open demos folder and documents.
-
-negative values to duration of CONST and other functions causes crash.
-
 nyquist plugins in Audacity slower on Linux than Windows:
 On Linux, Nyquist plug-ins are much slower than on Win XP.
 Details here: http://audacity.238276.n2.nabble.com/Nyquist-in-Audacity-is-much-slower-on-Linux-than-on-Windows-XP-td7556262.html

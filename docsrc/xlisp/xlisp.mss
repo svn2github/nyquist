@@ -323,13 +323,11 @@ closures (user defined functions)
 
                 @xlcode(#:)@i[<symbol>]      == an uninterned symbol
 
-                @xlcode(`)@i[<expr>]         == @xlcode{(backquote} @i[<expr>]@xlcode{)}
+                @xlcode(`)@i[<expr>]        == @xlcode{(backquote} @i[<expr>]@xlcode{)}
 
-                @xlcode(,)@i[<expr>]         == @xlcode{(comma} @i[<expr>]@xlcode{)}
+                @xlcode(,)@i[<expr>]        == @xlcode{(comma} @i[<expr>]@xlcode{)}
 
-                @xlcode(,@@)@i[<expr>]        == @xlcode{(comma-at} @i[<expr>]@xlcode{)}
-
-@end(itemize)
+   @xlcode(,@@)@i[<expr>] == @xlcode{(comma-at} @i[<expr>]@xlcode{)}@end(itemize)
 @section(Lambda Lists)@index(Lambda Lists)
 
         There are several forms in XLISP that require that a ``lambda
@@ -374,7 +372,7 @@ closures (user defined functions)
         function body.  It is possible to have initialization
         expressions for the @xlcode(&aux) variables.
 
-    Here is the complete syntax for lambda lists:
+    Here is the complete syntax for lambda lists:@latex(\needspace{16\baselineskip})
 @begin(display)
                 (@i<rarg>...
                  [@xlcode(&optional) [@i<oarg> | (@i<oarg> [@i<init> [@i<svar>]])]...]
@@ -394,12 +392,8 @@ closures (user defined functions)
                 @i<key> is a keyword symbol
                 @i<aux> is an auxiliary variable symbol
                 @i<init> is an initialization expression
-                @i<svar> is a supplied-p variable symbol
-@end(display)
-
-
+                @i<svar> is a supplied-p variable symbol @end(display)
 @section(Objects)@index(Objects)@label(objects-sec)
-
         Definitions:
 @begin(itemize)
 selector @itemsep a symbol used to select an appropriate method
@@ -505,7 +499,6 @@ returns @itemsep  the object
 @xlcode(Class@index(Class)) @itemsep class of all object classes (including itself)
 
             Messages:
-
 @begin(fdescription)
                 @xlcode(:new@index(:new)) @itemsep create a new instance of a class
 @begin(pdescription)
@@ -657,12 +650,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
         @xlcode{(function@pragma(defn)@index(function) @t(@i(expr)))} @c{[lisp]} @itemsep  get the functional interpretation
 @end(fgroup)
-
 @begin(pdescription)
             @i<expr> @itemsep     the symbol or lambda expression (quoted)
 
             returns  @itemsep   the functional interpretation
-
 @end(pdescription)
 @blankspace(1)
 
@@ -670,7 +661,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
         @xlcode{(backquote@pragma(defn)@index(backquote) @t(@i(expr)))} @c{[lisp]} @itemsep fill in a template
 @end(fgroup)
-
 @begin(pdescription)
             @i<expr> @itemsep     the template
 
@@ -684,14 +674,12 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
         @xlcode{(lambda@pragma(defn)@index(lambda) @t(@i(args)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep make a function closure
 @end(fgroup)
-
 @begin(pdescription)
             @i<args> @itemsep     formal argument list (lambda list) (quoted)
 
             @i<expr> @itemsep     expressions of the function body
 
             returns  @itemsep   the function closure
-
 @end(pdescription)
 @blankspace(1)
 
@@ -699,12 +687,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
         @xlcode{(get-lambda-expression@pragma(defn)@index(get-lambda-expression) @t(@i(closure)))} @c{[lisp]} @itemsep get the lambda expression
 @end(fgroup)
-
 @begin(pdescription)
             @i<closure> @itemsep  the closure
 
             returns  @itemsep   the original lambda expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -712,12 +698,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
         @xlcode{(macroexpand@pragma(defn)@index(macroexpand) @t(@i(form)))} @c{[lisp]} @itemsep recursively expand macro calls
 @end(fgroup)
-
 @begin(pdescription)
             @i<form> @itemsep     the form to expand
 
             returns  @itemsep   the macro expansion
-
 @end(pdescription)
 @blankspace(1)
 
@@ -725,12 +709,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
         @xlcode{(macroexpand-1@pragma(defn)@index(macroexpand-1) @t(@i(form)))} @c{[lisp]} @itemsep expand a macro call
 @end(fgroup)
-
 @begin(pdescription)
             @i<form> @itemsep     the macro call form
 
             returns  @itemsep   the macro expansion
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -748,7 +730,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr> @itemsep     the new value
 
             returns  @itemsep   the new value
-
 @end(pdescription)
 @blankspace(1)
 
@@ -762,7 +743,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr> @itemsep     the new value
 
             returns  @itemsep   the new value
-
 @end(pdescription)
 @blankspace(1)
 
@@ -776,7 +756,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr> @itemsep     the new value
 
             returns  @itemsep   the new value
-
 @end(pdescription)
 @blankspace(1)
 
@@ -786,7 +765,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(fgroup)
 @begin(pdescription)
             @i<place> @itemsep     the field specifier (quoted):
-
 @begin(pdescription)
   @i<sym> @itemsep                  set value of a symbol
 
@@ -805,19 +783,19 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
   (symbol-function @i<sym>) @itemsep set functional value of a symbol
 
   (symbol-plist @i<sym>) @itemsep    set property list of a symbol
-
 @end(pdescription)@pragma(stopcodef)
+
         @i<expr> @itemsep     the new value
 
         returns  @itemsep   the new value
-
 @end(pdescription)
 @blankspace(1)
+
 @begin(fgroup)
         @xlcode{(defun@pragma(defn)@index(defun) @t(@i(sym)) @t(@i(fargs)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep define a function
 
-@pragma(startcodef)
-        @xlcode{(defmacro@pragma(defn)@index(defmacro) @t(@i(sym)) @t(@i(fargs)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  define a macro
+@comment[@pragma(startcodef)
+]        @xlcode{(defmacro@pragma(defn)@index(defmacro) @t(@i(sym)) @t(@i(fargs)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  define a macro
 @end(fgroup)
 @begin(pdescription)
             @i<sym> @itemsep      symbol being defined (quoted)
@@ -828,7 +806,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
                         function (quoted)
             returns   @itemsep  the function symbol
-
 @end(pdescription)
 @blankspace(1)
 
@@ -840,7 +817,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<tag>   @itemsep    string or number
 
             returns   @itemsep  the new symbol
-
 @end(pdescription)
 @blankspace(1)
 
@@ -852,7 +828,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<pname> @itemsep    the symbol's print name string
 
             returns   @itemsep  the new symbol
-
 @end(pdescription)
 @blankspace(1)
 
@@ -864,7 +839,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<pname> @itemsep    the symbol's print name string
 
             returns   @itemsep  the new symbol
-
 @end(pdescription)
 @blankspace(1)
 
@@ -876,7 +850,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<sym>   @itemsep    the symbol
 
             returns   @itemsep  the symbol's print name
-
 @end(pdescription)
 @blankspace(1)
 
@@ -888,7 +861,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<sym>   @itemsep    the symbol
 
             returns   @itemsep  the symbol's value
-
 @end(pdescription)
 @blankspace(1)
 
@@ -900,7 +872,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<sym>   @itemsep    the symbol
 
             returns   @itemsep  the symbol's functional value
-
 @end(pdescription)
 @blankspace(1)
 
@@ -912,7 +883,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<sym>   @itemsep    the symbol
 
             returns   @itemsep  the symbol's property list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -926,7 +896,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<n>     @itemsep    the table size (integer)
 
             returns   @itemsep  the hash index (integer)
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -943,7 +912,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<prop>  @itemsep    the property symbol
 
             returns   @itemsep  the property value or @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -959,7 +927,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<prop>  @itemsep    the property symbol
 
             returns   @itemsep  the property value
-
 @end(pdescription)
 @blankspace(1)
 
@@ -973,7 +940,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<prop>  @itemsep    the property symbol
 
             returns   @itemsep  @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -990,7 +956,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<n>     @itemsep    the array index (integer)
 
             returns   @itemsep  the value of the array element
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1002,7 +967,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<size>  @itemsep    the size of the new array (integer)
 
             returns   @itemsep  the new array
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1014,7 +978,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the vector elements
 
             returns   @itemsep  the new vector
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -1029,7 +992,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the list node
 
             returns   @itemsep  the car of the list node
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1041,7 +1003,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the list node
 
             returns   @itemsep  the cdr of the list node
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1119,7 +1080,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr2> @itemsep    the cdr of the new list node
 
             returns   @itemsep  the new list node
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1131,7 +1091,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    expressions to be combined into a list
 
             returns   @itemsep  the new list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1143,7 +1102,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    lists whose elements are to be appended
 
             returns   @itemsep  the new list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1155,7 +1113,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the list to reverse
 
             returns   @itemsep  a new list in the reverse order
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1167,7 +1124,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep  the last list node in the list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1185,7 +1141,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             :test-not @itemsep  the test function (sense inverted)      
 
             returns   @itemsep  the remainder of the list starting with the expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1203,7 +1158,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             :test-not @itemsep  the test function (sense inverted)      
 
             returns   @itemsep  the alist entry or @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1221,7 +1175,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             :test-not @itemsep  the test function (sense inverted)      
 
             returns   @itemsep  copy of list with matching expressions removed
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1235,7 +1188,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep  copy of list with matching elements removed
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1249,7 +1201,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep  copy of list with non-matching elements removed
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1261,7 +1212,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the list, vector or string
 
             returns   @itemsep  the length of the list, vector or string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1275,7 +1225,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep  the nth element or @xlcode(nil) if the list isn't that long
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1289,7 +1238,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep  the nth cdr or @xlcode(nil) if the list isn't that long
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1303,7 +1251,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<listn> @itemsep    a list for each argument of the function
 
             returns   @itemsep  the first list of arguments
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1317,7 +1264,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<listn> @itemsep    a list for each argument of the function
 
             returns   @itemsep  a list of the values returned
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1331,7 +1277,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<listn> @itemsep    a list for each argument of the function
 
             returns   @itemsep  the first list of arguments
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1345,7 +1290,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<listn> @itemsep    a list for each argument of the function
 
             returns   @itemsep  a list of the values returned
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1365,7 +1309,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             :test-not @itemsep  the test function (sense inverted)      
 
             returns   @itemsep  the expression with substitutions
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1383,7 +1326,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             :test-not @itemsep  the test function (sense inverted)      
 
             returns   @itemsep  the expression with substitutions
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -1400,7 +1342,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr> @itemsep     the new value for the car of the list node
 
             returns  @itemsep   the list node after updating the car
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1414,7 +1355,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr> @itemsep     the new value for the cdr of the list node
 
             returns  @itemsep   the list node after updating the cdr
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1426,7 +1366,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list> @itemsep     lists to concatenate
 
             returns  @itemsep   the result of concatenating the lists
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1444,7 +1383,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             :test-not @itemsep   the test function (sense inverted)      
 
             returns   @itemsep  the list with the matching expressions deleted
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1458,7 +1396,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep  the list with matching elements deleted
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1472,7 +1409,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep  the list with non-matching elements deleted
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1486,7 +1422,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<test>  @itemsep    the comparison function
 
             returns   @itemsep  the sorted list
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -1501,7 +1436,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is an atom, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1513,7 +1447,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the expression is a symbol, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1525,7 +1458,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the expression is a number, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1537,7 +1469,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the list to check
 
             returns   @itemsep @xlcode(t) if the list is empty, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1549,7 +1480,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             return    @itemsep @xlcode(t) if the value is @xlcode(nil), @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1561,7 +1491,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is a cons or @xlcode(nil), @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1573,7 +1502,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<list>  @itemsep    the list
 
             returns   @itemsep @xlcode(t) if the value is @xlcode(nil), @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1585,7 +1513,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is a cons, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1597,7 +1524,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is an integer, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1609,7 +1535,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is a float, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1621,7 +1546,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is a string, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1633,7 +1557,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is a character, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1645,7 +1568,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is an array, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1657,7 +1579,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is a stream, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1669,7 +1590,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is an object, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1681,7 +1601,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the expression to check
 
             returns   @itemsep @xlcode(t) if the value is an object, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1693,7 +1612,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<sym>   @itemsep    the symbol
 
             returns   @itemsep @xlcode(t) if a value is bound to the symbol, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1718,7 +1636,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the number to test
 
             returns   @itemsep @xlcode(t) if the number is negative, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1730,7 +1647,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the number to test
 
             returns   @itemsep @xlcode(t) if the number is zero, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1742,7 +1658,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the number to test
 
             returns   @itemsep @xlcode(t) if the number is positive, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1754,7 +1669,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the integer to test
 
             returns   @itemsep @xlcode(t) if the integer is even, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1766,7 +1680,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr>  @itemsep    the integer to test
 
             returns   @itemsep @xlcode(t) if the integer is odd, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1780,7 +1693,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr2> @itemsep    the second expression
 
             returns   @itemsep @xlcode(t) if they are equal, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1794,7 +1706,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr2> @itemsep    the second expression
 
             returns   @itemsep @xlcode(t) if they are equal, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1808,7 +1719,6 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<expr2> @itemsep    the second expression
 
             returns   @itemsep @xlcode(t) if they are equal, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -1818,10 +1728,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
         @xlcode{(cond@pragma(defn)@index(cond) @t(@i(pair))@r(...))} @c{[lisp]}  @itemsep evaluate conditionally
 @begin(pdescription)
             @i<pair>  @itemsep    pair consisting of:
-
 @begin(pdescription)
                             (@i<pred> @i<expr>...)
 @end(pdescription)@pragma(stopcodef)
+
                           where:
 @begin(pdescription)
                             @i<pred> @itemsep     is a predicate expression
@@ -1829,7 +1739,8 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
                             @i<expr> @itemsep     evaluated if the predicate
  is not @xlcode(nil)
 @end(pdescription)@pragma(stopcodef)
-returns  @itemsep   the value of the first expression whose predicate is not
+
+returns  @itemsep   the value of the first expression whose predicate is not 
 @xlcode(nil)
 @end(pdescription)
 @blankspace(1)
@@ -1874,7 +1785,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr2> @itemsep    the expression to be evaluated if texpr is @xlcode(nil)
 
             returns   @itemsep  the value of the selected expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1901,7 +1811,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the expression(s) to be evaluated if texpr is @xlcode(nil)
 
             returns   @itemsep  the value of the last expression or @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -1910,10 +1819,10 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the selection expression
 
             @i<case>  @itemsep    pair consisting of:
-
 @begin(pdescription)
                             (@i<value> @i<expr>...)
 @end(pdescription)@pragma(stopcodef)
+
                           where:
 @begin(pdescription)
                             @i<value> @itemsep     is a single expression or a list of
@@ -1922,8 +1831,8 @@ returns  @itemsep   the value of the first expression whose predicate is not
                             @i<expr>  @itemsep    are expressions to execute if the
                                         case matches
 @end(pdescription)@pragma(stopcodef)
-            returns @itemsep     the value of the last expression of the matching case
 
+            returns @itemsep     the value of the last expression of the matching case
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
@@ -1934,17 +1843,16 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep   the variable bindings each of which is either:
-
 @begin(pdescription)
                         1)  a symbol (which is initialized to @xlcode(nil))
 
                         2)  a list whose car is a symbol and whose cadr
                                 is an initialization expression
 @end(pdescription)@pragma(stopcodef)
+
             @i<expr> @itemsep     the expressions to be evaluated
 
             returns  @itemsep   the value of the last expression
-
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
@@ -1958,10 +1866,10 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep  the function bindings each of which is:
-
 @begin(pdescription)
                           (@i<sym> @i<fargs> @i<expr>...)
 @end(pdescription)@pragma(stopcodef)
+
                         where:
 @begin(pdescription)
                             @i<sym> @itemsep      the function/macro name
@@ -1971,6 +1879,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
                             @i<expr>  @itemsep    expressions constituting the body of
                                         the function/macro
 @end(pdescription)@pragma(stopcodef)
+
             @i<expr> @itemsep     the expressions to be evaluated
 
             returns  @itemsep   the value of the last expression
@@ -1987,7 +1896,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr> @itemsep     expressions to evaluate
 
             returns  @itemsep   the value of the last expression the throw expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2001,7 +1909,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr> @itemsep     the value for the catch to return (defaults to @xlcode(nil))
 
             returns  @itemsep   never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2030,7 +1937,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr> @itemsep     the body of the loop
 
             returns  @itemsep   never returns (must use non-local exit)
-
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
@@ -2040,7 +1946,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep  the variable bindings each of which is either:
-
 @begin(pdescription)
                         1)  a symbol (which is initialized to @xlcode(nil))
 
@@ -2052,9 +1957,8 @@ returns  @itemsep   the value of the first expression whose predicate is not
                                 @i<init> @itemsep is the initial value of the symbol
 
                                 @i<step> @itemsep is a step expression
+@end(pdescription)@end(pdescription)@pragma(stopcodef)
 
-@end(pdescription)
-@end(pdescription)@pragma(stopcodef)
             @i<texpr> @itemsep    the termination test expression
 
             @i<rexpr> @itemsep    result expressions (the default is @xlcode(nil))
@@ -2062,7 +1966,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the body of the loop (treated like an implicit prog)
 
             returns   @itemsep  the value of the last result expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2075,7 +1978,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<rexpr> @itemsep    the result expression (the default is @xlcode(nil))
 
             @i<expr>  @itemsep    the body of the loop (treated like an implicit prog)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2088,7 +1990,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<rexpr> @itemsep    the result expression (the default is @xlcode(nil))
 
             @i<expr>  @itemsep    the body of the loop (treated like an implicit prog)
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -2103,17 +2004,16 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep  the variable bindings each of which is either:
-
 @begin(pdescription)
                         1)  a symbol (which is initialized to @xlcode(nil))
 
                         2)  a list whose car is a symbol and whose cadr
                                 is an initialization expression
 @end(pdescription)@pragma(stopcodef)
+
             @i<expr>  @itemsep    expressions to evaluate or tags (symbols)
 
             returns   @itemsep  @xlcode(nil) or the argument passed to the return function
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2127,7 +2027,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the block body
 
             returns   @itemsep  the value of the last expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2136,7 +2035,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the value (defaults to @xlcode(nil))
 
             returns   @itemsep  never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2150,7 +2048,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<value> @itemsep    the value to return (defaults to @xlcode(nil))
 
             returns   @itemsep  never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2162,7 +2059,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    expression(s) to evaluate or tags (symbols)
 
             returns   @itemsep  @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2174,7 +2070,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<sym>   @itemsep    the tag (quoted)
 
             returns   @itemsep  never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2187,7 +2082,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    expression(s) to evaluate
 
             returns   @itemsep  the value of the last expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2201,7 +2095,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the remaining expressions to evaluate
 
             returns   @itemsep  the value of the first expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2217,7 +2110,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the remaining expressions to evaluate
 
             returns   @itemsep  the value of the second expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2229,7 +2121,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the expressions to evaluate
 
             returns   @itemsep  the value of the last expression (or @xlcode(nil))
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -2244,7 +2135,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<sym>   @itemsep    the function to add (quoted)
 
             returns   @itemsep  the trace list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2256,7 +2146,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<sym>   @itemsep    the function to remove (quoted)
 
             returns   @itemsep  the trace list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2270,7 +2159,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<arg>   @itemsep    the argument expression (printed after the message)
 
             returns   @itemsep  never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2286,7 +2174,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<arg>   @itemsep    the argument expression (printed after the message)
 
             returns   @itemsep  @xlcode(nil) when continued from the break loop
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2300,28 +2187,24 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<arg>   @itemsep    the argument expression (printed after the message)
 
             returns   @itemsep  @xlcode(nil) when continued from the break loop
-
 @end(pdescription)
 @blankspace(1)
 
         @xlcode{(clean-up@pragma(defn)@index(clean-up))} @c{[lisp]}  @itemsep clean-up after an error
 @begin(pdescription)
             returns   @itemsep  never returns
-
 @end(pdescription)
 @blankspace(1)
 
         @xlcode{(top-level@pragma(defn)@index(top-level))} @c{[lisp]}  @itemsep clean-up after an error and return to the top level
 @begin(pdescription)
             returns   @itemsep  never returns
-
 @end(pdescription)
 @blankspace(1)
 
         @xlcode{(continue@pragma(defn)@index(continue))} @c{[lisp]}  @itemsep continue from a correctable error
 @begin(pdescription)
             returns   @itemsep  never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2342,7 +2225,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<n>     @itemsep    the number of levels (defaults to all levels)
 
             returns   @itemsep  @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2357,7 +2239,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<env>   @itemsep    the environment (default is @xlcode(nil))
 
             returns   @itemsep  the result of evaluating the expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2369,7 +2250,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<flag>   @itemsep    @xlcode(nil) turns profiling off, otherwise on
 
             returns   @itemsep  the previous state of profiling.
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -2384,7 +2264,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the number
 
             returns   @itemsep  the result of truncating the number
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2396,7 +2275,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the number
 
             returns   @itemsep  the result of floating the integer
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2405,7 +2283,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the addition
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2414,7 +2291,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the subtraction
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2423,7 +2299,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the multiplication
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2432,7 +2307,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the division
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2441,7 +2315,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the number
 
             returns   @itemsep  the number plus one
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2450,7 +2323,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the number
 
             returns   @itemsep  the number minus one
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2462,7 +2334,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the remainder operation
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2474,7 +2345,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the expressions to be checked
 
             returns   @itemsep  the smallest number in the list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2486,7 +2356,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the expressions to be checked
 
             returns   @itemsep  the largest number in the list
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2498,7 +2367,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the number
 
             returns   @itemsep  the absolute value of the number
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2512,7 +2380,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<n2>    @itemsep    the second number(s) (integer)
 
             returns   @itemsep  the greatest common divisor
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2526,7 +2393,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<n>     @itemsep    the upper bound (integer)
 
             returns   @itemsep  a random number
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2536,7 +2402,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep  a random floating point number
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2548,7 +2413,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the floating point number
 
             returns   @itemsep  the sine of the number
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2560,7 +2424,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the floating point number
 
             returns   @itemsep  the cosine of the number
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2572,7 +2435,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the floating point number
 
             returns   @itemsep  the tangent of the number
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2586,7 +2448,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr2> @itemsep    the value of @i(y) (default value is 1.0)
 
             returns   @itemsep  the arctangent of @i(x)/@i(y)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2600,7 +2461,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<y-expr> @itemsep   the floating point exponent
 
             returns    @itemsep x to the y power
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2612,7 +2472,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<x-expr> @itemsep   the floating point number
 
             returns   @itemsep  e to the x power
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2624,7 +2483,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
             @i<expr>  @itemsep    the floating point number
 
             returns   @itemsep  the square root of the number
-
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
@@ -2647,7 +2505,6 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
 returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @i<n2> with @i<n3>, etc., are all true.
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -2662,7 +2519,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the and operation
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2674,7 +2530,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the inclusive or operation
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2686,7 +2541,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<expr>  @itemsep    the numbers
 
             returns   @itemsep  the result of the exclusive or operation
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2698,7 +2552,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<expr>  @itemsep    the number
 
             returns   @itemsep  the bitwise inversion of number
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -2713,7 +2566,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<expr>  @itemsep    an integer (which is first converted into its ASCII character value), string, character, or symbol
 
             returns   @itemsep  the string representation of the argument
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2731,7 +2583,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             :end      @itemsep  the ending offset + 1
 
             returns   @itemsep  index of pat in str or NIL if not found
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2745,7 +2596,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<str>   @itemsep    the string to trim
 
             returns   @itemsep  a trimed copy of the string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2759,7 +2609,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<str>   @itemsep    the string to trim
 
             returns   @itemsep  a trimed copy of the string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2773,7 +2622,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<str>   @itemsep    the string to trim
 
             returns   @itemsep  a trimed copy of the string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2789,7 +2637,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             :end      @itemsep  the ending offset + 1
 
             returns   @itemsep  a converted copy of the string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2805,7 +2652,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             :end      @itemsep  the ending offset + 1
 
             returns   @itemsep  a converted copy of the string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2821,7 +2667,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             :end      @itemsep  the ending offset + 1
 
             returns   @itemsep  the converted string (not a copy)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2837,7 +2682,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             :end      @itemsep  the ending offset + 1
 
             returns  @itemsep   the converted string (not a copy)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2849,7 +2693,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<expr> @itemsep     the strings to concatenate
 
             returns  @itemsep   the result of concatenating the strings
-
 @end(pdescription)
 @blankspace(1)
 
@@ -2865,43 +2708,47 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<end>    @itemsep   the ending position + 1 (defaults to end)
 
             returns    @itemsep substring between @i<start> and @i<end>
-
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)
+
         @begin(fgroup)@xlcode{string<(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string<@pragma(defn)@index(string<) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
         @begin(fgroup)@xlcode{string<=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string<=@pragma(defn)@index(string<=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
         @begin(fgroup)@xlcode{string=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string=@pragma(defn)@index(string=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
         @begin(fgroup)@xlcode{string/=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string/=@pragma(defn)@index(string/=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
         @begin(fgroup)@xlcode{string>=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string>=@pragma(defn)@index(string>=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
         @begin(fgroup)@xlcode{string>(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string>@pragma(defn)@index(string>) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
-@end(fgroup)
 @end(fgroup)
 @begin(pdescription)
             @i<str1> @itemsep     the first string to compare
@@ -2921,41 +2768,44 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
           Note: case is significant with these comparison functions.
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)
-@begin(fgroup)@xlcode{string-lessp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(fgroup)@xlcode{string-lessp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string-lessp@pragma(defn)@index(string-lessp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-@begin(fgroup)@xlcode{string-not-greaterp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{string-not-greaterp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string-not-greaterp@pragma(defn)@index(string-not-greaterp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-@begin(fgroup)@xlcode{string-equal(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{string-equal(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string-equal@pragma(defn)@index(string-equal) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-@begin(fgroup)@xlcode{string-not-equal(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{string-not-equal(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string-not-equal@pragma(defn)@index(string-not-equal) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-@begin(fgroup)@xlcode{string-not-lessp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{string-not-lessp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string-not-lessp@pragma(defn)@index(string-not-lessp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-@begin(fgroup)@xlcode{string-greaterp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{string-greaterp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
         @xlcode{(string-greaterp@pragma(defn)@index(string-greaterp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
-@end(fgroup)
 @end(fgroup)
 @begin(pdescription)
             @i<str1> @itemsep     the first string to compare
@@ -2989,7 +2839,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<index>  @itemsep   the string index (zero relative)
 
             returns    @itemsep the ascii code of the character
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3001,7 +2850,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr> @itemsep      the character
 
             returns @itemsep    @xlcode(t) if the character is upper case, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3013,7 +2861,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr> @itemsep      the character
 
             returns @itemsep    @xlcode(t) if the character is lower case, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3025,7 +2872,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr> @itemsep      the character
 
             returns @itemsep    @xlcode(t) if the character is alphabetic, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3037,7 +2883,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr> @itemsep      the character
 
             returns @itemsep    the digit weight if character is a digit, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3049,7 +2894,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr> @itemsep      the character
 
             returns @itemsep    the ascii character code (integer)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3061,7 +2905,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<code> @itemsep     the ascii code (integer)
 
             returns  @itemsep   the character with that code or @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3073,7 +2916,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr>  @itemsep     the character
 
             returns  @itemsep   the upper case character
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3085,7 +2927,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr>  @itemsep     the character
 
             returns  @itemsep   the lower case character
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3097,7 +2938,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<n>    @itemsep     the digit weight (integer)
 
             returns  @itemsep   the digit character or @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3109,7 +2949,6 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<chr>  @itemsep     the character
 
             returns  @itemsep   the ascii character code
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3121,44 +2960,42 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             @i<int>  @itemsep     the ascii character code
 
             returns  @itemsep   the character with that code
-
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)
-       @begin(fgroup)@xlcode{char<(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcode{char<(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char<@pragma(defn)@index(char<) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-        @begin(fgroup)@xlcode{char<=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{char<=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char<=@pragma(defn)@index(char<=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
-@end(fgroup)
-@pragma(endcodef)
-
-        @begin(fgroup)@xlcode{char=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@end(fgroup)@pragma(endcodef)@begin(fgroup)@xlcode{char=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char=@pragma(defn)@index(char=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-        @begin(fgroup)@xlcode{char/=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{char/=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char/=@pragma(defn)@index(char/=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-        @begin(fgroup)@xlcode{char>=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{char>=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char>=@pragma(defn)@index(char>=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
-        @begin(fgroup)@xlcode{char>(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
+@begin(fgroup)@xlcode{char>(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char>@pragma(defn)@index(char>) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
-@end(fgroup)
 @end(fgroup)
 @begin(pdescription)
             @i<chr1> @itemsep     the first character to compare
@@ -3170,41 +3007,44 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
           Note: case is significant with these comparison functions.
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)
 @begin(fgroup)@xlcode{char-lessp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char-lessp@pragma(defn)@index(char-lessp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
 @begin(fgroup)@xlcode{char-not-greaterp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char-not-greaterp@pragma(defn)@index(char-not-greaterp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
 @begin(fgroup)@xlcode{char-equal(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char-equal@pragma(defn)@index(char-equal) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
 @begin(fgroup)@xlcode{char-not-equal(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char-not-equal@pragma(defn)@index(char-not-equal) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
 @begin(fgroup)@xlcode{char-not-lessp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char-not-lessp@pragma(defn)@index(char-not-lessp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
-@pragma(endcodef)
-
+@begin(pdescription)
+@end(pdescription)
+@blankspace(1)
 @begin(fgroup)@xlcode{char-greaterp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
         @xlcode{(char-greaterp@pragma(defn)@index(char-greaterp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
-@end(fgroup)
 @end(fgroup)
 @begin(pdescription)
 @i<chr1> @itemsep     the first string to compare
@@ -3232,7 +3072,6 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
             @i<rflag>  @itemsep   recursive read flag (default is @xlcode(nil))
 
             returns    @itemsep the expression read
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3243,7 +3082,6 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
             @i<stream> @itemsep   the output stream (default is standard output)
 
             returns    @itemsep the expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3257,7 +3095,6 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
             @i<stream> @itemsep   the output stream (default is standard output)
 
             returns    @itemsep the expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3271,7 +3108,6 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
             @i<stream> @itemsep   the output stream (default is standard output)
 
             returns   @itemsep  the expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3285,7 +3121,6 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
             @i<stream> @itemsep   the output stream (default is standard output)
 
             returns @itemsep    the expression
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3297,7 +3132,6 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
             @i<stream> @itemsep   the output stream (default is standard output)
 
             returns   @itemsep  @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3309,7 +3143,6 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
             @i<expr>  @itemsep    the expression
 
             returns  @itemsep   the length
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3340,7 +3173,6 @@ output
             @i<arg>    @itemsep   the format arguments
 
             returns   @itemsep  output string if @i<stream> is @xlcode(nil), @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -3359,6 +3191,8 @@ allows strings to continue across multiple lines
 
 @section(File I/O Functions)@index(File I/O Functions)
 Note that files are ordinarily opened as text. Binary files (such as standard midi files) must be opened with @xlcode(open-binary) on non-unix systems.
+@blankspace(1)@comment(probably a bug that html output does not have paragraph break)
+@blankspace(1)
 @begin(fdescription)
         @begin(fgroup)@xlcode{open(@i(fname), direction: @i(direction))} @c{[sal]}
 
@@ -3370,7 +3204,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             :direction @itemsep :input or :output (default is :input)
 
             returns   @itemsep  a stream
-
 @end(pdescription)
 @blankspace(1)
         @begin(fgroup)@xlcode{open-binary(@i(fname), direction: @i(direction))} @c{[sal]}
@@ -3383,7 +3216,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             :direction @itemsep :input or :output (default is :input)
 
             returns   @itemsep  a stream
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3395,7 +3227,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             @i<stream> @itemsep   the stream
 
             returns    @itemsep @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3409,7 +3240,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             @i<verbose> @itemsep print error message if current directory cannot be changed to @i(path)
 
             returns   @itemsep  the resulting full path, e.g. (setdir ".") gets the current working directory, or @xlcode(nil) if an error occurs
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3421,7 +3251,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             @i<path> @itemsep   the path of the directory to be listed
 
             returns   @itemsep  list of filenames in the directory
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3431,7 +3260,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep  the resulting full path as a string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3441,7 +3269,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep the string naming the user
-
 @end(pdescription)
 @blankspace(1)
         @begin(fgroup)@xlcode{find-in-xlisp-path(@i(filename))} @c{[sal]}
@@ -3452,7 +3279,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             @i<filename> @itemsep the name of the file to search for
 
             returns @itemsep a full path name to the first occurrence found
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3464,7 +3290,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             @i<stream> @itemsep   the input stream (default is standard input)
 
             returns   @itemsep  the character
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3478,7 +3303,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             @i<stream> @itemsep    the input stream (default is standard input)
 
             returns   @itemsep  the character (integer)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3492,7 +3316,6 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             @i<stream> @itemsep   the output stream (default is standard output)
 
             returns   @itemsep  the character
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3511,7 +3334,6 @@ Note: Integers are assumed to be big-endian (high-order byte first) and
 signed, regardless of the platform. To read little-endian format, use a
 negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3532,7 +3354,6 @@ Note: Integers are assumed to be big-endian (high-order byte first) and
 signed, regardless of the platform. To write in little-endian format, use a
 negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3551,7 +3372,6 @@ Note: Floats are assumed to be big-endian (high-order byte first) and
 signed, regardless of the platform. To read little-endian format, use a
 negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3572,7 +3392,6 @@ Note: Floats are assumed to be big-endian (high-order byte first) and
 signed, regardless of the platform. To write in little-endian format, use a
 negative number for the length, e.g. -4 indicates a 4-bytes, low-order
 byte first. The file should be opened in binary mode.
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3584,7 +3403,6 @@ byte first. The file should be opened in binary mode.
             @i<stream> @itemsep   the input stream (default is standard input)
 
             returns   @itemsep  the string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3596,7 +3414,6 @@ byte first. The file should be opened in binary mode.
             @i<stream> @itemsep   the input stream (default is standard input)
 
             returns    @itemsep the byte (integer)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3610,7 +3427,6 @@ byte first. The file should be opened in binary mode.
             @i<stream> @itemsep   the output stream (default is standard output)
 
             returns    @itemsep the byte (integer)
-
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)
@@ -3626,7 +3442,6 @@ An unnamed input stream is setup with the
         it is used as the source of any input function.
 
 @begin(fdescription)
-@blankspace(1)
         @begin(fgroup)@xlcode{make-string-input-stream(@i(str) [, @i(start) [, @i(end)]])} @c{[sal]}
 
         @xlcode{(make-string-input-stream@pragma(defn)@index(make-string-input-stream) @t(@i(str)) [@t(@i(start)) [@t(@i(end))]])} @c{[lisp]}
@@ -3639,7 +3454,6 @@ An unnamed input stream is setup with the
             @i<end>    @itemsep   the ending offset + 1
 
             returns    @itemsep an unnamed stream that reads from the string
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3649,7 +3463,6 @@ An unnamed input stream is setup with the
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep  an unnamed output stream
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3682,7 +3495,8 @@ An unnamed input stream is setup with the
 
 @section(System Functions)@index(System Functions)
 Note: the @xlcode(load) function first tries to load a file from the current directory. A @code(.lsp) extension is added if there is not already an alphanumeric extension following  a period.  If that fails, XLISP searches the path, which is obtained from the XLISPPATH environment variable in Unix and  HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH under Win32. (The Macintosh version has no search path.)
-
+@blankspace(1)@comment(probably a bug that html output does not have paragraph break)
+@blankspace(1)
 @begin(fdescription)
         @begin(fgroup)@xlcode{get-env(@i(name))} @c{[sal]}
 
@@ -3692,7 +3506,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
            @i<name> @itemsep the name of the environment variable
 
            returns  @itemsep string value of the environment variable, @xlcode(nil) if variable does not exist
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3705,7 +3518,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             :print    @itemsep  the print flag (default is @xlcode(nil))
 
             returns   @itemsep  the filename
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3717,7 +3529,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<fname> @itemsep    the filename string or symbol
 
             returns   @itemsep @xlcode(t) if workspace was written, @xlcode(nil) otherwise
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3729,7 +3540,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<fname> @itemsep    the filename string or symbol
 
             returns   @itemsep  @xlcode(nil) on failure, otherwise never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3742,7 +3552,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
                         (if missing, close current transcript)
 
             returns   @itemsep @xlcode(t) if the transcript is opened, @xlcode(nil) if it is closed
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3752,7 +3561,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(fgroup)
 @begin(pdescription)
             returns @itemsep    @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3764,7 +3572,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<num> @itemsep      the number of segments to add
 
             returns @itemsep    the number of segments added
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3776,7 +3583,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<num> @itemsep      the number of nodes to allocate
 
             returns @itemsep    the old number of nodes to allocate
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3786,7 +3592,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(fgroup)
 @begin(pdescription)
             returns @itemsep    @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3796,7 +3601,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(fgroup)
 @begin(pdescription)
             returns @itemsep    @xlcode(nil)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3808,7 +3612,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<expr> @itemsep     the expression to return the type of
 
             returns  @itemsep   @xlcode(nil) if the value is @xlcode(nil) otherwise one of the symbols:
-
 @begin(pdescription)
                           SYMBOL      @itemsep    for symbols
 
@@ -3835,7 +3638,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
                           UNNAMED-STREAM @itemsep for unnamed streams
 
                           ARRAY          @itemsep for arrays
-
 @end(pdescription)
 @end(pdescription)
 @blankspace(1)
@@ -3848,7 +3650,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<addrs>  @itemsep   the address to peek at (integer)
 
             returns    @itemsep the value at the specified address (integer)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3862,7 +3663,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<value>  @itemsep   the value to poke into the address (integer)
 
             returns    @itemsep the value
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3873,7 +3673,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @begin(pdescription)
             returns    @itemsep T if this a big-endian architecture, storing the high-order byte of an integer at the lowest byte address of the integer; otherwise, NIL.
 @foot(This is not a standard XLISP 2.0 function.)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3885,7 +3684,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             @i<expr>   @itemsep   the node
 
             returns    @itemsep the address of the node (integer)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3897,7 +3695,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(fgroup)
 @begin(pdescription)
             returns    @itemsep never returns
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3909,7 +3706,6 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
             returns    @itemsep NIL
 
 Note: Under Windows, Nyquist normally starts up in a medium-sized console window with black text and a white background, with a window title of ``Nyquist.'' This is normally accomplished by calling @xlcode(setup-console) in @code(system.lsp). In Nyquist, you can avoid this behavior by setting @xlcode(*setup-console*) to NIL in your @code(init.lsp) file. If @xlcode(setup-console) is not called, Nyquist uses standard input and output as is. This is what you want if you are running Nyquist inside of emacs, for example.@index(emacs, using Nyquist with)
-
 @end(pdescription)
 @blankspace(1)
 
@@ -3925,7 +3721,6 @@ Note: Under Windows, Nyquist normally starts up in a medium-sized console window
 Note: This function is only implemented under Linux and Mac OS X. If Nyquist I/O is redirected through pipes,
 the Windows version does not echo the input, but the Linux and Mac versions do. You can turn off echoing with
 this function. Under windows it is defined to do nothing.
-
 @end(pdescription)
 @end(fdescription)
 
@@ -4017,4 +3812,3 @@ binding it using @xlcode(let) or @xlcode(let*).  Here is an example:
      ((null ex) nil)
   (print ex))
 @end(programexample)
-

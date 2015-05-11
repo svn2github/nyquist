@@ -1,10 +1,8 @@
 ;; build html for nyquist manual
-(load "md")
+(load "latex")
 (load "s2h")
 (expand 10)
 ;; sourcedir source       destdir  dest
-(setf *md* nil)
-(g "../nyquist" "nyquistman" "../../doc" "home" t)
-(setf *md* t) ;; turn on meta-doc output
+(g "../nyquist" "nyquistman" "../../doc" "home" t nil)
 ; (setf *token-trace* t)
-(g "../nyquist" "nyquistman" "../../doc" "home" t)
+(g "../nyquist" "nyquistman" "../../doc" "home" t t)

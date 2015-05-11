@@ -1,4 +1,6 @@
-<html><head><title>The NyquistIDE Program</title></head>
+<html><head><title>The NyquistIDE Program</title>
+<link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+</head>
 <body bgcolor="ffffff">
 <a href = "part2.html">Previous Section</a> | <a href = "part4.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
@@ -20,55 +22,57 @@ to automatically lay out windows in a rational way. There is a preference
 setting to determine the height of the completion list relative to the height of the output 
 window.
 <p>
-Many of the key commands for editing files are standard and built into Java. In particular, Control-Z is the "undo" command, even on OS X where you would expect to use Command-Z.<a name="index101"> A special command, "Copy to Lisp," or Control-U (Command-U on OS x)copies the selection and enters it into the input window as if it had been typed there.
+Many of the key commands for editing files are standard and built into Java. In particular, Control-Z is the "undo" command, even on OS X where you would expect to use Command-Z.<a name="index101"></a> A special command, "Copy to Lisp," or Control-U (Command-U on OS x)copies the selection and enters it into the input window as if it had been typed there.
 <p>
 <a name = "20"><h3>The Button Bar</h3></a>
-<a name="index102">
+<a name="index102"></a>
 There are a number of buttons with frequently-used operations. These are:
 <ul>
 <li>
-Info - <a name="index103">Print information about Nyquist memory
+Info &ndash; <a name="index103"></a>Print information about Nyquist memory
 utilization, including
 the number of free cons cells, the number of garbage collections,
 the total number of cons cells, the total amount of sample buffer memory,
 and the amount of memory in free sample buffers.
-<li>Break - <a name="index104">Send a break character to XLISP. This
+<li>Break &ndash; <a name="index104"></a>Send a break character to XLISP. This
 can be used to enter the debugger (the break loop) while a program is 
 running. Resume by typing <code>(co)</code>.
-<li>SAL/Lisp - <a name="index105"><a name="index106">Switch modes.
+<li>SAL/Lisp &ndash; <a name="index105"></a><a name="index106"></a>Switch modes.
 The button names the mode (SAL or Lisp) you will switch to, not the 
 current mode. For example, if you are in Lisp mode and want to type
 a SAL command, click the SAL button first.
-<li>Top - <a name="index107">Enters <code>(top)</code> into Nyquist.
+<li>Top &ndash; <a name="index107"></a>Enters <code>(top)</code> into Nyquist.
 If the XLISP prompt is <code>1&gt;</code> or 
 some other integer followed by "<code>&gt;</code>", clicking the Top button
 will exit the debug loop and return to the top-level prompt.
-<li>Replay - <a name="index108">Enters <code>(r)</code> into Nyquist.
+<li>Replay &ndash; <a name="index108"></a>Enters <code>(r)</code> into Nyquist.
 This command replays the last computed sound.
-<li>F2-F12 - <a name="index109">Enters <code>(f2)</code> etc. into Nyquist.
+<li>F2-F12 &ndash; <a name="index109"></a>Enters <code>(f2)</code> etc. into Nyquist.
 These commands are not built-in, and allow users to define their own
 custom actions.
-<li>Browse - <a name="index110">Equivalent to the Window:Browse
+<li>Browse &ndash; <a name="index110"></a>Equivalent to the Window:Browse
 menu item. (See Section <a href = "#22">"Browser"</a>.)
-<li>EQ - <a name="index111">Equivalent to the Window:EQ menu item.
+<li>EQ &ndash; <a name="index111"></a>Equivalent to the Window:EQ menu item.
 (See Section <a href = "#24">"Equalizer Editor"</a>.)
-<li>EnvEdit - <a name="index112">Equivalent to the Window:Envelope Edit 
+<li>EnvEdit &ndash; <a name="index112"></a>Equivalent to the Window:Envelope Edit 
 menu item. (See Section <a href = "#23">"Envelope Editor"</a>.)
-<li>NewFile - <a name="index113">Equivalent to the File:New menu
+<li>NewFile &ndash; <a name="index113"></a>Equivalent to the File:New menu
 item. Opens a new file editing window for creating and
 loading a Lisp or SAL program file.
-<li>OpenFile - <a name="index114">Equivalent to the File:Open menu
+<li>OpenFile &ndash; <a name="index114"></a>Equivalent to the File:Open menu
 item. Opens an existing Lisp or SAL program file for editing and loading.
-<li>SaveFile - <a name="index115">Equivalent to the File:Save menu
+<li>SaveFile &ndash; <a name="index115"></a>Equivalent to the File:Save menu
 item (found on the editing window's menu bar). Saves the contents
 of an editing window to its associated file.
-<li>Load - <a name="index116">Equivalent to the File:Load menu
+<li>Load &ndash; <a name="index116"></a>Equivalent to the File:Load menu
 item (found on the editing window's menu bar). Performs a Save operation,
 then sends a command to Nyquist that loads the file as a program.
-<li>Mark - <a name="index117">Sends a Control-A to Nyquist. While
+<li>Mark &ndash; <a name="index117"></a>Sends a Control-A to Nyquist. While
 playing a sound, this displays and records the approximate time in the
 audio stream. (See Section <a href = "part8.html#96">"Sound File Input and Output"</a> for more detail.)
-<li></ul><a name = "21"><h3>Command Completion</h3></a>
+</ul>
+<p>
+<a name = "21"><h3>Command Completion</h3></a>
 To help with programming, NyquistIDE maintains a command-completion window.
 As you type the first letters of function names, NyquistIDE lists matching
 functions and their parameters in the Completion List window. If you click
@@ -88,7 +92,7 @@ this should be fixed in the future.
 <p>
 <a name = "22"><h3>Browser</h3></a>
 
-<a name="index118"><a name="index119">
+<a name="index118"></a><a name="index119"></a>
 If you click on the Browse button or use the Window:Browse menu command, 
 NyquistIDE will display a browser window that is pre-loaded with a number of
  Nyquist commands to create sounds. You can adjust parameters, audition
@@ -108,9 +112,9 @@ your choice.
 <p>
 <a name = "23"><h3>Envelope Editor</h3></a>
 
-<a name="index120">
-<a name="index121">
-<a name="index122">
+<a name="index120"></a>
+<a name="index121"></a>
+<a name="index122"></a>
 The envelope editor allows you graphically to design and edit piece-wise
 linear and exponential envelopes. The editor maintains a list of envelopes
 and you select the one to edit or delete using the drop down list in the 
@@ -128,9 +132,9 @@ can create the envelope within a Nyquist SAL program by writing
 the expression <code>fast-attack()</code>.
 <p>
 These edited envelopes are saved to a file named <code>workspace.lsp</code> 
- <a name="index123"> in
+ <a name="index123"></a> in
 the current directory. The workspace is Nyquist's mechanism for saving
-data of all kinds (see Section <a href = "part14.html#161">"Workspaces"</a>). The normal way to
+data of all kinds (see Section <a href = "part15.html#173">"Workspaces"</a>). The normal way to
 work with workspaces is to (1) load the workspace, i.e.
  <code>load "workspace"</code>, as soon as you start Nyquist; (2) invoke
 the envelope editor to change values in the workspace; and (3) save the
@@ -162,7 +166,7 @@ process. Normally, there is no need to use this because the editor
 automatically loads data when you open it.
 <p>
 <a name = "24"><h3>Equalizer Editor</h3></a>
-<a name="index124"><a name="index125">
+<a name="index124"></a><a name="index125"></a>
 The Equalizer Editor provides a graphical EQ interface for creating and
 adjusting equalizers. Unlike the envelope editor, where you can type
 any envelope name, equalizers are named <code>eq-0</code>, <code>eq-1</code>, etc.,
@@ -170,7 +174,7 @@ and you select the equalizer to edit using a pull-down menu. The <code>Set</code
 button should be use to record changes. 
 <p>
 <a name = "25"><h3>UPIC Editor</h3></a>
-<a name="index126"><a name="index127"><a name="index128">The 
+<a name="index126"></a><a name="index127"></a><a name="index128"></a>The 
 UPIC Editor is inspired by the UPIC system by Iannis Xenakis at the Centre
 d'Edudes de Mathematique et Automatique Musicales (CEMaMu). The UPIC Editor
 is accessed by the "Upic Edit" menu item in the "Window" menu of the 
@@ -239,9 +243,9 @@ buttons.
 To convert UPIC data into sound, first load <code>upic.sal</code> and load
 a file generated by the UPIC Editor. Now, suppose the variable name
 used is <code>upicdata</code>. You can play the data by writing
-<pre>
+<p><pre>
 play upic(upicdata)
-</pre>
+</pre></p>
 
 If you created your own names for waveforms or envelopes, you must be
 sure that these exist before calling the <code>upic</code> function. Each 
@@ -250,17 +254,17 @@ wave table. (See Section <a href = "part2.html#11">"Waveforms"</a> for informati
 to create a wave table.) Also, each envelope must name a function with
 no parameters that will return an amplitude envelope. The following is
 the built-in definition for <code>upic-env</code>:
-<pre>
+<p><pre>
 define function upic-env()
   return env(0.01, 0.01, 0.01, 1, 1, 1)
-</pre>
+</pre></p>
 
 To make a custom envelope function named <code>upic-smooth</code> with a 0.2
  second attack and a 0.3 second decay, you could write:
-<pre>
+<p><pre>
 define function upic-smooth()
   return env(0.2, 0.01, 0.3, 1, 1, 1)
-</pre>
+</pre></p>
 
 <p>
 <hr>

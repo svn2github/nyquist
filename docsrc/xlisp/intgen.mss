@@ -155,7 +155,6 @@ Parameter types may be any of the following:
 @code(FILE)@\C routine expects @code(FILE *).
 
 @code(SOUND)@\C routine expects a @code(SoundPtr).
-
 @end(description)
 Any of these may be followed by ``@code(*)'': @code(FIXNUM*), @code(FLONUM*), @code(STRING*), @code(ANY*), @code(FILE*),
 indicating C routine expects @code(int *), @code(double *), @code(char **),  @code(LVAL *), or @code(FILE **) .

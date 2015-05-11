@@ -234,14 +234,14 @@
 (defun rms (s &optional (rate 100.0) window-size)
   (let (rslt step-size)
     (cond ((not (eq (type-of s) 'SOUND))
-	   (break "in RMS, first parameter must be a monophonic SOUND")))
+           (break "in RMS, first parameter must be a monophonic SOUND")))
     (setf step-size (round (/ (snd-srate s) rate)))
     (cond ((null window-size)
-               (setf window-size step-size)))
+           (setf window-size step-size)))
     (setf s (prod s s))
     (setf result (snd-avg s window-size step-size OP-AVERAGE))
-        ;; compute square root of average
-        (s-exp (scale 0.5 (s-log result)))))
+    ;; compute square root of average
+    (s-exp (scale 0.5 (s-log result)))))
 
 
 ;; RESON - bandpass filter

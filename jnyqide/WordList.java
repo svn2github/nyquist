@@ -48,12 +48,15 @@ public class WordList {
         //System.out.println("initializing WordList.java");
         try {
             BufferedReader inf;
+            String nw = MainFrame.currentDir + "NyquistWords.txt";
             try {
-                inf = new BufferedReader(new FileReader("NyquistWords.txt"));
-                System.out.println("\n\n***********************Opened NyquistWords.txt*********\n\n");
+                inf = new BufferedReader(new FileReader(nw));
+                System.out.println("\n\n**********Opened " + nw +
+                                   "*********\n\n");
             } catch (IOException e) {
-                System.out.println("could not find NyquistWords.txt, trying jnyqide/NyquistWords.txt");
-                inf = new BufferedReader(new FileReader("jnyqide/NyquistWords.txt"));
+                String nw2 = MainFrame.currentDir + "jnyqide/NyquistWords.txt";
+                System.out.println("could not find " + nw + ", trying " + nw2);
+                inf = new BufferedReader(new FileReader(nw2));
             }
             String word, link;
             while ((word = inf.readLine()) != null) {                

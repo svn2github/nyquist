@@ -21,6 +21,13 @@
    define pragma sets a flag that the NEXT index term is a definition.
    The s2h.lsp processor uses this to map terms defined within codef
    (which go into the completion list) to URLs for the help system.}
+@comment{pragma(forceparagraph) is used to force a new paragraph in a description,
+   i.e. when you want to define a term (or a function) and the definition
+   is indented, and you want multiple indented paragraphs in the definition,
+   insert pragma(forceparagraph) to separate the paragraphs. The Scribe manual never
+   actually got this right (or I did not use the right Scribe commands), so this
+   is an extension that works for HTML and Latex output. There may be no way
+   to get multiple paragraphs in a definition in Scribe.}
 @define(smallcode, FaceCode T, size 8, spacing 0.8) @comment(was 10)
 @define(rbdisplay = display, group)
 @define(fndefs = description, leftmargin 0.5in, indent -0.5in)
@@ -29,6 +36,7 @@
 @define(fgroup = text, indent -0.5in, spread 0)
 @define(altdef = text, leftmargin +0.0in, indent -0.5in)
 @textform(html = [])
+@textform(latex = [])
 @textform(htmltitle = [])
 @textform(pragma = [])
 @use(bibliography = "../bib/music.bib")
@@ -82,6 +90,7 @@ Pittsburgh, PA 15213, U.S.A.</blockquote>)
 @pageheading(odd, left "@c[@title(chapter)]", right "Page @Value(page)")
 @style(pagenumbers="@i")
 @set(page=3)
+@latex(\graphicspath{ {../nyquist/} })
 @Unnumbered(Preface)
 This manual is a guide for users of Nyquist, a language for composition and
 sound synthesis.  Nyquist grew out of a series of research projects, notably
@@ -91,9 +100,8 @@ semantics.
 
 Please help by noting any errors@Index(errors), omissions@Index(omissions),
 or suggestions@Index(suggestions) you may have.  You can send your
-suggestions to Dannenberg@@CS.CMU.EDU (internet) via computer mail, or by
-campus mail to Roger B. Dannenberg, School of Computer Science, or by
-ordinary mail to Roger B. Dannenberg, School of Computer Science, Carnegie
+suggestions to Dannenberg@@CS.CMU.EDU via email, or contact me by
+ordinary mail: Roger B. Dannenberg, School of Computer Science, Carnegie
 Mellon University, 5000 Forbes Ave., Pittsburgh, PA 15213-3890, USA.  
 
 Nyquist is a successor to Fugue, a language originally implemented by Chris
@@ -175,12 +183,13 @@ any of these machines.
 To use Nyquist, you should have a basic knowledge of Lisp.  An excellent text
 by Touretzky is recommended @cite(Touretzky).  Appendix @ref(xlisp-app) is
 the reference manual for XLISP, of which Nyquist is a superset. Starting with
-Version 3, Nyquist supports a variant of SAL, which is also available in 
-Common Music. Since there are some differences, one should generally call this
+Version 3, Nyquist supports a variant of SAL. SAL is a language distinct from 
+Lisp. It was introduced in Rick Taube's Common Music system. Since there are some
+differences between Nyquist and Common Music, one should generally call this
 implementation ``Nyquist SAL;'' however, in this manual, I will just call it
 ``SAL.'' SAL offers most of the capabilities of Lisp, but it uses an Algol-like
 syntax that may be more familiar to programmers with experience in Java, C,
-Basic, etc.
+Basic, etc. An introduction to SAL is in Mary Simoni and Roger B. Dannenberg, @i(Algorithmic Composition: A Guide to Composing Music with Nyquist) @cite(Simoni).
 
 @label(install-sec)
 @section(Installation)
@@ -281,14 +290,26 @@ cd ..
  NyquistIDE defines the environment passed to Nyquist. If you
 set @code(XLISPPATH)@index(XLISPPATH)@index(search path) as shown above, it 
 will be passed along to Nyquist under NyquistIDE. If not,
-a default XLISPPATH will have the @code(lib) and @code(runtime) directories only.
+a default XLISPPATH will be created with the @code(runtime),  @code(lib), 
+and @code(demos) directories that are located within the application 
+bundle (@code(NyquistIDE.app)).
 This does not apply to Windows because even though the environment is there, 
 the Windows version of Nyquist reads the @code(XLISPPATH) from the Registry.
 
 You can also specify the search path by creating the 
-file @code(nyquist/xlisppath), which should have colon-separated paths
-on a single line of text. This file will override the environment
-variable @code(XLISPPATH).
+file @code(xlisppath), which should have semicolon-separated paths
+on a single line of text. (Paths on a path list may also be separated by
+colons on OS X and Linux or by commas on Windows.) This @code(xlisppath) file 
+will override the environment variable @code(XLISPPATH). 
+
+The directory location of @code(xlisppath) should be the current directory 
+when Nyquist starts. You can use @code[(setdir ".")] to get the current
+directory when you start @code(NyquistIDE.app), probably
+@code(NyquistIDE.app/Contents/Resources/Java). Be sure to put full paths
+in @code(xlisppath). For example, if the path list contains relative paths
+such as @code(runtime;lib) and
+you change the initial directory (which @code(NyquistIDE) does when you open
+a file), the search directories will move.
 
 It is good to have @code(USER) in the environment with your user ID. This string
 is used to construct some file names. NyquistIDE will look for it in the environment.
@@ -526,7 +547,7 @@ Our first example makes and plays a sound:@index(osc)@index(play)
 @begin(example)
 @i(;; Making a sound.)
 play osc(60) ; generate a loud sine wave
-@comment{(play (osc 60))  @i(; generate a loud sine wave)} @end(example)
+@comment{(play (osc 60))  @i(; generate a loud sine wave)}@end(example)
 This example is about the simplest way to create a sound with Nyquist.  The
 @code(osc) function generates a sound using a table-lookup oscillator.
 There are a number of optional parameters, but the default is to compute a
@@ -539,7 +560,10 @@ exec r()
 @end(example)
 This @code[(r)] function is a general way to ``replay'' the last thing written by @code(play).
 
-Note: when Nyquist plays a sound, it scales the signal by 2@+(15)-1 and (by default) converts to a 16-bit integer format. A signal like  @code[(osc 60)], which ranges from +1 to -1, will play as a full-scale 16-bit audio signal. 
+Note: when Nyquist plays a sound, it scales the signal by 
+@pragma(startscribe)
+2@+(15)-1
+@pragma(endscribe)@latex[$2^{15} - 1$]@html[2^15-1] and (by default) converts to a 16-bit integer format. A signal like  @code[(osc 60)], which ranges from +1 to -1, will play as a full-scale 16-bit audio signal. 
 
 @subsection(Waveforms)
 @label(waveform-sec)
@@ -591,7 +615,8 @@ The list of sound, pitch, and @code(T) is formed in the last line of
 of one second, the fundamental is 1 Hz, and the @code(hz-to-step) function
 converts to pitch (in units of steps) as required.
 
-@begin(example)@label(build-harmonic-example)
+@label(build-harmonic-example)
+@begin(example)
 define function mkwave()
   begin
     set *table* = 0.5 * build-harmonic(1.0, 2048) +
@@ -630,8 +655,8 @@ define function my-note(pitch, dur)
 
 play seq(my-note(c4, i), my-note(d4, i), my-note(f4, i), 
          my-note(g4, i), my-note(d4, q))
-
 @end(example)
+
 Here, @code(my-note) is defined to take pitch and duration as parameters;
 it calls @code(osc) to do the work of generating a waveform, using
 @code(*table*) as a wave table.
@@ -659,14 +684,15 @@ envelope is generated using the @code(env@index(env)) function, which is
 illustrated in Figure @ref(env-fig).
 
 @begin(figure)
-@center(@graphic((height = 2 in, width = 3.75 in, magnify = 1,
-		postscript = "envfig.ps"))
+@center(@graphic(height = 2 in, width = 3.75 in, magnify = 1,
+		postscript = "envfig.ps")
+@latex(\includegraphics[scale=0.2]{envfig}))
 @html(<img src="fig1.gif"><br><br>)
 @fillcaption(An envelope generated by the @code(env) function.)
 @tag(env-fig)
 @end(figure)
 
-@begin(Example)
+@pragma(debugon)@begin(example)
 @i[; env-note produces an enveloped note.  The duration
 ;   defaults to 1.0, but stretch can be used to change
 ;   the duration.
@@ -679,7 +705,8 @@ define function env-note(p)
 @i[; try it out:
 ;]
 play env-note(c4)
-@end(example)
+@end(example)@pragma(debugoff)
+
 While this example shows a smooth envelope multiplied by an audio signal,
 you can also multiply audio signals to achieve
 what is often called @i(ring modulation)@index(ring modulation). See
@@ -716,10 +743,11 @@ and an implicit final value of 0.  There should always be an odd number of
 parameters, since the final value (but not the final time) is implicit. 
 Here are some examples:
 @begin(Example)
-@i[; symetric rise to 10 (at time 1) and fall back to 0 (at time 2):
+@i[; symmetric rise to 10 (at time 1) and fall back to 0 (at time 2):
 ;]
 pwl(1, 10, 2)
-
+@end(Example)
+@begin(Example)
 @i[; a square pulse of height 10 and duration 5. 
 ; Note that the first pair (0, 10) overrides the default initial
 ; point of (0, 0).  Also, there are two points specified at time 5:
@@ -729,20 +757,23 @@ pwl(1, 10, 2)
 ; sr is the sample rate.
 ;]
 pwl(0, 10, 5, 10, 5)
-
+@end(Example)
+@begin(Example)
 @i[; a constant function with the value zero over the time interval
 ; 0 to 3.5.  This is a very degenerate form of pwl.  Recall that there
 ; is an implicit initial point at (0, 0) and a final implicit value of
 ; 0, so this is really specifying two breakpoints: (0, 0) and (3.5, 0):
 ;]
 pwl(3.5)
-
+@end(Example)
+@begin(Example)
 @i[; a linear ramp from 0 to 10 and duration 1.
 ; Note the ramp returns to zero at time 1.  As with the square pulse
 ; above, the breakpoint (1, 10) is pushed back to the previous sample.
 ;]
 pwl(1, 10, 1)
-
+@end(Example)
+@begin(Example)
 @i[; If you really want a linear ramp to reach its final value at the 
 ; specified time, you need to make a signal that is one sample longer.
 ; The RAMP function does this:
@@ -824,7 +855,13 @@ different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
 
 @section(More Examples)
 More examples can be found in the directory @code(demos), part of the standard
-Nyquist release. The file @code(demos/examples_home.htm) is an index to all the demo descriptions. In this directory, you will find the following and more:
+Nyquist release. In the Apple OS X version of Nyquist, the
+@code(demos) and @code(doc) directories are inside the NyquistIDE
+application bundle. To make it easier to access these hidden files,
+the NyquistIDE installs links to these directories the first time you
+run it. The links will be in the same directory as the NyquistIDE itself.
+
+The file @code(demos/examples_home.htm) is an index to all the demo descriptions. In this directory, you will find the following and more:
 @begin(itemize)
 How to make arpeggios (@code(demos/arpeggiator.htm) and @code(arp.sal))@index(arpeggiator)
 
@@ -939,7 +976,6 @@ then sends a command to Nyquist that loads the file as a program.
 Mark @itemsep @index(mark button)Sends a Control-A to Nyquist. While
 playing a sound, this displays and records the approximate time in the
 audio stream. (See Section @ref(play-sec) for more detail.)
-
 @end(itemize)
 
 @section(Command Completion)
@@ -1252,7 +1288,6 @@ rate of musical sounds.  This environment element provides the
 default sample rate for musical sounds.  You can 
 read @code(*sound-srate*) directly, but use @code(sound-srate) 
 or @code(sound-srate-abs) to modify it.
-
 @end(description)
 
 @section(Sequential Behavior)@index(sequential behavior)
@@ -1595,10 +1630,10 @@ define function tone-seq()
                 osc-note(c4) ~ 0.25)
 @end(example)
 Now define a linearly increasing ramp to serve as a transposition function:
-@begin(code)
+@begin(example)
 define function pitch-rise()
   return sustain-abs(1.0, 16 * ramp() ~ 4)
-@end(code)
+@end(example)
 This ramp has a duration of 4 seconds, and over that interval it rises from
 0 to 16 (corresponding to the 16 semitones we want to transpose). The ramp
 is inside a @code(sustain-abs) transformation, which prevents a @code(sustain)
@@ -1607,19 +1642,19 @@ behavioral abstraction is that built-in behaviors sometimes do the wrong
 thing implicitly, requiring some explicit correction to turn off the 
 unwanted transformation.) Now,
 @code(pitch-rise) is used to transpose @code(tone-seq):
-@begin(code)
+@begin(example)
 define function chromatic-scale()
   return transpose(pitch-rise(), tone-seq())
-@end(code)
+@end(example)
 
 Similar transformations can be constructed to change the sustain or ``duty
 factor'' of notes and their loudness.  The following expression plays the
 @code(chromatic-scale) behavior with increasing note durations.  The
 rhythm is unchanged, but the note length changes from staccato to legato:
-@begin(code)
+@begin(example)
 play sustain((0.2 + ramp()) ~ 4,
              chromatic-scale())
-@end(code)
+@end(example)
 The resulting sustain function will ramp from 0.2 to 1.2.  A sustain of 1.2
 denotes a 20 percent overlap between notes.  The @code(sum) has a stretch
 factor of 4, so it will extend over the 4 second duration of
@@ -1634,10 +1669,10 @@ ramp from 0 to 16 becomes a 0.8s ramp. To fix this problem, we need to
 shield @code(pitch-rise) from the effect of @code(sustain) using the
 @code(sustain-abs) transformation. Here is a corrected version of 
 @code(chromatic-scale):
-@begin(code)
+@begin(example)
 define function chromatic-scale()
   return transpose(sustain-abs(1, pitch-rise()), tone-seq())
-@end(code)
+@end(example)
 
 What do these transformations mean?  How did the system know to produce a
 pitch rise rather than a continuous glissando?  This all relates to the idea
@@ -1694,7 +1729,8 @@ define function warp4()
 
 @begin(figure)
 @center(@graphic((height = 3.25 in, width = 3.5 in, magnify = 0.5,
-		postscript = "warpfig.ps"))
+		postscript = "warpfig.ps")
+@latex(\includegraphics[scale=0.35]{warpfig}))
 @html(<img src="fig2.gif"><br><br>)
 @fillcaption{The result of @code[(warp4)], intended to map 4 seconds of
 score time into 4 seconds of real time.  The function extends beyond 4
@@ -1716,7 +1752,8 @@ sustain will be adjusted to fit the available time.
 
 @begin(figure)
 @center(@graphic((height = 1.75 in, width = 6.75 in, magnify = 1.0,
-		postscript = "warpnotesfig.ps"))
+		postscript = "warpnotesfig.ps")
+@latex(\includegraphics[scale=0.25]{warpnotesfig}))
 @html(<img src="fig3.gif"><br><br>)
 @fillcaption[When @code{(warp4)} is applied to @code{(tone-seq-2)}, the note onsets and durations are warped.]
 @tag(warp-notes-fig)
@@ -1788,7 +1825,8 @@ enviroment.  Figure @ref(warp-onset-fig) illustrates the result graphically.
 
 @begin(figure)
 @center(@graphic((height = 1.75 in, width = 6.75 in, magnify = 1.0,
-	postscript = "warponsetfig.ps")) 
+	postscript = "warponsetfig.ps")
+@latex(\includegraphics[scale=0.25]{warponsetfig}))
 @html(<img src="fig4.gif"><br><br>)
 @fillcaption[When @code[(warp4)] is applied
 to @code[(tone-seq-3)], the note onsets are warped, but not the duration,
@@ -1872,7 +1910,8 @@ on ordinary sound cards.
 ;]
 if not(boundp(quote(a-snd))) then
   set a-snd = s-read("demo-snd.aiff")
-
+@end(Example)
+@begin(Example)
 @i[; the SOUND operator shifts, stretches, clips and scales 
 ; a sound according to the current environment
 ;]
@@ -1886,7 +1925,8 @@ define function down()
                          sound(a-snd) ~ 0.4,
                          sound(a-snd) ~ 0.6))
 play down()
-
+@end(Example)
+@begin(Example)
 @i[; that was so much fun, let's go back up:
 ;]
 define function up()
@@ -1895,7 +1935,8 @@ define function up()
                          sound(a-snd) ~ 0.4,
                          sound(a-snd) ~ 0.3,
                          sound(a-snd) ~ 0.2))
-
+@end(Example)
+@begin(Example)
 @i[; and write a sequence
 ;]
 play seq(down(), up(), down())
@@ -1943,31 +1984,34 @@ it is often convenient to save a sound to a particular file for later use:
 ;    s-save to not prepend *default-sf-dir*
 ;]
 exec s-save(a-snd, 1000000000, "./a-snd-file.snd")
-
+@end(Example)
+@begin(Example)
 @i[; play a file
 ; play command normally expects an expression for a sound
 ; but if you pass it a string, it will open and play a
 ; sound file]
 play "./a-snd-file.snd"
-
+@end(Example)
+@begin(Example)
 @i[; delete the file (do this with care!)
 ; only works under Unix (not Windows)]
 exec system("rm ./a-snd-file.snd")
-
+@end(Example)
+@begin(Example)
 @i[; now let's do it using a variable as the file name
 ;]
 set my-sound-file = "./a-snd-file.snd"
-
 exec s-save(a-snd, 1000000000, my-sound-file)
-
+@end(Example)
+@begin(Example)
 @i[; play-file is a function to open and play a sound file]
 exec play-file(my-sound-file)
-
 exec system(strcat("rm ", my-sound-file))
 @end(example)
 This example shows how @code(s-save) can be used to save a sound to a file.
 
-This example also shows how the @code(system) function can be used to invoke
+The last line of this example shows how the @code(system) function can
+be used to invoke 
 Unix shell commands, such as a command to play a file or remove it.
 Finally, notice that @code(strcat) can be used to concatenate a command name
 to a file name to create a complete command that is then passed to
@@ -2030,7 +2074,8 @@ set mymax = snd-max(mysound, NY:ALL)
 display "Computed max", mymax
 @i[; now write out and play the sound from memory with a scale factor:]
 play mysound * (0.9 / mymax)
-
+@end(Example)
+@begin(Example)
 @i[; if you don't have space in memory, here's how to do it:]
 define function myscore()
   return sim(osc(c4), osc(c5))
@@ -2098,7 +2143,7 @@ resulting function is shifted and stretched linearly according to
 ; sweeps from 0 to (step-to-hz c4) because, when added to the c4
 ; fundamental, this will double the frequency and cause an octave sweep.
 ;]
-play fmosc(c4, pwl(0.5, step-to-hz(c4),  0.501))
+play fmosc(c4, pwl(0.5, step-to-hz(c4), 0.501))
 @end(Example)
 
 The same idea can be applied to a non-sinusoidal carrier.  Here, we assume that @code(*fm-voice*) is predefined (the next section shows how to define it):
@@ -2196,7 +2241,7 @@ zero-crossings, extract a period, build a waveform, and generate a tone from it.
 
 @begin(comment)
 The @code(maketable) command is also useful and is documented on page
-@ref(maketable).  If @code(sample) is the source sound, then the following
+@pageref(maketable).  If @code(sample) is the source sound, then the following
 will extract 0.01 seconds (starting at time 0.2s) of audio and convert it
 into a waveform named @code(mytable):
 @begin(example)
@@ -2341,7 +2386,7 @@ Thus the goal is to design an XLISP object that, in response to a
 @code(:next) message will return a proper sequence of samples.  When the
 sound reaches the termination time, simply return @code(NIL).
 
-The XLISP manual (see Appendix @ref(XLISP-app) describes the object system,
+The XLISP manual (see Appendix @ref(XLISP-app)) describes the object system,
 but in a very terse style, so this example will include some explanation of
 how the object system is used. First, we need to define a class for the
 objects that will compute sound products. Every class is a subclass of class
@@ -2512,47 +2557,52 @@ list)@index(empty list) are equal.
 
 @paragraph(Operators)
 Expressions can be formed with unary and binary operators using infix notation. The operators are:
-@begin(itemize)
-@index(+)@code(+) - addition, including sounds
+@begin(description)
+@index(+)@code(+)@\addition, including sounds
 
-@index(-)@code(-) - subtraction, including sounds
+@index(-)@code(-)@\subtraction, including sounds
 
-@index(*)@code(*) - multiplication, including sounds
+@index(*)@code(*)@\multiplication, including sounds
 
-@index(/)@code(/) - division (due to divide-by-zero problems, does not operate on sounds)
+@index(/)@code(/)@\division (due to divide-by-zero problems, does not operate on sounds)
 
-@index(%)@code(%) - modulus (remainder after division)
+@index(%)@code(%)@\modulus (remainder after division)
 
-@index(^)@code(^) - exponentiation
+@index(^)@code(^)@\exponentiation
 
-@index(=)@code(=) - equal (using Lisp @code(eql))
+@index(=)@code(=)@\equal (using Lisp @code(equal) for non-lists, and
+comparing lists element-by-element recursively)@foot(In the Common Music implementation of SAL, @code(=) compiles to the Lisp @code(=) function, so this is an incompatible difference.)
 
-@index(!=)@code(!=) - not equal
+@index(!=)@code(!=)@\not equal
 
-@index(>)@code(>) - greater than
+@index(>)@code(>)@\greater than
 
-@index(<)@code(<) - less than
+@index(<)@code(<)@\less than
 
-@index(>=)@code(>=) - greater than or equal
+@index(>=)@code(>=)@\greater than or equal
 
-@index(<=)@code(<=) - less than or equal
+@index(<=)@code(<=)@\less than or equal
 
-@index(~=)@code(~=) - general equality (using Lisp @code(equal))
+@index(~=)@code(~=)@\approximately equal. Numbers are approximately
+equal if they are within @code(*~=tolerance*) of each
+other. @code(*~=tolerance*) is initially 0.000001. Non-numbers are
+compared with the XLISP @code(equal) function, and lists are compared
+element-by-element (recursively) using @code(~=).@foot(In the Common Music implementation of SAL, @code(~=) compiles to the Lisp @code(equal) function, so this is an incompatible difference.)
 
-@index(&)@code(&) - logical and
+@index(&)@code(&)@\logical and
 
-@index(|)@code(|) - logical or
+@index(|)@code(|)@\logical or
 
-@index(!)@code(!) - logical not (unary)
+@index(!)@code(!)@\logical not (unary)
 
-@index(@@)@index(time shift, sal)@index(at, sal)@code(@@) - time shift
+@index(@@)@index(time shift, sal)@index(at, sal)@code(@@)@\time shift
 
-@index(@@@@)@index(absolute time shift, sal)@index(at-abs, sal)@code(@@@@) - time shift to absolute time
+@index(@@@@)@index(absolute time shift, sal)@index(at-abs, sal)@code(@@@@)@\time shift to absolute time
 
-@index(~)@index(stretch, sal)@code(~) - time stretch
+@index(~)@index(stretch, sal)@code(~)@\time stretch
 
-@index(~~)@index(absolute stretch, sal)@code(~~) - time stretch to absolute stretch factor
-@end(itemize)
+@index(~~)@index(absolute stretch, sal)@code(~~)@\time stretch to absolute stretch factor
+@end(description)
 Again, remember that operators @i(must) be delimited from their operands using
 spaces or parentheses. Operator precedence is based on the following levels of 
 precedence:
@@ -2600,7 +2650,7 @@ its value is returned. If @i(false), the third expression is evaluated
 and returned (or @i(false) is returned if there is no third expression):
 @begin(example)
 #?(random(2) = 0, unison, major-third)
-#?(pitch >= c4, pitch - c4) ; returns false if pitch < c4
+#?(pitch >= c4, pitch - c4) @i(; returns false if pitch < c4)
 @end(example)
 
 @subsection(SAL Statements)
@@ -2893,7 +2943,8 @@ loop
   repeat 10
   print random(100)
 end
-
+@end(example)
+@begin(example)
 @i(; print even numbers from 10 to 20
 ; note that 20 is printed. On the next iteration,
 ;   i = 22, so i >= 22, so the loop exits.)
@@ -2901,7 +2952,8 @@ loop
   for i from 10 to 22 by 2
   print i
 end
-
+@end(example)
+@begin(example)
 @i(; collect even numbers in a list)
 loop
   with lis
@@ -2912,7 +2964,8 @@ loop
   finally set result = reverse(lis)
 end
 @i(; now, the variable result has a list of evens)
-
+@end(example)
+@begin(example)
 @i(; find the first even number in a list)
 result = #f @i(; #f means "false")
 loop
@@ -3048,10 +3101,11 @@ you can write the Lisp-style keyword with the leading colon, e.g.
 In Nyquist SAL, the hash character (#), can be used as a prefix to a 
 Lisp function name. For example, the following command is not legal
 because @code(print) is a SAL command name, not a legal function name:
-@code[set v = append(print(a), print(b))]. (Here the intent is to print
+@example[set v = append(print(a), print(b))]. 
+(Here the intent is to print
 arguments to append). However, you can use the hash character to access
-the Lisp @code(print) function: @code[set v = append(#print(a), #print(b))].
-
+the Lisp @code(print) function: 
+@example[set v = append(#print(a), #print(b))]
 @subsection(Playing Tricks On the SAL Compiler)
 In many cases, the close coupling between SAL and XLISP gives SAL
 unexpected expressive power. A good example is @code(seqrep). This
@@ -3113,6 +3167,8 @@ pitch numbers are allowed:
 @math[frequency = 440 @mult 2@+{(pitch - 69)/12}].
 @pragma(endscribe)
 @html[@center{frequency = 440 * 2^((pitch - 69)/12)}]
+@latex[\hspace*{3em} $frequency = 440 \times 2^{(pitch - 69)/12}$
+]
 There are many
 predefined pitch names.  By default these are tuned in equal temperament,
 with A4 = 440Hz, but these may be changed.  (See Section @ref(constants-sec)).
@@ -3189,19 +3245,36 @@ t = (n / srate) + t0
 @end(math)
 @pragma(endscribe)
 @html[<blockquote>t = (n / srate) + t0</blockquote>]
-Thus, the lisp code to access the n@+(th) sample of a sound would look like:
-@begin(code)
+@latex[\hspace*{3em}$t = (n / srate) + t0$
+]
+Thus, the Lisp code to access the n@+(th) sample of a sound would look like:
+@begin(example)
 (sref sound (global-to-local (+ (/ n (snd-srate sound)) (snd-t0 sound))))
-@end(code)
-Here is why @code(sref) interprets its time argument as a local time:
+@end(example)
+Or in SAL, it would look like:
+@begin(example)
+sref(sound, global-to-local(n / snd-srate(sound) + snd-t0(sound)))
+@end(example)
+Here is why @code(sref) interprets its time argument 
+as a local time (shown first in LISP and then in SAL syntax):
 @begin(example)
 > (sref (ramp 1) 0.5) @i(; evaluate a ramp at time 0.5)
+0.5
+SAL> print sref(ramp(1), 0.5) @i(; evaluate a ramp at time 0.5)
 0.5
 > (at 2.0 (sref (ramp 1) 0.5)) @i(; ramp is shifted to start at 2.0)
 		@i(; the time, 0.5, is shifted to 2.5)
 0.5
+SAL> sref(ramp(1), 0.5) @@ 2.0 @i(; ramp is shifted to start at 2.0)
+		@i(; the time, 0.5, is shifted to 2.5)
+0.5
 @end(example)
-If you were to use @code(snd-sref), which treats time as global, instead of @code(sref), which treats time as local, then the first example above would return the same answer (0.5), but the second example would return 0.  Why? Because the @code[(ramp 1)] behavior would be shifted to start at time 2.0, but the resulting sound would be evaluated at global time 0.5.  By definition, sounds have a value of zero before their start time.
+If you were to use @code(snd-sref), which treats time as global, instead 
+of @code(sref), which treats time as local, then the first example above
+would return the same answer (0.5), but the second example would return
+0.  Why? Because the @code[ramp] behavior would be shifted to start at
+time 2.0, but the resulting sound would be evaluated at global time 
+0.5.  By definition, sounds have a value of zero before their start time.
 
 @codef[sref-inverse(@pragma(defn)@index(sref-inverse)@i(sound), @i(value))] @c{[sal]}@*
 @altdef{@code[(sref-inverse @i(sound) @i(value))] @c{[lisp]}}@\Search @i(sound) for the first point at which it achieves @i(value) and return the corresponding (linearly interpolated) time.  If no inverse exists, an error is raised.  This function is used by Nyquist in the implementation of time warping.
@@ -3299,7 +3372,7 @@ the absolute value of the samples in @i(sound).  Calling this function will
 cause samples to be computed and saved in memory.  (This function should
 have a @i(maxlen) parameter to allow self-defense against sounds that would
 exhaust available memory.)  Otherwise, this function is safe for ordinary use.
-This function will probably be removed in a future version.  See @code(peak), a replacement (@pragma(startref) page @pageref(peak-sec)).
+This function will probably be removed in a future version.  See @code(peak), a replacement (@pragma(startref)page @pageref(peak-sec)).
 
 
  @codef[snd-play(@pragma(defn)@index(snd-play)@i(expression))] @c{[sal]}@*
@@ -3333,7 +3406,6 @@ sample.
  @codef[snd-srate(@pragma(defn)@index(snd-srate)@i(sound))] @c{[sal]}@*
 @altdef{@code[(snd-srate @i(sound))] @c{[lisp]}}@\Returns the sample rate of
 the sound. Safe for ordinary use.
-
 @begin(comment)
  @codef[snd-show(@pragma(defn)@index(snd-show)@i(sound))] @c{[sal]}@*
 @altdef{@code[(snd-show @i(sound))] @c{[lisp]}}@\Print the entire (internal)
@@ -3387,7 +3459,6 @@ usage)@index(table memory))] @c{[sal]}@*
 @altdef{@code[(stats)] @c{[lisp]}}@\Prints the memory usage status.  
 See also the 
 XLISP @code(mem) function.  Safe for ordinary use. This is the only way to find out how much memory is being used by table-lookup oscillator instances.
-
 @end(fndefs)
 
 @subsection(Miscellaneous Functions)
@@ -3536,40 +3607,11 @@ function is mainly for internal system use.  In the future,
  @code(get-warp) will probably be reimplemented to always return
  a signal and never raise an error.
 
-@CODEF{LOCAL-to-global(@pragma(defn)@index(local-to-global)@i(local-time))} @c{[sal]}@*
+@CODEF{local-to-global(@pragma(defn)@index(local-to-global)@i(local-time))} @c{[sal]}@*
 @altdef{@code[(local-to-global @i(local-time))] @c{[lisp]}}@\Converts a score (local) time to a real (global) time according to the current environment.
 
-@codef{osc-enable(@pragma(defn)@index(osc-enable)@index(osc)@index(open sound control)@i(flag))} @c{[sal]}@*
-@altdef{@code[(osc-enable @i(flag))] @c{[lisp]}}@\Enable or disable Open Sound Control. 
-(See Appendix @ref(osc-app).)
-Enabling creates a socket and a service that listens for UDP 
-packets on port 7770. Currently, only two messages are accepted 
-by Nyquist. The first is of the form @code(/slider)
-with an integer index and a floating point value. These set internal 
-slider values accessed by the @code(snd-slider) 
-function. The second is of the form @code(/wii/orientation) with
-two floating point values. This message is a special case to 
-support the DarwiinRemoteOsc@index(DarwiinRemoteOsc) program
- which can relay data from
-a Nintendo@index(Nintendo WiiMote) WiiMote@index(Wii Controller)
- device to Nyquist via OSC. The two orientation
-values control sliders 0 and 1.
-Disabling terminates the service (polling for messages) 
-and closes the socket. The @i(previous) state of enablement
-is returned, e.g. if OSC is enabled and @i(flag) is @i(nil), 
-OSC is disabled and @code(T) (true) is returned because OSC 
-was enabled at the time of the call. This function only exists 
-if Nyquist is compiled with the compiler flag @code(OSC). 
-Otherwise, the function 
-exists but always returns the symbol @code(DISABLED). Consider 
-lowering the audio latency using @code(snd-set-latency).
-@i(Warning:) there is the potential for 
-network-based attacks using OSC. It is tempting to add the 
-ability to evaluate XLISP expressions sent via OSC, but 
-this would create
-unlimited and unprotected access to OSC clients. For now, 
-it is unlikely that an attacker could do more than 
-manipulate slider values.
+@codef{round(@index(round)@pragma(defn)@index(convert FLONUM to FIXNUM)@i(x))} @c{[sal]}@*
+@altdef{@code[(round @i(x))] @c{[lisp]}}@\Round @i(x) to the nearest integer. If @i(x) is @i(n) + 0.5, where @i(n) is an integer, then return @i(n) + 1, even if @i(n) is negative.
 
 @codef{snd-set-latency(@index(latency)@pragma(defn)@index(snd-set-latency)@i(latency))} @c{[sal]}@*
 @altdef{@code[(snd-set-latency @i(latency))] @c{[lisp]}}@\Set the latency requested when Nyquist plays sound to
@@ -3583,14 +3625,6 @@ velocity 1 to -60 dB and 127 to 0 dB. The amplitude is proportional to
 the square of MIDI velocity. The input @i(x) can be a @code(FIXNUM) or
 @code(FLONUM) but not a sound. The result is a @code[FLONUM].
 
-@codef[db-to-vel(@pragma(defn)@index(db-to-vel)@i(x))] @c{[sal]}@*
-@altdef{@code[(db-to-vel @i(x))] @c{[lisp]}}@\Returns the conversion
-of @i(x) from decibels to MIDI velocity using a rule that maps 0 dB to 
-MIDI velocity 127 and -60 dB to MIDI velocity 1.
-The MIDI velocity is proportional to the square root of the amplitude. 
-The input @i(x) can be a @code(FIXNUM) or
-@code(FLONUM) but not a sound. The result is a @code[FLONUM].
-
 @code[vel-to-linear(@pragma(defn)@index(vel-to-linear)@i(x))]
 @c{[sal]}@* @altdef{@code[(vel-to-linear @i(x))] @c{[lisp]}}@\Returns
 the conversion of @i(x) from MIDI velocity to linear amplitude
@@ -3598,15 +3632,6 @@ ratio using a rule that maps MIDI
 velocity 1 to -60 dB (0.001) and 127 to unity gain. The amplitude is proportional to
 the square of MIDI velocity. The input @i(x) can be a @code(FIXNUM) or
 @code(FLONUM) but not a sound. The result is a @code[FLONUM].
-
-@code[linear-to-vel(@pragma(defn)@index(linear-to-vel)@i(x))]
-@c{[sal]}@* @altdef{@code[(linear-to-vel @i(x))] @c{[lisp]}}@\Returns
-the conversion of @i(x) from lineary amplitude to MIDI velocity
-using a rule that maps unity gain to 127 and -60 dB (0.001) to MIDI 
-velocity 1. The velocity is proportional to
-the square root of the linear amplitude. The input @i(x) can be a @code(FIXNUM) or
-@code(FLONUM) but not a sound. The result is a @code[FLONUM].
-
 @end(fndefs)
 
 @section(Behaviors)@index(Behaviors)
@@ -3679,7 +3704,7 @@ applied in the down-sample case, so aliasing may occur. See also
 @altdef{@code[(lfo @i(freq) @i(duration) @i(table) @i(phase))] @c{[lisp]}}@\Just
 like @code(osc) (below)
 except this computes at the @code(*control-srate*) and frequency
-is specified in Hz.  Phase is specified in degrees.
+is specified in Hz.  Initial @i(phase) is specified in degrees, defaulting to zero.
  The @code(*transpose*) and @code(*sustain*) is not
 applied.  The effect of time warping is to warp the starting and ending
 times.  The signal itself will have a constant unwarped frequency.
@@ -3687,7 +3712,7 @@ times.  The signal itself will have a constant unwarped frequency.
 @codef{fmlfo(@pragma(defn)@index(fmlfo)@i(freq) [, @i(table), @i(phase)])} @c{[sal]}@*
 @altdef{@code{(fmlfo @i(freq) [@i(table) @i(phase)])} @c{[lisp]}}@\A low-frequency oscillator
 that computes at the @code(*control-srate*) using a sound to specify a time-varying 
-frequency in Hz. Phase is a @code(FLONUM) in degrees. The duration of the result is determined by @i(freq).
+frequency in Hz. Initial @i(phase) is a @code(FLONUM) in degrees. The duration of the result is determined by @i(freq).
 
 @codef{maketable(@pragma(defn)@index(maketable)@label(maketable)@i(sound))} @c{[sal]}@*
 @altdef{@code[(maketable @i(sound))] @c{[lisp]}}@\Assumes that
@@ -3756,16 +3781,15 @@ by @i(shift) seconds.  If the sound is
 See Figure @ref(shift-time-fig).  This is a special
 case of @code(snd-xform) (see Section @ref(snd-xform-sec)).
 @end(fndefs)
-
 @begin(figure)
 @center(@graphic((height = 3 in, width = 4.5 in, magnify = 0.75,
-		postscript = "shifttimefig.ps"))
+		postscript = "shifttimefig.ps")
+@latex(\includegraphics[scale=0.2]{shifttimefig}))
 @html(<img src="fig5.gif"><br><br>)
 @fillcaption(The @code(shift-time) function shifts a sound in time
 according to its @i(shift) argument.)
 @tag(shift-time-fig)
 @end(figure)
-
 @begin(fndefs)
 @codef{sound-warp(@pragma(defn)@index(sound-warp)@i(warp-fn), @i(signal) [, @i(wrate)])} @c{[sal]}@*
 @altdef{@code{(sound-warp @i(warp-fn) @i(signal) [@i(wrate)])} @c{[lisp]}}@\Applies a
@@ -3838,8 +3862,7 @@ The effect of time-warping is to warp the starting and ending times only; the
 signal has a constant unwarped frequency.
  @p(Note 1:) @i(table) is a list of the form
 @begin(display)
-(@i(sound) @i(pitch-number) @i(periodic))
-@end(display)
+(@i(sound) @i(pitch-number) @i(periodic))@end(display) 
 where the first element is a sound, the second is the pitch of the sound 
 (this is not redundant, because the sound may represent any number of
 periods), and the third element is @code(T) if the sound is one period of
@@ -3867,7 +3890,13 @@ respect to transformations.  The @code(sine) function is faster than
 @code(osc).
 
 @codef{hzosc(@pragma(defn)@index(hzosc)@i(hz) [, @i(table), @i(phase)])} @c{[sal]}@*
-@altdef{@code{(hzosc @i(hz) [@i(table) @i(phase)])} @c{[lisp]}}@\Returns a sound which is the @i(table) oscillated at @i(hz) starting at @i(phase) degrees. The default @i(table) is @code(*table*) and the default @i(phase) is @i(0.0). The default duration is @code(1.0), but this is stretched as in @code(osc) (see above). The @i(hz) parameter may be a @code(SOUND), in which case the duration of the result is the duration of @i(hz). The sample rate is @code(*sound-srate*).
+@altdef{@code{(hzosc @i(hz) [@i(table) @i(phase)])} @c{[lisp]}}@\Returns a sound
+which is the @i(table) oscillated at @i(hz) starting at @i(phase) degrees. The
+default @i(table) is @code(*table*) and the default @i(phase) is @i(0.0)
+degrees. The default duration is @code(1.0), but this is stretched as
+in @code(osc) (see above). The @i(hz) parameter may be a @code(SOUND), in
+which case the duration of the result is the duration of @i(hz). The
+sample rate is @code(*sound-srate*).
 
 @codef{osc-saw(@pragma(defn)@index(osc-saw)@index(sawtooth oscillator)@i(hz))} @c{[sal]}@*
 @altdef{@code[(osc-saw @i(hz))] @c{[lisp]}}@\Returns a sawtooth waveshape at the indicated frequency (in Hertz). The sample rate is @code(*sound-srate*). The @i(hz) parameter may be a sound as in @i(hzosc) (see above).
@@ -3967,9 +3996,7 @@ The @i(pitch) and @i(modulation) parameters are used as in @code(fmosc)
 described above.  The optional @i(sample) (which defaults to the global
 variable @code(*table*) is a list of the form
 @begin(display)
-(@i(sound) @i(pitch-number) @i(loop-start))
-@end(display)
-where the first element is a sound containing the sample, the second is the
+(@i(sound) @i(pitch-number) @i(loop-start))@end(display) where the first element is a sound containing the sample, the second is the
 pitch of the sample, and the third element is the time of the loop point. If
 the loop point is not in the bounds of the sound, it is set to zero.
 The optional @i(npoints) specifies how many points should be used for sample
@@ -3981,8 +4008,16 @@ The sample rate is @code(*sound-srate*).
 
 @paragraph(Piece-wise Approximations)
 @index(piece-wise)@index(approximation)@index(splines)
-There are a number of related behaviors for piece-wise approximations to functions.  The simplest of these, @code(pwl) was mentioned earlier in the manual.  It takes a list of breakpoints, assuming an initial point at (0, 0), and a final value of 0.  An analogous piece-wise exponential function, @code(pwe), is provided. Its implicit starting and stopping values are 1 rather than 0.  Each of these has variants.   You can specify the initial and final values (instead of taking the default).  You can specify time in intervals rather than cummulative time.  Finally, you can pass a list rather than an argument list.  This leads to 16 versions:
-@pragma(startscribe)
+There are a number of related behaviors for piece-wise approximations
+to functions.  The simplest of these, @code(pwl) was mentioned earlier
+in the manual.  It takes a list of breakpoints, assuming an initial
+point at (0, 0), and a final value of 0.  An analogous piece-wise
+exponential function, @code(pwe), is provided. Its implicit starting
+and stopping values are 1 rather than 0.  Each of these has variants.
+You can specify the initial and final values (instead of taking the
+default).  You can specify time in intervals rather than cummulative
+time.  Finally, you can pass a list rather than an argument list. @pragma(startscribe)
+This leads to 16 versions:
 @begin(display)
 @tabclear
 @tabset(0.4 inches, 0.8 inches, 1.2 inches)
@@ -4017,8 +4052,8 @@ Piece-wise Exponential Functions:
 @\@\@\@code(pwevr)
 @\@\@\@code(pwevr-list)
 @end(display)
-@pragma(endscribe)
-@html[<pre><b>Piece-wise Linear Functions:</b>
+@pragma(endscribe) @html[This leads to 16 versions:
+<pre><b>Piece-wise Linear Functions:</b>
 	<i>Cummulative Time:</i>
 		<i>Default initial point at (0, 0), final value at 0:</i>
 			pwl
@@ -4049,8 +4084,46 @@ Piece-wise Exponential Functions:
 		<i>Explicit initial value:</i>
 			pwevr
 			pwevr-list
-</pre>]
-All of these functions are implemented in terms of @code(pwl) (see @code(nyquist.lsp) for the implementations.  There are infinite opportunities for errors in these functions: if you leave off a data point, try to specify points in reverse order, try to create an exponential that goes to zero or negative values, or many other bad things, the behavior is not well-defined.  Nyquist should not crash, but Nyquist does not necessarily attempt to report errors at this time.
+</pre>] @begin(latex) This leads to 16 versions, as shown in 
+Figure \ref{pwfunctions}. 
+
+\begin{figure}
+\hspace*{2em}Piece-wise Linear Functions:\\
+\hspace*{4em}Cummulative Time:\\
+\hspace*{6em}Default initial point at (0, 0), final value at 0:\\
+\hspace*{8em}\texttt{pwl}\\
+\hspace*{8em}\texttt{pwl-list}\\
+\hspace*{6em}Explicit initial value:\\
+\hspace*{8em}\texttt{pwlv}\\
+\hspace*{8em}\texttt{pwlv-list}\\
+\hspace*{4em}Relative Time:\\
+\hspace*{6em}Default initial point at (0, 0), final value at 0:\\
+\hspace*{8em}\texttt{pwlr}\\
+\hspace*{8em}\texttt{pwlr-list}\\
+\hspace*{6em}Explicit initial value:\\
+\hspace*{8em}\texttt{pwlvr}\\
+\hspace*{8em}\texttt{pwlvr-list}\\
+
+\hspace*{2em}Piece-wise Exponential Functions:\\
+\hspace*{4em}Cummulative Time:\\
+\hspace*{6em}Default initial point at (0, 1), final value at 1:\\
+\hspace*{8em}\texttt{pwe}\\
+\hspace*{8em}\texttt{pwe-list}\\
+\hspace*{6em}Explicit initial value:\\
+\hspace*{8em}\texttt{pwev}\\
+\hspace*{8em}\texttt{pwev-list}\\
+\hspace*{4em}Relative Time:\\
+\hspace*{6em}Default initial point at (0, 1), final value at 1:\\
+\hspace*{8em}\texttt{pwer}\\
+\hspace*{8em}\texttt{pwer-list}\\
+\hspace*{6em}Explicit initial value:\\
+\hspace*{8em}\texttt{pwevr}\\
+\hspace*{8em}\texttt{pwevr-li}st 
+\caption{Variants of piece-wise functions.}
+\label{pwfunctions}
+\end{figure}
+
+@end(latex) All of these functions are implemented in terms of @code(pwl) (see @code(nyquist.lsp) for the implementations.  There are infinite opportunities for errors in these functions: if you leave off a data point, try to specify points in reverse order, try to create an exponential that goes to zero or negative values, or many other bad things, the behavior is not well-defined.  Nyquist should not crash, but Nyquist does not necessarily attempt to report errors at this time.
 
 @begin(fndefs)
 @label(pwl-sec)
@@ -4197,7 +4270,7 @@ coefficients (requiring trig functions) are recomputed at the sample rate of
 
 @label(reson-sec)
 @codef{reson(@pragma(defn)@index(reson)@index(bandpass filter)@i(sound), @i(center), @i(bandwidth) [, @i(n)])} @c{[sal]}@*
-@altdef{@code[(reson @i(sound) @i(center) @i(bandwidth) [@i(n)])] @c{[lisp]}}@\Apply
+@altdef{@code{(reson @i(sound) @i(center) @i(bandwidth) [@i(n)])} @c{[lisp]}}@\Apply
 a resonating filter to @i(sound) with center frequency @i(center) (in hertz),
 which may be a float or a signal.  @i(Bandwidth) is the filter bandwidth (in
 hertz), which may also be a signal.  Filter coefficients (requiring trig
@@ -4215,7 +4288,7 @@ for sample code and documentation.
 
 @label(areson-sec)
 @codef{areson(@pragma(defn)@index(areson)@index(notch filter)@i(sound), @i(center), @i(bandwidth) [, @i(n)])} @c{[sal]}@*
-@altdef{@code[(areson @i(sound) @i(center) @i(bandwidth) [@i(n)])] @c{[lisp]}}@\The @code(areson) filter is an exact
+@altdef{@code{(areson @i(sound) @i(center) @i(bandwidth) [@i(n)])} @c{[lisp]}}@\The @code(areson) filter is an exact
 complement of @code(reson) such that if both are applied to the
 same signal with the same parameters, the sum of the results yeilds
 the original signal.
@@ -4224,11 +4297,9 @@ the original signal.
 @codef{shape(@pragma(defn)@index(shape)@index(waveshaping)@index(table)@i(signal), @i(table), @i(origin))} @c{[sal]}@*
 @altdef{@code[(shape @i(signal) @i(table) @i(origin))] @c{[lisp]}}@\A waveshaping function.  Use @i(table) as a function; apply the function to each sample of @i(signal) to yield a new sound.  @i(Signal) should range from -1 to +1.  Anything beyond these bounds is clipped.  @i(Table) is also a sound, but it is converted into a lookup table (similar to table-lookup oscillators).  The @i(origin) is a @code(FLONUM) and gives the time which should be considered the origin of @i(table).  (This is important because @i(table) cannot have values at negative times, but @i(signal) will often have negative values.  The @i(origin) gives an offset so that you can produce suitable tables.)  The output at time @i(t) is:
 @begin(display)
-@i(table)(@i(origin) + clip(@i(signal)(@i(t)))
-@end(display)
-where clip(@i(x)) = @i(max)(1, @i(min)(-1, @i(x))).
+@i(table)(@i(origin) + clip(@i(signal)(@i(t)))@end(display) where clip(@i(x)) = @i(max)(1, @i(min)(-1, @i(x))).
 (E.g. if @i(table) is a signal defined over the interval [0, 2], then @i(origin) should be 1.0.  The value of @i(table) at time 1.0 will be output when the input signal is zero.)  The output has the same start time, sample rate, etc. as @i(signal).  The @code(shape) function will also accept multichannel @i(signal)s and @i(table)s.
-
+@blankspace(1)
 Further discussion and examples can be found in 
 @code(demos/distortion.htm)@index(distortion tutorial)@index(demos, distortion). 
 The @code(shape)
@@ -4303,8 +4374,7 @@ Shepard tones in @code(demos/shepard.lsp).@index(Shepard tones)@index(demos, She
 @codef{tapv(@pragma(defn)@index(tapv)@index(variable delay)@index(tapped delay)@i(sound), @i(offset), 
 @i(vardelay), @i(maxdelay))} @c{[sal]}@*
 @altdef{@code[(tapv @i(sound) @i(offset) @i(vardelay) @i(maxdelay))] @c{[lisp]}}@\A delay line with a variable position tap. 
-Identical to @code(snd-tapv). See it for details (@ref(snd-tapv-sec)).
-
+Identical to @code(snd-tapv). See it for details (page @pageref(snd-tapv-sec)).
 @end(fndefs)
 
 @paragraph(Effects)
@@ -4320,8 +4390,7 @@ reverberation)@index(STK nreverb)@i(sound), @i(decay), @i(mix))} @c{[sal]}@*
 
 @codef{prcrev(@pragma(defn)@index(prcrev)@index(reverb)@index(effect,
  reverberation)@index(STK prcreverb)@i(sound), @i(decay), @i(mix))} @c{[sal]}@*
-@altdef{@code[(prcrev @i(sound) @i(decay) @i(mix))] @c{[lisp]}}
-These reverbs (@code(nrev), @code(jcrev), and @code(prcrev)) are implemented 
+@altdef{@code[(prcrev @i(sound) @i(decay) @i(mix))] @c{[lisp]}}@\These reverbs (@code(nrev), @code(jcrev), and @code(prcrev)) are implemented 
 in STK (running within Nyquist). @code(nrev) derives from Common Music's 
 NRev,  which consists of 6 comb filters followed by 3 allpass filters, a
  lowpass filter, and another allpass in series followed by two allpass 
@@ -4380,9 +4449,10 @@ duration of @i(breath-env) and @i(freq-env). These parameters may be of type
 @code(FLONUM) or @code(SOUND). @code(FLONUM)s are coerced into @code(SOUND)s
 with a nominal duration arbitrarily set to 30.
 
-@codef{clarinet-all(@index(clarinet)@pragma(defn)@index(clarinet-all)@index(stk clarinet)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq), @i(vibrato-gain), 
-@i(reed-stiffness), @i(noise))} @c{[sal]}@*
-@altdef{@code[(clarinet-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @i(reed-stiffness) @i(noise))] @c{[lisp]}}@\A variation of @code(clarinet-freq)
+@codef{clarinet-all(@index(clarinet)@pragma(defn)@index(clarinet-all)@index(stk clarinet)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq), @i(vibrato-gain), @latex(\\
+\hspace*{3em})@i(reed-stiffness), @i(noise))} @c{[sal]}@*
+@altdef{@code[(clarinet-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @latex(\\
+\hspace*{3em})@i(reed-stiffness) @i(noise))] @c{[lisp]}}@\A variation of @code(clarinet-freq)
 that includes controls @i(vibrato-freq) (a @code(FLONUM) for vibrato frequency in Hertz), 
 @i(vibrato-gain) (a @code(FLONUM) for the amount of amplitude vibrato),
 @i(reed-stiffness) (a @code(FLONUM) or @code(SOUND) controlling reed stiffness in the clarinet
@@ -4407,7 +4477,7 @@ that controls the tube length, and the @i(breath-env) controls the air pressure
 and also determines the length of the resulting sound. The @i(breath-env) signal
 should range from zero to one.
 
-@codef{sax-freq(@pragma(defn)@index(sax)@index(sax-freq)@index(stk sax)@i(step), @i(breath-env), @i(freq-env))} @c{[sal]}@*
+@codef{sax-freq(@pragma(defn)@index(sax-freq)@index(sax)@index(stk sax)@i(step), @i(breath-env), @i(freq-env))} @c{[sal]}@*
 @altdef{@code[(sax-freq @i(step) @i(breath-env) @i(freq-env))] @c{[lisp]}}@\A variation of @code(sax)
 that includes a variable frequency control, @i(freq-env), which specifies
 frequency deviation in Hz. The duration of the resulting sound is the minimum
@@ -4415,9 +4485,10 @@ duration of @i(breath-env) and @i(freq-env). These parameters may be of type
 @code(FLONUM) or @code(SOUND). @code(FLONUM)s are coerced into @code(SOUND)s
 with a nominal duration arbitrarily set to 30.
 
-@codef{sax-all(@pragma(defn)@index(sax)@index(sax-all)@index(stk sax)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq), @i(vibrato-gain), 
-@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset))} @c{[sal]}@*
-@altdef{@code[(sax-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @i(reed-stiffness) @i(noise) @i(blow-pos) @i(reed-table-offset))] @c{[lisp]}}@\A variation of
+@codef{sax-all(@pragma(defn)@index(sax-all)@index(sax)@index(stk sax)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq), @i(vibrato-gain), @latex(\\
+\hspace*{3em})@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset))} @c{[sal]}@*
+@altdef{@code[(sax-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @latex(\\
+\hspace*{3em})@i(reed-stiffness) @i(noise) @i(blow-pos) @i(reed-table-offset))] @c{[lisp]}}@\A variation of
  @code(sax-freq)
 that includes controls @i(vibrato-freq) (a @code(FLONUM) for vibrato frequency in Hertz), 
 @i(vibrato-gain) (a @code(FLONUM) for the amount of amplitude vibrato),
@@ -4454,11 +4525,14 @@ length of the resulting sound. The @i(breath-env) signal should
 resulting sound is the minimum duration of @i(breath-env) and 
 @i(freq-env). These parameters may be of type @code(FLONUM) or
  @code(SOUND). @code(FLONUM)s are coerced into SOUNDs with a 
-nominal duration arbitrary set to 30.
+nominal duration arbitrarily set to 30.
 
-@codef{flute-all(@pragma(defn)@index(flute-all)@index(STK flute)@i(step), @i(breath-env), @i(freq-env), @i(vibrato-freq),
- @i(vibrato-gain), @i(jet-delay), @i(noise))} @c{[sal]}@*
-@altdef{@code[(flute-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @i(jet-delay) @i(noise))] @c{[lisp]}}@\A variation of 
+@codef{flute-all(@pragma(defn)@index(flute-all)@index(STK flute)@i(step), 
+ @i(breath-env), @i(freq-env), @i(vibrato-freq),
+ @i(vibrato-gain), @i(jet-delay), @latex(\\
+\hspace*{3em})@i(noise))} @c{[sal]}@*
+@altdef{@code[(flute-all @i(step) @i(breath-env) @i(freq-env) @i(vibrato-freq) @i(vibrato-gain) @i(jet-delay) @latex(\\
+\hspace*{3em})@i(noise))] @c{[lisp]}}@\A variation of 
 @code(clarinet-freq) that includes controls @i(vibrato-freq) (a 
 @code(FLONUM) for vibrato frequency in Hz), @i(vibrato-gain) (a
  @code(FLONUM) for the amount of amplitude vibrato), @i(jet-delay)
@@ -4478,7 +4552,7 @@ resulting sound is the minimum duration of @i(breath-env), @i(freq-env),
 @i(jet-delay), and @i(noise). These parameters may be either 
 @code(FLONUM)s or @code(SOUND)s, and @code(FLONUM)s are coerced
  to sounds with a nominal duration of 30. 
-  
+
 @label(bowed-sec)
 @codef{bowed(@pragma(defn)@index(bowed)@index(STK bowed string)@i(step), @i(bowpress-env))} @c{[sal]}@*
 @altdef{@code[(bowed @i(step) @i(bowpress-env))] @c{[lisp]}}@\A physical model of a bowed string
@@ -4607,7 +4681,8 @@ ramp itself is unwarped (linear).  The sample rate is @code(*control-srate*).
 
 @begin(figure)
 @center(@graphic((height = 2.37 in, width = 4.5 in, magnify = 0.75,
-		postscript = "rampfig.ps"))
+		postscript = "rampfig.ps")
+@latex(\includegraphics[scale=0.3]{rampfig}))
 @html(<img src="fig6.gif"><br><br>)
 @fillcaption[Ramps generated by @code(pwl) and @code(ramp) functions.  The
 @code(pwl) version ramps toward the breakpoint (1, 1), but in order to ramp
@@ -4686,7 +4761,6 @@ the exact sample rate of the result, which will be the sample rate of
 E.g. @code{(snd-srate (aref yin-output 0))},
 where @code(yin-output) is a result returned by @code(yin), will be the 
 sample rate of the estimates. 
-
 @end(fndefs)
 
 @section(Transformations)@index(Transformations)
@@ -4865,7 +4939,7 @@ must be the same, and the behaviors must be (monophonic) @code(SOUND)s.
 This function is particularly designed to allow behaviors to be invoked
 in real time by making @i(s) a function of a Nyquist slider, which can be
 controlled by a graphical interface or by OSC messages. See @code(snd-slider)
-in Section @ref(snd-slider-sec).
+in Section @ref(snd-slider-sec). See also Section @ref(interactive-sec).
 
 @codef[set-logical-stop(@pragma(defn)@index(set-logical-stop)@i(beh), @i(time))] @c{[sal]}@*
 @altdef{@code[(set-logical-stop @i(beh) @i(time))] @c{[lisp]}}@\Returns a sound with @i(time) as 
@@ -4901,7 +4975,6 @@ which is a list, the list represents a chord, and the expression is
 replaced by a set of behaviors, one for each note in the chord. 
 It follows that if @code(:pitch) is @code(nil), the behavior 
 represents a rest and is ignored.
-
 @end(fndefs)
 
 
@@ -4920,14 +4993,13 @@ writes a file and plays it.  The details of this
 are system-dependent, but @code(play) is defined in the file
 @code(system.lsp).  The variable @code(*default-sf-dir*)@index(sound file directory default)@index(directory, default sound file)@index(default sound file directory)@index(temporary sound files directory)
 @index(*default-sf-dir*) names a directory into which to save a sound file. Be careful not to call @code(play) or @code(sound-play) within a function and then
-invoke that function from another @code(play) command.
-
+invoke that function from another @code(play) command.@pragma{forceparagraph}
 By default, Nyquist will try to normalize sounds using the method named by 
 @code(*autonorm-type*), which is @code('lookahead) by default. 
 The @i(lookahead) method precomputes and buffers @code(*autonorm-max-samples*)
 samples, finds the peak value, and normalizes accordingly. The 
 @code('previous) method bases the normalization of the current sound on the peak value of the (entire) previous sound. This might be good if you are working with long sounds that start rather softly. See Section @ref(peak-ex-sec) for more details.
-
+@blankspace(1)
 If you want precise control over output levels, you should turn this feature off by typing (using SAL syntax):
 @begin(example)
 autonorm-off()@index(autonorm-off)
@@ -4944,9 +5016,8 @@ and reenabled by:
 @begin(example)
 sound-on()@index(sound-on)
 @end(example)
-Disabling real-time playback has no effect on @code[(play-file)] or @code[(r)].
-
-While sounds are playing, typing control-A@index(control-A) to Nyquist will push the estimated
+Disabling real-time playback has no effect on @code[(play-file)] or @code[(r)].@pragma{forceparagraph}
+While sounds are playing, typing control-A@index(control-A) to Nyquist (or clicking the Mark button in the NyquistIDE) will push the estimated
 elapsed@index(elapsed audio time) audio time onto the head of the list 
 stored in @code(*audio-markers*).
 @index(*audio-markers*)@index(audio markers)@index(markers, audio)
@@ -4974,8 +5045,10 @@ samples have been computed but the sound is still playing.
 
 @label(s-save-sec)
 @codef{s-save(@pragma(defn)@index(s-save)@index(save samples to file)@index(write samples to file)@index(output samples to file)@i(expression), @i(maxlen),
-@i(filename), format: @i(format), mode: @i(mode), bits: @i(bits), swap: @i(flag), play: @i(play))} @c{[sal]}@*
-@altdef{@code{(s-save @i(expression) @i(maxlen) @i(filename) :format @i(format) :mode @i(mode) :bits @i(bits) :swap @i(flag) :play @i(play))} @c{[lisp]}}@\@label(s-save)Evaluates the @i(expression), which should result in a sound
+@i(filename), format: @i(format), mode: @i(mode), bits: @i(bits), @latex(\\
+\hspace*{3em})swap: @i(flag), play: @i(play))} @c{[sal]}@*
+@altdef{@code{(s-save @i(expression) @i(maxlen) @i(filename) :format @i(format) :mode @i(mode) :bits @i(bits) @latex(\\
+\hspace*{3em}):swap @i(flag) :play @i(play))} @c{[lisp]}}@\@label(s-save)Evaluates the @i(expression), which should result in a sound
 or an array of sounds, and writes the result to the given @i(filename).  A
 @code(FLONUM) is returned giving the maximum absolute value of all samples
 written. (This is useful for normalizing sounds and detecting sample
@@ -4994,6 +5067,7 @@ header is written according to @i(format), samples are encoded according to
 @code(*default-sf-bits*). The default for @i(flag) is NIL.
 The @i(bits) parameter may be 8, 16, or 32.  The values for the @i(format) and @i(mode) options are described below:
 @end(fndefs)
+@pragma(needspace3)
 @b(Format)
 @begin(description, leftmargin +2 in, indent -2 in)
 @code(snd-head-none)@\The format is unknown and should be determined
@@ -5049,15 +5123,15 @@ NeXT and Sun machines:@\@code(snd-head-NeXT), @code(snd-mode-pcm),
 @code(16)
 
 SGI and Macintosh machines:@\@code(snd-head-AIFF), @code(snd-mode-pcm), @code(16)
-
 @end(description)
 
 @begin(fndefs)
 @label(s-read-sec)
-@codef{s-read(@pragma(defn)@index(s-read)@index(read samples from file)@i(filename), time-offset: @i(offset), srate: @i(sr), dur: @i(dur), nchans: @i(chans),
- format: @i(format), mode: @i(mode), bits: @i(n), swap: @i(flag))} @c{[sal]}@*
+@codef{s-read(@pragma(defn)@index(s-read)@index(read samples from file)@i(filename), time-offset: @i(offset), srate: @i(sr), dur: @i(dur), nchans: @i(chans), @latex(\\
+\hspace*{3em})format: @i(format), mode: @i(mode), bits: @i(n), swap: @i(flag))} @c{[sal]}@*
 @altdef{@code{(s-read @i(filename) :time-offset @i(offset) :srate @i(sr)
- :dur @i(dur) :nchans @i(chans) :format @i(format) :mode @i(mode) :bits @i(n)
+ :dur @i(dur) :nchans @i(chans) @latex(\\
+\hspace*{3em}):format @i(format) :mode @i(mode) :bits @i(n)
  :swap @i(flag))} @c{[lisp]}}@\Reads a sound from
  @i(filename). The global @code(*default-sf-dir*) applies. If a header is
 detected, the header is used to determine the format
@@ -5177,8 +5251,8 @@ The data file used is @code(*default-plot-file*):
 @codef{s-print-tree(@pragma(defn)@index(s-print-tree)@index(snd-print-tree)@i(sound))} @c{[sal]}@*
 @altdef{@code[(s-print-tree @i(sound))] @c{[lisp]}}@\Prints an ascii
 representation of the internal data structures representing a sound.  This
-is useful for debugging@index(debugging) Nyquist.  Identical to @code(snd-print-tree).
-
+is useful for debugging@index(debugging) Nyquist.  Identical 
+to @code(snd-print-tree).
 @end(fndefs)
 
 @section(Low-level Functions)
@@ -5188,9 +5262,7 @@ you are trying to understand the inner workings of Nyquist, you can skip this se
 
 @subsection(Creating Sounds)
 The basic operations that create sounds are described here.  
-
 @begin(fndefs)
-
 @codef[snd-const(@pragma(defn)@index(snd-const)@i(value), @i(t0), @i(srate),
 @i(duration))] @c{[sal]}@*
 @altdef{@code[(snd-const @i(value) @i(t0) @i(srate) @i(duration))] @c{[lisp]}}@\Returns a sound with constant @i(value), starting at @i(t0)
@@ -5309,26 +5381,6 @@ use @code(noise) (see Section @ref(noise-sec)).
 zero everywhere, starts at @i(t0), and has sample rate @i(srate).  The
 logical stop time is immediate, i.e. also at @i(t0).  You probably want
 to use @code(pwl) (see Section @ref(pwl-sec)) instead.
-
- @codef[get-slider-value(@pragma(defn)@index(get-slider-value)@i(index))] @c{[sal]}@*
-@altdef{@code[(get-slider-value @i(index))] @c{[lisp]}}@\@label(get-slider-value-sec)Return the current value of the slider
-named by @i(index) (an integer index into the array of sliders). 
-Note that this ``slider'' is just a floating point
-value in an array. Sliders can be changed by OSC messages (see @code(osc-enable)) and by sending character
-sequences to Nyquist's standard input. (Normally, these character sequences would 
-not be typed but generated by the NyquistIDE interactive development environment, which
-runs Nyquist as a sub-process, and which present the user with graphical sliders.) 
-
-@codef[snd-slider(@pragma(defn)@index(snd-slider)@i(index), @i(t0), @i(srate), @i(duration))] @c{[sal]}@*
-@altdef{@code[(snd-slider @i(index) @i(t0) @i(srate) @i(duration))] @c{[lisp]}}@\@label(snd-slider-sec)Create
-a sound controlled by the slider named by @i(index) (an integer 
-index into the array of sliders; see @code(get-slider-value) for more information). 
-The function returns a sound. Since Nyquist sounds are computed in blocks of samples, 
-and each block is computed at once, each block will contain copies of the current slider
-value. To obtain reasonable responsiveness, slider sounds should have high (audio) 
-sample rates so that the block rate will be reasonably high. Also, consider lowering the audio
-latency using @code(snd-set-latency). To ``trigger'' a Nyquist behavior using slider input, see the @code(trigger) function in Section @ref(trigger-sec).
-
 @end(fndefs)
 
 @subsection(Signal Operations)
@@ -5403,9 +5455,10 @@ incrementally.  If in fact @i(g) decreases, the current sample of @i(g)  is
 replaced by the previous one, forcing @i(g) into compliance with the
 non-decreasing restriction.  See also @code(sref), @code(shape), and
 @code(snd-resample).  
-
+@blankspace(1)
 For an extended example that uses @code(snd-compose) for variable pitch shifting,
-see @code(demos/pitch_change.htm).@index(demos, pitch change)@index(pitch shifting)
+see @latex(\\
+)@code(demos/pitch_change.htm).@index(demos, pitch change)@index(pitch shifting)
 @index(variable-resample function)@index(resampling)
 
 @label(snd-tapv-sec)
@@ -5584,7 +5637,6 @@ effect, so use @code(cue) to create a transformable sound (see Section
 @codef{snd-yin(@pragma(defn)@index(snd-yin)@i(sound), @i(minstep), @i(maxstep), @i(rate))} @c{[sal]}@*
 @altdef{@code[(snd-yin @i(sound) @i(minstep) @i(maxstep) @i(rate))] @c{[lisp]}}@\Identical to
 @code[yin]. See Section @ref(yin-sec).
-
 @end(fndefs)
 
 @subsection(Filters)
@@ -5597,7 +5649,6 @@ filter coefficients are calculated at the sample rate of the filter
 parameter, and coefficients are not interpolated.
 
 @begin(fndefs)
-
 @codef[snd-alpass(@pragma(defn)@index(snd-alpass)@i(sound), @i(delay), @i(feedback))] @c{[sal]}@*
 @altdef{@code[(snd-alpass @i(sound) @i(delay) @i(feedback))] @c{[lisp]}}@\An all-pass filter.  This produces a repeating echo effect without the resonances of @code(snd-delay).  The @i(feedback) should be less than one to avoid exponential amplitude blowup.  Delay is rounded to the nearest sample.  You should use @code(alpass) instead (see Section @ref(alpass-sec)).
 
@@ -5770,8 +5821,6 @@ identical to @code(snd-tone) except @i(hz) (cutoff frequency) is a sound.
 The filter coefficients are updated at the sample rate of @i(hz).  You
 should use @code(lp) instead (see Section
 @ref(lp-sec)).
-
-
 @end(fndefs)
 
 
@@ -5924,7 +5973,6 @@ interpolated from @i(table1) to @i(table2), and so on.  If more than
 the sound. The duration and logical stop time  of the sound is taken from
 @i(fm), which specified frequency modulation (deviation) in Hertz. You
 should use @code(siosc) instead (see Section @ref(siosc-sec)).
-
 @end(fndefs)
 
 @subsection(Physical Model Functions)
@@ -5970,9 +6018,10 @@ an additional parameter for continuous frequency control. You should use
 @code(clarinet-freq) instead (see Section @ref(clarinet-sec)).
 
 @codef[snd-clarinet-all(@pragma(defn)@index(snd-clarinet-all)@i(freq), @i(vibrato-freq),
-@i(vibrato-gain), @i(freq-env), @i(breath-env),
-@i(reed-stiffness), @i(noise), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-clarinet-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @i(reed-stiffness) @i(noise) @i(sr))] @c{[lisp]}}@\A clarinet model just like 
+@i(vibrato-gain), @i(freq-env), @i(breath-env), @latex(\\
+\hspace*{3em})@i(reed-stiffness), @i(noise), @i(sr))] @c{[sal]}@*
+@altdef{@code[(snd-clarinet-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @latex(\\
+\hspace*{3em})@i(reed-stiffness) @i(noise) @i(sr))] @c{[lisp]}}@\A clarinet model just like 
 @code(snd-clarinet-freq) but with 
 additional parameters for vibrato generation and continuous control of
 reed stiffness and breath noise. You should use 
@@ -5986,15 +6035,16 @@ reed stiffness and breath noise. You should use
  the desired sample rate (a @code(FLONUM)). You should use @code(flute)
  instead (see Section @ref(flute-sec)).
 
-@codef[snd-flute-freq(@pragma(defn)@index(snd-flute-freq)@index(stk flute)@i(freq), @i(breath-env),
-@i(freq-env), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-flute-freq @i(freq) @i(breath-env) @i(freq-env) @i(sr))] @c{[lisp]}}@\A flute model just like @code(snd-flute) but with 
+@codef{snd-flute-freq(@pragma(defn)@index(snd-flute-freq)@index(stk flute)@i(freq), @i(breath-env),
+@i(freq-env), @i(sr))} @c{[sal]}@*
+@altdef{@code{(snd-flute-freq @i(freq) @i(breath-env) @i(freq-env) @i(sr))} @c{[lisp]}}@\A flute model just like @code(snd-flute) but with 
 an additional parameter for continuous frequency control. You should use 
 @code(flute-freq) instead (see Section @ref(flute-sec)).
 
-@codef[snd-flute-all(@pragma(defn)@index(snd-flute-all)@index(stk flute)@i(freq), @i(vibrato-freq), @i(vibrato-gain), @i(freq-env), @i(breath-env),
-@i(jet-delay), @i(noise), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-flute-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @i(jet-delay) @i(noise) @i(sr))] @c{[lisp]}}@\A flute model just like 
+@codef{snd-flute-all(@pragma(defn)@index(snd-flute-all)@index(stk flute)@i(freq), @i(vibrato-freq), @i(vibrato-gain), @i(freq-env), @i(breath-env), @latex(\\
+\hspace*{3em})@i(jet-delay), @i(noise), @i(sr))} @c{[sal]}@*
+@altdef{@code{(snd-flute-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @latex(\\
+\hspace*{3em})@i(jet-delay) @i(noise) @i(sr))} @c{[lisp]}}@\A flute model just like 
 @code(snd-flute-freq) but with 
 additional parameters for vibrato generation and continuous control of
 breath noise. You should use 
@@ -6031,9 +6081,10 @@ an additional parameter for continuous frequency control. You should use
 @code(sax-freq) instead (see Section @ref(sax-sec)).
 
 @codef[snd-sax-all(@pragma(defn)@index(snd-sax-all)@i(freq), @i(vibrato-freq),
-@i(vibrato-gain), @i(freq-env), @i(breath-env),
-@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset), @i(sr))] @c{[sal]}@*
-@altdef{@code[(snd-sax-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @i(reed-stiffness) @i(noise) @i(blow-pos) @i(reed-table-offset) @i(sr))] @c{[lisp]}}@\A 
+@i(vibrato-gain), @i(freq-env), @i(breath-env), @latex(\\
+\hspace*{3em})@i(reed-stiffness), @i(noise), @i(blow-pos), @i(reed-table-offset), @i(sr))] @c{[sal]}@*
+@altdef{@code[(snd-sax-all @i(freq) @i(vibrato-freq) @i(vibrato-gain) @i(freq-env) @i(breath-env) @latex(\\
+\hspace*{3em})@i(reed-stiffness) @i(noise) @i(blow-pos) @i(reed-table-offset) @i(sr))] @c{[lisp]}}@\A 
 sax model just like 
 @code(snd-sax-freq) but with 
 additional parameters for vibrato generation and continuous control of
@@ -6048,8 +6099,6 @@ reed stiffness, breath noise, excitation position, and reed table offset.
 @i(dur) sets the duration and @i(sr) is the sample rate (in Hz) 
 of the resulting sound. You should use @code(sitar) instead (see Section
 @ref(sitar-sec)).
-
-
 @end(fndefs)
 
 
@@ -6078,35 +6127,18 @@ which is the maximum logical stop time of any element of @i(array).    Do
 not call this function.  See @code(seq) in Section @ref(seq-sec).
 @end(fndefs)
 
-@begin(fndefs)
-@codef[snd-trigger(@pragma(defn)@index(snd-trigger)@i(s), @i(closure))] @c{[sal]}@*
-@altdef{@code[(snd-trigger @i(s) @i(closure))] @c{[lisp]}}@\This is one of
-the only ways in which a behavior instance can be created by changes in a
-signal. When @i(s) (a @code(SOUND)) makes a transition from less than or 
-equal to zero to greater than zero, the closure, which takes a starting
-time parameter, is evaluated. The closure must return a @code(SOUND). The
-sum of all these sounds is returned. If there are no sounds, the result will
-be zero. The stop time of the result is the maximum stop time of @i(s) and
-all sounds returned by the closure. The sample rate of the return value is
-the sample rate of @i(s), and the sounds returned by the closure must all
-have that same sample rate. Do not call this function. 
-See @code(trigger) in Section @ref(trigger-sec).
 
-An implementation note: There is no way to have @code(snd-trigger) return
-a multichannel sound. An alternative implementation would be a built-in
-function to scan ahead in a sound to find the time of the next zero crossing.
-This could be combined with some LISP code similar to @code(seq) to sum up
-instances of the closure. However, this would force arbitrary look-ahead
-and therefore would not work with real-time inputs, which was the motivation
-for @code(snd-trigger) in the first place.
-@end(fndefs)
 
 @chapter(Nyquist Globals)
 @index(Global Variables)
 There are many global variables in Nyquist. A convention in Lisp is to place asterisks (*) around global variables, e.g. @code(*table*). This is only a convention, and the asterisks are just like any other letter as far as variable names are concerned. Here are some globals users should know about:
 
 @begin(description, leftmargin +2 in, indent -2 in)
-@codef(*table*)@index(*table*)@\Default table used by @code(osc) and other oscillators.
+@codef(*~=tolerance*)@index(*~=tolerance*)@\The tolerance used by the
+SAL "approximately equal" operator (@code(~=)) to determine if two
+numbers are approximately equal.
+
+@codef(*table*)@index(*table*)@\Default table used by @code(osc) and other oscillators. Initially set to the sinusoid in @code(*sine-table*).
 
 @codef(*A4-Hertz*)@pragma(defn)@index(*a4-hertz*)@\Frequency of A4 in Hertz.. Note: you must call @code[(set-pitch-names)] to recompute pitches after changing @code(*A4-Hertz*).
 
@@ -6137,7 +6169,7 @@ and it is possible to slightly exceed this value, even with 8-bit
 files without actual clipping (consider rounding). Also, floating point
 format files will not clip even when the amplitude exceeds 1.0. Note
 that a ``clipping'' threshold of 1.0 is optimistic: 1.0 corresponds to
-a 16-bit integer value of 32,768 (2^15), but the maximum positive
+a 16-bit integer value of 32,768 (2@+[15]), but the maximum positive
 16-bit integer is 32,767. Thus, a positive sample of 1.0 will clip
 when written or played as 16-bit audio.
 
@@ -6159,7 +6191,16 @@ when written or played as 16-bit audio.
 e.g. ``@code(/)'' for Unix, ``@code(:)'' for Mac, and ``@code(\)'' for Win32.
 This is normally set in @code(system.lsp).
 
+@codef(*lpslider-cutoff*)@pragma(defn)@index(*lpslider-cutoff*)@\The
+cutoff frequency used by @code(lpslider), described in Section
+@ref(lpslider-sec). The default value is 20Hz. If unbound, this variable is set
+when you load @code(sliders.lsp).
+
 @codef(*rslt*)@pragma(defn)@index(*rslt*)@\When a function returns more than one value, @code(*rslt*) is set to a list of the ``extra'' values. This provides a make-shift version of the @code(multiple-value-return) facility in Common Lisp.
+
+@codef(*saw-table*)@pragma(defn)@index(*saw-table*)@index(sawtooth table)@\A single cycle sawtooth wave intended for use by table-lookup oscillators such as @code(osc). This is the waveform used by @code(osc-saw).  Note that some aliasing will normally occur when using this waveform, which is not band-limited.
+
+@codef(*sine-table*)@pragma(defn)@index(*sine-table*)@index(sine table)@\A single cycle sinusoid intended for use by table-lookup oscillators such as @code(osc).
 
 @codef(*sound-srate*)@pragma(defn)@index(*sound-srate*)@\Part of the environment, establishes the audio sample rate. See Section @ref(environment-sec) for details.
 
@@ -6167,14 +6208,393 @@ This is normally set in @code(system.lsp).
 
 @codef(*tracenable*)@pragma(defn)@index(*tracenable*)@\Controls whether XLISP prints a backtrace when an error is encountered.
 
+@codef(*tri-table*)@pragma(defn)@index(*tri-table*)@index(triangle table)@\A single cycle triangle wave intended for use by table-lookup oscillators such as @code(osc). This is the waveform used by @code(osc-tri). Note that some aliasing will normally occur when using this waveform, which is not band-limited.
+
 @b(XLISP variables)@\See Section @ref(symbols-sec) for a list of 
 global variables defined by XLISP.
 
 @b(Environment variables)@\See Section @ref(environment-sec) for definitions of variables used in the environment for behaviors. In general, you should never set or access these variables directly.
 
 @b(Various constants)@\See Section @ref(constants-sec) for definitions of predefined constants for loudness, duration, and pitch.
-
 @end(description)
+
+@chapter(Interactive Nyquist)@index(interactivity)
+@label(interactive-sec)
+
+Nyquist is not intended for real-time performance, but it has some
+features that allow you to adjust parameters interactively. The basic
+idea is that there is an array of 1000 floating point values, called
+sliders, that can be accessed while synthesizing sounds in
+Nyquist. The @code(slider) unit generator returns a signal that copies
+the current value of a slider value. You can change the slider value
+while playing sounds using either Open Sound Control or the NyquistIDE.
+
+@begin(detail)
+Sounds are normally computed on demand. So the result returned by
+@code(slider) does not immediately compute any samples. Samples
+are only computed when something tries to use this signal. At that
+time, the slider value is read. Normally, if the slider is used to
+control a sound, you will hear changes in the sound pretty soon after
+the slider value changes. However, one thing that can interfere with
+this is that @code(SOUND) samples are computed in blocks of about 1000
+samples. When the slider value is read, the same value is used to fill
+a block of 1000 samples, so even if the sample rate is 44,100 Hz, the
+effective slider sample rate is 44,100/1000, or 44.1 Hz. If you give
+the slider a very low sample rate, say 1000, then slider value changes
+will only be noticed by Nyquist approximately once per second. For
+this reason, you should normally use the audio sample rate (typically
+44,100 Hz) for the rate of the @code(snd-slider) output
+@code(SOUND). (Yes, this is terribly wasteful to represent each slider
+value with 1000 samples, but Nyquist was not designed for low-latency
+computation, and this is an expedient work-around.) 
+
+When you load
+@code(sliders.lsp), which defines a number of slider functions, two
+important settings may be changed. First @code(autonorm-off) is
+called. The problem with auto-normalization is that it works by
+computing 1 million samples ahead of real time to determine a
+normalization factor. If Nyquist computes ahead, it will be unable to
+respond to control changes until the million samples (about 20
+seconds) have been played. Secondly, @code(snd-set-latency) is used to
+set the audio latency to 0.02s (20 milliseconds). Normally, Nyquist
+uses a generous 0.3s latency which allows Nyquist to stop computing
+audio and run garbage collection without breaks in the audio
+output. At 20ms, interactivity is greatly enhanced because changes do
+not sit in audio buffers for 300ms, but you may notices some break-up
+in the audio, especially when garbage collection takes place. The
+latency can be changed to any value you like after you load
+@code(sliders.lsp).
+@end(detail)
+
+In addition to reading sliders as continually changing @code(SOUND)s,
+you can get the slider value as a Lisp @code(FLONUM) (a floating point
+number) using @code(get-slider-value). This might be
+useful if you are computing 
+a sequence of many notes (or other sound events) and want to apply the
+current slider value to the whole note or sound event.
+
+Other unit generators exist to instantiate behaviors and to stop
+sounds according to slider values. These will be described below.
+
+@section(Interactive Control with the NyquistIDE)
+To control sounds interactively using the NyquistIDE, you first create
+a control panel, then populate the panel with sliders and buttons.
+These will send values into the sliders array in the Nyquist
+process. To control a sound, you use built-in functions to retrieve
+real-time values from the sliders array as sound is being played.
+
+@subsection(Creating a Control Panel)
+A control panel is created with @code(make-slider-panel), which takes
+a panel name and color as parameters. Control panels @i(can only be
+created by executing code in Nyquist.) There is no way to configure
+control panels directly using the NyquistIDE. Control panels can be
+deleted interactively using the close button on the panel or through
+code by calling @code(close-slider-panel).
+
+@begin(fndefs)
+@codef[make-slider-panel(@pragma(defn)@index(make-slider-panel)@index(slider-panel)@index(control panel)@i(name), @i(color))] @c{[sal]}@*
+@altdef{@code[(make-slider-panel @i(name) @i(color))] @c{[lisp]}}@\@label(make-slider-panel-sec)Create
+a control panel in the IDE. The title of the control panel window is
+given by @i(name), a STRING. The color of the panel is given by
+@i(color), a FIXNUM from 0 through 12. The color 0 is gray. Other
+colors are implementation-dependent, but different numbers give
+distinguishable colors. You must load @code(sliders.lsp) to access
+this function.
+
+@codef[close-slider-panel(@pragma(defn)@index(close-slider-panel)@i(name))] @c{[sal]}@*
+@altdef{@code[(close-slider-panel @i(name))]
+@c{[lisp]}}@\@label(close-slider-panel-sec)Close 
+a control panel in the NyquistIDE named by @i(name), a STRING. Any
+embedded controls (sliders or buttons) are also destroyed. You must
+load @code(sliders.lsp) to access this function.
+@end(fndefs)
+
+@subsection(Creating Controls)
+You can create slider and button controls. A slider control adjusts a
+floating point value in the sliders array and accessible as a
+time-varying signal (a SOUND) or as a FLONUM. A button control sets a
+floating point value in the sliders array to zero (0.0) or one (1.0).
+The value changes when the left mouse button is pressed over the button control
+and changes back when the mouse button is released.
+
+@begin(fndefs)
+@codef[make-slider(@pragma(defn)@index(make-slider)@index(slider)@i(name),
+@i(init), @i(low), @i(high))] @c{[sal]}@*
+@altdef{@code[(make-slider @i(name) @i(init) @i(low) @i(high))] @c{[lisp]}}@\@label(make-slider-sec)Create
+a slider in the most recently created control panel. (Thus, you should
+populate a control panel with sliders and buttons before creating
+another control panel.) Sliders have a label specified by @i(name), a
+STRING, an initial value specified by @i(init), a FLONUM, a minimum
+value specified by @i(low), a FLONUM, and a maximum value specified by
+@i(high), a FLONUM. Sliders are added to the current panel in order from top
+to bottom. You must
+load @code(sliders.lsp) to access this function.
+
+@codef{make-button(@pragma(defn)@index(make-button)@index(button)@i(name)
+[, @i(normal)])} @c{[sal]}@*
+@altdef{@code{(make-button @i(name) [@i(normal)])} 
+@c{[lisp]}}@\@label(make-button-sec)Create a button in the most
+recently created control panel. Buttons have a label specified by
+@i(name), a STRING, and a "normal value" specified by 0 or 1 (a
+FIXNUM). If 0 is specified, the value controlled by the button is 0
+when the button is released and 1 when the button is pressed. If 1 is
+specified, the normal value is 1 changing to 0 when the button is
+pressed. Buttons are added to the control panel in order from top to
+bottom. You must
+load @code(sliders.lsp) to access this function.
+@end(fndefs)
+
+@subsection(Accessing Control Values)
+Each control created by @code(make-slider) or @code(make-button) is
+assigned a slider index from 10 to 999. Control changes are passed via
+hidden text input from the NyquistIDE to the nyquist process, where
+the values are converted to floats and stored in the slider array. You
+can then access these values with either @code(slider),
+@code(lpslider), or @code(get-slider-value).
+
+@begin(fndefs)
+@codef{slider(@pragma(defn)@index(slider)@i(number) [, @i(dur)])} @c{[sal]}@*
+@altdef{@codef{slider(@i(name) [, @i(dur)])} @c{[sal]}}@*
+@altdef{@codef{slider(@i(panel), @i(name) [, @i(dur)])} @c{[sal]}}@*
+@altdef{@code{(slider @i(number) [@i(dur)])} @c{[lisp]}}@*
+@altdef{@code{(slider @i(name) [@i(dur)])} @c{[lisp]}}@*
+@altdef{@code{(slider @i(panel) @i(name) [@i(dur)])}
+@c{[lisp]}}@\@label(slider-sec)Create a @code(SOUND) that reads signal values
+from the slider array. In the first form, the first parameter is the
+index (a FIXNUM) of the value in the slider array. In the second form,
+the slider value will be controlled by the NyquistIDE control created
+by @code(make-slider) or @code(make-button) using the same @i(name), a
+STRING. The control must be in the most recently created panel. In the
+third form, the panel named @i(panel) is searched for the control
+named @i(name) to determine the value. In all cases, the optional
+@i(dur), a FLONUM, is used to determine the duration of the
+sound. This duration is scaled by the environment in the usual way. You must
+load @code(sliders.lsp) to access this function.
+
+@codef{lpslider(@pragma(defn)@index(lpslider)@i(number) [, @i(dur)])} @c{[sal]}@*
+@altdef{@codef{lpslider(@i(name) [, @i(dur)])} @c{[sal]}}@*
+@altdef{@codef{lpslider(@i(panel), @i(name) [, @i(dur)])} @c{[sal]}} @*
+@altdef{@code{(lpslider @i(number) [@i(dur)])} @c{[lisp]}}@*
+@altdef{@code{(lpslider @i(name) [@i(dur)])} @c{[lisp]}}@*
+@altdef{@code{(lpslider @i(panel) @i(name) [@i(dur)])}
+@c{[lisp]}}@\@label(lpslider-sec)Create a @code(SOUND) based on the value of
+an interactive control. This function is exactly like @code(slider),
+except the sound is low-pass filtered to avoid sudden jumps when the
+control value is adjusted. The low-pass filter cutoff is determined by
+@code(*lpslider-cutoff*), which is initialized to 20Hz when
+@code(slider.lsp) is loaded. You must
+load @code(sliders.lsp) to access this function.
+
+@codef{get-slider-value(@pragma(defn)@index(get-slider-value)@i(number))} @c{[sal]}@*
+@altdef{@codef{get-slider-value(@i(name))} @c{[sal]}}@*
+@altdef{@codef{get-slider-value(@i(panel), @i(name) [, @i(dur)])} @c{[sal]}}@*
+@altdef{@codef{(get-slider-value @i(number))} @c{[lisp]}}@*
+@altdef{@codef{(get-slider-value @i(name))} @c{[lisp]}}@*
+@altdef{@codef{(get-slider-value @i(panel) @i(name))}
+@c{[lisp]}}@\@label(lpslider-sec)Get a value (a FLONUM) stored in the 
+slider array. The array is accessed directly if the parameter is
+@i(number), a FIXNUM. The index can be determined by searching the
+most recently created control panel by @i(name), a STRING, if only
+@i(name) is given. If both @i(panel) and @i(name) are given (STRINGS),
+the named panel is searched for the named control. The result is a FLONUM.
+You must
+load @code(sliders.lsp) to access this function.
+
+@codef[snd-slider(@pragma(defn)@index(snd-slider)@i(index), @i(t0), @i(srate), @i(duration))] @c{[sal]}@*
+@altdef{@code[(snd-slider @i(index) @i(t0) @i(srate) @i(duration))] @c{[lisp]}}@\@label(snd-slider-sec)Create
+a sound controlled by the slider named by @i(index) (an integer 
+index into the array of sliders).
+The function returns a sound. Since Nyquist sounds are computed in blocks of samples, 
+and each block is computed at once, each block will contain copies of
+the current slider 
+value. Normally, you would call @code(slider) (see above) rather than
+this low-level function.
+@end(fndefs)
+
+@subsection(Starting and Stopping Sounds)
+All Nyquist sounds have a duration. Even the @code(slider) unit
+generator has a duration and terminates at the end of that
+duration. In most cases, you will instead want interactive functions to run
+until you interactively ask them to stop. The @code(stop-on-zero)
+function terminates when an input signal (typically a slider) goes to
+zero. This can be used to terminate a complex
+interatively controlled sound. For example, here is a tone that
+terminates when the Stop button is pressed:
+@begin(example)
+exec make-button("Stop", 1)
+
+function can-stop()
+  play (hzosc(1000) * stop-on-zero(slider("Stop"))) ~ 100
+@end(example)
+The stretch factor of 100 will cause this tone to play for 100
+seconds. However, if the button named "Stop" is pressed, it will
+change value from the "normal" value 1 to 0. When the signal goes to
+zero, @code(stop-on-zero) will terminate. The multiplication then
+immediately terminates (because anything multiplied by zero will be
+zero; termination is just an efficient way to return zeros from now
+on). Since the multiplication is the top-level sound being played, the
+play stops.
+
+Another thing you might want to do with interactive control is start
+some sound. The @code(trigger) function computes an instance of a
+behavior each time an input @code(SOUND) goes from zero to
+greater-than-zero. This can be used, for example, to create a
+sequence of sound events interactively. For example:
+@begin(example)
+exec make-button("Trigger", 0)
+
+function trigger-me()
+  play trigger(slider("Trigger", 100), pluck(c3))
+@end(example)
+Here, a button control changes value from 0 to 1 when the button is
+  pressed. This value is retrieved by the @code(slider) function,
+  which runs for 100 seconds. When the button and hence the
+  @code(slider) goes from 0 to 1, the behavior, @code[pluck(c3)] is
+  instantiated. Many instances can be triggered by the button.
+
+
+@begin(fndefs)
+@codef[stop-on-zero(@pragma(defn)@index(stop-on-zero)@i(s))] @c{[sal]}@*
+@altdef{@code[(stop-on-zero @i(s))]
+@c{[lisp]}}@\@label(stop-on-zero-sec)Return a @code(SOUND) that is identical
+to @i(s), a @code(SOUND), except the returned sound terminates when @i(s)
+first goes to zero. When a sound terminates, it remains at zero. A
+@code(SOUND) multiplication terminates when either parameter terminates, so
+multiplying by @code(stop-on-zero) is a way to terminate a sound
+interactively. (See the example above.)
+You must
+load @code(sliders.lsp) to access this function.
+
+@codef{trigger(@pragma(defn)@index(trigger)@i(s) @i(behavior))} @c{[sal]}@*
+@altdef{@code{(trigger @i(s) @i(behavior))}
+@c{[lisp]}}@\@label(trigger-sec)Instantiate a behavior each time a signal
+becomes positive: Each time @i(s), a @code(SOUND), makes a transition from
+zero or less to greater than zero, @i(behavior), an expression, is
+evaluated at the current time and must return a
+@code(SOUND). (Multi-channel behaviors are not allowed.)
+ The result is the sum of all
+instantiated behaviors (which may overlap in time). (See the example above.)
+The stop time of the result is the maximum stop time of @i(s) and
+all sounds returned by instances of the behavior. 
+The sample rate of the return value is
+the sample rate of @i(s), and the sounds returned by the closure must all
+have that same sample rate. Do not call this function. 
+
+@codef[snd-stoponzero(@pragma(defn)@index(snd-stoponzero)@i(s))] @c{[sal]}@*
+@altdef{@code[(snd-stoponzero @i(s))]
+@c{[lisp]}}@\@label(snd-stoponzero-sec)This function is identical to
+@code(stop-on-zero). You should use @code(stop-on-zero) instead.
+
+@codef[snd-trigger(@pragma(defn)@index(snd-trigger)@i(s), @i(closure))] @c{[sal]}@*
+@altdef{@code[(snd-trigger @i(s) @i(closure))] @c{[lisp]}}@\This is one of
+the only ways in which a behavior instance can be created by changes in a
+signal. When @i(s) (a @code(SOUND)) makes a transition from less than or 
+equal to zero to greater than zero, the closure, which takes a starting
+time parameter, is evaluated. The closure must return a @code(SOUND). The
+sum of all these sounds is returned. If there are no sounds, the result will
+be zero. The stop time of the result is the maximum stop time of @i(s) and
+all sounds returned by the closure. The sample rate of the return value is
+the sample rate of @i(s), and the sounds returned by the closure must all
+have that same sample rate. Do not call this function. 
+Use @code(trigger), described above.
+@blankspace(1)
+@begin(detail)
+An implementation note: There is no way to have @code(snd-trigger) return
+a multichannel sound. An alternative implementation would be a built-in
+function to scan ahead in a sound to find the time of the next zero crossing.
+This could be combined with some LISP code similar to @code(seq) to sum up
+instances of the closure. However, this would force arbitrary look-ahead
+and therefore would not work with real-time inputs, which was the motivation
+for @code(snd-trigger) in the first place.
+@end(detail)
+@end(fndefs)
+
+@section(Using Open Sound Control)@index(Open Sound Control)
+@label(open-sound-control-sec)
+Open Sound Control (OSC) is a simple protocol for communicating music
+control parameters between software applications and across
+networks. For more information, see @html[<a
+href="http://wwww.cnmat.berkeley.edu/OpenSoundControl">]@code(http://www.cnmat.berkeley.edu/OpenSoundControl/)@html[</a>]. The
+Nyquist implementation of Open Sound Control is simple: an array of
+floats can be set by OSC messages and read by Nyquist functions. That
+is about all there is to it. 
+
+The @code(slider) and
+@code(get-slider-value) functions, described above, can be used to
+access these values within Nyquist. Each of these functions can take a
+slider array index to specify which value to use. Since
+@code(make-slider) allocates slider indices starting at 10, it is
+recommended that you control sliders 0 through 9 via OSC. If you
+change a slider array value via OSC that is already controlled by a
+graphical slider in the NyquistIDE, the graphical slider will not be
+updated or synchronized to the OSC value. (And there is no current way
+to send OSC command to the NyquistIDE.)
+
+Note: Open Sound Control must be enabled by calling
+@code[osc-enable(t)]. If this fails under Windows, see the
+installation instructions in @code(sys/win/README.txt) regarding
+@code(SystemRoot).
+
+@codef{osc-enable(@pragma(defn)@index(osc-enable)@index(osc)@index(open sound control)@i(flag))} @c{[sal]}@*
+@altdef{@code[(osc-enable @i(flag))] @c{[lisp]}}@\Enable or disable Open Sound Control.
+(See Section @ref(open-sound-control-sec).)
+Enabling creates a socket and a service that listens for UDP 
+packets on port 7770. Currently, only two messages are accepted 
+by Nyquist. The first is of the form @code(/slider)
+with an integer index and a floating point value. These set internal 
+slider values accessed by the @code(slider) and
+@code(get-slider-value) functions. The second is of the form
+@code(/wii/orientation) with 
+two floating point values. This message is a special case to 
+support the DarwiinRemoteOsc@index(DarwiinRemoteOsc) program
+ which can relay data from
+a Nintendo@index(Nintendo WiiMote) WiiMote@index(Wii Controller)
+ device to Nyquist via OSC. The two orientation
+values control sliders 0 and 1.
+Disabling terminates the service (polling for messages) 
+and closes the socket. The @i(previous) state of enablement
+is returned, e.g. if OSC is enabled and @i(flag) is @i(nil), 
+OSC is disabled and @code(T) (true) is returned because OSC 
+was enabled at the time of the call. This function only exists 
+if Nyquist is compiled with the compiler flag @code(OSC). 
+Otherwise, the function 
+exists but always returns the symbol @code(DISABLED). 
+@i(Warning:) there is the potential for 
+network-based attacks using OSC. It is tempting to add the 
+ability to evaluate XLISP expressions sent via OSC, but 
+this would create
+unlimited and unprotected access to OSC clients. For now, 
+it is unlikely that an attacker could do more than 
+manipulate slider values.
+
+@subsection(Sending Open Sound Control Messages)
+A variety of programs support OSC. The only OSC message interpreted by Nyquist has an address of @code[/slider], and two parameters: an integer slider number and a float value, nominally from 0.0 to 1.0. 
+
+Two small programs are included in the Nyquist distribution for sending OSC messages. (Both can be found in the same directory as the nyquist executable.) The first one, @code[osc-test-client] sends a sequence of messages that just cause slider 0 to ramp slowly up and down. If you run this on a command line, you can use "?" or "h" to get help information. There is an interactive mode that lets you send each OSC message by typing RETURN.
+
+@subsection(The ser-to-osc Program)
+The second program is @code[ser-to-osc], a program that reads serial input (for example from a PIC-based microcontroller) and sends OSC messages. Run this command-line program from a shell (a terminal window under OS X or Linux; use the CMD program under Windows). You must name the serial input device on the command line, e.g. under OS X, you might run:
+@begin(example)
+./ser-to-osc /dev/tty.usbserial-0000103D
+@end(example)
+(Note that the program name is preceded by ``@code(./)". This tells the shell exactly where to find the executable program in case the current directory is not on the search path for executable programs.)
+Under Windows, you might run:
+@begin(example)
+ser-to-osc com4
+@end(example)
+(Note that you do not type ``@code(./)'' in front of a windows program.)
+
+To use @code(ser-to-osc), you will have to find the serial device. On the Macintosh and Linux, try the following:
+@begin(example)
+ls /dev/*usb*
+@end(example)
+This will list all serial devices with ``usb'' in their names. Probably, one will be a name similar to @code(/dev/tty.usbserial-0000103D). The @code(ser-to-osc) program will echo data that it receives, so you should know if things are working correctly.
+
+Under Windows, open Control Panel from the Start menu, and open the System control panel. Select the Hardware tab and click the Device Manager button. Look in the device list under Ports (COM & LPT). When you plug in your serial or USB device, you should see a new entry appear, e.g. @code(COM4). This is the device name you need.
+
+The format for the serial input is: any non-whitespace character(s), a slider number, a slider value, and a newline (control-j or ASCII 0x0A). These fields need to be separated by tabs or spaces. An optional carriage return (control-m or ASCII 0x0D) preceding the ASCII 0x0A is ignored. The slider number should be in decimal, and theh slider value is a decimal number from 0 to 255. This is scaled to the range 0.0 to 1.0 (so an input of 255 translates to 1.0).
+
+There is a simple test program in @code[demos/osc-test.lsp] you can run to try out control with Open Sound Control. There are two examples in that file. One uses @code(snd-slider) to control the frequency of an oscillator. The other uses @code(get-slider-value) to control the pitch of grains in a granular synthesis process.
 
 @chapter(Time/Frequency Transformation)
 Nyquist provides functions for FFT and inverse FFT operations on streams of audio data.
@@ -6388,7 +6808,6 @@ the sequence of frames.
 
 @codef[lpc-frame-filter-coefs(@pragma(defn)@index(lpc-frame-filter-coefs)@i(frame))] @c{[sal]}@*
 @altdef{@code[(lpc-frame-filter-coefs @i(frame))] @c{[lisp]}}@\Get the filter coefficients from a frame.
-
 @end(fndefs)
 
 @section(Low-level LPC Functions)
@@ -6624,18 +7043,38 @@ the @i(y) power.
 @index(Xmusic)@index(Algorithmic Composition)
 Several Nyquist libraries offer support for algorithmic composition. Xmusic 
 is a library for generating sequences and patterns of data. Included in Xmusic 
-is the @code(score-gen) macro which helps to generate scores from patterns.
-Another important facility is the @code(distributions.lsp) library,
-containing many different random number generators.
+are:
+@begin(itemize)
+pattern objects, used to generate interesting sequences of parameter values,
+
+random number generators, used to create random sequences from
+different distributions (contained in the @code(distributions.lsp)
+library) 
+
+a standard representation for "note lists" called @i(scores) and
+functions to render them as sounds, 
+
+the @code(score-gen) macro which helps to generate scores from patterns, 
+
+score manipulation functions to select, transform, shift, and perform
+other operations on scores. 
+@end(itemize)
 
 @section(Xmusic Basics)
-Xmusic is inspired by and based on Common Music by Rick Taube. Currently, 
-Xmusic only implements patterns and some simple support for scores to be
-realized as sound by Nyquist. In contrast, Common Music supports MIDI and
+Xmusic is inspired by and based on Common Music by Rick Taube. 
+Common Music supports MIDI and
 various other synthesis languages and includes a graphical interface, some
 visualization tools, and many other features. Common Music runs in Common
-Lisp and Scheme, but not XLISP, which is the base language for Nyquist.
+Lisp and Scheme, but not XLISP (the base language for Nyquist). 
 
+The Xmusic libraries in Nyquist offer an interesting subset of the
+tools in Common Music. One important feature of Xmusic is that it is
+integrated with all of the Nyquist synthesis functions, so you can use
+Xmusic patterns and scores to control fine details of sound
+synthesis. 
+
+@section(Xmusic Patterns)
+@index(Patterns)
 Xmusic patterns are objects that generate data streams. For example, 
 the @code(cycle-class) of objects generate cyclical patterns such as 
 "1 2 3 1 2 3 1 2 3 ...", or "1 2 3 4 3 2 1 2 3 4 ...". Patterns can
@@ -6646,6 +7085,22 @@ To use a pattern object, you first create the pattern, e.g.
 @begin(example)
 set pitch-source = make-cycle(list(c4, d4, e4, f4))
 @end(example)
+@index(pattern-class)@index(pattern objects)
+In this example, @code(pitch-source) is an object of class
+@code(cycle-class) which inherits from @code(pattern-class). 
+
+@begin(detail)
+Because SAL is not an object-oriented language, these classes and
+their methods are not directly accessible from SAL.
+Instead, Xmusic defines a functional interface, e.g. @code(make-cycle)
+creates an instance of @code(cycle-class), and the @code(next)
+function, introduced below, retrieves the next value from any instance
+of @code(pattern-class). Using LISP syntax, you can have full access
+to the methods of all objects (see the source code in @code(xm.lsp),
+but the functional interface described here should be sufficient and
+it is recommended that you limit your access to this interface.
+@end(detail)
+
 After creating the pattern, you can access it repeatedly 
 with @code(next)@index(next in pattern) to generate data, e.g.
 @begin(example)
@@ -6672,6 +7127,7 @@ First, the pattern is created and stored in a
 variable using @code(setf). Second, the pattern is accessed (multiple
 times) using @code(next).
 
+@subsection(Nested Patterns)
 Patterns can be nested, that is, you can write patterns of patterns. 
 In general, the @code(next) function does not return patterns. Instead,
 if the next item in a pattern is a (nested) pattern, @code(next) recursively
@@ -6685,6 +7141,7 @@ to the inner-most nesting level, this is not how @code(next) works. Instead,
 until the end of the inner pattern's @i(period) is reached. The next 
 paragraph explains the concept of the @i(period).
 
+@subsection(Periods)
 The data returned by a pattern object is structured into logical groups
 called @i(periods). You can get an entire period (as a list) by calling
 @code[next(@i(pattern), t)]@index(next pattern). For example:
@@ -6723,6 +7180,7 @@ This will print "A B C X Y Z A B C". Notice that the inner-most
 cycles @code(cycle-1) and @code(cycle-2) generate a period of items
 before the top-level @code(cycle-3) advances to the next pattern.
 
+@subsection(General Parameters for Creating Pattern objects)
 Before describing specific pattern classes, there are several optional
 parameters that apply in the creating of any pattern object. These are:
 @begin(description, leftmargin +2 in, indent -2 in)
@@ -6738,11 +7196,9 @@ if the @code(trace:) option is used.
 @code(trace:)@\If non-null, this optional parameter causes information
 about the pattern to be printed each time an item is generated 
 from the pattern.
-
 @end(description)
 The built-in pattern classes are described in the following section.
 
-@section(Pattern Classes)
 @subsection(cycle)
 The @code(cycle-class) iterates repeatedly through a list of items. 
 For example, two periods of @code[make-cycle({a b c})] would be
@@ -6876,19 +7332,23 @@ where @i(n) is the length of @i(items).  If @i(items) is a pattern, a period
 from that pattern becomes the list from which items are generated,
 and a new list is generated every period. Note that this is similar in 
 name but different from @code(make-accumulate).
+@end(fndefs)
 
 @subsection(copier)
 The @code(copier-class) makes copies of periods from a sub-pattern.
 For example, three periods 
-of @code[make-copier(make-cycle({a b c}, for: 1), repeat: 2, merge: t)]
+of @code[make-copier( make-cycle({a b c}, for: 1), repeat: 2, merge: t)]
 would be @code[(A A) (B B) (C C)]. Note that entire periods (not
 individual items) are repeated, so in this example the @code(for:) 
 keyword was used to force periods to be of length one so that 
 each item is repeated by the @code(repeat:) count.
 
+@begin(fndefs)
 @codef{make-copier(@pragma(defn)@index(make-copier)@index(copier 
-pattern)@index(pattern, copier)@i(sub-pattern), repeat: @i(repeat), merge: @i(merge), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-copier @i(sub-pattern) :repeat @i(repeat) :merge @i(merge) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Generate a period
+pattern)@index(pattern, copier)@i(sub-pattern), repeat: @i(repeat), merge: @i(merge), for: @i(for), @latex(\\
+\hspace*{3em})name: @i(name), trace: @i(trace))} @c{[sal]}@*
+@altdef{@code{(make-copier @i(sub-pattern) :repeat @i(repeat) :merge @i(merge) :for @i(for) @latex(\\
+\hspace*{3em}):name @i(name) :trace @i(trace))} @c{[lisp]}}@\Generate a period
 from @i(sub-pattern) and repeat it @i(repeat) times. If @i(merge) is false
 (the default), each repetition of a period from @i(sub-pattern) results
 in a period by default. If @i(merge) is true (non-null), then all
@@ -6913,8 +7373,10 @@ The default output period length is the length of the input period.
 
 @begin(fndefs)
 @codef{make-accumulate(@pragma(defn)@index(make-accumulate)@index(accumulate 
-pattern)@index(pattern, accumulate)@i(sub-pattern), for: @i(for), max: @i(maximum), min: @i(minimum), name: @i(name), trace: @i(trace))} @c{[sal]}@*
-@altdef{@code{(make-accumulate @i(sub-pattern) :for @i(for) :max @i(maximum) :min @i(minimum) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Keep
+pattern)@index(pattern, accumulate)@i(sub-pattern), for: @i(for), max: @i(maximum), min: @i(minimum), @latex(\\
+\hspace*{3em})name: @i(name), trace: @i(trace))} @c{[sal]}@*
+@altdef{@code{(make-accumulate @i(sub-pattern) :for @i(for) :max @i(maximum) :min @i(minimum) @latex(\\
+\hspace*{3em}):name @i(name) :trace @i(trace))} @c{[lisp]}}@\Keep
 a running sum of numbers generated by @i(sub-pattern). The default
 period lengths match the period lengths from @i(sub-pattern). If @i(maximum) (a pattern or a number) is specified, and the running sum exceeds @i(maximum), the running sum is reset to @i(maximum). If @i(minimum) (a pattern or a number) is specified, and the running sum falls below @i(minimum), the running sum is reset to @i(minimum). If @i(minimum) is greater than @i(maximum), the running sum will be set to one of the two values. Note that this is similar in name but not in function to
 @code(make-accumulation).
@@ -7112,7 +7574,8 @@ The upper and lower bounds are implemented simply by drawing a random number fro
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "linear-fig.ps"))
+		postscript = "linear-fig.ps")
+@latex(\includegraphics[scale=0.8]{linear-fig}))
 @html(<img src="linear-fig.gif"><br><br>)
 @fillcaption(The Linear Distribution, @i(g) = 1.)
 @tag(linear-fig)
@@ -7129,7 +7592,8 @@ is a continuous distribution, but @code(geometric-dist) (described below) implem
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "exponential-fig.ps"))
+		postscript = "exponential-fig.ps")
+@latex(\includegraphics[scale=0.8]{exponential-fig}))
 @html(<img src="exponential-fig.gif"><br><br>)
 @fillcaption(The Exponential Distribution, @i(delta) = 1.)
 @tag(exponential-fig)
@@ -7143,7 +7607,8 @@ is a continuous distribution, but @code(geometric-dist) (described below) implem
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "gamma-fig.ps"))
+		postscript = "gamma-fig.ps")
+@latex(\includegraphics[scale=0.8]{gamma-fig}))
 @html(<img src="gamma-fig.gif"><br><br>)
 @fillcaption(The Gamma Distribution, @i(nu) = 4.)
 @tag(gamma-fig)
@@ -7160,7 +7625,8 @@ the exponential, it can be used to generate time intervals; however, it might be
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "bilateral-fig.ps"))
+		postscript = "bilateral-fig.ps")
+@latex(\includegraphics[scale=0.8]{bilateral-fig}))
 @html(<img src="bilateral-fig.gif"><br><br>)
 @fillcaption(The Bilateral Exponential Distribution.)
 @tag(bilateral-fig)
@@ -7168,12 +7634,13 @@ the exponential, it can be used to generate time intervals; however, it might be
 
 @begin(fndefs)
 @codef{cauchy-dist(@pragma(defn)@index(cauchy-dist)@index(cauchy distribution)@i(tau) [, @i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code{(cauchy-dist @i(tau) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) from the Cauchy distribution, a symetric distribution with a high peak at zero and a width (variance) that increases with parameter @i(tau), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@altdef{@code{(cauchy-dist @i(tau) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) from the Cauchy distribution, a symmetric distribution with a high peak at zero and a width (variance) that increases with parameter @i(tau), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "cauchy-fig.ps"))
+		postscript = "cauchy-fig.ps")
+@latex(\includegraphics[scale=0.8]{cauchy-fig}))
 @html(<img src="cauchy-fig.gif"><br><br>)
 @fillcaption(The Cauchy Distribution, @i(tau) = 1.)
 @tag(cauchy-fig)
@@ -7181,12 +7648,13 @@ the exponential, it can be used to generate time intervals; however, it might be
 
 @begin(fndefs)
 @codef{hyperbolic-cosine-dist(@pragma(defn)@index(hyperbolic-cosine-dist)[@i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code[(hyperbolic-cosine-dist [@i(low) @i(high)])] @c{[lisp]}}@\Returns a @code(FLONUM) value from the hyperbolic cosine distribution, a symetric distribution with its peak at zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@altdef{@code{(hyperbolic-cosine-dist [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from the hyperbolic cosine distribution, a symmetric distribution with its peak at zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "hyperbolic-fig.ps"))
+		postscript = "hyperbolic-fig.ps")
+@latex(\includegraphics[scale=0.8]{hyperbolic-fig}))
 @html(<img src="hyperbolic-fig.gif"><br><br>)
 @fillcaption(The Hyperbolic Cosine Distribution.)
 @tag(hyperbolic-fig)
@@ -7194,12 +7662,13 @@ the exponential, it can be used to generate time intervals; however, it might be
 
 @begin(fndefs)
 @codef{logistic-dist(@pragma(defn)@index(logistic-dist)@index(logistic distribution)@i(alpha), @i(beta) [, @i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code{(logistic-dist @i(alpha) @i(beta) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from the logistic distribution, which is symetric about the mean. The @i(alpha) parameter primarily affects dispersion (variance), with larger values resulting in values closer to the mean (less variance), and the @i(beta) parameter primarily influences the mean. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@altdef{@code{(logistic-dist @i(alpha) @i(beta) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from the logistic distribution, which is symmetric about the mean. The @i(alpha) parameter primarily affects dispersion (variance), with larger values resulting in values closer to the mean (less variance), and the @i(beta) parameter primarily influences the mean. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "logistic-fig.ps"))
+		postscript = "logistic-fig.ps")
+@latex(\includegraphics[scale=0.8]{logistic-fig}))
 @html(<img src="logistic-fig.gif"><br><br>)
 @fillcaption(The Logistic Distribution, alpha = 1, beta = 2.)
 @tag(logistic-fig)
@@ -7207,12 +7676,13 @@ the exponential, it can be used to generate time intervals; however, it might be
 
 @begin(fndefs)
 @codef{arc-sine-dist(@pragma(defn)@index(arc-sine-dist)@index(arcsine distribution))} @c{[sal]}@*
-@altdef{@code{(arc-sine-dist)} @c{[lisp]}}@\Returns a @code(FLONUM) value from the arc sine distribution, which outputs values between 0 and 1. It is symetric about the mean of 1/2, but is more likely to generate values closer to 0 and 1. 
+@altdef{@code{(arc-sine-dist)} @c{[lisp]}}@\Returns a @code(FLONUM) value from the arc sine distribution, which outputs values between 0 and 1. It is symmetric about the mean of 1/2, but is more likely to generate values closer to 0 and 1. 
 @end(fndefs)
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "arcsine-fig.ps"))
+		postscript = "arcsine-fig.ps")
+@latex(\includegraphics[scale=0.8]{arcsine-fig}))
 @html(<img src="arcsine-fig.gif"><br><br>)
 @fillcaption(The Arc Sine Distribution.)
 @tag(arcsine-fig)
@@ -7220,12 +7690,13 @@ the exponential, it can be used to generate time intervals; however, it might be
 
 @begin(fndefs)
 @codef{gaussian-dist(@index(Gaussian distribution)@pragma(defn)@index(gaussian-dist)@i(xmu), @i(sigma) [, @i(low), @i(high)])} @c{[sal]}@*
-@altdef{@code{(gaussian-dist @i(xmu) @i(sigma) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from the Gaussian or Gauss-Laplace distribution, a linear function of the normal distribution. It is symetric about the mean of @i(xmu), with a standard deviation of @i(sigma), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
+@altdef{@code{(gaussian-dist @i(xmu) @i(sigma) [@i(low) @i(high)])} @c{[lisp]}}@\Returns a @code(FLONUM) value from the Gaussian or Gauss-Laplace distribution, a linear function of the normal distribution. It is symmetric about the mean of @i(xmu), with a standard deviation of @i(sigma), which must be greater than zero. The @i(low) and @i(high) parameters give optional artificial bounds on the minimum and maximum output values, respectively.
 @end(fndefs)
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "gaussian-fig.ps"))
+		postscript = "gaussian-fig.ps")
+@latex(\includegraphics[scale=0.8]{gaussian-fig}))
 @html(<img src="gaussian-fig.gif"><br><br>)
 @fillcaption{The Gauss-Laplace (Gaussian) Distribution, @i(xmu) = 0, @i(sigma) = 1.}
 @tag(gaussian-fig)
@@ -7233,12 +7704,13 @@ the exponential, it can be used to generate time intervals; however, it might be
 
 @begin(fndefs)
 @codef{beta-dist(@index(beta distribution)@pragma(defn)@index(beta-dist)@i(a), @i(b))} @c{[sal]}@*
-@altdef{@code[(beta-dist @i(a) @i(b))] @c{[lisp]}}@\Returns a @code(FLONUM) value from the Beta distribution. This distribution outputs values between 0 and 1, with outputs more likely to be close to 0 or 1. The parameter @i(a) controls the height (probability) of the right side of the distribution (at 1) and @i(b) controls the height of the left side (at 0). The distribution is symetric about 1/2 when @i(a) = @i(b).
+@altdef{@code[(beta-dist @i(a) @i(b))] @c{[lisp]}}@\Returns a @code(FLONUM) value from the Beta distribution. This distribution outputs values between 0 and 1, with outputs more likely to be close to 0 or 1. The parameter @i(a) controls the height (probability) of the right side of the distribution (at 1) and @i(b) controls the height of the left side (at 0). The distribution is symmetric about 1/2 when @i(a) = @i(b).
 @end(fndefs)
 
 @begin(figure)
 @center(@graphic((height = 2.5 in, width = 3.75 in, magnify = 1,
-		postscript = "beta-fig.ps"))
+		postscript = "beta-fig.ps")
+@latex(\includegraphics[scale=0.8]{beta-fig}))
 @html(<img src="beta-fig.gif"><br><br>)
 @fillcaption(The Beta Distribution, @i(alpha) = .5, @i(beta) = .25.)
 @tag(beta-fig)
@@ -7253,7 +7725,8 @@ a failure.
 
 @begin(figure)
 @center(@graphic((height = 3.5 in, width = 3.75 in, magnify = 0.75,
-		postscript = "bernoulli-fig.ps"))
+		postscript = "bernoulli-fig.ps")
+@latex(\includegraphics[scale=0.7]{bernoulli-fig}))
 @html(<img src="bernoulli-fig.gif"><br><br>)
 @fillcaption(The Bernoulli Distribution, @i(px1) = .75.)
 @tag(bernoulli-fig)
@@ -7266,7 +7739,8 @@ a failure.
 
 @begin(figure)
 @center(@graphic((height = 3.5 in, width = 3.75 in, magnify = 0.75,
-		postscript = "binomial-fig.ps"))
+		postscript = "binomial-fig.ps")
+@latex(\includegraphics[scale=0.7]{binomial-fig}))
 @html(<img src="binomial-fig.gif"><br><br>)
 @fillcaption(The Binomial Distribution, @i(n) = 5, @i(p) = .5.)
 @tag(binomial-fig)
@@ -7279,7 +7753,8 @@ a failure.
 
 @begin(figure)
 @center(@graphic((height = 3.5 in, width = 3.75 in, magnify = 0.75,
-		postscript = "geometric-fig.ps"))
+		postscript = "geometric-fig.ps")
+@latex(\includegraphics[scale=0.7]{geometric-fig}))
 @html(<img src="geometric-fig.gif"><br><br>)
 @fillcaption(The Geometric Distribution, @i(p) = .4.)
 @tag(geometric-fig)
@@ -7292,7 +7767,8 @@ a failure.
 
 @begin(figure)
 @center(@graphic((height = 3.5 in, width = 3.75 in, magnify = 0.75,
-		postscript = "poisson-fig.ps"))
+		postscript = "poisson-fig.ps")
+@latex(\includegraphics[scale=0.7]{poisson-fig}))
 @html(<img src="poisson-fig.gif"><br><br>)
 @fillcaption(The Poisson Distribution, @i(delta) = 3.)
 @tag(poisson-fig)
@@ -7642,7 +8118,6 @@ specified, and otherwise @code(nil).
 
 @codef{event-set-attr(@pragma(defn)@index(event-set-attr)@i(event), @i(attribute), @i(value))} @c{[sal]}@*
 @altdef{@code[(event-set-attr @i(event) @i(attribute) @i(value))] @c{[lisp]}}@\Construct a new event identical to @i(event) except that the @i(attribute) has @i(value).
-
 @end(fndefs)
 
 Functions are provided to shift the starting times of notes,
@@ -7689,10 +8164,12 @@ keyword parameters. The begin time of the score is not changed, but the
 end time is increased by @i(offset).
 The original score is not modified, and a new score is returned.
 
-@codef{score-stretch(@pragma(defn)@index(score-stretch)@i(score), @i(factor), dur: @i(dur-flag), time: @i(time-flag), from-index: @i(i),
+@codef{score-stretch(@pragma(defn)@index(score-stretch)@i(score), @i(factor), dur: @i(dur-flag), time: @i(time-flag), @latex(\\
+\hspace*{3em})from-index: @i(i),
  to-index: @i(j), from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
 @altdef{@code{(score-stretch @i(score) @i(factor)
- :dur @i(dur-flag) :time @i(time-flag) :from-index @i(i)
+ :dur @i(dur-flag) :time @i(time-flag) @latex(\\
+\hspace*{3em}):from-index @i(i)
  :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Stretch  
 note times and durations by @i(factor). The default @i(dur-flag) is 
 non-null, but if @i(dur-flag) is null, the original durations are retained
@@ -7711,11 +8188,11 @@ any notes are present or where they start. In other words, the
 The original score is not modified, and a new score is returned.
 
 @codef{score-transpose(@pragma(defn)@index(score-transpose)@i(score),
- @i(keyword),  @i(amount), from-index: @i(i), to-index: @i(j),
- from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
+ @i(keyword),  @i(amount), from-index: @i(i), to-index: @i(j), @latex(\\
+\hspace*{3em})from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
 @altdef{@code{(score-transpose @i(score)
- @i(keyword) @i(amount) :from-index @i(i) :to-index @i(j)
- :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\For 
+ @i(keyword) @i(amount) :from-index @i(i) :to-index @i(j) @latex(\\
+\hspace*{3em}):from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\For 
  each note in the score and in any indicated range, if there is a keyword
  parameter matching @i(keyword) and the
 parameter value is a number, increment
@@ -7747,11 +8224,11 @@ starting times. The original score is not modified, and
 a new score is returned.
 
 @codef{score-voice(@pragma(defn)@index(score-voice)@i(score),
- @i(replacement-list), from-index: @i(i), to-index: @i(j),
- from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
+ @i(replacement-list), from-index: @i(i), to-index: @i(j), @latex(\\
+\hspace*{3em})from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
 @altdef{@code{(score-voice @i(score)
- @i(replacement-list) :from-index @i(i) :to-index @i(j)
- :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\For each note
+ @i(replacement-list) :from-index @i(i) :to-index @i(j) @latex(\\
+\hspace*{3em}):from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\For each note
 in the score and in any indicated range, replace the behavior (function)
 name using @i(replacement-list), which has the format: 
 @code[((@i(old1 new1)) (@i(old2 new2)) @r(...))], where @i(oldi) indicates
@@ -7782,10 +8259,12 @@ previous score; thus, scores are ``spliced'' in sequence. The original
 scores are not modified, and a new score is returned.
 
 @codef{score-select(@pragma(defn)@index(score-select)@index(score-filter)@i(score),
- @i(predicate), from-index: @i(i), to-index: @i(j), from-time: @i(x),
+ @i(predicate), from-index: @i(i), to-index: @i(j), @latex(\\
+\hspace*{3em})from-time: @i(x),
  to-time: @i(y), reject: @i(flag))} @c{[sal]}@*
 @altdef{@code{(score-select @i(score)
- @i(predicate) :from-index @i(i) :to-index @i(j) :from-time @i(x)
+ @i(predicate) :from-index @i(i) :to-index @i(j) @latex(\\
+\hspace*{3em}):from-time @i(x)
  :to-time @i(y) :reject @i(flag))} @c{[lisp]}}@\Select (or reject)
 notes to form a new score. Notes are selected if they fall into the
 given ranges of index and time @i(and) they satisfy @i(predicate), a function
@@ -7862,9 +8341,10 @@ using @code(timed-seq) to convert the score to a sound, and
 
 @codef{score-adjacent-events(@pragma(defn)@index(score-adjacent-events)@i(score),
  @i(function),
- from-index: @i(i), to-index: @i(j), 
- from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
-@altdef{@code{(score-adjacent-events @i(score) @i(function) :from-index @i(i) :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Call
+ from-index: @i(i), to-index: @i(j), @latex(\\
+\hspace*{3em})from-time: @i(x), to-time: @i(y))} @c{[sal]}@*
+@altdef{@code{(score-adjacent-events @i(score) @i(function) :from-index @i(i) :to-index @i(j) @latex(\\
+\hspace*{3em}):from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Call
  @code[(@i(function) @i(A) @i(B) @i(C))], where
 @i(A), @i(B), and @i(C) are consecutive notes in the score. The result
 replaces @i(B). If the result is @code(nil), @i(B) is deleted, and the
@@ -7898,10 +8378,13 @@ using @code[(@i(function time dur expression))] returns true.
 
 
 @codef{score-last-indexof(@pragma(defn)@index(score-last-indexof)@i(score),
- @i(function), from-index: @i(i), to-index: @i(j), from-time: @i(x), 
+ @i(function), from-index: @i(i), to-index: @i(j), @latex(\\
+\hspace*{3em})from-time: @i(x), 
 to-time: @i(y))} @c{[sal]}@*
 @altdef{@code{(score-last-indexof @i(score) @i(function)
- :from-index @i(i) :to-index @i(j) :from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Return the index (position)
+ :from-index @i(i) :to-index @i(j) @latex(\\
+\hspace*{3em}):from-time @i(x) :to-time @i(y))} @c{[lisp]}}@\Return 
+the index (position)
 of the last score event (in range) for which applying @i(function) 
 using @code[(@i(function time dur expression))] returns true.
 
@@ -7926,8 +8409,7 @@ changes, pitch bends, and other messages.
 MIDI notes are translated to Xmusic score events as follows:
 @begin(display)
 @code[(@i(time) @i(dur) (NOTE :chan @i(channel) :pitch @i(keynum) :vel @i(velocity)))],
-@end(display)
-where @i(channel), @i(keynum), and @i(velocity) come directly 
+@end(display) where @i(channel), @i(keynum), and @i(velocity) come directly 
 from the MIDI message (channels are numbered starting from zero).
 Note also that note-off messages are implied by the stretch factor 
 @i(dur) which is duration in seconds.
@@ -7961,7 +8443,7 @@ details on handling program changes.
 
 @codef{score-write-smf(@pragma(defn)@index(score-write-smf)@index(midi file)@i(score), @i(filename),
 [@i(programs) @i(as-adagio)])} @c{[sal]}@*
-@altdef{@code{(score-write-smf @i(score) @i(filename) [@i(programs)) @i(as-adagio)]} @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
+@altdef{@code{(score-write-smf @i(score) @i(filename) [@i(programs)]) @i(as-adagio)]} @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
 with notes in @i(score). In this function,
 @i(every) event in the score with a @code(pitch:) attribute, regardless of the
 ``instrument'' (or function name), generates a
@@ -7986,11 +8468,11 @@ one less than displayed on MIDI hardware, sequencers, etc.) The
  @i[as-adagio] optional parameter should normally be omitted. 
 If non-nil, the file is written in Adagio format, but if you 
 want to do that, call @code(score-write) instead.
-@end(fndefs)
 
 @codef{score-write(@pragma(defn)@index(score-write)@index(midi file)@i(score), @i(filename),
 [@i(programs)])} @c{[sal]}@*
 @altdef{@code{(score-write @i(score) @i(filename) [@i(programs)]} @c{[lisp]}}@\Write an Adagioformat file to @i(filename) with notes in @i(score). See Chapter @ref(adagio-chap) for details on Adagio, a text-based score language. See @code(score-write-smf) for details on MIDI program changes.
+@end(fndefs)
 
 
 @subsection(Workspaces)
@@ -8034,7 +8516,7 @@ directory), overwriting the previous file.
 
 @codef{describe(@pragma(defn)@index(describe)@i(symbol) [, @i(description)])}
  @c{[sal]}@*
-@altdef{@code[(describe @i(symbol) [@i(description)])] @c{[lisp]}}@\If @i(description), a text string, is present, 
+@altdef{@code{(describe @i(symbol) [@i(description)])} @c{[lisp]}}@\If @i(description), a text string, is present, 
 associate @i(description) with the variable named by the
 @i(symbol). If @i(symbol) is not already in the workspace, 
 it is added. If @i(description) is omitted, the function returns
@@ -8210,11 +8692,13 @@ to set the overall level without clipping.
 @begin(fndefs)
 @codef{compress-map(@pragma(defn)@index(compress-map)@i(compress-ratio), 
 @i(compress-threshold), 
-@i(expand-ratio), @i(expand-threshold), limit: @i(limit), transition: 
-@i(transition))} @c{[sal]}@*
+@i(expand-ratio), @i(expand-threshold), @latex(\\
+\hspace*{3em})limit: @i(limit), transition: 
+@i(transition), verbose: @i(verbose))} @c{[sal]}@*
 @altdef{@code{(compress-map @i(compress-ratio) @i(compress-threshold)
- @i(expand-ratio) @i(expand-threshold) [:limit @i(limit) :transition
- @i(transition) :verbose @i(verbose)])} @c{[lisp]}}@\Construct
+ @i(expand-ratio) @i(expand-threshold) @latex(\\
+\hspace*{3em}):limit @i(limit) :transition
+ @i(transition) :verbose @i(verbose))} @c{[lisp]}}@\Construct
 a map for the compress function. The map consists of two parts: a compression
 part and an expansion part.
 The intended use is to compress everything above compress-threshold by
@@ -8253,8 +8737,8 @@ dB to gain. Time 1.0 corresponds to 0dB, time 0.0 corresponds to
 of @i(input) in dB.
 
 @codef{compress(@pragma(defn)@index(compress)@i(input), @i(map), @i(rise-time), @i(fall-time) [, @i(lookahead)])} @c{[sal]}@*
-@altdef{@code[(compress @i(input) @i(map) @i(rise-time) @i(fall-time)
- [@i(lookahead)])] @c{[lisp]}}@\Compress 
+@altdef{@code{(compress @i(input) @i(map) @i(rise-time) @i(fall-time)
+ [@i(lookahead)])} @c{[lisp]}}@\Compress 
 @i(input) using @i(map), a compression curve
 probably generated by @code(compress-map) (see above). Adjustments in gain have
 the given @i(rise-time) and @i(fall-time). Lookahead tells how far ahead to look
@@ -8316,7 +8800,6 @@ to @code(nband-range) with a range of 20 to 20,000 Hz.
 
 @section(Sound Reversal)
 The @code(reverse.lsp) library implements functions to play sounds in reverse.
-
 @begin(fndefs)
 @codef[s-reverse(@index(reverse, sound)@pragma(defn)@index(s-reverse)@index(backward)@index(play in reverse)@i(snd))] @c{[sal]}@*
 @altdef{@code[(s-reverse @i(snd))] @c{[lisp]}}@\Reverses @i(snd) (a @code(SOUND)). Sound must be shorter
@@ -8328,9 +8811,14 @@ time given by the current environment (not necessarily the starting time
 of @i(snd)). If @i(snd) has multiple channels, a multiple channel, 
 reversed sound is returned.
 
-@codef{s-read-reverse(@index(read samples in reverse)@pragma(defn)@index(s-read-reverse)@i(filename), time-offset: @i(offset), srate: @i(sr), dur: @i(dur), nchans: @i(chans), format: @i(format), mode: @i(mode), bits: @i(n), swap: @i(flag))} @c{[sal]}@*
+@codef{s-read-reverse(@index(read samples in reverse)@pragma(defn)@index(s-read-reverse)@i(filename), time-offset: @i(offset), srate: @i(sr), dur: @i(dur), @latex(\\
+\hspace*{3em})nchans: @i(chans), format: @i(format), mode: @i(mode), bits: @i(n), swap: @i(flag))} @c{[sal]}@*
 @altdef{@code{(s-read-reverse @i(filename) :time-offset @i(offset)
- :srate @i(sr) :dur @i(dur) :nchans @i(chans) :format @i(format) :mode @i(mode) :bits @i(n) :swap @i(flag))} @c{[lisp]}}@\This function is identical to @code(s-read) (see @ref(s-read-sec)), except it reads the indicated samples in reverse. Like
+ :srate @i(sr) :dur @i(dur) @latex(\\
+\hspace*{3em}):nchans @i(chans) :format @i(format) :mode @i(mode) 
+:bits @i(n) :swap @i(flag))} @c{[lisp]}}@\This function is 
+identical to @code(s-read) (see Section @ref(s-read-sec)), except it reads 
+the indicated samples in reverse. Like
 @code(s-reverse) (see above), it uses XLISP in the inner loop, so it is slow.
 Unlike @code(s-reverse), @code(s-read-reverse) uses a fixed amount of 
 memory that is independent of how many samples are computed. Multiple channels
@@ -8350,8 +8838,11 @@ but feel free to modify the source code of this one-liner.
 @altdef{@code[(flange @i(snd))] @c{[lisp]}}@\A flange effect
 applied to @i(snd). To vary the rate and other parameters, see the source code.
 
-@codef[stereo-chorus(@index(chorus)@pragma(defn)@index(stereo-chorus)@i(snd), delay: @i(delay), depth: @i(depth), rate1: @i(rate1), rate2: @i(rate2) saturation: @i(saturation))] @c{[sal]}@*
-@altdef{@code[(stereo-chorus @i(snd) :delay @i(delay) :depth @i(depth) :rate1 @i(rate1) :rate2 @i(rate2) :saturation @i(saturation))] @c{[lisp]}}@\A chorus effect 
+@codef[stereo-chorus(@index(chorus)@pragma(defn)@index(stereo-chorus)@i(snd), delay: @i(delay), depth: @i(depth), rate1: @i(rate1), rate2: @i(rate2) @latex(\\
+\hspace*{3em})saturation: @i(saturation))] @c{[sal]}@*
+@altdef{@code[(stereo-chorus @i(snd) :delay @i(delay) :depth @i(depth)
+:rate1 @i(rate1) :rate2 @i(rate2) @latex(\\
+\hspace*{3em}):saturation @i(saturation))] @c{[lisp]}}@\A chorus effect 
 applied to @i(snd),
 a @code(SOUND) (monophonic). The output is a stereo sound with out-of-phase chorus effects applied separately for the left and right channels. See the @code(chorus) function below for a description of the optional parameters. The @i(rate1) and @i(rate2) parameters are @i(rate) parameters for the left and right channels.
 
@@ -8431,9 +8922,12 @@ few hundred bytes per score event (obviously, size depends on the number of
 parameters) and avoid using all of your computer's memory.
 
 @begin(fndefs)
-@codef{sf-granulate(@index(granular synthesis)@pragma(defn)@index(sf-granulate)@i(filename), @i(grain-dur), @i(grain-dev), @i(ioi), @i(ioi-dev), @i(pitch-dev),
-[@i(file-start), @i(file-end)])} @c{[sal]}@*
-@altdef{@code{(sf-granulate @i(filename) @i(grain-dur) @i(grain-dev) @i(ioi) @i(ioi-dev) @i(pitch-dev) [@i(file-start) @i(file-end)])} @c{[lisp]}}@\Granular synthesis using a sound file
+@codef{sf-granulate(@index(granular synthesis)@pragma(defn)@index(sf-granulate)@i(filename), @i(grain-dur), @i(grain-dev), @i(ioi), @i(ioi-dev), @i(pitch-dev), @latex(\\
+\hspace*{3em})[@i(file-start), @i(file-end)])} @c{[sal]}@*
+@altdef{@code{(sf-granulate @i(filename) @i(grain-dur) @i(grain-dev) @i(ioi)
+ @i(ioi-dev) @i(pitch-dev) @latex(\\
+\hspace*{3em})[@i(file-start) @i(file-end)])} @c{[lisp]}}@\Granular synthesis 
+using a sound file
 named @i(filename) as the source for grains. Grains are extracted from
 a sound file named by @i(filename) by stepping through the file in equal
 increments. Each grain duration is the 
@@ -8604,7 +9098,6 @@ frequency, @i(c) is the speed of sound (assumed to be 344.31 m/s), and
 @i(vr) is the speed at which the emitter approaches the receiver. (@i(vr)
 is the first derivative of parameter @i(r), the distance from the listener
 in meters.
-
 @end(fndefs)
 
 @section(Drum Machine)
@@ -8704,7 +9197,8 @@ The control lines have been omitted.
 
 @begin(figure)
 @center(@graphic((height = 2.514 in, width = 4.65 in, magnify = 0.3,
-                postscript = "moog-fig.ps"))
+                postscript = "moog-fig.ps")
+@latex(\includegraphics[scale=0.4]{moog-fig}))
 @html(<img src="moog-fig.gif" width=558><br><br>)
 @fillcaption(System diagram for Minimoog emulator.)
 @tag(moog-fig)
@@ -8723,89 +9217,121 @@ obtained by experimenting with the official Minimoog software synthesizer
 by Arturia.
 
 @subsection(Oscillator Parameters)
-@code(range-osc1) (2)@*
-@code(range-osc2) (1)@*
-@code(range-osc3) (3)@*
+@begin(example)
+range-osc1(2)
+range-osc2(1)
+range-osc3(3)
+@end(example)
 These parameters control the octave of each oscillator. A value of 1
 corresponds to the octave indicated by the input note. A value of 3
 is two octaves above the fundamental. The allowable range is 1 to 7.
 
-@code(detun2) (-.035861)@*
-@code(detun3) (.0768)@*
+@begin(example)
+detun2(-.035861)
+detun3(.0768)
+@end(example)
 Detuning of two oscillators adds depth to the sound. A value of 1 corresponds
 to an increase of a single semitone and a -1 corresponds to a decrease
 in a semitone. The range is -1 to 1.
 
-@code(shape-osc1) (@code(*saw-table*))@*
-@code(shape-osc2) (@code(*saw-table*))@*
-@code(shape-osc3) (@code(*saw-table*))@*
+@begin(example)
+shape-osc1(*saw-table*)
+shape-osc2(*saw-table*)
+shape-osc3(*saw-table*)
+@end(example)
 Oscilators can use any wave shape. The default sawtooth waveform is
 a built-in Nyquist variable. Other waveforms can be defined by the user.
 
-@code(volume-osc1) (1)@*
-@code(volume-osc2) (1)@*
-@code(volume-osc3) (1)@*
+@begin(example)
+volume-osc1(1)
+volume-osc2(1)
+volume-osc3(1)
+@end(example)
 These parameters control the relative volume of each oscillator. The range
 is any @code(FLONUM) greater than or equal to zero.
 
 @subsection(Noise Parameters)
-@code(noiselevel) (.05)@*
+@begin(example)
+noiselevel(.05)
+@end(example)
 This parameter controls the relative volume of the noise source. The range
 is any @code(FLONUM) greater than or equal to zero.
 	
 @subsection(Filter Parameters)
-@code(filter-cutoff) (768)@*
+@begin(example)
+filter-cutoff(768)
+@end(example)
 The cutoff frequency of the filter in given in Hz. The range is zero
 to 20,000 Hz.
 
 
-@code(Q) (2)@*
+@begin(example)
+Q(2)
+@end(example)
 Q is the ratio of center frequency to bandwidth. It is held constant by
 making the bandwidth a function of frequency. The range is any
 @code(FLONUM) greater than zero.
 
-@code(contour) (.65)@*
+@begin(example)
+contour(.65)
+@end(example)
 Contour controls the range of the transient frequency sweep from a high
 to low cutoff frequency when a 	note is played. The high frequency is
 proportional to contour. A contour of 0 removes this sweep. The range
 is 0 to 1.
 
-@code(filter-attack) (.0001)@*
+@begin(example)
+filter-attack(.0001)
+@end(example)
 Filter attack controls the attack time of the filter, i.e. the time to
 reach the high cutoff frequency. The range is any @code(FLONUM) greater
 than zero (seconds).
 
-@code(filter-decay) (.5)@*
+@begin(example)
+filter-decay(.5)
+@end(example)
 Filter decay controls the decay time of the filter, i.e. the time of the
 sweep from the high to low cutoff frequency. The range is 
 any @code(FLONUM) greater than zero (seconds).
 
-@code(filter-sustain) (.8)@*
+@begin(example)
+filter-sustain(.8)
+@end(example)
 Filter sustain controls the percentage of the filter cutoff frequency that
 the filter settles on following the sweep. The range is 0 to 1.
 	
 @subsection(Amplitude Parameters)
-@code(amp-attack) (.01)@*
+@begin(example)
+amp-attack(.01)
+@end(example)
 This parameter controls the amplitude envelope attack time, i.e. the time to
 reach maximum amplitude. The range is 
 any @code(FLONUM) greater than zero (seconds).
 
-@code(amp-decay) (1)@*
+@begin(example)
+amp-decay(1)
+@end(example)
 This parameter controls the amplitude envelope decay time, i.e. the time
 between the maximum and sustain volumes. The range is
 any @code(FLONUM) greater than zero (seconds).
 
-@code(amp-sustain) (1)@*
+@begin(example)
+amp-sustain(1)
+@end(example)
 This parameter controls the amplitude envelope sustain volume, a fraction
 of the maximum. The range is 0 to 1.
 
-@code(amp-release) (0)@*
+@begin(example)
+amp-release(0)
+@end(example)
 This parameter controls the amplitude envelope release time, i.e. the time
 it takes between the sustain volume and 0 once the note ends. 
 The duration controls the overall length of the sound. The range of @code(amp-release) is any @code(FLONUM) greater than zero (seconds).
 
 @subsection(Other Parameters)
-@code(glide) (0)@*
+@begin(example)
+glide(0)
+@end(example)
 Glide controls the low-pass filter on the control voltages. This models the
 glide knob on a Minimoog. A higher value corresponds to a lower cutoff
 frequency and hence a longer "glide" between notes. A value of 0
@@ -8831,48 +9357,39 @@ triggered when the articulation is less than 1 at the time
 @subsection(Sample Code/Sounds)
 
 @b[Sound 1 (default parameters):]
-@begin(display)
-@begin(code)
+@begin(example)
 set s = {{24 .5 .99} {26 .5 .99} {28 .5 .99} 
          {29 .5 .99} {31 2 1}}
 play moog(s)
-@end(code)
-@end(display)
+@end(example)
 
 @b[Sound 2 (articulation, with amplitude release):]
-@begin(display)
-@begin(code)
+@begin(example)
 set s = {{24 .5 .5} {26 .5 1} {28 .5 .25} {29 .5 1} {31 1 .8}}
 play moog(s, amp-release: .2)
-@end(code)
-@end(display)
+@end(example)
 
 @b[Sound 3 (glide):]
-@begin(display)
-@begin(code)
+@begin(example)
 set s = {{24 .5 .5} {38 .5 1} {40 .5 .25}
          {53 .5 1} {55 2 1} {31 2 .8} {36 2 .8}}
 play moog(s, amp-release: .2, glide: .5)
-@end(code)
-@end(display)
+@end(example)
 
 @b[Sound 4 (keyword parameters):] Filter attack and decay are purposely
 longer than notes being played with articulation equal to 1.
-@begin(display)
-@begin(code)
+@begin(example)
 set s = {{20 .5 1} {27 .5 1} {26 .5 1} {21 .5 1}
          {20 .5 1} {27 .5 1} {26 .5 1} {21 .5 1}}
 play moog(s, shape-osc1: *tri-table*, shape-osc2: *tri-table*,
              filter-attack: 2, filter-decay: 2,
              filter-cutoff: 300, contour: .8, glide: .2, Q: 8)
-@end(code)
-@end(display)
+@end(example)
 
 @b[Sound 5:] This example illustrates the ability to completely define a new 
 synthesizer with different parameters creating a drastically different
 sound. Sine waves are used for wavetables. There is a high value for glide.
-@begin(display)
-@begin(code)
+@begin(example)
 define function my-moog(freq) 
   return moog(freq,
     range-osc1: 3, range-osc2: 2, range-osc3: 4,
@@ -8887,84 +9404,47 @@ define function my-moog(freq)
 
 set s = {{80 .4 .75} {28 .2 1} {70 .5 1} {38 1 .5}}
 play my-moog(s)
-@end(code)
-@end(display)
+@end(example)
 
 @b[Sound 6:] This example has another variation on the default
  parameters.
-@begin(display)
-@begin(code)
+@begin(example)
 set s = {{24 .5 .99} {26 .5 .99} {28 .5 .99} 
          {29 .5 .99} {31 2 1}}
 play moog(s, shape-osc1: *tri-table*, shape-osc2: *tri-table*,
              filter-attack: .5, contour: .5)
-@end(code)
-@end(display)
+@end(example)
+
+@comment(Bibliography is not supported by scribe-to-latex translator)
+@begin(latex)
+\begin{thebibliography}{9}
+
+\bibitem{ICMCFUGUE}
+  R. B. Dannenberg and C. L. Fraley. 
+  "Fugue: Composition and Sound Synthesis with Lazy Evaluation and 
+   Behavioral Abstraction."
+  In \emph{Proceedings of the International Computer Music Conference},
+  T. Wells and D. Butler (eds.),
+  San Francisco: International Computer Music Association, 1989, pp. 76-79.
+
+\bibitem{SIMONI}
+  M. Simoni and R. B. Dannenberg.
+  \emph{Algorithmic Composition: A Guide to Composing Music with Nyquist.}
+  Ann Arbor: University of Michigan Press.
+  2013.
+
+\bibitem{TOURETZKY}
+  D. S. Touretzky.
+  \emph{LISP: A Gentle Introduction to Symbolic Computation.}
+  New York: Harper and Row.
+  1984.
+
+\end{thebibliography}
+@end(latex)
 
 @pragma(doinclude)
 @include(nymanimpl.mss)
 
-@appendix(Open Sound Control and Nyquist)@index(Open Sound Control)
-@label(osc-app)
-Open Sound Control (OSC) is a simple protocol for communicating music
-control parameters between software applications and across
-networks. For more information, see @html[<a
-href="http://wwww.cnmat.berkeley.edu/OpenSoundControl">]@code(http://www.cnmat.berkeley.edu/OpenSoundControl/)@html[</a>]. The
-Nyquist implementation of Open Sound Control is simple: an array of
-floats can be set by OSC messages and read by Nyquist functions. That
-is about all there is to it. 
-
-Note: Open Sound Control must be enabled by calling
-@code[osc-enable(t)]. If this fails under Windows, see the
-installation instructions in @code(sys/win/README.txt) regarding
-@code(SystemRoot).
-
-To control something in (near) real-time, you need to access a slider value as if it a signal, or more properly, a Nyquist @code(SOUND) type. The function @code(snd-slider), described in Section @ref(snd-slider-sec), takes a slider number and returns a @code(SOUND) type representing the current value of the slider. To fully understand this function, you need to know something about how Nyquist is actually computing sounds.
-
-Sounds are normally computed on demand. So the result returned by @code(snd-slider) does not immediately compute any samples. Samples are only computed when something tries to use this signal. At that time, the slider value is read. Normally, if the slider is used to control a sound, you will hear changes in the sound pretty soon after the slider value changes. However, one thing that can interfere with this is that @code(SOUND) samples are computed in blocks of about 1000 samples. When the slider value is read, the same value is used to fill a block of 1000 samples, so even if the sample rate is 44,100 Hz, the effective slider sample rate is 44,100/1000, or 44.1 Hz. If you give the slider a very low sample rate, say 1000, then slider value changes will only be noticed by Nyquist approximately once per second. For this reason, you should normally use the audio sample rate (typically 44,100 Hz) for the rate of the @code(snd-slider) output @code(SOUND). (Yes, this is terribly wasteful to represent each slider value with 1000 samples, but Nyquist was not designed for low-latency computation, and this is an expedient work-around.)
-
-In addition to reading sliders as continually changing @code(SOUND)s, you can get the slider value as a Lisp @code(FLONUM) (a floating point number) using @code(get-slider-value), described in Section @ref(get-slider-value-sec). This might be useful if you are computing a sequence of many notes (or other sound events) and want to apply the current slider value to the whole note or sound event.
-
-Note that if you store the value returned by @code(snd-slider) in a variable, you will capture the history of the slider changes. This will take a lot of memory, so be careful.
-
-Suppose you write a simple expression such as @code[(hzosc (mult 1000 (snd-slider 0 @r(...))))] (or in SAL, @code[hzosc(1000 * snd-slider(0 @r(...)))]) to control an oscillator frequency with a slider. How long does this sound last? The duration of @code[hzosc] is the duration of the frequency control, so what is the duration of a slider? To avoid infinitely long signals, you must specify a duration as one of the parameters of @code[snd-slider].
-
-You might be thinking, what if I just want to tell the slider when to stop? At present, you cannot do that, but in the future there should be a function that stops when its input goes to zero. Then, moving a slider to zero could end the signal (and if you multiplied a complex sound by one of these ending functions, everything in the sound would end and be garbage collected).
-
-Another thing you might want to do with interactive control is start some sound. The @code(trigger) function computes an instance of a behavior each time an input @code(SOUND) goes from zero to greater-than-zero. This could be used, for example, to create a sequence of notes.
-
-The @code(snd-slider) function has some parameters that may be unfamiliar. The second parameter, @i(t0), is the starting time of the sound. This should normally be @code[local-to-global(0)], an expression that computes the instantiation time of the current expression. This will often be zero, but if you call @code[snd-slider] from inside a @code(seq) or @code(seq-rep), the starting time may not be zero. 
-
-The @i(srate) parameter is the sample rate to return. This should normally be the audio sample rate you are working with, which is typically @code[*default-sound-srate*].
-
-@section(Sending Open Sound Control Messages)
-A variety of programs support OSC. The only OSC message interpreted by Nyquist has an address of @code[/slider], and two parameters: an integer slider number and a float value, nominally from 0.0 to 1.0. 
-
-Two small programs are included in the Nyquist distribution for sending OSC messages. (Both can be found in the same directory as the nyquist executable.) The first one, @code[osc-test-client] sends a sequence of messages that just cause slider 0 to ramp slowly up and down. If you run this on a command line, you can use "?" or "h" to get help information. There is an interactive mode that lets you send each OSC message by typing RETURN.
-
-@section(The ser-to-osc Program)
-The second program is @code[ser-to-osc], a program that reads serial input (for example from a PIC-based microcontroller) and sends OSC messages. Run this command-line program from a shell (a terminal window under OS X or Linux; use the CMD program under Windows). You must name the serial input device on the command line, e.g. under OS X, you might run:
-@begin(display)
-@code(./ser-to-osc /dev/tty.usbserial-0000103D)
-@end(display)
-(Note that the program name is preceded by ``@code(./)". This tells the shell exactly where to find the executable program in case the current directory is not on the search path for executable programs.)
-Under Windows, you might run:
-@begin(display)
-@code(ser-to-osc com4)
-@end(display)
-(Note that you do not type ``@code(./)'' in front of a windows program.)
-
-To use @code(ser-to-osc), you will have to find the serial device. On the Macintosh and Linux, try the following:
-@begin(display)
-@code(ls /dev/*usb*)
-@end(display)
-This will list all serial devices with ``usb'' in their names. Probably, one will be a name similar to @code(/dev/tty.usbserial-0000103D). The @code(ser-to-osc) program will echo data that it receives, so you should know if things are working correctly.
-
-Under Windows, open Control Panel from the Start menu, and open the System control panel. Select the Hardware tab and click the Device Manager button. Look in the device list under Ports (COM & LPT). When you plug in your serial or USB device, you should see a new entry appear, e.g. @code(COM4). This is the device name you need.
-
-The format for the serial input is: any non-whitespace character(s), a slider number, a slider value, and a newline (control-j or ASCII 0x0A). These fields need to be separated by tabs or spaces. An optional carriage return (control-m or ASCII 0x0D) preceding the ASCII 0x0A is ignored. The slider number should be in decimal, and theh slider value is a decimal number from 0 to 255. This is scaled to the range 0.0 to 1.0 (so an input of 255 translates to 1.0).
-
-There is a simple test program in @code[demos/osc-test.lsp] you can run to try out control with Open Sound Control. There are two examples in that file. One uses @code(snd-slider) to control the frequency of an oscillator. The other uses @code(get-slider-value) to control the pitch of grains in a granular synthesis process.
 
 
 @appendix(Intgen)@index(Intgen)

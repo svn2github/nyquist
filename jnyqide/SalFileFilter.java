@@ -9,34 +9,20 @@ package jnyqide;
 
 
 
-import javax.swing.filechooser.*;
 import java.io.File;
+import java.io.FilenameFilter;
 
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
- */
+public class SalFileFilter implements FilenameFilter {
 
-public class SalFileFilter extends FileFilter {
-
-  public SalFileFilter() {
-  }
-
-  public boolean accept(File f) {
-    if (f.getName().endsWith(".sal")) return true;
-    for (int x = 0; x < f.getName().length(); x++) {
-      if ((f.getName().charAt(x) == '.'))
-        return false;
+    public SalFileFilter() {
     }
-    return true;
-  }
 
-  public String getDescription() {
-    return "Sal files.";
-  }
+    public boolean accept(File dir, String name) {
+        return name.endsWith(".sal") || (name.indexOf('.') < 0);
+    }
+
+    public String getDescription() {
+        return "Sal files.";
+    }
 }

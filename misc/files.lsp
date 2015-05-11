@@ -35,7 +35,7 @@
                    "instrbanded" "instrmandolin"
                    "instrsitar" "instrmodalbar"                   
                    "instrflute" "instrflutefreq" "instrfluteall"
-                   "fmfb" "fmfbv"
+                   "fmfb" "fmfbv" "stoponzero"
                    ))
 
 ;; nyqsrcfiles - these are .c and .h files in /nyqsrc that implement nyquist

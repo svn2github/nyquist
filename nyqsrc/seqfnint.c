@@ -1,7 +1,7 @@
 /* nyqsrc/seqfnint.c -- interface to  cmt/seqdecls.h, 
  * nyqsrc/seqext.h, cmt/seq.h, nyqsrc/seqinterf.h, 
- * cmt/seqread.h, cmt/seqmread.h, cmt/seqwrite.h, 
- * cmt/seqmwrite.h */
+ * cmt/seqmread.h, cmt/seqmwrite.h, cmt/seqread.h, 
+ * cmt/seqwrite.h */
 
 #ifndef mips
 #include "stdlib.h"
@@ -186,21 +186,6 @@ LVAL xlc_seq_get(void)
 }
 
 
-#include "seqread.h"
-
-/* xlc_seq_read -- interface to C routine seq_read */
-/**/
-LVAL xlc_seq_read(void)
-{
-    seq_type arg1 = getseq(xlgaseq());
-    FILE * arg2 = getfile(xlgastream());
-
-    xllastarg();
-    seq_read(arg1, arg2);
-    return NIL;
-}
-
-
 #include "seqmread.h"
 
 /* xlc_seq_read_smf -- interface to C routine seq_read_smf */
@@ -212,6 +197,36 @@ LVAL xlc_seq_read_smf(void)
 
     xllastarg();
     seq_read_smf(arg1, arg2);
+    return NIL;
+}
+
+
+#include "seqmwrite.h"
+
+/* xlc_seq_write_smf -- interface to C routine seq_write_smf */
+/**/
+LVAL xlc_seq_write_smf(void)
+{
+    seq_type arg1 = getseq(xlgaseq());
+    FILE * arg2 = getfile(xlgastream());
+
+    xllastarg();
+    seq_write_smf(arg1, arg2);
+    return NIL;
+}
+
+
+#include "seqread.h"
+
+/* xlc_seq_read -- interface to C routine seq_read */
+/**/
+LVAL xlc_seq_read(void)
+{
+    seq_type arg1 = getseq(xlgaseq());
+    FILE * arg2 = getfile(xlgastream());
+
+    xllastarg();
+    seq_read(arg1, arg2);
     return NIL;
 }
 
@@ -228,21 +243,6 @@ LVAL xlc_seq_write(void)
 
     xllastarg();
     seq_write(arg1, arg2, arg3);
-    return NIL;
-}
-
-
-#include "seqmwrite.h"
-
-/* xlc_seq_write_smf -- interface to C routine seq_write_smf */
-/**/
-LVAL xlc_seq_write_smf(void)
-{
-    seq_type arg1 = getseq(xlgaseq());
-    FILE * arg2 = getfile(xlgastream());
-
-    xllastarg();
-    seq_write_smf(arg1, arg2);
     return NIL;
 }
 

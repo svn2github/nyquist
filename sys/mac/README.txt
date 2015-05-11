@@ -2,9 +2,11 @@ README.txt -- information on Nyquist for Mac OS X
 
 IMPORTANT
 ---------
-You may get the message "NyquistIDE is damaged and can't be opened. 
-You should move it to the Trash" from the Finder. This appears to 
-be a deliberately incorrect statement from Apple. Here is what to do:
+You may get the message 
+    "NyquistIDE is damaged and can't be opened. 
+    You should move it to the Trash from the Finder."
+This appears to be a deliberately incorrect statement from Apple.
+Here is what to do:
 
 1) Go to Preferences, Security & Privacy
 2) Unlock (requires password)
