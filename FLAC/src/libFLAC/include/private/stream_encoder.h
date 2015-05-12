@@ -1,5 +1,5 @@
-/* libFLAC++ - Free Lossless Audio Codec library
- * Copyright (C) 2002-2009  Josh Coalson
+/* libFLAC - Free Lossless Audio Codec library
+ * Copyright (C) 2000-2009  Josh Coalson
  * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,57 +30,38 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FLACPP__EXPORT_H
-#define FLACPP__EXPORT_H
+#ifndef FLAC__PRIVATE__STREAM_ENCODER_H
+#define FLAC__PRIVATE__STREAM_ENCODER_H
 
-/** \file include/FLAC++/export.h
- *
- *  \brief
- *  This module contains #defines and symbols for exporting function
- *  calls, and providing version information and compiled-in features.
- *
- *  See the \link flacpp_export export \endlink module.
- */
-
-/** \defgroup flacpp_export FLAC++/export.h: export symbols
- *  \ingroup flacpp
- *
- *  \brief
- *  This module contains #defines and symbols for exporting function
- *  calls, and providing version information and compiled-in features.
- *
- *  If you are compiling with MSVC and will link to the static library
- *  (libFLAC++.lib) you should define FLAC__NO_DLL in your project to
- *  make sure the symbols are exported properly.
- *
- * \{
- */
-
-#if defined(FLAC__NO_DLL)
-#define FLACPP_API
-
-#elif defined(_MSC_VER)
-#ifdef FLACPP_API_EXPORTS
-#define	FLACPP_API __declspec(dllexport)
-#else
-#define FLACPP_API __declspec(dllimport)
+#ifdef HAVE_CONFIG_H
+#include <config.h>
 #endif
 
-#elif defined(FLAC__USE_VISIBILITY_ATTR)
-#define FLACPP_API __attribute__ ((visibility ("default")))
+/*
+ * This is used to avoid overflow with unusual signals in 32-bit
+ * accumulator in the *precompute_partition_info_sums_* functions.
+ */
+#define FLAC__MAX_EXTRA_RESIDUAL_BPS 4
 
-#else
-#define FLACPP_API
+#if (defined FLAC__CPU_IA32 || defined FLAC__CPU_X86_64) && defined FLAC__HAS_X86INTRIN
+#include "private/cpu.h"
+#include "FLAC/format.h"
 
+#ifdef FLAC__SSE2_SUPPORTED
+extern void FLAC__precompute_partition_info_sums_intrin_sse2(const FLAC__int32 residual[], FLAC__uint64 abs_residual_partition_sums[],
+			unsigned residual_samples, unsigned predictor_order, unsigned min_partition_order, unsigned max_partition_order, unsigned bps);
 #endif
 
-/* These #defines will mirror the libtool-based library version number, see
- * http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
- */
-#define FLACPP_API_VERSION_CURRENT 9
-#define FLACPP_API_VERSION_REVISION 0
-#define FLACPP_API_VERSION_AGE 3
+#ifdef FLAC__SSSE3_SUPPORTED
+extern void FLAC__precompute_partition_info_sums_intrin_ssse3(const FLAC__int32 residual[], FLAC__uint64 abs_residual_partition_sums[],
+			unsigned residual_samples, unsigned predictor_order, unsigned min_partition_order, unsigned max_partition_order, unsigned bps);
+#endif
 
-/* \} */
+#ifdef FLAC__AVX2_SUPPORTED
+extern void FLAC__precompute_partition_info_sums_intrin_avx2(const FLAC__int32 residual[], FLAC__uint64 abs_residual_partition_sums[],
+			unsigned residual_samples, unsigned predictor_order, unsigned min_partition_order, unsigned max_partition_order, unsigned bps);
+#endif
+
+#endif
 
 #endif

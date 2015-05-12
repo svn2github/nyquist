@@ -81,11 +81,11 @@ set(flac_SRCS
   FLAC/src/libFLAC/fixed.c
   FLAC/src/libFLAC/float.c
   FLAC/src/libFLAC/format.c
-  FLAC/src/libFLAC/ia32/bitreader_asm.nasm
+#  FLAC/src/libFLAC/ia32/bitreader_asm.nasm
   FLAC/src/libFLAC/ia32/cpu_asm.nasm
   FLAC/src/libFLAC/ia32/fixed_asm.nasm
   FLAC/src/libFLAC/ia32/lpc_asm.nasm
-  FLAC/src/libFLAC/ia32/stream_encoder_asm.nasm
+#  FLAC/src/libFLAC/ia32/stream_encoder_asm.nasm
   FLAC/src/libFLAC/lpc.c
   FLAC/src/libFLAC/md5.c
   FLAC/src/libFLAC/memory.c
@@ -101,7 +101,8 @@ set(flac_SRCS
   FLAC/src/libFLAC/window.c)
 
 add_library(flac_static STATIC ${flac_SRCS})
-set_target_properties(flac_static PROPERTIES COMPILE_FLAGS -DVERSION=\\\\\"1.2.1\\\\\") 
+set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
+                      "-DVERSION=\\\\\"1.3.1\\\\\" -DHAVE_LROUND") 
 set_property(TARGET flac_static APPEND PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/src/libFLAC/include/ 
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/include/ 

@@ -1,6 +1,5 @@
-/* libFLAC++ - Free Lossless Audio Codec library
- * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2014  Xiph.Org Foundation
+/* libFLAC - Free Lossless Audio Codec library
+ * Copyright (C) 2012-2014  Xiph.org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,57 +29,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FLACPP__EXPORT_H
-#define FLACPP__EXPORT_H
+#ifndef FLAC__PRIVATE__MACROS_H
+#define FLAC__PRIVATE__MACROS_H
 
-/** \file include/FLAC++/export.h
- *
- *  \brief
- *  This module contains #defines and symbols for exporting function
- *  calls, and providing version information and compiled-in features.
- *
- *  See the \link flacpp_export export \endlink module.
- */
+#if defined(__GNUC__) && (__GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3))
 
-/** \defgroup flacpp_export FLAC++/export.h: export symbols
- *  \ingroup flacpp
- *
- *  \brief
- *  This module contains #defines and symbols for exporting function
- *  calls, and providing version information and compiled-in features.
- *
- *  If you are compiling with MSVC and will link to the static library
- *  (libFLAC++.lib) you should define FLAC__NO_DLL in your project to
- *  make sure the symbols are exported properly.
- *
- * \{
- */
+#define flac_max(a,b) \
+    ({ __typeof__ (a) _a = (a); \
+    __typeof__ (b) _b = (b); \
+    _a > _b ? _a : _b; })
 
-#if defined(FLAC__NO_DLL)
-#define FLACPP_API
+#define MIN_PASTE(A,B) A##B
+#define MIN_IMPL(A,B,L) ({ \
+    __typeof__(A) MIN_PASTE(__a,L) = (A); \
+    __typeof__(B) MIN_PASTE(__b,L) = (B); \
+    MIN_PASTE(__a,L) < MIN_PASTE(__b,L) ? MIN_PASTE(__a,L) : MIN_PASTE(__b,L); \
+    })
 
+#define flac_min(A,B) MIN_IMPL(A,B,__COUNTER__)
+
+/* Whatever other unix that has sys/param.h */
+#elif defined(HAVE_SYS_PARAM_H)
+#include <sys/param.h>
+#define flac_max(a,b) MAX(a,b)
+#define flac_min(a,b) MIN(a,b)
+
+/* Windows VS has them in stdlib.h.. XXX:Untested */
 #elif defined(_MSC_VER)
-#ifdef FLACPP_API_EXPORTS
-#define	FLACPP_API __declspec(dllexport)
-#else
-#define FLACPP_API __declspec(dllimport)
+#include <stdlib.h>
+#define flac_max(a,b) __max(a,b)
+#define flac_min(a,b) __min(a,b)
 #endif
 
-#elif defined(FLAC__USE_VISIBILITY_ATTR)
-#define FLACPP_API __attribute__ ((visibility ("default")))
-
-#else
-#define FLACPP_API
-
+#ifndef MIN
+#define MIN(x,y)	((x) <= (y) ? (x) : (y))
 #endif
 
-/* These #defines will mirror the libtool-based library version number, see
- * http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
- */
-#define FLACPP_API_VERSION_CURRENT 9
-#define FLACPP_API_VERSION_REVISION 0
-#define FLACPP_API_VERSION_AGE 3
-
-/* \} */
+#ifndef MAX
+#define MAX(x,y)	((x) >= (y) ? (x) : (y))
+#endif
 
 #endif
