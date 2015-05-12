@@ -23,9 +23,6 @@ Most of the other "top bugs" are more to do with the Audacity than
 Nyquist itself, though there is an issue that s-add-to does not work
 with stereo sounds.
 
-There is also this 64 bit issue:
-http://bugzilla.audacityteam.org/show_bug.cgi?id=336
-
 portaudio diffs:
 
 portaudio.h

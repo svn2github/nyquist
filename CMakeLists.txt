@@ -228,7 +228,10 @@ set(portaudio_SRCS
   portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.h
   portaudio/src/hostapi/coreaudio/pa_mac_core_internal.h
   portaudio/src/hostapi/coreaudio/pa_mac_core.c
-  portaudio/src/os/mac_osx/pa_mac_hostapis.c
+  portaudio/src/hostapi/skeleton/pa_hostapi_skeleton.c
+  portaudio/src/os/unix/pa_unix_hostapis.c
+  portaudio/src/os/unix/pa_unix_util.c
+#  portaudio/src/os/mac_osx/pa_mac_hostapis.c
   portaudio/include/portaudio.h
   portaudio/src/common/pa_allocation.h
   portaudio/src/common/pa_converters.c
@@ -253,17 +256,7 @@ set(portaudio_SRCS
   portaudio/src/common/pa_allocation.c
   portaudio/include/pa_jack.h
   portaudio/include/pa_mac_core.h
-  portaudio/src/common/pa_allocation.c
-  portaudio/src/common/pa_converters.c
-  portaudio/src/common/pa_cpuload.c
-  portaudio/src/common/pa_debugprint.c
-  portaudio/src/common/pa_dither.c
-  portaudio/src/common/pa_front.c
-  portaudio/src/common/pa_process.c
-  portaudio/src/common/pa_ringbuffer.c
-  portaudio/src/common/pa_skeleton.c
-  portaudio/src/common/pa_stream.c
-  portaudio/src/common/pa_trace.c
+#  portaudio/src/common/pa_skeleton.c
   )
 
 add_library(portaudio_static STATIC ${portaudio_SRCS})

@@ -27,19 +27,20 @@ Installation
 ------------
 The simplest way to install and run Nyquist is to get the pre-compiled
 NyquistIDE application, which includes executables, documentation, and
-libraries all in one package.
-
-When the pre-compiled package is uncompressed, it produces two directories:
-     nyquist
+libraries all in one package, which is:
      NyquistIDE.app
-You should always keep these together. The nyquist directory initially 
-contains documentation, but when NyquistIDE.app is run, the nyquist
-folder is also populated with links to the lib and demos folders,
-which contain example code and more documentation. The symbolic links
-allow you to easily find these files.
+When you run NyquistIDE.app, it will generate a new directory named
+     nyquist
+in the same directory as NyquistIDE.app. The nyquist directory will
+contain links to lib, demos, and doc directories which are normally
+hidden inside NyquistIDE.app. The symbolic links allow you to easily 
+find these files.
 
-You can copy both nyquist and NyquistIDE.app to the /Applications folder
-if you wish, and you can add NyquistIDE.app to the Dock.
+You can move the NyquistIDE.app to the /Applications folder
+if you wish, and you can add NyquistIDE.app to the Dock. If you move
+NyquistIDE.app after it creates the nyquist directory, you might want
+to simply delete nyquist and let NyquistIDE.app create a new nyquist
+directory in the new location.
 
 You will probably run Nyquist using the NyquistIDE application, but
 you can also run nyquist from the command line. The executable is
