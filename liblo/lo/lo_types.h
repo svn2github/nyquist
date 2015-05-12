@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2004 Steve Harris
+ *  Copyright (C) 2014 Steve Harris et al. (see AUTHORS)
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
@@ -25,16 +25,17 @@
 extern "C" {
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(_MSC_VER)
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
 #include <netdb.h>
 #endif
 
-#include <pthread.h>
-
 #include "lo/lo_osc_types.h"
+
+#define LO_DISABLE 0  //!< Disable a boolean option.
+#define LO_ENABLE 1   //!< Enable a boolean option.
 
 /**
  * \brief A reference to an OSC service.
@@ -78,8 +79,8 @@ typedef void *lo_method;
 /**
  * \brief An object representing an instance of an OSC server.
  *
- * Created by calls to lo_server_new(). If you with the library to take care of
- * the threading as well you can just use server threads instead.
+ * Created by calls to lo_server_new(). If you wish to have the server
+ * operate in a background thread, use lo_server_thread instead.
  */
 typedef void *lo_server;
 
@@ -91,10 +92,10 @@ typedef void *lo_server;
 typedef void *lo_server_thread;
 
 /**
- * \brief A callback function to receive notifcation of an error in a server or
+ * \brief A callback function to receive notification of an error in a server or
  * server thread.
  *
- * On callback the paramters will be set to the following values:
+ * On callback the parameters will be set to the following values:
  *
  * \param num An error number that can be used to identify this condition.
  * \param msg An error message describing the condidtion.
@@ -104,7 +105,7 @@ typedef void *lo_server_thread;
 typedef void (*lo_err_handler)(int num, const char *msg, const char *where);
 
 /**
- * \brief A callback function to receive notifcation of matching message
+ * \brief A callback function to receive notification of matching message
  * arriving in the server or server thread.
  *
  * The return value tells the method dispatcher whether this handler
@@ -121,9 +122,9 @@ typedef void (*lo_err_handler)(int num, const char *msg, const char *where);
  * will match those and the incoming types will have been coerced to match,
  * otherwise it will be the types of the arguments of the incoming message.
  * \param argv An array of lo_arg types containing the values, e.g. if the
- * first argument of the incoming message is of type 'f' then the vlaue will be
+ * first argument of the incoming message is of type 'f' then the value will be
  * found in argv[0]->f.
- * \param argc The number of argumets received.
+ * \param argc The number of arguments received.
  * \param msg A structure containing the original raw message as received. No
  * type coercion will have occured and the data will be in OSC byte order
  * (bigendian).
@@ -133,6 +134,36 @@ typedef void (*lo_err_handler)(int num, const char *msg, const char *where);
 typedef int (*lo_method_handler)(const char *path, const char *types,
 				 lo_arg **argv, int argc, lo_message msg,
 				 void *user_data);
+
+/**
+ * \brief A callback function to receive notification of a bundle being
+ * dispatched by the server or server thread.
+ *
+ * This callback allows applications to be aware of incoming bundles
+ * and preserve ordering and atomicity of messages in bundles.
+ *
+ * If installed with lo_server_add_bundle_handlers, this callback will be
+ * called with \a time set to the time tag of the bundle, and \a user_data
+ * set to the user_data parameter passed to lo_server_add_bundle_handlers.
+ *
+ * Note that bundles may be nested, in which case calls to the bundle start
+ * and end handlers will also be nested.  The application can keep track of
+ * nested bundles in a stack-like manner by treating the start handler as
+ * "push" and the end handler as "pop".  For example, a bundle containing two
+ * bundles would fire 6 callbacks: begin, begin, end, begin, end, end.
+ */
+typedef int (*lo_bundle_start_handler)(lo_timetag time, void *user_data);
+
+/**
+ * \brief A callback function to receive notification of a bundle dispatch
+ * being completed by the server or server thread.
+ *
+ * If installed with lo_server_add_bundle_handlers, this callback will be
+ * called after all the messages of a bundle have been dispatched with
+ * \a user_data set to the user_data parameter passed to
+ * lo_server_add_bundle_handlers.
+ */
+typedef int (*lo_bundle_end_handler)(void *user_data);
 
 #ifdef __cplusplus
 }

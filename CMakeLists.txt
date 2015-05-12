@@ -49,28 +49,25 @@ libvorbis/lib/bitrate.c
 )
 
 add_library(vorbis_static STATIC ${vorbis_SRCS})
-set_property(TARGET vorbis_static 
-PROPERTY INCLUDE_DIRECTORIES
-${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
-${CMAKE_CURRENT_SOURCE_DIR}/libogg/include)
+target_include_directories(vorbis_static PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
+    ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include)
 
 set(vorbisenc_SRCS
 libvorbis/lib/vorbisenc.c)
 add_library(vorbisenc_static STATIC ${vorbisenc_SRCS})
-set_property(TARGET vorbisenc_static 
-PROPERTY INCLUDE_DIRECTORIES
-${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
-${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
-${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
+target_include_directories(vorbisenc_static PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
+    ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
+    ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
 
 set(vorbisfile_SRCS
 libvorbis/lib/vorbisfile.c)
 add_library(vorbisfile_static STATIC ${vorbisfile_SRCS})
-set_property(TARGET vorbisfile_static 
-PROPERTY INCLUDE_DIRECTORIES
-${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
-${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
-${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
+target_include_directories(vorbisfile_static PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include 
+    ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
+    ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/lib)
 
 set(flac_SRCS
   FLAC/src/libFLAC/bitmath.c
@@ -209,13 +206,13 @@ set(sndfile_SRCS
   )
 
 add_library(sndfile_static STATIC ${sndfile_SRCS})
-set_property(TARGET sndfile_static 
-  PROPERTY INCLUDE_DIRECTORIES
+target_include_directories(sndfile_static PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/nylsf
   ${CMAKE_CURRENT_SOURCE_DIR}/sys/unix 
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/include 
   ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include)
+  ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmt)
 
 # portaudio
 set(portaudio_SRCS 
@@ -282,8 +279,7 @@ set(liblo_SRCS
 
 add_library(lo_static STATIC ${liblo_SRCS})
 set_target_properties(lo_static PROPERTIES COMPILE_FLAGS -DHAVE_CONFIG_H) 
-set_property(TARGET lo_static
-  PROPERTY INCLUDE_DIRECTORIES
+target_include_directories(lo_static PRIVATE 
   ${CMAKE_CURRENT_SOURCE_DIR}/liblo 
   ${CMAKE_CURRENT_SOURCE_DIR}/liblo/src 
   ${CMAKE_CURRENT_SOURCE_DIR}/liblo/osx)
@@ -516,15 +512,6 @@ set(nyqstk_SRCS
   nyqstk/src/Chorus.cpp
   nyqstk/stkint.cpp)
 
-set(liblo_SRCS
-  liblo/src/blob.c
-  liblo/src/bundle.c
-  liblo/src/message.c
-  liblo/src/method.c
-  liblo/src/pattern_match.c
-  liblo/src/send.c
-  liblo/src/timetag.c)
-
 set(nyqsrc_SRCS
 # put sound.c first (out of alphabetical order) because of dependencies
   nyqsrc/sound.c 
@@ -575,7 +562,7 @@ set(nyquist_SRCS
 
 list(APPEND nyquist_SRCS 
   ${xlisp_SRCS} ${tran_SRCS} ${cmt_SRCS} ${seq_SRCS} 
-  ${nyqsrc_SRCS} ${nyqstk_SRCS} ${liblo_SRCS})
+  ${nyqsrc_SRCS} ${nyqstk_SRCS})
 
 # Add headers using GLOB
 
@@ -594,29 +581,27 @@ list(APPEND nyquist_SRCS
   ${nyqstk_headers} ${nyquist_headers})
 
 
-#include directories
-include_directories(ffts/src snd cmt sys/unix xlisp tran nyqsrc nyqstk 
-                    nyqstk/include)
+# Create executables 
+add_executable(ny ${nyquist_SRCS}) 
 
-
-# Create executables
-add_executable(nyquist ${nyquist_SRCS})
-
+#include directories 
+target_include_directories(ny PRIVATE  
+    ffts/src snd cmt sys/unix xlisp tran nyqsrc nyqstk nyqstk/include) 
 
 if(USE_SOURCE_LIBS)
-  include_directories(nylsf liblo portaudio/include)
-  target_link_libraries(nyquist ogg_static)
-  target_link_libraries(nyquist vorbis_static)
-  target_link_libraries(nyquist vorbisenc_static)
-  target_link_libraries(nyquist vorbisfile_static)
-  target_link_libraries(nyquist flac_static)
-  target_link_libraries(nyquist sndfile_static)
-  target_link_libraries(nyquist portaudio_static)
-  target_link_libraries(nyquist lo_static)
+  target_include_directories(ny PRIVATE nylsf liblo portaudio/include)
+  target_link_libraries(ny ogg_static)
+  target_link_libraries(ny vorbis_static)
+  target_link_libraries(ny vorbisenc_static)
+  target_link_libraries(ny vorbisfile_static)
+  target_link_libraries(ny flac_static)
+  target_link_libraries(ny sndfile_static)
+  target_link_libraries(ny portaudio_static)
+  target_link_libraries(ny lo_static)
 else()
-  target_link_libraries(nyquist ${LIBSNDFILE_LIBRARY})
-  target_link_libraries(nyquist ${PORTAUDIO_LIBRARY})
-  target_link_libraries(nyquist ${LIBLO_LIBRARY})
+  target_link_libraries(ny ${LIBSNDFILE_LIBRARY})
+  target_link_libraries(ny ${PORTAUDIO_LIBRARY})
+  target_link_libraries(ny ${LIBLO_LIBRARY})
 endif()
 
 # NYQUIST IDE
@@ -643,7 +628,7 @@ else()
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide
     COMMENT "Building jnyqide.jar"
   )     
-  add_dependencies(NyquistIDE nyquist)
+  add_dependencies(NyquistIDE ny)
   
 endif()
 
@@ -701,7 +686,7 @@ else(UNIX)
   #set(PORTMIDI_OPT portmidi_s.lib)
 endif(UNIX)
 
-target_link_libraries(nyquist ${EXTRA_NEEDED_LIBS})
+target_link_libraries(ny ${EXTRA_NEEDED_LIBS})
 
 # Create args for intgen  
 set(sndfnint_args "")  

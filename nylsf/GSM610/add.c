@@ -11,7 +11,6 @@
 #include	<stdio.h>
 #include	<assert.h>
 
-#include        "config.h" /* RBD */
 #include	"gsm610_priv.h"
 
 #define	saturate(x) 	\

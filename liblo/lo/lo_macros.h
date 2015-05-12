@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2004 Steve Harris
+ *  Copyright (C) 2014 Steve Harris et al. (see AUTHORS)
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
@@ -36,14 +36,31 @@ extern "C" {
 
 /* an internal value, ignored in transmission but check against LO_MARKER in the
  * argument list. Used to do primitive bounds checking */
-#define LO_MARKER_A 0xdeadbeef
-#define LO_MARKER_B 0xf00baa23
+#	define LO_MARKER_A (void *)0xdeadbeefdeadbeefL
+#	define LO_MARKER_B (void *)0xf00baa23f00baa23L
+
 #define LO_ARGS_END LO_MARKER_A, LO_MARKER_B
 
 #define lo_message_add_varargs(msg, types, list) \
     lo_message_add_varargs_internal(msg, types, list, __FILE__, __LINE__)
 
-#ifdef __GNUC__
+#ifdef _MSC_VER
+#ifndef USE_ANSI_C
+#define USE_ANSI_C
+#endif
+#endif
+
+#if defined(USE_ANSI_C) || defined(DLL_EXPORT)
+
+/* In non-GCC compilers, there is no support for variable-argument
+ * macros, so provide "internal" vararg functions directly instead. */
+
+int lo_message_add(lo_message msg, const char *types, ...);
+int lo_send(lo_address targ, const char *path, const char *types, ...);
+int lo_send_timestamped(lo_address targ, lo_timetag ts, const char *path, const char *types, ...);
+int lo_send_from(lo_address targ, lo_server from, lo_timetag ts, const char *path, const char *types, ...);
+
+#else // !USE_ANSI_C
 
 #define lo_message_add(msg, types...)                         \
     lo_message_add_internal(msg, __FILE__, __LINE__, types,   \
@@ -61,17 +78,7 @@ extern "C" {
         lo_send_from_internal(targ, from, __FILE__, __LINE__, ts, path, \
 		       	             types, LO_MARKER_A, LO_MARKER_B)
 
-#else
-
-/* In non-GCC compilers, there is no support for variable-argument
- * macros, so provide "internal" vararg functions directly instead. */
-
-int lo_message_add(lo_message msg, const char *types, ...);
-int lo_send(lo_address targ, const char *path, const char *types, ...);
-int lo_send_timestamped(lo_address targ, lo_timetag ts, const char *path, const char *types, ...);
-int lo_send_from(lo_address targ, lo_server from, lo_timetag ts, const char *path, const char *types, ...);
-
-#endif
+#endif // USE_ANSI_C
 
 #ifdef __cplusplus
 }

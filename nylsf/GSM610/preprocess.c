@@ -7,8 +7,6 @@
 #include	<stdio.h>
 #include	<assert.h>
 
-#include "config.h" /* RBD */
-
 #include "gsm610_priv.h"
 
 /*	4.2.0 .. 4.2.3	PREPROCESSING SECTION

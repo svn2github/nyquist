@@ -1,4 +1,0 @@
-OBJECTS = message.o blob.o server.o address.o method.o pattern_match.o send.o timetag.o bundle.o nonblocking_server_example.o
-
-example_client: $(OBJECTS)
-	g++ $(OBJECTS) $(LFLAGS) -o nonblocking_server_example

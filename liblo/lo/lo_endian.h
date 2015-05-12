@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2004 Steve Harris
+ *  Copyright (C) 2014 Steve Harris et al. (see AUTHORS)
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
@@ -20,14 +20,19 @@
 #include <sys/types.h>
 
 #ifdef _MSC_VER
-#define inline __inline
-#define uint64_t unsigned __int64
+#ifndef UINTSDEFINED
+#define UINTSDEFINED
+#define int32_t __int32
+#define int64_t __int64
 #define uint32_t unsigned __int32
+#define uint64_t unsigned __int64
+#define uint8_t unsigned __int8
+#endif
 #else
 #include <stdint.h>
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(_MSC_VER)
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
@@ -93,7 +98,12 @@ typedef union {
     } part;
 } lo_split64;
 
-static inline uint64_t lo_swap64(uint64_t x)
+#ifdef _MSC_VER
+#define LO_INLINE __inline
+#else
+#define LO_INLINE inline
+#endif
+static LO_INLINE uint64_t lo_swap64(uint64_t x)
 {
     lo_split64 in, out;
 
@@ -103,39 +113,30 @@ static inline uint64_t lo_swap64(uint64_t x)
 
     return out.all;
 }
+#undef LO_INLINE
+#endif
+
+/* When compiling for an Apple universal build, allow compile-time
+ * macros to override autoconf endianness settings. */
+#ifdef LO_BIGENDIAN
+#undef LO_BIGENDIAN
+#endif
+#if 0 == 2
+#ifdef __BIG_ENDIAN__
+#define LO_BIGENDIAN 1
+#else
+#ifdef __LITTLE_ENDIAN__
+#define LO_BIGENDIAN 0
+#else
+#error Unknown endianness during Apple universal build.
+#endif
+#endif
+#else
+#define LO_BIGENDIAN 0
 #endif
 
 /* Host to OSC and OSC to Host conversion macros */
-
-#if defined(__linux__) || defined(__GLIBC__)
-    #include <endian.h> // set __BYTE_ORDER
-#endif
-
-#ifndef __BIG_ENDIAN
-    #define __BIG_ENDIAN 4321
-    #define __LITTLE_ENDIAN 1234
-#endif
-
-#ifdef __APPLE__
-    #include <sys/types.h>
-    #if defined(__LITTLE_ENDIAN__)
-        #define __BYTE_ORDER __LITTLE_ENDIAN
-    #endif
-    #if defined(__BIG_ENDIAN__)
-        #define __BYTE_ORDER __BIG_ENDIAN
-    #endif
-#endif
-
-#ifdef WIN32
-    #define __BYTE_ORDER __LITTLE_ENDIAN
-#endif
-
-#ifndef __BYTE_ORDER
-#error __BYTE_ORDER not defined
-#endif
-
-
-#if __BYTE_ORDER == __BIG_ENDIAN
+#if LO_BIGENDIAN
 #define lo_htoo16(x) (x)
 #define lo_htoo32(x) (x)
 #define lo_htoo64(x) (x)
@@ -153,12 +154,6 @@ static inline uint64_t lo_swap64(uint64_t x)
 
 #ifdef __cplusplus
 }
-#endif
-
-#ifdef _MSC_VER
-#undef inline
-#undef uint64_t
-#undef uint32_t
 #endif
 
 #endif

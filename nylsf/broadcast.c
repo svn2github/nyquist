@@ -179,7 +179,7 @@ gen_coding_history (char * added_history, int added_history_max, const SF_INFO *
 		} ;
 
 	count = snprintf (added_history, added_history_max,
-							"A=PCM,F=%u,W=%u,M=%s,T=%s-%s\r\n", /* RBD */
+							"A=PCM,F=%u,W=%hu,M=%s,T=%s-%s\r\n",
 							psfinfo->samplerate, width, chnstr, PACKAGE, VERSION) ;
 
 	if (count >= added_history_max)

@@ -8,8 +8,6 @@
 #include	<stdlib.h>
 #include	<string.h>
 
-#include	"config.h"  /* RBD */
-
 #include	"gsm610_priv.h"
 
 /* 

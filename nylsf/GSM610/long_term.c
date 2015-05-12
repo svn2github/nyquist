@@ -4,8 +4,6 @@
  * details.  THERE IS ABSOLUTELY NO WARRANTY FOR THIS SOFTWARE.
  */
 
-#include "config.h" /* RBD */
-
 #include <stdio.h>
 #include <assert.h>
 

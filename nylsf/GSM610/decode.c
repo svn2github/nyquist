@@ -6,8 +6,6 @@
 
 #include <stdio.h>
 
-#include "config.h" /* RBD */
-
 #include	"gsm610_priv.h"
 
 /*
