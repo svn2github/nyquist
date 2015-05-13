@@ -13,7 +13,7 @@ EXE_FOLDER=$CONTENTS_FOLDER/MacOS
 
 # cp ${SRC_ROOT}/macosxproject/Nyquist.icns $RES_FOLDER
 # cp jnyqide.jar $JAVA_FOLDER/
-cp $SRC_ROOT/macosxproject/build/$CONFIGURATION/nyquist $JAVA_FOLDER/ny
+cp $SRC_ROOT/macosxproject/build/$CONFIGURATION/ny $JAVA_FOLDER/ny
 
 cp ${JNYQIDE_ROOT}/mac-os-x-link-script.sh $JAVA_FOLDER
 cp ${JNYQIDE_ROOT}/closefile.gif $JAVA_FOLDER/
