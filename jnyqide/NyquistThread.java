@@ -4,15 +4,6 @@ package jnyqide;
 import java.io.*;
 import javax.swing.*;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
- */
-
 public class NyquistThread extends Thread {
     public Process myProcess;
     public boolean nyquist_is_running;

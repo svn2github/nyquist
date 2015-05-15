@@ -27,6 +27,8 @@ link step, so it does not try to link with ALSA. I assume this works
 because the PortAudio library which is included in the Nyquist sources
 configures itself differently on Debian and doesn't need ALSA.
 
+Note 3: You will also need Java and ant
+
 After unzipping sources, type:
 
     gunzip nyqsrc3<nn>.zip

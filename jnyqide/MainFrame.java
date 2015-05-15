@@ -11,7 +11,6 @@ import javax.swing.text.*;
 import javax.swing.event.*;
 import javax.swing.undo.*;
 import javax.swing.text.html.*;
-// import javax.swing.JOptionPane.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.*;
 import jnyqide.*;
@@ -25,20 +24,9 @@ import java.util.Map;
 import java.net.URL;
 import java.net.URLDecoder;
 import javax.swing.border.EmptyBorder;
-/* DO NOT EXIST FOR JAVA 6 -- SEE "SymbolicLink" BELOW 
-import java.nio.file.Path;
-import java.nio.file.Files;
-*/
 import java.nio.file.Paths;
 import java.lang.ProcessBuilder;
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
- */
+import javax.imageio.ImageIO;
 
 class ScrollUpdate implements Runnable {
     MainFrame frame;
@@ -65,9 +53,9 @@ public class MainFrame extends JFrame {
 
     JToolBar jToolBar = new JToolBar();
     float test_value = 0.0F;
-    ImageIcon image1;
-    ImageIcon image2;
-    ImageIcon image3;
+    // ImageIcon image1;
+    // ImageIcon image2;
+    // ImageIcon image3;
     public JLabel statusBar = new JLabel();
     JButton salLispButton;
     BorderLayout borderLayout1 = new BorderLayout();
@@ -207,12 +195,7 @@ public class MainFrame extends JFrame {
     
     
     public boolean isMac() {
-        // System.out.println("mrj.version" + System.getProperty("mrj.version"));
-        // return System.getProperty("mrj.version") != null;
-
-        // The code above seems not to work on Leopard; the following 
-        // suggested by Raymond Martin:
-
+        // the following suggested by Raymond Martin:
         final String strOS;
 
         try { strOS = System.getProperty("os.name"); }
@@ -342,21 +325,17 @@ public class MainFrame extends JFrame {
 		//
         System.out.println("This is a test of output" + "\n");
         System.out.println("isMac(): " + isMac() + "\n");
-        if (isMac()) {
-            hasRightMouseButton = false;
-            // set current working directory if we are in an application bundle
-            currentDir = Paths.get(MainFrame.class.getProtectionDomain().
+        // set current working directory if we are in an application bundle
+        currentDir = Paths.get(MainFrame.class.getProtectionDomain().
                     getCodeSource().getLocation().toURI()).getParent().
                     toString() + "/";
+        if (isMac()) {
+            hasRightMouseButton = false;
             if (isTrue(System.getProperty("isOSXbundle"))) {
                 System.out.println("isOSXbundle: true\n");
                 nyquistDir = currentDir;
                 docDir = new File(currentDir + "../../../nyquist/doc").
                          getCanonicalPath() + "/";
-            } else { // running from command line, 
-                nyquistDir = new File(currentDir + "..").getCanonicalPath() +
-                             "/";
-                docDir = nyquistDir + "doc/";
             }
             // Debugging:
             System.out.println("currentDir: |" + currentDir + "|");
@@ -377,33 +356,6 @@ public class MainFrame extends JFrame {
 
                 System.out.println("isMac, so created instance of SpecialMacHandler");
 
-				// install links to lib and demo if they do not exist
-				/* THIS CODE WRITTEN FOR JAVA SE 7, BUT OS X IS CURRENTLY USING
-				 * VERSION 6, SO CALL A SHELL SCRIPT INSTEAD 
-				// start by getting the current directory; should be
-				// ?/NyquistIDE.app/Contents/Resources/Java
-				String path = System.getProperty("user.dir");
-				File f = new File(path); // Java
-				Path libFile = new File(f, "lib"); // link to this
-				Path demosFile = new Path(f, "demos"); // and link to this
-				if (f) f = f.getParentFile(); // Resources
-				if (f) f = f.getParentFile(); // Content
-				// check to see if we are where we expect to be
-				if (f && f.getName().equals("Contents")) {
-					// good so far. Do not check for NyquistIDE.app because it
-					// might be renamed. Look for ../../nyquist
-					f = f.getParentFile(); // NyquistIDE.app
-					if (f) f = f.getParentFile(); // NyquistIDE.app/..
-					if (f) f = new File(f, "nyquist"); // nyquist
-					if (f) { // add symbolic links
-						Path p = f.toPath();
-						Path libLink = new Path(p, "lib");
-						createSymbolicLinkConditional(libLink, libTarget);
-						Path demosLink = new Path(p, "demos");
-						createSymbolicLinkConditional(demosLink, demosTarget);
-					}
-				}
-				*/
 				ProcessBuilder process = new ProcessBuilder(
                         "/bin/sh", "mac-os-x-link-script.sh");
                 process.redirectErrorStream(true).inheritIO();
@@ -420,8 +372,22 @@ public class MainFrame extends JFrame {
             } catch(Exception e) {
                 System.out.println(e);
             }
+        } else { // Linux and Windows
+            String icon_path = currentDir + "nycon.png";
+            Image im = null;
+            try {
+                im = ImageIO.read(new File(icon_path));
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+            System.out.println("nycon" + im + " from " + icon_path);
+            setIconImage(im);
         }
-
+        // Linux, Windows, and Mac debugging from command line are handled here
+		if (nyquistDir.equals("")) {
+             nyquistDir = new File(currentDir + "..").getCanonicalPath() + "/";
+             docDir = nyquistDir + "doc/";
+        }
         prefs = Preferences.userNodeForPackage(Main.class);
         prefStartInSalMode = prefs.getBoolean("start-with-sal", 
                                               prefStartInSalMode);
@@ -453,10 +419,10 @@ public class MainFrame extends JFrame {
         prefSFDirectory = prefs.get("default-sf-directory", prefSFDirectory);
         prefsHaveBeenSet = false;
 
-        image1 = new ImageIcon("openFile.gif");
-        image2 = new ImageIcon("closeFile.gif");
-        image3 = new ImageIcon("help.gif");
-        //setIconImage(Toolkit.getDefaultToolkit().createImage(MainFrame.class.getResource("[Your Icon]")));
+        // image1 = new ImageIcon("openFile.gif");
+        // image2 = new ImageIcon("closeFile.gif");
+        /// image3 = new ImageIcon("help.gif");
+
         contentPane = (JPanel) this.getContentPane();
         contentPane.setLayout(borderLayout1);
         this.setSize(new Dimension(400, 300));

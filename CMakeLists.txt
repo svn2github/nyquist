@@ -98,9 +98,16 @@ set(flac_SRCS
   FLAC/src/libFLAC/window.c)
 
 add_library(flac_static STATIC ${flac_SRCS})
-set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
-                      "-DVERSION=\\\\\"1.3.1\\\\\" -DHAVE_LROUND") 
-set_property(TARGET flac_static APPEND PROPERTY INCLUDE_DIRECTORIES
+# There's a problem with quotes in XCode, so we need a special case
+if (APPLE)
+  set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
+                        "-DVERSION=\\\\\"1.3.1\\\\\" -DHAVE_LROUND") 
+else(APPLE)
+  # also, Linux needs to get SIZE_MAX from stdint.h
+  set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
+            "-DVERSION=\\\"1.3.1\\\" -DHAVE_LROUND -DHAVE_STDINT_H") 
+endif(APPLE)
+target_include_directories(flac_static PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/src/libFLAC/include/ 
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/include/ 
   ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
@@ -220,12 +227,6 @@ set(portaudio_SRCS
   portaudio/src/common/pa_ringbuffer.h
   portaudio/src/os/unix/pa_unix_util.c
   portaudio/src/os/unix/pa_unix_util.h
-  portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.c
-  portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.h
-  portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.c
-  portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.h
-  portaudio/src/hostapi/coreaudio/pa_mac_core_internal.h
-  portaudio/src/hostapi/coreaudio/pa_mac_core.c
   portaudio/src/hostapi/skeleton/pa_hostapi_skeleton.c
   portaudio/src/os/unix/pa_unix_hostapis.c
   portaudio/src/os/unix/pa_unix_util.c
@@ -253,15 +254,41 @@ set(portaudio_SRCS
   portaudio/src/common/pa_util.h
   portaudio/src/common/pa_allocation.c
   portaudio/include/pa_jack.h
-  portaudio/include/pa_mac_core.h
 #  portaudio/src/common/pa_skeleton.c
   )
-
+if(UNIX)
+  if(APPLE)
+    set(portaudio_mac_SRCS 
+	  portaudio/include/pa_mac_core.h
+      portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.c
+      portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.h
+      portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.c
+      portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.h
+      portaudio/src/hostapi/coreaudio/pa_mac_core_internal.h
+      portaudio/src/hostapi/coreaudio/pa_mac_core.c)
+    set(portaudio_SRCS ${portaudio_SRCS} ${portaudio_mac_SRCS})
+  else(APPLE)
+    # LINUX
+	set(portaudio_linux_SRCS 
+      portaudio/src/hostapi/alsa/pa_linux_alsa.c
+      portaudio/src/hostapi/oss/pa_unix_oss.c)
+    set(portaudio_SRCS ${portaudio_SRCS} ${portaudio_linux_SRCS})
+  endif(APPLE)
+endif(UNIX)
 add_library(portaudio_static STATIC ${portaudio_SRCS})
-set_property(TARGET portaudio_static
+target_include_directories(portaudio_static PRIVATE
   PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/common)
+  ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/common
+  ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/os/unix)
+
+
+## portaudio
+set(PORTAUDIO_INCLUDE_PATH ../portaudio/include)
+set(PORTAUDIO_LIBRARY portaudio)
+include_directories(${PORTAUDIO_INCLUDE_PATH})
+##
+
 
 # liblo
 
@@ -314,6 +341,7 @@ if(PORTAUDIO_INCLUDE_PATH)
 else()
     message(FATAL_ERROR "Could not find portaudio.h") 
 endif()
+
 
 # liblo
 
@@ -580,6 +608,9 @@ list(APPEND nyquist_SRCS
   ${xlisp_headers} ${tran_headers} ${cmt_headers} 
   ${nyqstk_headers} ${nyquist_headers})
 
+##
+link_directories(../portaudio/lib/.libs)
+##
 
 # Create executables 
 add_executable(ny ${nyquist_SRCS}) 
@@ -589,14 +620,18 @@ target_include_directories(ny PRIVATE
     ffts/src snd cmt sys/unix xlisp tran nyqsrc nyqstk nyqstk/include) 
 
 if(USE_SOURCE_LIBS)
-  target_include_directories(ny PRIVATE nylsf liblo portaudio/include)
+##  target_include_directories(ny PRIVATE nylsf liblo portaudio/include)
+  target_include_directories(ny PRIVATE nylsf liblo)
+##
   target_link_libraries(ny ogg_static)
   target_link_libraries(ny vorbis_static)
   target_link_libraries(ny vorbisenc_static)
   target_link_libraries(ny vorbisfile_static)
   target_link_libraries(ny flac_static)
   target_link_libraries(ny sndfile_static)
-  target_link_libraries(ny portaudio_static)
+##  target_link_libraries(ny portaudio_static)
+  target_link_libraries(ny ${PORTAUDIO_LIBRARY})
+##
   target_link_libraries(ny lo_static)
 else()
   target_link_libraries(ny ${LIBSNDFILE_LIBRARY})
@@ -624,27 +659,27 @@ else()
   #add_jar(jnyqide SOURCES ${jnyqide_SRCS})
   # I could not figure out how to use java, jar, and appbundler
   # directly, so I'm using ant based on Oracle appbundler example
-  add_custom_target(NyquistIDE ALL ant jar
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide
-    COMMENT "Building jnyqide.jar"
-  )     
-  add_dependencies(NyquistIDE ny)
+  if (APPLE)
+    add_custom_target(NyquistIDE ALL ant jar
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide
+      COMMENT "Building jnyqide.jar")     
+    add_dependencies(NyquistIDE ny)
+  else(APPLE)
+	add_custom_target(jNyqIDE ALL 
+        mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden
+      COMMAND javac jnyqide/*.java
+      COMMAND 
+	    mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java
+      COMMAND rm -f jnyqide/jNyqIDE.jar
+      COMMAND 
+        jar -cfm jnyqide/jNyqIDE.jar jnyqide/manifest.txt jnyqide/*.class
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	  COMMENT "BUilding jnyqide/jNyqIDE.jar")
+    add_dependencies(jNyqIDE ny)
+  endif(APPLE)
   
 endif()
 
-# APPLE NyquistIde.app
-
-if(APPLE)
-  add_custom_command(TARGET NyquistIDE 
-    POST_BUILD
-    COMMAND ant bundle-nyquist
-    COMMAND sh ./finish-osx-app.sh
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide)
-endif()
-
-add_definitions("-DPA_USE_COREAUDIO")
-add_definitions("-DCMTSTUFF")
-add_definitions("-Dmacintosh")
 add_definitions("-DOSC")
 add_definitions("-DSTK_NYQUIST")
 
@@ -662,8 +697,25 @@ if(UNIX)
     set(EXTRA_NEEDED_LIBS ${COREAUDIO_LIB} ${COREFOUNDATION_LIB}
                        ${CORESERVICES_LIB}
                        ${AUDIOTOOLBOX_LIB} ${AUDIOUNIT_LIB})
+
+    # APPLE NyquistIde.app
+    add_custom_command(TARGET NyquistIDE 
+      POST_BUILD
+      COMMAND ant bundle-nyquist
+      COMMAND sh ./finish-osx-app.sh
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide)
+
+    add_definitions("-DPA_USE_COREAUDIO")
+    add_definitions("-DCMTSTUFF")
+    add_definitions("-Dmacintosh")
   else(APPLE)
-    set(EXTRA_NEEDED_LIBS asound)
+    set(USE_ALSA 1 CACHE BOOL "Use ALSA audio rather than OSS")
+    if(USE_ALSA)
+      add_definitions("-DPA_USE_ALSA=1")
+    endif(USE_ALSA)
+    add_definitions("-DPA_USE_OSS=1")
+    add_definitions("-DHAVE_LINUX_SOUNDCARD_H")
+    set(EXTRA_NEEDED_LIBS asound pthread)
   endif(APPLE)
   # useing ../liblo/liblo_s.a. The builder must explicitly make a 
   # static liblo library with --enable-static and copy the result,
@@ -711,6 +763,7 @@ set(seqfnint_args cmt/seqdecls.h ${seqfnint_args})
 # message(status "seqfnint_args: ${seqfnint_args}")  
 
 add_executable(intgen misc/intgen2.c misc/cmdline.c)
+target_include_directories(intgen PRIVATE sys/unix cmt)
 
 add_custom_target(XLISP_C_Interfaces
   intgen nyqsrc/sndfnint ${sndfnint_args}

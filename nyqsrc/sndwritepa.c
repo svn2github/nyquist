@@ -112,11 +112,13 @@ void portaudio_exit()
 }
 
 
-sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info, SNDFILE *snd_file,
-                             float *buf, long *ntotal, PaStream *audio_stream);
+sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
+                             SNDFILE *snd_file, float *buf, long *ntotal,
+                             PaStream *audio_stream);
 
-sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info, SNDFILE *snd_file,
-                             float *buf, long *ntotal, PaStream *audio_stream);
+sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info,
+                             SNDFILE *snd_file, float *buf, long *ntotal,
+                             PaStream *audio_stream);
 
 unsigned char st_linear_to_ulaw(int sample);/* jlh not used anywhere */
 
@@ -147,10 +149,22 @@ static int portaudio_error(PaError err, char *problem)
 LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
 {
     PaStreamParameters output_parameters;
-    int i;
+    int i, j = -1;
     int num_devices;
-    const PaDeviceInfo *device_info;
+    const PaDeviceInfo *device_info = NULL;
     const PaHostApiInfo *host_info;
+    // list tells us to list devices
+    LVAL list = xlenter("*SND-LIST-DEVICES*");
+    // pref tells us which device to open
+    LVAL pref = xlenter("*SND-DEVICE*");
+    int pref_num = -1;
+    char *pref_string = NULL;
+    list = getvalue(list);
+    if (list == s_unbound) list = NULL;
+    pref = getvalue(pref);
+    if (pref == s_unbound) pref = NULL;
+    if (stringp(pref)) pref_string = getstring(pref);
+    else if (fixp(pref)) pref_num = getfixnum(pref);
 
     if (!portaudio_initialized) {
         if (portaudio_error(Pa_Initialize(), 
@@ -170,20 +184,44 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
     // Initialize the audio stream for output
     // If this is Linux, prefer to open ALSA device
     num_devices = Pa_GetDeviceCount();
+    // nyquist_printf("num_devices %d\n", num_devices);
     for (i = 0; i < num_devices; i++) {
         device_info = Pa_GetDeviceInfo(i);
         host_info = Pa_GetHostApiInfo(device_info->hostApi);
-        if (host_info->type == paALSA) {
-            output_parameters.device = i;
-            break;
+        if (list) {
+            nyquist_printf("PortAudio %d: %s -- %s\n", i,
+                           device_info->name, host_info->name);
         }
+        if (j == -1) {
+            if (pref_num >= 0 && pref_num == i) j = i;
+            else if (pref_string &&
+                     strstr(device_info->name, pref_string)) j = i;
+        }
+        // giving preference to first ALSA device seems to be a bad idea
+        // if (j == -1 && host_info->type == paALSA) {
+        //     j = i;
+        // }
     }
-
-    if (portaudio_error(
-         Pa_OpenStream(audio_stream, NULL /* input */, &output_parameters,
-                   sf_info->samplerate, max_sample_block_len, 
-                   paClipOff, NULL /* callback */, NULL /* userdata */),
-         "could not open audio")) {
+    if (j != -1) {
+        output_parameters.device = j;
+    }
+    if (list) {
+        nyquist_printf("... Default device is %d\n",
+                       Pa_GetDefaultOutputDevice());
+        nyquist_printf("... Selected device %d for output\n",
+                       output_parameters.device);
+    }
+    if (device_info) {
+        if (portaudio_error(
+                Pa_OpenStream(audio_stream, NULL /* input */, &output_parameters,
+                    sf_info->samplerate, max_sample_block_len, 
+                    paClipOff, NULL /* callback */, NULL /* userdata */),
+                "could not open audio")) {
+            nyquist_printf("audio device name: %s\n", device_info->name);
+            return NIL;
+        }
+    } else {
+        nyquist_printf("warning: no audio device found\n");
         return NIL;
     }
     flush_count = (long) (sf_info->samplerate * (sound_latency + 0.2));
@@ -457,8 +495,9 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     frames = round(offset * sf_info->samplerate);
     rslt = sf_seek(sndfile, frames, SEEK_SET);
     if (rslt < 0) {
-        snprintf(error, sizeof(error), "snd_overwrite: cannot seek to frame %lld of %s",
-                frames, filename);
+        snprintf(error, sizeof(error),
+				 "snd_overwrite: cannot seek to frame %lld of %s",
+                 (long long int) frames, filename);
         xlabort(error);
     }
     if (sf_info->channels != channels) {
@@ -652,7 +691,8 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
             sf_writef_float(sndfile, samps, togo);
         }
         if (audio_stream) {
-            Pa_WriteStream(audio_stream, samps, togo);
+            PaError err = Pa_WriteStream(audio_stream, samps, togo);
+			if (err != paNoError) gprintf(TRANS, "Pa_WriteStream %d\n", err);
             sound_frames += togo;
         }
 

@@ -6202,6 +6202,26 @@ when you load @code(sliders.lsp).
 
 @codef(*sine-table*)@pragma(defn)@index(*sine-table*)@index(sine table)@\A single cycle sinusoid intended for use by table-lookup oscillators such as @code(osc).
 
+@codef(*snd-device*)@pragma(defn)@index(*snd-device*)@index(output 
+device)@index(audio output device)@index(portaudio)@index(select 
+output device)@\Select the audio 
+output device by setting this to a @code(FIXNUM) to select a device by 
+index number or to a @code(STRING) to select a device by name. If a
+@code(STRING) is provided, the first device whose name contains the 
+@code(STRING) (as a substring) is selected. (See @code(*snd-list-devices*)
+below.) If the value is unbound or NULL, the default PortAudio device
+is used.
+
+@codef(*snd-list-devices*)@pragma(defn)@index(*snd-list-devices*)@index(list
+output devices)@index(show output devices)@index(devices)@\List all audio
+output devices (as text output) when a sound is played. By inspecting this
+list, one can determine possible values for @code(*snd-device*) and see
+what device is being selected by Nyquist. One cannot (currently) obtain
+the list of devices as an @code(XLISP) value. The default behavior is to
+list the devices and some instructions only the first time any sound is 
+played. Setting @code(*snd-list-devices*) to a value (@code(t) or @code(nil))
+before playing a sound will override this behavior.
+
 @codef(*sound-srate*)@pragma(defn)@index(*sound-srate*)@\Part of the environment, establishes the audio sample rate. See Section @ref(environment-sec) for details.
 
 @codef(*soundenable*)@pragma(defn)@index(*soundenable*)@\Controls whether writes to a sound file will also be played as audio.  Set this variable by calling @code{(sound-on)} or @code{(sound-off)}.

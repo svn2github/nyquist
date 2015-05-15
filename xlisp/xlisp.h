@@ -190,7 +190,7 @@ extern long ptrtoabs();
 #define LOCAL		static
 #endif
 #ifndef AFMT
-#define AFMT		"%x"
+#define AFMT		"%lx"
 #endif
 #ifndef FIXTYPE
 #define FIXTYPE		long
