@@ -865,6 +865,8 @@ run it. The links will be in the same directory as the NyquistIDE itself.
 
 The file @code(demos/examples_home.htm) is an index to all the demo descriptions. In this directory, you will find the following and more:
 @begin(itemize)
+Code to create atonal melodies (@code(demos/atonal-melodies.sal)).
+
 How to make arpeggios (@code(demos/arpeggiator.htm) and @code(arp.sal))@index(arpeggiator)
 
 Gong sounds by additive synthesis@index(additive synthesis, gongs)
@@ -890,10 +892,15 @@ Computing samples directly in Lisp (using Karplus-Strong and physical modelling
 as examples)
 (@code(demos/pmorales/d1.lsp))@index(demos, sample-by-sample)@index(DSP in Lisp)@index(Lisp DSP)@index(Karplus-Strong synthesis)@index(physical model)@index(flute sound)
 
-FM Synthesis examples, including bell@index(bell sound), wood drum@index(wood drum sound),
-brass sounds@index(brass sound), tuba sound @index(tuba) (@code(demos/mateos/tuba.lsp) and clarinet sounds@index(clarinet sound) (@code(demos/pmorales/e2.lsp))@index(demos, FM synthesis)
+FM Synthesis examples, including FM voices (@code(demos/FM-voices-Chowning.sal))
+designed by John Chowning@index(FM voices)@index(Chowning, John),
+bell@index(bell sound), wood drum@index(wood drum sound),
+brass sounds@index(brass sound), tuba sound @index(tuba)
+ (@code(demos/mateos/tuba.lsp)) and clarinet sounds@index(clarinet sound) 
+(@code(demos/pmorales/e2.lsp))@index(demos, FM synthesis)
 
-Rhythmic patterns (@code(demos/rhythm_tutorial.htm))@index(demos, rhythmic pattern)
+Rhythmic patterns
+(@code(demos/rhythm_tutorial.htm))@index(demos, rhythmic pattern)
 
 Drum Samples and Drum Machine
 (@code(demos/plight/drum.lsp))@index(demos, drum machine)@index(drum
@@ -4379,6 +4386,8 @@ Shepard tones in @code(demos/shepard.lsp).@index(Shepard tones)@index(demos, She
 Identical to @code(snd-tapv). See it for details (page @pageref(snd-tapv-sec)).
 @end(fndefs)
 
+@latex(\needspace{3\baselineskip}
+)
 @paragraph(Effects)
 @begin(fndefs)
 @label(stkrev-sec)
@@ -4679,8 +4688,12 @@ ramp itself is unwarped (linear).  The sample rate is @code(*control-srate*).
 @label(rms-sec)
 @codef{rms(@pragma(defn)@index(rms)@i(sound) [, @i(rate), @i(window-size)])} @c{[sal]}@*
 @altdef{@code{(rms @i(sound) [@i(rate) @i(window-size)])} @c{[lisp]}}@\Computes the RMS of @i(sound) using a square window of size @i(window-size). The result has a sample rate of @i(rate). The default value of @i(rate) is 100 Hz, and the default window size is 1/rate seconds (converted to samples). The @i(rate) is a @code(FLONUM) and @i(window-size) is a @code(FIXNUM).
-@end(fndefs)
 
+@label(recip-sec)
+@codef{recip(@pragma(defn)@index(recip)@index(reciprocal)@index(division)@i(sound))} @c{[sal]}@*
+@altdef{@code[(recip @i(sound))] @c{[lisp]}}@\A generalized reciprocal function.  
+If @i(sound) is a @code(SOUND), compute 1/@i(x) for each sample @i(x).  If @i(sound) is a number @i(x), just compute 1/@i(x).  If @i(sound) is a multichannel sound, return a multichannel sound with @code(recip) applied to each element.  The result has the type, sample rate, starting time, etc. of @i(sound).  Note that the reciprocal of 0 is undefined (some implementations return  infinity), so use this function with care on sounds.  Division of sounds is accomplished by multiplying by the reciprocal.  Again, be careful not to divide by zero.
+@end(fndefs)
 @begin(figure)
 @center(@graphic((height = 2.37 in, width = 4.5 in, magnify = 0.75,
 		postscript = "rampfig.ps")
@@ -4696,13 +4709,7 @@ used in a sequence, the next sound after @code(ramp) would start at time 1 +
 @i(P), where @i(P) is the sample period.]
 @tag(ramp-fig)
 @end(figure)
-
 @begin(fndefs)
-@label(recip-sec)
-@codef{recip(@pragma(defn)@index(recip)@index(reciprocal)@index(division)@i(sound))} @c{[sal]}@*
-@altdef{@code[(recip @i(sound))] @c{[lisp]}}@\A generalized reciprocal function.  
-If @i(sound) is a @code(SOUND), compute 1/@i(x) for each sample @i(x).  If @i(sound) is a number @i(x), just compute 1/@i(x).  If @i(sound) is a multichannel sound, return a multichannel sound with @code(recip) applied to each element.  The result has the type, sample rate, starting time, etc. of @i(sound).  Note that the reciprocal of 0 is undefined (some implementations return  infinity), so use this function with care on sounds.  Division of sounds is accomplished by multiplying by the reciprocal.  Again, be careful not to divide by zero.
-
 @codef{s-rest(@index(rest)@pragma(defn)@index(s-rest)[@i(duration)])} @c{[sal]}@*
 @altdef{@code{(s-rest [@i(duration)])} @c{[lisp]}}@\Create silence (zero samples)
 for the given 
@@ -5728,9 +5735,10 @@ on analog synthesizers.  The @i(gate) is a sound that normally steps from 0.0 to
 
 @codef[snd-convolve(@pragma(defn)@index(snd-convolve)@i(sound), @i(response))] @c{[sal]}@*
 @altdef{@code[(snd-convolve @i(sound) @i(response))] @c{[lisp]}}@\Convolves
-@i(sound) by @i(response) using a simple O(N x M) algorithm. The @i(sound)
-can be any length, but the @i(response) is computed and stored in a table. The required compuation time per sample and total space are proportional to the
-length of @i(response). Use @code(convolve) instead (see Section
+@i(sound) by @i(response) using a fast convolution algorithm. The @i(sound)
+can be any length, but the @i(response) is computed and stored in in memory. 
+The required compuation time per sample and total space are proportional to
+the length of @i(response). Use @code(convolve) instead (see Section
 @ref(convolve-sec)).
 
 @codef[snd-delay(@pragma(defn)@index(snd-delay)@i(sound), @i(delay), @i(feedback))] @c{[sal]}@*
@@ -6176,6 +6184,8 @@ a 16-bit integer value of 32,768 (2@+[15]), but the maximum positive
 when written or played as 16-bit audio.
 
 @codef(*control-srate*)@pragma(defn)@index(*control-srate*)@\Part of the environment, establishes the control sample rate. See Section @ref(environment-sec) for details.
+
+@codef(*default-plot-file*)@pragma(defn)@index(*default-plot-file*)@\The default file for plot data (written by Nyquist, read by NyquistIDE). Default value is @code("points.dat").
 
 @codef(*default-sf-bits*)@pragma(defn)@index(*default-sf-bits*)@\The default bits-per-sample for sound files. Typically 16.
 
@@ -6832,6 +6842,8 @@ the sequence of frames.
 @altdef{@code[(lpc-frame-filter-coefs @i(frame))] @c{[lisp]}}@\Get the filter coefficients from a frame.
 @end(fndefs)
 
+@latex(\needspace{3\baselineskip}
+)
 @section(Low-level LPC Functions)
 The lowest-level Nyquist functions for LPC are 
 @begin(itemize)

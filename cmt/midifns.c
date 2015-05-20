@@ -110,7 +110,7 @@
 #define BREAKTEST
 #endif
 
-#ifdef __APPLE__
+#ifdef UNIX_MACH
 #include <sys/types.h>
 #include <sys/time.h>
 #include <errno.h>
@@ -131,7 +131,7 @@
 #endif /* UNIX_IRIX_MIDIFNS */
 #endif  /* UNIX_IRIX */
 #endif /* UNIX */
-#endif /* __APPLE__ */
+#endif /* UNIX_MACH */
 
 #ifdef ITC
 static int ignore_realtime = 0;
@@ -395,7 +395,7 @@ void eventwait(timeout)
 }
 #else /* !UNIX_ITC */
 #ifdef UNIX
-/* see machmidi.c for UNIX_MACH implementation */
+/* see machmidi.c for UNIX_MACH (OS X) implementation */
 #ifndef UNIX_MACH
 #ifdef UNIX_IRIX_MIDIFNS
 void eventwait(timeout)

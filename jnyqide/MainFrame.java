@@ -338,9 +338,10 @@ public class MainFrame extends JFrame {
                          getCanonicalPath() + "/";
             }
             // Debugging:
-            System.out.println("currentDir: |" + currentDir + "|");
-            System.out.println("nyquistDir: |" + nyquistDir + "|");
-            System.out.println("docDir: |" + docDir + "|");
+            // System.out.println("currentDir: |" + currentDir + "|");
+            // System.out.println("nyquistDir: |" + nyquistDir + "|");
+            // System.out.println("docDir: |" + docDir + "|");
+            //
             // try to load special mac-specific code that won't even compile
             // on windows or linux
             try {

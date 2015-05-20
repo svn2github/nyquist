@@ -32,8 +32,7 @@
 ;;
 (defun dmhm-organ-test ()
   (autonorm-off)
-  (play
-   (sim
+  (sim
     (at 0 
      (stretch 1.98 
       (sim
@@ -53,6 +52,6 @@
     (at 4 (stretch 1.98 (dmhm-organ c3)))
     (at 4 (stretch 0.1 (dmhm-organ ds3)))
     (at 4.1 (stretch 1.88 (dmhm-organ e3)))
-    (at 4 (stretch 1.98 (dmhm-organ g3))))))
+    (at 4 (stretch 1.98 (dmhm-organ g3)))))
 
 

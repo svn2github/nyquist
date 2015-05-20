@@ -1219,8 +1219,10 @@ loop
                               ;; output a regular roman space
                               (format *ltoutf* "\\textrm{ }"))
                              (t
-                              (if (equal c #\Newline) 
-                                  (setf skip-count (1- skip-count)))
+                              (cond ((equal c #\Newline) 
+                                     (setf skip-count (1- skip-count))
+                                     ;; DEBUG: (format *ltoutf* "<skip-count ~A>" skip-count)
+                                     ))
                               (write-char c *ltoutf*))))
                       (t
                        ; (display "skipping output of" c)

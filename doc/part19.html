@@ -3,7 +3,7 @@
 <html><head><title>Appendix 3: XLISP: An Object-oriented Lisp</title>
 <link rel="stylesheet" type="text/css" href="nyquiststyle.css">
 </head>
-<a name = "218"><h2>Appendix 3: XLISP: An Object-oriented Lisp</h2></a>
+<a name = "220"><h2>Appendix 3: XLISP: An Object-oriented Lisp</h2></a>
 
 <blockquote>
 <p>
@@ -32,7 +32,7 @@ Permission is granted for unrestricted non-commercial use<br>
 
 
 
-<a name = "219"><h3>Introduction</h3></a>
+<a name = "221"><h3>Introduction</h3></a>
         XLISP is an experimental programming language combining some of
         the features of Common Lisp with an object-oriented extension
         capability.  It was implemented to allow experimentation with
@@ -65,7 +65,7 @@ Permission is granted for unrestricted non-commercial use<br>
         use as a reference for some of the Common Lisp functions that
         are described only briefly in this document.
 <p>
-        <a name = "220"><h3>A Note From The Author</h3></a>
+        <a name = "222"><h3>A Note From The Author</h3></a>
 <p>
         If you have any problems with XLISP, feel free to contact me [me being David Betz - RBD] for
         help or advice.  Please remember that since XLISP is available
@@ -94,7 +94,7 @@ Permission is granted for unrestricted non-commercial use<br>
         don't want it to get so big that it requires megabytes of memory
         to run.
 <p>
-        <a name = "221"><h3>XLISP Command Loop</h3></a><a name="index1335"></a><a name="index1336"></a>
+        <a name = "223"><h3>XLISP Command Loop</h3></a><a name="index1347"></a><a name="index1348"></a>
 <p>
         When XLISP is started, it first tries to load the workspace
         <code>xlisp.wks</code> from the current directory.  If that file doesn't
@@ -118,7 +118,7 @@ Permission is granted for unrestricted non-commercial use<br>
         successfully, XLISP prints the result and then returns to the
         initial prompt waiting for another expression to be typed.
 <p>
-        <a name = "222"><h3>Special Characters</h3></a><a name="index1337"></a>
+        <a name = "224"><h3>Special Characters</h3></a><a name="index1349"></a>
 <p>
  When XLISP is running from a console, some control characters invoke operations:
 <ul>
@@ -134,18 +134,18 @@ Backspace and Delete characters erase the previous character on the input line (
 <li>Control-T evaluates the INFO function.
 </ul>
 <p>
-        <a name = "223"><h3>Break Command Loop</h3></a><a name="index1338"></a>
+        <a name = "225"><h3>Break Command Loop</h3></a><a name="index1350"></a>
 <p>
         When XLISP encounters an error while evaluating an expression,
         it attempts to handle the error in the following way:
 <p>
-        If the symbol <code>*breakenable*<a name="index1339"></a></code> is
+        If the symbol <code>*breakenable*<a name="index1351"></a></code> is
         true, the message corresponding to the error is printed.  If
         the error is correctable, the correction message is printed.
 <p>
-        If the symbol <code>*tracenable*<a name="index1340"></a></code> is true, a trace back is printed.
+        If the symbol <code>*tracenable*<a name="index1352"></a></code> is true, a trace back is printed.
         The number of entries printed depends on the value of the symbol
-        <code>*tracelimit*<a name="index1341"></a></code>.  If this symbol is set to something other than a
+        <code>*tracelimit*<a name="index1353"></a></code>.  If this symbol is set to something other than a
         number, the entire trace back stack is printed.
 <p>
         XLISP then enters a read/eval/print loop to allow the user to
@@ -158,7 +158,7 @@ Backspace and Delete characters erase the previous character on the input line (
         numbered break loop.  When in a break loop, XLISP prefixes the
         break level to the normal prompt.
 <p>
-        If the symbol <code>*breakenable*<a name="index1342"></a></code> is <code>nil</code>, XLISP looks for a
+        If the symbol <code>*breakenable*<a name="index1354"></a></code> is <code>nil</code>, XLISP looks for a
         surrounding errset function.  If one is found, XLISP examines
         the value of the print flag.  If this flag is true, the error
         message is printed.  In any case, XLISP causes the errset
@@ -167,7 +167,7 @@ Backspace and Delete characters erase the previous character on the input line (
         If there is no surrounding errset function, XLISP prints the
         error message and returns to the top level.
 <p>
-        <a name = "224"><h3>Data Types</h3></a><a name="index1343"></a><a name="index1344"></a>
+        <a name = "226"><h3>Data Types</h3></a><a name="index1355"></a><a name="index1356"></a>
 <p>
         There are several different data types available to XLISP
         programmers.
@@ -188,7 +188,7 @@ lists
 <li>closures (user defined functions)
 </ul>
 <p>
-<a name = "225"><h3>The Evaluator</h3></a><a name="index1345"></a><a name="index1346"></a>
+<a name = "227"><h3>The Evaluator</h3></a><a name="index1357"></a><a name="index1358"></a>
 <p>
         The process of evaluation in XLISP:
 <ul>
@@ -223,7 +223,7 @@ lists
 </ul>
 </ul>
 <p>
-<a name = "226"><h3>Lexical Conventions</h3></a><a name="index1347"></a><a name="index1348"></a>
+<a name = "228"><h3>Lexical Conventions</h3></a><a name="index1359"></a><a name="index1360"></a>
 <p>
         The following conventions must be followed when entering XLISP
         programs:
@@ -267,10 +267,10 @@ lists
 <li><code>\nnn</code>    means the character whose octal code is nnn
 </ul>
 <p>
-<a name = "227"><h3>Readtables</h3></a><a name="index1349"></a>
+<a name = "229"><h3>Readtables</h3></a><a name="index1361"></a>
 <p>
         The behavior of the reader is controlled by a data structure
-        called a <i>readtable</i>.  The reader uses the symbol <code>*readtable*<a name="index1350"></a></code> to
+        called a <i>readtable</i>.  The reader uses the symbol <code>*readtable*<a name="index1362"></a></code> to
         locate the current readtable.  This table controls the
         interpretation of input characters.  It is an array with 128
         entries, one for each of the ASCII character codes.  Each entry
@@ -297,7 +297,7 @@ lists
         specified value.  Of course, the readmacro code is free to read
         additional characters from the input stream.
 <p>
-        XLISP defines several useful read macros<a name="index1351"></a>:
+        XLISP defines several useful read macros<a name="index1363"></a>:
 <ul>
 <li>
                 <code>'</code><i>&lt;expr&gt;</i>         == <code>(quote</code> <i>&lt;expr&gt;</i><code>)</code>
@@ -312,7 +312,7 @@ lists
 <li>                <code>`</code><i>&lt;expr&gt;</i>        == <code>(backquote</code> <i>&lt;expr&gt;</i><code>)</code>
 <li>                <code>,</code><i>&lt;expr&gt;</i>        == <code>(comma</code> <i>&lt;expr&gt;</i><code>)</code>
 <li>   <code>,@</code><i>&lt;expr&gt;</i> == <code>(comma-at</code> <i>&lt;expr&gt;</i><code>)</code></ul>
-<a name = "228"><h3>Lambda Lists</h3></a><a name="index1352"></a>
+<a name = "230"><h3>Lambda Lists</h3></a><a name="index1364"></a>
 <p>
         There are several forms in XLISP that require that a "lambda
         list" be specified.  A lambda list is a definition of the
@@ -391,7 +391,7 @@ lists
                 <i>init</i> is an initialization expression<br>
 
                 <i>svar</i> is a supplied-p variable symbol </blockquote>
-<a name = "229"><h3>Objects</h3></a><a name="index1353"></a>
+<a name = "231"><h3>Objects</h3></a><a name="index1365"></a>
         Definitions:
 <ul>
 <li>
@@ -453,31 +453,31 @@ selector &ndash; a symbol used to select an appropriate method
         superclass of the class containing the current method
         rather than the class of the current object.
 <p>
-<a name = "230"><h3>The "Object" Class</h3></a><a name="index1354"></a>
+<a name = "232"><h3>The "Object" Class</h3></a><a name="index1366"></a>
 <p>
-<code>Object</code><a name="index1355"></a> &ndash; the top of the class hierarchy.
+<code>Object</code><a name="index1367"></a> &ndash; the top of the class hierarchy.
 <p>
 Messages:
 <div style="padding-left: 0em;">
-<code>:show<a name="index1356"></a></code> &ndash; show an object's instance variables.
+<code>:show<a name="index1368"></a></code> &ndash; show an object's instance variables.
 </div><div style="padding-left: 2em;">
 returns &ndash;  the object<br>
 
 </div>
 <br>
-<code>:class<a name="index1357"></a></code> &ndash; return the class of an object
+<code>:class<a name="index1369"></a></code> &ndash; return the class of an object
 </div><div style="padding-left: 2em;">
 returns &ndash;  the class of the object<br>
 
 </div>
 <br>
-<code>:isa<a name="index1358"></a></code> <i>class</i> &ndash; test if object inherits from class
+<code>:isa<a name="index1370"></a></code> <i>class</i> &ndash; test if object inherits from class
 </div><div style="padding-left: 2em;">
 returns &ndash; <code>t</code> if object is an instance of <i>class</i> or a subclass of <i>class</i>, otherwise <code>nil</code><br>
 
 </div>
 <br>
-<code>:isnew<a name="index1359"></a></code> &ndash; the default object initialization routine
+<code>:isnew<a name="index1371"></a></code> &ndash; the default object initialization routine
 </div><div style="padding-left: 2em;">
 returns &ndash;  the object<br>
 
@@ -485,19 +485,19 @@ returns &ndash;  the object<br>
 </div>
 
 <p>
-<a name = "231"><h3>The "Class" Class</h3></a><a name="index1360"></a>
+<a name = "233"><h3>The "Class" Class</h3></a><a name="index1372"></a>
 <p>
-<code>Class<a name="index1361"></a></code> &ndash; class of all object classes (including itself)
+<code>Class<a name="index1373"></a></code> &ndash; class of all object classes (including itself)
 <p>
             Messages:
 <div style="padding-left: 0em;">
-                <code>:new<a name="index1362"></a></code> &ndash; create a new instance of a class
+                <code>:new<a name="index1374"></a></code> &ndash; create a new instance of a class
 </div><div style="padding-left: 2em;">
                     returns &ndash;    the new class object<br>
 
 </div>
 <br>
-                <code>:isnew<a name="index1363"></a></code> <i>ivars</i> [<i>cvars</i> [<i>super</i>]] &ndash; initialize a new class
+                <code>:isnew<a name="index1375"></a></code> <i>ivars</i> [<i>cvars</i> [<i>super</i>]] &ndash; initialize a new class
 </div><div style="padding-left: 2em;">
                     <i>ivars</i> &ndash;    the list of instance variable symbols</div>
 <div style="padding-left: 2em;">                    <i>cvars</i> &ndash;    the list of class variable symbols</div>
@@ -506,7 +506,7 @@ returns &ndash;  the object<br>
 
 </div>
 <br>
-                <code>:answer<a name="index1364"></a></code> <i>msg</i> <i>fargs</i> <i>code</i> &ndash; add a message to a class
+                <code>:answer<a name="index1376"></a></code> <i>msg</i> <i>fargs</i> <i>code</i> &ndash; add a message to a class
 </div><div style="padding-left: 2em;">
                     <i>msg</i> &ndash;      the message symbol</div>
 <div style="padding-left: 2em;">                <i>fargs</i> &ndash;    the formal argument list (lambda list)</div>
@@ -530,33 +530,33 @@ returns &ndash;  the object<br>
         class inherits all instance variables, class variables, and
         methods from its super-class.
 <p>
-<a name = "232"><h3>Profiling</h3></a><a name="index1365"></a>
+<a name = "234"><h3>Profiling</h3></a><a name="index1377"></a>
 The Xlisp 2.0 release has been extended with a profiling facility, which counts how many times and where <code>eval</code> is executed.  A separate count is maintained for each named function, closure, or macro, and a count indicates an <code>eval</code> in the immediately (lexically) enclosing named function, closure, or macro.  Thus, the count gives an indication of the amount of time spent in a function, not counting nested function calls.  The list of all functions executed is maintained on the global <code>*profile*</code> variable.  These functions in turn have <code>*profile*</code> properties, which maintain the counts.  The profile system merely increments counters and puts symbols on the <code>*profile*</code> list.  It is up to the user to initialize data and gather results.  Profiling is turned on or off with the <code>profile</code> function.  Unfortunately, methods cannot be profiled with this facility.
 <p>
 
-<a name = "233"><h3>Symbols</h3></a><a name="index1366"></a>
+<a name = "235"><h3>Symbols</h3></a><a name="index1378"></a>
 <ul>
 <li>
-<code>self</code><a name="index1367"></a> - the current object (within a method context)
-<li><code>*obarray*<a name="index1368"></a></code> - the object hash table
-<li><code>*standard-input*<a name="index1369"></a></code> - the standard input stream
-<li><code>*standard-output*<a name="index1370"></a></code> - the standard output stream
-<li><code>*error-output*<a name="index1371"></a></code> - the error output stream
-<li><code>*trace-output*<a name="index1372"></a></code> - the trace output stream
-<li><code>*debug-io*<a name="index1373"></a></code> - the debug i/o stream
-<li><code>*breakenable*<a name="index1374"></a></code> - flag controlling entering break loop on errors
-<li><code>*tracelist*<a name="index1375"></a></code> - list of names of functions to trace
-<li><code>*tracenable*<a name="index1376"></a></code> - enable trace back printout on errors
-<li><code>*tracelimit*<a name="index1377"></a></code> - number of levels of trace back information
-<li><code>*evalhook*<a name="index1378"></a></code> - user substitute for the evaluator function
-<li><code>*applyhook*<a name="index1379"></a></code> - (not yet implemented)
-<li><code>*readtable*<a name="index1380"></a></code> - the current readtable
-<li><code>*unbound*<a name="index1381"></a></code> - indicator for unbound symbols
-<li><code>*gc-flag*<a name="index1382"></a></code> - controls the printing of gc messages
-<li><code>*gc-hook*<a name="index1383"></a></code> - function to call after garbage collection
-<li><code>*integer-format*<a name="index1384"></a></code> - format for printing integers ("%d" or "%ld")
-<li><code>*float-format*<a name="index1385"></a></code> - format for printing floats ("%g")
-<li><code>*print-case*<a name="index1386"></a></code> - symbol output case (:upcase or :downcase)
+<code>self</code><a name="index1379"></a> - the current object (within a method context)
+<li><code>*obarray*<a name="index1380"></a></code> - the object hash table
+<li><code>*standard-input*<a name="index1381"></a></code> - the standard input stream
+<li><code>*standard-output*<a name="index1382"></a></code> - the standard output stream
+<li><code>*error-output*<a name="index1383"></a></code> - the error output stream
+<li><code>*trace-output*<a name="index1384"></a></code> - the trace output stream
+<li><code>*debug-io*<a name="index1385"></a></code> - the debug i/o stream
+<li><code>*breakenable*<a name="index1386"></a></code> - flag controlling entering break loop on errors
+<li><code>*tracelist*<a name="index1387"></a></code> - list of names of functions to trace
+<li><code>*tracenable*<a name="index1388"></a></code> - enable trace back printout on errors
+<li><code>*tracelimit*<a name="index1389"></a></code> - number of levels of trace back information
+<li><code>*evalhook*<a name="index1390"></a></code> - user substitute for the evaluator function
+<li><code>*applyhook*<a name="index1391"></a></code> - (not yet implemented)
+<li><code>*readtable*<a name="index1392"></a></code> - the current readtable
+<li><code>*unbound*<a name="index1393"></a></code> - indicator for unbound symbols
+<li><code>*gc-flag*<a name="index1394"></a></code> - controls the printing of gc messages
+<li><code>*gc-hook*<a name="index1395"></a></code> - function to call after garbage collection
+<li><code>*integer-format*<a name="index1396"></a></code> - format for printing integers ("%d" or "%ld")
+<li><code>*float-format*<a name="index1397"></a></code> - format for printing floats ("%g")
+<li><code>*print-case*<a name="index1398"></a></code> - symbol output case (:upcase or :downcase)
 </ul>
 <p>
         There are several symbols maintained by the read/eval/print
@@ -565,10 +565,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
         are bound to the most recent three results.  The symbol <code>-</code> is
         bound to the expression currently being evaluated.  It becomes
         the value of <code>+</code> at the end of the evaluation.
-<a name = "234"><h3>Evaluation Functions</h3></a><a name="index1387"></a>
+<a name = "236"><h3>Evaluation Functions</h3></a><a name="index1399"></a>
 <div style="padding-left: 0em;">
         <code>eval(<i>expr</i>)</code> [SAL]<br>
-        <code>(eval<a name="index1388"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash; evaluate an xlisp expression<br>
+        <code>(eval<a name="index1400"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash; evaluate an xlisp expression<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -578,7 +578,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>apply(<i>fun</i>, <i>args</i>)</code> [SAL]<br>
-        <code>(apply<a name="index1389"></a> <tt><i>fun</i></tt> <tt><i>args</i></tt>)</code> [LISP] &ndash; apply a function to a list of arguments<br>
+        <code>(apply<a name="index1401"></a> <tt><i>fun</i></tt> <tt><i>args</i></tt>)</code> [LISP] &ndash; apply a function to a list of arguments<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -589,7 +589,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>funcall(<i>fun</i>, <i>arg</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(funcall<a name="index1390"></a> <tt><i>fun</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash; call a function with arguments<br>
+        <code>(funcall<a name="index1402"></a> <tt><i>fun</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash; call a function with arguments<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -600,7 +600,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>quote(<i>expr</i>)</code> [SAL]<br>
-        <code>(quote<a name="index1391"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  return an expression unevaluated<br>
+        <code>(quote<a name="index1403"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  return an expression unevaluated<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -610,7 +610,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>function(<i>expr</i>)</code> [SAL]<br>
-        <code>(function<a name="index1392"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  get the functional interpretation<br>
+        <code>(function<a name="index1404"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  get the functional interpretation<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -620,7 +620,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>backquote(<i>expr</i>)</code> [SAL]<br>
-        <code>(backquote<a name="index1393"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash; fill in a template<br>
+        <code>(backquote<a name="index1405"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash; fill in a template<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -631,7 +631,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>lambda(<i>args</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(lambda<a name="index1394"></a> <tt><i>args</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash; make a function closure<br>
+        <code>(lambda<a name="index1406"></a> <tt><i>args</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash; make a function closure<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -642,7 +642,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>get-lambda-expression(<i>closure</i>)</code> [SAL]<br>
-        <code>(get-lambda-expression<a name="index1395"></a> <tt><i>closure</i></tt>)</code> [LISP] &ndash; get the lambda expression<br>
+        <code>(get-lambda-expression<a name="index1407"></a> <tt><i>closure</i></tt>)</code> [LISP] &ndash; get the lambda expression<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -652,7 +652,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>macroexpand(<i>form</i>)</code> [SAL]<br>
-        <code>(macroexpand<a name="index1396"></a> <tt><i>form</i></tt>)</code> [LISP] &ndash; recursively expand macro calls<br>
+        <code>(macroexpand<a name="index1408"></a> <tt><i>form</i></tt>)</code> [LISP] &ndash; recursively expand macro calls<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -662,7 +662,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>macroexpand-1(<i>form</i>)</code> [SAL]<br>
-        <code>(macroexpand-1<a name="index1397"></a> <tt><i>form</i></tt>)</code> [LISP] &ndash; expand a macro call<br>
+        <code>(macroexpand-1<a name="index1409"></a> <tt><i>form</i></tt>)</code> [LISP] &ndash; expand a macro call<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -674,10 +674,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "235"><h3>Symbol Functions</h3></a><a name="index1398"></a>
+<a name = "237"><h3>Symbol Functions</h3></a><a name="index1410"></a>
 <div style="padding-left: 0em;">
         <code>set(<i>sym</i>, <i>expr</i>)</code> [SAL]<br>
-        <code>(set<a name="index1399"></a> <tt><i>sym</i></tt> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  set the value of a symbol<br>
+        <code>(set<a name="index1411"></a> <tt><i>sym</i></tt> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  set the value of a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -688,7 +688,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>setq([<i>sym</i>, <i>expr</i>]<span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(setq<a name="index1400"></a> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP] &ndash;  set the value of a symbol<br>
+        <code>(setq<a name="index1412"></a> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP] &ndash;  set the value of a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -699,7 +699,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>psetq([<i>sym</i>, <i>expr</i>]<span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(psetq<a name="index1401"></a> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  &ndash; parallel version of setq<br>
+        <code>(psetq<a name="index1413"></a> [<tt><i>sym</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  &ndash; parallel version of setq<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -710,7 +710,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>setf([<i>place</i>, <i>expr</i>]<span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(setf<a name="index1402"></a> [<tt><i>place</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  &ndash; set the value of a field<br>
+        <code>(setf<a name="index1414"></a> [<tt><i>place</i></tt> <tt><i>expr</i></tt>]<span style="font-style:normal">...</span>)</code> [LISP]  &ndash; set the value of a field<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -734,8 +734,8 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
 
-        <code>(defun<a name="index1403"></a> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; define a function<br>
-        <code>(defmacro<a name="index1404"></a> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  define a macro<br>
+        <code>(defun<a name="index1415"></a> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; define a function<br>
+        <code>(defmacro<a name="index1416"></a> <tt><i>sym</i></tt> <tt><i>fargs</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  define a macro<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -749,7 +749,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>gensym([<i>tag</i>])</code> [SAL]<br>
-        <code>(gensym<a name="index1405"></a> [<tt><i>tag</i></tt>])</code> [LISP]  &ndash; generate a symbol<br>
+        <code>(gensym<a name="index1417"></a> [<tt><i>tag</i></tt>])</code> [LISP]  &ndash; generate a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -759,7 +759,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
 <code>intern(<i>pname</i>)</code> [SAL]<br>
-        <code>(intern<a name="index1406"></a> <tt><i>pname</i></tt>)</code> [LISP]  &ndash; make an interned symbol<br>
+        <code>(intern<a name="index1418"></a> <tt><i>pname</i></tt>)</code> [LISP]  &ndash; make an interned symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -769,7 +769,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>make-symbol(<i>pname</i>)</code> [SAL]<br>
-        <code>(make-symbol<a name="index1407"></a> <tt><i>pname</i></tt>)</code> [LISP]  &ndash; make an uninterned symbol<br>
+        <code>(make-symbol<a name="index1419"></a> <tt><i>pname</i></tt>)</code> [LISP]  &ndash; make an uninterned symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -779,7 +779,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>symbol-name(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-name<a name="index1408"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the print name of a symbol<br>
+        <code>(symbol-name<a name="index1420"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the print name of a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -789,7 +789,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
     <code>symbol-value(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-value<a name="index1409"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the value of a symbol<br>
+        <code>(symbol-value<a name="index1421"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the value of a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -799,7 +799,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>symbol-function(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-function<a name="index1410"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the functional value of a symbol<br>
+        <code>(symbol-function<a name="index1422"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the functional value of a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -809,7 +809,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>symbol-plist(<i>sym</i>)</code> [SAL]<br>
-        <code>(symbol-plist<a name="index1411"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the property list of a symbol<br>
+        <code>(symbol-plist<a name="index1423"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; get the property list of a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -819,7 +819,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>hash(<i>sym</i>, <i>n</i>)</code> [SAL]<br>
-        <code>(hash<a name="index1412"></a> <tt><i>sym</i></tt> <tt><i>n</i></tt>)</code> [LISP]  &ndash; compute the hash index for a symbol<br>
+        <code>(hash<a name="index1424"></a> <tt><i>sym</i></tt> <tt><i>n</i></tt>)</code> [LISP]  &ndash; compute the hash index for a symbol<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -832,10 +832,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "236"><h3>Property List Functions</h3></a><a name="index1413"></a>
+<a name = "238"><h3>Property List Functions</h3></a><a name="index1425"></a>
 <div style="padding-left: 0em;">
         <code>get(<i>sym</i>, <i>prop</i>)</code> [SAL]<br>
-        <code>(get<a name="index1414"></a> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  &ndash; get the value of a property<br>
+        <code>(get<a name="index1426"></a> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  &ndash; get the value of a property<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -846,7 +846,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>putprop(<i>sym</i>, <i>val</i>, <i>prop</i>)</code> [SAL]<br>
-        <code>(putprop<a name="index1415"></a> <tt><i>sym</i></tt> <tt><i>val</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  &ndash; put a property onto a property list<br>
+        <code>(putprop<a name="index1427"></a> <tt><i>sym</i></tt> <tt><i>val</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  &ndash; put a property onto a property list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -858,7 +858,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>remprop(<i>sym</i>, <i>prop</i>)</code> [SAL]<br>
-        <code>(remprop<a name="index1416"></a> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  &ndash; remove a property<br>
+        <code>(remprop<a name="index1428"></a> <tt><i>sym</i></tt> <tt><i>prop</i></tt>)</code> [LISP]  &ndash; remove a property<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -871,10 +871,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "237"><h3>Array Functions</h3></a><a name="index1417"></a>
+<a name = "239"><h3>Array Functions</h3></a><a name="index1429"></a>
 <div style="padding-left: 0em;">
         <code>aref(<i>array</i>, <i>n</i>)</code> [SAL]<br>
-        <code>(aref<a name="index1418"></a> <tt><i>array</i></tt> <tt><i>n</i></tt>)</code> [LISP]  &ndash; get the nth element of an array<br>
+        <code>(aref<a name="index1430"></a> <tt><i>array</i></tt> <tt><i>n</i></tt>)</code> [LISP]  &ndash; get the nth element of an array<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -885,7 +885,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>make-array(<i>size</i>)</code> [SAL]<br>
-        <code>(make-array<a name="index1419"></a> <tt><i>size</i></tt>)</code> [LISP]  &ndash; make a new array<br>
+        <code>(make-array<a name="index1431"></a> <tt><i>size</i></tt>)</code> [LISP]  &ndash; make a new array<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -895,7 +895,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>vector(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(vector<a name="index1420"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; make an initialized vector<br>
+        <code>(vector<a name="index1432"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; make an initialized vector<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -907,10 +907,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "238"><h3>List Functions</h3></a><a name="index1421"></a>
+<a name = "240"><h3>List Functions</h3></a><a name="index1433"></a>
 <div style="padding-left: 0em;">
         <code>car(<i>expr</i>)</code> [SAL]<br>
-        <code>(car<a name="index1422"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  return the car of a list node<br>
+        <code>(car<a name="index1434"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  return the car of a list node<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -920,7 +920,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>cdr(<i>expr</i>)</code> [SAL]<br>
-        <code>(cdr<a name="index1423"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; return the cdr of a list node<br>
+        <code>(cdr<a name="index1435"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; return the cdr of a list node<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -930,63 +930,63 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>c<i>xx</i>r(<i>expr</i>)</code> [SAL]<br>
-        <code>(c<i>xx</i>r<a name="index1424"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; all c<i>xx</i>r combinations<br>
+        <code>(c<i>xx</i>r<a name="index1436"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; all c<i>xx</i>r combinations<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>c<i>xxx</i>r(<i>expr</i>)</code> [SAL]<br>
-        <code>(c<i>xxx</i>r<a name="index1425"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; all c<i>xxx</i>r combinations<br>
+        <code>(c<i>xxx</i>r<a name="index1437"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; all c<i>xxx</i>r combinations<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>c<i>xxxx</i>r(<i>expr</i>)</code> [SAL]<br>
-        <code>(c<i>xxxx</i>r<a name="index1426"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; all c<i>xxxx</i>r combinations<br>
+        <code>(c<i>xxxx</i>r<a name="index1438"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; all c<i>xxxx</i>r combinations<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>first(<i>expr</i>)</code> [SAL]<br>
-        <code>(first<a name="index1427"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash;  a synonym for car<br>
+        <code>(first<a name="index1439"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash;  a synonym for car<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>second(<i>expr</i>)</code> [SAL]<br>
-        <code>(second<a name="index1428"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; a synonym for cadr<br>
+        <code>(second<a name="index1440"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; a synonym for cadr<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>third(<i>expr</i>)</code> [SAL]<br>
-        <code>(third<a name="index1429"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash;  a synonym for caddr<br>
+        <code>(third<a name="index1441"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash;  a synonym for caddr<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>fourth(<i>expr</i>)</code> [SAL]<br>
-        <code>(fourth<a name="index1430"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; a synonym for cadddr<br>
+        <code>(fourth<a name="index1442"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; a synonym for cadddr<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>rest(<i>expr</i>)</code> [SAL]<br>
-        <code>(rest<a name="index1431"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash;   a synonym for cdr<br>
+        <code>(rest<a name="index1443"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash;   a synonym for cdr<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 <br>
         <code>cons(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(cons<a name="index1432"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; construct a new list node<br>
+        <code>(cons<a name="index1444"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; construct a new list node<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -997,7 +997,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>list(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(list<a name="index1433"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; create a list of values<br>
+        <code>(list<a name="index1445"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; create a list of values<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1007,7 +1007,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>append(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(append<a name="index1434"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; append lists<br>
+        <code>(append<a name="index1446"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; append lists<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1017,7 +1017,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>reverse(<i>expr</i>)</code> [SAL]<br>
-        <code>(reverse<a name="index1435"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; reverse a list<br>
+        <code>(reverse<a name="index1447"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; reverse a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1027,7 +1027,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>last(<i>list</i>)</code> [SAL]<br>
-        <code>(last<a name="index1436"></a> <tt><i>list</i></tt>)</code> [LISP]  &ndash; return the last list node of a list<br>
+        <code>(last<a name="index1448"></a> <tt><i>list</i></tt>)</code> [LISP]  &ndash; return the last list node of a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1037,7 +1037,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>member(<i>expr</i>, <i>list</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(member<a name="index1437"></a> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; find an expression in a list<br>
+        <code>(member<a name="index1449"></a> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; find an expression in a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1050,7 +1050,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>assoc(<i>expr</i>, <i>alist</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(assoc<a name="index1438"></a> <tt><i>expr</i></tt> <tt><i>alist</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; find an expression in an a-list<br>
+        <code>(assoc<a name="index1450"></a> <tt><i>expr</i></tt> <tt><i>alist</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; find an expression in an a-list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1063,7 +1063,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>remove(<i>expr</i>, <i>list</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(remove<a name="index1439"></a> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; remove elements from a list<br>
+        <code>(remove<a name="index1451"></a> <tt><i>expr</i></tt> <tt><i>list</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; remove elements from a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1076,7 +1076,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>remove-if(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(remove-if<a name="index1440"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; remove elements that pass test<br>
+        <code>(remove-if<a name="index1452"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; remove elements that pass test<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1087,7 +1087,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>remove-if-not(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(remove-if-not<a name="index1441"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; remove elements that fail test<br>
+        <code>(remove-if-not<a name="index1453"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; remove elements that fail test<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1098,7 +1098,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>length(<i>expr</i>)</code> [SAL]<br>
-        <code>(length<a name="index1442"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; find the length of a list, vector or string<br>
+        <code>(length<a name="index1454"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; find the length of a list, vector or string<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1108,7 +1108,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>nth(<i>n</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(nth<a name="index1443"></a> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; return the nth element of a list<br>
+        <code>(nth<a name="index1455"></a> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; return the nth element of a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1119,7 +1119,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>nthcdr(<i>n</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(nthcdr<a name="index1444"></a> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; return the nth cdr of a list<br>
+        <code>(nthcdr<a name="index1456"></a> <tt><i>n</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; return the nth cdr of a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1130,7 +1130,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>mapc(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(mapc<a name="index1445"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cars<br>
+        <code>(mapc<a name="index1457"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cars<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1141,7 +1141,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>mapcar(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(mapcar<a name="index1446"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cars<br>
+        <code>(mapcar<a name="index1458"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cars<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1152,7 +1152,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>mapl(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(mapl<a name="index1447"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cdrs<br>
+        <code>(mapl<a name="index1459"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cdrs<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1163,7 +1163,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>maplist(<i>fcn</i>, <i>list1</i>, <i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(maplist<a name="index1448"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cdrs<br>
+        <code>(maplist<a name="index1460"></a> <tt><i>fcn</i></tt> <tt><i>list1</i></tt> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; apply function to successive cdrs<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1174,7 +1174,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
        <code>subst(<i>to</i>, <i>from</i>, <i>expr</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(subst<a name="index1449"></a> <tt><i>to</i></tt> <tt><i>from</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; substitute expressions<br>
+        <code>(subst<a name="index1461"></a> <tt><i>to</i></tt> <tt><i>from</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; substitute expressions<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1188,7 +1188,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>sublis(<i>alist</i>, <i>expr</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(sublis<a name="index1450"></a> <tt><i>alist</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; substitute with an a-list<br>
+        <code>(sublis<a name="index1462"></a> <tt><i>alist</i></tt> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; substitute with an a-list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1203,10 +1203,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "239"><h3>Destructive List Functions</h3></a><a name="index1451"></a>
+<a name = "241"><h3>Destructive List Functions</h3></a><a name="index1463"></a>
 <div style="padding-left: 0em;">
         <code>rplaca(<i>list</i>, <i>expr</i>)</code> [SAL]<br>
-        <code>(rplaca<a name="index1452"></a> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; replace the car of a list node<br>
+        <code>(rplaca<a name="index1464"></a> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; replace the car of a list node<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1217,7 +1217,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>rplacd(<i>list</i>, <i>expr</i>)</code> [SAL]<br>
-        <code>(rplacd<a name="index1453"></a> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; replace the cdr of a list node<br>
+        <code>(rplacd<a name="index1465"></a> <tt><i>list</i></tt> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; replace the cdr of a list node<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1228,7 +1228,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>nconc(<i>list</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(nconc<a name="index1454"></a> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; destructively concatenate lists<br>
+        <code>(nconc<a name="index1466"></a> <tt><i>list</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; destructively concatenate lists<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1238,7 +1238,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>delete(<i>expr</i>, test: <i>test</i>, test-not: <i>test-not</i>)</code> [SAL]<br>
-        <code>(delete<a name="index1455"></a> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; delete elements from a list<br>
+        <code>(delete<a name="index1467"></a> <tt><i>expr</i></tt> <tt>&amp;key </tt><tt>:test</tt> <tt>:test-not</tt>)</code> [LISP]  &ndash; delete elements from a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1251,7 +1251,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>delete-if(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(delete-if<a name="index1456"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; delete elements that pass test<br>
+        <code>(delete-if<a name="index1468"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; delete elements that pass test<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1262,7 +1262,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>delete-if-not(<i>test</i>, <i>list</i>)</code> [SAL]<br>
-        <code>(delete-if-not<a name="index1457"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; delete elements that fail test<br>
+        <code>(delete-if-not<a name="index1469"></a> <tt><i>test</i></tt> <tt><i>list</i></tt>)</code> [LISP]  &ndash; delete elements that fail test<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1273,7 +1273,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>sort(<i>list</i>, <i>test</i>)</code> [SAL]<br>
-        <code>(sort<a name="index1458"></a> <tt><i>list</i></tt> <tt><i>test</i></tt>)</code> [LISP]  &ndash; sort a list<br>
+        <code>(sort<a name="index1470"></a> <tt><i>list</i></tt> <tt><i>test</i></tt>)</code> [LISP]  &ndash; sort a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1286,10 +1286,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "240"><h3>Predicate Functions</h3></a><a name="index1459"></a>
+<a name = "242"><h3>Predicate Functions</h3></a><a name="index1471"></a>
 <div style="padding-left: 0em;">
 	<code>atom(<i>expr</i>)</code> [SAL]<br>
-        <code>(atom<a name="index1460"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an atom?<br>
+        <code>(atom<a name="index1472"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an atom?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1299,7 +1299,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>symbolp(<i>expr</i>)</code> [SAL]<br>
-        <code>(symbolp<a name="index1461"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a symbol?<br>
+        <code>(symbolp<a name="index1473"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a symbol?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1309,7 +1309,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>numberp(<i>expr</i>)</code> [SAL]<br>
-        <code>(numberp<a name="index1462"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a number?<br>
+        <code>(numberp<a name="index1474"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a number?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1319,7 +1319,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>null(<i>expr</i>)</code> [SAL]<br>
-        <code>(null<a name="index1463"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an empty list?<br>
+        <code>(null<a name="index1475"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an empty list?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1329,7 +1329,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>not(<i>expr</i>)</code> [SAL]<br>
-        <code>(not<a name="index1464"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this false?<br>
+        <code>(not<a name="index1476"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this false?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1339,7 +1339,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>listp(<i>expr</i>)</code> [SAL]<br>
-        <code>(listp<a name="index1465"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a list?<br>
+        <code>(listp<a name="index1477"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a list?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1349,7 +1349,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>endp(<i>list</i>)</code> [SAL]<br>
-        <code>(endp<a name="index1466"></a> <tt><i>list</i></tt>)</code> [LISP]  &ndash; is this the end of a list<br>
+        <code>(endp<a name="index1478"></a> <tt><i>list</i></tt>)</code> [LISP]  &ndash; is this the end of a list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1359,7 +1359,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>consp(<i>expr</i>)</code> [SAL]<br>
-        <code>(consp<a name="index1467"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a non-empty list?<br>
+        <code>(consp<a name="index1479"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a non-empty list?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1369,7 +1369,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>integerp(<i>expr</i>)</code> [SAL]<br>
-        <code>(integerp<a name="index1468"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an integer?<br>
+        <code>(integerp<a name="index1480"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an integer?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1379,7 +1379,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>floatp(<i>expr</i>)</code> [SAL]<br>
-        <code>(floatp<a name="index1469"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a float?<br>
+        <code>(floatp<a name="index1481"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a float?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1389,7 +1389,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>stringp(<i>expr</i>)</code> [SAL]<br>
-        <code>(stringp<a name="index1470"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a string?<br>
+        <code>(stringp<a name="index1482"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a string?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1399,7 +1399,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>characterp(<i>expr</i>)</code> [SAL]<br>
-        <code>(characterp<a name="index1471"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a character?<br>
+        <code>(characterp<a name="index1483"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a character?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1409,7 +1409,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>arrayp(<i>expr</i>)</code> [SAL]<br>
-        <code>(arrayp<a name="index1472"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an array?<br>
+        <code>(arrayp<a name="index1484"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an array?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1419,7 +1419,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>streamp(<i>expr</i>)</code> [SAL]<br>
-        <code>(streamp<a name="index1473"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a stream?<br>
+        <code>(streamp<a name="index1485"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this a stream?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1429,7 +1429,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>objectp(<i>expr</i>)</code> [SAL]<br>
-        <code>(objectp<a name="index1474"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an object?<br>
+        <code>(objectp<a name="index1486"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this an object?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1439,7 +1439,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>filep(<i>expr</i>)</code> [SAL]<br>
-        <code>(filep<a name="index1475"></a> <tt><i>expr</i></tt>)</code> [LISP] <a href = "foot.html#foot7">(Footnote 7)</a>   &ndash; is this a file? <br>
+        <code>(filep<a name="index1487"></a> <tt><i>expr</i></tt>)</code> [LISP] <a href = "foot.html#foot7">(Footnote 7)</a>   &ndash; is this a file? <br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1449,7 +1449,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>boundp(<i>sym</i>)</code> [SAL]<br>
-        <code>(boundp<a name="index1476"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; is a value bound to this symbol?<br>
+        <code>(boundp<a name="index1488"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; is a value bound to this symbol?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1459,7 +1459,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>fboundp(<i>sym</i>)</code> [SAL]<br>
-        <code>(fboundp<a name="index1477"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; is a functional value bound to this symbol?<br>
+        <code>(fboundp<a name="index1489"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; is a functional value bound to this symbol?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1470,7 +1470,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>minusp(<i>expr</i>)</code> [SAL]<br>
-        <code>(minusp<a name="index1478"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this number negative?<br>
+        <code>(minusp<a name="index1490"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this number negative?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1480,7 +1480,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>zerop(<i>expr</i>)</code> [SAL]<br>
-        <code>(zerop<a name="index1479"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this number zero?<br>
+        <code>(zerop<a name="index1491"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this number zero?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1490,7 +1490,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>plusp(<i>expr</i>)</code> [SAL]<br>
-        <code>(plusp<a name="index1480"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this number positive?<br>
+        <code>(plusp<a name="index1492"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this number positive?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1500,7 +1500,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>evenp(<i>expr</i>)</code> [SAL]<br>
-        <code>(evenp<a name="index1481"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this integer even?<br>
+        <code>(evenp<a name="index1493"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this integer even?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1510,7 +1510,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>oddp(<i>expr</i>)</code> [SAL]<br>
-        <code>(oddp<a name="index1482"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this integer odd?<br>
+        <code>(oddp<a name="index1494"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; is this integer odd?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1520,7 +1520,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>eq(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(eq<a name="index1483"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; are the expressions identical?<br>
+        <code>(eq<a name="index1495"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; are the expressions identical?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1531,7 +1531,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
 <code>eql(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(eql<a name="index1484"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; are the expressions identical? (<code>eql</code> "works" with all numbers, but a FIXNUM is never eql to a FLONUM, i.e. <code>(eql 1 1.0)</code> is false.)<br>
+        <code>(eql<a name="index1496"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; are the expressions identical? (<code>eql</code> "works" with all numbers, but a FIXNUM is never eql to a FLONUM, i.e. <code>(eql 1 1.0)</code> is false.)<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1542,7 +1542,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>equal(<i>expr1</i>, <i>expr2</i>)</code> [SAL]<br>
-        <code>(equal<a name="index1485"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; are the expressions equal?<br>
+        <code>(equal<a name="index1497"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt>)</code> [LISP]  &ndash; are the expressions equal?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1555,9 +1555,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "241"><h3>Control Constructs</h3></a><a name="index1486"></a>
+<a name = "243"><h3>Control Constructs</h3></a><a name="index1498"></a>
 <div style="padding-left: 0em;">
-        <code>(cond<a name="index1487"></a> <tt><i>pair</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate conditionally
+        <code>(cond<a name="index1499"></a> <tt><i>pair</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate conditionally
 </div><div style="padding-left: 2em;">
             <i>pair</i>  &ndash;    pair consisting of:<br>
 
@@ -1581,7 +1581,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>and(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(and<a name="index1488"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the logical and of a list of expressions<br>
+        <code>(and<a name="index1500"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the logical and of a list of expressions<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1597,7 +1597,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>or(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(or<a name="index1489"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the logical or of a list of expressions<br>
+        <code>(or<a name="index1501"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the logical or of a list of expressions<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1613,7 +1613,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>if(<i>texpr</i>, <i>expr1</i> [, <i>expr2</i>])</code> [SAL]<br>
-        <code>(if<a name="index1490"></a> <tt><i>texpr</i></tt> <tt><i>expr1</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP]  &ndash; evaluate expressions conditionally<br>
+        <code>(if<a name="index1502"></a> <tt><i>texpr</i></tt> <tt><i>expr1</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP]  &ndash; evaluate expressions conditionally<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1625,7 +1625,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>when(<i>texpr</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(when<a name="index1491"></a> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate only when a condition is true<br>
+        <code>(when<a name="index1503"></a> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate only when a condition is true<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1636,7 +1636,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>unless(<i>texpr</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(unless<a name="index1492"></a> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate only when a condition is false<br>
+        <code>(unless<a name="index1504"></a> <tt><i>texpr</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate only when a condition is false<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1646,7 +1646,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-          <code>(case<a name="index1493"></a> <tt><i>expr</i></tt> <tt><i>case</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; select by case
+          <code>(case<a name="index1505"></a> <tt><i>expr</i></tt> <tt><i>case</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; select by case
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the selection expression</div>
 <div style="padding-left: 2em;">            <i>case</i>  &ndash;    pair consisting of:<br>
@@ -1671,10 +1671,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 
-       <code>(let<a name="index1494"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; create local bindings<br>
+       <code>(let<a name="index1506"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; create local bindings<br>
 <br>
 
-        <code>(let*<a name="index1495"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; let with sequential binding<br>
+        <code>(let*<a name="index1507"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; let with sequential binding<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1693,13 +1693,13 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 
-        <code>(flet<a name="index1496"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; create local functions<br>
+        <code>(flet<a name="index1508"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; create local functions<br>
 <br>
 
-        <code>(labels<a name="index1497"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  flet with recursive functions<br>
+        <code>(labels<a name="index1509"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  flet with recursive functions<br>
 <br>
 
-        <code>(macrolet<a name="index1498"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  create local macros<br>
+        <code>(macrolet<a name="index1510"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  create local macros<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1725,7 +1725,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>catch(<i>sym</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(catch<a name="index1499"></a> <tt><i>sym</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate expressions and catch throws<br>
+        <code>(catch<a name="index1511"></a> <tt><i>sym</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; evaluate expressions and catch throws<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1736,7 +1736,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>throw(<i>sym</i> [, <i>expr</i>])</code> [SAL]<br>
-        <code>(throw<a name="index1500"></a> <tt><i>sym</i></tt> [<tt><i>expr</i></tt>])</code> [LISP]  &ndash; throw to a catch<br>
+        <code>(throw<a name="index1512"></a> <tt><i>sym</i></tt> [<tt><i>expr</i></tt>])</code> [LISP]  &ndash; throw to a catch<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1747,7 +1747,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>unwind-protect(<i>expr</i>, <i>cexpr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(unwind-protect<a name="index1501"></a> <tt><i>expr</i></tt> <tt><i>cexpr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; protect evaluation of an expression<br>
+        <code>(unwind-protect<a name="index1513"></a> <tt><i>expr</i></tt> <tt><i>cexpr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; protect evaluation of an expression<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1766,9 +1766,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "242"><h3>Looping Constructs</h3></a><a name="index1502"></a>
+<a name = "244"><h3>Looping Constructs</h3></a><a name="index1514"></a>
 <div style="padding-left: 0em;">
-        <code>(loop<a name="index1503"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; basic looping form
+        <code>(loop<a name="index1515"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; basic looping form
 </div><div style="padding-left: 2em;">
             <i>expr</i> &ndash;     the body of the loop</div>
 <div style="padding-left: 2em;">            returns  &ndash;   never returns (must use non-local exit)<br>
@@ -1776,10 +1776,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 
-        <code>(do<a name="index1504"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(do<a name="index1516"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
-        <code>(do*<a name="index1505"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(do*<a name="index1517"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) (<tt><i>texpr</i></tt> <tt><i>rexpr</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1804,7 +1804,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-    <code>(dolist<a name="index1506"></a> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; loop through a list
+    <code>(dolist<a name="index1518"></a> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; loop through a list
 </div><div style="padding-left: 2em;">
             <i>sym</i>   &ndash;    the symbol to bind to each list element</div>
 <div style="padding-left: 2em;">            <i>expr</i>  &ndash;    the list expression</div>
@@ -1813,7 +1813,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-        <code>(dotimes<a name="index1507"></a> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; loop from zero to n-1
+        <code>(dotimes<a name="index1519"></a> (<tt><i>sym</i></tt> <tt><i>expr</i></tt> [<tt><i>rexpr</i></tt>]) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; loop from zero to n-1
 </div><div style="padding-left: 2em;">
             <i>sym</i>   &ndash;    the symbol to bind to each value from 0 to n-1</div>
 <div style="padding-left: 2em;">            <i>expr</i>  &ndash;    the number of times to loop</div>
@@ -1825,13 +1825,13 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "243"><h3>The Program Feature</h3></a><a name="index1508"></a>
+<a name = "245"><h3>The Program Feature</h3></a><a name="index1520"></a>
 <div style="padding-left: 0em;">
 
-<code>(prog<a name="index1509"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the program feature<br>
+<code>(prog<a name="index1521"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the program feature<br>
 <br>
 
-<code>(prog*<a name="index1510"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; prog with sequential binding<br>
+<code>(prog*<a name="index1522"></a> (<tt><i>binding</i></tt><span style="font-style:normal">...</span>) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; prog with sequential binding<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1850,7 +1850,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>block(<i>name</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(block<a name="index1511"></a> <tt><i>name</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; named block<br>
+        <code>(block<a name="index1523"></a> <tt><i>name</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; named block<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1860,7 +1860,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-        <code>(return<a name="index1512"></a> [<tt><i>expr</i></tt>])</code> [LISP]  &ndash; cause a prog construct to return a value
+        <code>(return<a name="index1524"></a> [<tt><i>expr</i></tt>])</code> [LISP]  &ndash; cause a prog construct to return a value
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the value (defaults to <code>nil</code>)</div>
 <div style="padding-left: 2em;">            returns   &ndash;  never returns<br>
@@ -1868,7 +1868,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>return-from(<i>name</i> [, <i>value</i>])</code> [SAL]<br>
-        <code>(return-from<a name="index1513"></a> <tt><i>name</i></tt> [<tt><i>value</i></tt>])</code> [LISP]  &ndash; return from a named block<br>
+        <code>(return-from<a name="index1525"></a> <tt><i>name</i></tt> [<tt><i>value</i></tt>])</code> [LISP]  &ndash; return from a named block<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1879,7 +1879,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>tagbody(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(tagbody<a name="index1514"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; block with labels<br>
+        <code>(tagbody<a name="index1526"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; block with labels<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1889,7 +1889,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>go(<i>sym</i>)</code> [SAL]<br>
-        <code>(go<a name="index1515"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; go to a tag within a tagbody or prog<br>
+        <code>(go<a name="index1527"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; go to a tag within a tagbody or prog<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1898,7 +1898,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-        <code>(progv<a name="index1516"></a> <tt><i>slist</i></tt> <tt><i>vlist</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; dynamically bind symbols
+        <code>(progv<a name="index1528"></a> <tt><i>slist</i></tt> <tt><i>vlist</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; dynamically bind symbols
 </div><div style="padding-left: 2em;">
             <i>slist</i> &ndash;    list of symbols</div>
 <div style="padding-left: 2em;">            <i>vlist</i> &ndash;    list of values to bind to the symbols</div>
@@ -1908,7 +1908,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>prog1(<i>expr1</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(prog1<a name="index1517"></a> <tt><i>expr1</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; execute expressions sequentially<br>
+        <code>(prog1<a name="index1529"></a> <tt><i>expr1</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; execute expressions sequentially<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1919,7 +1919,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>prog2(<i>expr1</i>, <i>expr2</i>, <i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(prog2<a name="index1518"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; execute expressions sequentially<br>
+        <code>(prog2<a name="index1530"></a> <tt><i>expr1</i></tt> <tt><i>expr2</i></tt> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; execute expressions sequentially<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1931,7 +1931,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>progn(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(progn<a name="index1519"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; execute expressions sequentially<br>
+        <code>(progn<a name="index1531"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; execute expressions sequentially<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1943,10 +1943,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "244"><h3>Debugging and Error Handling</h3></a><a name="index1520"></a><a name="index1521"></a>
+<a name = "246"><h3>Debugging and Error Handling</h3></a><a name="index1532"></a><a name="index1533"></a>
 <div style="padding-left: 0em;">
         <code>trace(<i>sym</i>)</code> [SAL]<br>
-        <code>(trace<a name="index1522"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; add a function to the trace list<br>
+        <code>(trace<a name="index1534"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; add a function to the trace list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1956,7 +1956,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>untrace(<i>sym</i>)</code> [SAL]<br>
-        <code>(untrace<a name="index1523"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; remove a function from the trace list<br>
+        <code>(untrace<a name="index1535"></a> <tt><i>sym</i></tt>)</code> [LISP]  &ndash; remove a function from the trace list<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1966,7 +1966,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>error(<i>emsg</i> [, <i>arg</i>])</code> [SAL]<br>
-        <code>(error<a name="index1524"></a> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  &ndash; signal a non-correctable error<br>
+        <code>(error<a name="index1536"></a> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  &ndash; signal a non-correctable error<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1977,7 +1977,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>cerror(<i>cmsg</i>, <i>emsg</i> [, <i>arg</i>])</code> [SAL]<br>
-        <code>(cerror<a name="index1525"></a> <tt><i>cmsg</i></tt> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  &ndash; signal a correctable error<br>
+        <code>(cerror<a name="index1537"></a> <tt><i>cmsg</i></tt> <tt><i>emsg</i></tt> [<tt><i>arg</i></tt>])</code> [LISP]  &ndash; signal a correctable error<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1989,7 +1989,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>break([<i>bmsg</i> [, <i>arg</i>]])</code> [SAL]<br>
-        <code>(break<a name="index1526"></a> [<tt><i>bmsg</i></tt> [<tt><i>arg</i></tt>]])</code> [LISP]  &ndash; enter a break loop<br>
+        <code>(break<a name="index1538"></a> [<tt><i>bmsg</i></tt> [<tt><i>arg</i></tt>]])</code> [LISP]  &ndash; enter a break loop<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -1999,25 +1999,25 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-        <code>(clean-up<a name="index1527"></a>)</code> [LISP]  &ndash; clean-up after an error
+        <code>(clean-up<a name="index1539"></a>)</code> [LISP]  &ndash; clean-up after an error
 </div><div style="padding-left: 2em;">
             returns   &ndash;  never returns<br>
 
 </div>
 <br>
-        <code>(top-level<a name="index1528"></a>)</code> [LISP]  &ndash; clean-up after an error and return to the top level
+        <code>(top-level<a name="index1540"></a>)</code> [LISP]  &ndash; clean-up after an error and return to the top level
 </div><div style="padding-left: 2em;">
             returns   &ndash;  never returns<br>
 
 </div>
 <br>
-        <code>(continue<a name="index1529"></a>)</code> [LISP]  &ndash; continue from a correctable error
+        <code>(continue<a name="index1541"></a>)</code> [LISP]  &ndash; continue from a correctable error
 </div><div style="padding-left: 2em;">
             returns   &ndash;  never returns<br>
 
 </div>
 <br>
-        <code>(errset<a name="index1530"></a> <tt><i>expr</i></tt> [<tt><i>pflag</i></tt>])</code> [LISP]  &ndash; trap errors
+        <code>(errset<a name="index1542"></a> <tt><i>expr</i></tt> [<tt><i>pflag</i></tt>])</code> [LISP]  &ndash; trap errors
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the expression to execute</div>
 <div style="padding-left: 2em;">            <i>pflag</i> &ndash;    flag to control printing of the error message</div>
@@ -2026,14 +2026,14 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-        <code>(baktrace<a name="index1531"></a><a name="index1532"></a><a name="index1533"></a> [<tt><i>n</i></tt>])</code> [LISP]  &ndash; print n levels of trace back information
+        <code>(baktrace<a name="index1543"></a><a name="index1544"></a><a name="index1545"></a> [<tt><i>n</i></tt>])</code> [LISP]  &ndash; print n levels of trace back information
 </div><div style="padding-left: 2em;">
             <i>n</i>     &ndash;    the number of levels (defaults to all levels)</div>
 <div style="padding-left: 2em;">            returns   &ndash;  <code>nil</code><br>
 
 </div>
 <br>
-        <code>(evalhook<a name="index1534"></a> <tt><i>expr</i></tt> <tt><i>ehook</i></tt> <tt><i>ahook</i></tt> [<tt><i>env</i></tt>])</code> [LISP]  &ndash; evaluate with hooks
+        <code>(evalhook<a name="index1546"></a> <tt><i>expr</i></tt> <tt><i>ehook</i></tt> <tt><i>ahook</i></tt> [<tt><i>env</i></tt>])</code> [LISP]  &ndash; evaluate with hooks
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the expression to evaluate</div>
 <div style="padding-left: 2em;">            <i>ehook</i> &ndash;    the value for <code>*evalhook*</code></div>
@@ -2044,7 +2044,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>profile(<i>flag</i>)</code> [SAL]<br>
-        <code>(profile<a name="index1535"></a> <tt><i>flag</i></tt>)</code> [LISP] <a href = "foot.html#foot8">(Footnote 8)</a>   &ndash; turn profiling on or off.<br>
+        <code>(profile<a name="index1547"></a> <tt><i>flag</i></tt>)</code> [LISP] <a href = "foot.html#foot8">(Footnote 8)</a>   &ndash; turn profiling on or off.<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2056,10 +2056,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "245"><h3>Arithmetic Functions</h3></a><a name="index1536"></a>
+<a name = "247"><h3>Arithmetic Functions</h3></a><a name="index1548"></a>
 <div style="padding-left: 0em;">
         <code>truncate(<i>expr</i>)</code> [SAL]<br>
-        <code>(truncate<a name="index1537"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; truncates a floating point number to an integer<br>
+        <code>(truncate<a name="index1549"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; truncates a floating point number to an integer<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2069,7 +2069,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>float(<i>expr</i>)</code> [SAL]<br>
-        <code>(float<a name="index1538"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; converts an integer to a floating point number<br>
+        <code>(float<a name="index1550"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; converts an integer to a floating point number<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2078,42 +2078,42 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-        <code>(+<a name="index1539"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; add a list of numbers
+        <code>(+<a name="index1551"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; add a list of numbers
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the numbers</div>
 <div style="padding-left: 2em;">            returns   &ndash;  the result of the addition<br>
 
 </div>
 <br>
-        <code>(-<a name="index1540"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; subtract a list of numbers or negate a single number
+        <code>(-<a name="index1552"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; subtract a list of numbers or negate a single number
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the numbers</div>
 <div style="padding-left: 2em;">            returns   &ndash;  the result of the subtraction<br>
 
 </div>
 <br>
-        <code>(*<a name="index1541"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; multiply a list of numbers
+        <code>(*<a name="index1553"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; multiply a list of numbers
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the numbers</div>
 <div style="padding-left: 2em;">            returns   &ndash;  the result of the multiplication<br>
 
 </div>
 <br>
-        <code>(/<a name="index1542"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; divide a list of numbers
+        <code>(/<a name="index1554"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; divide a list of numbers
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the numbers</div>
 <div style="padding-left: 2em;">            returns   &ndash;  the result of the division<br>
 
 </div>
 <br>
-        <code>(1+<a name="index1543"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; add one to a number
+        <code>(1+<a name="index1555"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; add one to a number
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the number</div>
 <div style="padding-left: 2em;">            returns   &ndash;  the number plus one<br>
 
 </div>
 <br>
-        <code>(1-<a name="index1544"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; subtract one from a number
+        <code>(1-<a name="index1556"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; subtract one from a number
 </div><div style="padding-left: 2em;">
             <i>expr</i>  &ndash;    the number</div>
 <div style="padding-left: 2em;">            returns   &ndash;  the number minus one<br>
@@ -2121,7 +2121,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>rem(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(rem<a name="index1545"></a><a name="index1546"></a><a name="index1547"></a> function) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; remainder of a list of numbers<br>
+        <code>(rem<a name="index1557"></a><a name="index1558"></a><a name="index1559"></a> function) <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; remainder of a list of numbers<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2131,7 +2131,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>min(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(min<a name="index1548"></a><a name="index1549"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the smallest of a list of numbers<br>
+        <code>(min<a name="index1560"></a><a name="index1561"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the smallest of a list of numbers<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2141,7 +2141,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>max(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(max<a name="index1550"></a><a name="index1551"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the largest of a list of numbers<br>
+        <code>(max<a name="index1562"></a><a name="index1563"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the largest of a list of numbers<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2151,7 +2151,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>abs(<i>expr</i>)</code> [SAL]<br>
-        <code>(abs<a name="index1552"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; the absolute value of a number<br>
+        <code>(abs<a name="index1564"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; the absolute value of a number<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2161,7 +2161,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>gcd(<i>n1</i>, <i>n2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(gcd<a name="index1553"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; compute the greatest common divisor<br>
+        <code>(gcd<a name="index1565"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; compute the greatest common divisor<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2172,7 +2172,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
        <code>random(<i>n</i>)</code> [SAL]<br>
-        <code>(random<a name="index1554"></a> <tt><i>n</i></tt>)</code><br>
+        <code>(random<a name="index1566"></a> <tt><i>n</i></tt>)</code><br>
 
         [LISP]  &ndash; compute a random number between 0 and |n|-1<br>
 
@@ -2186,7 +2186,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
        <code>rrandom()</code> [SAL]<br>
-        <code>(rrandom<a name="index1555"></a><a name="index1556"></a>)</code> [LISP]  &ndash; compute a random real number between 0 and 1 inclusive<br>
+        <code>(rrandom<a name="index1567"></a><a name="index1568"></a>)</code> [LISP]  &ndash; compute a random real number between 0 and 1 inclusive<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2194,8 +2194,20 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
+       <code>random(<i>n</i>)</code> [SAL]<br>
+        <code>(random-seed<a name="index1569"></a><a name="index1570"></a> <tt><i>n</i></tt>)</code><br>
+
+        [LISP]  &ndash; seed the random number generator with starting seed <i>n</i>. If <code>random-seed</code> is not called, <code>sranddev</code> or some other initialization method will be used by default.<br>
+
+
+</div><div style="padding-left: 2em;">
+            <i>n</i>     &ndash;    the upper bound (integer)</div>
+<div style="padding-left: 2em;">            returns   &ndash;  a random number<br>
+
+</div>
+<br>
         <code>sin(<i>expr</i>)</code> [SAL]<br>
-        <code>(sin<a name="index1557"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the sine of a number<br>
+        <code>(sin<a name="index1571"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the sine of a number<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2205,7 +2217,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>cos(<i>expr</i>)</code> [SAL]<br>
-        <code>(cos<a name="index1558"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the cosine of a number<br>
+        <code>(cos<a name="index1572"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the cosine of a number<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2215,7 +2227,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>tan(<i>expr</i>)</code> [SAL]<br>
-        <code>(tan<a name="index1559"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the tangent of a number<br>
+        <code>(tan<a name="index1573"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the tangent of a number<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2225,7 +2237,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>atan(<i>expr</i> [, <i>expr2</i>])</code> [SAL]<br>
-        <code>(atan<a name="index1560"></a> <tt><i>expr</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP] <a href = "foot.html#foot9">(Footnote 9)</a>   &ndash; compute the arctangent<br>
+        <code>(atan<a name="index1574"></a> <tt><i>expr</i></tt> [<tt><i>expr2</i></tt>])</code> [LISP] <a href = "foot.html#foot9">(Footnote 9)</a>   &ndash; compute the arctangent<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2236,7 +2248,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>expt(<i>x-expr</i>, <i>y-expr</i>)</code> [SAL]<br>
-        <code>(expt<a name="index1561"></a> <tt><i>x-expr</i></tt> <tt><i>y-expr</i></tt>)</code> [LISP]  &ndash; compute x to the y power<br>
+        <code>(expt<a name="index1575"></a> <tt><i>x-expr</i></tt> <tt><i>y-expr</i></tt>)</code> [LISP]  &ndash; compute x to the y power<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2247,7 +2259,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>exp(<i>x-expr</i>)</code> [SAL]<br>
-        <code>(exp<a name="index1562"></a> <tt><i>x-expr</i></tt>)</code> [LISP]  &ndash; compute e to the x power<br>
+        <code>(exp<a name="index1576"></a> <tt><i>x-expr</i></tt>)</code> [LISP]  &ndash; compute e to the x power<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2257,7 +2269,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>sqrt(<i>expr</i>)</code> [SAL]<br>
-        <code>(sqrt<a name="index1563"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the square root of a number<br>
+        <code>(sqrt<a name="index1577"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; compute the square root of a number<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2267,12 +2279,12 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 
-<code>(&lt;<a name="index1564"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; test for less than<br>
-<code>(&lt;=<a name="index1565"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  test for less than or equal to<br>
-<code>(=<a name="index1566"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; test for equal to<br>
-<code>(/=<a name="index1567"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  test for not equal to<br>
-<code>(&gt;=<a name="index1568"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;   test for greater than or equal to<br>
-<code>(&gt;<a name="index1569"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;   test for greater than<br>
+<code>(&lt;<a name="index1578"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; test for less than<br>
+<code>(&lt;=<a name="index1579"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  test for less than or equal to<br>
+<code>(=<a name="index1580"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; test for equal to<br>
+<code>(/=<a name="index1581"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  test for not equal to<br>
+<code>(&gt;=<a name="index1582"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;   test for greater than or equal to<br>
+<code>(&gt;<a name="index1583"></a> <tt><i>n1</i></tt> <tt><i>n2</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;   test for greater than<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2287,10 +2299,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "246"><h3>Bitwise Logical Functions</h3></a><a name="index1570"></a>
+<a name = "248"><h3>Bitwise Logical Functions</h3></a><a name="index1584"></a>
 <div style="padding-left: 0em;">
         <code>logand(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(logand<a name="index1571"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  the bitwise and of a list of numbers<br>
+        <code>(logand<a name="index1585"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP] &ndash;  the bitwise and of a list of numbers<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2300,7 +2312,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>logior(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(logior<a name="index1572"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the bitwise inclusive or of a list of numbers<br>
+        <code>(logior<a name="index1586"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the bitwise inclusive or of a list of numbers<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2310,7 +2322,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>logxor(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(logxor<a name="index1573"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the bitwise exclusive or of a list of numbers<br>
+        <code>(logxor<a name="index1587"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; the bitwise exclusive or of a list of numbers<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2320,7 +2332,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>lognot(<i>expr</i>)</code> [SAL]<br>
-        <code>(lognot<a name="index1574"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; the bitwise not of a number<br>
+        <code>(lognot<a name="index1588"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; the bitwise not of a number<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2332,10 +2344,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "247"><h3>String Functions</h3></a><a name="index1575"></a>
+<a name = "249"><h3>String Functions</h3></a><a name="index1589"></a>
 <div style="padding-left: 0em;">
         <code>string(<i>expr</i>)</code> [SAL]<br>
-        <code>(string<a name="index1576"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  make a string from a value<br>
+        <code>(string<a name="index1590"></a> <tt><i>expr</i></tt>)</code> [LISP] &ndash;  make a string from a value<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2345,7 +2357,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>string-search(<i>pat</i>, <i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(string-search<a name="index1577"></a><a name="index1578"></a> <tt><i>pat</i></tt> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP] <a href = "foot.html#foot10">(Footnote 10)</a>   &ndash; search for pattern in string<br>
+        <code>(string-search<a name="index1591"></a><a name="index1592"></a> <tt><i>pat</i></tt> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP] <a href = "foot.html#foot10">(Footnote 10)</a>   &ndash; search for pattern in string<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2358,7 +2370,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>string-trim(<i>bag</i>, <i>str</i>)</code> [SAL]<br>
-        <code>(string-trim<a name="index1579"></a> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  &ndash; trim both ends of a string<br>
+        <code>(string-trim<a name="index1593"></a> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  &ndash; trim both ends of a string<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2369,7 +2381,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>string-left-trim(<i>bag</i>, <i>str</i>)</code> [SAL]<br>
-        <code>(string-left-trim<a name="index1580"></a> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  &ndash; trim the left end of a string<br>
+        <code>(string-left-trim<a name="index1594"></a> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  &ndash; trim the left end of a string<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2380,7 +2392,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>string-right-trim(<i>bag</i>, <i>str</i>)</code> [SAL]<br>
-        <code>(string-right-trim<a name="index1581"></a> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  &ndash; trim the right end of a string<br>
+        <code>(string-right-trim<a name="index1595"></a> <tt><i>bag</i></tt> <tt><i>str</i></tt>)</code> [LISP]  &ndash; trim the right end of a string<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2391,7 +2403,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>string-upcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(string-upcase<a name="index1582"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to uppercase<br>
+        <code>(string-upcase<a name="index1596"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to uppercase<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2403,7 +2415,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>string-downcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(string-downcase<a name="index1583"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to lowercase<br>
+        <code>(string-downcase<a name="index1597"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to lowercase<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2415,7 +2427,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>nstring-upcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(nstring-upcase<a name="index1584"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to uppercase<br>
+        <code>(nstring-upcase<a name="index1598"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to uppercase<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2427,7 +2439,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>nstring-downcase(<i>str</i>, start: <i>start</i>, end: <i>end</i>)</code> [SAL]<br>
-        <code>(nstring-downcase<a name="index1585"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to lowercase<br>
+        <code>(nstring-downcase<a name="index1599"></a> <tt><i>str</i></tt> <tt>&amp;key </tt><tt>:start</tt> <tt>:end</tt>)</code> [LISP]  &ndash; convert to lowercase<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2439,7 +2451,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>strcat(<i>expr</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(strcat<a name="index1586"></a><a name="index1587"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; concatenate strings<br>
+        <code>(strcat<a name="index1600"></a><a name="index1601"></a> <tt><i>expr</i></tt><span style="font-style:normal">...</span>)</code> [LISP]  &ndash; concatenate strings<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2449,7 +2461,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>subseq(<i>string</i>, <i>start</i> [, <i>end</i>])</code> [SAL]<br>
-        <code>(subseq<a name="index1588"></a> <tt><i>string</i></tt> <tt><i>start</i></tt> [<tt><i>end</i></tt>])</code> [LISP]  &ndash; extract a substring<br>
+        <code>(subseq<a name="index1602"></a> <tt><i>string</i></tt> <tt><i>start</i></tt> [<tt><i>end</i></tt>])</code> [LISP]  &ndash; extract a substring<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2461,42 +2473,42 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>string&lt;(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&lt;<a name="index1589"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string&lt;<a name="index1603"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
         <code>string&lt;=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&lt;=<a name="index1590"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string&lt;=<a name="index1604"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
         <code>string=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string=<a name="index1591"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string=<a name="index1605"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
         <code>string/=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string/=<a name="index1592"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string/=<a name="index1606"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
         <code>string&gt;=(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&gt;=<a name="index1593"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string&gt;=<a name="index1607"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
         <code>string&gt;(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string&gt;<a name="index1594"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string&gt;<a name="index1608"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2512,42 +2524,42 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <code>string-lessp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-lessp<a name="index1595"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string-lessp<a name="index1609"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>string-not-greaterp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-not-greaterp<a name="index1596"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string-not-greaterp<a name="index1610"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>string-equal(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-equal<a name="index1597"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string-equal<a name="index1611"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>string-not-equal(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-not-equal<a name="index1598"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string-not-equal<a name="index1612"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>string-not-lessp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-not-lessp<a name="index1599"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string-not-lessp<a name="index1613"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>string-greaterp(<i>str1</i>, <i>str2</i>, start1: <i>start1</i>, end1: <i>end1</i>, start2: <i>start2</i>, end2: <i>end2</i>)</code> [SAL]<br>
-        <code>(string-greaterp<a name="index1600"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
+        <code>(string-greaterp<a name="index1614"></a> <tt><i>str1</i></tt> <tt><i>str2</i></tt> <tt>&amp;key </tt><tt>:start1</tt> <tt>:end1</tt> <tt>:start2</tt> <tt>:end2</tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2565,10 +2577,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "248"><h3>Character Functions</h3></a><a name="index1601"></a>
+<a name = "250"><h3>Character Functions</h3></a><a name="index1615"></a>
 <div style="padding-left: 0em;">
         <code>char(<i>string</i>, <i>index</i>)</code> [SAL]<br>
-        <code>(char<a name="index1602"></a> <tt><i>string</i></tt> <tt><i>index</i></tt>)</code> [LISP] &ndash;  extract a character from a string<br>
+        <code>(char<a name="index1616"></a> <tt><i>string</i></tt> <tt><i>index</i></tt>)</code> [LISP] &ndash;  extract a character from a string<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2579,7 +2591,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>upper-case-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(upper-case-p<a name="index1603"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this an upper case character?<br>
+        <code>(upper-case-p<a name="index1617"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this an upper case character?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2589,7 +2601,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>lower-case-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(lower-case-p<a name="index1604"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this a lower case character?<br>
+        <code>(lower-case-p<a name="index1618"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this a lower case character?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2599,7 +2611,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>both-case-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(both-case-p<a name="index1605"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this an alphabetic (either case) character?<br>
+        <code>(both-case-p<a name="index1619"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this an alphabetic (either case) character?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2609,7 +2621,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>digit-char-p(<i>chr</i>)</code> [SAL]<br>
-        <code>(digit-char-p<a name="index1606"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this a digit character?<br>
+        <code>(digit-char-p<a name="index1620"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; is this a digit character?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2619,7 +2631,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>char-code(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-code<a name="index1607"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; get the ascii code of a character<br>
+        <code>(char-code<a name="index1621"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; get the ascii code of a character<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2629,7 +2641,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>code-char(<i>code</i>)</code> [SAL]<br>
-        <code>(code-char<a name="index1608"></a> <tt><i>code</i></tt>)</code> [LISP]  &ndash; get the character with a specified ascii code<br>
+        <code>(code-char<a name="index1622"></a> <tt><i>code</i></tt>)</code> [LISP]  &ndash; get the character with a specified ascii code<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2639,7 +2651,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>char-upcase(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-upcase<a name="index1609"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; convert a character to upper case<br>
+        <code>(char-upcase<a name="index1623"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; convert a character to upper case<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2649,7 +2661,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>char-downcase(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-downcase<a name="index1610"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; convert a character to lower case<br>
+        <code>(char-downcase<a name="index1624"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; convert a character to lower case<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2659,7 +2671,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>digit-char(<i>n</i>)</code> [SAL]<br>
-        <code>(digit-char<a name="index1611"></a> <tt><i>n</i></tt>)</code> [LISP]  &ndash; convert a digit weight to a digit<br>
+        <code>(digit-char<a name="index1625"></a> <tt><i>n</i></tt>)</code> [LISP]  &ndash; convert a digit weight to a digit<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2669,7 +2681,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>char-int(<i>chr</i>)</code> [SAL]<br>
-        <code>(char-int<a name="index1612"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; convert a character to an integer<br>
+        <code>(char-int<a name="index1626"></a> <tt><i>chr</i></tt>)</code> [LISP]  &ndash; convert a character to an integer<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2679,7 +2691,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>int-char(<i>int</i>)</code> [SAL]<br>
-        <code>(int-char<a name="index1613"></a> <tt><i>int</i></tt>)</code> [LISP]  &ndash; convert an integer to a character<br>
+        <code>(int-char<a name="index1627"></a> <tt><i>int</i></tt>)</code> [LISP]  &ndash; convert an integer to a character<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2689,38 +2701,38 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <code>char&lt;(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&lt;<a name="index1614"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char&lt;<a name="index1628"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char&lt;=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&lt;=<a name="index1615"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char&lt;=<a name="index1629"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 <code>char=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char=<a name="index1616"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char=<a name="index1630"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char/=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char/=<a name="index1617"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char/=<a name="index1631"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char&gt;=(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&gt;=<a name="index1618"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char&gt;=<a name="index1632"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char&gt;(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char&gt;<a name="index1619"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char&gt;<a name="index1633"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2732,42 +2744,42 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <code>char-lessp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-lessp<a name="index1620"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char-lessp<a name="index1634"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char-not-greaterp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-not-greaterp<a name="index1621"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char-not-greaterp<a name="index1635"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char-equal(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-equal<a name="index1622"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char-equal<a name="index1636"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char-not-equal(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-not-equal<a name="index1623"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char-not-equal<a name="index1637"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char-not-lessp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-not-lessp<a name="index1624"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char-not-lessp<a name="index1638"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
 </div>
 
 <code>char-greaterp(<i>chr1</i>, <i>chr2</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(char-greaterp<a name="index1625"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
+        <code>(char-greaterp<a name="index1639"></a> <tt><i>chr1</i></tt> <tt><i>chr2</i></tt><span style="font-style:normal">...</span>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2781,10 +2793,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "249"><h3>Input/Output Functions</h3></a><a name="index1626"></a>
+<a name = "251"><h3>Input/Output Functions</h3></a><a name="index1640"></a>
 <div style="padding-left: 0em;">
         <code>read([<i>stream</i> [, <i>eof</i> [, <i>rflag</i>]]])</code> [SAL]<br>
-        <code>(read<a name="index1627"></a> [<tt><i>stream</i></tt> [<tt><i>eof</i></tt> [<tt><i>rflag</i></tt>]]])</code> [LISP]  &ndash; read an expression<br>
+        <code>(read<a name="index1641"></a> [<tt><i>stream</i></tt> [<tt><i>eof</i></tt> [<tt><i>rflag</i></tt>]]])</code> [LISP]  &ndash; read an expression<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2795,7 +2807,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 </div>
 <br>
-        <code>(print<a name="index1628"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; print an expression on a new line
+        <code>(print<a name="index1642"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; print an expression on a new line
 </div><div style="padding-left: 2em;">
             <i>expr</i>   &ndash;   the expression to be printed</div>
 <div style="padding-left: 2em;">            <i>stream</i> &ndash;   the output stream (default is standard output)</div>
@@ -2804,7 +2816,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>prin1(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(prin1<a name="index1629"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; print an expression<br>
+        <code>(prin1<a name="index1643"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; print an expression<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2815,7 +2827,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>princ(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(princ<a name="index1630"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; print an expression without quoting<br>
+        <code>(princ<a name="index1644"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; print an expression without quoting<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2826,7 +2838,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>pprint(<i>expr</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(pprint<a name="index1631"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; pretty print an expression<br>
+        <code>(pprint<a name="index1645"></a> <tt><i>expr</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; pretty print an expression<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2837,7 +2849,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>terpri([<i>stream</i>])</code> [SAL]<br>
-        <code>(terpri<a name="index1632"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; terminate the current print line<br>
+        <code>(terpri<a name="index1646"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; terminate the current print line<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2847,7 +2859,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>flatsize(<i>expr</i>)</code> [SAL]<br>
-        <code>(flatsize<a name="index1633"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; length of printed representation using prin1<br>
+        <code>(flatsize<a name="index1647"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; length of printed representation using prin1<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2857,7 +2869,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 <br>
         <code>flatc(<i>expr</i>)</code> [SAL]<br>
-        <code>(flatc<a name="index1634"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; length of printed representation using princ<br>
+        <code>(flatc<a name="index1648"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; length of printed representation using princ<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2869,10 +2881,10 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 </div>
 
 <p>
-<a name = "250"><h3>The Format Function</h3></a><a name="index1635"></a>
+<a name = "252"><h3>The Format Function</h3></a><a name="index1649"></a>
 <div style="padding-left: 0em;">
 <code>format(<i>stream</i>, <i>fmt</i>, <i>arg</i><span style="font-style:normal">...</span>)</code> [SAL]<br>
-        <code>(format<a name="index1636"></a> <tt><i>stream</i></tt> <tt><i>fmt</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP]   &ndash; do formated<br>
+        <code>(format<a name="index1650"></a> <tt><i>stream</i></tt> <tt><i>fmt</i></tt> <tt><i>arg</i></tt><span style="font-style:normal">...</span>)</code> [LISP]   &ndash; do formated<br>
 
 
 output
@@ -2906,13 +2918,13 @@ allows strings to continue across multiple lines<br>
 
 </blockquote>
 <p>
-<a name = "251"><h3>File I/O Functions</h3></a><a name="index1637"></a>
+<a name = "253"><h3>File I/O Functions</h3></a><a name="index1651"></a>
 Note that files are ordinarily opened as text. Binary files (such as standard midi files) must be opened with <code>open-binary</code> on non-unix systems.
 <p>
 <p>
 <div style="padding-left: 0em;">
         <code>open(<i>fname</i>, direction: <i>direction</i>)</code> [SAL]<br>
-        <code>(open<a name="index1638"></a> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] &ndash;  open a file stream<br>
+        <code>(open<a name="index1652"></a> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] &ndash;  open a file stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2923,7 +2935,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 
         <code>open-binary(<i>fname</i>, direction: <i>direction</i>)</code> [SAL]<br>
-        <code>(open-binary<a name="index1639"></a><a name="index1640"></a><a name="index1641"></a> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] &ndash;  open a binary file stream<br>
+        <code>(open-binary<a name="index1653"></a><a name="index1654"></a><a name="index1655"></a> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:direction</tt>)</code> [LISP] &ndash;  open a binary file stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2934,7 +2946,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>close(<i>stream</i>)</code> [SAL]<br>
-        <code>(close<a name="index1642"></a> <tt><i>stream</i></tt>)</code> [LISP]  &ndash; close a file stream<br>
+        <code>(close<a name="index1656"></a> <tt><i>stream</i></tt>)</code> [LISP]  &ndash; close a file stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2944,7 +2956,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>setdir(<i>path</i> [, <i>verbose</i>])</code> [SAL]<br>
-        <code>(setdir<a name="index1643"></a><a name="index1644"></a> <tt><i>path</i></tt> [<tt><i>verbose</i></tt>])</code> [LISP] <a href = "foot.html#foot11">(Footnote 11)</a>  &ndash; set current directory<br>
+        <code>(setdir<a name="index1657"></a><a name="index1658"></a> <tt><i>path</i></tt> [<tt><i>verbose</i></tt>])</code> [LISP] <a href = "foot.html#foot11">(Footnote 11)</a>  &ndash; set current directory<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2955,7 +2967,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>listdir(<i>path</i>)</code> [SAL]<br>
-        <code>(listdir<a name="index1645"></a><a name="index1646"></a><a name="index1647"></a><a name="index1648"></a><a name="index1649"></a> <tt><i>path</i></tt>)</code> [LISP] <a href = "foot.html#foot12">(Footnote 12)</a>  &ndash; get a directory listing<br>
+        <code>(listdir<a name="index1659"></a><a name="index1660"></a><a name="index1661"></a><a name="index1662"></a><a name="index1663"></a> <tt><i>path</i></tt>)</code> [LISP] <a href = "foot.html#foot12">(Footnote 12)</a>  &ndash; get a directory listing<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2965,7 +2977,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>get-temp-path()</code> [SAL]<br>
-        <code>(get-temp-path<a name="index1650"></a><a name="index1651"></a><a name="index1652"></a>)</code> [LISP] <a href = "foot.html#foot13">(Footnote 13)</a>  &ndash; get a path where a temporary file can be created. Under Windows, this is based on environment variables. If XLISP is running as a sub-process to Java, the environment may not exist, in which case the default result is the unfortunate choice <code>c:\windows\</code>.<br>
+        <code>(get-temp-path<a name="index1664"></a><a name="index1665"></a><a name="index1666"></a>)</code> [LISP] <a href = "foot.html#foot13">(Footnote 13)</a>  &ndash; get a path where a temporary file can be created. Under Windows, this is based on environment variables. If XLISP is running as a sub-process to Java, the environment may not exist, in which case the default result is the unfortunate choice <code>c:\windows\</code>.<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2974,7 +2986,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>get-user()</code> [SAL]<br>
-        <code>(get-user<a name="index1653"></a><a name="index1654"></a><a name="index1655"></a>)</code> [LISP] <a href = "foot.html#foot14">(Footnote 14)</a>  &ndash; get the user ID. In Unix systems (including OS X and Linux), this is the value of the USER environment variable. In Windows, this is currently just "nyquist", which is also returned if the environment variable cannot be accessed. This function is used to avoid the case of two users creating files of the same name in the same temp directory.<br>
+        <code>(get-user<a name="index1667"></a><a name="index1668"></a><a name="index1669"></a>)</code> [LISP] <a href = "foot.html#foot14">(Footnote 14)</a>  &ndash; get the user ID. In Unix systems (including OS X and Linux), this is the value of the USER environment variable. In Windows, this is currently just "nyquist", which is also returned if the environment variable cannot be accessed. This function is used to avoid the case of two users creating files of the same name in the same temp directory.<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2983,7 +2995,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 
         <code>find-in-xlisp-path(<i>filename</i>)</code> [SAL]<br>
-        <code>(find-in-xlisp-path<a name="index1656"></a> <tt><i>filename</i></tt>)</code> [LISP] <a href = "foot.html#foot15">(Footnote 15)</a>  &ndash; search the XLISP search path (e.g. <code>XLISPPATH</code> from the environment) for <i>filename</i>. If <i>filename</i> is not found as is, and there is no file extension, append "<code>.lsp</code>" to <i>filename</i> and search again. The current directory is not searched.<br>
+        <code>(find-in-xlisp-path<a name="index1670"></a> <tt><i>filename</i></tt>)</code> [LISP] <a href = "foot.html#foot15">(Footnote 15)</a>  &ndash; search the XLISP search path (e.g. <code>XLISPPATH</code> from the environment) for <i>filename</i>. If <i>filename</i> is not found as is, and there is no file extension, append "<code>.lsp</code>" to <i>filename</i> and search again. The current directory is not searched.<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -2993,7 +3005,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>read-char([<i>stream</i>])</code> [SAL]<br>
-        <code>(read-char<a name="index1657"></a><a name="index1658"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; read a character from a stream<br>
+        <code>(read-char<a name="index1671"></a><a name="index1672"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; read a character from a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3003,7 +3015,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>peek-char([<i>flag</i> [, <i>stream</i>]])</code> [SAL]<br>
-        <code>(peek-char<a name="index1659"></a> [<tt><i>flag</i></tt> [<tt><i>stream</i></tt>]])</code> [LISP]  &ndash; peek at the next character<br>
+        <code>(peek-char<a name="index1673"></a> [<tt><i>flag</i></tt> [<tt><i>stream</i></tt>]])</code> [LISP]  &ndash; peek at the next character<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3014,7 +3026,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>write-char(<i>ch</i>  [, <i>stream</i>])</code> [SAL]<br>
-        <code>(write-char<a name="index1660"></a> <tt><i>ch</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; write a character to a stream<br>
+        <code>(write-char<a name="index1674"></a> <tt><i>ch</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; write a character to a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3025,7 +3037,7 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 </div>
 <br>
         <code>read-int([<i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(read-int<a name="index1661"></a> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; read a binary integer from a stream<br>
+        <code>(read-int<a name="index1675"></a> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; read a binary integer from a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3043,7 +3055,7 @@ byte first. The file should be opened in binary mode.<br>
 </div>
 <br>
         <code>write-int(<i>ch</i> [, <i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(write-int<a name="index1662"></a> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; write a binary integer to a stream<br>
+        <code>(write-int<a name="index1676"></a> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; write a binary integer to a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3062,7 +3074,7 @@ byte first. The file should be opened in binary mode.<br>
 </div>
 <br>
         <code>read-float([<i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(read-float<a name="index1663"></a> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; read a binary floating-point number from a stream<br>
+        <code>(read-float<a name="index1677"></a> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; read a binary floating-point number from a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3080,7 +3092,7 @@ byte first. The file should be opened in binary mode.<br>
 </div>
 <br>
         <code>write-float(<i>ch</i> [, <i>stream</i> [, <i>length</i>]])</code> [SAL]<br>
-        <code>(write-float<a name="index1664"></a> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; write a binary floating-point number to a stream<br>
+        <code>(write-float<a name="index1678"></a> <tt><i>ch</i></tt> [<tt><i>stream</i></tt> [<tt><i>length</i></tt>]])</code> [LISP]  &ndash; write a binary floating-point number to a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3099,7 +3111,7 @@ byte first. The file should be opened in binary mode.<br>
 </div>
 <br>
         <code>read-line([<i>stream</i>])</code> [SAL]<br>
-        <code>(read-line<a name="index1665"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; read a line from a stream<br>
+        <code>(read-line<a name="index1679"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; read a line from a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3109,7 +3121,7 @@ byte first. The file should be opened in binary mode.<br>
 </div>
 <br>
         <code>read-byte([<i>stream</i>])</code> [SAL]<br>
-        <code>(read-byte<a name="index1666"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; read a byte from a stream<br>
+        <code>(read-byte<a name="index1680"></a> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; read a byte from a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3119,7 +3131,7 @@ byte first. The file should be opened in binary mode.<br>
 </div>
 <br>
         <code>write-byte(<i>byte</i> [, <i>stream</i>])</code> [SAL]<br>
-        <code>(write-byte<a name="index1667"></a> <tt><i>byte</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; write a byte to a stream<br>
+        <code>(write-byte<a name="index1681"></a> <tt><i>byte</i></tt> [<tt><i>stream</i></tt>])</code> [LISP]  &ndash; write a byte to a stream<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3132,7 +3144,7 @@ byte first. The file should be opened in binary mode.<br>
 </div>
 
 <p>
-<a name = "252"><h3>String Stream Functions</h3></a><a name="index1668"></a>
+<a name = "254"><h3>String Stream Functions</h3></a><a name="index1682"></a>
         These functions operate on unnamed streams.  An unnamed output
         stream collects characters sent to it when it is used as the
         destination of any output function.  The functions 
@@ -3144,7 +3156,7 @@ An unnamed input stream is setup with the
 <p>
 <div style="padding-left: 0em;">
         <code>make-string-input-stream(<i>str</i> [, <i>start</i> [, <i>end</i>]])</code> [SAL]<br>
-        <code>(make-string-input-stream<a name="index1669"></a> <tt><i>str</i></tt> [<tt><i>start</i></tt> [<tt><i>end</i></tt>]])</code> [LISP]<br>
+        <code>(make-string-input-stream<a name="index1683"></a> <tt><i>str</i></tt> [<tt><i>start</i></tt> [<tt><i>end</i></tt>]])</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3156,7 +3168,7 @@ An unnamed input stream is setup with the
 </div>
 <br>
         <code>make-string-output-stream)()</code> [SAL]<br>
-        <code>(make-string-output-stream)</code> [LISP]<a name="index1670"></a><br>
+        <code>(make-string-output-stream)</code> [LISP]<a name="index1684"></a><br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3165,7 +3177,7 @@ An unnamed input stream is setup with the
 </div>
 <br>
         <code>get-output-stream-string(<i>stream</i>)</code> [SAL]<br>
-        <code>(get-output-stream-string<a name="index1671"></a> <tt><i>stream</i></tt>)</code> [LISP]<br>
+        <code>(get-output-stream-string<a name="index1685"></a> <tt><i>stream</i></tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3176,7 +3188,7 @@ An unnamed input stream is setup with the
 </div>
 <br>
         <code>get-output-stream-list(<i>stream</i>)</code> [SAL]<br>
-        <code>(get-output-stream-list<a name="index1672"></a> <tt><i>stream</i></tt>)</code> [LISP]<br>
+        <code>(get-output-stream-list<a name="index1686"></a> <tt><i>stream</i></tt>)</code> [LISP]<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3189,13 +3201,13 @@ An unnamed input stream is setup with the
 </div>
 
 <p>
-<a name = "253"><h3>System Functions</h3></a><a name="index1673"></a>
+<a name = "255"><h3>System Functions</h3></a><a name="index1687"></a>
 Note: the <code>load</code> function first tries to load a file from the current directory. A <code>.lsp</code> extension is added if there is not already an alphanumeric extension following  a period.  If that fails, XLISP searches the path, which is obtained from the XLISPPATH environment variable in Unix and  HKEY_LOCAL_MACHINE\SOFTWARE\CMU\Nyquist\XLISPPATH under Win32. (The Macintosh version has no search path.)
 <p>
 <p>
 <div style="padding-left: 0em;">
         <code>get-env(<i>name</i>)</code> [SAL]<br>
-        <code>(get-env<a name="index1674"></a><a name="index1675"></a><a name="index1676"></a> <tt><i>name</i></tt>)</code> [LISP] &ndash; get from an environment variable<br>
+        <code>(get-env<a name="index1688"></a><a name="index1689"></a><a name="index1690"></a> <tt><i>name</i></tt>)</code> [LISP] &ndash; get from an environment variable<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3204,7 +3216,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 
 </div>
 <br>
-        <code>(load<a name="index1677"></a> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:verbose</tt> <tt>:print</tt>)</code> [LISP]   &ndash; load a source file
+        <code>(load<a name="index1691"></a> <tt><i>fname</i></tt> <tt>&amp;key </tt><tt>:verbose</tt> <tt>:print</tt>)</code> [LISP]   &ndash; load a source file
 </div><div style="padding-left: 2em;">
             <i>fname</i>   &ndash;  the filename string or symbol</div>
 <div style="padding-left: 2em;">            :verbose  &ndash;  the verbose flag (default is t)</div>
@@ -3214,7 +3226,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>save(<i>fname</i>)</code> [SAL]<br>
-        <code>(save<a name="index1678"></a> <tt><i>fname</i></tt>)</code> [LISP] &ndash; save workspace to a file<br>
+        <code>(save<a name="index1692"></a> <tt><i>fname</i></tt>)</code> [LISP] &ndash; save workspace to a file<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3224,7 +3236,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>restore(<i>fname</i>)</code> [SAL]<br>
-        <code>(restore<a name="index1679"></a> <tt><i>fname</i></tt>)</code> [LISP]  &ndash; restore workspace from a file<br>
+        <code>(restore<a name="index1693"></a> <tt><i>fname</i></tt>)</code> [LISP]  &ndash; restore workspace from a file<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3234,7 +3246,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>dribble([<i>fname</i>])</code> [SAL]<br>
-        <code>(dribble<a name="index1680"></a> [<tt><i>fname</i></tt>])</code> [LISP]  &ndash; create a file with a transcript of a session<br>
+        <code>(dribble<a name="index1694"></a> [<tt><i>fname</i></tt>])</code> [LISP]  &ndash; create a file with a transcript of a session<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3246,7 +3258,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>gc()</code> [SAL]<br>
-        <code>(gc<a name="index1681"></a>)</code> [LISP]  &ndash; force garbage collection<br>
+        <code>(gc<a name="index1695"></a>)</code> [LISP]  &ndash; force garbage collection<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3255,7 +3267,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>expand(<i>num</i>)</code> [SAL]<br>
-        <code>(expand<a name="index1682"></a> <tt><i>num</i></tt>)</code> [LISP]  &ndash; expand memory by adding segments<br>
+        <code>(expand<a name="index1696"></a> <tt><i>num</i></tt>)</code> [LISP]  &ndash; expand memory by adding segments<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3265,7 +3277,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>alloc(<i>num</i>)</code> [SAL]<br>
-        <code>(alloc<a name="index1683"></a> <tt><i>num</i></tt>)</code> [LISP]  &ndash; change number of nodes to allocate in each segment<br>
+        <code>(alloc<a name="index1697"></a> <tt><i>num</i></tt>)</code> [LISP]  &ndash; change number of nodes to allocate in each segment<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3275,7 +3287,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>info()</code> [SAL]<br>
-        <code>(info<a name="index1684"></a>)</code> [LISP]  &ndash; show information about memory usage.<br>
+        <code>(info<a name="index1698"></a>)</code> [LISP]  &ndash; show information about memory usage.<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3284,7 +3296,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>room()</code> [SAL]<br>
-        <code>(room<a name="index1685"></a>)</code> [LISP]  &ndash; show memory allocation statistics<br>
+        <code>(room<a name="index1699"></a>)</code> [LISP]  &ndash; show memory allocation statistics<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3293,7 +3305,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>type-of(<i>expr</i>)</code> [SAL]<br>
-        <code>(type-of<a name="index1686"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; returns the type of the expression<br>
+        <code>(type-of<a name="index1700"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; returns the type of the expression<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3319,7 +3331,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>peek(<i>addrs</i>)</code> [SAL]<br>
-        <code>(peek<a name="index1687"></a> <tt><i>addrs</i></tt>)</code> [LISP]   &ndash; peek at a location in memory<br>
+        <code>(peek<a name="index1701"></a> <tt><i>addrs</i></tt>)</code> [LISP]   &ndash; peek at a location in memory<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3329,7 +3341,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>poke(<i>addrs</i>, <i>value</i>)</code> [SAL]<br>
-        <code>(poke<a name="index1688"></a> <tt><i>addrs</i></tt> <tt><i>value</i></tt>)</code> [LISP] &ndash;  poke a value into memory<br>
+        <code>(poke<a name="index1702"></a> <tt><i>addrs</i></tt> <tt><i>value</i></tt>)</code> [LISP] &ndash;  poke a value into memory<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3340,7 +3352,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>bigendianp()</code> [SAL]<br>
-        <code>(bigendianp<a name="index1689"></a><a name="index1690"></a><a name="index1691"></a><a name="index1692"></a>)</code> [LISP] &ndash;  is this a big-endian machine?<br>
+        <code>(bigendianp<a name="index1703"></a><a name="index1704"></a><a name="index1705"></a><a name="index1706"></a>)</code> [LISP] &ndash;  is this a big-endian machine?<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3351,7 +3363,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>address-of(<i>expr</i>)</code> [SAL]<br>
-        <code>(address-of<a name="index1693"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; get the address of an xlisp node<br>
+        <code>(address-of<a name="index1707"></a> <tt><i>expr</i></tt>)</code> [LISP]  &ndash; get the address of an xlisp node<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3361,7 +3373,7 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>exit()</code> [SAL]<br>
-        <code>(exit<a name="index1694"></a>)</code> [LISP]  &ndash;<br>
+        <code>(exit<a name="index1708"></a>)</code> [LISP]  &ndash;<br>
 
         exit xlisp. (Note: in Audacity plug-ins, <code>exit</code> is<br>
 
@@ -3374,17 +3386,17 @@ Note: the <code>load</code> function first tries to load a file from the current
 </div>
 <br>
         <code>setup-console()</code> [SAL]<br>
-        <code>(setup-console<a name="index1695"></a><a name="index1696"></a>)</code> [LISP]  &ndash; set default console attributes<br>
+        <code>(setup-console<a name="index1709"></a><a name="index1710"></a>)</code> [LISP]  &ndash; set default console attributes<br>
 
 
 </div><div style="padding-left: 2em;">
             returns    &ndash; NIL</div>
-<div style="padding-left: 2em;">Note: Under Windows, Nyquist normally starts up in a medium-sized console window with black text and a white background, with a window title of "Nyquist." This is normally accomplished by calling <code>setup-console</code> in <code>system.lsp</code>. In Nyquist, you can avoid this behavior by setting <code>*setup-console*</code> to NIL in your <code>init.lsp</code> file. If <code>setup-console</code> is not called, Nyquist uses standard input and output as is. This is what you want if you are running Nyquist inside of emacs, for example.<a name="index1697"></a><br>
+<div style="padding-left: 2em;">Note: Under Windows, Nyquist normally starts up in a medium-sized console window with black text and a white background, with a window title of "Nyquist." This is normally accomplished by calling <code>setup-console</code> in <code>system.lsp</code>. In Nyquist, you can avoid this behavior by setting <code>*setup-console*</code> to NIL in your <code>init.lsp</code> file. If <code>setup-console</code> is not called, Nyquist uses standard input and output as is. This is what you want if you are running Nyquist inside of emacs, for example.<a name="index1711"></a><br>
 
 </div>
 <br>
         <code>echoenabled(<i>flag</i>)</code> [SAL]<br>
-        <code>(echoenabled<a name="index1698"></a><a name="index1699"></a> <tt><i>flag</i></tt>)</code> [LISP]  &ndash; turn console input echoing on or off<br>
+        <code>(echoenabled<a name="index1712"></a><a name="index1713"></a> <tt><i>flag</i></tt>)</code> [LISP]  &ndash; turn console input echoing on or off<br>
 
 
 </div><div style="padding-left: 2em;">
@@ -3400,9 +3412,9 @@ this function. Under windows it is defined to do nothing.<br>
 </div>
 
 <p>
-<a name = "254"><h3>File I/O Functions</h3></a><a name="index1700"></a>
+<a name = "256"><h3>File I/O Functions</h3></a><a name="index1714"></a>
 <p>
-<a name = "255"><h4>Input from a File</h4></a><a name="index1701"></a>
+<a name = "257"><h4>Input from a File</h4></a><a name="index1715"></a>
 <p>
 To open a file for input, use the <code>open</code> function with the keyword
 argument <code>:direction</code> set to <code>:input</code>.  To open a file for output,
@@ -3446,7 +3458,7 @@ binding it using <code>let</code> or <code>let*</code>.  Here is an example:
 
         Evaluating this expression will cause the file to be closed.
 <p>
-<a name = "256"><h4>Output to a File</h4></a><a name="index1702"></a>
+<a name = "258"><h4>Output to a File</h4></a><a name="index1716"></a>
 <p>
         Writing to a file is pretty much the same as reading from one.
         You need to open the file first.  This time you should use the
@@ -3482,7 +3494,7 @@ binding it using <code>let</code> or <code>let*</code>.  Here is an example:
         Evaluating this expression will close the output file and make
         it permanent.
 <p>
-<a name = "257"><h4>A Slightly More Complicated File Example</h4></a>
+<a name = "259"><h4>A Slightly More Complicated File Example</h4></a>
 <p>
         This example shows how to open a file, read each Lisp expression
         from the file and print it.  It demonstrates the use of files

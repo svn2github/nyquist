@@ -1,1538 +1,1128 @@
-* expr ...)
-part19.html#index1516
 *a4-hertz*
-part9.html#index801
+part9.html#index795
 *applyhook*
-part19.html#index1354
+part19.html#index1391
 *autonorm*
-part9.html#index802
+part9.html#index796
 *autonorm-max-samples*
-part9.html#index804
+part9.html#index798
 *autonorm-previous-peak*
-part9.html#index805
+part9.html#index799
 *autonorm-target*
-part9.html#index806
-*autonorm-type*
-part9.html#index807
-*autonormflag*
-part9.html#index803
-*breakenable*
-part19.html#index1349
-*breakenable*
-part19.html#index1349
-*clipping-error*
-part9.html#index809
-*clipping-threshold*
-part9.html#index811
-*control-srate*
-part9.html#index812
-*control-srate*
-part9.html#index812
-*debug-io*
-part19.html#index1348
-*default-control-srate*
-part9.html#index817
-*default-plot-file*
-part8.html#index640
-*default-sf-bits*
-part9.html#index813
-*default-sf-dir*
-part9.html#index814
-*default-sf-format*
-part9.html#index815
-*default-sf-srate*
-part9.html#index816
-*default-sound-srate*
-part9.html#index818
-*error-output*
-part19.html#index1346
-*evalhook*
-part19.html#index1353
-*file-separator*
-part9.html#index819
-*float-format*
-part19.html#index1360
-*gc-flag*
-part19.html#index1357
-*gc-hook*
-part19.html#index1358
-*integer-format*
-part19.html#index1359
-*loud*
-part4.html#index134
-*obarray*
-part19.html#index1343
-*print-case*
-part19.html#index1361
-*readtable*
-part19.html#index1355
-*rslt*
-part9.html#index820
-*sound-srate*
-part9.html#index821
-*sound-srate*
-part9.html#index821
-*soundenable*
-part9.html#index822
-*standard-input*
-part19.html#index1344
-*standard-output*
-part19.html#index1345
-*start*
-part4.html#index137
-*stop*
-part4.html#index138
-*sustain*
-part4.html#index136
-*table*
 part9.html#index800
-*trace-output*
-part19.html#index1347
-*tracelimit*
-part19.html#index1352
-*tracelist*
-part19.html#index1350
-*tracenable*
-part19.html#index1351
-*tracenable*
-part19.html#index1351
-*transpose*
-part4.html#index135
-*unbound*
-part19.html#index1356
-*warp*
-part4.html#index133
-+ expr ...)
-part19.html#index1514
-- expr ...)
-part19.html#index1515
-/ expr ...)
-part19.html#index1517
-1+ expr)
-part19.html#index1518
-1- expr)
-part19.html#index1519
-< n1 n2 ...)
-part19.html#index1539
-abs expr)
-part19.html#index1527
-abs-env beh)
-part8.html#index557
-add-action-to-workspace symbol)
-part14.html#index1163
-add-to-workspace symbol)
-part14.html#index1160
-address-of expr)
-part19.html#index1668
-agc input range rise-time fall-time [lookahead])
-part15.html#index1226
-alloc num)
-part19.html#index1658
-allpass2 signal hz [q])
-part8.html#index448
-allpoles-from-lpc snd lpc-frame)
-part12.html#index985
-alpass sound decay hz [minhz])
-part8.html#index411
-amosc pitch modulation [table phase])
-part8.html#index377
-and expr ...)
-part19.html#index1463
-append expr ...)
-part19.html#index1409
-apply fun args)
-part19.html#index1364
-apply-banded-bass-boost s lowp highp num-bands num-boost gain)
-part15.html#index1254
-apply-banded-delay s lowp highp num-bands lowd highd fb wet)
-part15.html#index1252
-apply-banded-treble-boost s lowp highp num-bands num-boost gain)
-part15.html#index1256
-arc-sine-dist )
-part14.html#index1084
-aref array n)
-part19.html#index1393
-areson sound center bandwidth [n])
-part8.html#index433
-args name)
-part13.html#index998
-arrayp expr)
-part19.html#index1447
-assoc expr alist :test test :test-not test-not)
-part19.html#index1413
-at time beh)
-part8.html#index558
-at-abs time beh)
-part8.html#index560
-atan expr [expr2])
-part19.html#index1535
-atom expr)
-part19.html#index1435
-atone sound cutoff)
-part8.html#index428
-autonorm-off )
-part8.html#index619
-autonorm-on )
-part8.html#index618
-backquote expr)
-part19.html#index1368
-baktrace [n])
-part19.html#index1506
-bandpass2 signal hz [q])
-part8.html#index446
-bernoulli-dist px1 [x1 x2])
-part14.html#index1091
-beta-dist a b)
-part14.html#index1089
-bigendianp )
-part19.html#index1664
-bilateral-exponential-dist xmu tau [low high])
-part14.html#index1077
-binomial-dist n p)
-part14.html#index1093
-biquad signal b0 b1 b2 a0 a1 a2)
-part8.html#index442
-biquad-m signal b0 b1 b2 a0 a1 a2)
-part8.html#index443
-block name expr ...)
-part19.html#index1486
-both-case-p chr)
-part19.html#index1580
-boundp sym)
-part19.html#index1451
-bowed step bowpress-env)
-part8.html#index507
-bowed-freq step bowpress-env freq-env)
-part8.html#index509
-break [bmsg [arg]])
-part19.html#index1501
-build-harmonic n table-size)
-part8.html#index344
-buzz n pitch modulation)
-part8.html#index381
-car expr)
+*autonorm-type*
+part9.html#index801
+*autonormflag*
+part9.html#index797
+*breakenable*
+part19.html#index1386
+*breakenable*
+part19.html#index1386
+*clipping-error*
+part9.html#index803
+*clipping-threshold*
+part9.html#index805
+*control-srate*
+part9.html#index806
+*control-srate*
+part9.html#index806
+*debug-io*
+part19.html#index1385
+*default-control-srate*
+part9.html#index812
+*default-plot-file*
+part9.html#index807
+*default-plot-file*
+part9.html#index807
+*default-sf-bits*
+part9.html#index808
+*default-sf-dir*
+part9.html#index809
+*default-sf-format*
+part9.html#index810
+*default-sf-srate*
+part9.html#index811
+*default-sound-srate*
+part9.html#index813
+*error-output*
+part19.html#index1383
+*evalhook*
+part19.html#index1390
+*file-separator*
+part9.html#index814
+*float-format*
 part19.html#index1397
-case expr case ...)
-part19.html#index1468
-catch sym expr ...)
-part19.html#index1474
-cauchy-dist tau [low high])
-part14.html#index1079
-cdr expr)
-part19.html#index1398
-cerror cmsg emsg [arg])
-part19.html#index1500
-char string index)
-part19.html#index1577
-char-code chr)
-part19.html#index1582
-char-downcase chr)
-part19.html#index1585
-char-equal chr1 chr2 ...)
-part19.html#index1597
-char-greaterp chr1 chr2 ...)
-part19.html#index1600
-char-int chr)
-part19.html#index1587
-char-lessp chr1 chr2 ...)
-part19.html#index1595
-char-not-equal chr1 chr2 ...)
-part19.html#index1598
-char-not-greaterp chr1 chr2 ...)
-part19.html#index1596
-char-not-lessp chr1 chr2 ...)
-part19.html#index1599
-char-upcase chr)
-part19.html#index1584
-char/= chr1 chr2 ...)
-part19.html#index1592
-char< chr1 chr2 ...)
-part19.html#index1589
-char<= chr1 chr2 ...)
-part19.html#index1590
-char= chr1 chr2 ...)
-part19.html#index1591
-char> chr1 chr2 ...)
-part19.html#index1594
-char>= chr1 chr2 ...)
-part19.html#index1593
-characterp expr)
-part19.html#index1446
-chorus snd :delay delay :depth depth :rate rate :saturation saturation :phase phase)
-part15.html#index1247
-clarinet step breath-env)
-part8.html#index485
-clarinet-all step breath-env freq-env vibrato-freq vibrato-gain reed-stiffness noise)
-part8.html#index491
-clarinet-freq step breath-env freq-env)
-part8.html#index488
-clean-up)
-part19.html#index1502
-clip sound peak)
-part8.html#index525
-close stream)
-part19.html#index1617
-code-char code)
-part19.html#index1583
-comb sound decay hz)
-part8.html#index412
-compress input map rise-time fall-time [lookahead])
-part15.html#index1224
-compress-map compress-ratio compress-threshold expand-ratio expand-threshold :limit limit :transition transition)
-part15.html#index1222
-cond pair ...)
-part19.html#index1462
-congen gate risetime falltime)
-part8.html#index414
-cons expr1 expr2)
-part19.html#index1407
-consp expr)
-part19.html#index1442
-const value [duration])
-part8.html#index332
-continue)
-part19.html#index1504
-continuous-control-warp beh)
-part8.html#index562
-continuous-sound-warp beh)
-part8.html#index563
-control sound)
-part8.html#index331
-control-srate-abs srate beh)
-part8.html#index564
-control-warp warp-fn signal [wrate])
-part8.html#index348
-convolve sound response)
-part8.html#index417
-cos expr)
-part19.html#index1533
-cue sound)
-part8.html#index328
-cue-file filename)
-part8.html#index329
-current-path )
-part13.html#index1010
-cxxr expr)
-part19.html#index1399
-cxxxr expr)
-part19.html#index1400
-cxxxxr expr)
-part19.html#index1401
-db-average input)
-part15.html#index1223
-db-to-linear x)
-part8.html#index287
-db-to-vel x [float])
-part8.html#index324
-db-to-vel x)
-part8.html#index324
-decf symbol)
-part13.html#index1002
-defmacro sym fargs expr ...)
-part19.html#index1379
-defun sym fargs expr ...)
-part19.html#index1378
-delete expr :test test :test-not test-not)
-part19.html#index1430
-delete-if test list)
-part19.html#index1431
-delete-if-not test list)
-part19.html#index1432
-describe symbol [description])
-part14.html#index1162
-diff a b)
-part8.html#index596
-digit-char n)
-part19.html#index1586
-digit-char-p chr)
-part19.html#index1581
-do (binding ...) (texpr rexpr ...) expr ...)
-part19.html#index1479
-do* (binding ...) (texpr rexpr ...) expr ...)
-part19.html#index1480
-dolist (sym expr [rexpr]) expr ...)
-part19.html#index1481
-dotimes (sym expr [rexpr]) expr ...)
-part19.html#index1482
-dribble [fname])
-part19.html#index1655
-drum tracknum patternnum bpm)
-part15.html#index1297
-drum-loop snd duration numtimes)
-part15.html#index1298
-dtmf-tone key len space)
-part15.html#index1267
-echoenabled flag)
-part19.html#index1673
-endp list)
-part19.html#index1441
-env t1 t2 t4 l1 l2 l3 [dur])
-part8.html#index334
-eq expr1 expr2)
-part19.html#index1458
-eq-band signal hz gain width)
-part8.html#index453
-eq-highshelf signal hz gain [slope])
-part8.html#index451
-eq-lowshelf signal hz gain [slope])
-part8.html#index449
-eql expr1 expr2)
-part19.html#index1459
-equal expr1 expr2)
-part19.html#index1460
-error emsg [arg])
-part19.html#index1499
-errset expr [pflag])
-part19.html#index1505
-eval expr)
-part19.html#index1363
-evalhook expr ehook ahook [env])
-part19.html#index1509
-evenp expr)
-part19.html#index1456
-event-dur event)
-part14.html#index1107
-event-end event)
-part14.html#index1111
-event-expression event)
-part14.html#index1109
-event-get-attr event attribute [default])
-part14.html#index1116
-event-has-attr event attribute)
-part14.html#index1115
-event-set-attr event attribute value)
-part14.html#index1117
-event-set-dur event dur)
-part14.html#index1108
-event-set-expression event dur)
-part14.html#index1110
-event-set-time event time)
-part14.html#index1106
-event-time event)
-part14.html#index1105
-exit )
-part19.html#index1669
-exp x-expr)
-part19.html#index1537
-exp-dec hold halfdec length)
-part8.html#index335
-expand num)
-part19.html#index1657
-exponential-dist delta [high])
-part14.html#index1074
-expr-get-attr expression attribute [default])
-part14.html#index1113
-expr-has-attr expression attribute)
-part14.html#index1112
-expr-set-attr expr attribute value)
-part14.html#index1114
-expt x-expr y-expr)
-part19.html#index1536
-extract start stop beh)
-part8.html#index566
-extract-abs start stop beh)
-part8.html#index567
-fboundp sym)
-part19.html#index1452
-feedback-delay sound delay feedback)
-part8.html#index420
-filep expr)
-part19.html#index1450
-find-in-xlisp-path filename)
-part19.html#index1631
-first expr)
-part19.html#index1402
-flange snd)
-part15.html#index1242
-flatc expr)
-part19.html#index1609
-flatsize expr)
-part19.html#index1608
-flet (binding ...) expr ...)
-part19.html#index1471
-float expr)
-part19.html#index1513
-floatp expr)
-part19.html#index1444
-flute step breath-env)
-part8.html#index501
-flute-all step breath-env freq-env vibrato-freq vibrato-gain jet-delay noise)
-part8.html#index505
-flute-freq step breath-env freq-env)
-part8.html#index503
-fmfb pitch index [dur])
-part8.html#index379
-fmlfo freq [table phase])
-part8.html#index342
-fmosc pitch modulation [table phase])
-part8.html#index378
-follow sound floor risetime falltime lookahead)
-part8.html#index289
-force-srate srate sound)
-part8.html#index337
-format stream fmt arg ...)
-part19.html#index1611
-fourth expr)
-part19.html#index1405
-funcall fun arg ...)
-part19.html#index1365
-function expr)
-part19.html#index1367
-gamma-dist nu [high])
-part14.html#index1076
-gate sound lookahead risetime falltime floor threshold)
-part8.html#index293
-gaussian-dist xmu sigma [low high])
-part14.html#index1087
-gc )
-part19.html#index1656
-gcd n1 n2 ...)
-part19.html#index1528
-gensym [tag])
-part19.html#index1380
-geometric-dist p)
-part14.html#index1095
-get sym prop)
-part19.html#index1389
-get-duration dur)
-part8.html#index309
-get-env name)
-part19.html#index1649
-get-lambda-expression closure)
-part19.html#index1370
-get-loud )
-part8.html#index310
-get-output-stream-list stream)
-part19.html#index1647
-get-output-stream-string stream)
-part19.html#index1646
-get-slider-value index)
-part8.html#index653
-get-sustain )
-part8.html#index311
-get-temp-path )
-part19.html#index1625
-get-transpose )
-part8.html#index312
-get-user )
-part19.html#index1628
-get-warp )
-part8.html#index313
-go sym)
-part19.html#index1490
-grindef name)
-part13.html#index996
-hash sym n)
-part19.html#index1387
-highpass2 signal hz [q])
-part8.html#index445
-highpass4 signal hz)
-part8.html#index458
-highpass6 signal hz)
-part8.html#index459
-highpass8 signal hz)
-part8.html#index460
-hp sound cutoff)
-part8.html#index426
-hyperbolic-cosine-dist [low high])
-part14.html#index1081
-hz-to-step freq)
-part8.html#index295
-hzosc hz [table phase])
-part8.html#index368
-if texpr expr1 [expr2])
-part19.html#index1465
-incf symbol)
-part13.html#index1000
-info )
-part19.html#index1659
-int-char int)
-part19.html#index1588
-integerp expr)
-part19.html#index1443
-integrate signal)
-part8.html#index360
-intern pname)
-part19.html#index1381
-interpolate x x1 y1 x2 y2)
-part14.html#index1167
-intersection a b)
-part14.html#index1169
-jcrev sound decay mix)
-part8.html#index468
-labels (binding ...) expr ...)
-part19.html#index1472
-lambda args expr ...)
-part19.html#index1369
-last list)
-part19.html#index1411
-length expr)
-part19.html#index1417
-length-of-beat bpm)
-part15.html#index1299
-let (binding ...) expr ...)
-part19.html#index1469
-let* (binding ...) expr ...)
-part19.html#index1470
-lfo freq [duration table phase])
-part8.html#index340
-linear-dist g)
-part14.html#index1072
-linear-to-db x)
-part8.html#index296
-linear-to-vel x [float])
-part8.html#index326
-list expr ...)
-part19.html#index1408
-listdir path)
-part19.html#index1620
-listp expr)
-part19.html#index1440
-load fname [:verbose verbose] [:print print])
-part19.html#index1652
-local-to-global local-time)
-part8.html#index314
-log x)
-part8.html#index299
-logand expr ...)
-part19.html#index1546
-logior expr ...)
-part19.html#index1547
-logistic-dist alpha beta [low high])
-part14.html#index1082
-lognot expr)
-part19.html#index1549
-logxor expr ...)
-part19.html#index1548
-loop expr ...)
-part19.html#index1478
-loud volume beh)
-part8.html#index568
-loud-abs volume beh)
-part8.html#index569
-lower-case-p chr)
-part19.html#index1579
-lowpass2 signal hz [q])
-part8.html#index444
-lowpass4 signal hz)
-part8.html#index455
-lowpass6 signal hz)
-part8.html#index456
-lowpass8 signal hz)
-part8.html#index457
-lp sound cutoff)
-part8.html#index423
-lpc-frame-err frame)
-part12.html#index989
-lpc-frame-filter-coefs frame)
-part12.html#index990
-lpc-frame-rms1 frame)
-part12.html#index987
-lpc-frame-rms2 frame)
-part12.html#index988
-lpreson snd lpc-iterator skiptime)
-part12.html#index986
-macroexpand form)
-part19.html#index1371
-macroexpand-1 form)
-part19.html#index1372
-macrolet (binding ...) expr ...)
-part19.html#index1473
-make-accumulate sub-pattern :for for :max maximum :min minimum :name name :trace trace)
-part14.html#index1043
-make-accumulation items :name name :trace trace)
-part14.html#index1037
-make-array size)
+*gc-flag*
 part19.html#index1394
-make-copier sub-pattern :repeat repeat :merge merge :for for :name name :trace trace)
-part14.html#index1040
-make-cycle items :for for :name name :trace trace)
-part14.html#index1022
-make-eval expr :for for :name name :trace trace)
-part14.html#index1052
-make-heap items :for for :max max :name name :trace trace)
-part14.html#index1034
-make-length pattern length-pattern :name name :trace trace)
-part14.html#index1059
-make-line items :for for :name name :trace trace)
-part14.html#index1025
-make-lpanal-iterator sound framedur skiptime npoles)
-part12.html#index981
-make-lpc-file-iterator filename)
-part12.html#index982
-make-markov rules :past past :produces produces :for for :name name :trace trace)
-part14.html#index1063
-make-palindrome items :elide elide :for for :name name :trace trace)
-part14.html#index1031
-make-product x y :for for :name name :trace trace)
-part14.html#index1049
-make-random items :for for :name name :trace trace)
-part14.html#index1028
-make-string-input-stream str [start [end]])
-part19.html#index1644
-make-string-output-stream) )
-part19.html#index1645
-make-sum x y :for for :name name :trace trace)
-part14.html#index1046
-make-symbol pname)
+*gc-hook*
+part19.html#index1395
+*integer-format*
+part19.html#index1396
+*loud*
+part4.html#index136
+*lpslider-cutoff*
+part9.html#index815
+*obarray*
+part19.html#index1380
+*print-case*
+part19.html#index1398
+*readtable*
+part19.html#index1392
+*rslt*
+part9.html#index816
+*saw-table*
+part9.html#index817
+*sine-table*
+part9.html#index819
+*snd-device*
+part9.html#index821
+*snd-list-devices*
+part9.html#index826
+*sound-srate*
+part9.html#index830
+*sound-srate*
+part9.html#index830
+*soundenable*
+part9.html#index831
+*standard-input*
+part19.html#index1381
+*standard-output*
 part19.html#index1382
-make-window pattern length-pattern skip-pattern :name name :trace trace)
-part14.html#index1062
-maketable sound)
-part8.html#index343
-mandolin  step dur [detune])
-part8.html#index511
-mapc fcn list1 list ...)
-part19.html#index1420
-mapcar fcn list1 list ...)
-part19.html#index1421
-mapl fcn list1 list ...)
-part19.html#index1422
-maplist fcn list1 list ...)
-part19.html#index1423
-markov-create-rules sequence order [generalize])
-part14.html#index1066
-max expr ...)
-part19.html#index1525
-member expr list :test test :test-not test-not)
-part19.html#index1412
-midi-show the-seq [out-file])
-part15.html#index1262
-midi-show-file file-name)
-part15.html#index1259
-min expr ...)
-part19.html#index1523
-minusp expr)
-part19.html#index1453
-modalbar preset step dur)
+*start*
+part4.html#index139
+*stop*
+part4.html#index140
+*sustain*
+part4.html#index138
+*table*
+part9.html#index794
+*trace-output*
+part19.html#index1384
+*tracelimit*
+part19.html#index1389
+*tracelist*
+part19.html#index1387
+*tracenable*
+part19.html#index1388
+*tracenable*
+part19.html#index1388
+*transpose*
+part4.html#index137
+*tri-table*
+part9.html#index833
+*unbound*
+part19.html#index1393
+*warp*
+part4.html#index135
+*~=tolerance*
+part9.html#index793
+abs-env beh)
+part8.html#index553
+add-action-to-workspace symbol)
+part15.html#index1201
+add-to-workspace symbol)
+part15.html#index1198
+agc input range rise-time fall-time [lookahead])
+part16.html#index1264
+allpass2 signal hz [q])
+part8.html#index444
+allpoles-from-lpc snd lpc-frame)
+part13.html#index1020
+alpass sound decay hz [minhz])
+part8.html#index407
+amosc pitch modulation [table phase])
+part8.html#index373
+apply-banded-bass-boost s lowp highp num-bands num-boost gain)
+part16.html#index1292
+apply-banded-delay s lowp highp num-bands lowd highd fb wet)
+part16.html#index1290
+apply-banded-treble-boost s lowp highp num-bands num-boost gain)
+part16.html#index1294
+arc-sine-dist )
+part15.html#index1122
+aref array n)
+part19.html#index1430
+areson sound center bandwidth [n])
+part8.html#index429
+args name)
+part14.html#index1033
+at time beh)
+part8.html#index554
+at-abs time beh)
+part8.html#index556
+atom expr)
+part19.html#index1472
+atone sound cutoff)
+part8.html#index424
+autonorm-off )
+part8.html#index615
+autonorm-on )
+part8.html#index614
+bandpass2 signal hz [q])
+part8.html#index442
+bernoulli-dist px1 [x1 x2])
+part15.html#index1129
+beta-dist a b)
+part15.html#index1127
+bilateral-exponential-dist xmu tau [low high])
+part15.html#index1115
+binomial-dist n p)
+part15.html#index1131
+biquad signal b0 b1 b2 a0 a1 a2)
+part8.html#index438
+biquad-m signal b0 b1 b2 a0 a1 a2)
+part8.html#index439
+bowed step bowpress-env)
+part8.html#index503
+bowed-freq step bowpress-env freq-env)
+part8.html#index505
+build-harmonic n table-size)
+part8.html#index340
+buzz n pitch modulation)
+part8.html#index377
+car expr)
+part19.html#index1434
+cauchy-dist tau [low high])
+part15.html#index1117
+char string index)
+part19.html#index1616
+chorus snd :delay delay :depth depth :rate rate :saturation saturation :phase phase)
+part16.html#index1285
+clarinet step breath-env)
+part8.html#index481
+clarinet-all step breath-env freq-env vibrato-freq vibrato-gain \\ \hspace*{3em}reed-stiffness noise)
+part8.html#index487
+clarinet-freq step breath-env freq-env)
+part8.html#index484
+clip sound peak)
 part8.html#index521
-mult a [b ...])
-part8.html#index593
-mult beh1 beh2 ...)
-part8.html#index593
-nband input gains)
-part15.html#index1233
-nband-range input gains lowf highf)
-part15.html#index1230
-nconc list ...)
-part19.html#index1429
-noise [duration])
-part8.html#index549
-not expr)
-part19.html#index1439
-notch2 signal hz [q])
+close-slider-panel name)
+part10.html#index839
+comb sound decay hz)
+part8.html#index408
+compress input map rise-time fall-time [lookahead])
+part16.html#index1262
+compress-map compress-ratio compress-threshold expand-ratio expand-threshold \\ :\hspace*{3em}limit limit :transition transition :verbose verbose)
+part16.html#index1260
+cond pair ...)
+part19.html#index1499
+congen gate risetime falltime)
+part8.html#index410
+const value [duration])
+part8.html#index328
+continuous-control-warp beh)
+part8.html#index558
+continuous-sound-warp beh)
+part8.html#index559
+control sound)
+part8.html#index327
+control-srate-abs srate beh)
+part8.html#index560
+control-warp warp-fn signal [wrate])
+part8.html#index344
+convolve sound response)
+part8.html#index413
+cue sound)
+part8.html#index324
+cue-file filename)
+part8.html#index325
+current-path )
+part14.html#index1045
+db-average input)
+part16.html#index1261
+db-to-linear x)
+part8.html#index289
+db-to-vel x [float])
+part8.html#index290
+decf symbol)
+part14.html#index1037
+describe symbol [description])
+part15.html#index1200
+diff a b)
+part8.html#index592
+drum tracknum patternnum bpm)
+part16.html#index1335
+drum-loop snd duration numtimes)
+part16.html#index1336
+dtmf-tone key len space)
+part16.html#index1305
+env t1 t2 t4 l1 l2 l3 [dur])
+part8.html#index330
+eq-band signal hz gain width)
+part8.html#index449
+eq-highshelf signal hz gain [slope])
 part8.html#index447
-nrev sound decay mix)
+eq-lowshelf signal hz gain [slope])
+part8.html#index445
+eval expr)
+part19.html#index1400
+event-dur event)
+part15.html#index1145
+event-end event)
+part15.html#index1149
+event-expression event)
+part15.html#index1147
+event-get-attr event attribute [default])
+part15.html#index1154
+event-has-attr event attribute)
+part15.html#index1153
+event-set-attr event attribute value)
+part15.html#index1155
+event-set-dur event dur)
+part15.html#index1146
+event-set-expression event dur)
+part15.html#index1148
+event-set-time event time)
+part15.html#index1144
+event-time event)
+part15.html#index1143
+exp-dec hold halfdec length)
+part8.html#index331
+exponential-dist delta [high])
+part15.html#index1112
+expr-get-attr expression attribute [default])
+part15.html#index1151
+expr-has-attr expression attribute)
+part15.html#index1150
+expr-set-attr expr attribute value)
+part15.html#index1152
+extract start stop beh)
+part8.html#index562
+extract-abs start stop beh)
+part8.html#index563
+feedback-delay sound delay feedback)
+part8.html#index416
+flange snd)
+part16.html#index1280
+flute step breath-env)
+part8.html#index497
+flute-all step breath-env freq-env vibrato-freq vibrato-gain jet-delay \\ \hspace*{3em}noise)
+part8.html#index501
+flute-freq step breath-env freq-env)
+part8.html#index499
+fmfb pitch index [dur])
+part8.html#index375
+fmlfo freq [table phase])
+part8.html#index338
+fmosc pitch modulation [table phase])
+part8.html#index374
+follow sound floor risetime falltime lookahead)
+part8.html#index291
+force-srate srate sound)
+part8.html#index333
+format stream fmt arg ...)
+part19.html#index1650
+gamma-dist nu [high])
+part15.html#index1114
+gate sound lookahead risetime falltime floor threshold)
+part8.html#index295
+gaussian-dist xmu sigma [low high])
+part15.html#index1125
+geometric-dist p)
+part15.html#index1133
+get sym prop)
+part19.html#index1426
+get-duration dur)
+part8.html#index311
+get-env name)
+part19.html#index1688
+get-loud )
+part8.html#index312
+get-output-stream-list stream)
+part19.html#index1686
+get-output-stream-string stream)
+part19.html#index1685
+get-slider-value name)
+part10.html#index846
+get-slider-value name)
+part10.html#index846
+get-slider-value number)
+part10.html#index846
+get-slider-value number)
+part10.html#index846
+get-slider-value panel name [dur])
+part10.html#index846
+get-slider-value panel name)
+part10.html#index846
+get-sustain )
+part8.html#index313
+get-transpose )
+part8.html#index314
+get-warp )
+part8.html#index315
+grindef name)
+part14.html#index1031
+highpass2 signal hz [q])
+part8.html#index441
+highpass4 signal hz)
+part8.html#index454
+highpass6 signal hz)
+part8.html#index455
+highpass8 signal hz)
+part8.html#index456
+hp sound cutoff)
+part8.html#index422
+hyperbolic-cosine-dist [low high])
+part15.html#index1119
+hz-to-step freq)
+part8.html#index297
+hzosc hz [table phase])
+part8.html#index364
+incf symbol)
+part14.html#index1035
+integrate signal)
+part8.html#index356
+interpolate x x1 y1 x2 y2)
+part15.html#index1205
+intersection a b)
+part15.html#index1207
+jcrev sound decay mix)
 part8.html#index464
-nstring-downcase str :start start :end end)
-part19.html#index1560
-nstring-upcase str :start start :end end)
-part19.html#index1559
-nth n list)
-part19.html#index1418
-nthcdr n list)
-part19.html#index1419
-null expr)
-part19.html#index1438
-numberp expr)
-part19.html#index1437
+labels (binding ...) expr ...)
+part19.html#index1509
+length-of-beat bpm)
+part16.html#index1337
+let* (binding ...) expr ...)
+part19.html#index1507
+lfo freq [duration table phase])
+part8.html#index336
+linear-dist g)
+part15.html#index1110
+linear-to-db x)
+part8.html#index298
+linear-to-vel x [float])
+part8.html#index299
+local-to-global local-time)
+part8.html#index316
+log x)
+part8.html#index301
+logand expr ...)
+part19.html#index1585
+logistic-dist alpha beta [low high])
+part15.html#index1120
+loop expr ...)
+part19.html#index1515
+loud volume beh)
+part8.html#index564
+loud-abs volume beh)
+part8.html#index565
+lowpass2 signal hz [q])
+part8.html#index440
+lowpass4 signal hz)
+part8.html#index451
+lowpass6 signal hz)
+part8.html#index452
+lowpass8 signal hz)
+part8.html#index453
+lp sound cutoff)
+part8.html#index419
+lpc-frame-err frame)
+part13.html#index1024
+lpc-frame-filter-coefs frame)
+part13.html#index1025
+lpc-frame-rms1 frame)
+part13.html#index1022
+lpc-frame-rms2 frame)
+part13.html#index1023
+lpreson snd lpc-iterator skiptime)
+part13.html#index1021
+lpslider name [dur])
+part10.html#index845
+lpslider number [dur])
+part10.html#index845
+lpslider panel name [dur])
+part10.html#index845
+macrolet (binding ...) expr ...)
+part19.html#index1510
+make-accumulate sub-pattern :for for :max maximum :min minimum \\ :\hspace*{3em}name name :trace trace)
+part15.html#index1081
+make-accumulation items :name name :trace trace)
+part15.html#index1075
+make-button name [normal])
+part10.html#index842
+make-copier sub-pattern :repeat repeat :merge merge :for for \\ :\hspace*{3em}name name :trace trace)
+part15.html#index1078
+make-cycle items :for for :name name :trace trace)
+part15.html#index1060
+make-eval expr :for for :name name :trace trace)
+part15.html#index1090
+make-heap items :for for :max max :name name :trace trace)
+part15.html#index1072
+make-length pattern length-pattern :name name :trace trace)
+part15.html#index1097
+make-line items :for for :name name :trace trace)
+part15.html#index1063
+make-lpanal-iterator sound framedur skiptime npoles)
+part13.html#index1016
+make-lpc-file-iterator filename)
+part13.html#index1017
+make-markov rules :past past :produces produces :for for :name name :trace trace)
+part15.html#index1101
+make-palindrome items :elide elide :for for :name name :trace trace)
+part15.html#index1069
+make-product x y :for for :name name :trace trace)
+part15.html#index1087
+make-random items :for for :name name :trace trace)
+part15.html#index1066
+make-slider name init low high)
+part10.html#index840
+make-slider-panel name color)
+part10.html#index836
+make-string-input-stream str [start [end]])
+part19.html#index1683
+make-string-output-stream) )
+part19.html#index1684
+make-sum x y :for for :name name :trace trace)
+part15.html#index1084
+make-window pattern length-pattern skip-pattern :name name :trace trace)
+part15.html#index1100
+maketable sound)
+part8.html#index339
+mandolin  step dur [detune])
+part8.html#index507
+markov-create-rules sequence order [generalize])
+part15.html#index1104
+midi-show the-seq [out-file])
+part16.html#index1300
+midi-show-file file-name)
+part16.html#index1297
+modalbar preset step dur)
+part8.html#index517
+mult a [b ...])
+part8.html#index589
+mult beh1 beh2 ...)
+part8.html#index589
+nband input gains)
+part16.html#index1271
+nband-range input gains lowf highf)
+part16.html#index1268
+noise [duration])
+part8.html#index545
+notch2 signal hz [q])
+part8.html#index443
+nrev sound decay mix)
+part8.html#index460
 Ny:all
 part2.html#index70
-objectp expr)
-part19.html#index1449
-oddp expr)
-part19.html#index1457
 open fname :direction direction)
-part19.html#index1613
-open-binary fname :direction direction)
-part19.html#index1614
-or expr ...)
-part19.html#index1464
+part19.html#index1652
 osc pitch [duration table phase])
-part8.html#index365
+part8.html#index361
 osc-enable flag)
-part8.html#index315
+part10.html#index853
 osc-note pitch [duration env loud table])
-part8.html#index540
-osc-pulse hz bias [compare-shape])
-part8.html#index373
-osc-saw hz)
-part8.html#index369
-osc-tri hz)
-part8.html#index371
-pan sound where)
-part8.html#index351
-params-scale params keyword amount)
-part14.html#index1166
-params-transpose params keyword amount)
-part14.html#index1165
-partial pitch env)
-part8.html#index366
-patternp expression)
-part14.html#index1164
-peak expression maxlen)
-part8.html#index698
-peek addrs)
-part19.html#index1662
-peek-char [flag [stream]])
-part19.html#index1634
-phaser snd)
-part15.html#index1240
-piano-midi midi-file-name)
-part15.html#index1220
-piano-midi2file midi-file-name sound-file-name)
-part15.html#index1221
-piano-note duration step dynamic)
-part15.html#index1217
-piano-note-2 step dynamic)
-part15.html#index1219
-pitshift sound shift mix)
-part8.html#index480
-pl-center snd)
-part15.html#index1289
-pl-doppler snd r)
-part15.html#index1294
-pl-left snd)
-part15.html#index1288
-pl-pan2d snd x y)
-part15.html#index1292
-pl-position snd x y config)
-part15.html#index1293
-pl-rear snd)
-part15.html#index1291
-pl-right snd)
-part15.html#index1290
-play sound
-part8.html#index602
-play-file filename)
-part8.html#index617
-pluck pitch [duration final-amplitude])
-part8.html#index382
-plusp expr)
-part19.html#index1455
-poisson-dist delta)
-part14.html#index1097
-poke addrs value)
-part19.html#index1663
-pop lis)
-part13.html#index1005
-power x y)
-part13.html#index1016
-pprint expr [stream])
-part19.html#index1606
-prcrev sound decay mix)
-part8.html#index472
-prin1 expr [stream])
-part19.html#index1604
-princ expr [stream])
-part19.html#index1605
-print expr [stream])
-part19.html#index1603
-prod beh1 beh2 ...)
-part8.html#index353
-prod beh1 beh2 ...)
-part8.html#index353
-profile flag)
-part19.html#index1510
-prog (binding ...) expr ...)
-part19.html#index1484
-prog* (binding ...) expr ...)
-part19.html#index1485
-prog1 expr1 expr ...)
-part19.html#index1492
-prog2 expr1 expr2 expr ...)
-part19.html#index1493
-progn expr ...)
-part19.html#index1494
-progv slist vlist expr ...)
-part19.html#index1491
-prologic l c r s)
-part15.html#index1285
-psetq [sym expr] ...)
-part19.html#index1376
-push val lis)
-part13.html#index1004
-putprop sym val prop)
-part19.html#index1390
-pwe t1 l1 t2 l2 ... tn)
-part8.html#index400
-pwe-list breakpoints)
-part8.html#index401
-pwer i1 l1 i2 l2 ... in)
-part8.html#index404
-pwer-list breakpoints)
-part8.html#index405
-pwev l1 t2 l2 t3 t3 ... tn ln)
-part8.html#index402
-pwev-list breakpoints)
-part8.html#index403
-pwevr l1 i2 l2 i3 i3 ... in ln)
-part8.html#index407
-pwevr-list breakpoints)
-part8.html#index408
-pwl t1 l1 t2 l2 ... tn)
-part8.html#index392
-pwl-list breakpoints)
-part8.html#index393
-pwlr i1 l1 i2 l2 ... in)
-part8.html#index396
-pwlr-list breakpoints)
-part8.html#index397
-pwlv l1 t2 l2 t3 t3 ... tn ln)
-part8.html#index394
-pwlv-list breakpoints)
-part8.html#index395
-pwlvr l1 i2 l2 i3 i3 ... in ln)
-part8.html#index398
-pwlvr-list breakpoints)
-part8.html#index399
-quantize sound steps)
-part8.html#index541
-quote expr)
-part19.html#index1366
-ramp [duration])
-part11.html#index962
-random n)
-part19.html#index1529
-read [stream [eof [rflag]]])
-part19.html#index1602
-read-byte [stream])
-part19.html#index1641
-read-char [stream])
-part19.html#index1632
-read-float [stream [length]])
-part19.html#index1638
-read-int [stream [length]])
-part19.html#index1636
-read-line [stream])
-part19.html#index1640
-real-random from to)
-part13.html#index1015
-recip sound)
-part8.html#index544
-rem expr ...)
-part19.html#index1520
-remove expr list :test test :test-not test-not)
-part19.html#index1414
-remove-if test list)
-part19.html#index1415
-remove-if-not test list)
-part19.html#index1416
-remprop sym prop)
-part19.html#index1391
-require-from fnsymbol filename [path])
-part13.html#index1008
-resample sound srate)
-part8.html#index354
-reson sound center bandwidth [n])
-part8.html#index429
-rest expr)
-part19.html#index1406
-restore fname)
-part19.html#index1654
-return [expr])
-part19.html#index1487
-return-from name [value])
-part19.html#index1488
-reverb snd time)
-part15.html#index1263
-reverse expr)
-part19.html#index1410
-rms sound [rate window-size])
-part8.html#index543
-room )
-part19.html#index1660
-rplaca list expr)
-part19.html#index1427
-rplacd list expr)
-part19.html#index1428
-rrandom )
-part19.html#index1530
-s-abs sound)
-part8.html#index527
-s-add-to expression maxlen filename [offset])
-part8.html#index629
-s-exp sound)
-part8.html#index531
-s-log sound)
-part8.html#index533
-s-max sound1 sound2)
 part8.html#index536
-s-min sound1 sound2)
-part8.html#index538
-s-overwrite expression maxlen filename [offset])
-part8.html#index632
-s-plot sound [dur n])
-part8.html#index638
-s-print-tree sound)
-part8.html#index641
-s-read filename :time-offset offset :srate sr :dur dur :nchans chans :format format :mode mode :bits n :swap flag)
-part8.html#index626
-s-read-reverse filename :time-offset offset :srate sr :dur dur :nchans chans :format format :mode mode :bits n :swap flag)
-part15.html#index1239
-s-rest [duration])
-part8.html#index548
-s-reverse snd)
-part15.html#index1235
-s-save expression maxlen filename :format format :mode mode :bits bits :swap flag :play play)
-part8.html#index622
-s-sqrt sound)
-part8.html#index529
-sampler pitch modulation [sample npoints])
-part8.html#index388
-save fname)
-part19.html#index1653
-save-lpc-file lpc-iterator filename)
-part12.html#index983
-save-workspace )
-part14.html#index1161
-sax step breath-env)
-part8.html#index498
-sax-all step breath-env freq-env vibrato-freq vibrato-gain reed-stiffness noise blow-pos reed-table-offset)
-part8.html#index499
-sax-freq step breath-env freq-env)
-part8.html#index496
-scale scale sound)
-part8.html#index355
-scale-db db sound)
-part8.html#index356
-scale-srate sound scale)
-part8.html#index357
-score-adjacent-events score function :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1141
-score-append score1 score2 ...)
-part14.html#index1127
-score-apply score function :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1142
-score-filter-length score cutoff)
-part14.html#index1135
-score-filter-overlap score)
-part14.html#index1138
-score-gen :k1 e1 :k2 e2 ...)
-part14.html#index1102
-score-get-begin score)
-part14.html#index1131
-score-get-end score)
-part14.html#index1133
-score-indexof score function :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1143
-score-last-indexof score function :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1144
-score-merge score1 score2 ...)
-part14.html#index1126
-score-must-have-begin-end score)
-part14.html#index1134
-score-play score)
-part14.html#index1140
-score-print score)
-part14.html#index1139
-score-randomize-start score amt :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1145
-score-read filename)
-part14.html#index1153
-score-read-smf filename)
-part14.html#index1151
-score-repeat score n)
-part14.html#index1136
-score-scale score keyword amount :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1123
-score-select score predicate :from-index i :to-index j :from-time x :to-time y :reject flag)
-part14.html#index1128
-score-set-begin score time)
-part14.html#index1130
-score-set-end score time)
-part14.html#index1132
-score-shift score offset :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1120
-score-sort score [copy-flag])
-part14.html#index1119
-score-sorted score)
-part14.html#index1118
-score-stretch score factor :dur dur-flag :time time-flag :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1121
-score-stretch-to-length score length)
-part14.html#index1137
-score-sustain score factor :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1124
-score-transpose score keyword amount :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1122
-score-voice score replacement-list :from-index i :to-index j :from-time x :to-time y)
-part14.html#index1125
-score-write score filename [programs])
-part14.html#index1157
-score-write-smf score filename [programs as-adagio])
-part14.html#index1155
-second expr)
-part19.html#index1403
-Self
-part19.html#index1342
-seq beh1 [beh2 ...])
-part8.html#index585
-seqrep var limit beh)
-part8.html#index586
-set sym expr)
-part19.html#index1374
-set-control-srate rate)
-part8.html#index300
-set-difference a b)
-part14.html#index1174
-set-logical-stop beh time)
-part8.html#index590
-set-pitch-names )
-part8.html#index304
-set-sound-srate rate)
-part8.html#index302
-setdir path [verbose])
-part19.html#index1618
-setf [place expr] ...)
-part19.html#index1377
-setq [sym expr] ...)
-part19.html#index1375
-setup-console )
-part19.html#index1670
-sf-granulate filename grain-dur grain-dev ioi ioi-dev pitch-dev [file-start file-end])
-part15.html#index1258
-sf-info filename)
-part8.html#index635
-shape signal table origin)
-part8.html#index435
-shift-time sound shift)
-part8.html#index358
-show-lpc-data lpc-iterator iniframe endframe [poles?])
-part12.html#index984
-sim [beh1 beh2 ...])
-part8.html#index587
-simrep var limit beh)
-part8.html#index588
-sin expr)
-part19.html#index1532
-sine pitch [duration])
+osc-pulse hz bias [compare-shape])
+part8.html#index369
+osc-saw hz)
+part8.html#index365
+osc-tri hz)
 part8.html#index367
-siosc pitch modulation tables)
-part8.html#index386
-sitar step dur)
-part8.html#index523
-slope signal)
+pan sound where)
+part8.html#index347
+params-scale params keyword amount)
+part15.html#index1204
+params-transpose params keyword amount)
+part15.html#index1203
+partial pitch env)
 part8.html#index362
-snd-abs sound)
-part8.html#index655
-snd-add sound1 sound)
-part8.html#index659
-snd-allpoles snd lpc-coefs gain)
-part12.html#index992
-snd-alpass sound delay feedback)
-part8.html#index724
-snd-alpasscv sound delay feedback)
-part8.html#index725
-snd-alpassvv sound delay feedback maxdelay)
-part8.html#index726
-snd-amosc sound step sr hz t0 am phase)
-part8.html#index758
-snd-areson sound hz bw normalization)
-part8.html#index727
-snd-aresoncv sound hz bw normalization)
-part8.html#index728
-snd-aresonvc sound hz bw normalization)
-part8.html#index729
-snd-aresonvv sound hz bw normalization)
-part8.html#index730
-snd-atone sound hz)
-part8.html#index731
-snd-atonev sound hz)
-part8.html#index732
-snd-avg sound blocksize stepsize operation)
-part8.html#index663
-snd-bandedwg freq bowpress-env preset sr)
-part8.html#index769
-snd-biquad sound b0 b1 b2 a1 a2 z1init z2init)
-part8.html#index733
-snd-bowed freq bowpress-env sr)
-part8.html#index771
-snd-bowed-freq freq bowpress-env freq-env sr)
-part8.html#index773
-snd-buzz n sr hz t0 fm)
-part8.html#index762
-snd-chase sound risetime falltime)
-part8.html#index734
-snd-clarinet freq breath-env sr)
-part8.html#index775
-snd-clarinet-all freq vibrato-freq vibrato-gain freq-env breath-env reed-stiffness noise sr)
-part8.html#index779
-snd-clarinet-freq freq breath-env freq-env sr)
-part8.html#index777
-snd-clip sound peak)
-part8.html#index668
-snd-compose f g)
-part8.html#index671
-snd-congen gate risetime falltime)
-part8.html#index735
-snd-const value t0 srate duration)
-part8.html#index644
-snd-convolve sound response)
-part8.html#index736
-snd-copy sound)
-part8.html#index684
-snd-coterm s1 s2)
-part8.html#index648
-snd-delay sound delay feedback)
-part8.html#index737
-snd-delaycv sound delay feedback)
-part8.html#index738
-snd-down srate sound)
-part8.html#index686
-snd-exp sound)
-part8.html#index687
-snd-extent sound maxsamples)
-part8.html#index260
-snd-fetch sound)
-part8.html#index263
-snd-fetch-array sound len step)
-part8.html#index265
-snd-fft sound length skip window)
-part10.html#index827
-snd-flatten sound maxlen)
-part8.html#index266
-snd-flute freq breath-env sr)
-part8.html#index780
-snd-flute-all freq vibrato-freq vibrato-gain freq-env breath-env jet-delay noise sr)
-part8.html#index784
-snd-flute-freq freq breath-env freq-env sr)
-part8.html#index782
-snd-fmfb t0 hz sr index dur)
-part8.html#index760
-snd-fmfbv t0 hz sr index)
-part8.html#index761
-snd-fmosc s step sr hz t0 fm phase)
-part8.html#index759
-snd-follow sound floor risetime falltime lookahead)
-part8.html#index688
-snd-from-array t0 sr array)
-part8.html#index256
-snd-fromarraystream t0 sr object)
-part8.html#index257
-snd-fromobject t0 sr object)
-part8.html#index258
-snd-gate sound lookahead risetime falltime floor threshold)
-part8.html#index691
-snd-ifft time srate iterator skip window)
-part10.html#index829
-snd-inverse signal start srate)
-part8.html#index695
-snd-length sound maxlen)
-part8.html#index267
-snd-log sound)
-part8.html#index696
-snd-lpanal samps npoles)
-part12.html#index991
-snd-lpreson snd lpc-iterator skiptime)
-part12.html#index993
-snd-mandolin t0 freq dur body-size detune sr)
-part8.html#index786
-snd-max expression maxlen)
-part8.html#index699
-snd-maxsamp sound)
-part8.html#index268
-snd-maxv sound1 sound2)
-part8.html#index701
-snd-modalbar t0 freq preset dur sr)
-part8.html#index788
-snd-multiseq array closure)
-part8.html#index797
-snd-normalize sound)
-part8.html#index703
-snd-offset sound offset)
-part8.html#index660
-snd-oneshot sound threshold ontime)
-part8.html#index704
-snd-osc s step sr hz t0 d phase)
-part8.html#index764
-snd-overwrite expression maxlen filename offset format mode bits swap)
-part8.html#index647
-snd-partial sr hz t0 env)
-part8.html#index765
-snd-play expression)
-part8.html#index269
-snd-pluck sr hz t0 d final-amp)
-part8.html#index763
-snd-print expression maxlen)
-part8.html#index278
-snd-print-tree sound)
-part8.html#index270
-snd-prod sound1 sound2)
-part8.html#index707
-snd-pwl t0 sr lis)
-part8.html#index710
-snd-quantize sound steps)
-part8.html#index712
-snd-read filename offset t0 format channels mode bits swap sr dur)
-part8.html#index645
-snd-recip sound)
-part8.html#index713
-snd-resample f rate)
-part8.html#index714
-snd-resamplev f rate g)
-part8.html#index716
-snd-reson sound hz bw normalization)
-part8.html#index739
-snd-resoncv sound hz bw normalization)
-part8.html#index740
-snd-resonvc sound hz bw normalization)
-part8.html#index741
-snd-resonvv sound hz bw normalization)
-part8.html#index742
-snd-sampler s step start sr hz t0 fm npoints)
-part8.html#index767
-snd-samples sound limit)
-part8.html#index272
-snd-save expression maxlen filename format mode bits swap play)
-part8.html#index646
-snd-sax freq breath-env sr)
-part8.html#index790
-snd-sax-all freq vibrato-freq vibrato-gain freq-env breath-env reed-stiffness noise blow-pos reed-table-offset sr)
-part8.html#index793
-snd-sax-freq freq freq-env breath-env sr)
-part8.html#index792
-snd-scale scale sound)
-part8.html#index719
-snd-seq sound closure)
-part8.html#index796
-snd-set-latency latency)
-part8.html#index322
-snd-set-logical-stop sound time)
-part8.html#index280
-snd-shape signal table origin)
-part8.html#index720
-snd-sine t0 hz sr d)
-part8.html#index766
-snd-siosc tables sr hz t0 fm)
-part8.html#index768
-snd-sitar t0 freq dur sr)
-part8.html#index794
-snd-slider index t0 srate duration)
-part8.html#index654
-snd-sqrt sound)
-part8.html#index657
-snd-srate sound)
-part8.html#index275
-snd-sref sound time)
-part8.html#index281
-snd-stkchorus sound delay depth freq mix)
-part8.html#index743
-snd-stkpitshift sound shift mix)
-part8.html#index747
-snd-stkrev rev-type sound decay mix)
-part8.html#index751
-snd-stop-time sound)
-part8.html#index282
-snd-t0 sound)
-part8.html#index277
-snd-tapf sound offset vardelay maxdelay)
-part8.html#index681
-snd-tapv sound offset vardelay maxdelay)
-part8.html#index676
-snd-time sound)
-part8.html#index276
-snd-tone sound hz)
-part8.html#index755
-snd-tonev sound hz)
-part8.html#index757
-snd-trigger s closure)
-part8.html#index798
-snd-up srate sound)
-part8.html#index721
-snd-white t0 sr d)
-part8.html#index651
-snd-xform sound sr time start stop scale)
-part8.html#index722
-snd-yin sound minstep maxstep rate)
-part8.html#index723
-snd-zero t0 srate)
-part8.html#index652
-soften-clipping snd cutoff)
-part15.html#index1228
-sort list test)
-part19.html#index1433
-sound sound)
-part8.html#index330
-sound-off )
-part8.html#index621
-sound-on )
-part8.html#index620
-sound-srate-abs srate beh)
-part8.html#index570
-sound-warp warp-fn signal [wrate])
-part8.html#index359
-soundfilename name)
-part8.html#index637
-soundp sound)
-part8.html#index283
-span snd amt)
-part15.html#index1281
-speed-dial thelist)
-part15.html#index1268
-sqrt expr)
-part19.html#index1538
-sref sound time)
-part8.html#index252
-sref-inverse sound value)
-part8.html#index254
-stats )
-part8.html#index284
-step-to-hz pitch)
-part8.html#index308
-stereo-chorus snd :delay delay :depth depth :rate1 rate1 :rate2 rate2 :saturation saturation)
-part15.html#index1246
-stereoize snd)
-part15.html#index1273
-stkchorus sound depth freq mix [delay])
+patternp expression)
+part15.html#index1202
+peak expression maxlen)
+part8.html#index692
+phaser snd)
+part16.html#index1278
+piano-midi midi-file-name)
+part16.html#index1258
+piano-midi2file midi-file-name sound-file-name)
+part16.html#index1259
+piano-note duration step dynamic)
+part16.html#index1255
+piano-note-2 step dynamic)
+part16.html#index1257
+pitshift sound shift mix)
 part8.html#index476
-strcat expr ...)
-part19.html#index1561
-streamp expr)
-part19.html#index1448
-stretch factor beh)
-part8.html#index572
-stretch-abs factor beh)
-part8.html#index573
-string expr)
-part19.html#index1551
-string-downcase str :start start :end end)
-part19.html#index1558
-string-equal str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1572
-string-greaterp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1575
-string-left-trim bag str)
-part19.html#index1555
-string-lessp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1570
-string-not-equal str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1573
-string-not-greaterp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1571
-string-not-lessp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1574
-string-right-trim bag str)
-part19.html#index1556
-string-search pat str :start start :end end)
-part19.html#index1552
-string-trim bag str)
-part19.html#index1554
-string-upcase str :start start :end end)
-part19.html#index1557
-string/= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1567
-string< str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1564
-string<= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1565
-string= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1566
-string> str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1569
-string>= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1568
-stringp expr)
-part19.html#index1445
-sublis alist expr :test test :test-not test-not)
-part19.html#index1425
-subseq string start [end])
-part19.html#index1563
-subsetp a b)
-part14.html#index1175
-subst to from expr :test test :test-not test-not)
-part19.html#index1424
-sum a [b ...])
-part8.html#index591
-sustain factor beh)
-part8.html#index574
-sustain-abs factor beh)
-part8.html#index578
-swapchannels snd)
-part15.html#index1282
-symbol-function sym)
-part19.html#index1385
-symbol-name sym)
-part19.html#index1383
-symbol-plist sym)
-part19.html#index1386
-symbol-value sym)
-part19.html#index1384
-symbolp expr)
-part19.html#index1436
-tagbody expr ...)
-part19.html#index1489
-tan expr)
-part19.html#index1534
-tapv sound offset vardelay maxdelay)
-part8.html#index461
-terpri [stream])
-part19.html#index1607
-third expr)
-part19.html#index1404
-throw sym [expr])
-part19.html#index1475
-timed-seq score)
+pl-center snd)
+part16.html#index1327
+pl-doppler snd r)
+part16.html#index1332
+pl-left snd)
+part16.html#index1326
+pl-pan2d snd x y)
+part16.html#index1330
+pl-position snd x y config)
+part16.html#index1331
+pl-rear snd)
+part16.html#index1329
+pl-right snd)
+part16.html#index1328
+play sound
 part8.html#index598
-tone sound cutoff)
+play-file filename)
+part8.html#index613
+pluck pitch [duration final-amplitude])
+part8.html#index378
+poisson-dist delta)
+part15.html#index1135
+pop lis)
+part14.html#index1040
+power x y)
+part14.html#index1051
+prcrev sound decay mix)
+part8.html#index468
+prod beh1 beh2 ...)
+part8.html#index349
+prod beh1 beh2 ...)
+part8.html#index349
+prog (binding ...) expr ...)
+part19.html#index1521
+prog* (binding ...) expr ...)
+part19.html#index1522
+prologic l c r s)
+part16.html#index1323
+push val lis)
+part14.html#index1039
+pwe t1 l1 t2 l2 ... tn)
+part8.html#index396
+pwe-list breakpoints)
+part8.html#index397
+pwer i1 l1 i2 l2 ... in)
+part8.html#index400
+pwer-list breakpoints)
+part8.html#index401
+pwev l1 t2 l2 t3 t3 ... tn ln)
+part8.html#index398
+pwev-list breakpoints)
+part8.html#index399
+pwevr l1 i2 l2 i3 i3 ... in ln)
+part8.html#index403
+pwevr-list breakpoints)
+part8.html#index404
+pwl t1 l1 t2 l2 ... tn)
+part8.html#index388
+pwl-list breakpoints)
+part8.html#index389
+pwlr i1 l1 i2 l2 ... in)
+part8.html#index392
+pwlr-list breakpoints)
+part8.html#index393
+pwlv l1 t2 l2 t3 t3 ... tn ln)
+part8.html#index390
+pwlv-list breakpoints)
+part8.html#index391
+pwlvr l1 i2 l2 i3 i3 ... in ln)
+part8.html#index394
+pwlvr-list breakpoints)
+part8.html#index395
+quantize sound steps)
+part8.html#index537
+ramp [duration])
+part12.html#index997
+read [stream [eof [rflag]]])
+part19.html#index1641
+real-random from to)
+part14.html#index1050
+recip sound)
+part8.html#index540
+require-from fnsymbol filename [path])
+part14.html#index1043
+resample sound srate)
+part8.html#index350
+reson sound center bandwidth [n])
 part8.html#index425
-top-level)
-part19.html#index1503
-trace sym)
-part19.html#index1497
-transpose amount beh)
-part8.html#index579
-transpose-abs amount beh)
-part8.html#index580
-trigger s beh)
-part8.html#index589
-truncate expr)
-part19.html#index1512
-type-of expr)
-part19.html#index1661
-union a b)
-part14.html#index1171
-unless texpr expr ...)
-part19.html#index1467
-untrace sym)
-part19.html#index1498
-unwind-protect expr cexpr ...)
-part19.html#index1476
-upper-case-p chr)
-part19.html#index1578
-vector expr ...)
-part19.html#index1395
-vel-to-db x)
-part8.html#index323
-warp fn beh)
+reverb snd time)
+part16.html#index1301
+rms sound [rate window-size])
+part8.html#index539
+round x)
+part8.html#index317
+rplaca list expr)
+part19.html#index1464
+s-abs sound)
+part8.html#index523
+s-add-to expression maxlen filename [offset])
+part8.html#index625
+s-exp sound)
+part8.html#index527
+s-log sound)
+part8.html#index529
+s-max sound1 sound2)
+part8.html#index532
+s-min sound1 sound2)
+part8.html#index534
+s-overwrite expression maxlen filename [offset])
+part8.html#index628
+s-plot sound [dur n])
+part8.html#index634
+s-print-tree sound)
+part8.html#index637
+s-read filename :time-offset offset :srate sr :dur dur :nchans chans \\ :\hspace*{3em}format format :mode mode :bits n :swap flag)
+part8.html#index622
+s-read-reverse filename :time-offset offset :srate sr :dur dur \\ :\hspace*{3em}nchans chans :format format :mode mode :bits n :swap flag)
+part16.html#index1277
+s-rest [duration])
+part8.html#index544
+s-reverse snd)
+part16.html#index1273
+s-save expression maxlen filename :format format :mode mode :bits bits \\ :\hspace*{3em}swap flag :play play)
+part8.html#index618
+s-sqrt sound)
+part8.html#index525
+sampler pitch modulation [sample npoints])
+part8.html#index384
+save-lpc-file lpc-iterator filename)
+part13.html#index1018
+save-workspace )
+part15.html#index1199
+sax step breath-env)
+part8.html#index489
+sax-all step breath-env freq-env vibrato-freq vibrato-gain \\ \hspace*{3em}reed-stiffness noise blow-pos reed-table-offset)
+part8.html#index494
+sax-freq step breath-env freq-env)
+part8.html#index491
+scale scale sound)
+part8.html#index351
+scale-db db sound)
+part8.html#index352
+scale-srate sound scale)
+part8.html#index353
+score-adjacent-events score function :from-index i :to-index j \\ :\hspace*{3em}from-time x :to-time y)
+part15.html#index1179
+score-append score1 score2 ...)
+part15.html#index1165
+score-apply score function :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1180
+score-filter-length score cutoff)
+part15.html#index1173
+score-filter-overlap score)
+part15.html#index1176
+score-gen :k1 e1 :k2 e2 ...)
+part15.html#index1140
+score-get-begin score)
+part15.html#index1169
+score-get-end score)
+part15.html#index1171
+score-indexof score function :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1181
+score-last-indexof score function :from-index i :to-index j \\ :\hspace*{3em}from-time x :to-time y)
+part15.html#index1182
+score-merge score1 score2 ...)
+part15.html#index1164
+score-must-have-begin-end score)
+part15.html#index1172
+score-play score)
+part15.html#index1178
+score-print score)
+part15.html#index1177
+score-randomize-start score amt :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1183
+score-read filename)
+part15.html#index1191
+score-read-smf filename)
+part15.html#index1189
+score-repeat score n)
+part15.html#index1174
+score-scale score keyword amount :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1161
+score-select score predicate :from-index i :to-index j \\ :\hspace*{3em}from-time x :to-time y :reject flag)
+part15.html#index1166
+score-set-begin score time)
+part15.html#index1168
+score-set-end score time)
+part15.html#index1170
+score-shift score offset :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1158
+score-sort score [copy-flag])
+part15.html#index1157
+score-sorted score)
+part15.html#index1156
+score-stretch score factor :dur dur-flag :time time-flag \\ :\hspace*{3em}from-index i :to-index j :from-time x :to-time y)
+part15.html#index1159
+score-stretch-to-length score length)
+part15.html#index1175
+score-sustain score factor :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1162
+score-transpose score keyword amount :from-index i :to-index j \\ :\hspace*{3em}from-time x :to-time y)
+part15.html#index1160
+score-voice score replacement-list :from-index i :to-index j \\ :\hspace*{3em}from-time x :to-time y)
+part15.html#index1163
+score-write score filename [programs])
+part15.html#index1195
+score-write-smf score filename [programs as-adagio])
+part15.html#index1193
+Self
+part19.html#index1379
+seq beh1 [beh2 ...])
 part8.html#index581
-warp-abs fn beh)
+seqrep var limit beh)
 part8.html#index582
-wg-glass-harm step bowpress-env)
-part8.html#index517
-wg-tibetan-bowl step bowpress-env)
+set sym expr)
+part19.html#index1411
+set-control-srate rate)
+part8.html#index302
+set-difference a b)
+part15.html#index1212
+set-logical-stop beh time)
+part8.html#index586
+set-pitch-names )
+part8.html#index306
+set-sound-srate rate)
+part8.html#index304
+sf-granulate filename grain-dur grain-dev ioi ioi-dev pitch-dev \\ \hspace*{3em}[file-start file-end])
+part16.html#index1296
+sf-info filename)
+part8.html#index631
+shape signal table origin)
+part8.html#index431
+shift-time sound shift)
+part8.html#index354
+show-lpc-data lpc-iterator iniframe endframe [poles?])
+part13.html#index1019
+sim [beh1 beh2 ...])
+part8.html#index583
+simrep var limit beh)
+part8.html#index584
+sine pitch [duration])
+part8.html#index363
+siosc pitch modulation tables)
+part8.html#index382
+sitar step dur)
 part8.html#index519
-wg-tuned-bar step bowpress-env)
-part8.html#index515
-wg-uniform-bar step bowpress-env)
+slider name [dur])
+part10.html#index844
+slider number [dur])
+part10.html#index844
+slider panel name [dur])
+part10.html#index844
+slope signal)
+part8.html#index358
+snd-abs sound)
+part8.html#index649
+snd-add sound1 sound)
+part8.html#index653
+snd-allpoles snd lpc-coefs gain)
+part13.html#index1027
+snd-alpass sound delay feedback)
+part8.html#index718
+snd-alpasscv sound delay feedback)
+part8.html#index719
+snd-alpassvv sound delay feedback maxdelay)
+part8.html#index720
+snd-amosc sound step sr hz t0 am phase)
+part8.html#index752
+snd-areson sound hz bw normalization)
+part8.html#index721
+snd-aresoncv sound hz bw normalization)
+part8.html#index722
+snd-aresonvc sound hz bw normalization)
+part8.html#index723
+snd-aresonvv sound hz bw normalization)
+part8.html#index724
+snd-atone sound hz)
+part8.html#index725
+snd-atonev sound hz)
+part8.html#index726
+snd-avg sound blocksize stepsize operation)
+part8.html#index657
+snd-bandedwg freq bowpress-env preset sr)
+part8.html#index763
+snd-biquad sound b0 b1 b2 a1 a2 z1init z2init)
+part8.html#index727
+snd-bowed freq bowpress-env sr)
+part8.html#index765
+snd-bowed-freq freq bowpress-env freq-env sr)
+part8.html#index767
+snd-buzz n sr hz t0 fm)
+part8.html#index756
+snd-chase sound risetime falltime)
+part8.html#index728
+snd-clarinet freq breath-env sr)
+part8.html#index769
+snd-clarinet-all freq vibrato-freq vibrato-gain freq-env breath-env \\ \hspace*{3em}reed-stiffness noise sr)
+part8.html#index773
+snd-clarinet-freq freq breath-env freq-env sr)
+part8.html#index771
+snd-clip sound peak)
+part8.html#index662
+snd-compose f g)
+part8.html#index665
+snd-congen gate risetime falltime)
+part8.html#index729
+snd-const value t0 srate duration)
+part8.html#index640
+snd-convolve sound response)
+part8.html#index730
+snd-copy sound)
+part8.html#index678
+snd-coterm s1 s2)
+part8.html#index644
+snd-delay sound delay feedback)
+part8.html#index731
+snd-delaycv sound delay feedback)
+part8.html#index732
+snd-down srate sound)
+part8.html#index680
+snd-exp sound)
+part8.html#index681
+snd-extent sound maxsamples)
+part8.html#index262
+snd-fetch sound)
+part8.html#index265
+snd-fetch-array sound len step)
+part8.html#index267
+snd-fft sound length skip window)
+part11.html#index862
+snd-flatten sound maxlen)
+part8.html#index268
+snd-flute freq breath-env sr)
+part8.html#index774
+snd-flute-all freq vibrato-freq vibrato-gain freq-env breath-env \\ \hspace*{3em}jet-delay noise sr)
+part8.html#index778
+snd-flute-freq freq breath-env freq-env sr)
+part8.html#index776
+snd-fmfb t0 hz sr index dur)
+part8.html#index754
+snd-fmfbv t0 hz sr index)
+part8.html#index755
+snd-fmosc s step sr hz t0 fm phase)
+part8.html#index753
+snd-follow sound floor risetime falltime lookahead)
+part8.html#index682
+snd-from-array t0 sr array)
+part8.html#index258
+snd-fromarraystream t0 sr object)
+part8.html#index259
+snd-fromobject t0 sr object)
+part8.html#index260
+snd-gate sound lookahead risetime falltime floor threshold)
+part8.html#index685
+snd-ifft time srate iterator skip window)
+part11.html#index864
+snd-inverse signal start srate)
+part8.html#index689
+snd-length sound maxlen)
+part8.html#index269
+snd-log sound)
+part8.html#index690
+snd-lpanal samps npoles)
+part13.html#index1026
+snd-lpreson snd lpc-iterator skiptime)
+part13.html#index1028
+snd-mandolin t0 freq dur body-size detune sr)
+part8.html#index780
+snd-max expression maxlen)
+part8.html#index693
+snd-maxsamp sound)
+part8.html#index270
+snd-maxv sound1 sound2)
+part8.html#index695
+snd-modalbar t0 freq preset dur sr)
+part8.html#index782
+snd-multiseq array closure)
+part8.html#index791
+snd-normalize sound)
+part8.html#index697
+snd-offset sound offset)
+part8.html#index654
+snd-oneshot sound threshold ontime)
+part8.html#index698
+snd-osc s step sr hz t0 d phase)
+part8.html#index758
+snd-overwrite expression maxlen filename offset format mode bits swap)
+part8.html#index643
+snd-partial sr hz t0 env)
+part8.html#index759
+snd-play expression)
+part8.html#index271
+snd-pluck sr hz t0 d final-amp)
+part8.html#index757
+snd-print expression maxlen)
+part8.html#index280
+snd-print-tree sound)
+part8.html#index272
+snd-prod sound1 sound2)
+part8.html#index701
+snd-pwl t0 sr lis)
+part8.html#index704
+snd-quantize sound steps)
+part8.html#index706
+snd-read filename offset t0 format channels mode bits swap sr dur)
+part8.html#index641
+snd-recip sound)
+part8.html#index707
+snd-resample f rate)
+part8.html#index708
+snd-resamplev f rate g)
+part8.html#index710
+snd-reson sound hz bw normalization)
+part8.html#index733
+snd-resoncv sound hz bw normalization)
+part8.html#index734
+snd-resonvc sound hz bw normalization)
+part8.html#index735
+snd-resonvv sound hz bw normalization)
+part8.html#index736
+snd-sampler s step start sr hz t0 fm npoints)
+part8.html#index761
+snd-samples sound limit)
+part8.html#index274
+snd-save expression maxlen filename format mode bits swap play)
+part8.html#index642
+snd-sax freq breath-env sr)
+part8.html#index784
+snd-sax-all freq vibrato-freq vibrato-gain freq-env breath-env \\ \hspace*{3em}reed-stiffness noise blow-pos reed-table-offset sr)
+part8.html#index787
+snd-sax-freq freq freq-env breath-env sr)
+part8.html#index786
+snd-scale scale sound)
+part8.html#index713
+snd-seq sound closure)
+part8.html#index790
+snd-set-latency latency)
+part8.html#index320
+snd-set-logical-stop sound time)
+part8.html#index282
+snd-shape signal table origin)
+part8.html#index714
+snd-sine t0 hz sr d)
+part8.html#index760
+snd-siosc tables sr hz t0 fm)
+part8.html#index762
+snd-sitar t0 freq dur sr)
+part8.html#index788
+snd-slider index t0 srate duration)
+part10.html#index847
+snd-sqrt sound)
+part8.html#index651
+snd-srate sound)
+part8.html#index277
+snd-sref sound time)
+part8.html#index283
+snd-stkchorus sound delay depth freq mix)
+part8.html#index737
+snd-stkpitshift sound shift mix)
+part8.html#index741
+snd-stkrev rev-type sound decay mix)
+part8.html#index745
+snd-stop-time sound)
+part8.html#index284
+snd-stoponzero s)
+part10.html#index850
+snd-t0 sound)
+part8.html#index279
+snd-tapf sound offset vardelay maxdelay)
+part8.html#index675
+snd-tapv sound offset vardelay maxdelay)
+part8.html#index670
+snd-time sound)
+part8.html#index278
+snd-tone sound hz)
+part8.html#index749
+snd-tonev sound hz)
+part8.html#index751
+snd-trigger s closure)
+part10.html#index851
+snd-up srate sound)
+part8.html#index715
+snd-white t0 sr d)
+part8.html#index647
+snd-xform sound sr time start stop scale)
+part8.html#index716
+snd-yin sound minstep maxstep rate)
+part8.html#index717
+snd-zero t0 srate)
+part8.html#index648
+soften-clipping snd cutoff)
+part16.html#index1266
+sound sound)
+part8.html#index326
+sound-off )
+part8.html#index617
+sound-on )
+part8.html#index616
+sound-srate-abs srate beh)
+part8.html#index566
+sound-warp warp-fn signal [wrate])
+part8.html#index355
+soundfilename name)
+part8.html#index633
+soundp sound)
+part8.html#index285
+span snd amt)
+part16.html#index1319
+speed-dial thelist)
+part16.html#index1306
+sref sound time)
+part8.html#index254
+sref-inverse sound value)
+part8.html#index256
+stats )
+part8.html#index286
+step-to-hz pitch)
+part8.html#index310
+stereo-chorus snd :delay delay :depth depth :rate1 rate1 :rate2 rate2 \\ :\hspace*{3em}saturation saturation)
+part16.html#index1284
+stereoize snd)
+part16.html#index1311
+stkchorus sound depth freq mix [delay])
+part8.html#index472
+stop-on-zero s)
+part10.html#index848
+stretch factor beh)
+part8.html#index568
+stretch-abs factor beh)
+part8.html#index569
+string expr)
+part19.html#index1590
+subsetp a b)
+part15.html#index1213
+sum a [b ...])
+part8.html#index587
+sustain factor beh)
+part8.html#index570
+sustain-abs factor beh)
+part8.html#index574
+swapchannels snd)
+part16.html#index1320
+tapv sound offset vardelay maxdelay)
+part8.html#index457
+timed-seq score)
+part8.html#index594
+tone sound cutoff)
+part8.html#index421
+trace sym)
+part19.html#index1534
+transpose amount beh)
+part8.html#index575
+transpose-abs amount beh)
+part8.html#index576
+trigger s beh)
+part10.html#index849
+trigger s behavior)
+part10.html#index849
+truncate expr)
+part19.html#index1549
+union a b)
+part15.html#index1209
+vel-to-db x)
+part8.html#index321
+warp fn beh)
+part8.html#index577
+warp-abs fn beh)
+part8.html#index578
+wg-glass-harm step bowpress-env)
 part8.html#index513
+wg-tibetan-bowl step bowpress-env)
+part8.html#index515
+wg-tuned-bar step bowpress-env)
+part8.html#index511
+wg-uniform-bar step bowpress-env)
+part8.html#index509
 when test action)
-part19.html#index1466
-when texpr expr ...)
-part19.html#index1466
+part19.html#index1503
 while test expr1 expr2 ...)
-part13.html#index1006
+part14.html#index1041
 widen snd amt)
-part15.html#index1276
-write-byte byte [stream])
-part19.html#index1642
-write-char ch [stream])
-part19.html#index1635
-write-float ch [stream [length]])
-part19.html#index1639
-write-int ch [stream [length]])
-part19.html#index1637
+part16.html#index1314
 yin sound minstep maxstep stepsize)
-part8.html#index550
-zerop expr)
-part19.html#index1454
+part8.html#index546

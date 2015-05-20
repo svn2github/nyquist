@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#ifndef UNIX_MACH // OS X does not have strings.h
+#ifndef __APPLE__ // OS X does not have strings.h
 #include <strings.h>
 #endif
 #include <unistd.h>

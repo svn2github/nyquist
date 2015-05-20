@@ -9,6 +9,8 @@
 "\\usepackage[T1]{fontenc}"
 "% \\usepackage{lmodern} -- results in texttt{AR} being too small!"
 "\\usepackage{amssymb,amsmath}"
+"\\usepackage{makeidx}"
+"\\makeindex"
 "\\usepackage{ifxetex,ifluatex}"
 "\\usepackage{fixltx2e} % provides \\textsubscript"
 "\\usepackage{mathptmx}% Times Roman font"
@@ -164,9 +166,6 @@
   (write-lines *lt-preamble3*)
   (setf *lt-started* t))
 
-
-(defun lt-finish ()
-  (format *ltoutf* "\\printindex~%\\end{document}~%"))
 
 (defun lt-end ()
   (format *ltoutf* "}"))
@@ -608,5 +607,6 @@
 
 (defun lt-end-document ()
   (setf *line-empty* t)
-  (format *ltoutf* "\\end{document}~%"))
+  (format *ltoutf* "\\clearpage~%\\addcontentsline{toc}{chapter}{Index}~%")
+  (format *ltoutf* "\\printindex~%\\end{document}~%"))
 

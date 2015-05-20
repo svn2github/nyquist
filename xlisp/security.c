@@ -4,7 +4,7 @@
  */
 
 #include <stdlib.h>
-#ifdef UNIX
+#if defined(UNIX) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 #ifdef WIN32
