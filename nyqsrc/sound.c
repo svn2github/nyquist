@@ -44,8 +44,8 @@ LVAL a_sound;
 LVAL s_audio_markers;
 
 static void sound_xlfree(void *);
-static void sound_xlprint(LVAL, sound_type);
-static void sound_xlsave(FILE *fp, sound_type s);
+static void sound_xlprint(LVAL, void *);
+static void sound_xlsave(FILE *fp, void *s);
 static unsigned char *sound_xlrestore(FILE *);
 
 void sound_print_array(LVAL sa, long n);
@@ -1592,15 +1592,13 @@ double step_to_hz(double steps)
  * from old stuff...
  */
 
-static void sound_xlfree(s)
-sound_type s;
+static void sound_xlfree(void *s)
 {
-/*    nyquist_printf("sound_xlfree(%p)\n", s);*/
-    sound_unref(s);
+    sound_unref((sound_type)s);
 }
 
 
-static void sound_xlprint(LVAL fptr, sound_type s)
+static void sound_xlprint(LVAL fptr, void *s)
 {
         /* the type cast from s to LVAL is OK because
          * putatm does not dereference the 3rd parameter */
@@ -1608,7 +1606,7 @@ static void sound_xlprint(LVAL fptr, sound_type s)
 }
 
 
-static void sound_xlsave(FILE *fp, sound_type s)
+static void sound_xlsave(FILE *fp, void *s)
 {
     stdputstr("sound_save called\n");
 }

@@ -118,7 +118,11 @@ void osinit(const char *banner)
     */
 #if USE_RAND
     // srand(1);
+#if OS_IS_OSX
     sranddev(); // initialize to a random seed
+#else
+    srand(time(NULL));
+#endif
 #endif
 
 #if USE_RANDOM

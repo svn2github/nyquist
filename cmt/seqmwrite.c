@@ -90,13 +90,15 @@ private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice,
     while (pitch >= 127) pitch -= 12;
     seq->noteoff_count++;
     args.arg[0] = seq;
-    args.arg[1] = voice;
-    args.arg[2] = pitch;
+    args.arg[1] = (void *)(size_t)voice;
+    args.arg[2] = (void *)(size_t)pitch;
     causepri((delay_type) delay, 10, seq->noteoff_fn, &args);
 }
 
-private void smfw_clock_event(time_type old_ticksize, time_type new_ticksize)
+private void smfw_clock_event(call_args_type args)
 {
+    time_type old_ticksize = (time_type)(args->arg[0]);
+    time_type new_ticksize = (time_type)(args->arg[1]);
     time_type temp_ticksize = new_ticksize;
     new_ticksize = scale(new_ticksize, 375L, 1024L);
 /* (new_ticksize >> 16) * 24000 ms/clock becomes us/midiquarter */
@@ -254,8 +256,8 @@ private void smfw_msg_write(n,c1,c2,c3)
 private void smfw_noteoff(call_args_type args)
 {
     /* seq_type seq = args->arg[0]; -- unused */
-    int voice = args->arg[1];
-    int pitch = args->arg[2];
+    int voice = (int)(size_t)args->arg[1];
+    int pitch = (int)(size_t)args->arg[2];
     if (debug) gprintf(TRANS, 
         "smfw_noteoff %d: %d (time:%ld)\n", voice, pitch, virttime);
     smfw_deltatime();
@@ -379,8 +381,8 @@ private void smfw_process_event(call_args_type args)
                                 /* cause clock write in half a newtick, 
                                  * because it was written .5 tick early */
                                 call_args_node args;
-                                args.arg[0] = last_tick_size;
-                                args.arg[1] = clock_ticksize;
+                                args.arg[0] = (void *)(size_t)last_tick_size;
+                                args.arg[1] = (void *)(size_t)clock_ticksize;
                                 cause((delay_type) (clock_ticksize >> 17), 
                                       smfw_clock_event, &args);
                                 /* set new ticksize: */
@@ -445,11 +447,11 @@ private void smfw_process_event(call_args_type args)
                         increment = (increment << 8) / n;
                         re_args.arg[0] = seq;
                         re_args.arg[1] = event;
-                        re_args.arg[2] = from << 8;
-                        re_args.arg[3] = to << 8;
-                        re_args.arg[4] = increment;
-                        re_args.arg[5] = step;
-                        re_args.arg[6] = n;
+                        re_args.arg[2] = (void *)(size_t)(from << 8);
+                        re_args.arg[3] = (void *)(size_t)(to << 8);
+                        re_args.arg[4] = (void *)(size_t)increment;
+                        re_args.arg[5] = (void *)(size_t)step;
+                        re_args.arg[6] = (void *)(size_t)n;
                         smfw_ramp_event(&re_args);
                         seq->noteoff_count++;
                         break;
@@ -482,11 +484,11 @@ private void smfw_ramp_event(call_args_type args)
 {
     seq_type seq = (seq_type) args->arg[0];
     event_type event = (event_type) args->arg[1];
-    unsigned int value = (unsigned int) args->arg[2];
-    unsigned int to_value = (unsigned int) args->arg[3];
-    int increment = (int) args->arg[4];
-    time_type step = (time_type) args->arg[5];
-    int n = (int) args->arg[6];
+    unsigned int value = (unsigned int)(size_t)args->arg[2];
+    unsigned int to_value = (unsigned int)(size_t)args->arg[3];
+    int increment = (int)(size_t)args->arg[4];
+    time_type step = (time_type)(size_t)args->arg[5];
+    int n = (int)(size_t)args->arg[6];
     
     if (debug) gprintf(TRANS, "ramp of %d: %d to %d\n", event->u.ramp.ctrl, 
                               value >> 8, to_value >> 8);     
@@ -494,8 +496,8 @@ private void smfw_ramp_event(call_args_type args)
     int voice = vc_voice(event->nvoice);
     if (n == 0) value = to_value;
     else {
-        args->arg[2] = value + increment; /* update value */
-        args->arg[6] = n - 1;             /* update n */
+        args->arg[2] = (void *)(size_t)(value + increment); /* update value */
+        args->arg[6] = (void *)(size_t)(n - 1);             /* update n */
         cause((delay_type)step, smfw_ramp_event, args);
     }
     if (event->value == CTRLRAMP_VALUE) {

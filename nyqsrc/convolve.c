@@ -143,7 +143,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* if we need output samples, generate them here */
         if (susp->R_current >= R + N) { // true when we output half of R
             int i = 0;
-            int j;
+            int j, k;
             sample_type *Xj = susp->X + susp->j * N * 2;
             sample_type *H = susp->H;
             sample_type *Y = susp->Y;
@@ -193,7 +193,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             rffts(Xj, susp->M, 1);
             /* convolve pairs of blocks and sum into Y */
             memset(Y, 0, N * sizeof(*Y)); /* initialize sum to zero */
-            for (int k = 0; k < susp->L; k++) {
+            for (k = 0; k < susp->L; k++) {
                 /* Multiply Xj by H (result goes into X) */
                 sample_type *X = susp->X + ((susp->L + susp->j - k) % susp->L) * N * 2;
                 rspectprod(X, H + k * N * 2, Y, N * 2);
@@ -311,8 +311,8 @@ void fill_with_samples(sample_type *x, sound_type s, long n)
 #define INDEX extra[2]
 #define FIELDS 3
 #define SAMPLES list->block->samples
-
-    for (int i = 0; i < n; i++) {
+    int i;
+    for (i = 0; i < n; i++) {
         if (!s->extra) { /* this is the first call, so fix up s */
             s->extra = (long *) malloc(sizeof(long) * FIELDS);
             s->extra[0] = sizeof(long) * FIELDS;
@@ -335,6 +335,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     long h_len;
+    int i;
     // assume fft_size is maximal. We fix this later if it is wrong
     long fft_size = 1 << MAX_LOG_FFT_SIZE;
     if (sr != h_snd->sr) {
@@ -370,7 +371,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     if (!susp->H) {
         xlabort("memory allocation failure in convolve");
     }
-    for (int i = 0; i < susp->L; i++) {
+    for (i = 0; i < susp->L; i++) {
         /* copy fft_size/2 samples into each H[i] */
         fill_with_samples(susp->H + i * susp->N * 2, h_snd, susp->N);
     }
