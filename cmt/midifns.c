@@ -1614,6 +1614,8 @@ private void musicterm()
 *    random number (lo <= result <= hi)
 ****************************************************************************/
 
+/* to avoid confusion and dead code, take this out */
+#ifdef ALL_CMT
 long randseed = 1534781L;
 
 short cmtrand(short lo, short hi)
@@ -1659,6 +1661,8 @@ void settime(newtime)
 #endif
 #endif  
 }
+#endif //ALL_CMT
+
 
 /****************************************************************************
 *                  timereset

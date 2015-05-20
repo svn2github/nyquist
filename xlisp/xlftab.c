@@ -487,6 +487,7 @@ FUNDEF funtab[] = {
 {       "FIND-IN-XLISP-PATH",           S, xfind_in_xlisp_path  }, /* 307 */
 {       "GET-ENV",                      S, xget_env             }, /* 308 */
 {       "GET-RUN-TIME",                 S, xgetruntime          }, /* 309 */
+{	"RANDOM-SEED",			S, xsrand		}, /* 310 */
 
 #ifdef MACINTOSH
 #include "macptrs.h"

@@ -9,6 +9,12 @@
 ;;
 ;; to compute histograms, see comments below
 
+;; this function is just here so we can write:
+;;   (require-from 'statistics "statistics.lsp")
+(defun statistics () (print "See statistics.lsp"))
+
+(require-from vector-from-array "vectors.lsp")
+
 (setf statistics-class (send class :new '(count sum sum-sqr max min retain data)))
 
 (send statistics-class :answer :isnew '(ret) '((send self :init ret)))
@@ -127,7 +133,12 @@
 ;;    (send my-histogram :print-hist) or
 ;;    (send my-histogram :plot-hist) or
 ;; If you (sal-load "gnuplot"), you can also make a plot file with:
-;;    (send my-histogram :gnu-plot filename xlabel ylabel title)
+;;    (send my-histogram :gnu-plot filename xlabel ylabel title [categories])
+;; where categories is true by default and says whether the histogram plot
+;; bars should be centered on the low value of threshold range or span from
+;; the low value to the high value. If this is a histogram of integer values
+;; and each bin represents one of the integers, then use t. If this is a 
+;; histogram of continuous real values that fall in a range, use nil (false).
 ;; You can change the thresholds with :set-thresholds or
 ;; :configure-bins without re-inserting all the points.
 ;; You can start over by calling
@@ -150,11 +161,17 @@
 (send histogram-class :answer :configure-bins '() '(
     (let* ((nbins (round (sqrt (float (send stats :get-count)))))
            (minthreshold (send stats :get-min))
-           (step (/ (- (send stats :get-max) (send stats :get-min)) nbins)))
+           (step (/ (- (send stats :get-max) (send stats :get-min))
+                    (float nbins))))
       (setf thresholds (make-array (1+ nbins)))
       (dotimes (i (1+ nbins))
-        (setf (aref thresholds i) (+ minthreshold (* i step)))))
-      thresholds))
+        (setf (aref thresholds i) (+ minthreshold (* i step))))
+      ;; make last bin a little bigger to contain max value:
+      ;; note: (I first tried +1e-6, but then when the threshold was
+      ;;        1e6, this must have underflowed and didn't work)
+      (setf (aref thresholds nbins) (* (aref thresholds nbins) 1.000001))
+      (display "configure-bins" minthreshold (send stats :get-max) thresholds)
+      thresholds)))
 
 (send histogram-class :answer :set-thresholds '(array) '(
     (setf counts nil)
@@ -210,23 +227,35 @@
       (setf args (cons cnt args)))
     (s-plot (pwl-list (reverse args)) time))))
 
-(send histogram-class :answer :gnu-plot '(filename xlabel ylabel title) '(
+
+
+(send histogram-class :answer :gnu-plot '(filename xlabel ylabel title 
+                                          &optional (categories t)) '(
   (let ((thresh-list (vector-from-array thresholds))
         (counts-list (vector-from-array counts))
-        (low-width (- (aref thresholds 1) (aref thresholds 0)))
-        (high-width (- (aref thresholds (- (length thresholds) 1))
-                       (aref thresholds (- (length thresholds) 2)))))
+        (low-wid (- (aref thresholds 1) (aref thresholds 0)))
+        (high-wid (- (aref thresholds (- (length thresholds) 1))
+                     (aref thresholds (- (length thresholds) 2))))
+        xrange x)
+    (display "gnu-plot" thresh-list counts-list low-wid high-wid)
     ;; I think histogram bars on the top and bottom are the width of the
     ;; distance to the next or previous bin, but centered on the data point,
     ;; so we have to adjust the xrange to accommodate fat bars
+    (cond (categories
+           (setf xrange (list (- (apply 'min thresh-list) (/ low-wid 2.0))
+                              (+ (apply 'max thresh-list) (/ high-wid 2.0)))))
+          (t
+           (setf xrange (list (apply 'min thresh-list) 
+                              (apply 'max thresh-list)))))
     (gp-init filename :xlabel xlabel :ylabel ylabel :title title
              :style :histogram
-             :xrange (list (- (apply 'min thresh-list) (/ low-width 2.0))
-                           (+ (apply 'max thresh-list) (/ high-width 2.0)))
+             :xrange xrange
              :yrange (list 0 (apply 'max counts-list)))
     (gp-newcurve)
     (dotimes (i (length counts))
-      (gp-point (pop thresh-list) (pop counts-list)))
+      (setf x (pop thresh-list))
+      (if (not categories) (setf x (* 0.5 (+ x (car thresh-list)))))
+      (gp-point x (pop counts-list)))
     (gp-endcurve)
     (gp-endplot))))
 
@@ -246,6 +275,9 @@
 
 (send histogram-class :answer :get-thresholds '() '(
     thresholds))
+
+(send histogram-class :answer :get-stats '() '(
+    stats))
 
       
 ;; Pearson correlation - direct (unstable) algorithm

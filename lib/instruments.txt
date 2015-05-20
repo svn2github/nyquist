@@ -111,9 +111,29 @@ REQUIRE "../demos/pmorales/b9.lsp"
 END-SOUND
 
 
+Vocal:Chowning-FM-Voices-23[fm-voice-23](int repeat-number = 2 (1:10))
+REQUIRE "../demos/FM-voices-Chowning.sal" 
+END-SOUND  
+
+ 
+Vocal:Chowning-FM-Voices-33[fm-voice-33](int repeat-number = 2 (1:10))
+REQUIRE "../demos/FM-voices-Chowning.sal" 
+END-SOUND  
+
+ 
+Vocal:Chowning-FM-Voices-39[fm-voice-39](int repeat-number = 2 (1:10))
+REQUIRE "../demos/FM-voices-Chowning.sal" 
+END-SOUND  
+ 
+
+Vocal:Chowning-FM-Voices-40[fm-voice-40](int repeat-number = 2 (1:10))
+REQUIRE "../demos/FM-voices-Chowning.sal" 
+END-SOUND
+
+
 Vocal:buzz-ah[ah](int pitch = 36 (24:72),
-		  float dur = 1 (0.1:9.9))
-REQUIRE "../demos/pmorales/buzz.lsp"
+		  float dur = 1 (0.1:9.9))  
+REQUIRE "../demos/pmorales/buzz.lsp" 
 END-SOUND
 
 

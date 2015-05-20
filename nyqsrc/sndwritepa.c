@@ -158,7 +158,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
     // pref tells us which device to open
     LVAL pref = xlenter("*SND-DEVICE*");
     int pref_num = -1;
-    char *pref_string = NULL;
+    unsigned char *pref_string = NULL;
     list = getvalue(list);
     if (list == s_unbound) list = NULL;
     pref = getvalue(pref);
@@ -195,7 +195,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
         if (j == -1) {
             if (pref_num >= 0 && pref_num == i) j = i;
             else if (pref_string &&
-                     strstr(device_info->name, pref_string)) j = i;
+                     strstr(device_info->name, (char *) pref_string)) j = i;
         }
         // giving preference to first ALSA device seems to be a bad idea
         // if (j == -1 && host_info->type == paALSA) {
@@ -361,7 +361,7 @@ double sound_save(
   LVAL play)
 {
     LVAL result;
-    float *buf;
+    float *buf = NULL;
     long ntotal;
     double max_sample;
     SNDFILE *sndfile = NULL;
@@ -454,7 +454,7 @@ double sound_save(
                  result);
         max_sample = 0.0;
     }
-    free(buf);
+    if (buf) free(buf);
     return max_sample;
 }
 

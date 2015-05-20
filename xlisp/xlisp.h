@@ -692,6 +692,7 @@ void trcputstr(const char *str);
 
 
 /* xlisp.c */
+long xlsrand(long seed);
 long xlrand(long range);
 double xlrealrand(void);
 void xlrdsave(LVAL expr);
@@ -810,6 +811,7 @@ LVAL xsqrt(void);
 LVAL xfix(void);
 LVAL xfloat(void);
 LVAL xrand(void);
+LVAL xsrand(void);
 LVAL xminusp(void);
 LVAL xzerop(void);
 LVAL xplusp(void);

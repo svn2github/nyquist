@@ -1672,7 +1672,7 @@ loop
 
 (defun diff (x &rest y)
   (cond ((and (numberp x) (numberp (car y)) (null (cdr y)))
-         (- x y)) ;; this is a fast path for the common case
+         (- x (car y))) ;; this is a fast path for the common case
         (y (sum x (prod -1 (car y))))
         (t (prod -1 x))))
 

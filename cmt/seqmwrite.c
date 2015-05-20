@@ -27,7 +27,7 @@ long chunk_size_marker;
 int seti_counter;
 extern time_type a_start_time;
 
-long last_event;                        /*time from last_clock_event to the last event*/
+long last_event;    /* time from last_clock_event to the last event */
 time_type last_clock_event;
 time_type last_tick_size;       /* millisec per tick shifted 16 bits */
 
@@ -44,17 +44,16 @@ extern boolean clock_running;     /* TRUE if clock is running */
 extern boolean use_midi_clock;
 
 private void smfw_bend();
-private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice, int pitch);
+private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice, 
+                                int pitch);
 private void smfw_ctrl();
 private void smfw_deltatime();
 private void smfw_dotrack();
 private void smfw_exclusive();
-private void smfw_noteoff();
+private void smfw_noteoff(call_args_type args);
 private void smfw_noteon();
-private void smfw_process_event();
-private void smfw_ramp_event(seq_type seq, event_type event, 
-    unsigned int value, unsigned int to_value, int increment,
-    time_type step, int n);
+private void smfw_process_event(call_args_type args);
+private void smfw_ramp_event(call_args_type args);
 private void smfw_send_macro();
 private void smfw_touch(seq_type seq, int voice, int value);
 private void writevarlen();
@@ -81,16 +80,19 @@ private void smfw_bend(seq_type seq, int voice, int value)
  * so no real timing delays occur.  The effect is to sort events by their
  * specified time.
  */
-private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice, int pitch)
+private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice, 
+                                int pitch)
 {
+    call_args_node args;
     if (debug) gprintf(TRANS, "cause noteoff at %ld...", virttime + delay);
     pitch += seq->transpose;
     while (pitch <= 0) pitch += 12;
     while (pitch >= 127) pitch -= 12;
     seq->noteoff_count++;
-    causepri((delay_type) delay, 10, seq->noteoff_fn,
-         seq, voice, pitch);
-    
+    args.arg[0] = seq;
+    args.arg[1] = voice;
+    args.arg[2] = pitch;
+    causepri((delay_type) delay, 10, seq->noteoff_fn, &args);
 }
 
 private void smfw_clock_event(time_type old_ticksize, time_type new_ticksize)
@@ -99,10 +101,11 @@ private void smfw_clock_event(time_type old_ticksize, time_type new_ticksize)
     new_ticksize = scale(new_ticksize, 375L, 1024L);
 /* (new_ticksize >> 16) * 24000 ms/clock becomes us/midiquarter */
 
-    if (debug)      gprintf(TRANS, "smfw_clock: write %ld (time:%ld) ->->->tempo %ld\n", 
+    if (debug) gprintf(TRANS, 
+        "smfw_clock: write %ld (time:%ld) ->->->tempo %ld\n", 
         new_ticksize, virttime, 2500L / (new_ticksize / 24000));
 
-    /*use old ticksize to write the delta for the clock event*/
+    /* use old ticksize to write the delta for the clock event */
     last_tick_size = old_ticksize;
     smfw_deltatime();
     last_tick_size = temp_ticksize;/* reset to = new_tick_size */
@@ -115,8 +118,10 @@ private void smfw_clock_event(time_type old_ticksize, time_type new_ticksize)
 
     last_clock_event = virttime;
     last_event = 0L;
-        /*no time expired between last clockevent and last event(they are the same).*/
-        /*next clock event will be exactly the next this_event from last_clock_event*/
+    /* no time expired between last clockevent and last event 
+     * (they are the same). Next clock event will be exactly the 
+     * next this_event from last_clock_event
+     */
 }
 
 
@@ -140,13 +145,16 @@ private void smfw_deltatime()
     time_type use_ticksize = (clock_ticksize != last_tick_size) ?
                 last_tick_size : clock_ticksize;
     time_type this_event = virttime - last_clock_event;
-    if (debug)  gprintf(TRANS, "delta! ticksize: %lu Lastev: %ld ThisevScaled: %lu Thisev: %lu ", 
-        clock_ticksize, last_event,  (this_event * ((2500L << 16) / use_ticksize)) / 100,
-         this_event);
+    if (debug) gprintf(TRANS, 
+        "delta! ticksize: %lu Lastev: %ld ThisevScaled: %lu Thisev: %lu ", 
+        clock_ticksize, last_event,  
+        (this_event * ((2500L << 16) / use_ticksize)) / 100,
+        this_event);
     
-    this_event = ((virttime - last_clock_event) * ((2500L << 16) / use_ticksize)) / 100;
+    this_event = ((virttime - last_clock_event) * 
+                      ((2500L << 16) / use_ticksize)) / 100;
 
-    if (debug)  gprintf(TRANS, "--- deltatime: %lu\n", this_event - last_event);        
+    if (debug) gprintf(TRANS, "--- deltatime: %lu\n", this_event - last_event);
     writevarlen((long) (this_event - last_event));
 
     last_event = this_event; 
@@ -154,8 +162,7 @@ private void smfw_deltatime()
 
 
 /* smfw_dotrack -- write the remainder of a track  */
-private void smfw_dotrack(seq)
-  seq_type seq;
+private void smfw_dotrack(seq_type seq)
 {
     long end_marker;
     timebase_type old_timebase = timebase;
@@ -176,33 +183,38 @@ private void smfw_dotrack(seq)
     if (debug)  gprintf(TRANS, "dotrack (reset) %d %ld (%lu) \n", 
         smfw_seq.track, last_event, virttime);
 
-    if (seq->current)   
-    cause((delay_type)(seq->current->ntime - virttime), smfw_process_event,
-         seq);
+    if (seq->current) {
+        call_args_node args;
+        args.arg[0] = seq;
+        cause((delay_type)(seq->current->ntime - virttime), smfw_process_event,
+              &args);
+    }
     set_virttime(timebase, MAXTIME);
     catchup();
 
     putc(0x00, smfw_seq.outfile);
-    putc(0xFF, smfw_seq.outfile);/*end of track chunk*/
+    putc(0xFF, smfw_seq.outfile); /* end of track chunk */
     putc(0x2F, smfw_seq.outfile);
     putc(0x00, smfw_seq.outfile);
     end_marker = ftell(smfw_seq.outfile);
-    fseek(smfw_seq.outfile, chunk_size_marker, 0);/*go back to enter chunksize*/
-    chunk_size = (end_marker - chunk_size_marker) - 4;/* - 4 for 4 size bytes*/ 
-    if (debug)  gprintf(TRANS, "bytes written in previous track: %ld \n\n", chunk_size);
+    /* go back to enter chunksize: */
+    fseek(smfw_seq.outfile, chunk_size_marker, 0);
+    /* - 4 for 4 size bytes: */ 
+    chunk_size = (end_marker - chunk_size_marker) - 4;
+    if (debug) gprintf(TRANS, "bytes written in previous track: %ld \n\n", 
+                              chunk_size);
     putc((int) ((0xFF & (chunk_size >> 24))), smfw_seq.outfile);
     putc((int) ((0xFF & (chunk_size >> 16))), smfw_seq.outfile);
     putc((int) ((0xFF & (chunk_size >> 8))), smfw_seq.outfile);
     putc((int) ((0xFF & chunk_size)), smfw_seq.outfile);
-    fseek(smfw_seq.outfile, end_marker, 0);/*return file pointer to end of track*/
+    /* return file pointer to end of track */
+    fseek(smfw_seq.outfile, end_marker, 0);
     timebase_use(old_timebase);
 }
 
 
 /* smfw_exclusive -- write a system excl. msg to midi file */
-private void smfw_exclusive(length, msg)
-int length;
-unsigned char *msg; 
+private void smfw_exclusive(int length, unsigned char *msg)
 {
     int length_count = 0;
 
@@ -221,7 +233,7 @@ private void smfw_msg_write(n,c1,c2,c3)
   int n;
   unsigned char c1,c2,c3;
 {
-    if (debug)  gprintf(TRANS, "MSGWRITE %d bytes (time:%ld)\n", n, virttime);
+    if (debug) gprintf(TRANS, "MSGWRITE %d bytes (time:%ld)\n", n, virttime);
     smfw_deltatime();
     switch(n) {
     case 1: putc(c1, smfw_seq.outfile);
@@ -239,9 +251,13 @@ private void smfw_msg_write(n,c1,c2,c3)
 
 /* smfw_noteoff -- write noteoff to midi file */
 /**/
-private void smfw_noteoff(seq_type seq, int voice, int pitch)
+private void smfw_noteoff(call_args_type args)
 {
-    if (debug)      gprintf(TRANS, "smfw_noteoff %d: %d (time:%ld)\n", voice, pitch, virttime);
+    /* seq_type seq = args->arg[0]; -- unused */
+    int voice = args->arg[1];
+    int pitch = args->arg[2];
+    if (debug) gprintf(TRANS, 
+        "smfw_noteoff %d: %d (time:%ld)\n", voice, pitch, virttime);
     smfw_deltatime();
     putc(NOTEOFF | (voice - 1), smfw_seq.outfile);
     putc(pitch, smfw_seq.outfile);
@@ -256,7 +272,8 @@ private void smfw_noteoff(seq_type seq, int voice, int pitch)
  */
 private void smfw_noteon(seq_type seq, int voice, int pitch, int vel)
 {
-    if (debug) gprintf(TRANS, "smfw_noteon %d: %d %d(time:%ld)\n", voice, pitch, vel, virttime);
+    if (debug) gprintf(TRANS, 
+        "smfw_noteon %d: %d %d(time:%ld)\n", voice, pitch, vel, virttime);
     smfw_deltatime();
     putc(NOTEON | (voice - 1), smfw_seq.outfile);
     putc(pitch, smfw_seq.outfile);
@@ -266,183 +283,221 @@ private void smfw_noteon(seq_type seq, int voice, int pitch, int vel)
 
 /* smfw_process_event -- write a seq event to a midi file */
 /**/
-private void smfw_process_event(seq)
-  seq_type seq;
+private void smfw_process_event(call_args_type args)
 {
+    seq_type seq = args->arg[0];
     register event_type event;
     if (!seq->runflag) return;
     while ((event = seq->current) && (event->ntime <= virttime)) {
-    unsigned int voice;
-    if ((vc_voice(event->nvoice) == smfw_seq.track) ||       /*if on current track*/
-        (((vc_voice(event->nvoice) - 16) == smfw_seq.track) 
-            && (smfw_seq.track > 0)) ||
-        /* acknowledge clock change on all tracks*/
-        (event->value == CLOCK_VALUE && vc_ctrl(event->nvoice) == ESC_CTRL)) {
+        unsigned int voice;
+        if ((vc_voice(event->nvoice) == smfw_seq.track) ||
+            /* if on current track */
+            (((vc_voice(event->nvoice) - 16) == smfw_seq.track)
+             && (smfw_seq.track > 0)) ||
+            /* acknowledge clock change on all tracks*/
+            (event->value == CLOCK_VALUE && 
+             vc_ctrl(event->nvoice) == ESC_CTRL)) {
 
-        /* process all current (and earlier) events */
-        if (is_note(event)) {   /*** play a note or rest ***/
-        /* if this note is not a rest, play it and schedule an off event */
-        if (event->value != NO_PITCH &&
-              (seq_channel_mask(seq) &
-               (1 << ((voice = vc_voice(event->nvoice)) - 1)))) {
-            seq_noteon(seq, voice, (0xFF & event->value), 
-            (int) (event->u.note.ndur & 0xFF));
+            /* process all current (and earlier) events */
+            if (is_note(event)) {   /*** play a note or rest ***/
+                /* if this note is not a rest, play it and schedule an 
+                 * off event */
+                if (event->value != NO_PITCH &&
+                    (seq_channel_mask(seq) &
+                     (1 << ((voice = vc_voice(event->nvoice)) - 1)))) {
+                    seq_noteon(seq, voice, (0xFF & event->value), 
+                               (int) (event->u.note.ndur & 0xFF));
         
-            seq_cause_noteoff(seq, (event->u.note.ndur) >> 8, 
-              voice, (0xFF & event->value)); 
-        }
-        } else {                    /*** send a control command ***/
-        int n;
-        time_type step;
-        int delta;
-        int increment;
-        int voice = vc_voice(event->nvoice);
-        ulong enabled = seq_channel_mask(seq) & (1 << (voice - 1));
-
-        switch (vc_ctrl(event->nvoice)) {
-          case PSWITCH_CTRL:
-            if (!enabled) break;
-            if (debug)   gprintf(TRANS, "porta %d (time:%ld)... ", event->value, virttime);
-            seq_midi_ctrl(seq, voice, PORTASWITCH, 0xFF & event->value);
-            break;
-          case MODWHEEL_CTRL:
-            if (!enabled) break;
-            if (debug)   gprintf(TRANS, "modw %d (time:%ld)...", event->value, virttime);
-            seq_midi_ctrl(seq, voice, MODWHEEL, 0xFF & event->value);
-            break;
-          case TOUCH_CTRL:
-            if (!enabled) break;
-            if (debug)   gprintf(TRANS, "touch %d (time:%ld)... ", event->value, virttime);
-            seq_midi_touch(seq, voice, 0xFF & event->value);
-            break;
-          case VOLUME_CTRL:
-            if (!enabled) break;
-            if (debug)   gprintf(TRANS, "ftvol %d (time:%ld)...", event->value, virttime);
-            seq_midi_ctrl(seq, voice, VOLUME, 0xFF & event->value);
-            break;
-          case BEND_CTRL:
-            if (!enabled) break;
-            if (debug)   gprintf(TRANS, "bend %d (time:%ld)... ", event->value, virttime);
-            seq_midi_bend(seq, voice, event->value);
-            break;
-          case PROGRAM_CTRL:
-            if (!enabled) break;
-            if (debug)   gprintf(TRANS, "prog %d (time:%ld)\n", event->value, virttime);
-            smfw_deltatime();
-            putc(MIDI_CH_PROGRAM | (voice - 1), smfw_seq.outfile);
-            putc(0xFF & event->value, smfw_seq.outfile);
-            break;
-          case ESC_CTRL:
-            switch (event->value) {
-              time_type this_event;
-              case CALL_VALUE:       /*called routine will write to midifile in execution */
-                sequence = seq;
-                (*(event->u.call.routine))(event->u.call.args);
-                break;
-              case CLOCK_VALUE:
-                clock_ticksize = event->u.clock.ticksize;
-                if (debug)   gprintf(TRANS, "clockevent! ticksize: %lu (time:%ld)\n",
-                    clock_ticksize, virttime);
-    
-                if (virttime > 0) {  /* any clock before this is already recorded in the header */
-                    if (smfw_seq.track == 0) {             /* record clock event on tempo track = 0 */
-                    /* cause clock write in half a newtick, because it was written .5 tick early*/
-                    cause((delay_type) (clock_ticksize >> 17), smfw_clock_event, 
-                          last_tick_size, clock_ticksize);
-                    last_tick_size = clock_ticksize; /*set new ticksize*/
-                    } else { /*not on tempo track*/
-                    this_event = ((virttime - last_clock_event) *
-                            ((2500L << 16) / last_tick_size)) / 100;
-                    if (debug)  gprintf(TRANS, "track != 0: Lastev: %ld Thisev: %ld NewLast: %ld\n", 
-                    last_event, this_event, this_event - last_event);
-                    last_event = 0L - (this_event - last_event);
-                        last_clock_event = virttime;
-                    /*last_event is negative, so will be ADDED to next this_event*/
-    
-                    last_tick_size = clock_ticksize;
-                    }               
-                } else if (debug) gprintf(TRANS, "IGNORED\n");/* if virttime <= 0 */
-                break;
-              case MACCTRL_VALUE:
-                if (!enabled) break;
-                if (debug) gprintf(TRANS, "MACCTRL %d: %d (time:%ld)\n", 
-                        event->u.macctrl.ctrl_number, event->u.macctrl.value, virttime);
-                smfw_deltatime();
-                putc(MIDI_CTRL | (voice - 1), smfw_seq.outfile);
-                putc(0xFF & event->u.macctrl.ctrl_number, smfw_seq.outfile);
-                putc(0xFF & event->u.macctrl.value, smfw_seq.outfile);
-                break;
-              case MACRO_VALUE:
-                if (!enabled) break;
-                if (debug) gprintf(TRANS, "MACRO sent to...\n");
-                smfw_send_macro(event->u.macro.definition,
-                  voice, event->u.macro.parameter, -1, 0);
-                break;
-              case CTRLRAMP_VALUE:
-              case DEFRAMP_VALUE: {
-                int from, to;
-                if (!enabled) break;
-                step = event->u.ramp.step;
-                if (event->value == CTRLRAMP_VALUE) {
-                if (debug)  gprintf(TRANS, "CTRLRAMP (time:%ld)...", virttime);
-                    from = event->u.ramp.u.ctrl.from_value;
-                    to = event->u.ramp.u.ctrl.to_value;
-                } else {
-                    if (debug) gprintf(TRANS, "DEFRAMP (time:%ld)...", virttime);
-                    from = event->u.ramp.u.def.parameter[
-                        event->u.ramp.u.def.parm_num];
-                    to = event->u.ramp.u.def.to_value;
+                    seq_cause_noteoff(seq, (event->u.note.ndur) >> 8, 
+                                      voice, (0xFF & event->value)); 
                 }
-                delta = to - from;
-                increment = delta;
-                if (delta < 0) delta = -delta;
-                /* RBD - Note: Step is always non-zero */
-                n = event->u.ramp.dur / step;
-                increment = (increment << 8) / n;
-                smfw_ramp_event(seq, event, from << 8, to << 8, 
-                       increment, step, n);
-                seq->noteoff_count++;
-                break;
-              }
-              case SETI_VALUE:
-                seti_counter++; /*will be printed after writing is completed*/
-                *(event->u.seti.int_to_set) = event->u.seti.value;
-                break;
-              default:
-                gprintf(TRANS, "unexpected ESC_CTRL value\n");
-                break;
+            } else {                    /*** send a control command ***/
+                int n;
+                time_type step;
+                int delta;
+                int increment;
+                int voice = vc_voice(event->nvoice);
+                ulong enabled = seq_channel_mask(seq) & (1 << (voice - 1));
+
+                switch (vc_ctrl(event->nvoice)) {
+                  case PSWITCH_CTRL:
+                    if (!enabled) break;
+                    if (debug) gprintf(TRANS, 
+                        "porta %d (time:%ld)... ", event->value, virttime);
+                    seq_midi_ctrl(seq, voice, PORTASWITCH, 0xFF & event->value);
+                    break;
+                  case MODWHEEL_CTRL:
+                    if (!enabled) break;
+                    if (debug) gprintf(TRANS, 
+                        "modw %d (time:%ld)...", event->value, virttime);
+                    seq_midi_ctrl(seq, voice, MODWHEEL, 0xFF & event->value);
+                    break;
+                  case TOUCH_CTRL:
+                    if (!enabled) break;
+                    if (debug) gprintf(TRANS, 
+                        "touch %d (time:%ld)... ", event->value, virttime);
+                    seq_midi_touch(seq, voice, 0xFF & event->value);
+                    break;
+                  case VOLUME_CTRL:
+                    if (!enabled) break;
+                    if (debug) gprintf(TRANS, 
+                        "ftvol %d (time:%ld)...", event->value, virttime);
+                    seq_midi_ctrl(seq, voice, VOLUME, 0xFF & event->value);
+                    break;
+                  case BEND_CTRL:
+                    if (!enabled) break;
+                    if (debug) gprintf(TRANS, 
+                        "bend %d (time:%ld)... ", event->value, virttime);
+                    seq_midi_bend(seq, voice, event->value);
+                    break;
+                  case PROGRAM_CTRL:
+                    if (!enabled) break;
+                    if (debug) gprintf(TRANS, 
+                        "prog %d (time:%ld)\n", event->value, virttime);
+                    smfw_deltatime();
+                    putc(MIDI_CH_PROGRAM | (voice - 1), smfw_seq.outfile);
+                    putc(0xFF & event->value, smfw_seq.outfile);
+                    break;
+                  case ESC_CTRL:
+                    switch (event->value) {
+                        time_type this_event;
+                      /* called routine will write to midifile in execution: */
+                      case CALL_VALUE: 
+                        sequence = seq;
+                        (*(event->u.call.routine))(event->u.call.args);
+                        break;
+                      case CLOCK_VALUE:
+                        clock_ticksize = event->u.clock.ticksize;
+                        if (debug) gprintf(TRANS, 
+                            "clockevent! ticksize: %lu (time:%ld)\n",
+                            clock_ticksize, virttime);
+
+                        if (virttime > 0) { /* any clock before this is 
+                                             * already recorded in the header */
+                            if (smfw_seq.track == 0) {  
+                                /* record clock event on tempo track = 0 */
+                                /* cause clock write in half a newtick, 
+                                 * because it was written .5 tick early */
+                                call_args_node args;
+                                args.arg[0] = last_tick_size;
+                                args.arg[1] = clock_ticksize;
+                                cause((delay_type) (clock_ticksize >> 17), 
+                                      smfw_clock_event, &args);
+                                /* set new ticksize: */
+                                last_tick_size = clock_ticksize; 
+                            } else { /*not on tempo track*/
+                                this_event = ((virttime - last_clock_event) *
+                                        ((2500L << 16) / last_tick_size)) / 100;
+                                if (debug) gprintf(TRANS,
+                                    "track != 0: Lastev: %ld Thisev: %ld NewLast: %ld\n",
+                                    last_event, this_event, 
+                                    this_event - last_event);
+                                last_event = 0L - (this_event - last_event);
+                                last_clock_event = virttime;
+                                /* last_event is negative, so will be ADDED 
+                                 * to next this_event */
+                                last_tick_size = clock_ticksize;
+                            }               
+                        } else /* if virttime <= 0 */
+                            if (debug) gprintf(TRANS, "IGNORED\n");
+                        break;
+                      case MACCTRL_VALUE:
+                        if (!enabled) break;
+                        if (debug) gprintf(TRANS, 
+                            "MACCTRL %d: %d (time:%ld)\n", 
+                            event->u.macctrl.ctrl_number, 
+                            event->u.macctrl.value, virttime);
+                        smfw_deltatime();
+                        putc(MIDI_CTRL | (voice - 1), smfw_seq.outfile);
+                        putc(0xFF & event->u.macctrl.ctrl_number, 
+                             smfw_seq.outfile);
+                        putc(0xFF & event->u.macctrl.value, smfw_seq.outfile);
+                        break;
+                      case MACRO_VALUE:
+                        if (!enabled) break;
+                        if (debug) gprintf(TRANS, "MACRO sent to...\n");
+                        smfw_send_macro(event->u.macro.definition,
+                                        voice, event->u.macro.parameter, -1, 0);
+                        break;
+                      case CTRLRAMP_VALUE:
+                      case DEFRAMP_VALUE: {
+                        int from, to;
+                        call_args_node re_args;
+                        if (!enabled) break;
+                        step = event->u.ramp.step;
+                        if (event->value == CTRLRAMP_VALUE) {
+                            if (debug) gprintf(TRANS, 
+                                "CTRLRAMP (time:%ld)...", virttime);
+                            from = event->u.ramp.u.ctrl.from_value;
+                            to = event->u.ramp.u.ctrl.to_value;
+                        } else {
+                            if (debug) gprintf(TRANS, 
+                                "DEFRAMP (time:%ld)...", virttime);
+                            from = event->u.ramp.u.def.parameter[
+                                event->u.ramp.u.def.parm_num];
+                            to = event->u.ramp.u.def.to_value;
+                        }
+                        delta = to - from;
+                        increment = delta;
+                        if (delta < 0) delta = -delta;
+                        /* RBD - Note: Step is always non-zero */
+                        n = event->u.ramp.dur / step;
+                        increment = (increment << 8) / n;
+                        re_args.arg[0] = seq;
+                        re_args.arg[1] = event;
+                        re_args.arg[2] = from << 8;
+                        re_args.arg[3] = to << 8;
+                        re_args.arg[4] = increment;
+                        re_args.arg[5] = step;
+                        re_args.arg[6] = n;
+                        smfw_ramp_event(&re_args);
+                        seq->noteoff_count++;
+                        break;
+                      }
+                      case SETI_VALUE:
+                        /* will be printed after writing is completed: */
+                        seti_counter++; 
+                        *(event->u.seti.int_to_set) = event->u.seti.value;
+                        break;
+                      default:
+                        gprintf(TRANS, "unexpected ESC_CTRL value\n");
+                        break;
+                    }
+                    break;
+                  default:
+                    gprintf(TRANS, "unexpected seq data\n");
+                    break;
+                }
             }
-            break;
-          default:
-            gprintf(TRANS, "unexpected seq data\n");
-            break;
         }
-        }
+        seq->current = event->next;
     }
-    seq->current = event->next;
-    }
-    if (seq->current) { /* if there is an event: delay, and then process again */
-    cause((delay_type)(event->ntime - virttime), smfw_process_event, seq);
+    if (seq->current) { /* if there is an event: delay, then process again */
+        cause((delay_type)(event->ntime - virttime), smfw_process_event, args);
     }
 }
 
-/* smfw_ramp_event -- generate a ramp to write*/
-private void smfw_ramp_event(seq, event, value, to_value, increment, step, n)
-  seq_type seq;
-  register event_type event;
-  unsigned int value;
-  unsigned int to_value;
-  int increment;
-  time_type step;
-  int n;
+/* smfw_ramp_event -- generate a ramp to write */
+private void smfw_ramp_event(call_args_type args)
 {
-    if (debug)  gprintf(TRANS, "ramp of %d: %d to %d\n", event->u.ramp.ctrl, value >> 8,
-        to_value >> 8);     
+    seq_type seq = (seq_type) args->arg[0];
+    event_type event = (event_type) args->arg[1];
+    unsigned int value = (unsigned int) args->arg[2];
+    unsigned int to_value = (unsigned int) args->arg[3];
+    int increment = (int) args->arg[4];
+    time_type step = (time_type) args->arg[5];
+    int n = (int) args->arg[6];
+    
+    if (debug) gprintf(TRANS, "ramp of %d: %d to %d\n", event->u.ramp.ctrl, 
+                              value >> 8, to_value >> 8);     
     if (seq->runflag) {
     int voice = vc_voice(event->nvoice);
     if (n == 0) value = to_value;
-    else cause((delay_type)step, smfw_ramp_event, seq, event, value + increment,
-           to_value, increment, step, n - 1);
+    else {
+        args->arg[2] = value + increment; /* update value */
+        args->arg[6] = n - 1;             /* update n */
+        cause((delay_type)step, smfw_ramp_event, args);
+    }
     if (event->value == CTRLRAMP_VALUE) {
         int ctrl = event->u.ramp.ctrl;
         if (ctrl == -TOUCH_CTRL) smfw_touch(seq, voice, value >> 8);
@@ -454,7 +509,8 @@ private void smfw_ramp_event(seq, event, value, to_value, increment, step, n)
         event->u.ramp.u.def.parameter,
         event->u.ramp.u.def.parm_num, value >> 8);
     }
-    if (n == 0) seq_end_event(seq);
+    /* really passing seq, but it's already in args: */
+    if (n == 0) seq_end_event(args); 
     }
 }
 
@@ -536,10 +592,11 @@ void seq_write_smf(seq, outfile)
     while(event && event->ntime <= 0){
         if (debug)  gprintf(TRANS, "event (time:%ld)\n", event->ntime); 
         if (vc_ctrl(event->nvoice) == ESC_CTRL && event->value == CLOCK_VALUE) {
-            if (debug)  gprintf(TRANS, "clock %lu at 0\n", event->u.clock.ticksize);
+            if (debug) gprintf(TRANS, 
+                               "clock %lu at 0\n", event->u.clock.ticksize);
             starting_ticksize = event->u.clock.ticksize;
             break;
-            }
+        }
         event = event->next;
     }
 
@@ -555,10 +612,10 @@ void seq_write_smf(seq, outfile)
     putc(0x01, smfw_seq.outfile);       /*format 1 */
     putc(0x00, smfw_seq.outfile);
 
-    track_count_marker = ftell(smfw_seq.outfile);   /*number of tracks will be written later*/
-    putc(0x00, smfw_seq.outfile);                                       /*will be filled by track_count_marker*/
-
-    putc(0x02, smfw_seq.outfile);/*division resolution of 600*/
+    /* number of tracks will be written later: */
+    track_count_marker = ftell(smfw_seq.outfile);
+    putc(0x00, smfw_seq.outfile); /* will be filled by track_count_marker */
+    putc(0x02, smfw_seq.outfile); /* division resolution of 600 */
     putc(0x58, smfw_seq.outfile);
 
     for (i = 0; i < 17; i++) { /* for each track... */

@@ -117,10 +117,17 @@ void osinit(const char *banner)
        pseudo randomness than does rand().
     */
 #if USE_RAND
-    srand(1);
+    // srand(1);
+    sranddev(); // initialize to a random seed
 #endif
 
 #if USE_RANDOM
+USE_RANDOM is not supported, or at least the code should
+be inspected carefully if USE_RANDOM is set. Things to look
+for are: Is USE_RAND undefined to avoid conflicts? Should
+the seed be initialized (as in sranddev() above under USE_RAND)?
+Who uses random()? Nyquist uses random numbers in XLISP, in the
+noise() function, in STK's Noise class, and probably other places.
     srandom(1);
 #endif
 

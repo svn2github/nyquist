@@ -130,7 +130,9 @@ stereo and spatialization effects. Stephen Mangiat wrote the MiniMoog
 emulator. Phil Light recorded the drum samples and wrote drum 
 machine software. The Xmusic library, particularly the pattern specification,
 was inspired by Rick Taube's Common Music. The functions for generating
-probability distributions were implemented by Andreas Pfenning.
+probability distributions were implemented by Andreas Pfenning. John Chowning 
+and Jorge Sastre contributed a SAL implementation of Chowning's voice 
+synthesis technique.
 
 Starting with Version 3, Nyquist supports a version of SAL, providing
 an alternative to Lisp syntax. SAL was designed by Rick Taube, and the
@@ -8679,7 +8681,7 @@ is given by @i(midi-file-name) and the (monophonic) result is written to the fil
 named @i(sound-file-name).
 @end(fndefs)
 
-@section(Dymanics Compression)
+@section(Dynamics Compression)
 These functions
 implement a compressor originally intended for noisy speech audio, but
 usable in a variety of situations.
@@ -8975,6 +8977,18 @@ To achieve a rich granular synthesis effect, it is often a good idea to
 sum four or more copies of @code(sf-granulate) together. (See the @code(gran-test)
 function in @code(gran.lsp).)
 @end(fndefs)
+
+@section(Chowning FM Voices)
+John Chowning developed voice synthesis methods using FM to simulate 
+resonances for his 1981 composition "Phone." He later recreated the
+synthesis algorithms in Max, and Jorge Sastre ported these to SAL. 
+See @code(demos/FM-voices-Chowning.sal) for more details.
+
+@section(Atonal Melody Composition)
+Jorge Sastre contributed @code(demos/atonal-melodies.sal), code 
+that generates atonal melodies. You can find links to an example
+score and audio file in the code and also at
+@code(http://algocompbook.com/examples.html).
 
 @section(MIDI Utilities)
 The @code(midishow.lsp) library has functions that can print the contents fo MIDI

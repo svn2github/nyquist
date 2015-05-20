@@ -85,6 +85,11 @@ long xlrand (long range) {
 #endif
 }
 
+long xlsrand(long seed) {
+    srand(seed);
+    return seed;
+}
+
 /* xlrealrand - return random number in [0, 1] */
 double xlrealrand() {
     /* always use the random generator from the C library,

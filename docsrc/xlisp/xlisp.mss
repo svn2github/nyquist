@@ -2405,6 +2405,18 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
+       @begin(fgroup)@xlcode{random(@i(n))} @c{[sal]}
+
+        @xlcode{(random-seed@pragma(defn)@index(random-seed)@index(seed) @t(@i(n)))}
+        @c{[lisp]}  @itemsep seed the random number generator with starting seed @i(n). If @code(random-seed) is not called, @code(sranddev) or some other initialization method will be used by default.
+@end(fgroup)
+@begin(pdescription)
+            @i<n>     @itemsep    the upper bound (integer)
+
+            returns   @itemsep  a random number
+@end(pdescription)
+@blankspace(1)
+
         @begin(fgroup)@xlcode{sin(@i(expr))} @c{[sal]}
 
         @xlcode{(sin@pragma(defn)@index(sin) @t(@i(expr)))} @c{[lisp]}  @itemsep compute the sine of a number
