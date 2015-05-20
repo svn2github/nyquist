@@ -204,7 +204,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
 void convolve_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
-    convolve_susp_type susp = (convolve_susp_type) susp;
+    convolve_susp_type susp = (convolve_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 

@@ -38,8 +38,10 @@ HISTORY
 #define NNODES		2000
 #define AFMT		"%lx"
 #define OFFTYPE		long
-#define SAVERESTORE
+/* #define SAVERESTORE */
 #define XL_LITTLE_ENDIAN 
+#define _longjmp longjmp
+#define _setjmp setjmp
 #endif
 
 /* for the Turbo C compiler - MS-DOS, large model */

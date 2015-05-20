@@ -9,6 +9,8 @@
 Error: switches.h included more than once.
 #endif
 
+#define __func__ __FUNCTION__
+
 #define HAS_STDLIB_H 1
 #define HAS_SYS_TYPES_H 1
 #define HAS_SYS_STAT_H 1

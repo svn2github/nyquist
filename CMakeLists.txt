@@ -9,6 +9,10 @@ include(UseJava)
 
 option(USE_SOURCE_LIBS "Enabling this will disable searching for system installed libraries and instead use source-compiled versions" ON)
 
+if(WIN32)
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS")
+endif(WIN32)
+
 ################
 # DEPENDENCIES #
 ################
@@ -21,6 +25,11 @@ set(ogg_SRCS
    libogg/src/framing.c)
 
 add_library(ogg_static STATIC ${ogg_SRCS})
+if(WIN32)
+  set_target_properties(ogg_static PROPERTIES COMPILE_FLAGS
+                        "-DWIN32 -D_WINDOWS")
+endif(WIN32)
+
 set_property(TARGET ogg_static 
 PROPERTY INCLUDE_DIRECTORIES
 ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include)
@@ -99,13 +108,18 @@ set(flac_SRCS
 
 add_library(flac_static STATIC ${flac_SRCS})
 # There's a problem with quotes in XCode, so we need a special case
-if (APPLE)
+if(APPLE)
   set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
                         "-DVERSION=\\\\\"1.3.1\\\\\" -DHAVE_LROUND") 
 else(APPLE)
-  # also, Linux needs to get SIZE_MAX from stdint.h
-  set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
-            "-DVERSION=\\\"1.3.1\\\" -DHAVE_LROUND -DHAVE_STDINT_H") 
+  if(WIN32)
+    set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
+        "-DVERSION=\\\"1.3.1\\\" -DFLAC__NO_DLL -DFLAC__HAS_OGG -DFLAC__CPU_IA32 -DFLAC__USE_3DNOW -DWIN32 -DFLAC__OVERFLOW_DETECT -D_LIB")
+  else(WIN32)
+    # also, Linux needs to get SIZE_MAX from stdint.h
+    set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
+              "-DVERSION=\\\"1.3.1\\\" -DHAVE_LROUND -DHAVE_STDINT_H") 
+  endif(WIN32)
 endif(APPLE)
 target_include_directories(flac_static PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/src/libFLAC/include/ 
@@ -189,7 +203,7 @@ set(sndfile_SRCS
   nylsf/G72x/g723_24.c
   nylsf/G72x/g723_40.c
   nylsf/G72x/g72x.c
-  nylsf/G72x/g72x_test.c
+#  nylsf/G72x/g72x_test.c
   nylsf/GSM610/add.c
   nylsf/GSM610/code.c
   nylsf/GSM610/decode.c
@@ -213,23 +227,29 @@ set(sndfile_SRCS
   )
 
 add_library(sndfile_static STATIC ${sndfile_SRCS})
+
+if(WIN32)
+  set_target_properties(sndfile_static PROPERTIES COMPILE_FLAGS
+              "-DOS_IS_WIN32=1")
+  set(EXTRA_SNDFILE_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/sys/win/msvc)
+else(WIN32)
+  set(EXTRA_SNDFILE_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/sys/unix)
+endif(WIN32)
+
+
 target_include_directories(sndfile_static PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/nylsf
-  ${CMAKE_CURRENT_SOURCE_DIR}/sys/unix 
   ${CMAKE_CURRENT_SOURCE_DIR}/FLAC/include 
   ${CMAKE_CURRENT_SOURCE_DIR}/libogg/include 
   ${CMAKE_CURRENT_SOURCE_DIR}/libvorbis/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmt)
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmt
+  ${EXTRA_SNDFILE_INCLUDE})
 
 # portaudio
 set(portaudio_SRCS 
   portaudio/src/common/pa_ringbuffer.c
   portaudio/src/common/pa_ringbuffer.h
-  portaudio/src/os/unix/pa_unix_util.c
-  portaudio/src/os/unix/pa_unix_util.h
   portaudio/src/hostapi/skeleton/pa_hostapi_skeleton.c
-  portaudio/src/os/unix/pa_unix_hostapis.c
-  portaudio/src/os/unix/pa_unix_util.c
 #  portaudio/src/os/mac_osx/pa_mac_hostapis.c
   portaudio/include/portaudio.h
   portaudio/src/common/pa_allocation.h
@@ -257,6 +277,11 @@ set(portaudio_SRCS
 #  portaudio/src/common/pa_skeleton.c
   )
 if(UNIX)
+  set(portaudio_SRCS ${portaudio_SRCS}
+      portaudio/src/os/unix/pa_unix_util.c
+      portaudio/src/os/unix/pa_unix_util.h
+      portaudio/src/os/unix/pa_unix_hostapis.c
+      portaudio/src/os/unix/pa_unix_util.c)
   if(APPLE)
     set(portaudio_mac_SRCS 
 	  portaudio/include/pa_mac_core.h
@@ -268,24 +293,58 @@ if(UNIX)
       portaudio/src/hostapi/coreaudio/pa_mac_core.c)
     set(portaudio_SRCS ${portaudio_SRCS} ${portaudio_mac_SRCS})
   else(APPLE)
-    # LINUX
-	set(portaudio_linux_SRCS 
+    # Linux
+    set(portaudio_linux_SRCS 
       portaudio/src/hostapi/alsa/pa_linux_alsa.c
       portaudio/src/hostapi/oss/pa_unix_oss.c)
     set(portaudio_SRCS ${portaudio_SRCS} ${portaudio_linux_SRCS})
   endif(APPLE)
+else(UNIX)
+  #WIN32
+  set(portaudio_SRCS ${portaudio_SRCS} 
+      portaudio/src/os/win/pa_win_hostapis.c
+      portaudio/src/os/win/pa_win_util.c
+      portaudio/src/os/win/pa_win_coinitialize.c
+      portaudio/src/os/win/pa_win_coinitialize.h
+      portaudio/src/os/win/pa_win_waveformat.c
+      portaudio/src/os/win/pa_x86_plain_converters.c
+      portaudio/src/os/win/pa_x86_plain_converters.h
+      portaudio/src/hostapi/wasapi/pa_win_wasapi.c
+      portaudio/src/hostapi/wmme/pa_win_wmme.c)
 endif(UNIX)
 add_library(portaudio_static STATIC ${portaudio_SRCS})
 target_include_directories(portaudio_static PRIVATE
   PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/common
-  ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/os/unix)
+  ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/common)
 
+if(UNIX)
+  target_include_directories(portaudio_static PRIVATE
+          PROPERTY INCLUDE_DIRECTORIES
+          ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/os/unix)
+if(APPLE)
+else(APPLE)
+    # Linux
+    set(USE_ALSA 1 CACHE BOOL "Use ALSA audio rather than OSS")
+    if(USE_ALSA)
+      set_target_properties(portaudio_static PROPERTIES COMPILE_FLAGS
+            "-DPA_USE_ALSA=1")
+    endif(USE_ALSA)
+    set_target_properties(portaudio_static PROPERTIES COMPILE_FLAGS 
+            "-DPA_USE_OSS=1 -DHAVE_LINUX_SOUNDCARD_H")
+endif(APPLE)
+else(UNIX)
+    # Windows
+    set_target_properties(portaudio_static PROPERTIES COMPILE_FLAGS 
+            "-DPA_USE_WMME=1 -DPA_USE_WASAPI=1")
+    target_include_directories(portaudio_static PRIVATE
+            PROPERTY INCLUDE_DIRECTORIES 
+            ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/src/os/win)
+endif(UNIX)
 
 ## portaudio
 set(PORTAUDIO_INCLUDE_PATH ../portaudio/include)
-set(PORTAUDIO_LIBRARY portaudio)
+set(PORTAUDIO_LIBRARY portaudio_static)
 include_directories(${PORTAUDIO_INCLUDE_PATH})
 ##
 
@@ -305,11 +364,18 @@ set(liblo_SRCS
   )
 
 add_library(lo_static STATIC ${liblo_SRCS})
-set_target_properties(lo_static PROPERTIES COMPILE_FLAGS -DHAVE_CONFIG_H) 
+if(UNIX) # including OS X...
+set(LIBLO_EXTRA_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/liblo/osx)
+set_target_properties(lo_static PROPERTIES COMPILE_FLAGS -DHAVE_CONFIG_H)
+else(UNIX)
+set_target_properties(lo_static PROPERTIES COMPILE_FLAGS 
+    "-DPACKAGE_NAME=\\\"liblo\\\" -DHAVE_SELECT -DPRINTF_LL=\\\"ll\\\"")
+endif(UNIX)
+
 target_include_directories(lo_static PRIVATE 
   ${CMAKE_CURRENT_SOURCE_DIR}/liblo 
   ${CMAKE_CURRENT_SOURCE_DIR}/liblo/src 
-  ${CMAKE_CURRENT_SOURCE_DIR}/liblo/osx)
+  ${LIBLO_EXTRA_INCLUDES})
 
 else()
 
@@ -567,8 +633,6 @@ set(nyqsrc_SRCS
 )
 
 set(nyquist_SRCS
-  sys/unix/osstuff.c
-  sys/unix/term.c
   nyqsrc/debug.c
   nyqsrc/falloc.c
   nyqsrc/local.c
@@ -591,6 +655,16 @@ set(nyquist_SRCS
 list(APPEND nyquist_SRCS 
   ${xlisp_SRCS} ${tran_SRCS} ${cmt_SRCS} ${seq_SRCS} 
   ${nyqsrc_SRCS} ${nyqstk_SRCS})
+
+if(UNIX)
+  list(APPEND nyquist_SRCS
+       sys/unix/osstuff.c
+       sys/unix/term.c)
+else(UNIX)
+  list(APPEND nyquist_SRCS
+       sys/win/msvc/winstuff.c
+       sys/win/msvc/winfun.c)
+endif(UNIX)
 
 # Add headers using GLOB
 
@@ -617,7 +691,13 @@ add_executable(ny ${nyquist_SRCS})
 
 #include directories 
 target_include_directories(ny PRIVATE  
-    ffts/src snd cmt sys/unix xlisp tran nyqsrc nyqstk nyqstk/include) 
+    ffts/src snd cmt xlisp tran nyqsrc nyqstk nyqstk/include) 
+
+if(UNIX)
+    target_include_directories(ny PRIVATE sys/unix)
+else(UNIX)
+    target_include_directories(ny PRIVATE sys/win/msvc)
+endif(UNIX)
 
 if(USE_SOURCE_LIBS)
 ##  target_include_directories(ny PRIVATE nylsf liblo portaudio/include)
@@ -665,17 +745,25 @@ else()
       COMMENT "Building jnyqide.jar")     
     add_dependencies(NyquistIDE ny)
   else(APPLE)
-	add_custom_target(jNyqIDE ALL 
-        mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden
-      COMMAND javac jnyqide/*.java
-      COMMAND 
-	    mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java
-      COMMAND rm -f jnyqide/jNyqIDE.jar
-      COMMAND 
-        jar -cfm jnyqide/jNyqIDE.jar jnyqide/manifest.txt jnyqide/*.class
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-	  COMMENT "BUilding jnyqide/jNyqIDE.jar")
-    add_dependencies(jNyqIDE ny)
+    if(UNIX) # Linux
+      add_custom_target(jNyqIDE ALL 
+          mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden
+        COMMAND javac jnyqide/*.java
+        COMMAND 
+          mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java
+        COMMAND rm -f jnyqide/jNyqIDE.jar
+        COMMAND 
+          jar -cfm jnyqide/jNyqIDE.jar jnyqide/manifest.txt jnyqide/*.class
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	COMMENT "Building jnyqide/jNyqIDE.jar")
+      add_dependencies(jNyqIDE ny)
+    else(UNIX) # WIN32
+      add_custom_target(jNyqIDE ALL 
+          comp-ide.bat
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	COMMENT "Building jnyqide/jNyqIDE.jar")
+      add_dependencies(jNyqIDE ny)
+    endif(UNIX)
   endif(APPLE)
   
 endif()
@@ -709,12 +797,7 @@ if(UNIX)
     add_definitions("-DCMTSTUFF")
     add_definitions("-Dmacintosh")
   else(APPLE)
-    set(USE_ALSA 1 CACHE BOOL "Use ALSA audio rather than OSS")
-    if(USE_ALSA)
-      add_definitions("-DPA_USE_ALSA=1")
-    endif(USE_ALSA)
-    add_definitions("-DPA_USE_OSS=1")
-    add_definitions("-DHAVE_LINUX_SOUNDCARD_H")
+    # Linux
     set(EXTRA_NEEDED_LIBS asound pthread)
   endif(APPLE)
   # useing ../liblo/liblo_s.a. The builder must explicitly make a 
@@ -728,14 +811,8 @@ if(UNIX)
   #set(PORTMIDI_OPT portmidi_s)
 else(UNIX)
   # the liblo project builds liblo.lib, not lo.lib
-  #set(LO liblo)
-  #set(LO_PATH ../liblo)
-  set(EXTRA_NEEDED_LIBS winmm.lib ws2_32.lib)
-  # I think this distinction is necessary to keep the C runtime
-  #   libraries consistent with wxWindows, which is dll for debug and
-  #   static for optimized versions.
-  #set(PORTMIDI_DBG portmidi.lib)
-  #set(PORTMIDI_OPT portmidi_s.lib)
+  # Iphlpapi is for GetAdaptersAddresses() in address.c
+  set(EXTRA_NEEDED_LIBS winmm.lib ws2_32.lib Iphlpapi.lib)
 endif(UNIX)
 
 target_link_libraries(ny ${EXTRA_NEEDED_LIBS})

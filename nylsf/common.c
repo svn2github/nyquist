@@ -23,7 +23,7 @@
 #include	<ctype.h>
 #include	<math.h>
 #include	<time.h>
-#include	<sys/time.h>
+/*RBD #include	<sys/time.h>*/
 
 #include	"sndfile.h"
 #include	"sfendian.h"

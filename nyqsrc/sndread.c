@@ -42,10 +42,9 @@
 
 static int sndread_file_open_count = 0;
 
-void read__fetch(susp, snd_list)
-  register read_susp_type susp;
-  snd_list_type snd_list;
+void read__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    read_susp_type susp = (read_susp_type) a_susp;
     long n; /* jlh Changed type to long, trying to make move_samples_... work */
     sample_block_type out;
     register sample_block_values_type out_ptr;
@@ -70,7 +69,7 @@ void read__fetch(susp, snd_list)
         n = susp->cnt - susp->susp.current;
     }
 
-    snd_list->block_len = n;
+    snd_list->block_len = (short) n;
     susp->susp.current += n;
 
     if (n == 0) {

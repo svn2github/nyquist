@@ -1745,7 +1745,7 @@ void tracemidi(boolean flag)
 ***********************************************************************/
 
 #ifdef  DOS
-
+#include <ctype.h>
 /* binary value of hex char */
 
 private int xval(int c)
@@ -1754,7 +1754,7 @@ private int xval(int c)
     static char t[]="0123456789abcdef";
 
     for (i=0; i<16; i++)
-        if(tolower(c)==t[i]) return(i);
+        if (tolower(c)==t[i]) return(i);
     return (-1);
 }
 
@@ -1814,7 +1814,7 @@ private void midi_init()
         gprintf(TRANS,"MPUBASE %s\n",t);
     base=atox(t);
     }
-    if(err = mOpen(base, irq)) {
+    if (err = mOpen(base, irq)) {
     mClose(err);
     EXIT(1);
     }

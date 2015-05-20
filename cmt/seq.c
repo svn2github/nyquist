@@ -903,8 +903,7 @@ void seq_end_event(seq)
 *    frees storage occupied by a seq
 ****************************************************************************/
 
-private void seq_free_meth(seq)
-  seq_type seq;
+private void seq_free_meth(seq_type seq)
 {
     seq_free_chunks(seq);
     if (seq->timebase) timebase_free(seq->timebase);

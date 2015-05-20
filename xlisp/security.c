@@ -4,7 +4,12 @@
  */
 
 #include <stdlib.h>
+#ifdef UNIX
 #include <unistd.h>
+#endif
+#ifdef WIN32
+#include <direct.h>
+#endif
 #include <string.h>
 #include <xlisp.h>
 
@@ -56,13 +61,13 @@ char *safe_write_path = NULL;
 int ok_to_open(const char *filename, const char *mode)
 {
     char fullname[STRMAX];
-    if (index(mode, 'r')) { /* asking for read permission */
+    if (strchr(mode, 'r')) { /* asking for read permission */
 	if (secure_read_path) { /* filename must be in path */
 	    find_full_path(filename, fullname);
 	    if (!in_tree(fullname, secure_read_path)) return FALSE;
 	}
     }
-    if (index(mode, 'w')) { /* asking for write permission */
+    if (strchr(mode, 'w')) { /* asking for write permission */
 	if (safe_write_path) { /* filename must be in path */
 	    find_full_path(filename, fullname);
 	    if (!in_tree(fullname, safe_write_path)) return FALSE;
@@ -98,7 +103,7 @@ void find_full_path(const char *filename, char *fullname)
     /* if windows, replace \ with / to simplify the rest */
     char *loc = fullname;
     if (os_pathchar != '/') {
-        while ((loc = index(loc, os_pathchar))) {
+        while ((loc = strchr(loc, os_pathchar))) {
 	    *loc = '/';
 	}
     }

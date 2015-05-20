@@ -451,8 +451,8 @@ sound_type snd_make_fmosc(sound_type s, double step, rate_type sr, double hz, ti
     susp->table_ptr = susp->the_table->samples;
     susp->phase = compute_phase(phase, step, (long) susp->table_len,
         s->sr, sr, hz, &susp->ph_incr);
-    s_fm->scale *= hz != 0 ? (sample_type) (susp->ph_incr / hz)
-                                                   : s->sr / (sr * step_to_hz(step));
+    s_fm->scale *= (sample_type) (hz != 0 ? (susp->ph_incr / hz)
+                                          : s->sr / (sr * step_to_hz(step)));
 
     /* make sure no sample rate is too high */
     if (s_fm->sr > sr) {

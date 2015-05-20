@@ -55,7 +55,7 @@
     <IntDir>.\Debug_static\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>C:\Users\MusicFish\AppData\Local\nasm;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>.\libogg\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\libflac\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>

@@ -92,7 +92,7 @@ void quantize_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
 		float x = *s1_ptr_reg++ * factor_reg;
 		long xx;
-		x = (x > 0.0F ? x + 0.5 : x - 0.5);
+		x = (x > 0.0F ? x + 0.5F : x - 0.5F);
 		xx = (long) x;
 		*out_ptr_reg++ = (float) xx;
 	    };

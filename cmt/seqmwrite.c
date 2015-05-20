@@ -44,7 +44,7 @@ extern boolean clock_running;     /* TRUE if clock is running */
 extern boolean use_midi_clock;
 
 private void smfw_bend();
-private void smfw_cause_noteoff();
+private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice, int pitch);
 private void smfw_ctrl();
 private void smfw_deltatime();
 private void smfw_dotrack();
@@ -64,7 +64,7 @@ private void writevarlen();
 /**/
 private void smfw_bend(seq_type seq, int voice, int value)
 {
-    if(debug)   gprintf(TRANS, "smfw_bend %d\n", value);
+    if (debug)  gprintf(TRANS, "smfw_bend %d\n", value);
     smfw_deltatime();
     putc(MIDI_BEND | (voice - 1), smfw_seq.outfile);
     putc(0xFF & ((value & 0x1) << 6) , smfw_seq.outfile);
@@ -81,13 +81,9 @@ private void smfw_bend(seq_type seq, int voice, int value)
  * so no real timing delays occur.  The effect is to sort events by their
  * specified time.
  */
-private void smfw_cause_noteoff(seq, delay, voice, pitch)
-  seq_type seq;
-  time_type delay;
-  int voice;
-  int pitch;
+private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice, int pitch)
 {
-    if(debug)       gprintf(TRANS, "cause noteoff at %ld...", virttime + delay);
+    if (debug) gprintf(TRANS, "cause noteoff at %ld...", virttime + delay);
     pitch += seq->transpose;
     while (pitch <= 0) pitch += 12;
     while (pitch >= 127) pitch -= 12;
@@ -97,14 +93,13 @@ private void smfw_cause_noteoff(seq, delay, voice, pitch)
     
 }
 
-private void smfw_clock_event(old_ticksize, new_ticksize)
-  time_type old_ticksize, new_ticksize;
+private void smfw_clock_event(time_type old_ticksize, time_type new_ticksize)
 {
     time_type temp_ticksize = new_ticksize;
     new_ticksize = scale(new_ticksize, 375L, 1024L);
 /* (new_ticksize >> 16) * 24000 ms/clock becomes us/midiquarter */
 
-    if(debug)       gprintf(TRANS, "smfw_clock: write %ld (time:%ld) ->->->tempo %ld\n", 
+    if (debug)      gprintf(TRANS, "smfw_clock: write %ld (time:%ld) ->->->tempo %ld\n", 
         new_ticksize, virttime, 2500L / (new_ticksize / 24000));
 
     /*use old ticksize to write the delta for the clock event*/
@@ -129,7 +124,7 @@ private void smfw_clock_event(old_ticksize, new_ticksize)
 /**/
 private void smfw_ctrl(seq_type seq, int voice, int ctrl_name, int value)
 {
-    if(debug)   gprintf(TRANS, "smfw_ctrl %d: %d\n", ctrl_name, value); 
+    if (debug)  gprintf(TRANS, "smfw_ctrl %d: %d\n", ctrl_name, value); 
     smfw_deltatime();
     putc(MIDI_CTRL | (voice - 1), smfw_seq.outfile);
     putc(ctrl_name, smfw_seq.outfile);
@@ -145,13 +140,13 @@ private void smfw_deltatime()
     time_type use_ticksize = (clock_ticksize != last_tick_size) ?
                 last_tick_size : clock_ticksize;
     time_type this_event = virttime - last_clock_event;
-    if(debug)   gprintf(TRANS, "delta! ticksize: %lu Lastev: %ld ThisevScaled: %lu Thisev: %lu ", 
+    if (debug)  gprintf(TRANS, "delta! ticksize: %lu Lastev: %ld ThisevScaled: %lu Thisev: %lu ", 
         clock_ticksize, last_event,  (this_event * ((2500L << 16) / use_ticksize)) / 100,
          this_event);
     
     this_event = ((virttime - last_clock_event) * ((2500L << 16) / use_ticksize)) / 100;
 
-    if(debug)   gprintf(TRANS, "--- deltatime: %lu\n", this_event - last_event);        
+    if (debug)  gprintf(TRANS, "--- deltatime: %lu\n", this_event - last_event);        
     writevarlen((long) (this_event - last_event));
 
     last_event = this_event; 
@@ -178,7 +173,7 @@ private void smfw_dotrack(seq)
     seq->paused = TRUE;
     last_clock_event = 0L;
     last_event = 0L;
-    if(debug)   gprintf(TRANS, "dotrack (reset) %d %ld (%lu) \n", 
+    if (debug)  gprintf(TRANS, "dotrack (reset) %d %ld (%lu) \n", 
         smfw_seq.track, last_event, virttime);
 
     if (seq->current)   
@@ -194,7 +189,7 @@ private void smfw_dotrack(seq)
     end_marker = ftell(smfw_seq.outfile);
     fseek(smfw_seq.outfile, chunk_size_marker, 0);/*go back to enter chunksize*/
     chunk_size = (end_marker - chunk_size_marker) - 4;/* - 4 for 4 size bytes*/ 
-    if(debug)   gprintf(TRANS, "bytes written in previous track: %ld \n\n", chunk_size);
+    if (debug)  gprintf(TRANS, "bytes written in previous track: %ld \n\n", chunk_size);
     putc((int) ((0xFF & (chunk_size >> 24))), smfw_seq.outfile);
     putc((int) ((0xFF & (chunk_size >> 16))), smfw_seq.outfile);
     putc((int) ((0xFF & (chunk_size >> 8))), smfw_seq.outfile);
@@ -211,7 +206,7 @@ unsigned char *msg;
 {
     int length_count = 0;
 
-    if(debug)   gprintf(TRANS, "SYSEX (time:%ld)\n", virttime);
+    if (debug)  gprintf(TRANS, "SYSEX (time:%ld)\n", virttime);
 
     smfw_deltatime();
    
@@ -219,14 +214,14 @@ unsigned char *msg;
         putc(*msg++, smfw_seq.outfile); 
         length_count++;
     }
-    if(*(--msg) != MIDI_EOX) gprintf(TRANS, "ERROR: no end of sysex\n");
+    if (*(--msg) != MIDI_EOX) gprintf(TRANS, "ERROR: no end of sysex\n");
 }
 
 private void smfw_msg_write(n,c1,c2,c3)
   int n;
   unsigned char c1,c2,c3;
 {
-    if(debug)   gprintf(TRANS, "MSGWRITE %d bytes (time:%ld)\n", n, virttime);
+    if (debug)  gprintf(TRANS, "MSGWRITE %d bytes (time:%ld)\n", n, virttime);
     smfw_deltatime();
     switch(n) {
     case 1: putc(c1, smfw_seq.outfile);
@@ -246,7 +241,7 @@ private void smfw_msg_write(n,c1,c2,c3)
 /**/
 private void smfw_noteoff(seq_type seq, int voice, int pitch)
 {
-    if(debug)       gprintf(TRANS, "smfw_noteoff %d: %d (time:%ld)\n", voice, pitch, virttime);
+    if (debug)      gprintf(TRANS, "smfw_noteoff %d: %d (time:%ld)\n", voice, pitch, virttime);
     smfw_deltatime();
     putc(NOTEOFF | (voice - 1), smfw_seq.outfile);
     putc(pitch, smfw_seq.outfile);
@@ -259,11 +254,9 @@ private void smfw_noteoff(seq_type seq, int voice, int pitch)
  * NOTE: the seq parameter is not used here, but is passed in by the
  * seq_noteon macro, so we have to have a placeholder for it.
  */
-private void smfw_noteon(seq, voice, pitch, vel)
-  seq_type seq;
-  int voice, pitch, vel;
+private void smfw_noteon(seq_type seq, int voice, int pitch, int vel)
 {
-    if(debug)   gprintf(TRANS, "smfw_noteon %d: %d %d(time:%ld)\n", voice, pitch, vel, virttime);
+    if (debug) gprintf(TRANS, "smfw_noteon %d: %d %d(time:%ld)\n", voice, pitch, vel, virttime);
     smfw_deltatime();
     putc(NOTEON | (voice - 1), smfw_seq.outfile);
     putc(pitch, smfw_seq.outfile);
@@ -309,32 +302,32 @@ private void smfw_process_event(seq)
         switch (vc_ctrl(event->nvoice)) {
           case PSWITCH_CTRL:
             if (!enabled) break;
-            if(debug)    gprintf(TRANS, "porta %d (time:%ld)... ", event->value, virttime);
+            if (debug)   gprintf(TRANS, "porta %d (time:%ld)... ", event->value, virttime);
             seq_midi_ctrl(seq, voice, PORTASWITCH, 0xFF & event->value);
             break;
           case MODWHEEL_CTRL:
             if (!enabled) break;
-            if(debug)    gprintf(TRANS, "modw %d (time:%ld)...", event->value, virttime);
+            if (debug)   gprintf(TRANS, "modw %d (time:%ld)...", event->value, virttime);
             seq_midi_ctrl(seq, voice, MODWHEEL, 0xFF & event->value);
             break;
           case TOUCH_CTRL:
             if (!enabled) break;
-            if(debug)    gprintf(TRANS, "touch %d (time:%ld)... ", event->value, virttime);
+            if (debug)   gprintf(TRANS, "touch %d (time:%ld)... ", event->value, virttime);
             seq_midi_touch(seq, voice, 0xFF & event->value);
             break;
           case VOLUME_CTRL:
             if (!enabled) break;
-            if(debug)    gprintf(TRANS, "ftvol %d (time:%ld)...", event->value, virttime);
+            if (debug)   gprintf(TRANS, "ftvol %d (time:%ld)...", event->value, virttime);
             seq_midi_ctrl(seq, voice, VOLUME, 0xFF & event->value);
             break;
           case BEND_CTRL:
             if (!enabled) break;
-            if(debug)    gprintf(TRANS, "bend %d (time:%ld)... ", event->value, virttime);
+            if (debug)   gprintf(TRANS, "bend %d (time:%ld)... ", event->value, virttime);
             seq_midi_bend(seq, voice, event->value);
             break;
           case PROGRAM_CTRL:
             if (!enabled) break;
-            if(debug)    gprintf(TRANS, "prog %d (time:%ld)\n", event->value, virttime);
+            if (debug)   gprintf(TRANS, "prog %d (time:%ld)\n", event->value, virttime);
             smfw_deltatime();
             putc(MIDI_CH_PROGRAM | (voice - 1), smfw_seq.outfile);
             putc(0xFF & event->value, smfw_seq.outfile);
@@ -348,7 +341,7 @@ private void smfw_process_event(seq)
                 break;
               case CLOCK_VALUE:
                 clock_ticksize = event->u.clock.ticksize;
-                if(debug)    gprintf(TRANS, "clockevent! ticksize: %lu (time:%ld)\n",
+                if (debug)   gprintf(TRANS, "clockevent! ticksize: %lu (time:%ld)\n",
                     clock_ticksize, virttime);
     
                 if (virttime > 0) {  /* any clock before this is already recorded in the header */
@@ -360,7 +353,7 @@ private void smfw_process_event(seq)
                     } else { /*not on tempo track*/
                     this_event = ((virttime - last_clock_event) *
                             ((2500L << 16) / last_tick_size)) / 100;
-                    if(debug)   gprintf(TRANS, "track != 0: Lastev: %ld Thisev: %ld NewLast: %ld\n", 
+                    if (debug)  gprintf(TRANS, "track != 0: Lastev: %ld Thisev: %ld NewLast: %ld\n", 
                     last_event, this_event, this_event - last_event);
                     last_event = 0L - (this_event - last_event);
                         last_clock_event = virttime;
@@ -391,7 +384,7 @@ private void smfw_process_event(seq)
                 if (!enabled) break;
                 step = event->u.ramp.step;
                 if (event->value == CTRLRAMP_VALUE) {
-                if(debug)   gprintf(TRANS, "CTRLRAMP (time:%ld)...", virttime);
+                if (debug)  gprintf(TRANS, "CTRLRAMP (time:%ld)...", virttime);
                     from = event->u.ramp.u.ctrl.from_value;
                     to = event->u.ramp.u.ctrl.to_value;
                 } else {
@@ -443,7 +436,7 @@ private void smfw_ramp_event(seq, event, value, to_value, increment, step, n)
   time_type step;
   int n;
 {
-    if(debug)   gprintf(TRANS, "ramp of %d: %d to %d\n", event->u.ramp.ctrl, value >> 8,
+    if (debug)  gprintf(TRANS, "ramp of %d: %d to %d\n", event->u.ramp.ctrl, value >> 8,
         to_value >> 8);     
     if (seq->runflag) {
     int voice = vc_voice(event->nvoice);
@@ -502,7 +495,7 @@ private void smfw_send_macro(ptr, voice, parameter, parm_num, value)
 /**/
 private void smfw_touch(seq_type seq, int voice, int value)
 {
-    if(debug)   gprintf(TRANS, "smfw_touch %d\n", value);
+    if (debug)  gprintf(TRANS, "smfw_touch %d\n", value);
     smfw_deltatime();
     putc(MIDI_TOUCH | (voice - 1), smfw_seq.outfile);
     putc(value, smfw_seq.outfile);
@@ -541,9 +534,9 @@ void seq_write_smf(seq, outfile)
     /* search for clock events up till start of score */
     /* careful: there may be no events at all */
     while(event && event->ntime <= 0){
-        if(debug)   gprintf(TRANS, "event (time:%ld)\n", event->ntime); 
-        if(vc_ctrl(event->nvoice) == ESC_CTRL && event->value == CLOCK_VALUE) {
-            if(debug)   gprintf(TRANS, "clock %lu at 0\n", event->u.clock.ticksize);
+        if (debug)  gprintf(TRANS, "event (time:%ld)\n", event->ntime); 
+        if (vc_ctrl(event->nvoice) == ESC_CTRL && event->value == CLOCK_VALUE) {
+            if (debug)  gprintf(TRANS, "clock %lu at 0\n", event->u.clock.ticksize);
             starting_ticksize = event->u.clock.ticksize;
             break;
             }
@@ -635,7 +628,7 @@ private void writevarlen(value)
 {       
     register ulong buffer;
 
-    if(debug) gprintf(TRANS, "variable length quantity...");
+    if (debug) gprintf(TRANS, "variable length quantity...");
 
     buffer = value & 0x7f;
 
@@ -646,10 +639,10 @@ private void writevarlen(value)
     }
 
     for(;;) {
-    if(debug) gprintf(TRANS, " byte ");
+    if (debug) gprintf(TRANS, " byte ");
     putc((int) (buffer & 0xFF), smfw_seq.outfile);
     if (buffer & 0x80)  buffer >>= 8;
     else break;
     }
-    if(debug) gprintf(TRANS, "written!\n");
+    if (debug) gprintf(TRANS, "written!\n");
 }

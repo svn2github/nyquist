@@ -30,7 +30,7 @@ float parabolic_interp(float x1, float x2, float x3, float y1, float y2, float y
 
   // dy/dx = 2a*x + b = 0
   
-  pos= -b/2.0/a;
+  pos= -b/2.0F/a;
 
   return pos;
 

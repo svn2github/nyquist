@@ -43,10 +43,10 @@ xtype_desc sound_desc;
 LVAL a_sound;
 LVAL s_audio_markers;
 
-static void sound_xlfree();
-static void sound_xlprint();
-static void sound_xlsave();
-static unsigned char *sound_xlrestore();
+static void sound_xlfree(void *);
+static void sound_xlprint(LVAL, sound_type);
+static void sound_xlsave(FILE *fp, sound_type s);
+static unsigned char *sound_xlrestore(FILE *);
 
 void sound_print_array(LVAL sa, long n);
 void sound_print_sound(sound_type s, long n);
@@ -1587,14 +1587,6 @@ double step_to_hz(double steps)
     return exp(steps * p1 + p2);
 }
 
-#ifdef WIN32
-#define RECIP_LOG_2 1.44269504088895364453
-
-double log2(double x)
-{
-  return log(x) * RECIP_LOG_2;
-}
-#endif
 
 /*
  * from old stuff...
@@ -1616,9 +1608,7 @@ static void sound_xlprint(LVAL fptr, sound_type s)
 }
 
 
-static void sound_xlsave(fp, s)
-FILE *fp;
-sound_type s;
+static void sound_xlsave(FILE *fp, sound_type s)
 {
     stdputstr("sound_save called\n");
 }
