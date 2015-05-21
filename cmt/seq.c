@@ -114,7 +114,7 @@ private void clock_tick(call_args_type args)
     if (seq->runflag && clock_ticksize && seq->note_enable) {
         midi_clock();
         args->arg[0] = seq;
-        args->arg[1] = fraction;
+        args->arg[1] = (void *)(size_t)fraction;
         cause((delay_type)delay, clock_tick, args);
     } else {
         clock_running = FALSE;
@@ -125,7 +125,7 @@ private void clock_tick(call_args_type args)
 
 private void cycle(call_args_type args)
 {
-    seq_type seq = args->arg[0];
+    seq_type seq = (seq_type) args->arg[0];
     seq_reset(seq);
     seq_play(seq);
 }
@@ -629,7 +629,7 @@ private void process_event(call_args_type args)
                         clock_running = TRUE;
                         midi_start();
                         args.arg[0] = seq;
-                        args.arg[1] = 0;
+                        args.arg[1] = (void *)(size_t)0;
                         clock_tick(&args);
                     }
                     break;
@@ -668,11 +668,11 @@ private void process_event(call_args_type args)
                     increment = (increment << 8) / n;
                     re_args.arg[0] = seq;
                     re_args.arg[1] = event;
-                    re_args.arg[2] = from << 8;
-                    re_args.arg[3] = to << 8;
-                    re_args.arg[4] = increment;
-                    re_args.arg[5] = step;
-                    re_args.arg[6] = n;
+                    re_args.arg[2] = (void *)(size_t)(from << 8);
+                    re_args.arg[3] = (void *)(size_t)(to << 8);
+                    re_args.arg[4] = (void *)(size_t)increment;
+                    re_args.arg[5] = (void *)(size_t)step;
+                    re_args.arg[6] = (void *)(size_t)n;
                     ramp_event(&re_args);
                     seq->noteoff_count++;
                     break;
@@ -723,8 +723,8 @@ private void ramp_event(call_args_type args)
                value, to_value, increment, step, n, virttime); */
         if (n == 0) value = to_value;
         else {
-            args->arg[2] = value + increment; /* update value */
-            args->arg[6] = n - 1; /* update n */
+            args->arg[2] = (void *)(size_t)(value + increment); /* update value */
+            args->arg[6] = (void *)(size_t)(n - 1); /* update n */
             causepri((delay_type)step, 5, ramp_event, args);
         }
         if (event->value == CTRLRAMP_VALUE) {
@@ -851,8 +851,8 @@ void seq_cause_noteoff_meth(seq_type seq, time_type delay, int voice, int pitch)
         while (pitch > 127) pitch -= 12;
         seq->noteoff_count++;
         args.arg[0] = seq;
-        args.arg[1] = voice;
-        args.arg[2] = pitch;
+        args.arg[1] = (void *)(size_t)voice;
+        args.arg[2] = (void *)(size_t)pitch;
         causepri((delay_type) delay, 10, seq->noteoff_fn, &args);
     }
 }
@@ -1036,8 +1036,8 @@ void seq_midi_touch_meth(seq_type seq, int voice, int value)
 void seq_noteoff_meth(call_args_type args)
 {
     /* seq_type seq = args->arg[0]; -- unused */
-    int voice = args->arg[1];
-    int pitch = args->arg[2];
+    int voice = (int)args->arg[1];
+    int pitch = (int)args->arg[2];
     midi_note(voice, pitch, 0);
         /*gprintf(TRANS, "_e");*/
     seq_end_event(args);

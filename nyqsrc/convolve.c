@@ -62,7 +62,8 @@
  */
 
 #define MAX_IR_LEN 4000000 /* maximum impulse response length */
-#define MAX_LOG_FFT_SIZE 16 /* maximum fft size for convolution */
+// #define MAX_LOG_FFT_SIZE 16 /* maximum fft size for convolution */
+#define MAX_LOG_FFT_SIZE 4 /* maximum fft size for convolution */
 #define _USE_MATH_DEFINES 1 /* for Visual C++ to get M_LN2 */
 #include <math.h>
 #include "stdio.h"
@@ -151,9 +152,6 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             /* Shift R, zero fill: */
             memcpy(R, R + N, N * sizeof(*R));
             memset(R + N, 0, N * sizeof(*R));
-            for (j = 0; j < N; j++) {
-                R[j] = R[j + N];
-            }
             /* Copy N samples of x_snd into Xj and zero fill to size 2N */
             while (i < N) {
                 if (susp->x_snd_cnt == 0) {
@@ -188,6 +186,13 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             }
             /* zero fill to size 2N */
             memset(Xj + N, 0, N * sizeof(Xj[0]));
+            /*
+            printf("Xj: ");
+            for (i = 0; i < susp->N * 2; i++) {
+                printf("%g ", Xj[i]);
+            }
+            printf("\n");
+            */
             /* Compute FFT of Xj in place */
             fftInit(susp->M);
             rffts(Xj, susp->M, 1);
@@ -200,12 +205,21 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 /* Compute IFFT of Y in place */
                 riffts(Y, susp->M, 1);
                 /* R += Y */
+                /* printf("Output block %d: ", k); */
                 for (i = 0; i < 2 * N; i++) {
                     R[i] += Y[i];
+                    /* printf("%g ", Y[i]); */
                 }
+                /* printf("\n"); */
                 /* now N samples of R can be output */
                 susp->R_current = R;
             }
+            /* printf("R: ");
+            for (i = 0; i < susp->N; i++) {
+                printf("%g ", R[i]);
+            }
+            printf("\n");
+            */
         }
         /* compute togo, the number of samples to "compute" */
         /* can't use more than what's left in R. R_current is
