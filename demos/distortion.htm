@@ -1,118 +1,144 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="GENERATOR" content="Mozilla/4.75 [en] (Windows NT 5.0; U) [Netscape]">
-   <title>Untitled Document</title>
-</head>
-<body bgcolor="#FFFFFF">
-
-<h1>
-Distortion Tutorial</h1>
-This page describes how to use the Nyquist <tt>shape</tt> function to achieve distortion.
-<h2>
-Terminology</h2>
-First, some terminology:
-<blockquote><i>Clipping</i> means that you limit the amplitude of samples,
-e.g.
-<p>sample_out = min(sample_in, 1.0),</blockquote>
-or, observing that you might want to limit negative excursions as well
-as positive ones:
-<blockquote>sample_out = max(min(sample_in, 1.0), -1.0).</blockquote>
-This type of clipping is called <i>hard clipping</i> because the transition
-from an undistorted one to a maximum or minimum value is instantaneous,
-as if the signal hit a brick wall and can go no more.
-<p>As you might guess, you can also have <i>soft clipping</i> where the
-transition is more gradual, and that's what this tutorial is about.
-<p>Before discussing soft clipping, let's introduce a few other terms.
-Since <i>clipping</i> seems to be a way of <i>limiting</i> the values of
-the signal or <i>compressing</i> the range of the signal, you might think
-that clipping is a form of compressing or limiting; however, these terms
-have special meanings in the audio processing world.
-<blockquote><i>Compression</i>, or <i>dynamics compression</i> (not to
-be confused with <i>data compression</i>) is a way of reducing the overall
-range of soft to loud.</blockquote>
-To do dynamics compression, you generally detect the intensity or peak
-level of a sound over a time scale of a few milliseconds, and then construct
-a relatively smooth amplitude control that you apply to the signal. For
-compression, the amplification goes down as the intensity of the input
-goes up, so loud passages get (relatively) softer and soft passages get
-(relatively) louder. (Dynamics expansion does just the opposite.) <i>Limiters</i>
-work like compressors, but are designed to eliminate peaks -- conceptually,
-there is no real difference, and products are often sold as "compressor/limiters".
-See nyquist/lib/compress.lsp for an implementation.
-<p>In some ways, soft clipping is like dynamics compression. Both reduce
-the gain at high levels, but dynamics compression operates relatively slowly,
-effectively turning the volume knob up and down, whereas clipping operates
-on a sample-by-sample basis. The effect of clipping is to distort the input.
-<p>In Nyquist, you use the <tt>shape</tt> function to implement clipping. <tt>shape</tt>
-applies a function to each sample, where the function is specified by a
-sound. The following is a typical function for soft clipping:
-<center><img SRC="softclip.jpg" ></center>
-Notice how the function is essentially y=x at small amplitudes, so there
-is no distortion for small signals, but at large input values, the function
-becomes very non-linear. Also, notice that this is similar to the behavior
-of real-life amplifiers, where small signals are undistorted, but at some
-point, the power limits of the amplifier clip the output signal.
-<p>The Nyquist <tt>shape</tt> function is allows you to specify any function you
-like using a sound. Therefore you can use any of the Nyquist primitives
-to construct the function. Since a sound is a function of time, where time
-must be non-negative, how do you specify a shape function over a range
-that includes negative values? The trick is that <tt>shape</tt> takes an <i>offset</i>
-parameter that shifts the whole function to the left (in the -y direction).
-Note also that whereas a Nyquist sound is generally regarded as a function
-of time, <tt>shape</tt> treats the sound as just a real-valued function.
-<p>The typical way to use shape is to create some increasing signal over
-the interval [0,2] that crosses zero at 1.0. Then you give 1.0 as the offset
-(3rd parameter). The result will look something like the graph above.
-<h2>Implementation</h2>
-In the figure above, I used a sine function to generate the smooth curve. Here is an implementation of distortion in Nyquist using the sine curve:
-<blockquote>
-<pre>(setf distortion 
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.75 [en] (Windows NT 5.0;
+      U) [Netscape]">
+    <title>Untitled Document</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body bgcolor="#FFFFFF">
+    <h1> Distortion Tutorial</h1>
+    <b>Roger B. Dannenberg</b> <br>
+    <br>
+    This page describes how to use the Nyquist <tt>shape</tt> function
+    to achieve distortion.
+    <h2> Terminology</h2>
+    First, some terminology:
+    <blockquote><i>Clipping</i> means that you limit the amplitude of
+      samples, e.g.
+      <p>sample_out = min(sample_in, 1.0),</p>
+    </blockquote>
+    or, observing that you might want to limit negative excursions as
+    well as positive ones:
+    <blockquote>sample_out = max(min(sample_in, 1.0), -1.0).</blockquote>
+    This type of clipping is called <i>hard clipping</i> because the
+    transition from an undistorted one to a maximum or minimum value is
+    instantaneous, as if the signal hit a brick wall and can go no more.
+    <p>As you might guess, you can also have <i>soft clipping</i> where
+      the transition is more gradual, and that's what this tutorial is
+      about. </p>
+    <p>Before discussing soft clipping, let's introduce a few other
+      terms. Since <i>clipping</i> seems to be a way of <i>limiting</i>
+      the values of the signal or <i>compressing</i> the range of the
+      signal, you might think that clipping is a form of compressing or
+      limiting; however, these terms have special meanings in the audio
+      processing world. </p>
+    <blockquote><i>Compression</i>, or <i>dynamics compression</i> (not
+      to be confused with <i>data compression</i>) is a way of reducing
+      the overall range of soft to loud.</blockquote>
+    To do dynamics compression, you generally detect the intensity or
+    peak level of a sound over a time scale of a few milliseconds, and
+    then construct a relatively smooth amplitude control that you apply
+    to the signal. For compression, the amplification goes down as the
+    intensity of the input goes up, so loud passages get (relatively)
+    softer and soft passages get (relatively) louder. (Dynamics
+    expansion does just the opposite.) <i>Limiters</i> work like
+    compressors, but are designed to eliminate peaks -- conceptually,
+    there is no real difference, and products are often sold as
+    "compressor/limiters". See nyquist/lib/compress.lsp for an
+    implementation.
+    <p>In some ways, soft clipping is like dynamics compression. Both
+      reduce the gain at high levels, but dynamics compression operates
+      relatively slowly, effectively turning the volume knob up and
+      down, whereas clipping operates on a sample-by-sample basis. The
+      effect of clipping is to distort the input. </p>
+    <p>In Nyquist, you use the <tt>shape</tt> function to implement
+      clipping. <tt>shape</tt> applies a function to each sample, where
+      the function is specified by a sound. The following is a typical
+      function for soft clipping: </p>
+    <center><img src="images/softclip.jpg"></center>
+    Notice how the function is essentially y=x at small amplitudes, so
+    there is no distortion for small signals, but at large input values,
+    the function becomes very non-linear. Also, notice that this is
+    similar to the behavior of real-life amplifiers, where small signals
+    are undistorted, but at some point, the power limits of the
+    amplifier clip the output signal.
+    <p>The Nyquist <tt>shape</tt> function is allows you to specify any
+      function you like using a sound. Therefore you can use any of the
+      Nyquist primitives to construct the function. Since a sound is a
+      function of time, where time must be non-negative, how do you
+      specify a shape function over a range that includes negative
+      values? The trick is that <tt>shape</tt> takes an <i>offset</i>
+      parameter that shifts the whole function to the left (in the -y
+      direction). Note also that whereas a Nyquist sound is generally
+      regarded as a function of time, <tt>shape</tt> treats the sound
+      as just a real-valued function. </p>
+    <p>The typical way to use shape is to create some increasing signal
+      over the interval [0,2] that crosses zero at 1.0. Then you give
+      1.0 as the offset (3rd parameter). The result will look something
+      like the graph above. </p>
+    <h2>Implementation</h2>
+    In the figure above, I used a sine function to generate the smooth
+    curve. Here is an implementation of distortion in Nyquist using the
+    sine curve:
+    <blockquote>
+      <pre>(setf distortion 
       (osc (hz-to-step 0.25) 2.01 *SINE-TABLE* -90.0))
 (defun distort (snd)
     (shape snd distortion 1.0)) 
 
-(play (distort (mult 15.0 (ramp 4) (osc c4 4))))
-</pre>
-</blockquote>
-<p>Even though I am an expert, and I have done this before, it still took 
-me a few tries to get right. Here's a step-by-step explanation:
-<ul>
-<li>I used <tt>osc</tt> to generate a sinusoid so I could control the initial phase.
-<li>I set the osc duration to 2 because I want the table to go from
-0 to 2 (after which we'll shift it back to [-1, +1]), but 2 is not enough because the interval [0,2] is closed, which
-means I need one extra sample. I used 2.01 to be conservative.
-<li>I specified <tt>*SINE-TABLE*</tt>, the default value, because the table
-parameter comes before the phase parameter.
-<li>I specified the phase to get the sine curve to go through zero
-in the <i>middle</i> of the generated function.
-<li>I assigned this to the variable distortion so I could plot it; try:
-<pre>(s-plot (force-srate 100 distortion))</pre>
-<li>Finally, I put in a tone that ramps up from zero to 15 in amplitude
-to cause some serious clipping. The output amplitude is limited to 1. 
-</ul>
-<p>Note that the input to <tt>shape</tt> is pre-clipped to the range 
-[-1, +1] so you only need to specify the table from [0, 2] if the origin (third parameter to <tt>shape</tt>) is 1.0. If you specify a little extra, as
-in this example, it will be ignored.
-<h2>The Output</h2>
-<p>
-Look
-at the generated waveform to observe the soft clipping effect. Here we see the beginning of the output, where the input amplitude is low and there is very little distortion:
-<p>
-<center>
-<img src="beginclip.jpg">
-</center>
-But when the input amplitude becomes large, the clipping becomes substantial. This plot is at the same scale, but taken from a later portion of the generated output. Remember that the input at this point is a high-amplitude sinusoid:<p>
-<center>
-<img src="largeclip.jpg">
-</center>
-Also notice
-that the distortion is symetrical, so it generates even harmonics. If you
-put in an asymetric function, you'll get odd harmonics too. Note that at
-soft levels, I actually get some gain from this function.
-<p><i>Generated by Roger Dannenberg (roger.dannenberg@cs.cmu.edu) Feb,
-2004.</i></blockquote>
+(play (distort (mult 15.0 (ramp 4) (osc c4 4))))</pre>
+      <p>Or in SAL,</p>
+      <pre>set distortion =
+      osc(hz-to-step(0.25), 2.01, *SINE-TABLE*, -90.0)
+function distort(snd)<br>  return shape(snd, distortion, 1.0) 
 
-</body>
-</html>
+play distort(15.0 * ramp(4) * osc(c4, 4))</pre>
+</blockquote>
+<p>Even though I am an expert, and I have done this before, it still
+      took me a few tries to get right. Here's a step-by-step
+      explanation: </p>
+    <ul>
+      <li>I used <tt>osc</tt> (line 2) to generate a sinusoid so I could control
+        the initial phase. </li>
+      <li>I set the osc duration to 2 because I want the table to go
+        from 0 to 2 (after which we'll shift it back to [-1, +1]), but 2
+        is not enough because the interval [0,2] is closed, which means
+        I need one extra sample. I used 2.01 to be conservative. </li>
+      <li>I specified <tt>*SINE-TABLE*</tt> (line 2), the default value, because
+        the table parameter comes before the phase parameter. </li>
+      <li>I specified the phase of -90 (line 2) to get the sine curve to go through zero
+        in the <i>middle</i> of the generated function. </li>
+      <li>I assigned this to the variable <tt>distortion</tt> so I could plot it;
+        try:
+        <pre>(s-plot (force-srate 100 distortion))</pre>
+or in SAL:
+<pre>plot force-srate(100, distortion)</pre></li>
+      <li>Finally, I put in a tone that ramps up from zero to 15 in
+        amplitude to cause some serious clipping. The output amplitude
+        is limited to 1. </li>
+    </ul>
+    <p>Note that the input to <tt>shape</tt> is pre-clipped to the
+      range [-1, +1] so you only need to specify the table from [0, 2]
+      if the origin (third parameter to <tt>shape</tt>) is 1.0. If you
+      specify a little extra, as in this example, it will be ignored. </p>
+    <h2>The Output</h2>
+    <p> Look at the generated waveform to observe the soft clipping
+      effect. Here we see the beginning of the output, where the input
+      amplitude is low and there is very little distortion: </p>
+    <p> </p>
+    <center> <img src="images/beginclip.jpg"> </center>
+    But when the input amplitude becomes large, the clipping becomes
+    substantial. This plot is at the same scale, but taken from a later
+    portion of the generated output. Remember that the input at this
+    point is a high-amplitude sinusoid:
+    <p> </p>
+    <center> <img src="images/largeclip.jpg"> </center>
+    Also notice that the distortion is symetrical, so it generates even
+    harmonics. If you put in an asymetric function, you'll get odd
+    harmonics too. Note that at soft levels, I actually get some gain
+    from this function.
+  
+</body></html>

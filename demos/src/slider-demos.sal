@@ -130,7 +130,7 @@ function f5()
     if ! fboundp(quote(risset-bell)) then load "../demos/pmorales/b3.lsp"
     play trigger(slider(TD, "Trigger", 100), 
                  risset-bell(1.0, get-slider-value(TD, "Dur"), 
-                                  get-slider-value(TD, "Freq")) *
+                                  get-slider-value(TD, "Freq"))) *
          stop-on-zero(slider(TD, "Stop", 100))
   end
 

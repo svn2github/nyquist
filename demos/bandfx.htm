@@ -1,59 +1,52 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="GENERATOR" content="Mozilla/4.75 [en] (Windows NT 5.0; U) [Netscape]">
-   <title>Untitled Document</title>
-</head>
-<body bgcolor="#FFFFFF">
-
-<h1>
-Multiple Band Effects Tutorial</h1>
-This page describes how to use the bandfx library in Nyquist.
-<h2>
-What does it do?</h2>
-The idea is very simple: separate the incoming signal into different frequency
-bands. Apply an effect to each frequency band.
-<br>For example, apply a delay, with longer delays at higher frequencies.
-Then sum the outputs of the effects. In the delay example,
-<br>the result will be something like a filter sweep -- the low frequencies
-come out first, followed by increasingly higher frequencies.
-<h2>
-How does it work?</h2>
-Frequency bands are separated using Nyquist's <font face="">reson</font>
-filter. Although reson is not perfect for this job, it has the nice
-<br>feature that there is a complementary areson filter that returns everything
-removed by reson. We split off the lowest
-<br>frequency band with reson, then apply areson to get the remainder of
-the signal. We pass this through another reson
-<br>tuned to the second band and use another areson to get the remainder.
-Using a series of filters, we pull off all the
-<br>band except for the last one, which is just whatever is left over.
-<p>The function separate-into-bands constructs an array of frequency bands.
-The function reconstruct-from-bands sums an
-<br>array of frequency bands back into a single channel. Different functions
-apply effects to the frequency band representation.
-<br>Consult the code (see lib/bandfx.lsp) for details. You can use the
-code as a template for creating your own multiple band effects.
-<h2>
-How can I use it?</h2>
-
-<pre>> (load "bandfx")</pre>
-
-<pre>> (f2)</pre>
-
-<pre>> (f3)</pre>
-
-<pre>> (f4)</pre>
-
-<pre>> (f5)</pre>
-The commands shown above will play some examples that are included in lib/bandfx.lsp.
-You can read the code for
-<br>a description of the functions and to see examples of their use. The
-functions are also described in the Nyquist manual
-<br>(see "multiple band effects" in the index).<i></i>
-<p>The manual also describes some ways this library might be extended.
-Please contribute some examples if you find these effects useful.
-<br>&nbsp;
-</body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.75 [en] (Windows NT 5.0;
+      U) [Netscape]">
+    <title>Untitled Document</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body bgcolor="#FFFFFF">
+    <h1> Multiple Band Effects Tutorial</h1>
+    This page describes how to use the bandfx library in Nyquist.
+    <h2> What does it do?</h2>
+    The idea is very simple: separate the incoming signal into different
+    frequency bands. Apply an effect to each frequency band. For
+    example, apply a delay, with longer delays at higher frequencies.
+    Then sum the outputs of the effects. In the delay example, the
+    result will be something like a filter sweep -- the low frequencies
+    come out first, followed by increasingly higher frequencies.
+    <h2> How does it work?</h2>
+    Frequency bands are separated using Nyquist's <font face="">reson</font>
+    filter. Although reson is not perfect for this job, it has the nice
+    feature that there is a complementary areson filter that returns
+    everything removed by reson. We split off the lowest frequency band
+    with reson, then apply areson to get the remainder of the signal. We
+    pass this through another reson tuned to the second band and use
+    another areson to get the remainder. Using a series of filters, we
+    pull off all the band except for the last one, which is just
+    whatever is left over.
+    <p>The function separate-into-bands constructs an array of frequency
+      bands. The function reconstruct-from-bands sums an array of
+      frequency bands back into a single channel. Different functions
+      apply effects to the frequency band representation. Consult the
+      code (see lib/bandfx.lsp) for details. You can use the code as a
+      template for creating your own multiple band effects. </p>
+    <h2> How can I use it?</h2>
+    <pre>&gt; load "bandfx"</pre>
+    <pre>&gt; f2()</pre>
+    <pre>&gt; f3()</pre>
+    <pre>&gt; f4()</pre>
+    <pre>&gt; f5()</pre>
+    The commands shown above will play some examples that are included
+    in lib/bandfx.lsp. You can read the code for a description of the
+    functions and to see examples of their use. The functions are also
+    described in the Nyquist manual (see "multiple band effects" in the
+    index).
+    <p>The manual also describes some ways this library might be
+      extended. Please contribute some examples if you find these
+      effects useful. </p>
+  </body>
 </html>

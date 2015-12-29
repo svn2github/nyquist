@@ -1,83 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-
-<head>
-<title>Pitch Change by Resampling Tutorial</title>
-</head>
-
-<body>
-
-<h1>Pitch Change by Resampling Tutorial</h1>
-
-<p><b>Roger Dannenberg</b></p>
-<p>
-This tutorial shows how to change the pitch of a sound using resampling.
-In this example, a source sound is resampled to effectively play the sound
-faster and/or slower. This changes the perceived pitch. It also makes the
-sound play faster and/or slower, so the original duration is not preserved.
-<p>
-To control the playback speed, a control function is used. The function
-specifies the pitch shift in steps, so if the function is zero, there is
-no change. If the signal is 1, the signal is shifted up one half-step.
-If the signal is -2, the signal is shifted down a whole-step, etc.
-<p>
-The control signal can of course change over time. The control signal
-time corresponds to time in the resulting sound. Thus, if the control
-signal jumps from 0 to 5 at time 3, the resulting sound will jump up
-a musical fourth (5 half-steps) at time 3. This may or may not be time
-3 in the source sound.
-
-<p>
-The code implements VARIABLE-RESAMPLE which takes two parameters:
-<ul>
-<li>steps -- the pitch control function
-<li>snd -- the source sound to be resampled
-</ul>
-The function works as follows:
-First, steps is converted to ratio, which is the speed change expressed
-as a ratio. E.g. when steps is 12 (an octave), ratio will be 2 (a 2:1 ratio)
-Second, ratio is integrated to get map. The map is a function from real
-time to the score. Note that the slope of the map at any time determines
-the amount of speedup.
-Finally, SND-COMPOSE is used to map the source sound according to the
-tempo map. Because SND-COMPOSE is defined to output the sample rate
-of the map, we coerce the sample rate of map to *sound-srate*.
-<p>
-This function could be improved by adding code to handle stereo inputs.
-Also, this function should really be implemented using snd-resamplev,
-which uses a high-quality resampling algorithm. Unfortunately, there
-a bug in snd-resamplev, so until the bug is fixed, snd-compose actually
-sounds better.
-<p>
-The resulting sound ends whenever either steps or snd come to an end.
-To control duration, you may want to make sure that the source sound
-is much longer than the control function. That way, even if you speed
-it up, it will still last long enough to exhaust the control function,
-and you know by design how long that is. You can also apply an
-envelope to the result to trim it to a known length.
-<p>
-So, here finally is the implementation:
-<pre>
-(defun variable-resample (steps snd)
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>Pitch Change by Resampling Tutorial</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body>
+    <h1>Pitch Change by Resampling Tutorial</h1>
+    <p><b>Roger B. Dannenberg</b></p>
+    <p> This tutorial shows how to change the pitch of a sound using
+      resampling. In this example, a source sound is resampled to
+      effectively play the sound faster and/or slower. This changes the
+      perceived pitch. It also makes the sound play faster and/or
+      slower, so the original duration is not preserved. </p>
+    <p> To control the playback speed, a control function is used. The
+      function specifies the pitch shift in steps, so if the function is
+      zero, there is no change. If the signal is 1, the signal is
+      shifted up one half-step. If the signal is -2, the signal is
+      shifted down a whole-step, etc. </p>
+    <p> The control signal can of course change over time. The control
+      signal time corresponds to time in the resulting sound. Thus, if
+      the control signal jumps from 0 to 5 at time 3, the resulting
+      sound will jump up a musical fourth (5 half-steps) at time 3. This
+      may or may not be time 3 in the source sound. </p>
+    <p> The code implements VARIABLE-RESAMPLE which takes two
+      parameters: </p>
+    <ul>
+      <li>steps -- the pitch control function </li>
+      <li>snd -- the source sound to be resampled </li>
+    </ul>
+    The function works as follows: First, steps is converted to ratio,
+    which is the speed change expressed as a ratio. E.g. when steps is
+    12 (an octave), ratio will be 2 (a 2:1 ratio) Second, ratio is
+    integrated to get map. The map is a function from real time to the
+    score. Note that the slope of the map at any time determines the
+    amount of speedup. Finally, SND-COMPOSE is used to map the source
+    sound according to the tempo map. Because SND-COMPOSE is defined to
+    output the sample rate of the map, we coerce the sample rate of map
+    to *sound-srate*.
+    <p> This function could be improved by adding code to handle stereo
+      inputs. Also, this function should really be implemented using
+      snd-resamplev, which uses a high-quality resampling algorithm.
+      Unfortunately, there a bug in snd-resamplev, so until the bug is
+      fixed, snd-compose actually sounds better. </p>
+    <p> The resulting sound ends whenever either steps or snd come to an
+      end. To control duration, you may want to make sure that the
+      source sound is much longer than the control function. That way,
+      even if you speed it up, it will still last long enough to exhaust
+      the control function, and you know by design how long that is. You
+      can also apply an envelope to the result to trim it to a known
+      length. </p>
+    <p> So, here finally is the implementation (first in SAL syntax, and
+      then in Lisp syntax in small print): </p>
+    <pre>function variable-resample(steps, snd)<br>  begin<br>    with p1 = log(2.0) / 12,    ; p1 helps convert steps to a ratio
+         ratio = s-exp(steps * p1) ; pitch ratio
+         map = integrate(ratio) ; map from real-time to sound time
+    return snd-compose(snd, force-srate(*sound-srate*, map))<br>  end<br>&nbsp;<br><small><small>(defun variable-resample (steps snd)
   (let ((p1 (/ (log 2.0) 12))  ; p1 helps convert steps to a ratio
         ratio map)
     (setf ratio (s-exp (mult steps p1))) ; pitch ratio
     (setf map (integrate ratio)) ; map from real-time to sound time
     (snd-compose snd (force-srate *sound-srate* map))))
-</pre>
-Here is an example: the PWL control function is initially zero (no
+</small></small></pre><small><small>
+</small></small>Here is an example: the PWL control function is initially zero (no
 transposition), but starting at time 1.0, it rises to 2.0 in 0.1s
 where it remains until time 3.0. The function ends at time 3.0.
 The sound to be modified in this case is a simple sinusoid with a
 duration of 8. In this case, the PWL function finishes at 3.0s, well
-before the OSC sound comes to an end.
-<pre>
-(play
-       (variable-resample (pwl 1.0 0.0 1.1 2.0 3.0 2.0 3.0) (osc c4 8.0)))
+before the OSC sound comes to an end.<pre>play variable-resample(pwl(1.0, 0.0, 1.1, 2.0, 3.0, 2.0, 3.0), <br>                       osc(c4, 8.0))
 </pre>
-Note that you can replace (osc c4 8.0) with any sound, including one
-read from a sound file using S-READ.
+<pre><small><small>(play (variable-resample (pwl 1.0 0.0 1.1 2.0 3.0 2.0 3.0) (osc c4 8.0)))
+</small></small></pre><small><small>
+</small></small>Note that you can replace <tt>osc(c4, 8.0)</tt> with any sound, including one
+read from a sound file using <tt>s-read</tt>.
 
-</body>
-</html>
 
 
+
+
+</body></html>
