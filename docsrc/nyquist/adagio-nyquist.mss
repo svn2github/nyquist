@@ -128,7 +128,7 @@ beats, followed by one or several modifiers.  The basic duration codes are:
 \begin{tt}I\end{tt}\index{I (adagio eight note)} \> (eighth\index{Eighth note}, 1/2 beat), \\
 \begin{tt}S\end{tt}\index{S (adagio sixteenth note)} \> (sixteenth\index{Sixteenth note}, 1/4 beat), \\
 \begin{tt}\%\end{tt}\index{\% (adagio thirtysecond note)} \> (thirtysecond\index{Thirtysecond note}, 1/8 beat), and\\
-\begin{tt}\textasciicircum \end{tt}\index{\textasciicircum  \> (adagio sixtyfourth note)} \> (sixtyfourth\index{Sixtyfourth note}, 1/16 beat). 
+\begin{tt}\textasciicircum{} \end{tt}\index{\textasciicircum{} (adagio sixtyfourth note)} \> (sixtyfourth\index{Sixtyfourth note}, 1/16 beat). 
 \end{tabbing}
 \end{quote} @end(latex)@pragma(htmlonly)
 @begin(display)
@@ -383,7 +383,7 @@ Durations specified in time units (for example @code(U58), @code(N15)) are not a
 
 The @code(!TEMPO) command is fairly clever about default durations@Index(default
 durations).  If the last duration specified before the @code(!TEMPO) command is
-symbolic (using one of @code(^),@code(%), @code(S), @code(I), @code(Q), @code(H), or @code(W) ), then the default duration for the
+symbolic (using one of @code(^), @code(%), @code(S), @code(I), @code(Q), @code(H), or @code(W) ), then the default duration for the
 node after the @code(!TEMPO) command will be modified according to the tempo change.
 Consider the following tempo change:
 @begin(programexample)

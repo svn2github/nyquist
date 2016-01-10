@@ -69,7 +69,7 @@
 @majorheading(Nyquist Reference Manual)
 @b(Version 3.10)
 @blankspace(0.3 inch)
-@b(Copyright 2013 by Roger B. Dannenberg)
+@b(Copyright 2013, 2014, 2015, 2016 by Roger B. Dannenberg)
 @value(date)
 @end(titlebox)
 @pragma(startscribe)
@@ -193,8 +193,8 @@ implementation ``Nyquist SAL;'' however, in this manual, I will just call it
 syntax that may be more familiar to programmers with experience in Java, C,
 Basic, etc. An introduction to SAL is in Mary Simoni and Roger B. Dannenberg, @i(Algorithmic Composition: A Guide to Composing Music with Nyquist) @cite(Simoni).
 
-@label(install-sec)
 @section(Installation)
+@label(install-sec)
 @index(installation)@index(configure nyquist)@index(setup nyquist)
 Nyquist is a C++ program intended to run under various operating systems 
 including Unix, Mac OS X, and Windows. Nyquist is based on Lisp, but it 
@@ -443,12 +443,13 @@ When Nyquist starts it normally enters SAL mode automatically, but certain error
 In SAL mode, you type commands in the SAL programming language. Nyquist reads the commands, compiles them into Lisp, and evaluates the commands. Commands can be entered manually by typing into the upper left text box in NyquistIDE.
 
 @section(Command Line)
+@label(command-line-sec)
 @index(Command Line)@index(security)@index(protected files)
 When run from the command line, Nyquist (usually the command is @t(ny)) looks 
 for some options and some files to load. There are several options.
 
 The
- @t(-R)@i(paths) option gives Nyquist a list of paths (separated by 
+@index(file access limit)@index(limit, file access)@t(-R)@i(paths) option gives Nyquist a list of paths (separated by 
 semicolons) to directories where Nyquist is allowed to read files. Files in any 
 subdirectories of the listed directories can also be read, along with the 
 directories themselves. This option can be used to restrict access to files.
@@ -461,14 +462,14 @@ from accidentally malicious code. (If you are truly worried about Nyquist code,
 you should run Nyquist in a virtual machine or other isolated machine. It is
 unlikely that Nyquist is secure from all attacks.)
 
-The @t(-L)@i(run-time-limit) option gives Nyquist a run time limit. If the limit
+@index(run-time limit)@index(limit, run-time)The @t(-L)@i(run-time-limit) option gives Nyquist a run time limit. If the limit
 is exceeded, Nyquist prints an error message and exits. The time is based on 
 actual work rather than CPU seconds or wall time. One unit of run time is on the 
 order of 10ms of CPU time (for a medium speed computer in 2014), but you can use
 the @code(GET-RUN-TIME) function to read the internal run-time counter to see
 how much computation you have done.
 
-The @t(-M)@i(memory-limit) option gives Nyquist a memory limit. If the limit
+@index(limit, memory)@index(memory limit)@index(memory usage)The @t(-M)@i(memory-limit) option gives Nyquist a memory limit. If the limit
 (in megabytes) is exceeded, Nyquist prints an error message and exits. The
 limit includes all XLISP data (cons cells, strings, etc.) plus sample blocks
 and tables allocated for signal processing.
@@ -672,7 +673,7 @@ all the computed sounds.
 
 Sequences can also be constructed using the @code(at) transformation to 
 specify time offsets. See 
-@code(sequence_example.htm)@index(sequence_example.htm)@index(score, musical)
+@code(demos/sequence_example.htm)@index(sequence_example.htm)@index(score, musical)
 @code(demos, sequence) for more examples and explanation.
 
 @subsection(Envelopes)@index(Envelopes)
@@ -863,11 +864,11 @@ application bundle. To make it easier to access these hidden files,
 the NyquistIDE installs links to these directories the first time you
 run it. The links will be in the same directory as the NyquistIDE itself.
 
-The file @code(demos/examples_home.htm) is an index to all the demo descriptions. In this directory, you will find the following and more:
+The file @code(demos/index.htm) is an index to all the demo descriptions. In this directory, you will find the following and more:
 @begin(itemize)
-Code to create atonal melodies (@code(demos/atonal-melodies.sal)).
+Code to create atonal melodies (@code(demos/src/atonal-melodies.sal)).
 
-How to make arpeggios (@code(demos/arpeggiator.htm) and @code(arp.sal))@index(arpeggiator)
+How to make arpeggios (@code(demos/arpeggiator.htm) and @code(demos/src/arp.sal))@index(arpeggiator)
 
 Gong sounds by additive synthesis@index(additive synthesis, gongs)
 (@code(demos/pmorales/b1.lsp) and @code(demos/mateos/gong.lsp))@index(Gong sounds)@index(demos, gong sound)
@@ -881,7 +882,7 @@ Bell sounds
 Drum sounds by Risset
 (@code(demos/pmorales/b8.lsp)@index(demos, drum sound)@index(drum sound)
 
-Shepard tones (@code(demos/shepard.lsp) and @code(demos/pmorales/b9.lsp))@index(Shepard tones)@index(endless tones)
+Shepard tones (@code(demos/src/shepard.lsp) and @code(demos/pmorales/b9.lsp))@index(Shepard tones)@index(endless tones)
 
 Random signals (@code(demos/pmorales/c1.lsp))
 
@@ -892,7 +893,7 @@ Computing samples directly in Lisp (using Karplus-Strong and physical modelling
 as examples)
 (@code(demos/pmorales/d1.lsp))@index(demos, sample-by-sample)@index(DSP in Lisp)@index(Lisp DSP)@index(Karplus-Strong synthesis)@index(physical model)@index(flute sound)
 
-FM Synthesis examples, including FM voices (@code(demos/FM-voices-Chowning.sal))
+FM Synthesis examples, including FM voices (@code(demos/src/fm-voices-chowning.sal))
 designed by John Chowning@index(FM voices)@index(Chowning, John),
 bell@index(bell sound), wood drum@index(wood drum sound),
 brass sounds@index(brass sound), tuba sound @index(tuba)
@@ -1563,8 +1564,8 @@ stretched by 1.0). This is good because it means @code(rise-time) will
 not be stretched, but we must be careful to extend the envelope to 
 @code(dur) so that it has the expected duration.
 
-@section(Sample Rates)
-@index(sample rates)
+@section(Sampling Rates)
+@index(sampling rate)
 The global environment contains @code(*sound-srate*) and
 @code(*control-srate*), which determine the sample rates of sounds and
 control signals.  These can be overridden at any point by the
@@ -2577,7 +2578,7 @@ Expressions can be formed with unary and binary operators using infix notation. 
 
 @index(%)@code(%)@\modulus (remainder after division)
 
-@index(^)@code(^)@\exponentiation
+@index(^)@code(^) @\exponentiation
 
 @index(=)@code(=)@\equal (using Lisp @code(equal) for non-lists, and
 comparing lists element-by-element recursively)@foot(In the Common Music implementation of SAL, @code(=) compiles to the Lisp @code(=) function, so this is an incompatible difference.)
@@ -2773,24 +2774,6 @@ contain more than one statement or you need to define local variables. Use
 a @code(return) statement to return a value from the function. If @i(statement)
 completes without a @code(return), the value false is returned.
 
-@paragraph(display)
-@index(display statement, sal)
-@code(display) @i(string) {, @i(expression)}*
-
-The @code(display) statement is handy for debugging. At present, it is only
-implemented in Nyquist SAL. When executed, @code(display) prints the @i(string)
-followed by a colon and then, for each @i(expression), the expression and its
-value are printed, after the last expression, a newline is printed. For example,
-@begin(example)
-display "In function foo", bar, baz
-@end(example)
-prints
-@begin(example)
-In function foo : bar = 23, baz = 5.3
-@end(example)
-SAL may print the expressions using Lisp syntax, e.g. if the expression is
-``bar + baz,'' do not be surprised if the output is ``@code[(sum bar baz) = 28.3].''
-
 @paragraph(exec)
 @index(exec statement, sal)
 @code(exec) @i(expression)
@@ -2985,6 +2968,25 @@ end
 @i[; result has first even value in lis (or it is #f)]
 @end(example)
 
+@paragraph(play)
+@index(play statement, sal)
+@code(play) @i(expr)
+
+The @code(play) statement plays the sound denoted by @i(expr), an expression.
+
+@paragraph(plot)
+@index(plot statement, sal)
+@code(plot) @i(expr) {, @i(dur), @i(n)}
+
+The @code(plot) statement plots the sound denoted by @i(expr), an
+expression. If you plot a long sound, the @code(plot) statement will
+by default truncate the sound to 2.0 seconds and resample the signal
+to 1000 points. The optional @i(dur) is an expression that specifies
+the (maximum) duration to be plotted, and the optional @i(n) specifies
+the number of points to be plotted. Executing a @code(plot) statement
+is equivalent to calling the @code(s-plot) function (see Section
+@ref(s-plot-sec)).
+
 @paragraph(print)
 @index(print statement, sal)
 @code(print) @i(expr) {, @i(expr)}*
@@ -2992,6 +2994,24 @@ end
 The @code(print) statement prints the values separated by
 spaces and followed by a newline. [Note that in the original
 SAL, the newline is printed @i(before) the values, not after.]
+
+@paragraph(display)
+@index(display statement, sal)
+@code(display) @i(string) {, @i(expression)}*
+
+The @code(display) statement is handy for debugging. At present, it is only
+implemented in Nyquist SAL. When executed, @code(display) prints the @i(string)
+followed by a colon and then, for each @i(expression), the expression and its
+value are printed; after the last expression, a newline is printed. For example,
+@begin(example)
+display "In function foo", bar, baz
+@end(example)
+prints
+@begin(example)
+In function foo : bar = 23, baz = 5.3
+@end(example)
+SAL may print the expressions using Lisp syntax, e.g. if the expression is
+``bar + baz,'' do not be surprised if the output is ``@code[(sum bar baz) = 28.3].''
 
 
 @begin(example)
@@ -3412,7 +3432,7 @@ is returned.  This function is safe for ordinary use, but like
 @code(snd-from-array), it requires a total of slightly over 18 bytes per
 sample.
 
- @codef[snd-srate(@pragma(defn)@index(snd-srate)@i(sound))] @c{[sal]}@*
+ @codef[snd-srate(@pragma(defn)@index(snd-srate)@index(sampling rate)@i(sound))] @c{[sal]}@*
 @altdef{@code[(snd-srate @i(sound))] @c{[lisp]}}@\Returns the sample rate of
 the sound. Safe for ordinary use.
 @begin(comment)
@@ -3468,6 +3488,30 @@ usage)@index(table memory))] @c{[sal]}@*
 @altdef{@code[(stats)] @c{[lisp]}}@\Prints the memory usage status.  
 See also the 
 XLISP @code(mem) function.  Safe for ordinary use. This is the only way to find out how much memory is being used by table-lookup oscillator instances.
+
+@codef[snd-set-max-audio-mem(@pragma(defn)@index(snd-set-max-audio-mem)@index(memory usage)@index(limit, memory)@index(memory limit)@i(bytes))] @c{[sal]}@*
+@altdef{@code[(snd-set-max-audio-mem @i(bytes))] @c{[lisp]}}@\Sets
+a limit (a FIXNUM in bytes) on the amount of main memory that
+Nyquist will allocate
+for SOUNDs (this does not count table memory). The default is about 1GB.
+The return value is the previous limit, in bytes. This is not a limit on
+how big sounds can be. Since Nyquist computes sound incrementally, it can
+generally play sounds or write sounds to files without storing them in
+memory. However, if you store large sounds in variables, memory usage can
+exceed your available RAM, causing extremely slow computation as main memory
+is swapped to and from disk or Nyquist might run out of memory and crash. The
+goal of placing a limit on audio memory is to terminate computations before
+memory is totally exhausted, allowing Nyquist to print an error message and
+allowing the user to view or save work. Generally, if you see the message
+``The maximum number of sample blocks has been reached, ...,'' you should
+fix your code to avoid accumulating samples in memory, e.g. do not assign
+sounds to global variables. Alternatively, you can use this function to
+increase the limit, but of course you are still limited by the actual size
+of memory on your computer, and exceeding that could cause severe performance
+problems in Nyquist and and any other applications that are running.
+See also Section @ref(command-line-sec) for command line options to limit
+yquist memory, run time, and file access (these options are not available through
+the NyquistIDE.)
 @end(fndefs)
 
 @subsection(Miscellaneous Functions)
@@ -4242,13 +4286,14 @@ will have a duration of 1.0 because that is the termination time of the @code(pw
 @label(convolve-sec)
 @codef{convolve(@pragma(defn)@index(convolve)@index(convolution)@index(FIR filter)@i(sound),
 @i(response))} @c{[sal]}@*
-@altdef{@code[(convolve @i(sound) @i(response))] @c{[lisp]}}@\Convolves two signals. The first can be any length, but the
-computation time per sample and the total space required are proportional to
+@altdef{@code[(convolve @i(sound) @i(response))] @c{[lisp]}}@\Convolves two signals. The first can be any length, but the total space required is proportional to
 the length of @i(response). The start time, logical stop time, and sample 
 rate of the output match those of the input @i(sound). The physical stop 
 time of the result is the physical stop time of @i(sound) plus the duration 
 of the @i(response) so that the result sound includes the ``tail'' of the 
-filter response. The response is assumed to have the same sample rate as @i(sound). The samples are used as is without resampling.
+filter response. The response is linearly interpolated if necessary to have same sample rate as @i(sound). The current implementation uses a ``fast convolution'' algorithm with a maximum FFT size of 64K, which after zero padding allows up to 32K point convolutions. If the impulse response is longer, it is broken into multiple blocks of 32K samples. There is no limit on the length of the impulse response. This is an Order(N x M) algorithm where N and M are the number of 32K sample blocks in the @i(sound) and @i(response), respectively.
+Further discussion and examples can be found in 
+@code(demos/convolution.htm)@index(convolution tutorial)@index(demos, convolution). 
 
 @label(feedback-delay-sec)
 @codef{feedback-delay(@pragma(defn)@index(feedback-delay)@index(delay)@index(echo)@i(sound), @i(delay), @i(feedback))} @c{[sal]}@*
@@ -4633,6 +4678,53 @@ The parameter @i(step) is a @code(FLONUM) that sets the pitch,
  and @i(dur) is the duration.
 @end(fndefs)
 
+@paragraph(Phase Vocoder)
+@begin(fndefs)
+@label(phasevocoder-sec)
+@codef{phasevocoder(@pragma(defn)@index(phasevocoder)@index(phase vocoder)@index(stretch)@index(time stretch)@i(s),
+       @i(map), [@i(fftsize), @i(hopsize), @i(mode)])} @c{[sal]}@*
+@altdef{@code{(phasevocoder @i(s) @i(map) [@i(fftsize) @i(hopsize) @i(mode)])}
+       @c{[lisp]}}@\Phase vocoder: the input SOUND @i(s) is stretched in 
+time according to the control signal (a SOUND) @i(map). The @i(map) parameter
+must be strictly non-decreasing. It specifies the input time for each time
+in the output. E.g. if @i(map) at time 3 is 4, then the output at time 3 will
+sound like the input at time 4, assuming @i(s) and @i(map) start at time 0.
+In the general case, @i(s) and @i(map) must start at the same time. The phase 
+vocoder operation is applied as if @i(s) and @i(map) started at time 0, and
+the result is shifted to start at the same starting time as @i(s) and @i(map).
+The @i(fftsize) is a FIXNUM and power of 2, indicating the size of the 
+analysis and synthesis windows in samples. The default is 2048. 
+The @i(hopsize) is the hop size (in samples, a FIXNUM) of the 
+synthesis stage where overlapping windows are added. The @i(hopsize) 
+should be a power of 2 that is smaller than the @i(fftsize). The default is
+the @i(fftsize)/8. Note that the analysis hopsize is determined by the @i(map).
+If the playback speed (slope of @i(map)) is too great, the analysis hopsize
+will be large and the sound quality will suffer. You can always make the 
+analysis hopsize smaller by making the synthesis hopsize smaller (at the
+cost of greater computation). The @i(mode) is a FIXNUM that defaults to
+0, meaning a standard phase vocoder. A value of 1 invokes a phase computation
+that attempts to reduce phase artifacts by preserving the phase relationships
+between peaks and nearby bins. A value of 2 invokes a ``robot voice'' mode
+that assigns fixed phases and creates a constant pitch (controlled
+by the hopsize) vocoder-like effect.
+
+@codef{pv-time-pitch(@pragma(defn)@index(pv-time-pitch)@index(transpose)@index(pitch shift)@i(s),
+    @i(stretchfn), @i(pitchfn), @i(dur), [@i(fftsize), @i(hopsize), @i(mode)])} @c{[sal]}@*
+@altdef{@code{(pv-time-pitch @i(s) @i(stretchfn) @i(pitchfn) @i(dur) [@i(fftsize) @i(hopsize) @i(mode)])} @c{[lisp]}}@\Combines phase vocoder and resampling
+to perform simultaneous time stretching and pitch shifting. The input SOUND
+@i(s) is stretched according to SOUND @i(stretchfn) and pitch-shifted according
+to SOUND @i(pitchfn). The approximate output duration should be specified by
+@i(dur) (which is used to optimize the sample rate of computed control
+functions), and the remaining parameters @i(fftsize), @i(hopsize) and
+@i(mode) are passed to the phase vocoder (see @code(phasevocoder) above). The
+@i(stretchfn) gives the factor by which the input should be stretched at each
+point in time; thus, the total duration is the @i(integral) of this function. The @i(pitchfn) specifies the amount by which pitch should be shifted at each
+point in time. For example, where @i(pitchfn) is 2, the sample rate will be
+doubled, increasing pitch and frequencies by an octave. The phase vocoder is
+used to compensate for time stretching caused by resampling,
+so @i(stretchfn) and @i(pitchfn) operate independently.
+@end(fndefs)
+
 @paragraph(More Behaviors)
 @begin(fndefs)
 @label(clip-sec)
@@ -4889,7 +4981,8 @@ The difference is returned.
 @section(Combination and Time Structure)@index(Combination)@index(Time Structure)
 These behaviors combine component behaviors into structures, including
 sequences (melodies), simultaneous sounds (chords), and structures based
-on iteration.
+on iteration. See also the @code(trigger) function, described in
+Section @ref(trigger-sec), which uses a SOUND to trigger instances of a behavior.
 
 @begin(fndefs)
 @label(seq-sec)
@@ -4936,19 +5029,6 @@ evaluates @i(beh) with the atom
 are then placed simultaneously in time as if by @code(sim).
 In LISP, the syntax is
  @code[(seqrep (@i(var) @i(limit)) @i(beh))].
-
-@label(trigger-sec)
-@codef[trigger(@pragma(defn)@index(trigger)@i(s), @i(beh))] @c{[sal]}@*
-@altdef{@code[(trigger @i(s) @i(beh))] @c{[lisp]}}@\Returns a sound which is the
-sum of instances of the behavior @i(beh). One instance is created each time
-@code(SOUND) @i(s) makes a transition from less than or equal to zero to
-greater than zero. (If the first sample of @i(s) is greater than zero, an
-instance is created immediately.) The sample rate of @i(s) and all behaviors
-must be the same, and the behaviors must be (monophonic) @code(SOUND)s.
-This function is particularly designed to allow behaviors to be invoked
-in real time by making @i(s) a function of a Nyquist slider, which can be
-controlled by a graphical interface or by OSC messages. See @code(snd-slider)
-in Section @ref(snd-slider-sec). See also Section @ref(interactive-sec).
 
 @codef[set-logical-stop(@pragma(defn)@index(set-logical-stop)@i(beh), @i(time))] @c{[sal]}@*
 @altdef{@code[(set-logical-stop @i(beh) @i(time))] @c{[lisp]}}@\Returns a sound with @i(time) as 
@@ -5242,6 +5322,7 @@ sound file with a header (not a raw sound file).
 @codef{soundfilename(@pragma(defn)@index(soundfilename)@i(name))} @c{[sal]}@*
 @altdef{@code[(soundfilename @i(name))] @c{[lisp]}}@\Converts a string @i(name) to a soundfile name.  If @i(name) begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from @code(*default-sf-dir*) is prepended to @i(name).  The @code(s-plot), @code(s-read), and @code(s-save) functions all use @code(soundfilename) translate filenames.
 
+@label(s-plot-sec)
 @codef{s-plot(@pragma(defn)@index(s-plot)@index(plot)@i(sound) 
  [, @i(dur), @i(n)])} @c{[sal]}@*
 @altdef{@code{(s-plot @i(sound) 
@@ -5985,10 +6066,24 @@ the sound. The duration and logical stop time  of the sound is taken from
 should use @code(siosc) instead (see Section @ref(siosc-sec)).
 @end(fndefs)
 
+@subsection(Phase Vocoder Functions)
+@begin(fndefs)
+@codef{snd-phasevocoder(@pragma(defn)@index(snd-phasevocoder)@index(phasevocoder)@i(s), 
+ @i(map), @i(fftsize), @i(hopsize) @i(mode))} @c{[sal]}@*
+@altdef{code{(snd-phasevocoder @i(s) @i(map) @i(fftsize)
+ @i(hopsize) @i(mode))} @c{[lisp]}}@\Phase vocoder: Identical
+to @code(phasevocoder) 
+except that @i(fftsize), @i(hopsize) and @i(mode) are not optional.
+Specify -1 to get
+the default values for @i(fftsize) and @i(hopsize). Specify 0 for the
+default value of @i(mode). You should use @code(phasevocoder) instead 
+(see Section @ref(phasevocoder-sec)).
+@end(fndefs)
+
 @subsection(Physical Model Functions)
 These functions perform some sort of physically-based modeling synthesis.
 @begin(fndefs)
-@codef[(snd-bandedwg@pragma(defn)@index(snd-bandedwg)@index(STK banded waveguide) @i(freq) @i(bowpress-env) @i(preset) @i(sr))]@*
+@codef[snd-bandedwg(@pragma(defn)@index(snd-bandedwg)@index(STK banded waveguide)@i(freq), @i(bowpress-env), @i(preset), @i(sr))] @c{[sal]}@*
 @altdef{@code[(snd-bandedwg @i(freq) @i(bowpress-env) @i(preset) @i(sr))] @c{[lisp]}}@\A Banded Wave Guide 
 Percussion instrument implemented in STK. The parameter @i(freq) is a 
 @code(FLONUM) in Hz, @i(bowpress-env) is 
@@ -6314,6 +6409,8 @@ a control panel, then populate the panel with sliders and buttons.
 These will send values into the sliders array in the Nyquist
 process. To control a sound, you use built-in functions to retrieve
 real-time values from the sliders array as sound is being played.
+Further discussion and examples can be found in 
+@code(demos/slider-demos.sal)@index(slider tutorial)@index(demos, slider control). 
 
 @subsection(Creating a Control Panel)
 A control panel is created with @code(make-slider-panel), which takes
@@ -6344,7 +6441,7 @@ load @code(sliders.lsp) to access this function.
 @subsection(Creating Controls)
 You can create slider and button controls. A slider control adjusts a
 floating point value in the sliders array and accessible as a
-time-varying signal (a SOUND) or as a FLONUM. A button control sets a
+time-varying signal (a @code(SOUND)) or as a @code(FLONUM). A button control sets a
 floating point value in the sliders array to zero (0.0) or one (1.0).
 The value changes when the left mouse button is pressed over the button control
 and changes back when the mouse button is released.
@@ -6423,7 +6520,7 @@ load @code(sliders.lsp) to access this function.
 @altdef{@codef{(get-slider-value @i(number))} @c{[lisp]}}@*
 @altdef{@codef{(get-slider-value @i(name))} @c{[lisp]}}@*
 @altdef{@codef{(get-slider-value @i(panel) @i(name))}
-@c{[lisp]}}@\@label(lpslider-sec)Get a value (a FLONUM) stored in the 
+@c{[lisp]}}@\@label(get-slider-value-sec)Get a value (a FLONUM) stored in the 
 slider array. The array is accessed directly if the parameter is
 @i(number), a FIXNUM. The index can be determined by searching the
 most recently created control panel by @i(name), a STRING, if only
@@ -6497,20 +6594,30 @@ interactively. (See the example above.)
 You must
 load @code(sliders.lsp) to access this function.
 
-@codef{trigger(@pragma(defn)@index(trigger)@i(s) @i(behavior))} @c{[sal]}@*
-@altdef{@code{(trigger @i(s) @i(behavior))}
-@c{[lisp]}}@\@label(trigger-sec)Instantiate a behavior each time a signal
-becomes positive: Each time @i(s), a @code(SOUND), makes a transition from
-zero or less to greater than zero, @i(behavior), an expression, is
-evaluated at the current time and must return a
-@code(SOUND). (Multi-channel behaviors are not allowed.)
- The result is the sum of all
-instantiated behaviors (which may overlap in time). (See the example above.)
+@label(trigger-sec)
+@codef[trigger(@pragma(defn)@index(trigger)@i(s), @i(beh))] @c{[sal]}@*
+@altdef{@code[(trigger @i(s) @i(beh))] @c{[lisp]}}@\Returns a sound which is the
+sum of zero or more possibly overlapping instances of the behavior @i(beh).
+One instance is created each time
+@code(SOUND) @i(s) makes a transition from less than or equal to zero to
+greater than zero. (If the first sample of @i(s) is greater than zero, an
+instance is created immediately.) The sample rate of @i(s) and all behaviors
+must be the same, and the behaviors must be (monophonic) @code(SOUND)s. The
+sample rate of the result is also the sample rate of @i(s).
 The stop time of the result is the maximum stop time of @i(s) and
 all sounds returned by instances of the behavior. 
-The sample rate of the return value is
-the sample rate of @i(s), and the sounds returned by the closure must all
-have that same sample rate. Do not call this function. 
+This function is particularly designed to allow behaviors to be invoked
+in real time. See the @code(trigger-me) function definition shown above.
+@blankspace(1)
+@begin(detail)
+An implementation note: There is no way to have @code(trigger) return
+a multichannel sound. An alternative implementation would be a built-in
+function to scan ahead in a sound to find the time of the next zero crossing.
+This could be combined with some LISP code similar to @code(seq) to sum up
+instances of the closure. However, this would force arbitrary look-ahead
+and therefore would not work with real-time inputs, which was the motivation
+for @code(trigger) in the first place.
+@end(detail)
 
 @codef[snd-stoponzero(@pragma(defn)@index(snd-stoponzero)@i(s))] @c{[sal]}@*
 @altdef{@code[(snd-stoponzero @i(s))]
@@ -6518,27 +6625,11 @@ have that same sample rate. Do not call this function.
 @code(stop-on-zero). You should use @code(stop-on-zero) instead.
 
 @codef[snd-trigger(@pragma(defn)@index(snd-trigger)@i(s), @i(closure))] @c{[sal]}@*
-@altdef{@code[(snd-trigger @i(s) @i(closure))] @c{[lisp]}}@\This is one of
-the only ways in which a behavior instance can be created by changes in a
-signal. When @i(s) (a @code(SOUND)) makes a transition from less than or 
-equal to zero to greater than zero, the closure, which takes a starting
-time parameter, is evaluated. The closure must return a @code(SOUND). The
-sum of all these sounds is returned. If there are no sounds, the result will
-be zero. The stop time of the result is the maximum stop time of @i(s) and
-all sounds returned by the closure. The sample rate of the return value is
-the sample rate of @i(s), and the sounds returned by the closure must all
-have that same sample rate. Do not call this function. 
-Use @code(trigger), described above.
-@blankspace(1)
-@begin(detail)
-An implementation note: There is no way to have @code(snd-trigger) return
-a multichannel sound. An alternative implementation would be a built-in
-function to scan ahead in a sound to find the time of the next zero crossing.
-This could be combined with some LISP code similar to @code(seq) to sum up
-instances of the closure. However, this would force arbitrary look-ahead
-and therefore would not work with real-time inputs, which was the motivation
-for @code(snd-trigger) in the first place.
-@end(detail)
+@altdef{@code[(snd-trigger @i(s) @i(closure))] @c{[lisp]}}@\This is a
+low-level support function for @code(trigger). The @i(closure) takes a
+starting time and returns a @code(SOUND). See @code(trigger) above for more
+details. Use @code(trigger) as described above and do not call this function
+directly.
 @end(fndefs)
 
 @section(Using Open Sound Control)@index(Open Sound Control)
@@ -6654,7 +6745,7 @@ With @code[snd-fft] and @code[snd-ifft], you can create all sorts of interesting
 idea is to create intermediate objects that both accept and generate sequences of frames.
 These objects can operate on the frames to implement the desired spectral-domain
 processes. Examples of this can be found in the file 
-@code[fft_tutorial.htm]@index(fft tutorial)@index(fast fourier transform tutorial)@index(demos, fft),
+@code[demos/fft_tutorial.htm]@index(fft tutorial)@index(fast fourier transform tutorial)@index(demos, fft),
 which is part of the standard Nyquist release. The documentation for @code[snd-fft] and
 @code[snd-ifft] follows.
 
@@ -6720,6 +6811,42 @@ than Lisp expressions for MIDI-like data. The Xmusic library
 and score manipulation. There are functions to convert between the
 Adagio, MIDI sequence data, and Xmusic score representations.
 
+@section(The SEQ Type)
+Nyquist has a special data type to store MIDI data called a SEQ (short for "sequence").
+You can create an empty SEQ object, read data into it from a MIDI or Adagio file, write a SEQ as MIDI or Adagio, and insert notes into a SEQ object. You can also convert SEQ objects into sound by providing functions to handle different MIDI messages.
+Further discussion and examples can be found in 
+@code(demos/midi_tutorial.htm)@index(midi tutorial)@index(demos, midi). 
+
+@begin(fndefs)
+@codef[seq-create(@pragma(defn)@index(seq-create)@index(MIDI sequence)@index(sequence))] @c{[sal]}@*
+@altdef{@code[(seq-create)] @c{[lisp]}}@\Creates a SEQ data object.
+
+@codef[seq-read(@pragma(defn)@index(seq-read)@index(read Adagio file)@index(Adagio file readr)@i(seq),
+@i(file))] @c{[sal]}@*
+@code[(seq-read @i(seq) @i(file))] @c{[lisp]}@\Reads into a SEQ data object from an ASCII text file in Adagio format. The first parameter is the SEQ object to read. The @i(file) is a file opened for reading. It must be closed after @code(seq-read) returns.
+
+@codef[seq-read-smf(@pragma(defn)@index(seq-read-smf)@index(read MIDI file)@index(MIDI file readr)@i(seq),
+@i(midi-file))] @c{[sal]}@*
+@code[(seq-read @i(seq) @i(midi-file))] @c{[lisp]}@\Reads into a SEQ data object from a Standard MIDI File. The first parameter is the SEQ object to read. The @i(midi-file) is a @i(binary) file opened @i(in binary mode) for reading. It must be closed after @code(seq-read-smf) returns.
+
+@codef[seq-write(@pragma(defn)@index(seq-write)@index(write Adagio file)@index(Adagio file writer)@i(seq),
+@i(file), @i(absolute))] @c{[sal]}@*
+@code[(seq-write @i(seq) @i(file) @i(absolute))] @c{[lisp]}@\Writes a SEQ data object to an ASCII text file in Adagio format. The first parameter is the SEQ object to write. The @i(file) is a file opened for writing. It must be closed after @code(seq-read) returns. The @i(absolute) parameter should be true to write absolute times of events and false (NIL) to write relative times.
+
+@codef[seq-write-smf(@pragma(defn)@index(seq-write-smf)@index(write MIDI file)@index(MIDI file writer)@i(seq),
+@i(midi-file))] @c{[sal]}@*
+@code[(seq-write-smf @i(seq) @i(midi-file))] @c{[lisp]}@\Writes a SEQ data object to a binary file in Standard MIDI File format. The first parameter is the SEQ object to write. The @i(midi-file) is a @i(binary) file opened for writing. It must be closed after @code(seq-write-smf) returns.
+
+@codef[seq-insert-note(@pragma(defn)@index(seq-insert-note)@i(seq), @i(time), @i(line), @i(voice), @i(pitch), @i(dur), @i(loud)] @c{[sal]}@*
+@altdef{@code[(seq-insert_note @i(seq) @i(time) @i(line) @i(voice) @i(pitch) @i(dur) @i(loud))] @c{[lisp]}}@\Inserts a new note into the SEQ object @i(seq). The note will be at @i(time) (a FIXNUM in milliseconds), with @i(voice) (channel) given by a FIXNUM starting at 1, duration given by @i(dur) (a FIXNUM in milliseconds), @i(pitch) (a FIXNUM with MIDI key number), and MIDI velocity given by @i(loud), a FIXNUM from 1 to 127.
+
+@codef[seq-midi-sal(@pragma(defn)@index(seq-midi-sal)@index(MIDI file synthesis)@i(seq), @i(note-fn), ctrl: @i(ctrl-fn), bend: @i(bend-fn), touch: @i(touch-fn), prgm: @i(prgm-fn))] @c{[sal]}@\Converts a SEQ data object @i(seq) into a sound. All @i(-fn) parameters are function names, typically passed by writing something like @code(quote(my-note-fn)). The @i(note-fn) takes channel, pitch, and velocity as parameters. The @i(ctrl-fn) takes channel, control number, and control value as parameters. All other functions take two parameters: channel and value. The @i(note-fn) must return a sound. It will be called for each MIDI note in an environment that conveys the starting time and duration.
+
+@codef[(seq-midi@pragma(defn)@index(seq-midi)@index(MIDI file synthesis) @i(seq) (note (chan pitch vel) @i(filter-expr) @i(behavior-expression)) (ctrl (chan control value) (...)) (bend (chan value) (...)) (touch (chan value) (...)) (prgm (chan value) (...)))] @c{[lisp]}@\Converts a SEQ data object @i(seq) into a sound. The @i(filter-expr) is an expression that must evaluate to true for the note to be synthesized, and @i(behavior-expression) returns a sound. Both @i(filter-expr) and @i(behavior-expression) can be written in terms of @i(chan), @i(pitch), and @i(vel), which are the channel, pitch, and velocity of the note in the MIDI file.
+@end(fndefs)
+
+@section(Adagio Score Language)
+
 @pragma(doinclude)
 @include(adagio-nyquist.mss)
 
@@ -6737,7 +6864,7 @@ spectra to musical tones, creating an artificial (or sometimes natural)
 singing voice.
 
 Examples of LPC analysis and synthesis can be found in the file 
-@code[lpc_tutorial.htm]@index(lpc tutorial)@index(linear prediction tutorial)@index(demos, lpc),
+@code[demos/lpc_tutorial.htm]@index(lpc tutorial)@index(linear prediction tutorial)@index(demos, lpc),
 which is part of the standard Nyquist release.
 
 As with FFT processing, LPC analysis takes a sound as input and returns 
@@ -7032,7 +7159,7 @@ NIL is returned. (Use @code(if) or @code(cond) to implement
 @end(fndefs)
 
 It is often necessary to load a file @i(only if) it has not already been
-loaded. For example, the @code(pianosyn) library loads very slowly, so if
+loaded. For example, the @code(pianosyn) library loads somewhat slowly, so if
 some other file already loaded it, it would be good to avoid loading it
 again. How can you load a file once? Nyquist does not keep track of files
 that are loaded, but you must be loading a file to define some function,
@@ -7596,6 +7723,8 @@ rule will be appended to the end so it will only apply if no other rule does.
 @index(random)@index(probability distributions)@index(distributions, probability)@index(stochastic functions)
 The @code(distributions.lsp) library implements random number generators that return random values with various probability distributions. Without this library, you can generate random numbers with @i(uniform) distributions. In a uniform distribution, all values are equally likely. To generate a random integer in some range, use @code(random). To generate a real number (FLONUM) in some range, use @code(real-random) (or @code(rrandom) if the range is 0-1). But there are other interesting distributions. For example, the Gaussian distribution is often used to model 
 real-world errors and fluctuations where values are clustered around some central value and large deviations are more unlikely than small ones. See Dennis Lorrain, "A Panoply of Stochastic 'Canons'," @i(Computer Music Journal) vol. 4, no. 1, 1980, pp. 53-81.
+Further discussion and examples can be found in 
+@code(demos/probability_distributions.htm)@index(demos, probability distributions). 
 
 In most of the random number generators described below, there are optional parameters to indicate a maximum and/or minimum value. These can be used to truncate the distribution. For example, if you basically want a Gaussian distribution, but you never want a value greater than 5, you can specify 5 as the maximum value. 
 The upper and lower bounds are implemented simply by drawing a random number from the full distribution repeatedly until a number falling into the desired range is obtained. Therefore, if you select an acceptable range that is unlikely, it may take Nyquist a long time to find each acceptable random number. The intended use of the upper and lower bounds is to weed out values that are already fairly unlikely.
@@ -8901,6 +9030,8 @@ bands, apply a slightly different effect to each band, and sum the effected
 bands back together to form the result. This file includes its own set of
 examples. After loading the file, try @code[f2()], @code[f3()], @code[f4()],
 and @code[f5()] to hear them.
+Further discussion and examples can be found in 
+@code(demos/bandfx.htm)@index(demos, multiple band effects). 
 
 There is much room for expansion and experimentation with this library. Other
 effects might include distortion in certain bands (for example, there are
