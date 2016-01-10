@@ -36,7 +36,7 @@
  *         fft_size/2 samples (except for the last H[i])
  *       Compute FFT of H[i] in place (FFT size is fft_size)
  *   Allocate X of h_len floats. This represents the history
- *       of x_snd, which is all zero, so the FFT, X is all zero
+ *       of x_snd, which is initially all zero, so the FFT, X is all zero
  *   Allocate output buffers Y and R, each of size fft_size
  *   Iterate over j (i.e. run this to generate MAX_CONVOLVE_LEN
  *           samples; then j = (j + 1) mod L.
@@ -61,9 +61,12 @@
  * Length of output is length of x input + length of h
  */
 
+// You can turn on debugging output with: #define D if (1)
+#define D if (0) 
+
 #define MAX_IR_LEN 4000000 /* maximum impulse response length */
-// #define MAX_LOG_FFT_SIZE 16 /* maximum fft size for convolution */
-#define MAX_LOG_FFT_SIZE 4 /* maximum fft size for convolution */
+#define MAX_LOG_FFT_SIZE 16 /* maximum fft size for convolution */
+//#define MAX_LOG_FFT_SIZE 4 /* maximum fft size for convolution */
 #define _USE_MATH_DEFINES 1 /* for Visual C++ to get M_LN2 */
 #include <math.h>
 #include "stdio.h"
@@ -142,6 +145,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* don't overflow the output sample block: */
         togo = max_sample_block_len - cnt;
         /* if we need output samples, generate them here */
+        D printf("test R_current at offset %ld\n", susp->R_current - R);
         if (susp->R_current >= R + N) { // true when we output half of R
             int i = 0;
             int j, k;
@@ -153,6 +157,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             memcpy(R, R + N, N * sizeof(*R));
             memset(R + N, 0, N * sizeof(*R));
             /* Copy N samples of x_snd into Xj and zero fill to size 2N */
+            D printf("Copying N samples of x_snd into Xj at offset %ld\n", Xj - susp->X);
             while (i < N) {
                 if (susp->x_snd_cnt == 0) {
                     susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
@@ -186,13 +191,11 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             }
             /* zero fill to size 2N */
             memset(Xj + N, 0, N * sizeof(Xj[0]));
-            /*
-            printf("Xj: ");
-            for (i = 0; i < susp->N * 2; i++) {
+            D printf("Xj at offset %ld: ", Xj - susp->X);
+            D for (i = 0; i < susp->N * 2; i++) {
                 printf("%g ", Xj[i]);
             }
-            printf("\n");
-            */
+            D printf("\n");
             /* Compute FFT of Xj in place */
             fftInit(susp->M);
             rffts(Xj, susp->M, 1);
@@ -205,21 +208,21 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 /* Compute IFFT of Y in place */
                 riffts(Y, susp->M, 1);
                 /* R += Y */
-                /* printf("Output block %d: ", k); */
+                D printf("Output block %d, X offset %ld: ", k, X - susp->X);
                 for (i = 0; i < 2 * N; i++) {
                     R[i] += Y[i];
-                    /* printf("%g ", Y[i]); */
+                    D printf("%g ", Y[i]);
                 }
-                /* printf("\n"); */
-                /* now N samples of R can be output */
-                susp->R_current = R;
+                D printf("\n");
             }
-            /* printf("R: ");
-            for (i = 0; i < susp->N; i++) {
+            /* now N samples of R can be output */
+            susp->R_current = R;
+            D printf("R: ");
+            D for (i = 0; i < susp->N; i++) {
                 printf("%g ", R[i]);
             }
-            printf("\n");
-            */
+            D printf("\n");
+            susp->j = (susp->j + 1) % susp->L;
         }
         /* compute togo, the number of samples to "compute" */
         /* can't use more than what's left in R. R_current is
@@ -239,6 +242,8 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             susp->susp.log_stop_cnt !=  UNKNOWN &&
             susp->susp.log_stop_cnt <= susp->susp.current + cnt + togo) {
             togo = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            D printf("susp->susp.log_stop_cnt is set to %ld\n",
+                   susp->susp.log_stop_cnt);
             if (togo == 0) break;
         }       
 
@@ -353,7 +358,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     // assume fft_size is maximal. We fix this later if it is wrong
     long fft_size = 1 << MAX_LOG_FFT_SIZE;
     if (sr != h_snd->sr) {
-        xlabort("convolve requires both inputs to have the same sample rates");
+        xlfail("convolve requires both inputs to have the same sample rates");
     }
     falloc_generic(susp, convolve_susp_node, "snd_make_convolve");
     /* compute the length of h_snd in samples */
@@ -361,7 +366,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     if (h_len > MAX_IR_LEN) {
         char emsg[100];
         sprintf(emsg, "convolve maximum impulse length is %d", MAX_IR_LEN);
-        xlabort(emsg);
+        xlfail(emsg);
     }
     /* len is the impulse response length; 
      * the FFT size is at least double that */
@@ -375,6 +380,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
         susp->M = MAX_LOG_FFT_SIZE;
     }
     fft_size = (1 << susp->M);
+    D printf("fft_size %ld\n", fft_size);
     susp->N = fft_size / 2;
     // round h_len up to multiple of susp->N and multiply by 2
     susp->h_snd_len = h_len;
@@ -383,20 +389,30 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     // allocate memory
     susp->H = (sample_type *) calloc(h_len, sizeof(susp->H[0]));
     if (!susp->H) {
-        xlabort("memory allocation failure in convolve");
+        xlfail("memory allocation failure in convolve");
     }
     for (i = 0; i < susp->L; i++) {
         /* copy fft_size/2 samples into each H[i] */
         fill_with_samples(susp->H + i * susp->N * 2, h_snd, susp->N);
+    }
+    for (i = 0; i < susp->L; i++) {
+        int j;
+        float *H = susp->H + i * susp->N * 2;
+        D printf("H_%d at %ld: ", i, H - susp->H);
+        D for (j = 0; j < susp->N * 2; j++) printf("%g ", H[j]);
+        D printf("\n");
     }
     sound_unref(h_snd);
     h_snd = NULL;
     /* remaining N samples are already zero-filled */
     if (fftInit(susp->M)) {
         free(susp->H);
-        xlabort("fft initialization error in convolve");
+        xlfail("fft initialization error in convolve");
     }
-    rffts(susp->H, susp->M, 1);
+    /* take the FFT of each block of the impulse response */
+    for (i = 0; i < susp->L; i++) {
+        rffts(susp->H + i * susp->N * 2, susp->M, 1);
+    }
     susp->X = (sample_type *) calloc(h_len, sizeof(susp->X[0]));
     susp->R = (sample_type *) calloc(fft_size, sizeof(susp->R[0]));
     susp->Y = (sample_type *) calloc(fft_size, sizeof(susp->Y[0]));
@@ -405,7 +421,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
         if (susp->X) free(susp->X);
         if (susp->R) free(susp->R);
         if (susp->Y) free(susp->Y);
-        xlabort("memory allocation failed in convolve");
+        xlfail("memory allocation failed in convolve");
     }
     susp->R_current = susp->R + susp->N;
     susp->susp.fetch = &convolve_s_fetch;

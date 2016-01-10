@@ -1,4 +1,4 @@
- /* sndwrite.c -- write sounds to files */
+/* sndwrite.c -- write sounds to files */
 
 #include "stdlib.h"
 #include "switches.h"
@@ -96,6 +96,8 @@
 // should be looking for local portaudio
 #include "portaudio.h"
 
+void finish_audio();
+
 long flush_count = 0; /* how many samples to write to finish */
 
 #define D if (0) 
@@ -113,12 +115,10 @@ void portaudio_exit()
 
 
 sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
-                             SNDFILE *snd_file, float *buf, long *ntotal,
-                             PaStream *audio_stream);
+                             SNDFILE *snd_file, float *buf, long *ntotal);
 
 sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info,
-                             SNDFILE *snd_file, float *buf, long *ntotal,
-                             PaStream *audio_stream);
+                             SNDFILE *snd_file, float *buf, long *ntotal);
 
 unsigned char st_linear_to_ulaw(int sample);/* jlh not used anywhere */
 
@@ -146,7 +146,19 @@ static int portaudio_error(PaError err, char *problem)
 }
 
 
-LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
+PaStream *audio_stream = NULL;
+
+
+/* whenever we jump to toplevel, make sure audio is closed */
+void local_toplevel(void)
+{
+    if (audio_stream) {
+        finish_audio();
+    }
+}
+
+
+LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
 {
     PaStreamParameters output_parameters;
     int i, j = -1;
@@ -213,11 +225,12 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
     }
     if (device_info) {
         if (portaudio_error(
-                Pa_OpenStream(audio_stream, NULL /* input */, &output_parameters,
+                Pa_OpenStream(&audio_stream, NULL /* input */, &output_parameters,
                     sf_info->samplerate, max_sample_block_len, 
                     paClipOff, NULL /* callback */, NULL /* userdata */),
                 "could not open audio")) {
             nyquist_printf("audio device name: %s\n", device_info->name);
+            audio_stream = NULL;
             return NIL;
         }
     } else {
@@ -226,7 +239,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
     }
     flush_count = (long) (sf_info->samplerate * (sound_latency + 0.2));
 
-    if (portaudio_error(Pa_StartStream(*audio_stream), 
+    if (portaudio_error(Pa_StartStream(audio_stream), 
                         "could not start audio")) {
         return NIL;
     }
@@ -237,7 +250,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
 
 /* finish_audio -- flush the remaining samples, then close */
 /**/
-void finish_audio(PaStream *audio_stream)
+void finish_audio()
 {
     /* portaudio_error(Pa_StopStream(audio_stream), "could not stop stream"); */
     /* write Latency frames of audio to make sure all samples are played */
@@ -249,7 +262,9 @@ void finish_audio(PaStream *audio_stream)
         flush_count -= 16;
     }
     portaudio_error(Pa_CloseStream(audio_stream), "could not close audio");
+    audio_stream = NULL;
 }
+
 
 long lookup_format(long format, long mode, long bits, long swap)
 {
@@ -366,7 +381,6 @@ double sound_save(
     double max_sample;
     SNDFILE *sndfile = NULL;
     SF_INFO sf_info;
-    PaStream *audio_stream = NULL;
     if (SAFE_NYQUIST) play = FALSE;
     
     gc();
@@ -404,7 +418,7 @@ double sound_save(
         }
         
         if (play) 
-            play = prepare_audio(play, &sf_info, &audio_stream);
+            play = prepare_audio(play, &sf_info);
 
         if ((buf = (float *) malloc(max_sample_block_len * sf_info.channels *
                                     sizeof(float))) == NULL) {
@@ -412,10 +426,10 @@ double sound_save(
         }
 
         max_sample = sound_save_array(result, n, &sf_info, sndfile, 
-                                      buf, &ntotal, audio_stream);
+                                      buf, &ntotal);
         *duration = ntotal / *sr;
         if (sndfile) sf_close(sndfile);
-        if (play != NIL) finish_audio(audio_stream);
+        if (play != NIL) finish_audio();
     } else if (exttypep(result, a_sound)) {
         *nchans = sf_info.channels = 1;
         sf_info.samplerate = ROUND((getsound(result))->sr);
@@ -437,7 +451,7 @@ double sound_save(
             }
         }
         if (play)
-            play = prepare_audio(play, &sf_info, &audio_stream);
+            play = prepare_audio(play, &sf_info);
 
         if ((buf = (float *) malloc(max_sample_block_len * 
                                     sizeof(float))) == NULL) {
@@ -445,7 +459,7 @@ double sound_save(
         }
 
         max_sample = sound_save_sound(result, n, &sf_info, sndfile,
-                                      buf, &ntotal, audio_stream);
+                                      buf, &ntotal);
         *duration = ntotal / *sr;
         if (sndfile) sf_close(sndfile);
         if (play != NIL) finish_audio(audio_stream);
@@ -580,7 +594,7 @@ double sound_overwrite(
                                  offset_secs, &buf);
 
         max_sample = sound_save_array(result, n, &sf_info, sndfile, 
-                                      buf, &ntotal, NULL);
+                                      buf, &ntotal);
         *duration = ntotal / (double) sf_info.samplerate;
         free(buf);
         sf_close(sndfile);
@@ -591,7 +605,7 @@ double sound_overwrite(
                                  ROUND(getsound(result)->sr), 
                                  offset_secs, &buf);
         max_sample = sound_save_sound(result, n, &sf_info, sndfile, buf, 
-                                      &ntotal, NULL);
+                                      &ntotal);
         *duration = ntotal / (double) sf_info.samplerate;
         free(buf);
         sf_close(sndfile);
@@ -612,7 +626,7 @@ int is_pcm(SF_INFO *sf_info)
 
 
 sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info, 
-        SNDFILE *sndfile, float *buf, long *ntotal, PaStream *audio_stream)
+        SNDFILE *sndfile, float *buf, long *ntotal)
 {
     long blocklen;
     sound_type s;
@@ -712,7 +726,7 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
 
 
 sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info, 
-        SNDFILE *sndfile, float *buf, long *ntotal, PaStream *audio_stream)
+        SNDFILE *sndfile, float *buf, long *ntotal)
 {
     long i, chans;
     float *float_bufp;

@@ -130,7 +130,7 @@ sound_type snd_make_slider(int index, time_type t0, rate_type sr, time_type d)
     /* t0 specified as input parameter */
     sample_type scale_factor = 1.0F;
     if (index < 0 || index >= SLIDERS_MAX) {
-        xlerror("slider index out of range", NIL);
+        xlfail("slider index out of range");
     }
     falloc_generic(susp, slider_susp_node, "snd_make_slider");
     susp->susp.fetch = slider__fetch;

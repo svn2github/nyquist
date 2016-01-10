@@ -15,6 +15,7 @@
 /* CHANGE LOG
  * --------------------------------------------------------------------
  * 28Apr03  dm  change for portability: min->MIN
+ * 28May15  rd  swap time domain signal before FFT to get correct phase
  */
 
 
@@ -66,6 +67,17 @@
         printf("\n");
     }
 */
+
+void fft_shift(float *x, int len)
+{
+    int j = len / 2;
+    for (int i = 0; i < len / 2; i++) {
+        float temp = x[i];
+        x[i] = x[j];
+        x[j++] = temp;
+    }
+}
+
 
 void n_samples_from_sound(sound_type s, long n, float *table)
 {
@@ -187,6 +199,9 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
     if (1 << m != len) {
         xlfail("FFT len is not a power of two");
     }
+    /* to get correct phase, you need to swap the left and right halves
+       of the time domain signal before the FFT */
+    fft_shift(temp_fft, len);
     if (!fftInit(m)) rffts(temp_fft, m, 1);
     else xlfail("FFT initialization error");
 

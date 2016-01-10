@@ -112,7 +112,7 @@
                          (:END "end") (:VARIABLE "variable")
                          (:FUNCTION "function") (:PROCESS "process")
                          (:CHDIR "chdir") (:DEFINE "define") (:LOAD "load")
-                         (:PLAY "play")
+                         (:PLAY "play") (:PLOT "plot")
                          (:EXEC "exec") (:exit "exit") (:DISPLAY "display")
                          (:~ "~") (:~~ "~~") (:@ ":@") (:@@ ":@@")))
 
@@ -1030,7 +1030,7 @@
 (defun maybe-parse-command ()
   (if (token-is '(:define :load :chdir :variable :function
                   ;  :system 
-                  :play :print :display))
+                  :play :print :display :plot))
       (parse-command)
       (if (and (token-is '(:return)) *audacity-top-level-return-flag*)
           (parse-command))))
@@ -1051,6 +1051,8 @@
          (parse-print-display :print 'sal-print))
         ((token-is :display)
          (parse-print-display :display 'display))
+        ((token-is :plot)
+         (parse-plot))
         ((and *audacity-top-level-return-flag* (token-is :return))
          (parse-return))
 ;        ((token-is :output)
@@ -1072,6 +1074,8 @@
          (parse-print-display :print 'sal-print))
         ((token-is :display)
          (parse-print-display :display 'display))
+        ((token-is :plot)
+         (parse-plot))
 ;        ((token-is :output)
 ;         (parse-output))
         ((token-is :exec)
@@ -1320,6 +1324,21 @@
     (push arg args))
    (add-line-info-to-stmt (cons function (reverse args)) loc)))
 
+(defun parse-plot ()
+  ;; assumes next token is :plot
+  (or (token-is :plot) (error "parse-plot internal error"))
+  (let (arg args loc)
+   (setf loc (parse-token))
+   (setf arg (parse-sexpr))
+   (setf args (list arg))
+   (cond ((token-is :co) ; get duration parameter
+          (parse-token) ; remove and ignore the comma
+          (setf arg (parse-sexpr))
+          (push arg args)
+          (cond ((token-is :co) ; get n points parameter
+                 (parse-token) ; remove and ignore the comma
+                 (setf arg (parse-sexpr))))))
+   (add-line-info-to-stmt (cons 's-plot (reverse args)) loc)))
 
 ;(defun parse-output ()
 ; ;; assume next token is :output

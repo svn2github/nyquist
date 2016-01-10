@@ -75,10 +75,13 @@
     (snd-const value *rslt* *CONTROL-SRATE* d)))
 
 
-;; CONVOLVE - slow convolution
+;; CONVOLVE - fast convolution
 ;; 
 (defun convolve (s r)
-  (multichan-expand #'snd-convolve s r))
+  (multichan-expand #'nyq:convolve s r))
+
+(defun nyq:convolve (s r)
+  (snd-convolve s (force-srate (snd-srate s) r)))
 
 
 ;; FEEDBACK-DELAY -- (delay is quantized to sample period)
@@ -305,14 +308,31 @@
 
 ; remember that snd-biquad uses the opposite sign convention for a_i's 
 ; than Matlab does.
+; 
+; Stability: Based on courses.cs.washington.edu/courses/cse490s/11au/
+; Readings/Digital_Sound_Generation_2.pdf, the stable region is 
+;   (a2 < 1) and ((a2 + 1) > |a1|)
+; It doesn't look to me like our a0, a1, a2 match the paper's a0, a1, a2,
+; and I'm not convinced the paper's derivation is correct, but at least
+; the predicted region of stability is correct if we swap signs on a1 and
+; a2 (but due to the |a1| term, only the sign of a2 matters). This was
+; tested manually at a number of points inside and outside the stable
+; triangle. Previously, the stability test was (>= a0 1.0) which seems
+; generally wrong. The old test has been removed.
 
 ; convenient biquad: normalize a0, and use zero initial conditions.
 (defun nyq:biquad (x b0 b1 b2 a0 a1 a2)
-  (if (< a0 1.0)
-      (error (format t "a0 < 1 (unstable parameter) in biquad~%")))
+  (if (<= a0 0.0)
+      (error (format nil "a0 < 0 (unstable parameter a0 = ~A) in biquad~%" a0)))
   (let ((a0r (/ 1.0 a0)))
+    (setf a1 (* a0r a1) 
+          a2 (* a0r a2))
+    (if (or (<= a2 -1.0) (<= (- 1.0 a2) (abs a1)))
+        (error (format nil 
+         "(a2 <= -1) or (1 - a2 <= |a1|) (~A a1 = ~A, a2 = ~A) in biquad~%" 
+         "unstable parameters" a1 a2)))
     (snd-biquad x (* a0r b0) (* a0r b1) (* a0r b2) 
-                  (* a0r a1) (* a0r a2) 0 0)))
+                  a1 a2 0 0)))
 
 
 (defun biquad (x b0 b1 b2 a0 a1 a2)
@@ -550,3 +570,47 @@
 ;  (setf lookahead (/ lookahead (snd-srate sound)))
 ;  (extract lookahead 10000
 ;           (snd-gate sound lookahead risetime falltime floor threshold)))
+
+;; PHASE VOCODER
+(defun phasevocoder (s map &optional (fftsize -1) (hopsize -1) (mode 0))
+  (snd-phasevocoder s map fftsize hopsize mode))
+
+;; PV-TIME-PITCH
+;; PV-TIME-PITCH -- control time stretch and transposition 
+;;
+;; stretchfn maps from input time to output time
+;; pitchfn maps from input time to transposition factor (2 means octave up)
+(defun pv-time-pitch (input stretchfn pitchfn dur &optional
+                      (fftsize 2048) (hopsize nil) (mode 0))
+  (let (wrate u v w vinv)
+    (if (null hopsize) (setf hopsize (/ fftsize 8)))
+    (setf wrate (/ 3000  dur))
+    (setf vinv (integrate (prod stretchfn  pitchfn)))
+    (setf v (snd-inverse vinv (local-to-global 0) wrate))
+    (setf w (integrate (snd-recip (snd-compose pitchfn v))))
+    (sound-warp w (phasevocoder input v fftsize hopsize mode) wrate)))
+
+#|  ORIGINAL SAL IMPLEMENTATION
+;; PV-TIME-PITCH -- control time stretch and transposition 
+;;
+;; stretchfn maps from input time to output time
+;; pitchfn maps from input time to transposition factor (2 means octave up)
+function pv-time-pitch(input, stretchfn, pitchfn, dur, fftsize: 2048, hopsize: nil, mode: 0)
+  begin with wrate, u, v, w, v-inv, w-inv
+    if ! hopsize then set hopsize = fftsize / 8
+    set wrate = 3000 / dur
+    set vinv = integrate(stretchfn * pitchfn)
+    set v = snd-inverse(vinv, local-to-global(0), wrate)
+    set w = integrate(snd-recip(snd-compose(pitchfn, v)))
+    return sound-warp(w, phasevocoder(input, v, fftsize, hopsize), wrate)
+
+    set s = slope(warpfn)
+    set sp = s * pitchfn
+    set spi = integrate(sp)
+    set spi-inv = snd-inverse(spi, local-to-global(0), wrate)
+    set sw = snd-compose(pitchfn, spi-inv)
+    set swi = integrate(sw)
+    set swi-int = snd-inverse(swi, local-to-global(0), wrate)
+    return sound-warp(swi-int, phasevocoder(input, spi-inv), wrate)
+  end
+|#

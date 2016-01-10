@@ -1,0 +1,262 @@
+;; atonal-melody.sal -- example code for generating random atonal melodies
+;; Jorge Sastre
+;; 2014
+;;
+;; Earlier versions of the code were used to generate melodies for the 
+;; following pieces written by Jorge Sastre:
+;; - "Deja vu" (2013), for Flute, Viola, Cello Piano and Electronics 
+;;    performed at the concert  "Computer Music from Carnegie Mellon" 
+;;    on May 2, 2013, recording available at 
+;;    https://soundcloud.com/jsastre/deja-vu
+;; - "Oscura Luz" (Obscure light, 2014) for Orchestra, performed by 
+;;    Carnegie Mellon Philharmonic Orchestra at Carnegie Music Hall 
+;;    (Pittsburgh, USA) on March 5th, 2014, recording 
+;;    https://soundcloud.com/jsastre/oscura-luz
+;; - "Bacuum" (mixture of "Baco" and "vacuum", 2014), for Flute, Oboe, 
+;;    Clarinet, Percussion, Piano, Violin, Viola and Cello
+;;    commissioned by CulturArts (Generalitat Valenciana, Spain) for 
+;;    the XXXVI International Festival of Contemporary Music ENSEMS.
+;;    Premiered on May 17, 2014 at the Teatro Principal of Valencia
+;;    by Espai Sonor Ensemble.
+;; - "Patrick" for piano premiered by Pablo Amoros at kresge Theatre 
+;;    on Oct. 31, 2014
+;; - "Patrick", the chamber opera premiered by Daniel Arnaldos (tenor) 
+;;    and Grant Braider (baritone) with Daniel Curtis conducting
+;     at CMU Alumni Concert Hall on Nov. 23, 2014.
+;;
+;; Jorge Sastre
+;; Visiting Scholar from Universitat Politecnica de Valencia (Spain)
+;; R. Dannenberg's Computer Music Group
+;; Computer Science Department
+;; Carnegie Mellon University
+;; December 2014
+
+;; Function atonal-melody() produces random atonal melodies with certain 
+;;     adjustable parameters: 
+;; atonal-melody(start-note: c3, max-pitch: c7, min-pitch: a1, 
+;;               speed: 1, chan: 0, rhythm-pat-type: 1, 
+;;               score-length: 50, rest-notes: 3, length-changes: 20,
+;;               length-changes-random-part: 10, medium-speed-note-rate: 2)
+;;   startnote: first note of the melody (it is recommended to randomize it,
+;;        see example of use)
+;;   maxpitch: maximum pitch of the melody to be produced (limit it to the
+;;        max pitch of the concrete instrument or to the desired maximum 
+;;        pitch of the melody)
+;;   minpitch: minimum pitch of the melody to be produced
+;;   speed: (must be >0) set to 1 for a medium speed of the notes (minimum
+;;        note value: 7 tuplet of 16ths), set to 2 for double speed (half 
+;;        the medium speed note durations), set to 0.5 for half speed, etc.
+;;   chan: midi channel (to be able to separate the multiple voices when 
+;;        opening the midi file in an editor)
+;;   rhythm-pat-type: if 1 then more regular rhythm pattern (values 
+;;        equivalent to eight, quarter, half and whole notes), else 
+;;        more irregular values
+;;   score-length: number of notes (and rests) to produce
+;;   length-changes + random(length-changes-random-part): number of notes 
+;;        after which where there will be a possible change of octave (but 
+;;        there might be changes of octave equally because of the random 
+;;        chosen intervals), and other changes (see below parameters: 
+;;        introducing rests and some medium speed valued notes at the 
+;;        end of each cycle)
+;;   rest-notes: To introduce some rests at the end of each cycle of 
+;;        length "length-changes + random(length-changes-random-part)"
+;;   medium-speed-note-rate: It applies the medium speed note durations 
+;;        to medium-speed-note-rate notes at the end of each cycle of 
+;;        length "length-changes + random(length-changes-random-part)" 
+;;        (if a negative value it does not do anything)
+;; The use example saves a midi file (atonal.mid) that can have one or 
+;; several voices. Open it in your music editor or sequencer with a 
+;; proper quantization (if it has to be played by humans) and using 
+;; separation by midi channels if you want to separate the different 
+;; voices in different tracks or staffs. In Finale: open the midi file, 
+;; select track-to-staff list, autoset to channels, eliminate split 
+;; points if Finale creates any (click on the Split word and select 
+;; Split none on the window that opens), select the desired quantization 
+;; settings, select in the score manager the desired instuments, 
+;; preferably with the Garritan sounds better than the midi default 
+;; ones, put your desired dynamisc, slurs, articulations, etc., and 
+;; playback. 
+;; See example files:
+;;    http://www.cs.cmu.edu/~rbd/algocompbook/jorge-sastre/Atonal%20aleatoric%20trio%20-%20Jorge%20Sastre%20-%20Nyquist.mid
+;;    http://www.cs.cmu.edu/~rbd/algocompbook/jorge-sastre/Atonal%20aleatoric%20trio%20-%20Jorge%20Sastre%20-%20Nyquist.pdf
+;;    http://www.cs.cmu.edu/~rbd/algocompbook/jorge-sastre/Atonal%20aleatoric%20trio%20-%20Jorge%20Sastre%20-%20Nyquist.wav
+
+load "pianosyn" ;; Piano sound selected to preview the result
+
+function atonal-melody(start-note: c3, max-pitch: c7, min-pitch: a1, 
+                       speed: 1, chan: 0, rhythm-pat-type: 1, 
+                       score-length: 50, rest-notes: 3, length-changes: 20, 
+                       length-changes-random-part: 10, 
+                       medium-speed-note-rate: 1)
+  begin
+    with pitch-pat = make-random(list(0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 
+           2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 6, 6, 6, 7, 8, 9, 10, 10, 11,
+           11, 12, 13, 13)), ; includes major seventh and minor 9th intervals, 
+           ; and higher probability to 2nds and minor thirds..., and less to 
+           ; fourths, fifths and octaves
+        oct-pat = make-copier(make-random(list(-12, 0, 12), for: 1),
+                             repeat: 12),
+        phrase-pat-regular = make-random(
+           list(make-cycle(list(i)),                  ;eighth
+           make-cycle(list(s, s)),                    ;eighth equivalent
+           make-cycle(list(st, st, st)),              ;eighth equivalent
+           make-cycle(list(q)),                       ;quarter
+           make-cycle(list(i, i))),                   ;quarter equivalent
+           make-cycle(list(s, s, s, s)),              ;quarter equivalent
+           make-heap(list(s, s, i)),                  ;quarter equivalent
+           make-heap(list(id, s)),                    ;quarter equivalent
+           make-cycle(list(it, it, it)),              ;quarter equivalent
+           make-cycle(list(i, i, i, i)),              ;half equivalent
+           make-cycle(list(st, st, st, st, st, st)),  ;half equivalent
+           make-heap(list(it, st, st, st, st)),       ;half equivalent
+           make-cycle(list(0.2, 0.2, 0.2, 0.2, 0.2)), ;tuplet five 16ths
+           make-heap(list(0.4, 0.2, 0.2, 0.2)), ;equivalent to tuplet five 16ths
+           make-cycle(make-copier(list(1.0 / 7.0), repeat: 7)), 
+                                                      ;tuplet: seven 16ths
+           make-cycle(list(h)),                       ;half  
+           make-heap(list(id, id, i)),                ;half equivalent
+           make-heap(list(id, id, s, s)),             ;half equivalent
+           make-heap(list(id, sd, sd, s, s)),         ;half equivalent
+           make-heap(list(sd, sd, sd, sd, i)),        ;half equivalent
+           make-cycle(list(w))),                      ;whole
+        phrase-pat-nonregular = make-random(list(make-cycle(list(i)), 
+                                                      ;eighth
+           make-cycle(list(s)),                       ;16th
+           make-cycle(list(st, st)),                   
+           make-cycle(list(q)),                       ;quarter
+           make-cycle(list(qd)),                      ;dotted quarter
+           make-cycle(list(i, i, i))),
+           make-cycle(list(s, s, s)), 
+           make-heap(list(s, s, id)), 
+           make-heap(list(id, id)),
+           make-cycle(list(i, i, i, i, i)),
+           make-cycle(list(it, it, it)),
+           make-cycle(list(st, st, st, st, st)),
+           make-heap(list(it, st, st)),
+           make-cycle(list(0.2, 0.2, 0.2, 0.2)),     ;tuplet five 16ths
+           make-heap(list(0.4, 0.2)),       ;equivalent to tuplet five 16ths
+           make-cycle(make-copier(list(2.0 / 7.0), repeat: 7)), 
+                                                      ;tuplet seven 8ths
+           make-cycle(list(h)),                       ;half  
+           make-cycle(list(h)),   ;half (increasing probability to have a half)
+           make-heap(list(id, i)),
+           make-heap(list(id, id, s)),
+           make-heap(list(id, sd, s, s)),
+           make-heap(list(sd, sd, i)),
+           make-heap(list(sd, sd, sd)),
+           make-heap(list(id, s, sd, sd, sd, i)), 
+           make-heap(list(id, id, id)),
+           make-heap(list(id, id, id)),
+           make-heap(list(i, s, s, sd, s)), 
+           make-cycle(list(i, i, s, s, s, sd)),
+           make-cycle(list(w))),                      ;whole
+        rhythm-pat-regular = make-cycle(phrase-pat-regular),
+        rhythm-pat-nonregular = make-cycle(phrase-pat-nonregular),
+        pitch = start-note,
+        counter = length-changes + random(length-changes-random-part),
+        rhythm-pat = #?(rhythm-pat-type = 1, rhythm-pat-regular, 
+                                                   rhythm-pat-nonregular)
+    exec score-gen(save: quote(my-atonal-melody),
+                   score-len: score-length, 
+                   pre: progn(setf(pitch, 
+                                   #?(counter = 0, 
+                                      pitch + next(oct-pat) + next(pitch-pat) *
+                                          (random(2) * 2 -  1), 
+                                      pitch + next(pitch-pat) * 
+                                              (random(2) * 2 -  1))), 
+                              setf(pitch,
+                                   #?(pitch > max-pitch, 
+                                      start-note + random(10) - 5, pitch)), 
+                              setf(pitch, 
+                                   #?(pitch < min-pitch, 
+                                      start-note + random(10) - 5, pitch)), 
+                              setf(counter,
+                                   #?(counter = 0,  
+                                      length-changes + 
+                                          random(length-changes-random-part), 
+                                      counter - 1))), 
+                   ; apply the medium speed note durations to 
+                   ; medium-speed-note-rate notes each time the counter 
+                   ; goes to zero (counter < medium-speed-note-rate):
+                   ioi: #?(counter < medium-speed-note-rate, 
+                           next(rhythm-pat), next(rhythm-pat) / speed),
+                   ; introduce some rests at the end of each cycle:
+                   pitch: #?(counter < rest-notes, NIL, pitch),
+                   ; midi channel separates multiple 
+                   ; voices when opening the midi file in an editor:
+                   chan: chan) 
+  end
+
+begin
+  ;; Creation of one atonal melody for the right hand of the Piano 
+  ;; using the range: c4-c7
+  exec atonal-melody(start-note: g5 + random(12), max-pitch: c7, 
+                     min-pitch: c4, speed: 1, chan: 0, 
+                     rhythm-pat-type: 2, score-length: 50, 
+                     rest-notes: 3, length-changes: 20, 
+                     length-changes-random-part: 10, 
+                     medium-speed-note-rate: 3)
+  exec score-play(my-atonal-melody)  ; preview the melody with a piano sound
+  ;; Write the midi file atonal.mid. Open it in your music editor or 
+  ;; sequencer with a proper quantization (if it has to be played by
+  ;; humans) and separate by midi channels if you want to 
+  ;; separate the different voices in different tracks/staffs:
+  exec score-write-smf(my-atonal-melody, "atonal-melody.mid")
+  ;;
+  ;; Create several atonal melodies to be played together 
+  ;; with random start notes using a loop and being able to 
+  ;; separate them by midi channel:
+  exec atonal-melody(start-note: g5 + random(12), max-pitch: c7, 
+                     min-pitch: c4, speed: 1, chan: 0, 
+                     rhythm-pat-type: 2, score-length: 50, 
+                     rest-notes: 3, length-changes: 20, 
+                     length-changes-random-part: 10, 
+                     medium-speed-note-rate: 3)
+  set atonal-material = my-atonal-melody
+  loop
+    ;; add melodies for a Clarinet and a Bassoon 
+    ;;     (below we add some randomness to the start notes)
+    with start-note-list = list(c4, g3),
+         max-desired-pitch-list = list(g6, g4),
+         min-desired-pitch-list = list(e3, bf1),
+         speed-list = list(1, .5), ; to make the bassoon melody slower
+         ; both clarinet and basoon more regularly than flute:
+         rhythm-pat-type-list = list(1, 1), 
+         ;; less notes to the basoon since its note duration values are
+         ;; approx. half those of the clarinet:
+         score-length-list = list(50, 25),
+         rest-notes-list = list(2, 1), ; more rests in the clarinet melody
+         ;; since the basoon has double note durations, we set the 
+         ;; changes to half the clarinet value, and both to the double 
+         ;; of the flute value so that their cycles are bigger
+         length-changes-list = list(20, 10),
+         ;; since the basoon has double note durations, we set the 
+         ;; random part of the changes to half the clarinet value
+         length-changes-random-part-list = list(10, 5), 
+         ;; some notes at medium speed in the basoon and no one in 
+         ;; the clarinet, since the clarinet has already used medium 
+         ;; speed (speed = 1):
+         medium-speed-note-rate-list = list(-1, 3) 
+    for k from 0 below 2 ; add two more simultaneous atonal melodies:
+      exec atonal-melody(start-note: nth(k, start-note-list) + random(6), 
+                               max-pitch: nth(k, max-desired-pitch-list), 
+                         min-pitch: nth(k, min-desired-pitch-list), 
+                         speed: nth(k, speed-list), chan: k + 1, 
+                         rhythm-pat-type: nth(k, rhythm-pat-type-list), 
+                         score-length: nth(k, score-length-list), 
+                         rest-notes: nth(k, rest-notes-list), 
+                         length-changes: nth(k, length-changes-list), 
+                         length-changes-random-part: 
+                           nth(k, length-changes-random-part-list), 
+                         medium-speed-note-rate: 
+                           nth(k, medium-speed-note-rate-list))
+    set atonal-material = score-merge(atonal-material, my-atonal-melody)
+  end 
+  ;; preview the simultaneous melodies with a piano sound:
+  exec score-play(atonal-material)  
+  ;; write the midi file atonal.mid. Open it in your music editor or 
+  ;; sequencer with a proper quantization (if it has to be played by 
+  ;; humans) and using separation by midi channels to separate the 
+  ;; different voices in different tracks/staffs  
+  exec score-write-smf(atonal-material, "atonal-simultaneous-melodies.mid") 
+end

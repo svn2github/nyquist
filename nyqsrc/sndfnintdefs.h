@@ -1,3 +1,4 @@
+extern LVAL xlc_snd_set_max_audio_mem(void);
 extern LVAL xlc_snd_set_latency(void);
 extern LVAL xlc_soundp(void);
 extern LVAL xlc_hz_to_step(void);
@@ -29,6 +30,7 @@ extern LVAL xlc_snd_fft(void);
 extern LVAL xlc_snd_inverse(void);
 extern LVAL xlc_snd_lpanal(void);
 extern LVAL xlc_snd_multiseq(void);
+extern LVAL xlc_snd_phasevocoder(void);
 extern LVAL xlc_snd_resample(void);
 extern LVAL xlc_snd_resamplev(void);
 extern LVAL xlc_snd_from_array(void);

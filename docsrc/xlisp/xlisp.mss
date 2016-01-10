@@ -598,9 +598,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
         the value of @code(+) at the end of the evaluation.
 @section(Evaluation Functions)@index(evaluation functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{eval(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{eval@pragma(defn)@index(eval)(@i(expr))} @c{[sal]}
 
-        @xlcode{(eval@pragma(defn)@index(eval) @t(@i(expr)))} @c{[lisp]} @itemsep evaluate an xlisp expression
+        @xlcode{(eval @t(@i(expr)))} @c{[lisp]} @itemsep evaluate an xlisp expression
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the expression to be evaluated
@@ -609,9 +609,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{apply(@i(fun), @i(args))} @c{[sal]}
+        @begin(fgroup)@xlcodef{apply@pragma(defn)@index(apply)(@i(fun), @i(args))} @c{[sal]}
 
-        @xlcode{(apply@pragma(defn)@index(apply) @t(@i(fun)) @t(@i(args)))} @c{[lisp]} @itemsep apply a function to a list of arguments
+        @xlcode{(apply @t(@i(fun)) @t(@i(args)))} @c{[lisp]} @itemsep apply a function to a list of arguments
 @end(fgroup)
 @begin(pdescription)
             @i<fun> @itemsep      the function to apply (or function symbol)
@@ -622,9 +622,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{funcall(@i(fun), @i(arg)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{funcall@pragma(defn)@index(funcall)(@i(fun), @i(arg)@r(...))} @c{[sal]}
 
-        @xlcode{(funcall@pragma(defn)@index(funcall) @t(@i(fun)) @t(@i(arg))@r(...))} @c{[lisp]} @itemsep call a function with arguments
+        @xlcode{(funcall @t(@i(fun)) @t(@i(arg))@r(...))} @c{[lisp]} @itemsep call a function with arguments
 @end(fgroup)
 @begin(pdescription)
             @i<fun> @itemsep      the function to call (or function symbol)
@@ -635,9 +635,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{quote(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{quote@pragma(defn)@index(quote)(@i(expr))} @c{[sal]}
 
-        @xlcode{(quote@pragma(defn)@index(quote) @t(@i(expr)))} @c{[lisp]} @itemsep  return an expression unevaluated
+        @xlcode{(quote @t(@i(expr)))} @c{[lisp]} @itemsep  return an expression unevaluated
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to be quoted (quoted)
@@ -646,9 +646,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{function(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{function@pragma(defn)@index(function)(@i(expr))} @c{[sal]}
 
-        @xlcode{(function@pragma(defn)@index(function) @t(@i(expr)))} @c{[lisp]} @itemsep  get the functional interpretation
+        @xlcode{(function @t(@i(expr)))} @c{[lisp]} @itemsep  get the functional interpretation
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the symbol or lambda expression (quoted)
@@ -657,9 +657,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{backquote(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{backquote@pragma(defn)@index(backquote)(@i(expr))} @c{[sal]}
 
-        @xlcode{(backquote@pragma(defn)@index(backquote) @t(@i(expr)))} @c{[lisp]} @itemsep fill in a template
+        @xlcode{(backquote @t(@i(expr)))} @c{[lisp]} @itemsep fill in a template
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the template
@@ -670,9 +670,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{lambda(@i(args), @i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{lambda@pragma(defn)@index(lambda)(@i(args), @i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(lambda@pragma(defn)@index(lambda) @t(@i(args)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep make a function closure
+        @xlcode{(lambda @t(@i(args)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep make a function closure
 @end(fgroup)
 @begin(pdescription)
             @i<args> @itemsep     formal argument list (lambda list) (quoted)
@@ -683,9 +683,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{get-lambda-expression(@i(closure))} @c{[sal]}
+        @begin(fgroup)@xlcodef{get-lambda-expression@pragma(defn)@index(get-lambda-expression)(@i(closure))} @c{[sal]}
 
-        @xlcode{(get-lambda-expression@pragma(defn)@index(get-lambda-expression) @t(@i(closure)))} @c{[lisp]} @itemsep get the lambda expression
+        @xlcode{(get-lambda-expression @t(@i(closure)))} @c{[lisp]} @itemsep get the lambda expression
 @end(fgroup)
 @begin(pdescription)
             @i<closure> @itemsep  the closure
@@ -694,9 +694,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{macroexpand(@i(form))} @c{[sal]}
+        @begin(fgroup)@xlcodef{macroexpand@pragma(defn)@index(macroexpand)(@i(form))} @c{[sal]}
 
-        @xlcode{(macroexpand@pragma(defn)@index(macroexpand) @t(@i(form)))} @c{[lisp]} @itemsep recursively expand macro calls
+        @xlcode{(macroexpand @t(@i(form)))} @c{[lisp]} @itemsep recursively expand macro calls
 @end(fgroup)
 @begin(pdescription)
             @i<form> @itemsep     the form to expand
@@ -705,9 +705,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{macroexpand-1(@i(form))} @c{[sal]}
+        @begin(fgroup)@xlcodef{macroexpand-1@pragma(defn)@index(macroexpand-1)(@i(form))} @c{[sal]}
 
-        @xlcode{(macroexpand-1@pragma(defn)@index(macroexpand-1) @t(@i(form)))} @c{[lisp]} @itemsep expand a macro call
+        @xlcode{(macroexpand-1 @t(@i(form)))} @c{[lisp]} @itemsep expand a macro call
 @end(fgroup)
 @begin(pdescription)
             @i<form> @itemsep     the macro call form
@@ -720,9 +720,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @section(Symbol Functions)@index(Symbol Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{set(@i(sym), @i(expr))} @c{[sal]}
-
-        @xlcode{(set@pragma(defn)@index(set) @t(@i(sym)) @t(@i(expr)))} @c{[lisp]} @itemsep  set the value of a symbol
+        @begin(fgroup)@xlcode{(set@pragma(defn)@index(set) @t(@i(sym)) @t(@i(expr)))} @c{[lisp]} @itemsep  set the value of a symbol. Note that in SAL, the function can be accessed as @code(#set).
 @end(fgroup)
 @begin(pdescription)
             @i<sym>  @itemsep     the symbol being set
@@ -733,9 +731,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{setq([@i(sym), @i(expr)]@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{setq@pragma(defn)@index(setq)([@i(sym), @i(expr)]@r(...))} @c{[sal]}
 
-        @xlcode{(setq@pragma(defn)@index(setq) [@t(@i(sym)) @t(@i(expr))]@r(...))} @c{[lisp]} @itemsep  set the value of a symbol
+        @xlcode{(setq [@t(@i(sym)) @t(@i(expr))]@r(...))} @c{[lisp]} @itemsep  set the value of a symbol. Note that in SAL, the @code(set) command is normally used.
 @end(fgroup)
 @begin(pdescription)
             @i<sym>  @itemsep     the symbol being set (quoted)
@@ -746,9 +744,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{psetq([@i(sym), @i(expr)]@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{psetq@pragma(defn)@index(psetq)([@i(sym), @i(expr)]@r(...))} @c{[sal]}
 
-        @xlcode{(psetq@pragma(defn)@index(psetq) [@t(@i(sym)) @t(@i(expr))]@r(...))} @c{[lisp]}  @itemsep parallel version of setq
+        @xlcode{(psetq [@t(@i(sym)) @t(@i(expr))]@r(...))} @c{[lisp]}  @itemsep parallel version of setq
 @end(fgroup)
 @begin(pdescription)
             @i<sym>  @itemsep     the symbol being set (quoted)
@@ -759,9 +757,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{setf([@i(place), @i(expr)]@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{setf@pragma(defn)@index(setf)([@i(place), @i(expr)]@r(...))} @c{[sal]}
 
-        @xlcode{(setf@pragma(defn)@index(setf) [@t(@i(place)) @t(@i(expr))]@r(...))} @c{[lisp]}  @itemsep set the value of a field
+        @xlcode{(setf [@t(@i(place)) @t(@i(expr))]@r(...))} @c{[lisp]}  @itemsep set the value of a field
 @end(fgroup)
 @begin(pdescription)
             @i<place> @itemsep     the field specifier (quoted):
@@ -809,9 +807,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{gensym([@i(tag)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{gensym@pragma(defn)@index(gensym)([@i(tag)])} @c{[sal]}
 
-        @xlcode{(gensym@pragma(defn)@index(gensym) [@t(@i(tag))])} @c{[lisp]}  @itemsep generate a symbol
+        @xlcode{(gensym [@t(@i(tag))])} @c{[lisp]}  @itemsep generate a symbol
 @end(fgroup)
 @begin(pdescription)
             @i<tag>   @itemsep    string or number
@@ -820,9 +818,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-@begin(fgroup)@xlcode{intern(@i(pname))} @c{[sal]}
+@begin(fgroup)@xlcodef{intern@pragma(defn)@index(intern)(@i(pname))} @c{[sal]}
 
-        @xlcode{(intern@pragma(defn)@index(intern) @t(@i(pname)))} @c{[lisp]}  @itemsep make an interned symbol
+        @xlcode{(intern @t(@i(pname)))} @c{[lisp]}  @itemsep make an interned symbol
 @end(fgroup)
 @begin(pdescription)
             @i<pname> @itemsep    the symbol's print name string
@@ -831,9 +829,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{make-symbol(@i(pname))} @c{[sal]}
+        @begin(fgroup)@xlcodef{make-symbol@pragma(defn)@index(make-symbol)(@i(pname))} @c{[sal]}
 
-        @xlcode{(make-symbol@pragma(defn)@index(make-symbol) @t(@i(pname)))} @c{[lisp]}  @itemsep make an uninterned symbol
+        @xlcode{(make-symbol @t(@i(pname)))} @c{[lisp]}  @itemsep make an uninterned symbol
 @end(fgroup)
 @begin(pdescription)
             @i<pname> @itemsep    the symbol's print name string
@@ -842,9 +840,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{symbol-name(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{symbol-name@pragma(defn)@index(symbol-name)(@i(sym))} @c{[sal]}
 
-        @xlcode{(symbol-name@pragma(defn)@index(symbol-name) @t(@i(sym)))} @c{[lisp]}  @itemsep get the print name of a symbol
+        @xlcode{(symbol-name @t(@i(sym)))} @c{[lisp]}  @itemsep get the print name of a symbol
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -853,9 +851,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-    @begin(fgroup)@xlcode{symbol-value(@i(sym))} @c{[sal]}
+    @begin(fgroup)@xlcodef{symbol-value@pragma(defn)@index(symbol-value)(@i(sym))} @c{[sal]}
 
-        @xlcode{(symbol-value@pragma(defn)@index(symbol-value) @t(@i(sym)))} @c{[lisp]}  @itemsep get the value of a symbol
+        @xlcode{(symbol-value @t(@i(sym)))} @c{[lisp]}  @itemsep get the value of a symbol
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -864,9 +862,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{symbol-function(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{symbol-function@pragma(defn)@index(symbol-function)(@i(sym))} @c{[sal]}
 
-        @xlcode{(symbol-function@pragma(defn)@index(symbol-function) @t(@i(sym)))} @c{[lisp]}  @itemsep get the functional value of a symbol
+        @xlcode{(symbol-function @t(@i(sym)))} @c{[lisp]}  @itemsep get the functional value of a symbol
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -875,9 +873,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{symbol-plist(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{symbol-plist@pragma(defn)@index(symbol-plist)(@i(sym))} @c{[sal]}
 
-        @xlcode{(symbol-plist@pragma(defn)@index(symbol-plist) @t(@i(sym)))} @c{[lisp]}  @itemsep get the property list of a symbol
+        @xlcode{(symbol-plist @t(@i(sym)))} @c{[lisp]}  @itemsep get the property list of a symbol
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -886,9 +884,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{hash(@i(sym), @i(n))} @c{[sal]}
+        @begin(fgroup)@xlcodef{hash@pragma(defn)@index(hash)(@i(sym), @i(n))} @c{[sal]}
 
-        @xlcode{(hash@pragma(defn)@index(hash) @t(@i(sym)) @t(@i(n)))} @c{[lisp]}  @itemsep compute the hash index for a symbol
+        @xlcode{(hash @t(@i(sym)) @t(@i(n)))} @c{[lisp]}  @itemsep compute the hash index for a symbol
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol or string
@@ -902,9 +900,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @section(Property List Functions)@index(Property List Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{get(@i(sym), @i(prop))} @c{[sal]}
+        @begin(fgroup)@xlcodef{get@pragma(defn)@index(get)(@i(sym), @i(prop))} @c{[sal]}
 
-        @xlcode{(get@pragma(defn)@index(get) @t(@i(sym)) @t(@i(prop)))} @c{[lisp]}  @itemsep get the value of a property
+        @xlcode{(get @t(@i(sym)) @t(@i(prop)))} @c{[lisp]}  @itemsep get the value of a property
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -915,9 +913,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{putprop(@i(sym), @i(val), @i(prop))} @c{[sal]}
+        @begin(fgroup)@xlcodef{putprop@pragma(defn)@index(putprop)(@i(sym), @i(val), @i(prop))} @c{[sal]}
 
-        @xlcode{(putprop@pragma(defn)@index(putprop) @t(@i(sym)) @t(@i(val)) @t(@i(prop)))} @c{[lisp]}  @itemsep put a property onto a property list
+        @xlcode{(putprop @t(@i(sym)) @t(@i(val)) @t(@i(prop)))} @c{[lisp]}  @itemsep put a property onto a property list
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -930,9 +928,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{remprop(@i(sym), @i(prop))} @c{[sal]}
+        @begin(fgroup)@xlcodef{remprop@pragma(defn)@index(remprop)(@i(sym), @i(prop))} @c{[sal]}
 
-        @xlcode{(remprop@pragma(defn)@index(remprop) @t(@i(sym)) @t(@i(prop)))} @c{[lisp]}  @itemsep remove a property
+        @xlcode{(remprop @t(@i(sym)) @t(@i(prop)))} @c{[lisp]}  @itemsep remove a property
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -946,9 +944,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @section(Array Functions)@index(Array Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{aref(@i(array), @i(n))} @c{[sal]}
+        @begin(fgroup)@xlcodef{aref@pragma(defn)@index(aref)(@i(array), @i(n))} @c{[sal]}
 
-        @xlcode{(aref@pragma(defn)@index(aref) @t(@i(array)) @t(@i(n)))} @c{[lisp]}  @itemsep get the nth element of an array
+        @xlcode{(aref @t(@i(array)) @t(@i(n)))} @c{[lisp]}  @itemsep get the nth element of an array
 @end(fgroup)
 @begin(pdescription)
             @i<array> @itemsep    the array
@@ -959,9 +957,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{make-array(@i(size))} @c{[sal]}
+        @begin(fgroup)@xlcodef{make-array@pragma(defn)@index(make-array)(@i(size))} @c{[sal]}
 
-        @xlcode{(make-array@pragma(defn)@index(make-array) @t(@i(size)))} @c{[lisp]}  @itemsep make a new array
+        @xlcode{(make-array @t(@i(size)))} @c{[lisp]}  @itemsep make a new array
 @end(fgroup)
 @begin(pdescription)
             @i<size>  @itemsep    the size of the new array (integer)
@@ -970,9 +968,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{vector(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{vector@pragma(defn)@index(vector)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(vector@pragma(defn)@index(vector) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep make an initialized vector
+        @xlcode{(vector @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep make an initialized vector
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the vector elements
@@ -984,9 +982,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @section(List Functions)@index(List Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{car(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{car@pragma(defn)@index(car)(@i(expr))} @c{[sal]}
 
-        @xlcode{(car@pragma(defn)@index(car) @t(@i(expr)))} @c{[lisp]} @itemsep  return the car of a list node
+        @xlcode{(car @t(@i(expr)))} @c{[lisp]} @itemsep  return the car of a list node
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the list node
@@ -995,9 +993,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{cdr(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{cdr@pragma(defn)@index(cdr)(@i(expr))} @c{[sal]}
 
-        @xlcode{(cdr@pragma(defn)@index(cdr) @t(@i(expr)))} @c{[lisp]}  @itemsep return the cdr of a list node
+        @xlcode{(cdr @t(@i(expr)))} @c{[lisp]}  @itemsep return the cdr of a list node
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the list node
@@ -1030,49 +1028,49 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{first(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{first@pragma(defn)@index(first)(@i(expr))} @c{[sal]}
 
-        @xlcode{(first@pragma(defn)@index(first) @t(@i(expr)))} @c{[lisp]}  @itemsep  a synonym for car
+        @xlcode{(first @t(@i(expr)))} @c{[lisp]}  @itemsep  a synonym for car
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{second(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{second@pragma(defn)@index(second)(@i(expr))} @c{[sal]}
 
-        @xlcode{(second@pragma(defn)@index(second) @t(@i(expr)))} @c{[lisp]}  @itemsep a synonym for cadr
+        @xlcode{(second @t(@i(expr)))} @c{[lisp]}  @itemsep a synonym for cadr
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{third(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{third@pragma(defn)@index(third)(@i(expr))} @c{[sal]}
 
-        @xlcode{(third@pragma(defn)@index(third) @t(@i(expr)))} @c{[lisp]}  @itemsep  a synonym for caddr
+        @xlcode{(third @t(@i(expr)))} @c{[lisp]}  @itemsep  a synonym for caddr
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{fourth(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{fourth@pragma(defn)@index(fourth)(@i(expr))} @c{[sal]}
 
-        @xlcode{(fourth@pragma(defn)@index(fourth) @t(@i(expr)))} @c{[lisp]}  @itemsep a synonym for cadddr
+        @xlcode{(fourth @t(@i(expr)))} @c{[lisp]}  @itemsep a synonym for cadddr
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{rest(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{rest@pragma(defn)@index(rest)(@i(expr))} @c{[sal]}
 
-        @xlcode{(rest@pragma(defn)@index(rest) @t(@i(expr)))} @c{[lisp]}  @itemsep   a synonym for cdr
+        @xlcode{(rest @t(@i(expr)))} @c{[lisp]}  @itemsep   a synonym for cdr
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{cons(@i(expr1), @i(expr2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{cons@pragma(defn)@index(cons)(@i(expr1), @i(expr2))} @c{[sal]}
 
-        @xlcode{(cons@pragma(defn)@index(cons) @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep construct a new list node
+        @xlcode{(cons @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep construct a new list node
 @end(fgroup)
 @begin(pdescription)
             @i<expr1> @itemsep    the car of the new list node
@@ -1083,9 +1081,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{list(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{list@pragma(defn)@index(list)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(list@pragma(defn)@index(list) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep create a list of values
+        @xlcode{(list @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep create a list of values
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    expressions to be combined into a list
@@ -1094,9 +1092,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{append(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{append@pragma(defn)@index(append)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(append@pragma(defn)@index(append) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep append lists
+        @xlcode{(append @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep append lists
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    lists whose elements are to be appended
@@ -1105,9 +1103,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{reverse(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{reverse@pragma(defn)@index(reverse)(@i(expr))} @c{[sal]}
 
-        @xlcode{(reverse@pragma(defn)@index(reverse) @t(@i(expr)))} @c{[lisp]}  @itemsep reverse a list
+        @xlcode{(reverse @t(@i(expr)))} @c{[lisp]}  @itemsep reverse a list
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the list to reverse
@@ -1116,9 +1114,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{last(@i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{last@pragma(defn)@index(last)(@i(list))} @c{[sal]}
 
-        @xlcode{(last@pragma(defn)@index(last) @t(@i(list)))} @c{[lisp]}  @itemsep return the last list node of a list
+        @xlcode{(last @t(@i(list)))} @c{[lisp]}  @itemsep return the last list node of a list
 @end(fgroup)
 @begin(pdescription)
             @i<list>  @itemsep    the list
@@ -1127,9 +1125,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{member(@i(expr), @i(list), test: @i(test), test-not: @i(test-not))} @c{[sal]}
+        @begin(fgroup)@xlcodef{member@pragma(defn)@index(member)(@i(expr), @i(list), test: @i(test), test-not: @i(test-not))} @c{[sal]}
 
-        @xlcode{(member@pragma(defn)@index(member) @t(@i(expr)) @t(@i(list)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep find an expression in a list
+        @xlcode{(member @t(@i(expr)) @t(@i(list)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep find an expression in a list
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to find
@@ -1144,9 +1142,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{assoc(@i(expr), @i(alist), test: @i(test), test-not: @i(test-not))} @c{[sal]}
+        @begin(fgroup)@xlcodef{assoc@pragma(defn)@index(assoc)(@i(expr), @i(alist), test: @i(test), test-not: @i(test-not))} @c{[sal]}
 
-        @xlcode{(assoc@pragma(defn)@index(assoc) @t(@i(expr)) @t(@i(alist)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep find an expression in an a-list
+        @xlcode{(assoc @t(@i(expr)) @t(@i(alist)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep find an expression in an a-list
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to find
@@ -1161,9 +1159,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{remove(@i(expr), @i(list), test: @i(test), test-not: @i(test-not))} @c{[sal]}
+        @begin(fgroup)@xlcodef{remove@pragma(defn)@index(remove)(@i(expr), @i(list), test: @i(test), test-not: @i(test-not))} @c{[sal]}
 
-        @xlcode{(remove@pragma(defn)@index(remove) @t(@i(expr)) @t(@i(list)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep remove elements from a list
+        @xlcode{(remove @t(@i(expr)) @t(@i(list)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep remove elements from a list
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the element to remove
@@ -1178,9 +1176,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{remove-if(@i(test), @i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{remove-if@pragma(defn)@index(remove-if)(@i(test), @i(list))} @c{[sal]}
 
-        @xlcode{(remove-if@pragma(defn)@index(remove-if) @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep remove elements that pass test
+        @xlcode{(remove-if @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep remove elements that pass test
 @end(fgroup)
 @begin(pdescription)
             @i<test>  @itemsep    the test predicate
@@ -1191,9 +1189,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{remove-if-not(@i(test), @i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{remove-if-not@pragma(defn)@index(remove-if-not)(@i(test), @i(list))} @c{[sal]}
 
-        @xlcode{(remove-if-not@pragma(defn)@index(remove-if-not) @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep remove elements that fail test
+        @xlcode{(remove-if-not @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep remove elements that fail test
 @end(fgroup)
 @begin(pdescription)
             @i<test>  @itemsep    the test predicate
@@ -1204,9 +1202,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{length(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{length@pragma(defn)@index(length)(@i(expr))} @c{[sal]}
 
-        @xlcode{(length@pragma(defn)@index(length) @t(@i(expr)))} @c{[lisp]}  @itemsep find the length of a list, vector or string
+        @xlcode{(length @t(@i(expr)))} @c{[lisp]}  @itemsep find the length of a list, vector or string
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the list, vector or string
@@ -1215,9 +1213,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{nth(@i(n), @i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{nth@pragma(defn)@index(nth)(@i(n), @i(list))} @c{[sal]}
 
-        @xlcode{(nth@pragma(defn)@index(nth) @t(@i(n)) @t(@i(list)))} @c{[lisp]}  @itemsep return the nth element of a list
+        @xlcode{(nth @t(@i(n)) @t(@i(list)))} @c{[lisp]}  @itemsep return the nth element of a list
 @end(fgroup)
 @begin(pdescription)
             @i<n>     @itemsep    the number of the element to return (zero origin)
@@ -1228,9 +1226,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{nthcdr(@i(n), @i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{nthcdr@pragma(defn)@index(nthcdr)(@i(n), @i(list))} @c{[sal]}
 
-        @xlcode{(nthcdr@pragma(defn)@index(nthcdr) @t(@i(n)) @t(@i(list)))} @c{[lisp]}  @itemsep return the nth cdr of a list
+        @xlcode{(nthcdr @t(@i(n)) @t(@i(list)))} @c{[lisp]}  @itemsep return the nth cdr of a list
 @end(fgroup)
 @begin(pdescription)
             @i<n>     @itemsep    the number of the element to return (zero origin)
@@ -1241,9 +1239,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{mapc(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{mapc@pragma(defn)@index(mapc)(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
 
-        @xlcode{(mapc@pragma(defn)@index(mapc) @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cars
+        @xlcode{(mapc @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cars
 @end(fgroup)
 @begin(pdescription)
             @i<fcn>   @itemsep    the function or function name
@@ -1254,9 +1252,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{mapcar(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{mapcar@pragma(defn)@index(mapcar)(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
 
-        @xlcode{(mapcar@pragma(defn)@index(mapcar) @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cars
+        @xlcode{(mapcar @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cars
 @end(fgroup)
 @begin(pdescription)
             @i<fcn>   @itemsep    the function or function name
@@ -1267,9 +1265,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{mapl(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{mapl@pragma(defn)@index(mapl)(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
 
-        @xlcode{(mapl@pragma(defn)@index(mapl) @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cdrs
+        @xlcode{(mapl @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cdrs
 @end(fgroup)
 @begin(pdescription)
             @i<fcn>   @itemsep    the function or function name
@@ -1280,9 +1278,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{maplist(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{maplist@pragma(defn)@index(maplist)(@i(fcn), @i(list1), @i(list)@r(...))} @c{[sal]}
 
-        @xlcode{(maplist@pragma(defn)@index(maplist) @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cdrs
+        @xlcode{(maplist @t(@i(fcn)) @t(@i(list1)) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep apply function to successive cdrs
 @end(fgroup)
 @begin(pdescription)
             @i<fcn>   @itemsep    the function or function name
@@ -1293,9 +1291,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-       @begin(fgroup)@xlcode{subst(@i(to), @i(from), @i(expr), test: @i(test), test-not: @i(test-not))} @c{[sal]}
+       @begin(fgroup)@xlcodef{subst@pragma(defn)@index(subst)(@i(to), @i(from), @i(expr), test: @i(test), test-not: @i(test-not))} @c{[sal]}
 
-        @xlcode{(subst@pragma(defn)@index(subst) @t(@i(to)) @t(@i(from)) @t(@i(expr)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep substitute expressions
+        @xlcode{(subst @t(@i(to)) @t(@i(from)) @t(@i(expr)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep substitute expressions
 @end(fgroup)
 @begin(pdescription)
             @i<to>    @itemsep    the new expression
@@ -1312,9 +1310,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{sublis(@i(alist), @i(expr), test: @i(test), test-not: @i(test-not))} @c{[sal]}
+        @begin(fgroup)@xlcodef{sublis@pragma(defn)@index(sublis)(@i(alist), @i(expr), test: @i(test), test-not: @i(test-not))} @c{[sal]}
 
-        @xlcode{(sublis@pragma(defn)@index(sublis) @t(@i(alist)) @t(@i(expr)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep substitute with an a-list
+        @xlcode{(sublis @t(@i(alist)) @t(@i(expr)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep substitute with an a-list
 @end(fgroup)
 @begin(pdescription)
             @i<alist> @itemsep    the association list
@@ -1332,9 +1330,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @section(Destructive List Functions)@index(Destructive List Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{rplaca(@i(list), @i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{rplaca@pragma(defn)@index(rplaca)(@i(list), @i(expr))} @c{[sal]}
 
-        @xlcode{(rplaca@pragma(defn)@index(rplaca) @t(@i(list)) @t(@i(expr)))} @c{[lisp]}  @itemsep replace the car of a list node
+        @xlcode{(rplaca @t(@i(list)) @t(@i(expr)))} @c{[lisp]}  @itemsep replace the car of a list node
 @end(fgroup)
 @begin(pdescription)
             @i<list> @itemsep     the list node
@@ -1345,9 +1343,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{rplacd(@i(list), @i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{rplacd@pragma(defn)@index(rplacd)(@i(list), @i(expr))} @c{[sal]}
 
-        @xlcode{(rplacd@pragma(defn)@index(rplacd) @t(@i(list)) @t(@i(expr)))} @c{[lisp]}  @itemsep replace the cdr of a list node
+        @xlcode{(rplacd @t(@i(list)) @t(@i(expr)))} @c{[lisp]}  @itemsep replace the cdr of a list node
 @end(fgroup)
 @begin(pdescription)
             @i<list> @itemsep     the list node
@@ -1358,9 +1356,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{nconc(@i(list)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{nconc@pragma(defn)@index(nconc)(@i(list)@r(...))} @c{[sal]}
 
-        @xlcode{(nconc@pragma(defn)@index(nconc) @t(@i(list))@r(...))} @c{[lisp]}  @itemsep destructively concatenate lists
+        @xlcode{(nconc @t(@i(list))@r(...))} @c{[lisp]}  @itemsep destructively concatenate lists
 @end(fgroup)
 @begin(pdescription)
             @i<list> @itemsep     lists to concatenate
@@ -1369,9 +1367,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{delete(@i(expr), test: @i(test), test-not: @i(test-not))} @c{[sal]}
+        @begin(fgroup)@xlcodef{delete@pragma(defn)@index(delete)(@i(expr), test: @i(test), test-not: @i(test-not))} @c{[sal]}
 
-        @xlcode{(delete@pragma(defn)@index(delete) @t(@i(expr)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep delete elements from a list
+        @xlcode{(delete @t(@i(expr)) @t(&key )@t(:test) @t(:test-not))} @c{[lisp]}  @itemsep delete elements from a list
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the element to delete
@@ -1386,9 +1384,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{delete-if(@i(test), @i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{delete-if@pragma(defn)@index(delete-if)(@i(test), @i(list))} @c{[sal]}
 
-        @xlcode{(delete-if@pragma(defn)@index(delete-if) @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep delete elements that pass test
+        @xlcode{(delete-if) @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep delete elements that pass test
 @end(fgroup)
 @begin(pdescription)
             @i<test>  @itemsep    the test predicate
@@ -1399,9 +1397,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{delete-if-not(@i(test), @i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{delete-if-not@pragma(defn)@index(delete-if-not)(@i(test), @i(list))} @c{[sal]}
 
-        @xlcode{(delete-if-not@pragma(defn)@index(delete-if-not) @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep delete elements that fail test
+        @xlcode{(delete-if-not) @t(@i(test)) @t(@i(list)))} @c{[lisp]}  @itemsep delete elements that fail test
 @end(fgroup)
 @begin(pdescription)
             @i<test>  @itemsep    the test predicate
@@ -1412,9 +1410,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{sort(@i(list), @i(test))} @c{[sal]}
+        @begin(fgroup)@xlcodef{sort@pragma(defn)@index(sort)(@i(list), @i(test))} @c{[sal]}
 
-        @xlcode{(sort@pragma(defn)@index(sort) @t(@i(list)) @t(@i(test)))} @c{[lisp]}  @itemsep sort a list
+        @xlcode{(sort @t(@i(list)) @t(@i(test)))} @c{[lisp]}  @itemsep sort a list
 @end(fgroup)
 @begin(pdescription)
             @i<list>  @itemsep    the list to sort
@@ -1428,9 +1426,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @section(Predicate Functions)@index(Predicate Functions)
 @begin(fdescription)
-	@begin(fgroup)@xlcode{atom(@i(expr))} @c{[sal]}
+	@begin(fgroup)@xlcodef{atom@pragma(defn)@index(atom)(@i(expr))} @c{[sal]}
 
-        @xlcode{(atom@pragma(defn)@index(atom) @t(@i(expr)))} @c{[lisp]}  @itemsep is this an atom?
+        @xlcode{(atom @t(@i(expr)))} @c{[lisp]}  @itemsep is this an atom?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1439,9 +1437,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{symbolp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{symbolp@pragma(defn)@index(symbolp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(symbolp@pragma(defn)@index(symbolp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a symbol?
+        @xlcode{(symbolp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a symbol?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1450,9 +1448,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{numberp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{numberp@pragma(defn)@index(numberp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(numberp@pragma(defn)@index(numberp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a number?
+        @xlcode{(numberp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a number?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1461,9 +1459,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{null(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{null@pragma(defn)@index(null)(@i(expr))} @c{[sal]}
 
-        @xlcode{(null@pragma(defn)@index(null) @t(@i(expr)))} @c{[lisp]}  @itemsep is this an empty list?
+        @xlcode{(null @t(@i(expr)))} @c{[lisp]}  @itemsep is this an empty list?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the list to check
@@ -1472,9 +1470,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{not(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{not@pragma(defn)@index(not)(@i(expr))} @c{[sal]}
 
-        @xlcode{(not@pragma(defn)@index(not) @t(@i(expr)))} @c{[lisp]}  @itemsep is this false?
+        @xlcode{(not @t(@i(expr)))} @c{[lisp]}  @itemsep is this false?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1483,9 +1481,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{listp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{listp@pragma(defn)@index(listp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(listp@pragma(defn)@index(listp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a list?
+        @xlcode{(listp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a list?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1494,9 +1492,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{endp(@i(list))} @c{[sal]}
+        @begin(fgroup)@xlcodef{endp@pragma(defn)@index(endp)(@i(list))} @c{[sal]}
 
-        @xlcode{(endp@pragma(defn)@index(endp) @t(@i(list)))} @c{[lisp]}  @itemsep is this the end of a list
+        @xlcode{(endp @t(@i(list)))} @c{[lisp]}  @itemsep is this the end of a list
 @end(fgroup)
 @begin(pdescription)
             @i<list>  @itemsep    the list
@@ -1505,9 +1503,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{consp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{consp@pragma(defn)@index(consp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(consp@pragma(defn)@index(consp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a non-empty list?
+        @xlcode{(consp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a non-empty list?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1516,9 +1514,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{integerp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{integerp@pragma(defn)@index(integerp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(integerp@pragma(defn)@index(integerp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this an integer?
+        @xlcode{(integerp @t(@i(expr)))} @c{[lisp]}  @itemsep is this an integer?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1527,9 +1525,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{floatp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{floatp@pragma(defn)@index(floatp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(floatp@pragma(defn)@index(floatp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a float?
+        @xlcode{(floatp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a float?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1538,9 +1536,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{stringp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{stringp@pragma(defn)@index(stringp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(stringp@pragma(defn)@index(stringp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a string?
+        @xlcode{(stringp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a string?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1549,9 +1547,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{characterp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{characterp@pragma(defn)@index(characterp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(characterp@pragma(defn)@index(characterp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a character?
+        @xlcode{(characterp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a character?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1560,9 +1558,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{arrayp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{arrayp@pragma(defn)@index(arrayp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(arrayp@pragma(defn)@index(arrayp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this an array?
+        @xlcode{(arrayp @t(@i(expr)))} @c{[lisp]}  @itemsep is this an array?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1571,9 +1569,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{streamp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{streamp@pragma(defn)@index(streamp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(streamp@pragma(defn)@index(streamp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this a stream?
+        @xlcode{(streamp @t(@i(expr)))} @c{[lisp]}  @itemsep is this a stream?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1582,9 +1580,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{objectp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{objectp@pragma(defn)@index(objectp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(objectp@pragma(defn)@index(objectp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this an object?
+        @xlcode{(objectp @t(@i(expr)))} @c{[lisp]}  @itemsep is this an object?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1593,9 +1591,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{filep(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{filep@pragma(defn)@index(filep)(@i(expr))} @c{[sal]}
 
-        @xlcode{(filep@pragma(defn)@index(filep) @t(@i(expr)))} @c{[lisp]}@foot(This is not part of standard XLISP nor is it built-in. Nyquist defines it though.)  @itemsep is this a file? 
+        @xlcode{(filep @t(@i(expr)))} @c{[lisp]}@foot(This is not part of standard XLISP nor is it built-in. Nyquist defines it though.)  @itemsep is this a file? 
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to check
@@ -1604,9 +1602,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{boundp(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{boundp@pragma(defn)@index(boundp)(@i(sym))} @c{[sal]}
 
-        @xlcode{(boundp@pragma(defn)@index(boundp) @t(@i(sym)))} @c{[lisp]}  @itemsep is a value bound to this symbol?
+        @xlcode{(boundp @t(@i(sym)))} @c{[lisp]}  @itemsep is a value bound to this symbol?
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -1615,9 +1613,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{fboundp(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{fboundp@pragma(defn)@index(fboundp)(@i(sym))} @c{[sal]}
 
-        @xlcode{(fboundp@pragma(defn)@index(fboundp) @t(@i(sym)))} @c{[lisp]}  @itemsep is a functional value bound to this symbol?
+        @xlcode{(fboundp @t(@i(sym)))} @c{[lisp]}  @itemsep is a functional value bound to this symbol?
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol
@@ -1628,9 +1626,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{minusp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{minusp@pragma(defn)@index(minusp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(minusp@pragma(defn)@index(minusp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this number negative?
+        @xlcode{(minusp @t(@i(expr)))} @c{[lisp]}  @itemsep is this number negative?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the number to test
@@ -1639,9 +1637,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{zerop(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{zerop@pragma(defn)@index(zerop)(@i(expr))} @c{[sal]}
 
-        @xlcode{(zerop@pragma(defn)@index(zerop) @t(@i(expr)))} @c{[lisp]}  @itemsep is this number zero?
+        @xlcode{(zerop @t(@i(expr)))} @c{[lisp]}  @itemsep is this number zero?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the number to test
@@ -1650,9 +1648,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{plusp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{plusp@pragma(defn)@index(plusp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(plusp@pragma(defn)@index(plusp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this number positive?
+        @xlcode{(plusp @t(@i(expr)))} @c{[lisp]}  @itemsep is this number positive?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the number to test
@@ -1661,9 +1659,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{evenp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{evenp@pragma(defn)@index(evenp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(evenp@pragma(defn)@index(evenp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this integer even?
+        @xlcode{(evenp @t(@i(expr)))} @c{[lisp]}  @itemsep is this integer even?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the integer to test
@@ -1672,9 +1670,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{oddp(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{oddp@pragma(defn)@index(oddp)(@i(expr))} @c{[sal]}
 
-        @xlcode{(oddp@pragma(defn)@index(oddp) @t(@i(expr)))} @c{[lisp]}  @itemsep is this integer odd?
+        @xlcode{(oddp @t(@i(expr)))} @c{[lisp]}  @itemsep is this integer odd?
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the integer to test
@@ -1683,9 +1681,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{eq(@i(expr1), @i(expr2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{eq@pragma(defn)@index(eq)(@i(expr1), @i(expr2))} @c{[sal]}
 
-        @xlcode{(eq@pragma(defn)@index(eq) @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions identical?
+        @xlcode{(eq @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions identical?
 @end(fgroup)
 @begin(pdescription)
             @i<expr1> @itemsep    the first expression
@@ -1696,9 +1694,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-@begin(fgroup)@xlcode{eql(@i(expr1), @i(expr2))} @c{[sal]}
+@begin(fgroup)@xlcodef{eql@pragma(defn)@index(eql)(@i(expr1), @i(expr2))} @c{[sal]}
 
-        @xlcode{(eql@pragma(defn)@index(eql) @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions identical? (@xlcode(eql) ``works'' with all numbers, but a FIXNUM is never eql to a FLONUM, i.e. @xlcode{(eql 1 1.0)} is false.)
+        @xlcode{(eql @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions identical? (@xlcode(eql) ``works'' with all numbers, but a FIXNUM is never eql to a FLONUM, i.e. @xlcode{(eql 1 1.0)} is false.)
 @end(fgroup)
 @begin(pdescription)
             @i<expr1> @itemsep    the first expression
@@ -1709,9 +1707,9 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{equal(@i(expr1), @i(expr2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{equal@pragma(defn)@index(equal)(@i(expr1), @i(expr2))} @c{[sal]}
 
-        @xlcode{(equal@pragma(defn)@index(equal) @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions equal?
+        @xlcode{(equal @t(@i(expr1)) @t(@i(expr2)))} @c{[lisp]}  @itemsep are the expressions equal?
 @end(fgroup)
 @begin(pdescription)
             @i<expr1> @itemsep    the first expression
@@ -1725,7 +1723,7 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
 
 @section(Control Constructs)@index(Control Constructs)
 @begin(fdescription)
-        @xlcode{(cond@pragma(defn)@index(cond) @t(@i(pair))@r(...))} @c{[lisp]}  @itemsep evaluate conditionally
+        @xlcodef{(cond@pragma(defn)@index(cond) @t(@i(pair))@r(...))} @c{[lisp]}  @itemsep evaluate conditionally
 @begin(pdescription)
             @i<pair>  @itemsep    pair consisting of:
 @begin(pdescription)
@@ -1745,9 +1743,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{and(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{and@pragma(defn)@index(and)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(and@pragma(defn)@index(and) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the logical and of a list of expressions
+        @xlcode{(and @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the logical and of a list of expressions
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the expressions to be anded
@@ -1759,9 +1757,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{or(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{or@pragma(defn)@index(or)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(or@pragma(defn)@index(or) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the logical or of a list of expressions
+        @xlcode{(or @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the logical or of a list of expressions
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the expressions to be ored
@@ -1773,9 +1771,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{if(@i(texpr), @i(expr1) [, @i(expr2)])} @c{[sal]}
-
-        @xlcode{(if@pragma(defn)@index(if) @t(@i(texpr)) @t(@i(expr1)) [@t(@i(expr2))])} @c{[lisp]}  @itemsep evaluate expressions conditionally
+        @begin(fgroup)@xlcode{(if@pragma(defn)@index(if) @t(@i(texpr)) @t(@i(expr1)) [@t(@i(expr2))])} @c{[lisp]}  @itemsep evaluate expressions conditionally. Note that the SAL conditional expression syntax is @code{#?(@i(test), @i(iftrue-expression), @i(iffalse-expression))}, but @code(#if) may be used instead of @code(#?). Either form may omit the third argument, which defaults to @code(nil).
 @end(fgroup)
 @begin(pdescription)
             @i<texpr> @itemsep    the test expression
@@ -1784,13 +1780,13 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
             @i<expr2> @itemsep    the expression to be evaluated if texpr is @xlcode(nil)
 
-            returns   @itemsep  the value of the selected expression
+            returns   @itemsep  the value of the selected expression.
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{when(@i(texpr), @i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{when@pragma(defn)@index(when)(@i(texpr), @i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(when@pragma(defn)@index(when) @t(@i(texpr)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep evaluate only when a condition is true
+        @xlcode{(when @t(@i(texpr)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep evaluate only when a condition is true
 @end(fgroup)
 @begin(pdescription)
             @i<texpr> @itemsep    the test expression
@@ -1801,9 +1797,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{unless(@i(texpr), @i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{unless@pragma(defn)@index(unless)(@i(texpr), @i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(unless@pragma(defn)@index(unless) @t(@i(texpr)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep evaluate only when a condition is false
+        @xlcode{(unless @t(@i(texpr)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep evaluate only when a condition is false
 @end(fgroup)
 @begin(pdescription)
             @i<texpr> @itemsep    the test expression
@@ -1814,7 +1810,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-          @xlcode{(case@pragma(defn)@index(case) @t(@i(expr)) @t(@i(case))@r(...))} @c{[lisp]}  @itemsep select by case
+          @xlcodef{(case@pragma(defn)@index(case) @t(@i(expr)) @t(@i(case))@r(...))} @c{[lisp]}  @itemsep select by case
 @begin(pdescription)
             @i<expr>  @itemsep    the selection expression
 
@@ -1836,10 +1832,10 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
-       @xlcode{(let@pragma(defn)@index(let) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep create local bindings
+       @xlcodef{(let@pragma(defn)@index(let) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep create local bindings
 
 @pragma(startcodef)
-        @xlcode{(let*@pragma(defn)@index(let*) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep let with sequential binding
+        @xlcodef{(let*@pragma(defn)@index(let*) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep let with sequential binding
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep   the variable bindings each of which is either:
@@ -1856,13 +1852,13 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
-        @xlcode{(flet@pragma(defn)@index(flet) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep create local functions
+        @xlcodef{(flet@pragma(defn)@index(flet) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep create local functions
 
 @pragma(startcodef)
-        @xlcode{(labels@pragma(defn)@index(labels) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  flet with recursive functions
+        @xlcodef{(labels@pragma(defn)@index(labels) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  flet with recursive functions
 
 @pragma(startcodef)
-        @xlcode{(macrolet@pragma(defn)@index(macrolet) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  create local macros
+        @xlcodef{(macrolet@pragma(defn)@index(macrolet) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  create local macros
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep  the function bindings each of which is:
@@ -1886,9 +1882,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{catch(@i(sym), @i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{catch@pragma(defn)@index(catch)(@i(sym), @i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(catch@pragma(defn)@index(catch) @t(@i(sym)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep evaluate expressions and catch throws
+        @xlcode{(catch @t(@i(sym)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep evaluate expressions and catch throws
 @end(fgroup)
 @begin(pdescription)
             @i<sym>  @itemsep     the catch tag
@@ -1899,9 +1895,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{throw(@i(sym) [, @i(expr)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{throw@pragma(defn)@index(throw)(@i(sym) [, @i(expr)])} @c{[sal]}
 
-        @xlcode{(throw@pragma(defn)@index(throw) @t(@i(sym)) [@t(@i(expr))])} @c{[lisp]}  @itemsep throw to a catch
+        @xlcode{(throw @t(@i(sym)) [@t(@i(expr))])} @c{[lisp]}  @itemsep throw to a catch
 @end(fgroup)
 @begin(pdescription)
             @i<sym>  @itemsep     the catch tag
@@ -1912,9 +1908,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{unwind-protect(@i(expr), @i(cexpr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{unwind-protect@pragma(defn)@index(unwind-protect)(@i(expr), @i(cexpr)@r(...))} @c{[sal]}
 
-        @xlcode{(unwind-protect@pragma(defn)@index(unwind-protect) @t(@i(expr)) @t(@i(cexpr))@r(...))} @c{[lisp]}  @itemsep protect evaluation of an expression
+        @xlcode{(unwind-protect @t(@i(expr)) @t(@i(cexpr))@r(...))} @c{[lisp]}  @itemsep protect evaluation of an expression
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the expression to protect
@@ -1932,7 +1928,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
 @section(Looping Constructs)@index(Looping Constructs)
 @begin(fdescription)
-        @xlcode{(loop@pragma(defn)@index(loop) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep basic looping form
+        @xlcodef{(loop@pragma(defn)@index(loop) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep basic looping form
 @begin(pdescription)
             @i<expr> @itemsep     the body of the loop
 
@@ -1940,9 +1936,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
-        @xlcode{(do@pragma(defn)@index(do) (@t(@i(binding))@r(...)) (@t(@i(texpr)) @t(@i(rexpr))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}
+        @xlcodef{(do@pragma(defn)@index(do) (@t(@i(binding))@r(...)) (@t(@i(texpr)) @t(@i(rexpr))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}
 @pragma(endcodef)
-        @xlcode{(do*@pragma(defn)@index(do*) (@t(@i(binding))@r(...)) (@t(@i(texpr)) @t(@i(rexpr))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}
+        @xlcodef{(do*@pragma(defn)@index(do*) (@t(@i(binding))@r(...)) (@t(@i(texpr)) @t(@i(rexpr))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep  the variable bindings each of which is either:
@@ -1969,7 +1965,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-    @xlcode{(dolist@pragma(defn)@index(dolist) (@t(@i(sym)) @t(@i(expr)) [@t(@i(rexpr))]) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep loop through a list
+    @xlcodef{(dolist@pragma(defn)@index(dolist) (@t(@i(sym)) @t(@i(expr)) [@t(@i(rexpr))]) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep loop through a list
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol to bind to each list element
 
@@ -1981,7 +1977,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(dotimes@pragma(defn)@index(dotimes) (@t(@i(sym)) @t(@i(expr)) [@t(@i(rexpr))]) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep loop from zero to n-1
+        @xlcodef{(dotimes@pragma(defn)@index(dotimes) (@t(@i(sym)) @t(@i(expr)) [@t(@i(rexpr))]) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep loop from zero to n-1
 @begin(pdescription)
             @i<sym>   @itemsep    the symbol to bind to each value from 0 to n-1
 
@@ -1997,10 +1993,10 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @section(The Program Feature)@index(The Program Feature)
 @begin(fdescription)
 @begin(fgroup)
-@xlcode{(prog@pragma(defn)@index(prog) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the program feature
+@xlcodef{(prog@pragma(defn)@index(prog) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the program feature
 
 @pragma(startcodef)
-@xlcode{(prog*@pragma(defn)@index(prog*) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep prog with sequential binding
+@xlcodef{(prog*@pragma(defn)@index(prog*) (@t(@i(binding))@r(...)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep prog with sequential binding
 @end(fgroup)
 @begin(pdescription)
             @i<binding> @itemsep  the variable bindings each of which is either:
@@ -2019,7 +2015,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
         @begin(fgroup)@xlcode{block(@i(name), @i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(block@pragma(defn)@index(block) @t(@i(name)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep named block
+        @xlcodef{(block@pragma(defn)@index(block) @t(@i(name)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep named block
 @end(fgroup)
 @begin(pdescription)
             @i<name>  @itemsep    the block name (symbol)
@@ -2030,7 +2026,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(return@pragma(defn)@index(return) [@t(@i(expr))])} @c{[lisp]}  @itemsep cause a prog construct to return a value
+        @xlcodef{(return@pragma(defn)@index(return) [@t(@i(expr))])} @c{[lisp]}  @itemsep cause a prog construct to return a value
 @begin(pdescription)
             @i<expr>  @itemsep    the value (defaults to @xlcode(nil))
 
@@ -2038,9 +2034,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{return-from(@i(name) [, @i(value)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{return-from@pragma(defn)@index(return-from)(@i(name) [, @i(value)])} @c{[sal]}
 
-        @xlcode{(return-from@pragma(defn)@index(return-from) @t(@i(name)) [@t(@i(value))])} @c{[lisp]}  @itemsep return from a named block
+        @xlcode{(return-from @t(@i(name)) [@t(@i(value))])} @c{[lisp]}  @itemsep return from a named block
 @end(fgroup)
 @begin(pdescription)
             @i<name>  @itemsep    the block name (symbol)
@@ -2051,9 +2047,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{tagbody(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{tagbody@pragma(defn)@index(tagbody)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(tagbody@pragma(defn)@index(tagbody) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep block with labels
+        @xlcode{(tagbody @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep block with labels
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    expression(s) to evaluate or tags (symbols)
@@ -2062,9 +2058,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{go(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{go@pragma(defn)@index(go)(@i(sym))} @c{[sal]}
 
-        @xlcode{(go@pragma(defn)@index(go) @t(@i(sym)))} @c{[lisp]}  @itemsep go to a tag within a tagbody or prog
+        @xlcode{(go @t(@i(sym)))} @c{[lisp]}  @itemsep go to a tag within a tagbody or prog
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the tag (quoted)
@@ -2073,7 +2069,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(progv@pragma(defn)@index(progv) @t(@i(slist)) @t(@i(vlist)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep dynamically bind symbols
+        @xlcodef{(progv@pragma(defn)@index(progv) @t(@i(slist)) @t(@i(vlist)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep dynamically bind symbols
 @begin(pdescription)
             @i<slist> @itemsep    list of symbols
 
@@ -2087,7 +2083,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
         @begin(fgroup)@xlcode{prog1(@i(expr1), @i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(prog1@pragma(defn)@index(prog1) @t(@i(expr1)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep execute expressions sequentially
+        @xlcodef{(prog1@pragma(defn)@index(prog1) @t(@i(expr1)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep execute expressions sequentially
 @end(fgroup)
 @begin(pdescription)
             @i<expr1> @itemsep    the first expression to evaluate
@@ -2100,7 +2096,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
         @begin(fgroup)@xlcode{prog2(@i(expr1), @i(expr2), @i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(prog2@pragma(defn)@index(prog2) @t(@i(expr1)) @t(@i(expr2)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep execute expressions sequentially
+        @xlcodef{(prog2@pragma(defn)@index(prog2) @t(@i(expr1)) @t(@i(expr2)) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep execute expressions sequentially
 @end(fgroup)
 @begin(pdescription)
             @i<expr1> @itemsep    the first expression to evaluate
@@ -2115,7 +2111,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
         @begin(fgroup)@xlcode{progn(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(progn@pragma(defn)@index(progn) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep execute expressions sequentially
+        @xlcodef{(progn@pragma(defn)@index(progn) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep execute expressions sequentially
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expressions to evaluate
@@ -2127,9 +2123,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
 @section(Debugging and Error Handling)@index(Debugging)@index(Error Handling)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{trace(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{trace@pragma(defn)@index(trace)(@i(sym))} @c{[sal]}
 
-        @xlcode{(trace@pragma(defn)@index(trace) @t(@i(sym)))} @c{[lisp]}  @itemsep add a function to the trace list
+        @xlcode{(trace @t(@i(sym)))} @c{[lisp]}  @itemsep add a function to the trace list
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the function to add (quoted)
@@ -2138,9 +2134,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{untrace(@i(sym))} @c{[sal]}
+        @begin(fgroup)@xlcodef{untrace@pragma(defn)@index(untrace)(@i(sym))} @c{[sal]}
 
-        @xlcode{(untrace@pragma(defn)@index(untrace) @t(@i(sym)))} @c{[lisp]}  @itemsep remove a function from the trace list
+        @xlcode{(untrace @t(@i(sym)))} @c{[lisp]}  @itemsep remove a function from the trace list
 @end(fgroup)
 @begin(pdescription)
             @i<sym>   @itemsep    the function to remove (quoted)
@@ -2149,9 +2145,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{error(@i(emsg) [, @i(arg)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{error@pragma(defn)@index(error)(@i(emsg) [, @i(arg)])} @c{[sal]}
 
-        @xlcode{(error@pragma(defn)@index(error) @t(@i(emsg)) [@t(@i(arg))])} @c{[lisp]}  @itemsep signal a non-correctable error
+        @xlcode{(error @t(@i(emsg)) [@t(@i(arg))])} @c{[lisp]}  @itemsep signal a non-correctable error
 @end(fgroup)
 @begin(pdescription)
             @i<emsg>  @itemsep    the error message string
@@ -2162,9 +2158,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{cerror(@i(cmsg), @i(emsg) [, @i(arg)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{cerror@pragma(defn)@index(cerror)(@i(cmsg), @i(emsg) [, @i(arg)])} @c{[sal]}
 
-        @xlcode{(cerror@pragma(defn)@index(cerror) @t(@i(cmsg)) @t(@i(emsg)) [@t(@i(arg))])} @c{[lisp]}  @itemsep signal a correctable error
+        @xlcode{(cerror @t(@i(cmsg)) @t(@i(emsg)) [@t(@i(arg))])} @c{[lisp]}  @itemsep signal a correctable error
 @end(fgroup)
 @begin(pdescription)
             @i<cmsg>  @itemsep    the continue message string
@@ -2177,9 +2173,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{break([@i(bmsg) [, @i(arg)]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{break@pragma(defn)@index(break)([@i(bmsg) [, @i(arg)]])} @c{[sal]}
 
-        @xlcode{(break@pragma(defn)@index(break) [@t(@i(bmsg)) [@t(@i(arg))]])} @c{[lisp]}  @itemsep enter a break loop
+        @xlcode{(break [@t(@i(bmsg)) [@t(@i(arg))]])} @c{[lisp]}  @itemsep enter a break loop
 @end(fgroup)
 @begin(pdescription)
             @i<bmsg>  @itemsep    the break message string (defaults to @xlcode(**break**))
@@ -2190,25 +2186,25 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(clean-up@pragma(defn)@index(clean-up))} @c{[lisp]}  @itemsep clean-up after an error
+        @xlcodef{(clean-up@pragma(defn)@index(clean-up))} @c{[lisp]}  @itemsep clean-up after an error
 @begin(pdescription)
             returns   @itemsep  never returns
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(top-level@pragma(defn)@index(top-level))} @c{[lisp]}  @itemsep clean-up after an error and return to the top level
+        @xlcodef{(top-level@pragma(defn)@index(top-level))} @c{[lisp]}  @itemsep clean-up after an error and return to the top level
 @begin(pdescription)
             returns   @itemsep  never returns
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(continue@pragma(defn)@index(continue))} @c{[lisp]}  @itemsep continue from a correctable error
+        @xlcodef{(continue@pragma(defn)@index(continue))} @c{[lisp]}  @itemsep continue from a correctable error
 @begin(pdescription)
             returns   @itemsep  never returns
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(errset@pragma(defn)@index(errset) @t(@i(expr)) [@t(@i(pflag))])} @c{[lisp]}  @itemsep trap errors
+        @xlcodef{(errset@pragma(defn)@index(errset) @t(@i(expr)) [@t(@i(pflag))])} @c{[lisp]}  @itemsep trap errors
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to execute
 
@@ -2220,7 +2216,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(baktrace@pragma(defn)@index(baktrace)@index(debugging)@index(stack trace) [@t(@i(n))])} @c{[lisp]}  @itemsep print n levels of trace back information
+        @xlcodef{(baktrace@pragma(defn)@index(baktrace)@index(debugging)@index(stack trace) [@t(@i(n))])} @c{[lisp]}  @itemsep print n levels of trace back information
 @begin(pdescription)
             @i<n>     @itemsep    the number of levels (defaults to all levels)
 
@@ -2228,7 +2224,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(evalhook@pragma(defn)@index(evalhook) @t(@i(expr)) @t(@i(ehook)) @t(@i(ahook)) [@t(@i(env))])} @c{[lisp]}  @itemsep evaluate with hooks
+        @xlcodef{(evalhook@pragma(defn)@index(evalhook) @t(@i(expr)) @t(@i(ehook)) @t(@i(ahook)) [@t(@i(env))])} @c{[lisp]}  @itemsep evaluate with hooks
 @begin(pdescription)
             @i<expr>  @itemsep    the expression to evaluate
 
@@ -2244,7 +2240,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
         @begin(fgroup)@xlcode{profile(@i(flag))} @c{[sal]}
 
-        @xlcode{(profile@pragma(defn)@index(profile) @t(@i(flag)))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.)  @itemsep turn profiling on or off.
+        @xlcodef{(profile@pragma(defn)@index(profile) @t(@i(flag)))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.)  @itemsep turn profiling on or off.
 @end(fgroup)
 @begin(pdescription)
             @i<flag>   @itemsep    @xlcode(nil) turns profiling off, otherwise on
@@ -2256,9 +2252,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 
 @section(Arithmetic Functions)@index(Arithmetic Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{truncate(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{truncate@pragma(defn)@index(truncate)(@i(expr))} @c{[sal]}
 
-        @xlcode{(truncate@pragma(defn)@index(truncate) @t(@i(expr)))} @c{[lisp]}  @itemsep truncates a floating point number to an integer
+        @xlcode{(truncate @t(@i(expr)))} @c{[lisp]}  @itemsep truncates a floating point number to an integer
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the number
@@ -2267,9 +2263,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{float(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{float@pragma(defn)@index(float)(@i(expr))} @c{[sal]}
 
-        @xlcode{(float@pragma(defn)@index(float) @t(@i(expr)))} @c{[lisp]}  @itemsep converts an integer to a floating point number
+        @xlcode{(float @t(@i(expr)))} @c{[lisp]}  @itemsep converts an integer to a floating point number
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the number
@@ -2278,7 +2274,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(+@pragma(defn)@index(+) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep add a list of numbers
+        @xlcodef{(+@pragma(defn)@index(+) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep add a list of numbers
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
 
@@ -2286,7 +2282,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(-@pragma(defn)@index(-) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep subtract a list of numbers or negate a single number
+        @xlcodef{(-@pragma(defn)@index(-) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep subtract a list of numbers or negate a single number
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
 
@@ -2294,7 +2290,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(*@pragma(defn)@index(*) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep multiply a list of numbers
+        @xlcodef{(*@pragma(defn)@index(*) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep multiply a list of numbers
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
 
@@ -2302,7 +2298,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(/@pragma(defn)@index(/) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep divide a list of numbers
+        @xlcodef{(/@pragma(defn)@index(/) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep divide a list of numbers
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
 
@@ -2310,7 +2306,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(1+@pragma(defn)@index(1+) @t(@i(expr)))} @c{[lisp]}  @itemsep add one to a number
+        @xlcodef{(1+@pragma(defn)@index(1+) @t(@i(expr)))} @c{[lisp]}  @itemsep add one to a number
 @begin(pdescription)
             @i<expr>  @itemsep    the number
 
@@ -2318,7 +2314,7 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(1-@pragma(defn)@index(1-) @t(@i(expr)))} @c{[lisp]}  @itemsep subtract one from a number
+        @xlcodef{(1-@pragma(defn)@index(1-) @t(@i(expr)))} @c{[lisp]}  @itemsep subtract one from a number
 @begin(pdescription)
             @i<expr>  @itemsep    the number
 
@@ -2326,9 +2322,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{rem(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{rem@pragma(defn)@index(rem)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(rem@pragma(defn)@index(rem)@index(remainder)@index(modulo (rem) function) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep remainder of a list of numbers
+        @xlcode{(rem@index(remainder)@index(modulo (rem) function) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep remainder of a list of numbers
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
@@ -2337,9 +2333,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{min(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{min@pragma(defn)@index(min)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(min@pragma(defn)@index(min)@index(minimum) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the smallest of a list of numbers
+        @xlcode{(min@index(minimum) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the smallest of a list of numbers
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expressions to be checked
@@ -2348,9 +2344,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{max(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{max@pragma(defn)@index(max)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(max@pragma(defn)@index(max)@index(maximum) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the largest of a list of numbers
+        @xlcode{(max@index(maximum) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the largest of a list of numbers
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expressions to be checked
@@ -2359,9 +2355,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{abs(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{abs@pragma(defn)@index(abs)(@i(expr))} @c{[sal]}
 
-        @xlcode{(abs@pragma(defn)@index(abs) @t(@i(expr)))} @c{[lisp]}  @itemsep the absolute value of a number
+        @xlcode{(abs @t(@i(expr)))} @c{[lisp]}  @itemsep the absolute value of a number
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the number
@@ -2370,9 +2366,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{gcd(@i(n1), @i(n2)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{gcd@pragma(defn)@index(gcd)(@i(n1), @i(n2)@r(...))} @c{[sal]}
 
-        @xlcode{(gcd@pragma(defn)@index(gcd) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]}  @itemsep compute the greatest common divisor
+        @xlcode{(gcd @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]}  @itemsep compute the greatest common divisor
 @end(fgroup)
 @begin(pdescription)
             @i<n1>    @itemsep    the first number (integer)
@@ -2383,9 +2379,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-       @begin(fgroup)@xlcode{random(@i(n))} @c{[sal]}
+       @begin(fgroup)@xlcodef{random@pragma(defn)@index(random)(@i(n))} @c{[sal]}
 
-        @xlcode{(random@pragma(defn)@index(random) @t(@i(n)))}
+        @xlcode{(random @t(@i(n)))}
         @c{[lisp]}  @itemsep compute a random number between 0 and |n|-1
         inclusive. If n is 0, return 0.
 @end(fgroup)
@@ -2396,18 +2392,18 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-       @begin(fgroup)@xlcode{rrandom()} @c{[sal]}
+       @begin(fgroup)@xlcodef{rrandom@pragma(defn)@index(rrandom)()} @c{[sal]}
 
-        @xlcode{(rrandom@pragma(defn)@index(rrandom)@index(uniform random))} @c{[lisp]}  @itemsep compute a random real number between 0 and 1 inclusive
+        @xlcode{(rrandom@index(uniform random))} @c{[lisp]}  @itemsep compute a random real number between 0 and 1 inclusive
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep  a random floating point number
 @end(pdescription)
 @blankspace(1)
 
-       @begin(fgroup)@xlcode{random(@i(n))} @c{[sal]}
+       @begin(fgroup)@xlcodef{random-seed@pragma(defn)@index(random-seed)(@i(n))} @c{[sal]}
 
-        @xlcode{(random-seed@pragma(defn)@index(random-seed)@index(seed) @t(@i(n)))}
+        @xlcode{(random-seed@index(seed) @t(@i(n)))}
         @c{[lisp]}  @itemsep seed the random number generator with starting seed @i(n). If @code(random-seed) is not called, @code(sranddev) or some other initialization method will be used by default.
 @end(fgroup)
 @begin(pdescription)
@@ -2417,9 +2413,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{sin(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{sin@pragma(defn)@index(sin)(@i(expr))} @c{[sal]}
 
-        @xlcode{(sin@pragma(defn)@index(sin) @t(@i(expr)))} @c{[lisp]}  @itemsep compute the sine of a number
+        @xlcode{(sin @t(@i(expr)))} @c{[lisp]}  @itemsep compute the sine of a number
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the floating point number
@@ -2428,9 +2424,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{cos(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{cos@pragma(defn)@index(cos)(@i(expr))} @c{[sal]}
 
-        @xlcode{(cos@pragma(defn)@index(cos) @t(@i(expr)))} @c{[lisp]}  @itemsep compute the cosine of a number
+        @xlcode{(cos @t(@i(expr)))} @c{[lisp]}  @itemsep compute the cosine of a number
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the floating point number
@@ -2439,9 +2435,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{tan(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{tan@pragma(defn)@index(tan)(@i(expr))} @c{[sal]}
 
-        @xlcode{(tan@pragma(defn)@index(tan) @t(@i(expr)))} @c{[lisp]}  @itemsep compute the tangent of a number
+        @xlcode{(tan @t(@i(expr)))} @c{[lisp]}  @itemsep compute the tangent of a number
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the floating point number
@@ -2450,9 +2446,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{atan(@i(expr) [, @i(expr2)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{atan@pragma(defn)@index(atan)(@i(expr) [, @i(expr2)])} @c{[sal]}
 
-        @xlcode{(atan@pragma(defn)@index(atan) @t(@i(expr)) [@t(@i(expr2))])} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.)  @itemsep compute the arctangent
+        @xlcode{(atan @t(@i(expr)) [@t(@i(expr2))])} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.)  @itemsep compute the arctangent
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the value of @i(x)
@@ -2463,9 +2459,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{expt(@i(x-expr), @i(y-expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{expt@pragma(defn)@index(expt)(@i(x-expr), @i(y-expr))} @c{[sal]}
 
-        @xlcode{(expt@pragma(defn)@index(expt) @t(@i(x-expr)) @t(@i(y-expr)))} @c{[lisp]}  @itemsep compute x to the y power
+        @xlcode{(expt @t(@i(x-expr)) @t(@i(y-expr)))} @c{[lisp]}  @itemsep compute x to the y power
 @end(fgroup)
 @begin(pdescription)
             @i<x-expr> @itemsep    the floating point number
@@ -2476,9 +2472,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{exp(@i(x-expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{exp@pragma(defn)@index(exp)(@i(x-expr))} @c{[sal]}
 
-        @xlcode{(exp@pragma(defn)@index(exp) @t(@i(x-expr)))} @c{[lisp]}  @itemsep compute e to the x power
+        @xlcode{(exp @t(@i(x-expr)))} @c{[lisp]}  @itemsep compute e to the x power
 @end(fgroup)
 @begin(pdescription)
             @i<x-expr> @itemsep   the floating point number
@@ -2487,9 +2483,9 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{sqrt(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{sqrt@pragma(defn)@index(sqrt)(@i(expr))} @c{[sal]}
 
-        @xlcode{(sqrt@pragma(defn)@index(sqrt) @t(@i(expr)))} @c{[lisp]}  @itemsep compute the square root of a number
+        @xlcode{(sqrt @t(@i(expr)))} @c{[lisp]}  @itemsep compute the square root of a number
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the floating point number
@@ -2498,17 +2494,17 @@ returns  @itemsep   the value of the first expression whose predicate is not
 @end(pdescription)
 @blankspace(1)
 @begin(fgroup)
-@xlcode{(<@pragma(defn)@index(<) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]}  @itemsep test for less than
+@xlcodef{(<@pragma(defn)@index(<) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]}  @itemsep test for less than
 
-@xlcode{(<=@pragma(defn)@index(<=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep  test for less than or equal to
+@xlcodef{(<=@pragma(defn)@index(<=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep  test for less than or equal to
 
-@xlcode{(=@pragma(defn)@index(=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]}  @itemsep test for equal to
+@xlcodef{(=@pragma(defn)@index(=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]}  @itemsep test for equal to
 
-@xlcode{(/=@pragma(defn)@index(/=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep  test for not equal to
+@xlcodef{(/=@pragma(defn)@index(/=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep  test for not equal to
 
-@xlcode{(>=@pragma(defn)@index(>=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep   test for greater than or equal to
+@xlcodef{(>=@pragma(defn)@index(>=) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep   test for greater than or equal to
 
-@xlcode{(>@pragma(defn)@index(>) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep   test for greater than
+@xlcodef{(>@pragma(defn)@index(>) @t(@i(n1)) @t(@i(n2))@r(...))} @c{[lisp]} @itemsep   test for greater than
 @end(fgroup)
 @begin(pdescription)
             @i<n1>    @itemsep    the first number to compare
@@ -2523,9 +2519,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 
 @section(Bitwise Logical Functions)@index(Bitwise Logical Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{logand(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{logand@pragma(defn)@index(logand)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(logand@pragma(defn)@index(logand) @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  the bitwise and of a list of numbers
+        @xlcode{(logand @t(@i(expr))@r(...))} @c{[lisp]} @itemsep  the bitwise and of a list of numbers
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
@@ -2534,9 +2530,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{logior(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{logior@pragma(defn)@index(logior)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(logior@pragma(defn)@index(logior) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the bitwise inclusive or of a list of numbers
+        @xlcode{(logior @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the bitwise inclusive or of a list of numbers
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
@@ -2545,9 +2541,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{logxor(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{logxor@pragma(defn)@index(logxor)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(logxor@pragma(defn)@index(logxor) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the bitwise exclusive or of a list of numbers
+        @xlcode{(logxor @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep the bitwise exclusive or of a list of numbers
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the numbers
@@ -2556,9 +2552,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{lognot(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{lognot@pragma(defn)@index(lognot)(@i(expr))} @c{[sal]}
 
-        @xlcode{(lognot@pragma(defn)@index(lognot) @t(@i(expr)))} @c{[lisp]}  @itemsep the bitwise not of a number
+        @xlcode{(lognot @t(@i(expr)))} @c{[lisp]}  @itemsep the bitwise not of a number
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the number
@@ -2570,9 +2566,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 
 @section(String Functions)@index(String Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{string(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string@pragma(defn)@index(string)(@i(expr))} @c{[sal]}
 
-        @xlcode{(string@pragma(defn)@index(string) @t(@i(expr)))} @c{[lisp]} @itemsep  make a string from a value
+        @xlcode{(string @t(@i(expr)))} @c{[lisp]} @itemsep  make a string from a value
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    an integer (which is first converted into its ASCII character value), string, character, or symbol
@@ -2581,9 +2577,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{string-search(@i(pat), @i(str), start: @i(start), end: @i(end))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string-search@pragma(defn)@index(string-search)(@i(pat), @i(str), start: @i(start), end: @i(end))} @c{[sal]}
 
-        @xlcode{(string-search@pragma(defn)@index(string-search)@index(find string) @t(@i(pat)) @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.)  @itemsep search for pattern in string
+        @xlcode{(string-search@index(find string) @t(@i(pat)) @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.)  @itemsep search for pattern in string
 @end(fgroup)
 @begin(pdescription)
             @i<pat>   @itemsep    a string to search for
@@ -2598,9 +2594,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{string-trim(@i(bag), @i(str))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string-trim@pragma(defn)@index(string-trim)(@i(bag), @i(str))} @c{[sal]}
 
-        @xlcode{(string-trim@pragma(defn)@index(string-trim) @t(@i(bag)) @t(@i(str)))} @c{[lisp]}  @itemsep trim both ends of a string
+        @xlcode{(string-trim @t(@i(bag)) @t(@i(str)))} @c{[lisp]}  @itemsep trim both ends of a string
 @end(fgroup)
 @begin(pdescription)
             @i<bag>   @itemsep    a string containing characters to trim
@@ -2611,9 +2607,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{string-left-trim(@i(bag), @i(str))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string-left-trim@pragma(defn)@index(string-left-trim)(@i(bag), @i(str))} @c{[sal]}
 
-        @xlcode{(string-left-trim@pragma(defn)@index(string-left-trim) @t(@i(bag)) @t(@i(str)))} @c{[lisp]}  @itemsep trim the left end of a string
+        @xlcode{(string-left-trim @t(@i(bag)) @t(@i(str)))} @c{[lisp]}  @itemsep trim the left end of a string
 @end(fgroup)
 @begin(pdescription)
             @i<bag>   @itemsep    a string containing characters to trim
@@ -2624,9 +2620,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{string-right-trim(@i(bag), @i(str))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string-right-trim@pragma(defn)@index(string-right-trim)(@i(bag), @i(str))} @c{[sal]}
 
-        @xlcode{(string-right-trim@pragma(defn)@index(string-right-trim) @t(@i(bag)) @t(@i(str)))} @c{[lisp]}  @itemsep trim the right end of a string
+        @xlcode{(string-right-trim @t(@i(bag)) @t(@i(str)))} @c{[lisp]}  @itemsep trim the right end of a string
 @end(fgroup)
 @begin(pdescription)
             @i<bag>   @itemsep    a string containing characters to trim
@@ -2637,9 +2633,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{string-upcase(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string-upcase@pragma(defn)@index(string-upcase)(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
 
-        @xlcode{(string-upcase@pragma(defn)@index(string-upcase) @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to uppercase
+        @xlcode{(string-upcase @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to uppercase
 @end(fgroup)
 @begin(pdescription)
             @i<str>   @itemsep    the string
@@ -2652,9 +2648,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{string-downcase(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string-downcase@pragma(defn)@index(string-downcase)(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
 
-        @xlcode{(string-downcase@pragma(defn)@index(string-downcase) @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to lowercase
+        @xlcode{(string-downcase @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to lowercase
 @end(fgroup)
 @begin(pdescription)
             @i<str>   @itemsep    the string
@@ -2667,9 +2663,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{nstring-upcase(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
+        @begin(fgroup)@xlcodef{nstring-upcase@pragma(defn)@index(nstring-upcase)(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
 
-        @xlcode{(nstring-upcase@pragma(defn)@index(nstring-upcase) @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to uppercase
+        @xlcode{(nstring-upcase @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to uppercase
 @end(fgroup)
 @begin(pdescription)
             @i<str>   @itemsep    the string
@@ -2682,9 +2678,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{nstring-downcase(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
+        @begin(fgroup)@xlcodef{nstring-downcase@pragma(defn)@index(nstring-downcase)(@i(str), start: @i(start), end: @i(end))} @c{[sal]}
 
-        @xlcode{(nstring-downcase@pragma(defn)@index(nstring-downcase) @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to lowercase
+        @xlcode{(nstring-downcase @t(@i(str)) @t(&key )@t(:start) @t(:end))} @c{[lisp]}  @itemsep convert to lowercase
 @end(fgroup)
 @begin(pdescription)
             @i<str>   @itemsep    the string
@@ -2697,9 +2693,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{strcat(@i(expr)@r(...))} @c{[sal]}
+        @begin(fgroup)@xlcodef{strcat@pragma(defn)@index(strcat)(@i(expr)@r(...))} @c{[sal]}
 
-        @xlcode{(strcat@pragma(defn)@index(strcat)@index(concatenate strings) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep concatenate strings
+        @xlcode{(strcat@index(concatenate strings) @t(@i(expr))@r(...))} @c{[lisp]}  @itemsep concatenate strings
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the strings to concatenate
@@ -2708,9 +2704,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{subseq(@i(string), @i(start) [, @i(end)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{subseq@pragma(defn)@index(subseq)(@i(string), @i(start) [, @i(end)])} @c{[sal]}
 
-        @xlcode{(subseq@pragma(defn)@index(subseq) @t(@i(string)) @t(@i(start)) [@t(@i(end))])} @c{[lisp]}  @itemsep extract a substring
+        @xlcode{(subseq @t(@i(string)) @t(@i(start)) [@t(@i(end))])} @c{[lisp]}  @itemsep extract a substring
 @end(fgroup)
 @begin(pdescription)
             @i<string> @itemsep   the string
@@ -2723,44 +2719,44 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{string<(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string<@pragma(defn)@index(string<)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string<@pragma(defn)@index(string<) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string< @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-        @begin(fgroup)@xlcode{string<=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string<=@pragma(defn)@index(string<=)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string<=@pragma(defn)@index(string<=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string<= @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-        @begin(fgroup)@xlcode{string=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string=@pragma(defn)@index(string=)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string=@pragma(defn)@index(string=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string= @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-        @begin(fgroup)@xlcode{string/=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string/=@pragma(defn)@index(string/=)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string/=@pragma(defn)@index(string/=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string/= @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-        @begin(fgroup)@xlcode{string>=(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string>=@pragma(defn)@index(string>=)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string>=@pragma(defn)@index(string>=) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string>= @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-        @begin(fgroup)@xlcode{string>(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
+        @begin(fgroup)@xlcodef{string>@pragma(defn)@index(string>)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string>@pragma(defn)@index(string>) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string> @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             @i<str1> @itemsep     the first string to compare
@@ -2780,44 +2776,44 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
           Note: case is significant with these comparison functions.
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{string-lessp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(fgroup)@xlcodef{string-lessp@pragma(defn)@index(string-lessp)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string-lessp@pragma(defn)@index(string-lessp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string-lessp @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{string-not-greaterp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(fgroup)@xlcodef{string-not-greaterp@pragma(defn)@index(string-not-greaterp)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string-not-greaterp@pragma(defn)@index(string-not-greaterp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string-not-greaterp @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{string-equal(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(fgroup)@xlcodef{string-equal@pragma(defn)@index(string-equal)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string-equal@pragma(defn)@index(string-equal) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string-equal @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{string-not-equal(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(fgroup)@xlcodef{string-not-equal@pragma(defn)@index(string-not-equal)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string-not-equal@pragma(defn)@index(string-not-equal) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string-not-equal @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{string-not-lessp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(fgroup)@xlcodef{string-not-lessp@pragma(defn)@index(string-not-lessp)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string-not-lessp@pragma(defn)@index(string-not-lessp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string-not-lessp @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{string-greaterp(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
+@begin(fgroup)@xlcodef{string-greaterp@pragma(defn)@index(string-greaterp)(@i(str1), @i(str2), start1: @i(start1), end1: @i(end1), @latex(\\\hspace*{15em})start2: @i(start2), end2: @i(end2))} @c{[sal]}
 
-        @xlcode{(string-greaterp@pragma(defn)@index(string-greaterp) @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
+        @xlcode{(string-greaterp @t(@i(str1)) @t(@i(str2)) @t(&key )@t(:start1) @t(:end1) @t(:start2) @t(:end2))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             @i<str1> @itemsep     the first string to compare
@@ -2841,9 +2837,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 
 @section(Character Functions)@index(Character Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{char(@i(string), @i(index))} @c{[sal]}
+        @begin(fgroup)@xlcodef{char@pragma(defn)@index(char)(@i(string), @i(index))} @c{[sal]}
 
-        @xlcode{(char@pragma(defn)@index(char) @t(@i(string)) @t(@i(index)))} @c{[lisp]} @itemsep  extract a character from a string
+        @xlcode{(char @t(@i(string)) @t(@i(index)))} @c{[lisp]} @itemsep  extract a character from a string
 @end(fgroup)
 @begin(pdescription)
             @i<string> @itemsep   the string
@@ -2854,9 +2850,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{upper-case-p(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{upper-case-p@pragma(defn)@index(upper-case-p)(@i(chr))} @c{[sal]}
 
-        @xlcode{(upper-case-p@pragma(defn)@index(upper-case-p) @t(@i(chr)))} @c{[lisp]}  @itemsep is this an upper case character?
+        @xlcode{(upper-case-p @t(@i(chr)))} @c{[lisp]}  @itemsep is this an upper case character?
 @end(fgroup)
 @begin(pdescription)
             @i<chr> @itemsep      the character
@@ -2865,9 +2861,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{lower-case-p(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{lower-case-p@pragma(defn)@index(lower-case-p)(@i(chr))} @c{[sal]}
 
-        @xlcode{(lower-case-p@pragma(defn)@index(lower-case-p) @t(@i(chr)))} @c{[lisp]}  @itemsep is this a lower case character?
+        @xlcode{(lower-case-p @t(@i(chr)))} @c{[lisp]}  @itemsep is this a lower case character?
 @end(fgroup)
 @begin(pdescription)
             @i<chr> @itemsep      the character
@@ -2876,9 +2872,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{both-case-p(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{both-case-p@pragma(defn)@index(both-case-p)(@i(chr))} @c{[sal]}
 
-        @xlcode{(both-case-p@pragma(defn)@index(both-case-p) @t(@i(chr)))} @c{[lisp]}  @itemsep is this an alphabetic (either case) character?
+        @xlcode{(both-case-p @t(@i(chr)))} @c{[lisp]}  @itemsep is this an alphabetic (either case) character?
 @end(fgroup)
 @begin(pdescription)
             @i<chr> @itemsep      the character
@@ -2887,9 +2883,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{digit-char-p(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{digit-char-p@pragma(defn)@index(digit-char-p)(@i(chr))} @c{[sal]}
 
-        @xlcode{(digit-char-p@pragma(defn)@index(digit-char-p) @t(@i(chr)))} @c{[lisp]}  @itemsep is this a digit character?
+        @xlcode{(digit-char-p @t(@i(chr)))} @c{[lisp]}  @itemsep is this a digit character?
 @end(fgroup)
 @begin(pdescription)
             @i<chr> @itemsep      the character
@@ -2898,9 +2894,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{char-code(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{char-code@pragma(defn)@index(char-code)(@i(chr))} @c{[sal]}
 
-        @xlcode{(char-code@pragma(defn)@index(char-code) @t(@i(chr)))} @c{[lisp]}  @itemsep get the ascii code of a character
+        @xlcode{(char-code @t(@i(chr)))} @c{[lisp]}  @itemsep get the ascii code of a character
 @end(fgroup)
 @begin(pdescription)
             @i<chr> @itemsep      the character
@@ -2909,9 +2905,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{code-char(@i(code))} @c{[sal]}
+        @begin(fgroup)@xlcodef{code-char@pragma(defn)@index(code-char)(@i(code))} @c{[sal]}
 
-        @xlcode{(code-char@pragma(defn)@index(code-char) @t(@i(code)))} @c{[lisp]}  @itemsep get the character with a specified ascii code
+        @xlcode{(code-char @t(@i(code)))} @c{[lisp]}  @itemsep get the character with a specified ascii code
 @end(fgroup)
 @begin(pdescription)
             @i<code> @itemsep     the ascii code (integer)
@@ -2920,9 +2916,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{char-upcase(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{char-upcase@pragma(defn)@index(char-upcase)(@i(chr))} @c{[sal]}
 
-        @xlcode{(char-upcase@pragma(defn)@index(char-upcase) @t(@i(chr)))} @c{[lisp]}  @itemsep convert a character to upper case
+        @xlcode{(char-upcase @t(@i(chr)))} @c{[lisp]}  @itemsep convert a character to upper case
 @end(fgroup)
 @begin(pdescription)
             @i<chr>  @itemsep     the character
@@ -2931,9 +2927,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{char-downcase(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{char-downcase@pragma(defn)@index(char-downcase)(@i(chr))} @c{[sal]}
 
-        @xlcode{(char-downcase@pragma(defn)@index(char-downcase) @t(@i(chr)))} @c{[lisp]}  @itemsep convert a character to lower case
+        @xlcode{(char-downcase @t(@i(chr)))} @c{[lisp]}  @itemsep convert a character to lower case
 @end(fgroup)
 @begin(pdescription)
             @i<chr>  @itemsep     the character
@@ -2942,9 +2938,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{digit-char(@i(n))} @c{[sal]}
+        @begin(fgroup)@xlcodef{digit-char@pragma(defn)@index(digit-char)(@i(n))} @c{[sal]}
 
-        @xlcode{(digit-char@pragma(defn)@index(digit-char) @t(@i(n)))} @c{[lisp]}  @itemsep convert a digit weight to a digit
+        @xlcode{(digit-char @t(@i(n)))} @c{[lisp]}  @itemsep convert a digit weight to a digit
 @end(fgroup)
 @begin(pdescription)
             @i<n>    @itemsep     the digit weight (integer)
@@ -2953,9 +2949,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{char-int(@i(chr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{char-int@pragma(defn)@index(char-int)(@i(chr))} @c{[sal]}
 
-        @xlcode{(char-int@pragma(defn)@index(char-int) @t(@i(chr)))} @c{[lisp]}  @itemsep convert a character to an integer
+        @xlcode{(char-int @t(@i(chr)))} @c{[lisp]}  @itemsep convert a character to an integer
 @end(fgroup)
 @begin(pdescription)
             @i<chr>  @itemsep     the character
@@ -2964,9 +2960,9 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{int-char(@i(int))} @c{[sal]}
+        @begin(fgroup)@xlcodef{int-char@pragma(defn)@index(int-char)(@i(int))} @c{[sal]}
 
-        @xlcode{(int-char@pragma(defn)@index(int-char) @t(@i(int)))} @c{[lisp]}  @itemsep convert an integer to a character
+        @xlcode{(int-char @t(@i(int)))} @c{[lisp]}  @itemsep convert an integer to a character
 @end(fgroup)
 @begin(pdescription)
             @i<int>  @itemsep     the ascii character code
@@ -2974,40 +2970,40 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
             returns  @itemsep   the character with that code
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char<(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char<@pragma(defn)@index(char<)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char<@pragma(defn)@index(char<) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char< @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char<=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char<=@pragma(defn)@index(char<=)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char<=@pragma(defn)@index(char<=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
-@end(fgroup)@pragma(endcodef)@begin(fgroup)@xlcode{char=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+        @xlcode{(char<= @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+@end(fgroup)@pragma(endcodef)@begin(fgroup)@xlcodef{char=@pragma(defn)@index(char=)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char=@pragma(defn)@index(char=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char= @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char/=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char/=@pragma(defn)@index(char/=)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char/=@pragma(defn)@index(char/=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char/= @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char>=(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char>=@pragma(defn)@index(char>=)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char>=@pragma(defn)@index(char>=) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char>= @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char>(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char>@pragma(defn)@index(char>)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char>@pragma(defn)@index(char>) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char> @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             @i<chr1> @itemsep     the first character to compare
@@ -3019,44 +3015,44 @@ returns   @itemsep  @xlcode(t) if the results of comparing @i<n1> with @i<n2>,
           Note: case is significant with these comparison functions.
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char-lessp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char-lessp@pragma(defn)@index(char-lessp)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char-lessp@pragma(defn)@index(char-lessp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char-lessp @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char-not-greaterp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char-not-greaterp@pragma(defn)@index(char-not-greaterp)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char-not-greaterp@pragma(defn)@index(char-not-greaterp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char-not-greaterp @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char-equal(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char-equal@pragma(defn)@index(char-equal)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char-equal@pragma(defn)@index(char-equal) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char-equal @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char-not-equal(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char-not-equal@pragma(defn)@index(char-not-equal)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char-not-equal@pragma(defn)@index(char-not-equal) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char-not-equal @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char-not-lessp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char-not-lessp@pragma(defn)@index(char-not-lessp)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char-not-lessp@pragma(defn)@index(char-not-lessp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char-not-lessp @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @end(pdescription)
 @blankspace(1)
-@begin(fgroup)@xlcode{char-greaterp(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{char-greaterp@pragma(defn)@index(char-greaterp)(@i(chr1), @i(chr2)@r(...))} @c{[sal]}
 
-        @xlcode{(char-greaterp@pragma(defn)@index(char-greaterp) @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
+        @xlcode{(char-greaterp @t(@i(chr1)) @t(@i(chr2))@r(...))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
 @i<chr1> @itemsep     the first string to compare
@@ -3072,9 +3068,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 
 @section(Input/Output Functions)@index(Input/Output Functions)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{read([@i(stream) [, @i(eof) [, @i(rflag)]]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{read@pragma(defn)@index(read)([@i(stream) [, @i(eof) [, @i(rflag)]]])} @c{[sal]}
 
-        @xlcode{(read@pragma(defn)@index(read) [@t(@i(stream)) [@t(@i(eof)) [@t(@i(rflag))]]])} @c{[lisp]}  @itemsep read an expression
+        @xlcode{(read [@t(@i(stream)) [@t(@i(eof)) [@t(@i(rflag))]]])} @c{[lisp]}  @itemsep read an expression
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the input stream (default is standard input)
@@ -3087,7 +3083,7 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(print@pragma(defn)@index(print) @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep print an expression on a new line
+        @xlcodef{(print@pragma(defn)@index(print) @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep print an expression on a new line
 @begin(pdescription)
             @i<expr>   @itemsep   the expression to be printed
 
@@ -3097,9 +3093,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{prin1(@i(expr) [, @i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{prin1@pragma(defn)@index(prin1)(@i(expr) [, @i(stream)])} @c{[sal]}
 
-        @xlcode{(prin1@pragma(defn)@index(prin1) @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep print an expression
+        @xlcode{(prin1 @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep print an expression
 @end(fgroup)
 @begin(pdescription)
             @i<expr>   @itemsep   the expression to be printed
@@ -3110,9 +3106,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{princ(@i(expr) [, @i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{princ@pragma(defn)@index(princ)(@i(expr) [, @i(stream)])} @c{[sal]}
 
-        @xlcode{(princ@pragma(defn)@index(princ) @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep print an expression without quoting
+        @xlcode{(princ @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep print an expression without quoting
 @end(fgroup)
 @begin(pdescription)
             @i<expr>   @itemsep   the expressions to be printed
@@ -3123,9 +3119,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{pprint(@i(expr) [, @i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{pprint@pragma(defn)@index(pprint)(@i(expr) [, @i(stream)])} @c{[sal]}
 
-        @xlcode{(pprint@pragma(defn)@index(pprint) @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep pretty print an expression
+        @xlcode{(pprint @t(@i(expr)) [@t(@i(stream))])} @c{[lisp]}  @itemsep pretty print an expression
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expressions to be printed
@@ -3136,9 +3132,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{terpri([@i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{terpri@pragma(defn)@index(terpri)([@i(stream)])} @c{[sal]}
 
-        @xlcode{(terpri@pragma(defn)@index(terpri) [@t(@i(stream))])} @c{[lisp]}  @itemsep terminate the current print line
+        @xlcode{(terpri [@t(@i(stream))])} @c{[lisp]}  @itemsep terminate the current print line
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the output stream (default is standard output)
@@ -3147,9 +3143,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{flatsize(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{flatsize@pragma(defn)@index(flatsize)(@i(expr))} @c{[sal]}
 
-        @xlcode{(flatsize@pragma(defn)@index(flatsize) @t(@i(expr)))} @c{[lisp]}  @itemsep length of printed representation using prin1
+        @xlcode{(flatsize @t(@i(expr)))} @c{[lisp]}  @itemsep length of printed representation using prin1
 @end(fgroup)
 @begin(pdescription)
             @i<expr>  @itemsep    the expression
@@ -3158,9 +3154,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{flatc(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{flatc@pragma(defn)@index(flatc)(@i(expr))} @c{[sal]}
 
-        @xlcode{(flatc@pragma(defn)@index(flatc) @t(@i(expr)))} @c{[lisp]}  @itemsep length of printed representation using princ
+        @xlcode{(flatc @t(@i(expr)))} @c{[lisp]}  @itemsep length of printed representation using princ
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the expression
@@ -3172,9 +3168,9 @@ returns  @itemsep   @xlcode(t) if predicate is true, @xlcode(nil) otherwise
 
 @section(The Format Function)@index(The Format Function)
 @begin(fdescription)
-@begin(fgroup)@xlcode{format(@i(stream), @i(fmt), @i(arg)@r(...))} @c{[sal]}
+@begin(fgroup)@xlcodef{format@pragma(defn)@index(format)(@i(stream), @i(fmt), @i(arg)@r(...))} @c{[sal]}
 
-        @xlcode{(format@pragma(defn)@index(format) @t(@i(stream)) @t(@i(fmt)) @t(@i(arg))@r(...))} @c{[lisp]}   @itemsep do formated
+        @xlcode{(format @t(@i(stream)) @t(@i(fmt)) @t(@i(arg))@r(...))} @c{[lisp]}   @itemsep do formated
 @end(fgroup)
 output
 @begin(pdescription)
@@ -3206,9 +3202,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @blankspace(1)@comment(probably a bug that html output does not have paragraph break)
 @blankspace(1)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{open(@i(fname), direction: @i(direction))} @c{[sal]}
+        @begin(fgroup)@xlcodef{open@pragma(defn)@index(open)(@i(fname), direction: @i(direction))} @c{[sal]}
 
-        @xlcode{(open@pragma(defn)@index(open) @t(@i(fname)) @t(&key )@t(:direction))} @c{[lisp]} @itemsep  open a file stream
+        @xlcode{(open @t(@i(fname)) @t(&key )@t(:direction))} @c{[lisp]} @itemsep  open a file stream
 @end(fgroup)
 @begin(pdescription)
             @i<fname> @itemsep    the file name string or symbol
@@ -3218,9 +3214,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
             returns   @itemsep  a stream
 @end(pdescription)
 @blankspace(1)
-        @begin(fgroup)@xlcode{open-binary(@i(fname), direction: @i(direction))} @c{[sal]}
+        @begin(fgroup)@xlcodef{open-binary@pragma(defn)@index(open-binary)(@i(fname), direction: @i(direction))} @c{[sal]}
 
-        @xlcode{(open-binary@pragma(defn)@index(open-binary)@index(open)@index(binary files) @t(@i(fname)) @t(&key )@t(:direction))} @c{[lisp]} @itemsep  open a binary file stream
+        @xlcode{(open-binary@index(open)@index(binary files) @t(@i(fname)) @t(&key )@t(:direction))} @c{[lisp]} @itemsep  open a binary file stream
 @end(fgroup)
 @begin(pdescription)
             @i<fname> @itemsep    the file name string or symbol
@@ -3231,9 +3227,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{close(@i(stream))} @c{[sal]}
+        @begin(fgroup)@xlcodef{close@pragma(defn)@index(close)(@i(stream))} @c{[sal]}
 
-        @xlcode{(close@pragma(defn)@index(close) @t(@i(stream)))} @c{[lisp]}  @itemsep close a file stream
+        @xlcode{(close @t(@i(stream)))} @c{[lisp]}  @itemsep close a file stream
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the stream
@@ -3242,9 +3238,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{setdir(@i(path) [, @i(verbose)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{setdir@pragma(defn)@index(setdir)(@i(path) [, @i(verbose)])} @c{[sal]}
 
-        @xlcode{(setdir@pragma(defn)@index(setdir)@index(change directory) @t(@i(path)) [@t(@i(verbose))])} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep set current directory
+        @xlcode{(setdir@index(change directory) @t(@i(path)) [@t(@i(verbose))])} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep set current directory
 @end(fgroup)
 @begin(pdescription)
             @i<path> @itemsep   the path of the new directory
@@ -3255,9 +3251,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{listdir(@i(path))} @c{[sal]}
+        @begin(fgroup)@xlcodef{listdir@pragma(defn)@index(listdir)(@i(path))} @c{[sal]}
 
-        @xlcode{(listdir@pragma(defn)@index(listdir)@index(directory listing)@index(scan directory)@index(read directory)@index(list directory) @t(@i(path)))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep get a directory listing
+        @xlcode{(listdir@index(directory listing)@index(scan directory)@index(read directory)@index(list directory) @t(@i(path)))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep get a directory listing
 @end(fgroup)
 @begin(pdescription)
             @i<path> @itemsep   the path of the directory to be listed
@@ -3266,26 +3262,26 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{get-temp-path()} @c{[sal]}
+        @begin(fgroup)@xlcodef{get-temp-path@pragma(defn)@index(get-temp-path)()} @c{[sal]}
 
-        @xlcode{(get-temp-path@pragma(defn)@index(get-temp-path)@index(temporary files)@index(temp file))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep get a path where a temporary file can be created. Under Windows, this is based on environment variables. If XLISP is running as a sub-process to Java, the environment may not exist, in which case the default result is the unfortunate choice @xlcode(c:\windows\).
+        @xlcode{(get-temp-path@index(temporary files)@index(temp file))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep get a path where a temporary file can be created. Under Windows, this is based on environment variables. If XLISP is running as a sub-process to Java, the environment may not exist, in which case the default result is the unfortunate choice @xlcode(c:\windows\).
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep  the resulting full path as a string
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{get-user()} @c{[sal]}
+        @begin(fgroup)@xlcodef{get-user@pragma(defn)@index(get-user)()} @c{[sal]}
 
-        @xlcode{(get-user@pragma(defn)@index(get-user)@index(user name)@index(temp file))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep get the user ID. In Unix systems (including OS X and Linux), this is the value of the USER environment variable. In Windows, this is currently just ``nyquist'', which is also returned if the environment variable cannot be accessed. This function is used to avoid the case of two users creating files of the same name in the same temp directory.
+        @xlcode{(get-user@index(user name)@index(temp file))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep get the user ID. In Unix systems (including OS X and Linux), this is the value of the USER environment variable. In Windows, this is currently just ``nyquist'', which is also returned if the environment variable cannot be accessed. This function is used to avoid the case of two users creating files of the same name in the same temp directory.
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep the string naming the user
 @end(pdescription)
 @blankspace(1)
-        @begin(fgroup)@xlcode{find-in-xlisp-path(@i(filename))} @c{[sal]}
+        @begin(fgroup)@xlcodef{find-in-xlisp-path@pragma(defn)@index(find-in-xlisp-path)(@i(filename))} @c{[sal]}
 
-        @xlcode{(find-in-xlisp-path@pragma(defn)@index(find-in-xlisp-path) @t(@i(filename)))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep search the XLISP search path (e.g. @xlcode(XLISPPATH) from the environment) for @i(filename). If @i(filename) is not found as is, and there is no file extension, append "@code(.lsp)" to @i(filename) and search again. The current directory is not searched.
+        @xlcode{(find-in-xlisp-path @t(@i(filename)))} @c{[lisp]}@foot(This is not a standard XLISP 2.0 function.) @itemsep search the XLISP search path (e.g. @xlcode(XLISPPATH) from the environment) for @i(filename). If @i(filename) is not found as is, and there is no file extension, append "@code(.lsp)" to @i(filename) and search again. The current directory is not searched.
 @end(fgroup)
 @begin(pdescription)
             @i<filename> @itemsep the name of the file to search for
@@ -3294,9 +3290,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{read-char([@i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{read-char@pragma(defn)@index(read-char)([@i(stream)])} @c{[sal]}
 
-        @xlcode{(read-char@pragma(defn)@index(read-char)@index(get char) [@t(@i(stream))])} @c{[lisp]}  @itemsep read a character from a stream
+        @xlcode{(read-char@index(get char) [@t(@i(stream))])} @c{[lisp]}  @itemsep read a character from a stream
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the input stream (default is standard input)
@@ -3305,9 +3301,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{peek-char([@i(flag) [, @i(stream)]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{peek-char@pragma(defn)@index(peek-char)([@i(flag) [, @i(stream)]])} @c{[sal]}
 
-        @xlcode{(peek-char@pragma(defn)@index(peek-char) [@t(@i(flag)) [@t(@i(stream))]])} @c{[lisp]}  @itemsep peek at the next character
+        @xlcode{(peek-char [@t(@i(flag)) [@t(@i(stream))]])} @c{[lisp]}  @itemsep peek at the next character
 @end(fgroup)
 @begin(pdescription)
             @i<flag>  @itemsep    flag for skipping white space (default is @xlcode(nil))
@@ -3318,9 +3314,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{write-char(@i(ch)  [, @i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{write-char@pragma(defn)@index(write-char)(@i(ch)  [, @i(stream)])} @c{[sal]}
 
-        @xlcode{(write-char@pragma(defn)@index(write-char) @t(@i(ch)) [@t(@i(stream))])} @c{[lisp]}  @itemsep write a character to a stream
+        @xlcode{(write-char @t(@i(ch)) [@t(@i(stream))])} @c{[lisp]}  @itemsep write a character to a stream
 @end(fgroup)
 @begin(pdescription)
             @i<ch>    @itemsep    the character to write
@@ -3331,9 +3327,9 @@ Note that files are ordinarily opened as text. Binary files (such as standard mi
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{read-int([@i(stream) [, @i(length)]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{read-int@pragma(defn)@index(read-int)([@i(stream) [, @i(length)]])} @c{[sal]}
 
-        @xlcode{(read-int@pragma(defn)@index(read-int) [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep read a binary integer from a stream
+        @xlcode{(read-int [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep read a binary integer from a stream
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the input stream (default is standard input)
@@ -3349,9 +3345,9 @@ byte first. The file should be opened in binary mode.
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{write-int(@i(ch) [, @i(stream) [, @i(length)]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{write-int@pragma(defn)@index(write-int)(@i(ch) [, @i(stream) [, @i(length)]])} @c{[sal]}
 
-        @xlcode{(write-int@pragma(defn)@index(write-int) @t(@i(ch)) [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep write a binary integer to a stream
+        @xlcode{(write-int @t(@i(ch)) [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep write a binary integer to a stream
 @end(fgroup)
 @begin(pdescription)
             @i<ch>    @itemsep    the character to write
@@ -3369,9 +3365,9 @@ byte first. The file should be opened in binary mode.
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{read-float([@i(stream) [, @i(length)]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{read-float@pragma(defn)@index(read-float)([@i(stream) [, @i(length)]])} @c{[sal]}
 
-        @xlcode{(read-float@pragma(defn)@index(read-float) [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep read a binary floating-point number from a stream
+        @xlcode{(read-float [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep read a binary floating-point number from a stream
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the input stream (default is standard input)
@@ -3387,9 +3383,9 @@ byte first. The file should be opened in binary mode.
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{write-float(@i(ch) [, @i(stream) [, @i(length)]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{write-float@pragma(defn)@index(write-float)(@i(ch) [, @i(stream) [, @i(length)]])} @c{[sal]}
 
-        @xlcode{(write-float@pragma(defn)@index(write-float) @t(@i(ch)) [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep write a binary floating-point number to a stream
+        @xlcode{(write-float @t(@i(ch)) [@t(@i(stream)) [@t(@i(length))]])} @c{[lisp]}  @itemsep write a binary floating-point number to a stream
 @end(fgroup)
 @begin(pdescription)
             @i<ch>    @itemsep    the character to write
@@ -3407,9 +3403,9 @@ byte first. The file should be opened in binary mode.
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{read-line([@i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{read-line@pragma(defn)@index(read-line)([@i(stream)])} @c{[sal]}
 
-        @xlcode{(read-line@pragma(defn)@index(read-line) [@t(@i(stream))])} @c{[lisp]}  @itemsep read a line from a stream
+        @xlcode{(read-line [@t(@i(stream))])} @c{[lisp]}  @itemsep read a line from a stream
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the input stream (default is standard input)
@@ -3418,9 +3414,9 @@ byte first. The file should be opened in binary mode.
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{read-byte([@i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{read-byte@pragma(defn)@index(read-byte)([@i(stream)])} @c{[sal]}
 
-        @xlcode{(read-byte@pragma(defn)@index(read-byte) [@t(@i(stream))])} @c{[lisp]}  @itemsep read a byte from a stream
+        @xlcode{(read-byte [@t(@i(stream))])} @c{[lisp]}  @itemsep read a byte from a stream
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the input stream (default is standard input)
@@ -3429,9 +3425,9 @@ byte first. The file should be opened in binary mode.
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{write-byte(@i(byte) [, @i(stream)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{write-byte@pragma(defn)@index(write-byte)(@i(byte) [, @i(stream)])} @c{[sal]}
 
-        @xlcode{(write-byte@pragma(defn)@index(write-byte) @t(@i(byte)) [@t(@i(stream))])} @c{[lisp]}  @itemsep write a byte to a stream
+        @xlcode{(write-byte @t(@i(byte)) [@t(@i(stream))])} @c{[lisp]}  @itemsep write a byte to a stream
 @end(fgroup)
 @begin(pdescription)
             @i<byte>   @itemsep   the byte to write (integer)
@@ -3454,9 +3450,9 @@ An unnamed input stream is setup with the
         it is used as the source of any input function.
 
 @begin(fdescription)
-        @begin(fgroup)@xlcode{make-string-input-stream(@i(str) [, @i(start) [, @i(end)]])} @c{[sal]}
+        @begin(fgroup)@xlcodef{make-string-input-stream@pragma(defn)@index(make-string-input-stream)(@i(str) [, @i(start) [, @i(end)]])} @c{[sal]}
 
-        @xlcode{(make-string-input-stream@pragma(defn)@index(make-string-input-stream) @t(@i(str)) [@t(@i(start)) [@t(@i(end))]])} @c{[lisp]}
+        @xlcode{(make-string-input-stream @t(@i(str)) [@t(@i(start)) [@t(@i(end))]])} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             @i<str>    @itemsep   the string
@@ -3469,18 +3465,18 @@ An unnamed input stream is setup with the
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{make-string-output-stream)()} @c{[sal]}
+        @begin(fgroup)@xlcodef{make-string-output-stream)@pragma(defn)@index(make-string-output-stream)()} @c{[sal]}
 
-        @xlcode{(make-string-output-stream)} @c{[lisp]}@pragma(defn)@index(make-string-output-stream)
+        @xlcode{(make-string-output-stream)} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             returns   @itemsep  an unnamed output stream
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{get-output-stream-string(@i(stream))} @c{[sal]}
+        @begin(fgroup)@xlcodef{get-output-stream-string@pragma(defn)@index(get-output-stream-string)(@i(stream))} @c{[sal]}
 
-        @xlcode{(get-output-stream-string@pragma(defn)@index(get-output-stream-string) @t(@i(stream)))} @c{[lisp]}
+        @xlcode{(get-output-stream-string @t(@i(stream)))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep    the output stream
@@ -3491,9 +3487,9 @@ An unnamed input stream is setup with the
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{get-output-stream-list(@i(stream))} @c{[sal]}
+        @begin(fgroup)@xlcodef{get-output-stream-list@pragma(defn)@index(get-output-stream-list)(@i(stream))} @c{[sal]}
 
-        @xlcode{(get-output-stream-list@pragma(defn)@index(get-output-stream-list) @t(@i(stream)))} @c{[lisp]}
+        @xlcode{(get-output-stream-list @t(@i(stream)))} @c{[lisp]}
 @end(fgroup)
 @begin(pdescription)
             @i<stream> @itemsep   the output stream
@@ -3510,9 +3506,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @blankspace(1)@comment(probably a bug that html output does not have paragraph break)
 @blankspace(1)
 @begin(fdescription)
-        @begin(fgroup)@xlcode{get-env(@i(name))} @c{[sal]}
+        @begin(fgroup)@xlcodef{get-env@pragma(defn)@index(get-env)(@i(name))} @c{[sal]}
 
-        @xlcode{(get-env@pragma(defn)@index(get-env)@index(getenv)@index(environment variables) @t(@i(name)))} @c{[lisp]} @itemsep get from an environment variable
+        @xlcode{(get-env@index(getenv)@index(environment variables) @t(@i(name)))} @c{[lisp]} @itemsep get from an environment variable
 @end(fgroup)
 @begin(pdescription)
            @i<name> @itemsep the name of the environment variable
@@ -3521,7 +3517,7 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @xlcode{(load@pragma(defn)@index(load) @t(@i(fname)) @t(&key )@t(:verbose) @t(:print))} @c{[lisp]}   @itemsep load a source file
+        @xlcodef{(load@pragma(defn)@index(load) @t(@i(fname)) @t(&key )@t(:verbose) @t(:print))} @c{[lisp]}   @itemsep load a source file
 @begin(pdescription)
             @i<fname>   @itemsep  the filename string or symbol
 
@@ -3533,9 +3529,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{save(@i(fname))} @c{[sal]}
+        @begin(fgroup)@xlcodef{save@pragma(defn)@index(save)(@i(fname))} @c{[sal]}
 
-        @xlcode{(save@pragma(defn)@index(save) @t(@i(fname)))} @c{[lisp]} @itemsep save workspace to a file
+        @xlcode{(save @t(@i(fname)))} @c{[lisp]} @itemsep save workspace to a file
 @end(fgroup)
 @begin(pdescription)
             @i<fname> @itemsep    the filename string or symbol
@@ -3544,9 +3540,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{restore(@i(fname))} @c{[sal]}
+        @begin(fgroup)@xlcodef{restore@pragma(defn)@index(restore)(@i(fname))} @c{[sal]}
 
-        @xlcode{(restore@pragma(defn)@index(restore) @t(@i(fname)))} @c{[lisp]}  @itemsep restore workspace from a file
+        @xlcode{(restore @t(@i(fname)))} @c{[lisp]}  @itemsep restore workspace from a file
 @end(fgroup)
 @begin(pdescription)
             @i<fname> @itemsep    the filename string or symbol
@@ -3555,9 +3551,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{dribble([@i(fname)])} @c{[sal]}
+        @begin(fgroup)@xlcodef{dribble@pragma(defn)@index(dribble)([@i(fname)])} @c{[sal]}
 
-        @xlcode{(dribble@pragma(defn)@index(dribble) [@t(@i(fname))])} @c{[lisp]}  @itemsep create a file with a transcript of a session
+        @xlcode{(dribble [@t(@i(fname))])} @c{[lisp]}  @itemsep create a file with a transcript of a session
 @end(fgroup)
 @begin(pdescription)
             @i<fname> @itemsep    file name string or symbol
@@ -3567,18 +3563,18 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{gc()} @c{[sal]}
+        @begin(fgroup)@xlcodef{gc@pragma(defn)@index(gc)()} @c{[sal]}
 
-        @xlcode{(gc@pragma(defn)@index(gc))} @c{[lisp]}  @itemsep force garbage collection
+        @xlcode{(gc)} @c{[lisp]}  @itemsep force garbage collection
 @end(fgroup)
 @begin(pdescription)
             returns @itemsep    @xlcode(nil)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{expand(@i(num))} @c{[sal]}
+        @begin(fgroup)@xlcodef{expand@pragma(defn)@index(expand)(@i(num))} @c{[sal]}
 
-        @xlcode{(expand@pragma(defn)@index(expand) @t(@i(num)))} @c{[lisp]}  @itemsep expand memory by adding segments
+        @xlcode{(expand @t(@i(num)))} @c{[lisp]}  @itemsep expand memory by adding segments
 @end(fgroup)
 @begin(pdescription)
             @i<num> @itemsep      the number of segments to add
@@ -3587,9 +3583,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{alloc(@i(num))} @c{[sal]}
+        @begin(fgroup)@xlcodef{alloc@pragma(defn)@index(alloc)(@i(num))} @c{[sal]}
 
-        @xlcode{(alloc@pragma(defn)@index(alloc) @t(@i(num)))} @c{[lisp]}  @itemsep change number of nodes to allocate in each segment
+        @xlcode{(alloc @t(@i(num)))} @c{[lisp]}  @itemsep change number of nodes to allocate in each segment
 @end(fgroup)
 @begin(pdescription)
             @i<num> @itemsep      the number of nodes to allocate
@@ -3598,27 +3594,27 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{info()} @c{[sal]}
+        @begin(fgroup)@xlcodef{info@pragma(defn)@index(info)()} @c{[sal]}
 
-        @xlcode{(info@pragma(defn)@index(info))} @c{[lisp]}  @itemsep show information about memory usage.
+        @xlcode{(info)} @c{[lisp]}  @itemsep show information about memory usage.
 @end(fgroup)
 @begin(pdescription)
             returns @itemsep    @xlcode(nil)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{room()} @c{[sal]}
+        @begin(fgroup)@xlcodef{room@pragma(defn)@index(room)()} @c{[sal]}
 
-        @xlcode{(room@pragma(defn)@index(room))} @c{[lisp]}  @itemsep show memory allocation statistics
+        @xlcode{(room)} @c{[lisp]}  @itemsep show memory allocation statistics
 @end(fgroup)
 @begin(pdescription)
             returns @itemsep    @xlcode(nil)
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{type-of(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{type-of@pragma(defn)@index(type-of)(@i(expr))} @c{[sal]}
 
-        @xlcode{(type-of@pragma(defn)@index(type-of) @t(@i(expr)))} @c{[lisp]}  @itemsep returns the type of the expression
+        @xlcode{(type-of @t(@i(expr)))} @c{[lisp]}  @itemsep returns the type of the expression
 @end(fgroup)
 @begin(pdescription)
             @i<expr> @itemsep     the expression to return the type of
@@ -3654,9 +3650,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{peek(@i(addrs))} @c{[sal]}
+        @begin(fgroup)@xlcodef{peek@pragma(defn)@index(peek)(@i(addrs))} @c{[sal]}
 
-        @xlcode{(peek@pragma(defn)@index(peek) @t(@i(addrs)))} @c{[lisp]}   @itemsep peek at a location in memory
+        @xlcode{(peek @t(@i(addrs)))} @c{[lisp]}   @itemsep peek at a location in memory
 @end(fgroup)
 @begin(pdescription)
             @i<addrs>  @itemsep   the address to peek at (integer)
@@ -3665,9 +3661,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{poke(@i(addrs), @i(value))} @c{[sal]}
+        @begin(fgroup)@xlcodef{poke@pragma(defn)@index(poke)(@i(addrs), @i(value))} @c{[sal]}
 
-        @xlcode{(poke@pragma(defn)@index(poke) @t(@i(addrs)) @t(@i(value)))} @c{[lisp]} @itemsep  poke a value into memory
+        @xlcode{(poke @t(@i(addrs)) @t(@i(value)))} @c{[lisp]} @itemsep  poke a value into memory
 @end(fgroup)
 @begin(pdescription)
             @i<addrs>  @itemsep   the address to poke (integer)
@@ -3678,9 +3674,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{bigendianp()} @c{[sal]}
+        @begin(fgroup)@xlcodef{bigendianp@pragma(defn)@index(bigendianp)()} @c{[sal]}
 
-        @xlcode{(bigendianp@pragma(defn)@index(bigendianp)@index(endian)@index(big endian)@index(little endian))} @c{[lisp]} @itemsep  is this a big-endian machine?
+        @xlcode{(bigendianp@index(endian)@index(big endian)@index(little endian))} @c{[lisp]} @itemsep  is this a big-endian machine?
 @end(fgroup)
 @begin(pdescription)
             returns    @itemsep T if this a big-endian architecture, storing the high-order byte of an integer at the lowest byte address of the integer; otherwise, NIL.
@@ -3688,9 +3684,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{address-of(@i(expr))} @c{[sal]}
+        @begin(fgroup)@xlcodef{address-of@pragma(defn)@index(address-of)(@i(expr))} @c{[sal]}
 
-        @xlcode{(address-of@pragma(defn)@index(address-of) @t(@i(expr)))} @c{[lisp]}  @itemsep get the address of an xlisp node
+        @xlcode{(address-of @t(@i(expr)))} @c{[lisp]}  @itemsep get the address of an xlisp node
 @end(fgroup)
 @begin(pdescription)
             @i<expr>   @itemsep   the node
@@ -3699,9 +3695,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{exit()} @c{[sal]}
+        @begin(fgroup)@xlcodef{exit@pragma(defn)@index(exit)()} @c{[sal]}
 
-        @xlcode{(exit@pragma(defn)@index(exit))} @c{[lisp]}  @itemsep
+        @xlcode{(exit)} @c{[lisp]}  @itemsep
         exit xlisp. (Note: in Audacity plug-ins, @code(exit) is
         undefined because exiting would terminate Audacity.)
 @end(fgroup)
@@ -3710,9 +3706,9 @@ Note: the @xlcode(load) function first tries to load a file from the current dir
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{setup-console()} @c{[sal]}
+        @begin(fgroup)@xlcodef{setup-console@pragma(defn)@index(setup-console)()} @c{[sal]}
 
-        @xlcode{(setup-console@pragma(defn)@index(setup-console)@index(window initialization))} @c{[lisp]}  @itemsep set default console attributes
+        @xlcode{(setup-console@index(window initialization))} @c{[lisp]}  @itemsep set default console attributes
 @end(fgroup)
 @begin(pdescription)
             returns    @itemsep NIL
@@ -3721,9 +3717,9 @@ Note: Under Windows, Nyquist normally starts up in a medium-sized console window
 @end(pdescription)
 @blankspace(1)
 
-        @begin(fgroup)@xlcode{echoenabled(@i(flag))} @c{[sal]}
+        @begin(fgroup)@xlcodef{echoenabled@pragma(defn)@index(echoenabled)(@i(flag))} @c{[sal]}
 
-        @xlcode{(echoenabled@pragma(defn)@index(echoenabled)@index(console, XLISP) @t(@i(flag)))} @c{[lisp]}  @itemsep turn console input echoing on or off
+        @xlcode{(echoenabled@index(console, XLISP) @t(@i(flag)))} @c{[lisp]}  @itemsep turn console input echoing on or off
 @end(fgroup)
 @begin(pdescription)
             @i<flag>   @itemsep T to enable echo, NIL to disable

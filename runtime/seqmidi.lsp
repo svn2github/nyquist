@@ -157,3 +157,14 @@ exit-loop ; here, we know time of next note
 ;    (seq-next the-seq)
 ;    (go loop)))
 ; 
+
+;; for SAL we can't pass in lisp expressions as arguments, so
+;; we pass in functions instead, using keyword parameters for
+;; ctrl, bend, touch, and prgm. The note parameter is required.
+;;
+(defun seq-midi-sal (seq note &optional ctrl bend touch prgm)
+  (seq-midi seq (note (chan pitch vel) (funcall note chan pitch vel))
+    (ctrl (chan num val) (if ctrl (funcall ctrl chan num val)))
+    (bend (chan val) (if bend (funcall bend chan val)))
+    (touch (chan val) (if touch (funcall touch chan val)))
+    (prgm (chan val) (if prgm (funcall prgm chan val)))))

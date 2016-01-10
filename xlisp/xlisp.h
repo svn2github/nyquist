@@ -1027,4 +1027,4 @@ void set_xlisp_path(const char *p);
 void localinit(void);
 void localsymbols(void);
 void print_local_gc_info(void);
-
+void local_toplevel(void);

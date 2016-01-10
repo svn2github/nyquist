@@ -1,19 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-
-
-<head>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-<title>Warble Tutorial</title>
-</head>
-
-<body>
-
-<h1>Warble Tutorial</h1>
-
-<p>The warble function by Alex illustrates the use of AM and FM oscillators to create an
-&quot;analog&quot; electronic synthesizer sound.</p>
-
-<pre>(defun warble (&amp;optional (dur 1) (pch 60))
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+    <title>Warble Tutorial</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body>
+    <h1>Warble Tutorial</h1>
+    <p>The warble function by Alex illustrates the use of AM and FM
+      oscillators to create an "analog" electronic synthesizer sound.</p>
+    <p><i>Note: all examples use SAL syntax followed by Lisp syntax in a
+        smaller font. Since SAL does not support optional parameters,
+        keyword parameters are used instead, so these implementations
+        are not exactly equivalent.</i><br>
+    </p>
+    <pre>function warble(dur: 1, pch: 60)
+  return (env(0.017, 0.1, 0.004, 1, 0.7, 0.8, 1) *
+          amosc(pch, fmosc(hz-to-step(8), 
+                           pwl(0, 4, 0.2, -4, 0.56, 9, 0.7, <br>                               0, 1, -8, 1))) +
+          env(0.2, 0.09, 0.07, 0.92, 0.8, 0.6, 1) ~ 0.96 *
+          amosc(pch, fmosc(pch * 1.414, 
+                           pwl(0.2, 80, 0.5, 4, 0.9,<br>                               1120, 1, 200, 1)))) ~ dur<br><br><small><small>(defun warble (&amp;optional (dur 1) (pch 60))
   (stretch dur 
     (sum (mult
            (env 0.017 0.1 0.004 1 0.7 0.8 1)
@@ -21,56 +30,61 @@
                              (pwl 0 4 0.2 -4 0.56 9 0.7 0 1 -8 1))))
          (mult (stretch 0.96 (env 0.2 0.09 0.07 0.92 0.8 0.6 1))
                (amosc pch (fmosc (* pch 1.414) 
-                                 (pwl 0.2 80 0.5 4 0.9 1120 1 200 1)))))))</pre>
-
-<p>This sound is the sum of two components. To find the two components, look for <code>(mult
-...)</code>. Each of these components is the product of an envelope and an AM oscillator.
-The first one modulates the AM oscillator with a low frequency (about 8 Hz) sinusoid
-produced by an FM oscillator. The modulator varies in frequency according to a piece-wise
-linear envelope.</p>
-
-<p>The second component is similar, but uses a much higher modulating frequency in the
-audio range, producing a ring-modulation effect. Another piece-wise linear envelope sweeps
-the modulator frequency by as much as 1120 Hz.</p>
-
-<h2>Thicker Texture</h2>
-
-<p>A thicker texture can be obtained by playing copies of warble together with slight
-parameter changes. Here is an example:</p>
-
-<pre>(defun thicker ()
+                                 (pwl 0.2 80 0.5 4 0.9 1120 1 200 1)))))))</small></small></pre><small><small>
+    </small></small><p>This sound is the sum of two components. Each of these components is the product of an
+      envelope (<tt>env</tt>) and an AM oscillator (<tt>amosc</tt>).
+      The first one modulates the AM oscillator with a low frequency
+      (about 8 Hz) sinusoid
+      produced by an FM oscillator. The modulator varies in frequency
+      according to a piece-wise
+      linear envelope.</p>
+    <p>The second component is similar, but uses a much higher
+      modulating frequency in the
+      audio range, producing a ring-modulation effect. Another
+      piece-wise linear envelope sweeps
+      the modulator frequency by as much as 1120 Hz.</p>
+    <h2>Thicker Texture</h2>
+    <p>A thicker texture can be obtained by playing copies of warble
+      together with slight
+      parameter changes. Here is an example:</p>
+    <pre>function thicker()
+  return sim(0.5 * warble(dur: 8, pch: 48) @ 0.0,
+             0.3 * warble(dur: 8.05, pch: 47.9) @ 0.05)
+<br><small><small>(defun thicker ()
   (sim (scale 0.5 (at 0.00 (warble 8 48)))
-       (scale 0.3 (at 0.05 (warble 8.05 47.9)))))</pre>
+       (scale 0.3 (at 0.05 (warble 8.05 47.9)))))</small></small></pre>
+    <h2>Another FM Sound</h2>
+    <p>The following produces another analog-sounding FM texture:</p>
+    <pre>function mod(dur) 
+  return (pwl(0, 1000, 0.2, 200, 0.5, 8000, 1, 100, 1) *
+	  fmosc(c4, pwl(0, 1, 0.5, 3.25, 1, 0.74, 1)) ~ dur
 
-<h2><br>
-Another FM Sound</h2>
-
-<p>The following produces another analog-sounding FM texture:</p>
-
-<pre>(defun mod (dur) 
+function blurp(dur)
+  return fmosc(c3, osc(7, dur) * mod(dur))
+<br><small><small>(defun mod (dur) 
   (stretch dur
     (mult (pwl 0 1000 .2 200 .5 8000 1 100 1)
 	  (fmosc c4 (pwl 0 1 .5 3.25 1 .74 1)))))
 
 (defun blurp (dur)
-  (fmosc c3 (mult (osc 07 dur) (mod dur))))</pre>
-
-<p>This example relies on a combination of AM and FM: the output is from an FM oscillator,
-but its modulator is formed by multiplying (AM) two oscillators. The first is low
-frequency (about 12 Hz), giving a warbling sound, and the second, generated by <code>(mod
-dur)</code>, is another FM oscillator. It appears that the modulation generated by the
-piece-wise linear function is almost insignificant. You might try scaling the expression
-(pwl 0 1 .5 3.25 1 .74 1) in <code>mod</code> by varying amounts to see what happens.</p>
-
-<p>The original duration of <code>blurp</code> was 3.1 (seconds), but longer versions are
-interesting and reveal more detail.</p>
-
-<h2>Yet Another Sound</h2>
-
-<p>See <a href="scratch_tutorial.htm#ring">Other Sounds Using Ring in Vinal Scratch
-Tutorial</a> for another example.</p>
-
-<pre>
-</pre>
-/body>
-</html>
+  (fmosc c3 (mult (osc 07 dur) (mod dur))))</small></small></pre><small><small>
+    </small></small><p>This example relies on a combination of AM and FM: the output is
+      from an FM oscillator,
+      but its modulator is formed by multiplying (AM) two oscillators.
+      The first is low
+      frequency (about 12 Hz), giving a warbling sound, and the second,
+      generated by <code>(mod
+        dur)</code>, is another FM oscillator. It appears that the
+      modulation generated by the
+      piece-wise linear function is almost insignificant. You might try
+      scaling the expression
+      (pwl 0 1 .5 3.25 1 .74 1) in <code>mod</code> by varying amounts
+      to see what happens.</p>
+    <p>The original duration of <code>blurp</code> was 3.1 (seconds),
+      but longer versions are
+      interesting and reveal more detail.</p>
+    <h2>Yet Another Sound</h2>
+    <p>See <a href="scratch_tutorial.htm#ring">Other Sounds Using Ring
+        in Vinal Scratch
+        Tutorial</a> for another example.</p>  
+</body></html>

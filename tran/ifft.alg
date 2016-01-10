@@ -40,6 +40,7 @@
 
 #include \"samples.h\"
 #include \"fftext.h\"
+#include \"fft.h\"
 
 #define MUST_BE_FLONUM(e) \\
     if (!(e) || ntype(e) != FLONUM) { xlerror(\"flonum expected\", (e)); }
@@ -144,6 +145,7 @@ out:        togo = 0;   /* indicate termination */
             m = round(log2(n));
             if (!fftInit(m)) riffts(susp->samples, m, 1);
             else xlfail(\"FFT initialization error\");
+            fft_shift(susp->samples, n);
             if (susp->window) {
                 n = susp->length;
                 for (i = 0; i < n; i++) {

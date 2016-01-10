@@ -27,7 +27,7 @@ Let me know if you have problems with
 any of these machines.
 <p>
 To use Nyquist, you should have a basic knowledge of Lisp.  An excellent text
-by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#220">"XLISP: An Object-oriented Lisp"</a> is
+by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#227">"XLISP: An Object-oriented Lisp"</a> is
 the reference manual for XLISP, of which Nyquist is a superset. Starting with
 Version 3, Nyquist supports a variant of SAL. SAL is a language distinct from 
 Lisp. It was introduced in Rick Taube's Common Music system. Since there are some
@@ -37,8 +37,8 @@ implementation "Nyquist SAL;" however, in this manual, I will just call it
 syntax that may be more familiar to programmers with experience in Java, C,
 Basic, etc. An introduction to SAL is in Mary Simoni and Roger B. Dannenberg, <i>Algorithmic Composition: A Guide to Composing Music with Nyquist</i>  <a href = "http://www.algocompbook.com/">(Simoni and Dannenberg 2013)</a>.
 <p>
-
 <a name = "3"><h3>Installation</h3></a>
+
 <a name="index5"></a><a name="index6"></a><a name="index7"></a>
 Nyquist is a C++ program intended to run under various operating systems 
 including Unix, Mac OS X, and Windows. Nyquist is based on Lisp, but it 
@@ -98,12 +98,13 @@ When Nyquist starts it normally enters SAL mode automatically, but certain error
 In SAL mode, you type commands in the SAL programming language. Nyquist reads the commands, compiles them into Lisp, and evaluates the commands. Commands can be entered manually by typing into the upper left text box in NyquistIDE.
 <p>
 <a name = "7"><h3>Command Line</h3></a>
+
 <a name="index11"></a><a name="index12"></a><a name="index13"></a>
 When run from the command line, Nyquist (usually the command is <tt>ny</tt>) looks 
 for some options and some files to load. There are several options.
 <p>
 The
- <tt>-R</tt><i>paths</i> option gives Nyquist a list of paths (separated by 
+<a name="index14"></a><a name="index15"></a><tt>-R</tt><i>paths</i> option gives Nyquist a list of paths (separated by 
 semicolons) to directories where Nyquist is allowed to read files. Files in any 
 subdirectories of the listed directories can also be read, along with the 
 directories themselves. This option can be used to restrict access to files.
@@ -116,14 +117,14 @@ from accidentally malicious code. (If you are truly worried about Nyquist code,
 you should run Nyquist in a virtual machine or other isolated machine. It is
 unlikely that Nyquist is secure from all attacks.)
 <p>
-The <tt>-L</tt><i>run-time-limit</i> option gives Nyquist a run time limit. If the limit
+<a name="index16"></a><a name="index17"></a>The <tt>-L</tt><i>run-time-limit</i> option gives Nyquist a run time limit. If the limit
 is exceeded, Nyquist prints an error message and exits. The time is based on 
 actual work rather than CPU seconds or wall time. One unit of run time is on the 
 order of 10ms of CPU time (for a medium speed computer in 2014), but you can use
 the <code>GET-RUN-TIME</code> function to read the internal run-time counter to see
 how much computation you have done.
 <p>
-The <tt>-M</tt><i>memory-limit</i> option gives Nyquist a memory limit. If the limit
+<a name="index18"></a><a name="index19"></a><a name="index20"></a>The <tt>-M</tt><i>memory-limit</i> option gives Nyquist a memory limit. If the limit
 (in megabytes) is exceeded, Nyquist prints an error message and exits. The
 limit includes all XLISP data (cons cells, strings, etc.) plus sample blocks
 and tables allocated for signal processing.
@@ -192,7 +193,7 @@ get a Lisp prompt (<code>&gt; </code>). Commands can be entered manually by typi
 We will begin with some simple Nyquist programs. Throughout the manual,
 we will assume SAL mode and give examples in SAL, but it should be
 emphasized that all of these examples can be performed using Lisp
-syntax. See Section <a href = "part7.html#75">"Interoperability of SAL and XLISP"</a> on the relationship between
+syntax. See Section <a href = "part7.html#77">"Interoperability of SAL and XLISP"</a> on the relationship between
 SAL and Lisp.
 <p>
 Detailed explanations of the functions used in these examples will be
@@ -202,7 +203,7 @@ details will come later.  Most of these examples can be found in the
 file <code>nyquist/demos/examples.sal</code>. Corresponding Lisp syntax
 examples are in the file <code>nyquist/demos/examples.lsp</code>.
 <p>
-Our first example makes and plays a sound:<a name="index14"></a><a name="index15"></a>
+Our first example makes and plays a sound:<a name="index21"></a><a name="index22"></a>
 <p><pre>
 <i>;; Making a sound.</i>
 play osc(60) ; generate a loud sine wave
@@ -236,10 +237,10 @@ will be used to compute the harmonics.
 
 <p>
 The function
-<code>mkwave<a name="index16"></a></code> calls upon
-<code>build-harmonic<a name="index17"></a></code> to generate a total of four
+<code>mkwave<a name="index23"></a></code> calls upon
+<code>build-harmonic<a name="index24"></a></code> to generate a total of four
 harmonics with amplitudes 0.5, 0.25, 0.125, and 0.0625.  
-These are scaled and added (using <code>+<a name="index18"></a></code>) to
+These are scaled and added (using <code>+<a name="index25"></a></code>) to
 create a waveform which is bound temporarily to <code>*table*</code>.  
 <p>
 A complete Nyquist waveform is a list consisting of a sound, a pitch,
@@ -278,13 +279,13 @@ if ! fboundp(quote(*mkwave*)) then
 </pre></p>
 
 <p>
-<a name = "12"><h4>Wavetables</h4></a><a name="index19"></a><a name="index20"></a><a name="index21"></a><a name="index22"></a>
+<a name = "12"><h4>Wavetables</h4></a><a name="index26"></a><a name="index27"></a><a name="index28"></a><a name="index29"></a>
 When Nyquist starts, several waveforms are created and stored in global variables for convenience. They are: <code>*sine-table*</code>, <code>*saw-table*</code>, and <code>*tri-table*</code>, implementing sinusoid, sawtooth, and triangle waves, respectively. The variable <code>*table*</code> is initialized to <code>*sine-table*</code>, and it is <code>*table*</code> that forms the default wave table for many Nyquist oscillator behaviors. If you want a proper, band-limited waveform, you should construct it yourself, but if you do not understand this sentence and/or you do not mind a bit of aliasing, give <code>*saw-table*</code> and <code>*tri-table*</code> a try.
 <p>
 Note that in Lisp and SAL, global variables often start and end with asterisks (*). These are not special syntax, they just happen to be legal characters for names, and their use is purely a convention.
 <p>
-<a name = "13"><h4>Sequences</h4></a><a name="index23"></a>
-Finally, we define <code>my-note<a name="index24"></a></code> to use the waveform, and play several notes
+<a name = "13"><h4>Sequences</h4></a><a name="index30"></a>
+Finally, we define <code>my-note<a name="index31"></a></code> to use the waveform, and play several notes
 in a simple score. Note that the function <code>my-note</code> has only one command
 (a <code>return</code> command), so it is not necessary to use <code>begin</code> and 
 <code>end</code>. These are only necessary when the function body consists of a
@@ -311,17 +312,17 @@ all the computed sounds.
 <p>
 Sequences can also be constructed using the <code>at</code> transformation to 
 specify time offsets. See 
-<code>sequence_example.htm</code><a name="index25"></a><a name="index26"></a>
+<code>demos/sequence_example.htm</code><a name="index32"></a><a name="index33"></a>
 <code>demos, sequence</code> for more examples and explanation.
 <p>
-<a name = "14"><h4>Envelopes</h4></a><a name="index27"></a>
+<a name = "14"><h4>Envelopes</h4></a><a name="index34"></a>
 The next example will illustrate the use of envelopes.  In Nyquist,
 envelopes are just ordinary sounds (although they normally have a low sample
-rate).  An envelope<a name="index28"></a> is applied to another sound by
-multiplication using the <code>mult<a name="index29"></a></code> function.  The code shows
-the definition of <code>env-note<a name="index30"></a></code>, defined in terms of the
+rate).  An envelope<a name="index35"></a> is applied to another sound by
+multiplication using the <code>mult<a name="index36"></a></code> function.  The code shows
+the definition of <code>env-note<a name="index37"></a></code>, defined in terms of the
 <code>note</code> function in the previous example.  In <code>env-note</code>, a 4-phase
-envelope is generated using the <code>env<a name="index31"></a></code> function, which is
+envelope is generated using the <code>env<a name="index38"></a></code> function, which is
 illustrated in Figure <a href = "#14">1</a>.
 <p>
 <hr>
@@ -352,12 +353,12 @@ play env-note(c4)
 <p>
 While this example shows a smooth envelope multiplied by an audio signal,
 you can also multiply audio signals to achieve
-what is often called <i>ring modulation</i><a name="index32"></a>. See
+what is often called <i>ring modulation</i><a name="index39"></a>. See
 the code and description in 
-<code>demos/scratch_tutorial.htm</code><a name="index33"></a> for an
+<code>demos/scratch_tutorial.htm</code><a name="index40"></a> for an
 interesting use of ring modulation to create "scratch" sounds.
 <p>
-In the next example, The <i>stretch</i> operator (<code>~</code>)<a name="index34"></a> 
+In the next example, The <i>stretch</i> operator (<code>~</code>)<a name="index41"></a> 
 is used to modify durations:
 <p><pre>
 <i>; now use stretch to play different durations
@@ -442,47 +443,47 @@ based on the notation of the Adagio score language, as follows:
 <b>Dynamics</b>
 Note: these dynamics values are subject to change.
 <blockquote>
-<tt>lppp<a name="index35"></a></tt> = -12.0 (dB)<br>
+<tt>lppp<a name="index42"></a></tt> = -12.0 (dB)<br>
 
-<tt>lpp<a name="index36"></a></tt> = -9.0<br>
+<tt>lpp<a name="index43"></a></tt> = -9.0<br>
 
-<tt>lp<a name="index37"></a></tt> = -6.0<br>
+<tt>lp<a name="index44"></a></tt> = -6.0<br>
 
-<tt>lmp<a name="index38"></a></tt> = -3.0<br>
+<tt>lmp<a name="index45"></a></tt> = -3.0<br>
 
-<tt>lmf<a name="index39"></a></tt> = 3.0<br>
+<tt>lmf<a name="index46"></a></tt> = 3.0<br>
 
-<tt>lf<a name="index40"></a></tt> = 6.0<br>
+<tt>lf<a name="index47"></a></tt> = 6.0<br>
 
-<tt>lff<a name="index41"></a></tt> = 9.0<br>
+<tt>lff<a name="index48"></a></tt> = 9.0<br>
 
-<tt>lfff<a name="index42"></a></tt> = 12.0<br>
+<tt>lfff<a name="index49"></a></tt> = 12.0<br>
 
-<tt>dB0<a name="index43"></a></tt> = 1.00<br>
+<tt>dB0<a name="index50"></a></tt> = 1.00<br>
 
-<tt>dB1<a name="index44"></a></tt> = 1.122<br>
+<tt>dB1<a name="index51"></a></tt> = 1.122<br>
 
-<tt>dB10<a name="index45"></a></tt> = 3.1623<br>
+<tt>dB10<a name="index52"></a></tt> = 3.1623<br>
 
 </blockquote>
-<li><b>Durations<a name="index46"></a></b>
+<li><b>Durations<a name="index53"></a></b>
 <blockquote>
-<tt>s<a name="index47"></a></tt> = Sixteenth<a name="index48"></a> = 0.25<br>
+<tt>s<a name="index54"></a></tt> = Sixteenth<a name="index55"></a> = 0.25<br>
 
-<tt>i<a name="index49"></a></tt> = eIghth<a name="index50"></a> = 0.5<br>
+<tt>i<a name="index56"></a></tt> = eIghth<a name="index57"></a> = 0.5<br>
 
-<tt>q<a name="index51"></a></tt> = Quarter<a name="index52"></a> = 1.0<br>
+<tt>q<a name="index58"></a></tt> = Quarter<a name="index59"></a> = 1.0<br>
 
-<tt>h<a name="index53"></a></tt> = Half<a name="index54"></a> = 2.0<br>
+<tt>h<a name="index60"></a></tt> = Half<a name="index61"></a> = 2.0<br>
 
-<tt>w<a name="index55"></a></tt> = Whole<a name="index56"></a> = 4.0<br>
+<tt>w<a name="index62"></a></tt> = Whole<a name="index63"></a> = 4.0<br>
 
-<tt>sd<a name="index57"></a>, id<a name="index58"></a>, qd<a name="index59"></a>, hd<a name="index60"></a>, wd<a name="index61"></a></tt> = dotted durations<a name="index62"></a>.<br>
+<tt>sd<a name="index64"></a>, id<a name="index65"></a>, qd<a name="index66"></a>, hd<a name="index67"></a>, wd<a name="index68"></a></tt> = dotted durations<a name="index69"></a>.<br>
 
-<tt>st<a name="index63"></a>, it<a name="index64"></a>, qt<a name="index65"></a>, ht<a name="index66"></a>, wt<a name="index67"></a></tt> = triplet<a name="index68"></a> durations.<br>
+<tt>st<a name="index70"></a>, it<a name="index71"></a>, qt<a name="index72"></a>, ht<a name="index73"></a>, wt<a name="index74"></a></tt> = triplet<a name="index75"></a> durations.<br>
 
 </blockquote>
-<li><b>Pitches<a name="index69"></a></b> 
+<li><b>Pitches<a name="index76"></a></b> 
 Pitches are based on an A4 of 440Hz.  To achieve a different tuning,
 set <code>*A4-Hertz*</code> to the desired frequency for A4, and call
 <code>(set-pitch-names)</code>.  This will recompute the names listed below with a
@@ -534,7 +535,7 @@ different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
 </blockquote>
 <li><b>Miscellaneous</b>
 <blockquote>
-<code>ny:all</code><a name="index70"></a> = "all the samples" (i.e. a big number) = 1000000000<br>
+<code>ny:all</code><a name="index77"></a> = "all the samples" (i.e. a big number) = 1000000000<br>
 
 </blockquote>
 </ul>
@@ -547,36 +548,36 @@ application bundle. To make it easier to access these hidden files,
 the NyquistIDE installs links to these directories the first time you
 run it. The links will be in the same directory as the NyquistIDE itself.
 <p>
-The file <code>demos/examples_home.htm</code> is an index to all the demo descriptions. In this directory, you will find the following and more:
+The file <code>demos/index.htm</code> is an index to all the demo descriptions. In this directory, you will find the following and more:
 <ul>
 <li>
-Code to create atonal melodies (<code>demos/atonal-melodies.sal</code>).
-<li>How to make arpeggios (<code>demos/arpeggiator.htm</code> and <code>arp.sal</code>)<a name="index71"></a>
-<li>Gong sounds by additive synthesis<a name="index72"></a>
-(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code>)<a name="index73"></a><a name="index74"></a>
+Code to create atonal melodies (<code>demos/src/atonal-melodies.sal</code>).
+<li>How to make arpeggios (<code>demos/arpeggiator.htm</code> and <code>demos/src/arp.sal</code>)<a name="index78"></a>
+<li>Gong sounds by additive synthesis<a name="index79"></a>
+(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code>)<a name="index80"></a><a name="index81"></a>
 <li>Risset's spectral analysis of a chord
-(<code>demos/pmorales/b2.lsp</code>)<a name="index75"></a><a name="index76"></a>
+(<code>demos/pmorales/b2.lsp</code>)<a name="index82"></a><a name="index83"></a>
 <li>Bell sounds 
-(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index77"></a><a name="index78"></a>
+(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index84"></a><a name="index85"></a>
 <li>Drum sounds by Risset
-(<code>demos/pmorales/b8.lsp</code><a name="index79"></a><a name="index80"></a>
-<li>Shepard tones (<code>demos/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index81"></a><a name="index82"></a>
+(<code>demos/pmorales/b8.lsp</code><a name="index86"></a><a name="index87"></a>
+<li>Shepard tones (<code>demos/src/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index88"></a><a name="index89"></a>
 <li>Random signals (<code>demos/pmorales/c1.lsp</code>)
 <li>Buzz with formant filters 
-(<code>demos/pmorales/buzz.lsp</code>)<a name="index83"></a><a name="index84"></a>
+(<code>demos/pmorales/buzz.lsp</code>)<a name="index90"></a><a name="index91"></a>
 <li>Computing samples directly in Lisp (using Karplus-Strong and physical modelling
 as examples)
-(<code>demos/pmorales/d1.lsp</code>)<a name="index85"></a><a name="index86"></a><a name="index87"></a><a name="index88"></a><a name="index89"></a><a name="index90"></a>
-<li>FM Synthesis examples, including FM voices (<code>demos/FM-voices-Chowning.sal</code>)
-designed by John Chowning<a name="index91"></a><a name="index92"></a>,
-bell<a name="index93"></a>, wood drum<a name="index94"></a>,
-brass sounds<a name="index95"></a>, tuba sound <a name="index96"></a>
- (<code>demos/mateos/tuba.lsp</code>) and clarinet sounds<a name="index97"></a> 
-(<code>demos/pmorales/e2.lsp</code>)<a name="index98"></a>
+(<code>demos/pmorales/d1.lsp</code>)<a name="index92"></a><a name="index93"></a><a name="index94"></a><a name="index95"></a><a name="index96"></a><a name="index97"></a>
+<li>FM Synthesis examples, including FM voices (<code>demos/src/fm-voices-chowning.sal</code>)
+designed by John Chowning<a name="index98"></a><a name="index99"></a>,
+bell<a name="index100"></a>, wood drum<a name="index101"></a>,
+brass sounds<a name="index102"></a>, tuba sound <a name="index103"></a>
+ (<code>demos/mateos/tuba.lsp</code>) and clarinet sounds<a name="index104"></a> 
+(<code>demos/pmorales/e2.lsp</code>)<a name="index105"></a>
 <li>Rhythmic patterns
-(<code>demos/rhythm_tutorial.htm</code>)<a name="index99"></a>
+(<code>demos/rhythm_tutorial.htm</code>)<a name="index106"></a>
 <li>Drum Samples and Drum Machine
-(<code>demos/plight/drum.lsp</code>)<a name="index100"></a><a name="index101"></a><a name="index102"></a>. (See Section <a href = "part16.html#195">"Drum Machine"</a>).
+(<code>demos/plight/drum.lsp</code>)<a name="index107"></a><a name="index108"></a><a name="index109"></a>. (See Section <a href = "part16.html#201">"Drum Machine"</a>).
 </ul>
 <p>
 <hr>

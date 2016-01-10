@@ -756,7 +756,7 @@ loop
      ;; sample rate). If the actual sample rate was lowered to avoid
      ;; getting more than n samples, we can now raise the sample rate
      ;; based on our estimate of the actual sample duration.
-     (display "test" (length points) n)
+     ;(display "test" (length points) n)
      (cond ((< (length points) n)
             ;; sound is shorter than dur, estimate actual length
             (setf actual-dur (/ (length points) (snd-srate s)))

@@ -167,22 +167,12 @@ public class WordList {
     
     
     public static boolean isKeyword(String str) {
-        String s = URLLinks.get(str);
-        return s != null;
-    /*
-        str = str.toLowerCase();
-        for (int i = 0; i < words.size(); i++) {
-            String word = (String) words.get(i);
-            int pos = word.indexOf(str);
-            if (pos == 0 &&
-                (word.length() == str.length() ||
-                 (word.charAt(str.length() - 1) == ' ' ||
-                  word.charAt(str.length() - 1) == ')'))) {
-                return true;
-            }
+        if (str.length() > 0 && Character.isLetter(str.charAt(0))) {
+            String s = URLLinks.get(str);
+            return s != null;
+        } else {
+            return false;
         }
-        return false;
-    */
     }
 
     

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -9,67 +9,210 @@
     <h1>Nyquist Demos and Examples</h1>
     <p><b>Roger B. Dannenberg &amp; many contributors</b></p>
     <dl>
-      <dt><a href="arpeggiator.htm">Arpeggiator</a> (and <a
-          href="src/arp.sal">arp.sal</a>) </dt>
+      <dt><b><a href="arpeggiator.htm">Arpeggiator</a></b><b> (and </b><b><a
+            href="src/arp.sal">arp.sal</a></b><b>) </b></dt>
       <dd> describes functions to create arpeggio effects. </dd>
-      <dt> <a href="cellularautomata.htm">Cellular Automata</a> by Ann
-        Lewis</dt>
+      <dt> <b><a href="cellularautomata.htm">Cellular Automata</a></b><b>
+          by Ann Lewis</b></dt>
       <dd> uses cellular automata to generate scores in Nyquist. </dd>
-      <dt><a href="distortion.htm">Distortion Tutorial</a></dt>
+      <dt><b><a href="distortion.htm">Distortion Tutorial</a></b></dt>
       <dd>describes how to use the Nyquist <tt>shape</tt> function to
         achieve distortion.</dd>
-      <dt><a href="midi_tutorial.htm">Midi Tutorial</a></dt>
+      <dt><b>Drum Kit</b></dt>
+      <dd>Please see the <a href="../doc/home.html">Nyquist Reference
+          Manual</a>, section ``Drum Machine'' (in the index) for
+        information about the drum samples and software in <a
+          href="plight/drum.lsp">demos/plight/drum.lsp</a>.<br>
+      </dd>
+      <dt><b><a href="src/fm-voices-chowning.sal">FM Voices</a></b></dt>
+      <dd>This code example re-implements FM-synthesis-based voices
+        created by computer music pioneer John Chowning.</dd>
+      <dt><b><a href="src/examples.sal">General Examples from the Manual</a></b></dt>
+      <dd>The introductory chapter of the <a
+          href="file:///Users/rbd/nyquist/doc/home.html">Nyquist
+          Reference Manual</a> presents a number of small examples.
+        These are consolidated into both <a href="src/examples.sal">SAL</a>
+        and <a href="src/examples.lsp">Lisp</a> code that you can load
+        and run in Nyquist.</dd>
+      <dt><b><a href="midi_tutorial.htm">Midi Tutorial</a></b></dt>
       <dd>describes how to read and write Standard MIDI Files, how to
         generate MIDI data for sequencers, MIDI players, and music
         notation programs, and how to use Nyquist to synthesize a MIDI
-        file.<br>
+        file.</dd>
+      <dt><b>Instruments by Daniel Mateos<br>
+        </b></dt>
+      <dd>All of these are currently in Lisp syntax, but they can be
+        loaded and called from Sal programs. (For an example, the <a
+          href="file:///Users/rbd/nyquist/demos/phasevocoder.htm">Phase
+          Vocoder Tutorial</a> described below uses <tt>demos/mateos/organ.lsp</tt>.)
+
+
+
+        The directory <tt>demos/mateos/</tt> contains <a
+          href="mateos/bell.lsp"><tt>bell.lsp</tt></a>, <a
+          href="mateos/gong.lsp"><tt>gong.lsp</tt></a>, <a
+          href="mateos/organ.lsp"><tt>organ.lsp</tt></a>, and <a
+          href="mateos/tuba.lsp"><tt>tuba.lsp</tt></a>.&nbsp;</dd>
+      <dt><b>Instruments by Pedro Morales</b></dt>
+      <dd>The directory <tt>demos/pmorales/</tt> contains the following
+        programs:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="pmorales/pjmg.lsp">Some
+          Helper Functions: randi1, randi2, randh1, rndh2</a><br>
+        <b>Simple Synthesis</b><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/A4.lsp">Waveform
+
+
+          + Envelope, Modulating the envelope with noise</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/A5.lsp">Waveform
+
+
+          + Envelope, Modulating the frequency</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/A6.lsp">Waveform
+
+
+          + Envelope, Modulating the frequency, 2</a><br>
+        <b>Additive Synthesis</b><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/b1.lsp">Gong
+          like sounds</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/b2.lsp">Risset's
+
+
+          Spectral Analysis of a Chord</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/b3.lsp">Risset
+          Bell</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/b4.lsp">Continuous
+
+
+          pitch control by LFO</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/b7.lsp">Risset
+          Tibetan</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/b8.lsp">Risset
+          Drum</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/b9.lsp">Risset
+          Endless</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/c1.lsp">Random
+          Signals</a><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/partial.lsp">Bell</a><br>
+        <b>Subtractive Synthesis</b><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/buzz.lsp">Buzz
+          with Formant Filters</a><br>
+        <b>Karplus Strong Synthesis</b><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/d1.lsp">Simple
+          KARPLUS-STRONG</a>&lt;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/ks.lsp">Karplus-Strong
+
+
+          Algorithm</a><br>
+        <b>FM Synthesis</b><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/e2.lsp">Chowning
+
+
+          Dynamic Spectral Evolution</a><br>
+        <b>Physical Modeling</b><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a
+          href="file:///Users/rbd/nyquist/demos/pmorales/phm.lsp">Flute
+          Physical Modelling</a></dd>
+      <dt><b><a href="src/atonal-melodies.sal">Melody Generation</a></b></dt>
+      <dd>Jorge Sastre contributed this code to generate atonal
+        melodies. It uses simple methods, but is quite effective and has
+        been used in a number of compositions for both acoustic
+        instruments and electronics.<br>
       </dd>
-      <dt><a href="bandfx.htm">Multiple Band Effects Tutorial</a></dt>
+      <dt><b><a href="bandfx.htm">Multiple Band Effects Tutorial</a></b></dt>
       <dd> describes how to use the bandf library in Nyquist. Multiple
         band effects split the input into frequency bands and apply
         different effects (e.g. different delays) to each band.</dd>
-      <dt><a href="fft_tutorial.htm">Nyquist FFT and Inverse FFT
-          Tutorial</a></dt>
+      <dt><b><a href="fft_tutorial.htm">Nyquist FFT and Inverse FFT
+            Tutorial</a></b></dt>
       <dd>describes how to use FFT functions in Nyquist to perform
         spectral processing.</dd>
-      <dt><a href="lpc_tutorial.htm">Nyquist LPC Analysis and Synthesis</a></dt>
+      <dt><b><a href="lpc_tutorial.htm">Nyquist LPC Analysis and
+            Synthesis</a></b></dt>
       <dd>is a tutorial on how to use LPC functions, especially useful
         for voice modelling and cross-synthesis</dd>
-      <dt><a href="piano.htm">Piano Synthesizer Tutorial</a></dt>
-      <dd>gives examples of how to use the Nyquist piano synthesizer
-        library ("pianosyn.lsp").</dd>
-      <dt><a href="probability_distributions.htm">Probability
-          Distribution Generators</a></dt>
-      <dd>gives examples that use the lib/distributions.lsp library and
-        an explanation of how to use probability distributions to
-        compute parameters in granular synthesis.</dd>
-      <dt><a href="rhythm_tutorial.htm">Rhythmic Pattern Tutorial</a></dt>
-      <dd>provides examples that use noise pulses and the <a
+      <dt><b><a href="phasevocoder.htm">Phase Vocoder Tutorial</a></b></dt>
+      <b> </b><dd>shows how to use the phase vocoder in Nyquist.<br>
+      </dd>
+      <dt><b><a href="piano.htm">Piano Synthesizer Tutorial</a></b></dt>
+      <b> </b><dd>gives examples of how to use the Nyquist piano
+        synthesizer library ("pianosyn.lsp").</dd>
+      <dt><b><a href="probability_distributions.htm">Probability
+            Distribution Generators</a></b></dt>
+      <b> </b><dd>gives examples that use the <tt>lib/distributions.lsp</tt>
+        library and an explanation of how to use probability
+        distributions to compute parameters in granular synthesis.</dd>
+      <dt><b><a href="rhythm_tutorial.htm">Rhythmic Pattern Tutorial</a></b></dt>
+      <b> </b><dd>provides examples that use noise pulses and the <a
           href="scratch_tutorial.htm">Vinyl Scratch Tutorial</a>, along
         with transposition and repetition to explore various rhythmic
         effects.</dd>
-      <dt><a href="../doc/sdl-man.pdf">SDL Score Documentation</a> (PDF)
-        and <a href="sdl">Examples</a></dt>
-      <dd>offer a compact score language, SDL, which can be used as a
-        shorthand to generate Nyquist scores.<br>
+      <dt><b><a href="../doc/sdl-man.pdf">SDL Score Documentation</a></b><b>
+          (PDF) and </b><b><a href="sdl">Examples</a></b></dt>
+      <b> </b><dd>offer a compact score language, SDL, which can be
+        used as a shorthand to generate Nyquist scores.<br>
       </dd>
-      <dt><a href="sequence_example.htm">Sequence Example</a></dt>
-      <dd>is a basic example showing how to use <tt>sim</tt> and <tt>@</tt>
-        to build sequences of notes and sounds.</dd>
-      <dt><a href="src/shepard.lsp">Shepard tones</a></dt>
-      <dd>is a Lisp source file that produces Shepard tones. See
-        comments in the code for explanations and documentation. There
-        is also a <a href="src/shepard.ny">Shepard tone plug-in for
-          Audacity</a>.</dd>
-      <dt><a href="src/slider-demos.sal">Slider Demos</a></dt>
-      <dd>illustrate the use of sliders to create interactive controls
-        for sounds and compositions in Nyquist. Read the comments in the
-        <a href="src/slider-demos.sal">source code</a> and find full
-        documentation in the Nyquist Reference Manual.<br>
+      <dt><b><a href="sequence_example.htm">Sequence Example</a></b></dt>
+      <b> </b><dd>is a basic example showing how to use <tt>sim</tt>
+        and <tt>@</tt> to build sequences of notes and sounds.</dd>
+      <dt><b><a href="src/shepard.lsp">Shepard tones</a></b></dt>
+      <b> </b><dd>is a Lisp source file that produces Shepard tones.
+        See comments in the code for explanations and documentation.
+        There is also a <a href="src/shepard.ny">Shepard tone plug-in
+          for Audacity</a>.</dd>
+      <dt><b><a href="src/slider-demos.sal">Slider Demos</a></b></dt>
+      <b> </b><dd>illustrate the use of sliders to create interactive
+        controls for sounds and compositions in Nyquist. Read the
+        comments in the <a href="src/slider-demos.sal">source code</a>
+        and find full documentation in the Nyquist Reference Manual.</dd>
+      <dt><b><a href="src/stktest.lsp">STK Instruments Demo</a></b></dt>
+      <b> </b><dd>plays the various STK instruments that have been
+        ported to Nyquist. This file is just Lisp code, but it should be
+        fairly simple to read enough of the code to understand the
+        function names and parameters. (Reminder <tt>(bowed g4 (bow-env
+          d))</tt> in Lisp means <tt>bowed(g4, bow-env(d))</tt> in SAL,
+        i.e. the first element of each list is the function and the
+        remaining elements are parameters.)<br>
       </dd>
-      <dt><a href="scratch_tutorial.htm">Vinyl Scratch Tutorial</a></dt>
-      <dd>creates a sound inspired by dragging a needle across a vinyl
-        record.<br>
+      <dt><b><a href="scratch_tutorial.htm">Vinyl Scratch Tutorial</a></b></dt>
+      <b> </b><dd>creates a sound inspired by dragging a needle across
+        a vinyl record.</dd>
+      <dt><b><a href="src/voice-synthesis.sal">Voice Synthesis Source
+            Code</a></b><b><br>
+        </b> </dt>
+      <b> </b><dd>gives source code and examples for a source-filter
+        model of the singing voice. Please read the comments in either
+        the <a href="src/voice-synthesis.sal">SAL version</a> or the <a
+          href="src/voice-synthesis.lsp">Lisp version</a>.</dd>
+      <dt><b><a href="src/vosim.sal">VOSIM Example</a></b></dt>
+      <b> </b><dd>gives source code and examples of the VOSIM synthesis
+        technique. Please read comments in the code.</dd>
+      <dt><b><a href="warble_tutorial.htm">Warble Tutorial</a></b></dt>
+      <b> </b><dd>explains how to create some "analog" electronic
+        synthesizer sounds using FM and AM.</dd>
+      <dt><b><a href="wind_tutorial.htm">Wind Tutorial</a></b></dt>
+      <b> </b><dd>presents some code to create wind sounds.<br>
+      </dd>
+      <dt><br>
+      </dt>
+      <dt><br>
+      </dt>
+      <dd><br>
       </dd>
       <dt><br>
       </dt>

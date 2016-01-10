@@ -149,7 +149,7 @@
 ;; tells when preamble has been written, no other output until then
 (setf *lt-started* nil)
 
-(defun lt-title-info(title version)
+(defun lt-title-info(title version author)
   (write-lines *lt-preamble*)
   (format *ltoutf* "\\lhead{\\itshape ~A}~%" title)
   (format *ltoutf* "\\chead{}~%\\rhead{\\itshape{\\nouppercase{\\leftmark}}}")
@@ -158,11 +158,11 @@
   (format *ltoutf* "\\title{\\Huge{\\textbf{~A}}}~%" title)
   (format *ltoutf* "\\author{\\textbf{\\normalsize{Version ~A}}}~%" version)
   (format *ltoutf* 
-          "\\date{\\textbf{\\large{Copyright 2015 by Roger B. Dannenberg}}\\\\~
+          "\\date{\\textbf{\\large{~A}}\\\\~
            \\vspace{1 in}\\today\\\\~
            \\vspace{2 in}Carnegie Mellon University\\\\~
            \\vspace{10 pt}School of Computer Science\\\\~
-           \\vspace{10 pt}Pittsburgh, PA 15213, U.S.A.}~%")
+           \\vspace{10 pt}Pittsburgh, PA 15213, U.S.A.}~%" author)
   (write-lines *lt-preamble3*)
   (setf *lt-started* t))
 
@@ -359,7 +359,7 @@
 
 (defun lt-end-write-description ()
   (cond (*description-item-is-open*
-         (break "lt-end-write-description: *description-item-is-open* indicates we are expecting a description term and description. Probably there is a blank line before @end(description) in the source file. Turn on *token-trace* and continue to see where you are.")))
+         (break "lt-end-write-description: *description-item-is-open* indicates we are expecting a description term and description. Probably there is a blank line before @end(description) in the source file, or maybe there is a missing @\\ to mark the description. Turn on *token-trace* and continue to see where you are.")))
   (format *ltoutf* "\\end{description2}"))
 
 (defun lt-description-paragraph ()
@@ -533,7 +533,7 @@
 ;; Latex preamble
 ;;
 (defun lt-majorheading (title)
-  (lt-title-info title *doc-version*))
+  (lt-title-info title *doc-version* *doc-author*))
 
 (defun lt-write-chapter (body numbered)
   (setf *line-empty* t)

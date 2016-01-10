@@ -43,8 +43,7 @@ class ReplaceDialog extends Dialog implements WindowListener, ActionListener
 
     private boolean foundOnce = false;
 
-    public ReplaceDialog(NyquistFile tf, MainFrame mainFrame_)
-    {
+    public ReplaceDialog(NyquistFile tf, MainFrame mainFrame_) {
         super(mainFrame_, "Replace", true);
 
         mainFrame = mainFrame_;
@@ -66,10 +65,10 @@ class ReplaceDialog extends Dialog implements WindowListener, ActionListener
         pattern = new TextField();
         pattern.setColumns(35);
 
-        if(tf.pane.getSelectedText() == null)           // BWP
-	    pattern.setText(mainFrame.findPattern);
+        if (tf.pane.getSelectedText() == null)           // BWP
+            pattern.setText(mainFrame.findPattern);
         else                                            // BWP
-	    pattern.setText(tf.pane.getSelectedText()); // BWP
+            pattern.setText(tf.pane.getSelectedText()); // BWP
 
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         gridbag.setConstraints(pattern, constraints);
@@ -107,15 +106,14 @@ class ReplaceDialog extends Dialog implements WindowListener, ActionListener
         p3.add(cbutton);
         add("South",p3);
 
-        Dimension size = new Dimension(400,120);
+        Dimension size = new Dimension(450, 120);
         setSize(size);
-	Point tfloc = tf.getLocation();
-	Point mfloc = mainFrame.getLocation();
+        Point tfloc = tf.getLocation();
+        Point mfloc = mainFrame.getLocation();
         setLocation(mfloc.x + tfloc.x,
-		    mfloc.y + tfloc.y + 75);
-
+                    mfloc.y + tfloc.y + 75);
         addWindowListener(this);
-	setVisible(true);
+        setVisible(true);
     }
     
     public void windowDeiconified(WindowEvent event) {}
@@ -126,27 +124,24 @@ class ReplaceDialog extends Dialog implements WindowListener, ActionListener
     public void windowClosed(WindowEvent event) {}
     public void windowClosing(WindowEvent event)
     {
-	mainFrame.findPattern = pattern.getText();
-	mainFrame.replacePattern = replace.getText();
-	dispose();
+        mainFrame.findPattern = pattern.getText();
+        mainFrame.replacePattern = replace.getText();
+        dispose();
     }
 
     public void actionPerformed(ActionEvent evt)
     {
-        if (evt.getSource() == cbutton)
-        {
+        if (evt.getSource() == cbutton) {
             mainFrame.findPattern = pattern.getText();
-	    mainFrame.replacePattern = replace.getText();
+            mainFrame.replacePattern = replace.getText();
             dispose();
             return;
         }
 
         if (evt.getSource() == fbutton)
             foundOnce = nyquistFile.find(pattern.getText());
-        else if (evt.getSource() == rbutton)
-        {
-            if (!foundOnce)
-            {
+        else if (evt.getSource() == rbutton) {
+            if (!foundOnce) {
                 String selection= nyquistFile.copy(false,false);
                 if (selection != null)
                     foundOnce = selection.equals(pattern.getText());
@@ -158,8 +153,7 @@ class ReplaceDialog extends Dialog implements WindowListener, ActionListener
             foundOnce = nyquistFile.find(pattern.getText());
         }
 
-        if (!foundOnce)
-        {
+        if (!foundOnce) {
             NotFoundDialog nf = new NotFoundDialog(mainFrame, strings,
 						   getLocation());
             nf.setVisible(true);

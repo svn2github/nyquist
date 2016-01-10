@@ -227,6 +227,9 @@ loop
 ;; index-casify -- first letter upper, all others lower
 ;;
 (defun index-casify (item)
+  (cond ((zerop (length item))
+         (setf *token-trace* t)
+         (dsplay "zero length item" item)))
   (nstring-downcase item)
   (nstring-upcase item :start 0 :end 1))
 
@@ -517,7 +520,8 @@ gotone
     (translate)
     (format *outf* "</~A>" style)
     (if *lt* (lt-end-style style))
-    (cond ((and (equal style "b") (or *need-version* *need-author*))
+    (cond ((and (equal style "b")
+                (or *need-version* *need-author*))
            (setf *capture* nil)
            (cond (*need-version*
                   (setf *doc-version* (remove-version-from *captured*))
@@ -885,7 +889,8 @@ gotone
                ((or *fdescription* *fgroup*)
                 (fdescription-break))
                (*example*
-                (format *outf* "~%~%"))
+                (format *outf* "~%~%")
+                (if *lt* (lt-paragraph)))
                (t
                 (format *outf* "\n<p>\n")
                 (if (and *lt* (not *html*)) (lt-paragraph))))
@@ -1199,7 +1204,7 @@ loop
                       (*latex* (write-char c *ltoutf*))
                       ((equal s "~") (format *ltoutf* "\\textasciitilde{}"))
                       ((equal s "\\") (format *ltoutf* "\\textbackslash{}"))
-                      ((equal s "^") (format *ltoutf* "\\textasciicircum{}"))
+                      ((equal s "^") (format *ltoutf* "\\^{}"))
                       ((equal s "[") (format *ltoutf* "{[}"))
                       ((equal s "]") (format *ltoutf* "{]}"))
                       ((string-search s "#_%&${}")
@@ -1279,7 +1284,7 @@ loop
            (write-label))
           ((member tok '(code smallcode xlcode))
            (write-code))
-          ((eq tok 'codef)
+          ((member tok '(codef xlcodef))
            (write-codef))
           ((member tok '(index htmlindex))
            (write-index definition-flag)
@@ -1869,6 +1874,9 @@ ret
          (setf codef (subseq codef 1)))
         ((string-search "(" codef)
          (setf codef (do-convert-sal-to-lisp codef))))
+  (cond ((equal codef ")")
+         (setf *token-trace* t)
+         (display " codef" codef)))
   codef)
 
 (defun do-convert-sal-to-lisp (codef)

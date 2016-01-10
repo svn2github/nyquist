@@ -1,3 +1,11 @@
+implement logical stop in pv
+
+implement terminate in pv
+
+test pv
+
+test convolution
+
 moving code into libsndfile_static -- need to copy search paths from nyquist
 
 then test to see if libsndfile_static can be linked into scorealign

@@ -756,10 +756,10 @@ LVAL xget_user()
 /* xechoenabled -- set/clear echo_enabled flag (unix only) */
 LVAL xechoenabled()
 {
-	int flag = (xlgetarg() != NULL);
+    int flag = (xlgetarg() != NULL);
     xllastarg();
-	echo_enabled = flag;
-	return NULL;
+    echo_enabled = flag;
+    return NULL;
 }
 
 

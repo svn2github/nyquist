@@ -380,7 +380,7 @@ PaError AudioDeviceSetPropertyNowAndWaitForChange(
    memcpy( &tv2, &tv1, sizeof( struct timeval ) );
    while( tv2.tv_sec - tv1.tv_sec < 30 ) {
       /* now read the property back out */
-      macErr = AudioDeviceGetProperty( inDevice, inChannel,
+      macErr =  AudioDeviceGetProperty( inDevice, inChannel,
                                     isInput, inPropertyID, 
                                     &outPropertyDataSize, outPropertyData );
       if( macErr ) {

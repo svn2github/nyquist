@@ -22,7 +22,7 @@ public class SalWordList {
     public static String[] commandWords = {
         "begin", "end", "chdir", "define", "open", "exec", "exit", "display",
         "load", "loop", "open", "print", "if", "return", "set", // "system",
-        "play" };
+        "play", "plot" };
         
     public static Map<String, String> reservedWordsTable;
             

@@ -106,15 +106,17 @@ public class NyquistThread extends Thread {
             
             File cwdFile = new File(main.nyquistDir);
             try {
-                myProcess = Runtime.getRuntime().exec("./ny", envp, cwdFile);
+                myProcess = Runtime.getRuntime().exec(main.currentDir + "ny",
+                                                      envp, cwdFile);
             } catch (Exception e3) {
-                System.out.println("no ./ny found in " + main.currentDir + 
-                                   ", trying ./nyquist");
+                System.out.println("no " + main.currentDir + "ny found" +
+                                   ", trying nyquist");
                 try {
-                    myProcess = Runtime.getRuntime().exec("./nyquist", 
-                                                          envp, cwdFile);
+                    myProcess = Runtime.getRuntime().exec(
+                            main.currentDir + "nyquist", envp, cwdFile);
                 } catch (Exception e4) {
-                    System.out.println("no ./nyquist found, trying ny");
+                    System.out.println("no " + main.currentDir +
+                                       "nyquist found, trying ny");
                     // try using PATH to find ny (for linux systems where
                     // ny is installed)
                     myProcess = Runtime.getRuntime().exec("ny", envp, cwdFile);

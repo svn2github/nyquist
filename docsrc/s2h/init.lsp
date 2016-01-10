@@ -4,5 +4,8 @@
 
 (load "nyinit")
 (load "../../sys/unix/osx/system")
+;(setf *token-trace* T)
+;(setf *output-trace* T)
+;(setf *translate-trace* T)
 (load "do-nyquist-manual")
 (exit)

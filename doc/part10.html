@@ -4,7 +4,7 @@
 <body bgcolor="ffffff">
 <a href = "part9.html">Previous Section</a> | <a href = "part11.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "105"><h2>Interactive Nyquist</h2></a><a name="index835"></a>
+<a name = "109"><h2>Interactive Nyquist</h2></a><a name="index859"></a>
 
 <p>
 Nyquist is not intended for real-time performance, but it has some
@@ -63,14 +63,16 @@ current slider value to the whole note or sound event.
 Other unit generators exist to instantiate behaviors and to stop
 sounds according to slider values. These will be described below.
 <p>
-<a name = "106"><h3>Interactive Control with the NyquistIDE</h3></a>
+<a name = "110"><h3>Interactive Control with the NyquistIDE</h3></a>
 To control sounds interactively using the NyquistIDE, you first create
 a control panel, then populate the panel with sliders and buttons.
 These will send values into the sliders array in the Nyquist
 process. To control a sound, you use built-in functions to retrieve
 real-time values from the sliders array as sound is being played.
+Further discussion and examples can be found in 
+<code>demos/slider-demos.sal</code><a name="index860"></a><a name="index861"></a>. 
 <p>
-<a name = "107"><h4>Creating a Control Panel</h4></a>
+<a name = "111"><h4>Creating a Control Panel</h4></a>
 A control panel is created with <code>make-slider-panel</code>, which takes
 a panel name and color as parameters. Control panels <i>can only be
 created by executing code in Nyquist.</i> There is no way to configure
@@ -80,7 +82,7 @@ code by calling <code>close-slider-panel</code>.
 <p>
 <dl>
 <dt>
-<code>make-slider-panel(<a name="index836"></a><a name="index837"></a><a name="index838"></a><i>name</i>, <i>color</i>)</code> [SAL]<br>
+<code>make-slider-panel(<a name="index862"></a><a name="index863"></a><a name="index864"></a><i>name</i>, <i>color</i>)</code> [SAL]<br>
 
 <code>(make-slider-panel <i>name</i> <i>color</i>)</code> [LISP]<dd>Create
 a control panel in the IDE. The title of the control panel window is
@@ -89,7 +91,7 @@ given by <i>name</i>, a STRING. The color of the panel is given by
 colors are implementation-dependent, but different numbers give
 distinguishable colors. You must load <code>sliders.lsp</code> to access
 this function.<br><br>
-<dt><code>close-slider-panel(<a name="index839"></a><i>name</i>)</code> [SAL]<br>
+<dt><code>close-slider-panel(<a name="index865"></a><i>name</i>)</code> [SAL]<br>
 
 <code>(close-slider-panel <i>name</i>)</code>
 [LISP]<dd>Close 
@@ -98,17 +100,17 @@ embedded controls (sliders or buttons) are also destroyed. You must
 load <code>sliders.lsp</code> to access this function.
 </dl>
 <p>
-<a name = "108"><h4>Creating Controls</h4></a>
+<a name = "112"><h4>Creating Controls</h4></a>
 You can create slider and button controls. A slider control adjusts a
 floating point value in the sliders array and accessible as a
-time-varying signal (a SOUND) or as a FLONUM. A button control sets a
+time-varying signal (a <code>SOUND</code>) or as a <code>FLONUM</code>. A button control sets a
 floating point value in the sliders array to zero (0.0) or one (1.0).
 The value changes when the left mouse button is pressed over the button control
 and changes back when the mouse button is released.
 <p>
 <dl>
 <dt>
-<code>make-slider(<a name="index840"></a><a name="index841"></a><i>name</i>,
+<code>make-slider(<a name="index866"></a><a name="index867"></a><i>name</i>,
 <i>init</i>, <i>low</i>, <i>high</i>)</code> [SAL]<br>
 
 <code>(make-slider <i>name</i> <i>init</i> <i>low</i> <i>high</i>)</code> [LISP]<dd>Create
@@ -120,7 +122,7 @@ value specified by <i>low</i>, a FLONUM, and a maximum value specified by
 <i>high</i>, a FLONUM. Sliders are added to the current panel in order from top
 to bottom. You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>make-button(<a name="index842"></a><a name="index843"></a><i>name</i>
+<dt><code>make-button(<a name="index868"></a><a name="index869"></a><i>name</i>
 [, <i>normal</i>])</code> [SAL]<br>
 
 <code>(make-button <i>name</i> [<i>normal</i>])</code> 
@@ -135,7 +137,7 @@ bottom. You must
 load <code>sliders.lsp</code> to access this function.
 </dl>
 <p>
-<a name = "109"><h4>Accessing Control Values</h4></a>
+<a name = "113"><h4>Accessing Control Values</h4></a>
 Each control created by <code>make-slider</code> or <code>make-button</code> is
 assigned a slider index from 10 to 999. Control changes are passed via
 hidden text input from the NyquistIDE to the nyquist process, where
@@ -145,7 +147,7 @@ can then access these values with either <code>slider</code>,
 <p>
 <dl>
 <dt>
-<code>slider(<a name="index844"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
+<code>slider(<a name="index870"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
 
 <code>slider(<i>name</i> [, <i>dur</i>])</code> [SAL]<br>
 
@@ -167,7 +169,7 @@ named <i>name</i> to determine the value. In all cases, the optional
 <i>dur</i>, a FLONUM, is used to determine the duration of the
 sound. This duration is scaled by the environment in the usual way. You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>lpslider(<a name="index845"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
+<dt><code>lpslider(<a name="index871"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
 
 <code>lpslider(<i>name</i> [, <i>dur</i>])</code> [SAL]<br>
 
@@ -185,7 +187,7 @@ control value is adjusted. The low-pass filter cutoff is determined by
 <code>*lpslider-cutoff*</code>, which is initialized to 20Hz when
 <code>slider.lsp</code> is loaded. You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>get-slider-value(<a name="index846"></a><i>number</i>)</code> [SAL]<br>
+<dt><code>get-slider-value(<a name="index872"></a><i>number</i>)</code> [SAL]<br>
 
 <code>get-slider-value(<i>name</i>)</code> [SAL]<br>
 
@@ -204,7 +206,7 @@ most recently created control panel by <i>name</i>, a STRING, if only
 the named panel is searched for the named control. The result is a FLONUM.
 You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>snd-slider(<a name="index847"></a><i>index</i>, <i>t0</i>, <i>srate</i>, <i>duration</i>)</code> [SAL]<br>
+<dt><code>snd-slider(<a name="index873"></a><i>index</i>, <i>t0</i>, <i>srate</i>, <i>duration</i>)</code> [SAL]<br>
 
 <code>(snd-slider <i>index</i> <i>t0</i> <i>srate</i> <i>duration</i>)</code> [LISP]<dd>Create
 a sound controlled by the slider named by <i>index</i> (an integer 
@@ -216,7 +218,7 @@ value. Normally, you would call <code>slider</code> (see above) rather than
 this low-level function.
 </dl>
 <p>
-<a name = "110"><h4>Starting and Stopping Sounds</h4></a>
+<a name = "114"><h4>Starting and Stopping Sounds</h4></a>
 All Nyquist sounds have a duration. Even the <code>slider</code> unit
 generator has a duration and terminates at the end of that
 duration. In most cases, you will instead want interactive functions to run
@@ -261,7 +263,7 @@ Here, a button control changes value from 0 to 1 when the button is
 <p>
 <dl>
 <dt>
-<code>stop-on-zero(<a name="index848"></a><i>s</i>)</code> [SAL]<br>
+<code>stop-on-zero(<a name="index874"></a><i>s</i>)</code> [SAL]<br>
 
 <code>(stop-on-zero <i>s</i>)</code>
 [LISP]<dd>Return a <code>SOUND</code> that is identical
@@ -272,53 +274,47 @@ multiplying by <code>stop-on-zero</code> is a way to terminate a sound
 interactively. (See the example above.)
 You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>trigger(<a name="index849"></a><i>s</i> <i>behavior</i>)</code> [SAL]<br>
+<dt>
+<code>trigger(<a name="index875"></a><i>s</i>, <i>beh</i>)</code> [SAL]<br>
 
-<code>(trigger <i>s</i> <i>behavior</i>)</code>
-[LISP]<dd>Instantiate a behavior each time a signal
-becomes positive: Each time <i>s</i>, a <code>SOUND</code>, makes a transition from
-zero or less to greater than zero, <i>behavior</i>, an expression, is
-evaluated at the current time and must return a
-<code>SOUND</code>. (Multi-channel behaviors are not allowed.)
- The result is the sum of all
-instantiated behaviors (which may overlap in time). (See the example above.)
+<code>(trigger <i>s</i> <i>beh</i>)</code> [LISP]<dd>Returns a sound which is the
+sum of zero or more possibly overlapping instances of the behavior <i>beh</i>.
+One instance is created each time
+<code>SOUND</code> <i>s</i> makes a transition from less than or equal to zero to
+greater than zero. (If the first sample of <i>s</i> is greater than zero, an
+instance is created immediately.) The sample rate of <i>s</i> and all behaviors
+must be the same, and the behaviors must be (monophonic) <code>SOUND</code>s. The
+sample rate of the result is also the sample rate of <i>s</i>.
 The stop time of the result is the maximum stop time of <i>s</i> and
 all sounds returned by instances of the behavior. 
-The sample rate of the return value is
-the sample rate of <i>s</i>, and the sounds returned by the closure must all
-have that same sample rate. Do not call this function. <br><br>
-<dt><code>snd-stoponzero(<a name="index850"></a><i>s</i>)</code> [SAL]<br>
-
-<code>(snd-stoponzero <i>s</i>)</code>
-[LISP]<dd>This function is identical to
-<code>stop-on-zero</code>. You should use <code>stop-on-zero</code> instead.<br><br>
-<dt><code>snd-trigger(<a name="index851"></a><i>s</i>, <i>closure</i>)</code> [SAL]<br>
-
-<code>(snd-trigger <i>s</i> <i>closure</i>)</code> [LISP]<dd>This is one of
-the only ways in which a behavior instance can be created by changes in a
-signal. When <i>s</i> (a <code>SOUND</code>) makes a transition from less than or 
-equal to zero to greater than zero, the closure, which takes a starting
-time parameter, is evaluated. The closure must return a <code>SOUND</code>. The
-sum of all these sounds is returned. If there are no sounds, the result will
-be zero. The stop time of the result is the maximum stop time of <i>s</i> and
-all sounds returned by the closure. The sample rate of the return value is
-the sample rate of <i>s</i>, and the sounds returned by the closure must all
-have that same sample rate. Do not call this function. 
-Use <code>trigger</code>, described above.
+This function is particularly designed to allow behaviors to be invoked
+in real time. See the <code>trigger-me</code> function definition shown above.
 <p>
 <small>
-An implementation note: There is no way to have <code>snd-trigger</code> return
+An implementation note: There is no way to have <code>trigger</code> return
 a multichannel sound. An alternative implementation would be a built-in
 function to scan ahead in a sound to find the time of the next zero crossing.
 This could be combined with some LISP code similar to <code>seq</code> to sum up
 instances of the closure. However, this would force arbitrary look-ahead
 and therefore would not work with real-time inputs, which was the motivation
-for <code>snd-trigger</code> in the first place.
+for <code>trigger</code> in the first place.
 </small>
+<br><br>
+<dt><code>snd-stoponzero(<a name="index876"></a><i>s</i>)</code> [SAL]<br>
 
+<code>(snd-stoponzero <i>s</i>)</code>
+[LISP]<dd>This function is identical to
+<code>stop-on-zero</code>. You should use <code>stop-on-zero</code> instead.<br><br>
+<dt><code>snd-trigger(<a name="index877"></a><i>s</i>, <i>closure</i>)</code> [SAL]<br>
+
+<code>(snd-trigger <i>s</i> <i>closure</i>)</code> [LISP]<dd>This is a
+low-level support function for <code>trigger</code>. The <i>closure</i> takes a
+starting time and returns a <code>SOUND</code>. See <code>trigger</code> above for more
+details. Use <code>trigger</code> as described above and do not call this function
+directly.
 </dl>
 <p>
-<a name = "111"><h3>Using Open Sound Control</h3></a><a name="index852"></a>
+<a name = "115"><h3>Using Open Sound Control</h3></a><a name="index878"></a>
 
 Open Sound Control (OSC) is a simple protocol for communicating music
 control parameters between software applications and across
@@ -344,10 +340,10 @@ Note: Open Sound Control must be enabled by calling
 installation instructions in <code>sys/win/README.txt</code> regarding
 <code>SystemRoot</code>.
 <p>
-<code>osc-enable(<a name="index853"></a><a name="index854"></a><a name="index855"></a><i>flag</i>)</code> [SAL]<br>
+<code>osc-enable(<a name="index879"></a><a name="index880"></a><a name="index881"></a><i>flag</i>)</code> [SAL]<br>
 
 <code>(osc-enable <i>flag</i>)</code> [LISP]Enable or disable Open Sound Control.
-(See Section <a href = "#111">"Using Open Sound Control"</a>.)
+(See Section <a href = "#115">"Using Open Sound Control"</a>.)
 Enabling creates a socket and a service that listens for UDP 
 packets on port 7770. Currently, only two messages are accepted 
 by Nyquist. The first is of the form <code>/slider</code>
@@ -356,9 +352,9 @@ slider values accessed by the <code>slider</code> and
 <code>get-slider-value</code> functions. The second is of the form
 <code>/wii/orientation</code> with 
 two floating point values. This message is a special case to 
-support the DarwiinRemoteOsc<a name="index856"></a> program
+support the DarwiinRemoteOsc<a name="index882"></a> program
  which can relay data from
-a Nintendo<a name="index857"></a> WiiMote<a name="index858"></a>
+a Nintendo<a name="index883"></a> WiiMote<a name="index884"></a>
  device to Nyquist via OSC. The two orientation
 values control sliders 0 and 1.
 Disabling terminates the service (polling for messages) 
@@ -377,12 +373,12 @@ unlimited and unprotected access to OSC clients. For now,
 it is unlikely that an attacker could do more than 
 manipulate slider values.
 <p>
-<a name = "112"><h4>Sending Open Sound Control Messages</h4></a>
+<a name = "116"><h4>Sending Open Sound Control Messages</h4></a>
 A variety of programs support OSC. The only OSC message interpreted by Nyquist has an address of <code>/slider</code>, and two parameters: an integer slider number and a float value, nominally from 0.0 to 1.0. 
 <p>
 Two small programs are included in the Nyquist distribution for sending OSC messages. (Both can be found in the same directory as the nyquist executable.) The first one, <code>osc-test-client</code> sends a sequence of messages that just cause slider 0 to ramp slowly up and down. If you run this on a command line, you can use "?" or "h" to get help information. There is an interactive mode that lets you send each OSC message by typing RETURN.
 <p>
-<a name = "113"><h4>The ser-to-osc Program</h4></a>
+<a name = "117"><h4>The ser-to-osc Program</h4></a>
 The second program is <code>ser-to-osc</code>, a program that reads serial input (for example from a PIC-based microcontroller) and sends OSC messages. Run this command-line program from a shell (a terminal window under OS X or Linux; use the CMD program under Windows). You must name the serial input device on the command line, e.g. under OS X, you might run:
 <p><pre>
 ./ser-to-osc /dev/tty.usbserial-0000103D

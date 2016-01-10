@@ -44,8 +44,7 @@
          (ny:maxlen ,maxlen)
          (ny:endian ,endian)
          (ny:swap 0) 
-         max-sample     ; return value
-         restore-value) ; restore *snd-list-devices* to this value
+         max-sample)     ; return value
      (cond (*in-s-save*
             (error "Recursive call to s-save (maybe play?) detected!")))
      (progv '(*in-s-save*) '(t)
@@ -71,20 +70,19 @@
        ; print device info the first time sound is played
        (cond (,play
               (cond ((not (boundp '*snd-list-devices*))
-                     (setf *snd-list-devices* t)) ; one-time show
-                    (t
-                     (setf restore-value *snd-list-devices*)))))
+                     (setf *snd-list-devices* t))))) ; one-time show
        (setf max-sample
              (snd-save ',expression ny:maxlen ny:fname ,format 
                        ,mode ,bits ny:swap ,play))
        ; more information if *snd-list-devices* was unbound:
-       (cond ((and *snd-list-devices* (not restore-value))
-              (format t "\nSet *snd-list-devices* = t\n~A\n~A\n~A\n~A\n\n"
+       (cond (,play
+              (cond (*snd-list-devices*
+		     (format t "\nSet *snd-list-devices* = t\n~A\n~A\n~A\n~A\n\n"
                   "  and call play to see device list again."
                   "Set *snd-device* to a fixnum to select an output device"
                   "  or set *snd-device* to a substring of a device name"
                   "  to select the first device containing the substring.")))
-       (setf *snd-list-devices* restore-value) ; normally nil
+	      (setf *snd-list-devices* nil))) ; normally nil
        max-sample)))
 
 ;; MULTICHANNEL-MAX -- find peak over all channels

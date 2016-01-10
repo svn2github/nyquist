@@ -4,8 +4,8 @@
 <body bgcolor="ffffff">
 <a href = "part15.html">Previous Section</a> | <a href = "part17.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "175"><h2>Nyquist Libraries</h2></a>
-<a name="index1215"></a>
+<a name = "181"><h2>Nyquist Libraries</h2></a>
+<a name="index1264"></a>
 Nyquist is always growing with new functions. Functions that are most fundamental
 are added to the core language. These functions are automatically loaded when you 
 start Nyquist, and they are documented in the preceding chapters. Other functions seem
@@ -16,55 +16,55 @@ To use a library function, you
 must first load the library, e.g. <code>(load "pianosyn")</code> loads the piano synthesis
 library. The libraries are all located in the <code>lib</code> directory, and you 
 should therefore include this directory on your <code>XLISPPATH</code> variable. (See 
-Section <a href = "part2.html#2">"Introduction and Overview"</a>.) Each library is documented in one of the following
+Section <a href = "part2.html#3">"Installation"</a>.) Each library is documented in one of the following
 sections. When you load the library described by the section, all functions
 documented in that section become available.
 <p>
-<a name = "176"><h3>Statistics</h3></a>
-<a name="index1216"></a><a name="index1217"></a><a name="index1218"></a><a name="index1219"></a><a name="index1220"></a><a name="index1221"></a><a name="index1222"></a><a name="index1223"></a><a name="index1224"></a><a name="index1225"></a><a name="index1226"></a><a name="index1227"></a><a name="index1228"></a><a name="index1229"></a>
+<a name = "182"><h3>Statistics</h3></a>
+<a name="index1265"></a><a name="index1266"></a><a name="index1267"></a><a name="index1268"></a><a name="index1269"></a><a name="index1270"></a><a name="index1271"></a><a name="index1272"></a><a name="index1273"></a><a name="index1274"></a><a name="index1275"></a><a name="index1276"></a><a name="index1277"></a><a name="index1278"></a>
 The file <code>statistics.lsp</code> defines a class and functions to compute simple statistics, histograms, correlation, and some other tests. See the source code for complete details.
 <p>
-<a name = "177"><h3>Plots</h3></a>
-<a name="index1230"></a><a name="index1231"></a>
+<a name = "183"><h3>Plots</h3></a>
+<a name="index1279"></a><a name="index1280"></a>
 The Nyquist IDE has a simple facility to plot signals. For more advanced plotting, you can use <code>gnuplot.sal</code> to generate plots for <code>gnuplot</code>, a separate, but free program. See the source for details.
 <p>
-<a name = "178"><h3>Labeling Audio Events, Marking Audio Times, Displaying Marked Audio Times</h3></a>
-<a name="index1232"></a><a name="index1233"></a><a name="index1234"></a><a name="index1235"></a>
+<a name = "184"><h3>Labeling Audio Events, Marking Audio Times, Displaying Marked Audio Times</h3></a>
+<a name="index1281"></a><a name="index1282"></a><a name="index1283"></a><a name="index1284"></a>
 The <code>labels.sal</code> program can convert lists to label files and label files to lists. Label files can be loaded along with audio in Audacity to show metadata. See the source for details.
 <p>
-<a name = "179"><h3>Linear Regression</h3></a>
-<a name="index1236"></a><a name="index1237"></a><a name="index1238"></a>
+<a name = "185"><h3>Linear Regression</h3></a>
+<a name="index1285"></a><a name="index1286"></a><a name="index1287"></a>
 See <code>regression.sal</code> for simple linear regression functions.
 <p>
-<a name = "180"><h3>Vector Math, Linear Algebra</h3></a>
-<a name="index1239"></a><a name="index1240"></a><a name="index1241"></a><a name="index1242"></a><a name="index1243"></a><a name="index1244"></a><a name="index1245"></a><a name="index1246"></a><a name="index1247"></a><a name="index1248"></a><a name="index1249"></a><a name="index1250"></a><a name="index1251"></a><a name="index1252"></a>
+<a name = "186"><h3>Vector Math, Linear Algebra</h3></a>
+<a name="index1288"></a><a name="index1289"></a><a name="index1290"></a><a name="index1291"></a><a name="index1292"></a><a name="index1293"></a><a name="index1294"></a><a name="index1295"></a><a name="index1296"></a><a name="index1297"></a><a name="index1298"></a><a name="index1299"></a><a name="index1300"></a><a name="index1301"></a>
 See <code>vectors.lsp</code> for a simple implementation of vector arithmetic and other vector functions.
 <p>
-<a name = "181"><h3>Piano Synthesizer</h3></a>
+<a name = "187"><h3>Piano Synthesizer</h3></a>
 The piano synthesizer (library name is <code>pianosyn.lsp</code>) generates
 realistic piano tones using a multiple wavetable implementation by Zheng (Geoffrey)
 Hua and Jim Beauchamp, University of Illinois. Please see the notice about
 acknowledgements that prints when you load the file. Further informations and
 example code can be found in 
-<code>demos/piano.htm</code><a name="index1253"></a><a name="index1254"></a>. 
+<code>demos/piano.htm</code><a name="index1302"></a><a name="index1303"></a>. 
 There are several useful functions in this library:
 <dl>
 <dt>
-<code>piano-note(<a name="index1255"></a><a name="index1256"></a><i>duration</i>, <i>step</i>, 
+<code>piano-note(<a name="index1304"></a><a name="index1305"></a><i>duration</i>, <i>step</i>, 
  <i>dynamic</i>)</code> [SAL]<br>
 
 <code>(piano-note <i>duration</i> <i>step</i> <i>dynamic</i>)</code> [LISP]<dd>Synthesizes a piano tone. <i>Duration</i> is the duration to the point of
 key release, after which there is a rapid decay. <i>Step</i> is the pitch in half
 steps, and <i>dynamic</i> is approximately equivalent to a MIDI key velocity
 parameter. Use a value near 100 for a loud sound and near 10 for a soft sound.<br><br>
-<dt><code>piano-note-2(<a name="index1257"></a><i>step</i>, <i>dynamic</i>)</code> [SAL]<br>
+<dt><code>piano-note-2(<a name="index1306"></a><i>step</i>, <i>dynamic</i>)</code> [SAL]<br>
 
 <code>(piano-note-2 <i>step</i> <i>dynamic</i>)</code> [LISP]<dd>Similar to <code>piano-note</code> except the duration is nominally 1.0.<br><br>
-<dt><code>piano-midi(<a name="index1258"></a><i>midi-file-name</i>)</code> [SAL]<br>
+<dt><code>piano-midi(<a name="index1307"></a><i>midi-file-name</i>)</code> [SAL]<br>
 
 <code>(piano-midi <i>midi-file-name</i>)</code> [LISP]<dd>Use the piano synthesizer 
 to play a MIDI file. The file name (a string) is given by <i>midi-file-name</i>.<br><br>
-<dt><code>piano-midi2file(<a name="index1259"></a><i>midi-file-name</i>, 
+<dt><code>piano-midi2file(<a name="index1308"></a><i>midi-file-name</i>, 
 <i>sound-file-name</i>)</code> [SAL]<br>
 
 <code>(piano-midi2file <i>midi-file-name</i> <i>sound-file-name</i>)</code> [LISP]<dd>Use the piano synthesizer to play a MIDI file. The MIDI file
@@ -72,7 +72,7 @@ is given by <i>midi-file-name</i> and the (monophonic) result is written to the 
 named <i>sound-file-name</i>.
 </dl>
 <p>
-<a name = "182"><h3>Dynamics Compression</h3></a>
+<a name = "188"><h3>Dynamics Compression</h3></a>
 These functions
 implement a compressor originally intended for noisy speech audio, but
 usable in a variety of situations.
@@ -104,7 +104,7 @@ to set the overall level without clipping.
 <p>
 <dl>
 <dt>
-<code>compress-map(<a name="index1260"></a><i>compress-ratio</i>, 
+<code>compress-map(<a name="index1309"></a><i>compress-ratio</i>, 
 <i>compress-threshold</i>, 
 <i>expand-ratio</i>, <i>expand-threshold</i>, limit: <i>limit</i>, transition: 
 <i>transition</i>, verbose: <i>verbose</i>)</code> [SAL]<br>
@@ -140,11 +140,11 @@ function. The sound maps input
 dB to gain. Time 1.0 corresponds to 0dB, time 0.0 corresponds to
 -100 dB, and time 2.0 corresponds to +100dB, so this is a 
 100hz "sample rate" sound. The sound gives gain in dB.<br><br>
-<dt><code>db-average(<a name="index1261"></a><i>input</i>)</code> [SAL]<br>
+<dt><code>db-average(<a name="index1310"></a><i>input</i>)</code> [SAL]<br>
 
 <code>(db-average <i>input</i>)</code> [LISP]<dd>Compute the average amplitude 
 of <i>input</i> in dB.<br><br>
-<dt><code>compress(<a name="index1262"></a><i>input</i>, <i>map</i>, <i>rise-time</i>, <i>fall-time</i> [, <i>lookahead</i>])</code> [SAL]<br>
+<dt><code>compress(<a name="index1311"></a><i>input</i>, <i>map</i>, <i>rise-time</i>, <i>fall-time</i> [, <i>lookahead</i>])</code> [SAL]<br>
 
 <code>(compress <i>input</i> <i>map</i> <i>rise-time</i> <i>fall-time</i>
  [<i>lookahead</i>])</code> [LISP]<dd>Compress 
@@ -152,7 +152,7 @@ of <i>input</i> in dB.<br><br>
 probably generated by <code>compress-map</code> (see above). Adjustments in gain have
 the given <i>rise-time</i> and <i>fall-time</i>. Lookahead tells how far ahead to look
 at the signal, and is <i>rise-time</i> by default.<br><br>
-<dt><code>agc(<a name="index1263"></a><a name="index1264"></a><a name="index1265"></a><i>input</i>,
+<dt><code>agc(<a name="index1312"></a><a name="index1313"></a><a name="index1314"></a><i>input</i>,
 <i>range</i>, <i>rise-time</i>, <i>fall-time</i> [, <i>lookahead</i>])</code> [SAL]<br>
 
 <code>(agc <i>input</i> <i>range</i> <i>rise-time</i> <i>fall-time</i>
@@ -162,7 +162,7 @@ are attenuated to 1.0, and gain is controlled with the given <i>rise-time</i> an
 <i>fall-time</i>. The look-ahead time default is <i>rise-time</i>.
 </dl>
 <p>
-<a name = "183"><h3>Clipping Softener</h3></a>
+<a name = "189"><h3>Clipping Softener</h3></a>
 This library, in <code>soften.lsp</code>, was written to improve the quality of
 poorly recorded speech. In recordings of speech, extreme clipping generates
 harsh high frequency noise. This can sound particulary bad on small speakers
@@ -177,7 +177,7 @@ signal as opposed to changing filter coefficients.
 <p>
 <dl>
 <dt>
-<code>soften-clipping(<a name="index1266"></a><a name="index1267"></a><i>snd</i>, 
+<code>soften-clipping(<a name="index1315"></a><a name="index1316"></a><i>snd</i>, 
 <i>cutoff</i>)</code> [SAL]<br>
 
 <code>(soften-clipping <i>snd</i> <i>cutoff</i>)</code> [LISP]<dd>Filter the loud regions of a signal where clipping is likely
@@ -186,7 +186,7 @@ and <i>cutoff</i> is the filter cutoff frequency
 (4 kHz is recommended for speech).
 </dl>
 <p>
-<a name = "184"><h3>Graphical Equalizer</h3></a>
+<a name = "190"><h3>Graphical Equalizer</h3></a>
 There's nothing really "graphical" about this library (<code>grapheq.lsp</code>), but 
 this is a common term for multi-band equalizers. This implementation uses
 Nyquist's <code>eq-band</code> function to split the incoming signal into different
@@ -197,7 +197,7 @@ over time.
 <p>
 <dl>
 <dt>
-<code>nband-range(<a name="index1268"></a><a name="index1269"></a><a name="index1270"></a><i>input</i>, <i>gains</i>, <i>lowf</i>, <i>highf</i>)</code> [SAL]<br>
+<code>nband-range(<a name="index1317"></a><a name="index1318"></a><a name="index1319"></a><i>input</i>, <i>gains</i>, <i>lowf</i>, <i>highf</i>)</code> [SAL]<br>
 
 <code>(nband-range <i>input</i> <i>gains</i> <i>lowf</i> <i>highf</i>)</code> [LISP]<dd>A graphical equalizer applied to 
 <i>input</i> (a <code>SOUND</code>). The gain controls and number of bands is given by <i>gains</i>, an
@@ -205,17 +205,17 @@ ARRAY of <code>SOUND</code>s (in other words, a Nyquist multichannel <code>SOUND
 array may be replaced by a <code>FLONUM</code>. The bands are
 geometrically equally spaced from the lowest frequency <i>lowf</i> to the
 highest frequency <i>highf</i> (both are <code>FLONUM</code>s).<br><br>
-<dt><code>nband(<a name="index1271"></a><i>input</i>, <i>gains</i>)</code> [SAL]<br>
+<dt><code>nband(<a name="index1320"></a><i>input</i>, <i>gains</i>)</code> [SAL]<br>
 
 <code>(nband <i>input</i> <i>gains</i>)</code> [LISP]<dd>A graphical equalizer, identical 
 to <code>nband-range</code> with a range of 20 to 20,000 Hz.
 </dl>
 <p>
-<a name = "185"><h3>Sound Reversal</h3></a>
+<a name = "191"><h3>Sound Reversal</h3></a>
 The <code>reverse.lsp</code> library implements functions to play sounds in reverse.
 <dl>
 <dt>
-<code>s-reverse(<a name="index1272"></a><a name="index1273"></a><a name="index1274"></a><a name="index1275"></a><i>snd</i>)</code> [SAL]<br>
+<code>s-reverse(<a name="index1321"></a><a name="index1322"></a><a name="index1323"></a><a name="index1324"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(s-reverse <i>snd</i>)</code> [LISP]<dd>Reverses <i>snd</i> (a <code>SOUND</code>). Sound must be shorter
 than <code>*max-reverse-samples*</code>, which is currently initialized to 
@@ -225,12 +225,12 @@ garbage collector a lot and runs slowly. The result starts at the starting
 time given by the current environment (not necessarily the starting time 
 of <i>snd</i>). If <i>snd</i> has multiple channels, a multiple channel, 
 reversed sound is returned.<br><br>
-<dt><code>s-read-reverse(<a name="index1276"></a><a name="index1277"></a><i>filename</i>, time-offset: <i>offset</i>, srate: <i>sr</i>, dur: <i>dur</i>, nchans: <i>chans</i>, format: <i>format</i>, mode: <i>mode</i>, bits: <i>n</i>, swap: <i>flag</i>)</code> [SAL]<br>
+<dt><code>s-read-reverse(<a name="index1325"></a><a name="index1326"></a><i>filename</i>, time-offset: <i>offset</i>, srate: <i>sr</i>, dur: <i>dur</i>, nchans: <i>chans</i>, format: <i>format</i>, mode: <i>mode</i>, bits: <i>n</i>, swap: <i>flag</i>)</code> [SAL]<br>
 
 <code>(s-read-reverse <i>filename</i> :time-offset <i>offset</i>
  :srate <i>sr</i> :dur <i>dur</i> :nchans <i>chans</i> :format <i>format</i> :mode <i>mode</i> 
 :bits <i>n</i> :swap <i>flag</i>)</code> [LISP]<dd>This function is 
-identical to <code>s-read</code> (see Section <a href = "part8.html#96">"Sound File Input and Output"</a>), except it reads 
+identical to <code>s-read</code> (see Section <a href = "part8.html#99">"Sound File Input and Output"</a>), except it reads 
 the indicated samples in reverse. Like
 <code>s-reverse</code> (see above), it uses XLISP in the inner loop, so it is slow.
 Unlike <code>s-reverse</code>, <code>s-read-reverse</code> uses a fixed amount of 
@@ -238,27 +238,27 @@ memory that is independent of how many samples are computed. Multiple channels
 are handled. 
 </dl>
 <p>
-<a name = "186"><h3>Time Delay Functions</h3></a>
+<a name = "192"><h3>Time Delay Functions</h3></a>
 The <code>time-delay-fns.lsp</code> library implements chorus, phaser, and flange effects.
 <p>
 <dl>
 <dt>
-<code>phaser(<a name="index1278"></a><a name="index1279"></a><i>snd</i>)</code> [SAL]<br>
+<code>phaser(<a name="index1327"></a><a name="index1328"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(phaser <i>snd</i>)</code> [LISP]<dd>A phaser effect
 applied to <i>snd</i> (a <code>SOUND</code>). There are no parameters, 
 but feel free to modify the source code of this one-liner.<br><br>
-<dt><code>flange(<a name="index1280"></a><a name="index1281"></a><a name="index1282"></a><i>snd</i>)</code> [SAL]<br>
+<dt><code>flange(<a name="index1329"></a><a name="index1330"></a><a name="index1331"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(flange <i>snd</i>)</code> [LISP]<dd>A flange effect
 applied to <i>snd</i>. To vary the rate and other parameters, see the source code.<br><br>
-<dt><code>stereo-chorus(<a name="index1283"></a><a name="index1284"></a><i>snd</i>, delay: <i>delay</i>, depth: <i>depth</i>, rate1: <i>rate1</i>, rate2: <i>rate2</i> saturation: <i>saturation</i>)</code> [SAL]<br>
+<dt><code>stereo-chorus(<a name="index1332"></a><a name="index1333"></a><i>snd</i>, delay: <i>delay</i>, depth: <i>depth</i>, rate1: <i>rate1</i>, rate2: <i>rate2</i> saturation: <i>saturation</i>)</code> [SAL]<br>
 
 <code>(stereo-chorus <i>snd</i> :delay <i>delay</i> :depth <i>depth</i>
 :rate1 <i>rate1</i> :rate2 <i>rate2</i> :saturation <i>saturation</i>)</code> [LISP]<dd>A chorus effect 
 applied to <i>snd</i>,
 a <code>SOUND</code> (monophonic). The output is a stereo sound with out-of-phase chorus effects applied separately for the left and right channels. See the <code>chorus</code> function below for a description of the optional parameters. The <i>rate1</i> and <i>rate2</i> parameters are <i>rate</i> parameters for the left and right channels.<br><br>
-<dt><code>chorus(<a name="index1285"></a><a name="index1286"></a><i>snd</i>, delay: <i>delay</i>, depth: <i>depth</i>, rate: <i>rate</i>, saturation: <i>saturation</i>, phase: <i>phase</i>)</code> [SAL]<br>
+<dt><code>chorus(<a name="index1334"></a><a name="index1335"></a><i>snd</i>, delay: <i>delay</i>, depth: <i>depth</i>, rate: <i>rate</i>, saturation: <i>saturation</i>, phase: <i>phase</i>)</code> [SAL]<br>
 
 <code>(chorus <i>snd</i> :delay <i>delay</i> :depth <i>depth</i> :rate <i>rate</i> :saturation <i>saturation</i> :phase <i>phase</i>)</code> [LISP]<dd>A chorus effect applied to <i>snd</i>. All parameters may be arrays
 as usual. The chorus is implemented as a variable delay 
@@ -272,14 +272,16 @@ Default values are <i>delay</i> 0.03, <i>depth</i> 0.003, <i>rate</i> 0.3,
  <i>saturation</i> 1.0, and <i>phase</i> 0.0 (degrees).
 </dl>
 <p>
-<a name = "187"><h3>Multiple Band Effects</h3></a>
-<a name="index1287"></a><a name="index1288"></a>
+<a name = "193"><h3>Multiple Band Effects</h3></a>
+<a name="index1336"></a><a name="index1337"></a>
 The <code>bandfx.lsp</code> library implements several effects based on multiple
 frequency bands. The idea is to separate a signal into different frequency
 bands, apply a slightly different effect to each band, and sum the effected
 bands back together to form the result. This file includes its own set of
 examples. After loading the file, try <code>f2()</code>, <code>f3()</code>, <code>f4()</code>,
 and <code>f5()</code> to hear them.
+Further discussion and examples can be found in 
+<code>demos/bandfx.htm</code><a name="index1338"></a>. 
 <p>
 There is much room for expansion and experimentation with this library. Other
 effects might include distortion in certain bands (for example, there are
@@ -294,7 +296,7 @@ are interested in working on this library.
 <p>
 <dl>
 <dt>
-<code>apply-banded-delay(<a name="index1289"></a><a name="index1290"></a><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>lowd</i>, <i>highd</i>, <i>fb</i>, <i>wet</i>)</code> [SAL]<br>
+<code>apply-banded-delay(<a name="index1339"></a><a name="index1340"></a><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>lowd</i>, <i>highd</i>, <i>fb</i>, <i>wet</i>)</code> [SAL]<br>
 
 <code>(apply-banded-delay <i>s</i> <i>lowp</i> <i>highp</i> <i>num-bands</i> <i>lowd</i> <i>highd</i> <i>fb</i> <i>wet</i>)</code> [LISP]<dd>Separates
 input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> bands from a low frequency
@@ -306,7 +308,7 @@ interpolated between these values. Each delay has feedback gain controlled by
 <code>FLONUM</code> <i>fb</i>. The delayed bands are scaled by <code>FLONUM</code> <i>wet</i>, and 
 the original sound is scaled by 1 - <i>wet</i>. All are summed to form the result, 
 a <code>SOUND</code>.<br><br>
-<dt><code>apply-banded-bass-boost(<a name="index1291"></a><a name="index1292"></a><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code> [SAL]<br>
+<dt><code>apply-banded-bass-boost(<a name="index1341"></a><a name="index1342"></a><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code> [SAL]<br>
 
 <code>(apply-banded-bass-boost <i>s</i> <i>lowp</i> <i>highp</i> <i>num-bands</i> <i>num-boost</i> <i>gain</i>)</code> [LISP]<dd>Applies a boost to 
 low frequencies. Separates
@@ -314,7 +316,7 @@ input <code>SOUND</code> <i>s</i> into <code>FIXNUM</code> <i>num-bands</i> band
 of <i>lowp</i> to a high frequency of <i>highp</i> (these are <code>FLONUMS</code> that specify
 steps, not Hz), and scales the lowest <i>num-boost</i> (a <code>FIXNUM</code>) bands by <i>gain</i>,
 a <code>FLONUM</code>. The bands are summed to form the result, a <code>SOUND</code>.<br><br>
-<dt><code>apply-banded-treble-boost(<a name="index1293"></a><a name="index1294"></a><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code> [SAL]<br>
+<dt><code>apply-banded-treble-boost(<a name="index1343"></a><a name="index1344"></a><i>s</i>, <i>lowp</i>, <i>highp</i>, <i>num-bands</i>, <i>num-boost</i>, <i>gain</i>)</code> [SAL]<br>
 
 <code>(apply-banded-treble-boost <i>s</i> <i>lowp</i> <i>highp</i> <i>num-bands</i> <i>num-boost</i> <i>gain</i>)</code> [LISP]<dd>Applies a boost to 
 high frequencies. Separates
@@ -324,7 +326,7 @@ steps, not Hz), and scales the highest <i>num-boost</i> (a <code>FIXNUM</code>) 
 a <code>FLONUM</code>. The bands are summed to form the result, a <code>SOUND</code>.
 </dl>
 <p>
-<a name = "188"><h3>Granular Synthesis</h3></a>
+<a name = "194"><h3>Granular Synthesis</h3></a>
 Some granular synthesis functions are implemented in the <code>gran.lsp</code> library
 file. There are many variations and control schemes one could adopt for granular
 synthesis, so it is impossible to create a single universal granular synthesis
@@ -338,7 +340,7 @@ parameters) and avoid using all of your computer's memory.
 <p>
 <dl>
 <dt>
-<code>sf-granulate(<a name="index1295"></a><a name="index1296"></a><i>filename</i>, <i>grain-dur</i>, <i>grain-dev</i>, <i>ioi</i>, <i>ioi-dev</i>, <i>pitch-dev</i>, [<i>file-start</i>, <i>file-end</i>])</code> [SAL]<br>
+<code>sf-granulate(<a name="index1345"></a><a name="index1346"></a><i>filename</i>, <i>grain-dur</i>, <i>grain-dev</i>, <i>ioi</i>, <i>ioi-dev</i>, <i>pitch-dev</i>, [<i>file-start</i>, <i>file-end</i>])</code> [SAL]<br>
 
 <code>(sf-granulate <i>filename</i> <i>grain-dur</i> <i>grain-dev</i> <i>ioi</i>
  <i>ioi-dev</i> <i>pitch-dev</i> [<i>file-start</i> <i>file-end</i>])</code> [LISP]<dd>Granular synthesis 
@@ -371,61 +373,61 @@ sum four or more copies of <code>sf-granulate</code> together. (See the <code>gr
 function in <code>gran.lsp</code>.)
 </dl>
 <p>
-<a name = "189"><h3>Chowning FM Voices</h3></a>
+<a name = "195"><h3>Chowning FM Voices</h3></a>
 John Chowning developed voice synthesis methods using FM to simulate 
 resonances for his 1981 composition "Phone." He later recreated the
 synthesis algorithms in Max, and Jorge Sastre ported these to SAL. 
 See <code>demos/FM-voices-Chowning.sal</code> for more details.
 <p>
-<a name = "190"><h3>Atonal Melody Composition</h3></a>
+<a name = "196"><h3>Atonal Melody Composition</h3></a>
 Jorge Sastre contributed <code>demos/atonal-melodies.sal</code>, code 
 that generates atonal melodies. You can find links to an example
 score and audio file in the code and also at
 <code>http://algocompbook.com/examples.html</code>.
 <p>
-<a name = "191"><h3>MIDI Utilities</h3></a>
+<a name = "197"><h3>MIDI Utilities</h3></a>
 The <code>midishow.lsp</code> library has functions that can print the contents fo MIDI
 files. This intended as a debugging aid.
 <p>
 <dl>
 <dt>
-<code>midi-show-file(<a name="index1297"></a><a name="index1298"></a><a name="index1299"></a><i>file-name</i>)</code> [SAL]<br>
+<code>midi-show-file(<a name="index1347"></a><a name="index1348"></a><a name="index1349"></a><i>file-name</i>)</code> [SAL]<br>
 
 <code>(midi-show-file <i>file-name</i>)</code> [LISP]<dd>Print the contents of a MIDI file to the console.<br><br>
-<dt><code>midi-show(<a name="index1300"></a><i>the-seq</i> [, <i>out-file</i>])</code> [SAL]<br>
+<dt><code>midi-show(<a name="index1350"></a><i>the-seq</i> [, <i>out-file</i>])</code> [SAL]<br>
 
 <code>(midi-show <i>the-seq</i> [<i>out-file</i>])</code> [LISP]<dd>Print the
 contents of the sequence <i>the-seq</i> to the file <i>out-file</i> (whose default value
 is the console.)
 </dl>
 <p>
-<a name = "192"><h3>Reverberation</h3></a>
+<a name = "198"><h3>Reverberation</h3></a>
 The <code>reverb.lsp</code> library implements artificial reverberation.
 <p>
 <dl>
 <dt>
-<code>reverb(<a name="index1301"></a><a name="index1302"></a><i>snd</i>, 
+<code>reverb(<a name="index1351"></a><a name="index1352"></a><i>snd</i>, 
 <i>time</i>)</code> [SAL]<br>
 
 <code>(reverb <i>snd</i> <i>time</i>)</code> [LISP]<dd>Artificial reverberation applied to <i>snd</i> with a decay time of
 <i>time</i>.
 </dl>
 <p>
-<a name = "193"><h3>DTMF Encoding</h3></a>
-<a name="index1303"></a><a name="index1304"></a>
+<a name = "199"><h3>DTMF Encoding</h3></a>
+<a name="index1353"></a><a name="index1354"></a>
 The <code>dtmf.lsp</code> library implements DTMF encoding. DTMF is the 
 "touch tone" code used by telephones.
 <p>
 <dl>
 <dt>
-<code>dtmf-tone(<a name="index1305"></a><i>key</i>, <i>len</i>, <i>space</i>)</code> [SAL]<br>
+<code>dtmf-tone(<a name="index1355"></a><i>key</i>, <i>len</i>, <i>space</i>)</code> [SAL]<br>
 
 <code>(dtmf-tone <i>key</i> <i>len</i> <i>space</i>)</code> [LISP]<dd>Generate a
 single DTMF tone. The <i>key</i> parameter is either a digit (a <code>FIXNUM</code>
 from 0 through 9) or the atom <code>STAR</code> or <code>POUND</code>. The duration of
 the done is given by <i>len</i> (a <code>FLONUM</code>) and the tone is followed by
 silence of duration <i>space</i> (a <code>FLONUM</code>).<br><br>
-<dt><code>speed-dial(<a name="index1306"></a><i>thelist</i>)</code> [SAL]<br>
+<dt><code>speed-dial(<a name="index1356"></a><i>thelist</i>)</code> [SAL]<br>
 
 <code>(speed-dial <i>thelist</i>)</code> [LISP]<dd>Generates a sequence
 of DTMF tones using the keys in <i>thelist</i> (a <code>LIST</code> of keys as
@@ -434,8 +436,8 @@ seconds, and the space between tones is 0.1 second. Use <code>stretch</code> to
 change the "dialing" speed.
 </dl>
 <p>
-<a name = "194"><h3>Dolby Surround(R), Stereo and Spatialization Effects</h3></a>
-<a name="index1307"></a><a name="index1308"></a><a name="index1309"></a><a name="index1310"></a>
+<a name = "200"><h3>Dolby Surround(R), Stereo and Spatialization Effects</h3></a>
+<a name="index1357"></a><a name="index1358"></a><a name="index1359"></a><a name="index1360"></a>
 <p>
 The <code>spatial.lsp</code> library implements various functions for stereo
 manipulation and spatialization. It also includes some functions for
@@ -449,48 +451,48 @@ source code for comments about these.
 <p>
 <dl>
 <dt>
-<code>stereoize(<a name="index1311"></a><a name="index1312"></a><a name="index1313"></a><i>snd</i>)</code> [SAL]<br>
+<code>stereoize(<a name="index1361"></a><a name="index1362"></a><a name="index1363"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(stereoize <i>snd</i>)</code> [LISP]<dd>Convert a mono sound, <i>snd</i>, to stereo. Four bands of 
 equalization and some delay are used to create a stereo effect.<br><br>
-<dt><code>widen(<a name="index1314"></a><a name="index1315"></a><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
+<dt><code>widen(<a name="index1364"></a><a name="index1365"></a><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
 
 <code>(widen <i>snd</i> <i>amt</i>)</code> [LISP]<dd>Artificially
 widen the stereo field in <i>snd</i>, a two-channel sound. The amount of widening
 is <i>amt</i>, which varies from 0 (<i>snd</i> is unchanged) to 1 (maximum widening).
 The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
-<dt><code>span(<a name="index1316"></a><a name="index1317"></a><a name="index1318"></a><a name="index1319"></a><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
+<dt><code>span(<a name="index1366"></a><a name="index1367"></a><a name="index1368"></a><a name="index1369"></a><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
 
 <code>(span <i>snd</i> <i>amt</i>)</code> [LISP]<dd>Pan the virtual center channel of a stereo sound, <i>snd</i>,
 by <i>amt</i>, where 0 pans all the way to the left, while 1 pans all the way 
 to the right. The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
-<dt><code>swapchannels(<a name="index1320"></a><a name="index1321"></a><a name="index1322"></a><i>snd</i>)</code> [SAL]<br>
+<dt><code>swapchannels(<a name="index1370"></a><a name="index1371"></a><a name="index1372"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(swapchannels <i>snd</i>)</code> [LISP]<dd>Swap left and right channels in <i>snd</i>, a stereo sound.<br><br>
-<dt><code>prologic(<a name="index1323"></a><a name="index1324"></a><a name="index1325"></a><i>l</i>, <i>c</i>, 
+<dt><code>prologic(<a name="index1373"></a><a name="index1374"></a><a name="index1375"></a><i>l</i>, <i>c</i>, 
 <i>r</i>, <i>s</i>)</code> [SAL]<br>
 
 <code>(prologic <i>l</i> <i>c</i> <i>r</i> <i>s</i>)</code> [LISP]<dd>Encode four monaural <code>SOUND</code>s representing the front-left,
 front-center, front-right, and rear channels, respectively. 
 The return value is a stereo sound, which is a Dolby-encoded mix of the
 four input sounds. <br><br>
-<dt><code>pl-left(<a name="index1326"></a><i>snd</i>)</code> [SAL]<br>
+<dt><code>pl-left(<a name="index1376"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(pl-left <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
 signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front left channel.<br><br>
-<dt><code>pl-center(<a name="index1327"></a><i>snd</i>)</code> [SAL]<br>
+<dt><code>pl-center(<a name="index1377"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(pl-center <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
 signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front center channel.<br><br>
-<dt><code>pl-right(<a name="index1328"></a><i>snd</i>)</code> [SAL]<br>
+<dt><code>pl-right(<a name="index1378"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(pl-right <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
 signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front right channel.<br><br>
-<dt><code>pl-rear(<a name="index1329"></a><i>snd</i>)</code> [SAL]<br>
+<dt><code>pl-rear(<a name="index1379"></a><i>snd</i>)</code> [SAL]<br>
 
 <code>(pl-rear <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
 signal with <i>snd</i>, a <code>SOUND</code>, encoded as the rear, or surround, channel.<br><br>
-<dt><code>pl-pan2d(<a name="index1330"></a><i>snd</i>, <i>x</i>, <i>y</i>)</code> [SAL]<br>
+<dt><code>pl-pan2d(<a name="index1380"></a><i>snd</i>, <i>x</i>, <i>y</i>)</code> [SAL]<br>
 
 <code>(pl-pan2d <i>snd</i> <i>x</i> <i>y</i>)</code> [LISP]<dd>Comparable to Nyquist's
 existing pan function, <code>pl-pan2d</code> provides not only left-to-right
@@ -507,7 +509,7 @@ they are both driven by the same signal. Therefore any sound that is
 panned totally to the rear will be played over both rear speakers. For
 example, it is not possible to play a sound exclusively through the 
 rear left speaker.<br><br>
-<dt><code>pl-position(<a name="index1331"></a><i>snd</i>, <i>x</i>, <i>y</i>, <i>config</i>)</code> [SAL]<br>
+<dt><code>pl-position(<a name="index1381"></a><i>snd</i>, <i>x</i>, <i>y</i>, <i>config</i>)</code> [SAL]<br>
 
 <code>(pl-position <i>snd</i> <i>x</i> <i>y</i> <i>config</i>)</code> [LISP]<dd>The
 position function builds upon speaker panning to allow more abstract
@@ -523,7 +525,7 @@ system that allows x and y coordinates outside of the
 range (0, 1). This model assumes a listener position of (0,0). Each speaker
 has a predefined position as well. The input sound's position,
 relative to the listener, is given by the vector (<i>x</i>,<i>y</i>).<br><br>
-<dt><code>pl-doppler(<a name="index1332"></a><a name="index1333"></a><i>snd</i>, 
+<dt><code>pl-doppler(<a name="index1382"></a><a name="index1383"></a><i>snd</i>, 
 <i>r</i>)</code> [SAL]<br>
 
 <code>(pl-doppler <i>snd</i> <i>r</i>)</code> [LISP]<dd>Pitch-shift moving sounds according to the equation: <i>fr</i> =
@@ -535,8 +537,8 @@ is the first derivative of parameter <i>r</i>, the distance from the listener
 in meters.
 </dl>
 <p>
-<a name = "195"><h3>Drum Machine</h3></a>
-<a name="index1334"></a>
+<a name = "201"><h3>Drum Machine</h3></a>
+<a name="index1384"></a>
 <p>
 The drum machine software in <code>demos/plight</code> deserves further explanation. 
 to use the software, load the code by evaluating:
@@ -590,7 +592,7 @@ example of how to specify sound files and beat patterns.
 <p>
 <dl>
 <dt>
-<code>drum(<a name="index1335"></a><i>tracknum</i>, <i>patternnum</i>, <i>bpm</i>)</code> [SAL]<br>
+<code>drum(<a name="index1385"></a><i>tracknum</i>, <i>patternnum</i>, <i>bpm</i>)</code> [SAL]<br>
 
 <code>(drum <i>tracknum</i> <i>patternnum</i> <i>bpm</i>)</code> [LISP]<dd>Create
 a sound by playing drums sounds associated with track <i>tracknum</i> (a 
@@ -601,10 +603,10 @@ if <i>patternnum</i> is 10,
 then use the pattern specified for <code>beats.10</code>. If the third character
 of this pattern is 3 and <i>tracknum</i> is 5, then on the third beat, play
 the soundfile assigned to <code>track.5.3</code>. This function returns a <code>SOUND</code>.<br><br>
-<dt><code>drum-loop(<a name="index1336"></a><i>snd</i>, <i>duration</i>, <i>numtimes</i>)</code> [SAL]<br>
+<dt><code>drum-loop(<a name="index1386"></a><i>snd</i>, <i>duration</i>, <i>numtimes</i>)</code> [SAL]<br>
 
 <code>(drum-loop <i>snd</i> <i>duration</i> <i>numtimes</i>)</code> [LISP]<dd>Repeat the sound given by <i>snd</i> <i>numtimes</i> times. The repetitions occur at a time offset of <i>duration</i>, regardless of the actual duration of <i>snd</i>. A <code>SOUND</code> is returned.<br><br>
-<dt><code>length-of-beat(<a name="index1337"></a><i>bpm</i>)</code> [SAL]<br>
+<dt><code>length-of-beat(<a name="index1387"></a><i>bpm</i>)</code> [SAL]<br>
 
 <code>(length-of-beat <i>bpm</i>)</code> [LISP]<dd>Given a tempo of 
 <i>bpm</i>, return the duration of the beat in seconds. Note that this software
@@ -612,8 +614,8 @@ has no real notion of beat. A "beat" is just the duration of each character
 in the beat pattern strings. This function returns a <code>FLONUM</code>.
 </dl>
 <p>
-<a name = "196"><h3>Minimoog-inspired Synthesis</h3></a>
-<a name="index1338"></a><a name="index1339"></a><a name="index1340"></a>
+<a name = "202"><h3>Minimoog-inspired Synthesis</h3></a>
+<a name="index1388"></a><a name="index1389"></a><a name="index1390"></a>
 <p>
 The <code>moog.lsp</code> library gives the Nyquist user easy access to "classic"
 synthesizer sounds through an emulation of the Minimoog Synthesizer.
@@ -631,7 +633,7 @@ Controlled Oscillator or VCO found in the original analog Moog.
 The basic functionality of the Minimoog has been implemented, including the
 often-used "glide". The glide feature essentially low-pass filters the control
 voltage sequence in order to create sweeps between notes. 
-Figure <a href = "#196">21</a> is a simplified schematic of the data flow in the Moog. 
+Figure <a href = "#202">21</a> is a simplified schematic of the data flow in the Moog. 
 The control lines have been omitted.
 <p>
 <hr>
@@ -656,7 +658,7 @@ acceptable ranges, and descriptions are shown below. The defaults were
 obtained by experimenting with the official Minimoog software synthesizer
 by Arturia.
 <p>
-<a name = "197"><h4>Oscillator Parameters</h4></a>
+<a name = "203"><h4>Oscillator Parameters</h4></a>
 <p><pre>
 range-osc1(2)
 range-osc2(1)
@@ -694,7 +696,7 @@ volume-osc3(1)
 These parameters control the relative volume of each oscillator. The range
 is any <code>FLONUM</code> greater than or equal to zero.
 <p>
-<a name = "198"><h4>Noise Parameters</h4></a>
+<a name = "204"><h4>Noise Parameters</h4></a>
 <p><pre>
 noiselevel(.05)
 </pre></p>
@@ -702,7 +704,7 @@ noiselevel(.05)
 This parameter controls the relative volume of the noise source. The range
 is any <code>FLONUM</code> greater than or equal to zero.
 	
-<a name = "199"><h4>Filter Parameters</h4></a>
+<a name = "205"><h4>Filter Parameters</h4></a>
 <p><pre>
 filter-cutoff(768)
 </pre></p>
@@ -750,7 +752,7 @@ filter-sustain(.8)
 Filter sustain controls the percentage of the filter cutoff frequency that
 the filter settles on following the sweep. The range is 0 to 1.
 	
-<a name = "200"><h4>Amplitude Parameters</h4></a>
+<a name = "206"><h4>Amplitude Parameters</h4></a>
 <p><pre>
 amp-attack(.01)
 </pre></p>
@@ -782,7 +784,7 @@ This parameter controls the amplitude envelope release time, i.e. the time
 it takes between the sustain volume and 0 once the note ends. 
 The duration controls the overall length of the sound. The range of <code>amp-release</code> is any <code>FLONUM</code> greater than zero (seconds).
 <p>
-<a name = "201"><h4>Other Parameters</h4></a>
+<a name = "207"><h4>Other Parameters</h4></a>
 <p><pre>
 glide(0)
 </pre></p>
@@ -792,7 +794,7 @@ glide knob on a Minimoog. A higher value corresponds to a lower cutoff
 frequency and hence a longer "glide" between notes. A value of 0
 corresponds to no glide. The range is zero to 10.
 <p>
-<a name = "202"><h4>Input Format</h4></a>
+<a name = "208"><h4>Input Format</h4></a>
 A single note or a series of notes can be input to the Moog instrument
 by defining a list with the following format:
 <p><pre>
@@ -810,7 +812,7 @@ one note can sound at a time. The release section of the amplifier is
 triggered when the articulation is less than 1 at the time 
 (<i>duration</i> * <i>articulation</i>).
 <p>
-<a name = "203"><h4>Sample Code/Sounds</h4></a>
+<a name = "209"><h4>Sample Code/Sounds</h4></a>
 <p>
 <b>Sound 1 (default parameters):</b>
 <p><pre>

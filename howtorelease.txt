@@ -10,6 +10,10 @@ and then makefile.lsp should be used to generate a new
 Makefile as well as sndfn.cl and sndfn.wcl. Run intgen
 under Windows (or Mac) using intgen @sndfn.wcl
 
+(Alternatively, with the new CMake files, the XLISP_C_Interfaces
+project will build the interface files. You should check that they
+appear in the right place or if not they should be manually copied.)
+
 ON EITHER WINDOWS OR MAC
 
 Edit Readme.txt to contain correct version number at top.

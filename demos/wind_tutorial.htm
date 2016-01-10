@@ -1,17 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-<title>Wind Tutorial</title>
-</head>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+    <title>Wind Tutorial</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body>
+    <h1>Wind Tutorial</h1>
+    <p>This page describes a "wind" effect created by Alex. The basic
+      function is as follows.<br>
+    </p>
+    <p><i>Note: all examples use SAL syntax followed by Lisp syntax in a
+        smaller font. Since SAL does not support optional parameters,
+        keyword parameters are used instead, so these implementations
+        are not exactly equivalent.</i><br>
+    </p>
+    <pre>function wind(dur: 3, scal: 3, cps: 590, bw: 40)
+  return (env(0.07, 0.08, 0.1, 1, 0.6, 0.8, 1) *
+	  (reson(scal * noise(), cps, bw, 2) +
+	   reson(scal * 1.13 * noise(), 
+                 cps * pwl(0, 0.74, 0.2, 0.96, 0.5, 0.8, <br>                           0.75, 1.16, 0.9, 0.97, 1, 0.74, 1),
+                 bw * 1.042, 2))) ~ dur
 
-<body>
-
-<h1>Wind Tutorial</h1>
-
-<p>This page describes a &quot;wind&quot; effect created by Alex. The basic function is as
-follows:</p>
-
-<pre>(defun wind (&amp;optional (dur 3) (scal 3) (cps 590) (bw 40))
+<small><small>(defun wind (&amp;optional (dur 3) (scal 3) (cps 590) (bw 40))
   (stretch dur
     (mult (env 0.07 0.08 0.1 1 0.6 0.8 1)
 	  (sum 
@@ -19,25 +32,31 @@ follows:</p>
 	    (reson (scale (mult scal 1.13) (noise)) 
                    (mult cps (pwl 0 0.74 0.2 0.96 0.5 0.8 0.75 1.16 0.9 0.97 1 0.74 1))
                    (mult bw 1.042)
-                   2)))))</pre>
+                   2)))))</small></small></pre>
+    <p>The basic idea is to use bandpassed noise to create the sound of
+      wind. In this example,
+      two bandpass filters are added together. The first uses a fixed
+      center frequency and
+      bandwidth, and the second uses a piece-wise linear function to
+      control the center
+      frequency. The entire sound is multiplied by an envelope and
+      stretched to the desired
+      duration. Note how several optional parameters can be used to
+      change the default behavior.</p>
+    <p>A slight elaboration of the wind function uses several copies of
+      wind in sequence with
+      slight overlap:</p><pre>function multiwind()
+  return simrep(i, 4, wind() @ (i * 2.9))</pre>
 
-<p>The basic idea is to use bandpassed noise to create the sound of wind. In this example,
-two bandpass filters are added together. The first uses a fixed center frequency and
-bandwidth, and the second uses a piece-wise linear function to control the center
-frequency. The entire sound is multiplied by an envelope and stretched to the desired
-duration. Note how several optional parameters can be used to change the default behavior.</p>
+    
+<pre><small><small>(defun multiwind ()
+  (simrep (i 4) (at (* i 2.9) (wind))))</small></small></pre><small><small>
 
-<p>A slight elaboration of the wind function uses several copies of wind in sequence with
-slight overlap:</p>
-
-<pre>(defun multiwind ()
-  (simrep (i 4) (at (* i 2.9) (wind))))</pre>
-
-<p>One problem with this approach is that the wind sound becomes periodic. This could be
-solved by using noise or random numbers to generate the center frequency variation rather
-than a fixed envelope.</p>
-
-<p>&nbsp;</p>
-</body>
-</html>
-
+    
+</small></small>One problem with this approach is that the wind sound becomes
+      periodic. This could be
+      solved by using noise or random numbers to generate the center
+      frequency variation rather
+      than a fixed envelope.<br><br>
+  
+</body></html>

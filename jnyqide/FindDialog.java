@@ -54,14 +54,13 @@ class FindDialog extends Dialog implements WindowListener, ActionListener
         p1.setLayout(new FlowLayout());
         p1.add(new Label("Find:"));
 
-
         pattern = new TextField();
         pattern.setColumns(35);
 
-	if (tf.pane.getSelectedText() == null)           // BWP
-	    pattern.setText(mainFrame.findPattern);
+        if (tf.pane.getSelectedText() == null)           // BWP
+            pattern.setText(mainFrame.findPattern);
         else                                             // BWP
-	    pattern.setText(tf.pane.getSelectedText());  // BWP
+            pattern.setText(tf.pane.getSelectedText());  // BWP
 
         p1.add(pattern);
         p1.doLayout();
@@ -76,7 +75,7 @@ class FindDialog extends Dialog implements WindowListener, ActionListener
         p2.add(cbutton);
         add("South",p2);
 
-        Dimension size = new Dimension(400, 110);
+        Dimension size = new Dimension(450, 100);
         setSize(size);
 	    Point tfloc = tf.getLocation();
 	    Point mfloc = mainFrame.getLocation();
@@ -96,24 +95,23 @@ class FindDialog extends Dialog implements WindowListener, ActionListener
     public void windowClosing(WindowEvent event) {
         mainFrame.findPattern = pattern.getText();
         nyquistFile.lastFound = pattern.getText();  // BWP
-	dispose();
+        dispose();
     }
 
-    public void actionPerformed(ActionEvent evt)
-    {
+    public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == cbutton) {
             mainFrame.findPattern = pattern.getText();
-	    nyquistFile.lastFound = pattern.getText();
+            nyquistFile.lastFound = pattern.getText();
             dispose();
             return;
         }
 
-        if (evt.getSource() == fbutton)
+        if (evt.getSource() == fbutton) {
             if (!nyquistFile.find(pattern.getText())) {
                 NotFoundDialog nf = new NotFoundDialog(mainFrame, strings, 
 						       getLocation());
                 nf.setVisible(true);
             }
+        }
     }
-
 }

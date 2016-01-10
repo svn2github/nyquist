@@ -1,3 +1,4 @@
+  { "SND-SET-MAX-AUDIO-MEM",  S, xlc_snd_set_max_audio_mem}, 
   { "SND-SET-LATENCY",  S, xlc_snd_set_latency}, 
   { "SOUNDP",  S, xlc_soundp}, 
   { "HZ-TO-STEP",  S, xlc_hz_to_step}, 
@@ -29,6 +30,7 @@
   { "SND-INVERSE",  S, xlc_snd_inverse}, 
   { "SND-LPANAL",  S, xlc_snd_lpanal}, 
   { "SND-MULTISEQ",  S, xlc_snd_multiseq}, 
+  { "SND-PHASEVOCODER",  S, xlc_snd_phasevocoder}, 
   { "SND-RESAMPLE",  S, xlc_snd_resample}, 
   { "SND-RESAMPLEV",  S, xlc_snd_resamplev}, 
   { "SND-FROM-ARRAY",  S, xlc_snd_from_array}, 

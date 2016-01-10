@@ -3,22 +3,23 @@
  * nyqsrc/compose.h, nyqsrc/convolve.h, 
  * nyqsrc/downsample.h, nyqsrc/fft.h, nyqsrc/inverse.h, 
  * nyqsrc/lpanal.h, nyqsrc/multiseq.h, 
- * nyqsrc/nyq-osc-server.h, nyqsrc/resamp.h, 
- * nyqsrc/resampv.h, nyqsrc/samples.h, nyqsrc/sliderdata.h, 
- * nyqsrc/sndmax.h, nyqsrc/sndread.h, nyqsrc/sndseq.h, 
- * nyqsrc/sndsliders.h, nyqsrc/stoponzero.h, 
- * nyqsrc/trigger.h, nyqsrc/yin.h, tran/abs.h, 
- * tran/allpoles.h, tran/alpass.h, tran/alpasscv.h, 
- * tran/alpassvc.h, tran/alpassvv.h, tran/amosc.h, 
- * tran/areson.h, tran/aresoncv.h, tran/aresonvc.h, 
- * tran/aresonvv.h, tran/atone.h, tran/atonev.h, 
- * tran/biquadfilt.h, tran/buzz.h, tran/chase.h, 
- * tran/clip.h, tran/congen.h, tran/const.h, 
- * tran/coterm.h, tran/delaycc.h, tran/delaycv.h, 
- * tran/eqbandvvv.h, tran/exp.h, tran/fmfb.h, 
- * tran/fmfbv.h, tran/fmosc.h, tran/follow.h, 
- * tran/fromarraystream.h, tran/fromobject.h, tran/gate.h, 
- * tran/ifft.h, tran/instrbanded.h, tran/instrbow.h, 
+ * nyqsrc/nyq-osc-server.h, nyqsrc/phasevocoder.h, 
+ * nyqsrc/resamp.h, nyqsrc/resampv.h, nyqsrc/samples.h, 
+ * nyqsrc/sliderdata.h, nyqsrc/sndmax.h, nyqsrc/sndread.h, 
+ * nyqsrc/sndseq.h, nyqsrc/sndsliders.h, 
+ * nyqsrc/stoponzero.h, nyqsrc/trigger.h, nyqsrc/yin.h, 
+ * tran/abs.h, tran/allpoles.h, tran/alpass.h, 
+ * tran/alpasscv.h, tran/alpassvc.h, tran/alpassvv.h, 
+ * tran/amosc.h, tran/areson.h, tran/aresoncv.h, 
+ * tran/aresonvc.h, tran/aresonvv.h, tran/atone.h, 
+ * tran/atonev.h, tran/biquadfilt.h, tran/buzz.h, 
+ * tran/chase.h, tran/clip.h, tran/congen.h, 
+ * tran/const.h, tran/coterm.h, tran/delaycc.h, 
+ * tran/delaycv.h, tran/eqbandvvv.h, tran/exp.h, 
+ * tran/fmfb.h, tran/fmfbv.h, tran/fmosc.h, 
+ * tran/follow.h, tran/fromarraystream.h, 
+ * tran/fromobject.h, tran/gate.h, tran/ifft.h, 
+ * tran/instrbanded.h, tran/instrbow.h, 
  * tran/instrbowedfreq.h, tran/instrclar.h, 
  * tran/instrclarall.h, tran/instrclarfreq.h, 
  * tran/instrflute.h, tran/instrfluteall.h, 
@@ -57,6 +58,19 @@ extern LVAL RSLT_sym;
 #include "sndfile.h"
 
 #include "sound.h"
+
+/* xlc_snd_set_max_audio_mem -- interface to C routine snd_set_max_audio_mem */
+/**/
+LVAL xlc_snd_set_max_audio_mem(void)
+{
+    long arg1 = getfixnum(xlgafixnum());
+    long result;
+
+    xllastarg();
+    result = snd_set_max_audio_mem(arg1);
+    return cvfixnum(result);
+}
+
 
 /* xlc_snd_set_latency -- interface to C routine snd_set_latency */
 /**/
@@ -499,6 +513,25 @@ LVAL xlc_snd_multiseq(void)
 
 
 #include "nyq-osc-server.h"
+
+#include "phasevocoder.h"
+
+/* xlc_snd_phasevocoder -- interface to C routine snd_phasevocoder */
+/**/
+LVAL xlc_snd_phasevocoder(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    sound_type arg2 = getsound(xlgasound());
+    long arg3 = getfixnum(xlgafixnum());
+    long arg4 = getfixnum(xlgafixnum());
+    long arg5 = getfixnum(xlgafixnum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_phasevocoder(arg1, arg2, arg3, arg4, arg5);
+    return cvsound(result);
+}
+
 
 #include "resamp.h"
 

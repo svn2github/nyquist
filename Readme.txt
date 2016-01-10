@@ -1,5 +1,5 @@
 README file for Nyquist Version 3.10
-18 Mar 2015
+10 Jan 2016
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -26,6 +26,19 @@ other versions of Unix. For details, see one of these files:
 
 IMPLEMENTATION STATUS
 =====================
+
+Version 3.10 provides:
+    phasevocoder -- new phase vocoder function
+    pv-pitch-time -- phase vocoder + resampling for independent pitch
+        and speed control
+    convolve -- new fast convolution
+    interactive control of sounds with make-slider-panel,
+        close-slider-panel, make-slider, make-button, slider,
+        lpslider, get-slider-value, snd-slider, stop-on-zero, trigger,
+        snd-stop-on-zero, and snd-trigger functions
+    bug fix to snd-down (called by force-srate) that could crash Nyquist
+    adjustable upper limit on memory allocated for sounds, see
+        snd-set-max-audio-mem function
 
 Version 3.09 provides:
     Various bug fixes

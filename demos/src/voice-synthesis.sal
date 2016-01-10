@@ -1,0 +1,261 @@
+;---------------------------------------------------------------------------
+; Nyquist voice synthesis instrument by Eduardo Reck Miranda
+; SAL translation by Roger B. Dannenberg
+;
+; Implements a geometrical articulator for tongue position (h p) and 
+; lips rounding (r) 
+;
+;---------------------------------------------------------------------------
+; Geometrical articulator: the following FORMx functions estimates the formant
+; values from the positions of the three articulators p h and r, where:
+; p = horizontal position of the tongue: 0.0 = front and 1.0 = back 
+; h = vertical position of the tongue: 0.0 = low and 1.0 = high
+; r = rounding of the lips: 0.0 = spread -> 1.0 rounded
+;---------------------------------------------------------------------------
+; FORM1: converts p-h-r articulators to first formant frequency
+;---------------------------------------------------------------------------
+function form1(p, h, r)
+  return ((-392 + 392 * r) * expt(h, 2) +
+          (596 - 668 * r) * h +
+          (-146 + 166 * r)) * expt(p, 2) +
+         ((348 - 348 * r) * expt(h, 2) +
+          (-494 + 606 * r) * h +
+          (141 - 175 * r)) * p +
+         ((340 - 72 * r) * expt(h, 2) +
+          (-796 + 108 * r) * h +
+          (708 - 38 * r))
+
+;---------------------------------------------------------------------------
+; FORM2: converts p-h-r articulators to second formant frequency
+;---------------------------------------------------------------------------
+function form2(p, h, r)
+  return ((-1200 + 1208 * r) * expt(h, 2) +
+          (1320 - 1328 * r) * h +
+          (118 - 158 * r)) * expt(p, 2) +
+         ((1864 - 1488 * r) * expt(h, 2) +
+          (-2644 + 1510 * r) * h +
+          (-561 + 221 * r)) * p +
+         ((-670 + 490 * r) * expt(h, 2) +
+          (1355 - 697 * r) * h +
+          (1517 - 117 * r))
+
+;---------------------------------------------------------------------------
+; FORM3: converts p-h-r articulators to third formant frequency
+;---------------------------------------------------------------------------
+function form3(p, h, r)
+  return ((604 - 604 * r) * expt(h, 2) +
+          (1038 - 1178 * r) * h +
+          (246 + 566 * r)) * expt(p, 2) +
+         ((-1150 + 1262 * r) * expt(h, 2) +
+          (-1443 + 1313 * r) * h +
+          (-317 - 483 * r)) * p +
+         ((1130 - 836 * r) * expt(h, 2) +
+          (-315 + 44 * r) * h +
+          (2427 - 127 * r))
+
+;---------------------------------------------------------------------------
+; FORM4: converts p-h-r articulators to fourth formant frequency
+;---------------------------------------------------------------------------
+function form4(p, h, r)
+  return ((-1120 + 16 * r) * expt(h, 2) +
+          (1696 - 180 * r) * h +
+          (500 + 522 * r)) * expt(p, 2) +
+         ((-140 + 240 * r) * expt(h, 2) +
+          (-578 + 214 * r) * h +
+          (-692 - 419 * r)) * p +
+         ((1480 - 602 * r) * expt(h, 2) +
+          (-1220 + 289 * r) * h +
+          (3678 - 178 * r))
+
+;---------------------------------------------------------------------------
+; ADSR-SMOOTH: a standard ADSR envelope
+;---------------------------------------------------------------------------
+function adsr-smooth(signal, dur)
+	 return signal * env(0.1, 0.2, 0.5, 1.0, 0.8, 0.4, dur)
+;---------------------------------------------------------------------------
+; VIBRATO: generates vibrato
+; vib-rate = vibrato rate in Hz
+; dur = duration in seconds
+;---------------------------------------------------------------------------
+function vibrato(vib-rate, dur)
+	return lfo(vib-rate, dur)
+
+;---------------------------------------------------------------------------
+; PULSE-TABLE: build table for generating a pulse signal
+; harm = number of harmonics
+;---------------------------------------------------------------------------
+function pulse-table(harm)
+  return abs-env(pulse-table-2(harm)) ; prevent timewarping in the following
+
+function pulse-table-2(harm)
+  begin
+    with table = build-harmonic(1, 2048)
+    if harm > 1 then  ; sum remaining harmonics
+      begin
+        set harm = harm - 1
+        loop for i from 0 below harm
+          set table = table + build-harmonic(i + 1, 2048)
+        end
+      end
+    return table
+  end
+
+;---------------------------------------------------------------------------
+; PULSE-WITH-VIBRATO: generate pulse with vibrato
+; step = pitch in steps
+; duration = duration in seconds
+; vib-rate = vibrato rate in Hz
+;---------------------------------------------------------------------------
+function pulse-with-vibrato(step, duration, vib-rate)
+  begin
+    with freq = step-to-hz(step),
+         harm = truncate(22050 / (2 * freq))
+    set table = (1.0 / harm) * pulse-table(harm)
+    return fmosc(step, vibrato(vib-rate, duration), list(table, hz-to-step(1), t))
+end
+
+;---------------------------------------------------------------------------
+; VOICING-SOURCE: generate voicing source: pulse with vibrato + LPFs
+; step = pitch in steps
+; duration = duration in seconds
+; vib-rate = vibrato rate in Hz
+;---------------------------------------------------------------------------
+function voicing-source(step, duration, vib-rate)
+  return lp(lp(pulse-with-vibrato(step, duration, vib-rate),
+		       1.414 * 2 * step-to-hz(step)),
+            1.414 * 4 * step-to-hz(step))
+	
+;---------------------------------------------------------------------------
+; NOISE-SOURCE: generate noise source: noise + offset oscillator + LPF
+; step = pitch in steps
+; duration = duration in seconds
+; vib-rate = vibrato rate in Hz
+;---------------------------------------------------------------------------
+function noise-source(step, duration, vib-rate)
+  return lp(noise(duration) + 
+		    fmosc(step, vibrato(vib-rate, duration), 8000))
+
+;---------------------------------------------------------------------------
+; SOURCE: generate source signal: voicing + noise sources
+; freq = fundamental frequency in Hz
+; duration = duration in seconds
+; vib-rate = vibrato rate in Hz
+; voicing-scale = percentage of voicing in the resulting signal (0.0 -> 1.0)
+; noise-scale = percentage of noise in the resulting signal (0.0 -> 1.0)
+;---------------------------------------------------------------------------
+function source(freq, duration, vib-rate, voicing-scale, noise-scale)
+  return voicing-scale * voicing-source(hz-to-step(freq), duration, vib-rate) +
+         noise-scale * noise-source(hz-to-step(freq), duration, vib-rate)
+
+;---------------------------------------------------------------------------
+; MAKE-SPECTRUM: formant filters
+; freq = fundamental frequency in Hz
+; dur = duration in seconds
+; vib-rate = vibrato rate in Hz
+; v-scale = amplitude scaling for the voicing source
+; n-scale = amplitude scaling for the noise source 
+; p = horizontal position of the tongue (0.0 = front -> 1.0 = back) 
+; h = vertical position of the tongue (0.0 = low -> 1.0 = high)
+; r = rouding of the lips (0.0 = spread -> 1.0 = rounded)
+;---------------------------------------------------------------------------
+function make-spectrum(freq, dur, vib-rate, v-scale, n-scale, p, h, r)
+  begin
+    with src = source(freq, dur, vib-rate, v-scale, n-scale)
+    return reson(src, form1(p, h, r), 50, 1) +
+           reson(scale-db(-10, src), form2(p, h, r), 70, 1) +
+           reson(scale-db(-14, src), form3(p, h, r), 110, 1) +
+           reson(scale-db(-20, src), form4(p, h, r), 250, 1)
+  end
+
+;---------------------------------------------------------------------------
+; SYNTHESISE: the synthesise function
+; Simplified version of the instrument used by the agents discussed in Chapter 6.
+; f0 = pitch frequency
+; w1 = amplitude of voicing source (min = 0.0 max = 1.0)
+; w2 = amplitude of noise source (min = 0.0 max = 1.0)
+; a = horizontal position of the tongue (0.0 = front -> 1.0 = back) 
+; b = vertical position of the tongue (0.0 = low -> 1.0 = high)
+; c = rouding of the lips (0.0 = spread -> 1.0 = rounded)
+; fm = vibrato rate (in Hz)
+; h = duration in seconds
+;---------------------------------------------------------------------------
+function synthesise(f0, w1, w2, a, b, c, fm, h)
+  return adsr-smooth(make-spectrum(f0, h, fm, w1, w2, a, b, c), h)
+		
+;=== The code for the instrument ends here ===
+
+;---------------------------------------------------------------------------
+; Test the SYNTHESISE function with different positions of the articulators
+;
+; Running steps:
+; 1 - run Nyquist
+; 2 - load "articulator.lsp"
+; 3 - type (play (vowel-1)) to synthesise the first test, and so on
+;---------------------------------------------------------------------------
+function vowel-1()
+  return synthesise(220, 1.0, 0.005, 0.0, 0.0, 0.0, 5.6, 1.0)
+
+function vowel-2()
+  return synthesise(220, 1.0, 0.005, 0.0, 0.0, 1.0, 5.6, 1.0)
+
+function vowel-3()
+  return synthesise(220, 1.0, 0.005, 0.5, 0.0, 0.0, 5.6, 1.0)
+
+function vowel-4()
+  return synthesise(220, 1.0, 0.005, 0.5, 0.0, 1.0, 5.6, 1.0)
+
+function vowel-5()
+  return synthesise(220, 1.0, 0.005, 1.0, 0.0, 0.0, 5.6, 1.0)
+
+function vowel-6()
+  return synthesise(220, 1.0, 0.005, 1.0, 0.0, 1.0, 5.6, 1.0)
+
+function vowel-7()
+  return synthesise(220, 1.0, 0.005, 0.0, 0.5, 0.0, 5.6, 1.0)
+
+function vowel-8()
+  return synthesise(220, 1.0, 0.005, 0.0, 0.5, 1.0, 5.6, 1.0)
+
+function vowel-9()
+  return synthesise(220, 1.0, 0.005, 0.5, 0.5, 0.0, 5.6, 1.0)
+
+function vowel-10()
+  return synthesise(220, 1.0, 0.005, 0.5, 0.5, 1.0, 5.6, 1.0)
+
+function vowel-11()
+  return synthesise(220, 1.0, 0.005, 1.0, 0.5, 0.0, 5.6, 1.0)
+
+function vowel-12()
+  return synthesise(220, 1.0, 0.005, 1.0, 0.5, 1.0, 5.6, 1.0)
+
+function vowel-13()
+  return synthesise(220, 1.0, 0.005, 0.0, 1.0, 0.0, 5.6, 1.0)
+
+function vowel-14()
+  return synthesise(220, 1.0, 0.005, 0.0, 1.0, 1.0, 5.6, 1.0)
+
+function vowel-15()
+  return synthesise(220, 1.0, 0.005, 0.5, 1.0, 0.0, 5.6, 1.0)
+
+function vowel-16()
+  return synthesise(220, 1.0, 0.005, 0.5, 1.0, 1.0, 5.6, 1.0)
+
+function vowel-17()
+  return synthesise(220, 1.0, 0.005, 1.0, 1.0, 0.0, 5.6, 1.0)
+
+function vowel-18()
+  return synthesise(220, 1.0, 0.005, 1.0, 1.0, 1.0, 5.6, 1.0)
+ 
+;; play everything
+function vowel-n(n) return funcall(intern(format(nil, "VOWEL-~A", n)))
+
+function play-all-vowels()
+  begin
+    autonorm-off()
+    loop for i from 0 below 18
+      play 20 * vowel-n(i + 1)
+    end
+    autonorm-on()
+  end
+
+; play-all-vowels() will play everything in sequence

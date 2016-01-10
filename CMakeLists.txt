@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.8)
-
+project(nyquist)
 find_package(Java COMPONENTS Development)
 include(UseJava)
 
@@ -393,21 +393,9 @@ else()
     message(FATAL_ERROR "Could not find sndfile.h") 
 endif()
 
-# portaudio
-
-find_path(PORTAUDIO_INCLUDE_PATH portaudio.h)
-find_library(PORTAUDIO_LIBRARY portaudio)
-
 if(NOT PORTAUDIO_LIBRARY)
   message(FATAL_ERROR "Nyquist requires the portaudio library")
 endif()
-
-if(PORTAUDIO_INCLUDE_PATH)
-  include_directories(${PORTAUDIO_INCLUDE_PATH})
-else()
-    message(FATAL_ERROR "Could not find portaudio.h") 
-endif()
-
 
 # liblo
 
@@ -619,6 +607,7 @@ set(nyqsrc_SRCS
   nyqsrc/lpanal.c 
   nyqsrc/multiseq.c 
   nyqsrc/nyq-osc-server.c 
+  nyqsrc/phasevocoder.c 
   nyqsrc/resamp.c 
   nyqsrc/resampv.c 
   nyqsrc/samples.c 
@@ -638,7 +627,6 @@ set(nyquist_SRCS
   nyqsrc/local.c
   nyqsrc/handlers.c
   nyqsrc/multiread.c
-  nyqsrc/phasevocoder.c 
   nyqsrc/pvshell.c 
   nyqsrc/stats.c
   nyqsrc/ffilterkit.c
@@ -649,6 +637,8 @@ set(nyquist_SRCS
   ffts/src/fftlib.c
   ffts/src/fftext.c
   ffts/src/matlib.c
+  cmupv/src/cmupv.c 
+  cmupv/src/internal.c 
   snd/ieeecvt.c)
 
 
@@ -673,7 +663,11 @@ file(GLOB tran_headers "${CMAKE_CURRENT_SOURCE_DIR}/tran/*.h")
 file(GLOB cmt_headers "${CMAKE_CURRENT_SOURCE_DIR}/cmt/*.h")
 file(GLOB nyqstk_headers "${CMAKE_CURRENT_SOURCE_DIR}/nyqstk/*.h")
 file(GLOB nyquist_headers "${CMAKE_CURRENT_SOURCE_DIR}/nyqsrc/*.h")
-
+set(nyquist_headers ${nyquist_headers} 
+                    ${CMAKE_CURRENT_SOURCE_DIR}/ffts/src/fftext.h 
+                    ${CMAKE_CURRENT_SOURCE_DIR}/ffts/src/fftlib.h 
+                    ${CMAKE_CURRENT_SOURCE_DIR}/cmupv/src/cmupv.h
+                    ${CMAKE_CURRENT_SOURCE_DIR}/cmupv/src/internal.h) 
 #file(GLOB liblo_headers "${CMAKE_CURRENT_SOURCE_DIR}/liblo/*.h")  
 #file(GLOB sndfile_headers "${CMAKE_CURRENT_SOURCE_DIR}/nylsf/sndfile.h")
 
@@ -691,7 +685,7 @@ add_executable(ny ${nyquist_SRCS})
 
 #include directories 
 target_include_directories(ny PRIVATE  
-    ffts/src snd cmt xlisp tran nyqsrc nyqstk nyqstk/include) 
+    ffts/src snd cmt xlisp tran nyqsrc nyqstk nyqstk/include cmupv/src) 
 
 if(UNIX)
     target_include_directories(ny PRIVATE sys/unix)
@@ -761,7 +755,7 @@ else()
       add_custom_target(jNyqIDE ALL 
           comp-ide.bat
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-	COMMENT "Building jnyqide/jNyqIDE.jar")
+        COMMENT "Building jnyqide/jNyqIDE.jar")
       add_dependencies(jNyqIDE ny)
     endif(UNIX)
   endif(APPLE)
@@ -843,6 +837,6 @@ add_executable(intgen misc/intgen2.c misc/cmdline.c)
 target_include_directories(intgen PRIVATE sys/unix cmt)
 
 add_custom_target(XLISP_C_Interfaces
-  intgen nyqsrc/sndfnint ${sndfnint_args}
-  COMMAND intgen nyqsrc/seqfnint ${seqfnint_args}
+  COMMAND intgen nyqsrc/sndfnint ${sndfnint_args}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   SOURCES ${sndfnint_args} ${seqfnint_args})

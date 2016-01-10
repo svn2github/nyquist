@@ -6,6 +6,8 @@ the @code(.h) file.  Results are converted into the appropriate XLISP type and
 returned to the calling XLISP function.  Intgen lets you add C functions
 into the XLISP environment with very little effort.
 
+@section(Overview)
+
 The interface generator will take as command-line input:
 @begin(itemize)
 the name of the @code(.c) file to generate (do not include the @code(.c) extension; e.g. write

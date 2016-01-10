@@ -77,17 +77,7 @@ You can also build Nyquist from sources, as described below.
 How To Build Nyquist on Mac OS X
 --------------------------------
 You need to install Xcode, Apple's free software development system
-for OS X.
-
-Xcode 4.3.2 and later
--------
-The nyquist project for Xcode v4 is in nyquist/macosxproject/nyquist.xcodeproj
-
-To build Nyquist or NyquistIDE:
- - Open nyquist.wxworkspace in Xcode
- - Set the active target to "Nyquist" or "NyquistIDE"
- - Click on "build active target"
- - ny or NyquistIDE will be produced in a temporary folder managed by Xcode.
-   To find the files Right click on the Products/NyquistIDE.app of the project 
-   navigator, and select "reveal in finder". 
+for OS X, and CMake for OS X. Use CMake to build the xcode project.
+The "source code" directory is nyquist/macosxproject.
+"Where to build the binaries" is also nyquist/macosxproject.
 

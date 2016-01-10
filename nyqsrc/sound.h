@@ -12,6 +12,8 @@
 extern long sound_frames;
 extern double sound_srate;
 
+extern long max_sample_blocks;
+
 #if OSC
 extern int nosc_enabled; /* enable polling for OSC messages */
 #endif
@@ -316,28 +318,27 @@ typedef struct table_struct {
 #define UNKNOWN (-10-max_sample_block_len)
 
 typedef struct sound_struct {
-    sample_block_type   (*get_next)(struct sound_struct *snd, long *cnt);
-    time_type           time;   /* logical starting time */
-    time_type           t0;     /* quantized time of first sample */
-    long                stop;  /* stop (clipping) sample no. */
-    time_type           true_t0;    /* exact time of first sample */
-    rate_type           sr;     /* sample rate */
-    long                current;        /* current sample number,
-                                         if negative, then the first 
-                                         -current samples must be dropped
-                                         in order to find the first sample */
-    long                logical_stop_cnt; /* log stop sample no, -1=unknwn */
-    snd_list_type       list;   /* sample block list, starting at curr. samp */
-    sample_type         scale;  /* scale factor for the result */
-    long                prepend_cnt;    /* how many zeros to prepend */
+    sample_block_type (*get_next)(struct sound_struct *snd, long *cnt);
+    time_type         time;    /* logical starting time */
+    time_type         t0;      /* quantized time of first sample */
+    long              stop;    /* stop (clipping) sample no. */
+    time_type         true_t0; /* exact time of first sample */
+    rate_type         sr;      /* sample rate */
+    long              current; /* current sample number,
+                                  if negative, then the first 
+                                  -current samples must be dropped
+                                  in order to find the first sample */
+    long              logical_stop_cnt; /* log stop sample no, -1=unknwn */
+    snd_list_type     list;    /* sample block list, starting at curr. samp */
+    sample_type       scale;   /* scale factor for the result */
+    long              prepend_cnt; /* how many zeros to prepend */
     /* function to use as get_next after prepended zeros are generated: */
-    sample_block_type   (*after_prepend)
-                        (struct sound_struct * snd, long * cnt);
-    table_type table;   /* pointer to table-ized version of this sound */
-    long *extra;        /* used for extra state information, first word of extra
-			   state should be the length of the extra state 
-			   (see sound_unref())
-                         */
+    sample_block_type (*after_prepend)
+                      (struct sound_struct * snd, long * cnt);
+    table_type table; /* pointer to table-ized version of this sound */
+    long *extra;      /* used for extra state information, first word of extra
+                              state should be the length of the extra state 
+                              (see sound_unref()) */
 } sound_node, *sound_type;
 
 /* convert number of samples to memory size: */
@@ -350,6 +351,9 @@ extern sample_block_type internal_zero_block;
 extern snd_list_type zero_snd_list;
 
 extern sound_type printing_this_sound;  /* debugging global */
+
+long snd_set_max_audio_mem(long m);
+/* LISP: (SND-SET-MAX-AUDIO-MEM FIXNUM) */
 
 extern double sound_latency; /* controls output latency */
 double snd_set_latency(double latency); 

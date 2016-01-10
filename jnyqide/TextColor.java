@@ -29,7 +29,8 @@ public class TextColor {
     static final Color COLOR_BUILTIN = Color.blue;
     static final Color COLOR_STRING = new Color(130, 140, 0); // brown
     static final Color COLOR_ERROR = new Color(250, 0, 0);
-    static final Color COLOR_COMMAND = new Color(0, 0, 196); // darkBlue;
+    static final Color COLOR_COMMAND = new Color(96, 0, 196); // purple
+    // COLOR_COMMAND used to be new Color(0, 0, 180); // darkBlue;
     static final Color COLOR_RESERVED = new Color(96, 0, 196); // purple
     static final Color COLOR_KEYWORD = new Color(255, 128, 128); // pink
     static final Color COLOR_HIGHLIGHT_FG = Color.black;

@@ -314,7 +314,8 @@ public class NyquistFile extends JNonHideableInternalFrame
             } else if (e.getActionCommand().equals("next")) {
                 if (!lastFound.equals("")) find(lastFound);
             } else if (e.getActionCommand().equals("replace")) {
-                ReplaceDialog replaceDialog = new ReplaceDialog(thisFile, myParent);
+                ReplaceDialog replaceDialog =
+                        new ReplaceDialog(thisFile, myParent);
         } else if (e.getActionCommand().equals("select expression")) {
             myParent.doEditSelectExpression(e);
             // Context Menu Options

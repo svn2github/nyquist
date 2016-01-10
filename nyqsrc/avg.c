@@ -233,7 +233,7 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
        this could be very big and cause integer overflow, so here, we
        prevent the overflow by limiting stepsize */
     if (stepsize > (0x7FFFFFFF / max_sample_block_len)) {
-        xlerror("In SND-AVG, stepsize is too big", s_unbound);
+        xlfail("In SND-AVG, stepsize is too big");
     }
 
     falloc_generic(susp, avg_susp_node, "snd_make_avg");
@@ -274,7 +274,7 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
     if (!susp->buffer) {
         sound_unref(susp->s);
         ffree_generic(susp, sizeof(avg_susp_node), "avg_free");
-        xlerror("memory allocation failed in SND-AVG", s_unbound);
+        xlfail("memory allocation failed in SND-AVG");
     }
     susp->fillptr = susp->buffer;
     susp->endptr = susp->buffer + buffersize;
