@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>Phase Vocoder Tutorial</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body bgcolor="#FFFFFF">
+    <h1>Phase Vocoder Tutorial </h1>
+    <p><b>Roger B. Dannenberg</b></p>
+    <p>This page describes how to use the phase vocoder in Nyquist. The
+      phasevocoder is used for time stretching a signal without changing
+      the pitch, and it can be combined with resampling to change both
+      time and pitch independently.<br>
+    </p>
+    <p>The phase vocoder function is <tt>phasevocoder</tt>, which is
+      called as follows:<br>
+    </p>
+    <blockquote><tt>phasevocoder(input, map, fftsize, hopsize, mode)<br>
+      </tt></blockquote>
+    where <tt>input</tt> is the input sound, <tt>map</tt> is a map
+    from output time to input time, <tt>fftsize</tt> is the number of
+    samples to use in the analysis, <tt>hopsize</tt> is the step size
+    for use in synthesis, and <tt>mode</tt> controls the synthesis
+    algorithm. Only the first two parameters are required. These
+    parameters will be explained further below.<br>
+    <h2>How It Works</h2>
+    <p>A phase vocoder works by analyzing the input signal using the
+      FFT, which decomposes the signal into frequency components. The
+      basic assumption is that the input signal consists of sinusoids
+      (no impulses) and that the FFT can resolve these sinusoids into
+      separate components.<br>
+    </p>
+    <p>The phase vocoder is similar to granular synthesis in that the
+      input is broken into short grains of sound which are reassembled
+      to create an output sound. In the phase vocoder, the output signal
+      is always constructed from equally spaced grains. To achieve time
+      stretching, the spacing of the grains extracted from the input is
+      variable. If grains are taken with higher amounts of overlap, the
+      resulting output is longer so the input is apparently stretched.
+      If grains have less overlap in the input sound, the input will
+      sound speeded up.<br>
+    </p>
+    <p>The distinctive aspect of the phase vocoder is that when grains
+      are assembled into the output, the phase of each frequency
+      component is adjusted to avoid phase cancellation. Normally, if
+      the spacing of grains is changed from input to output, different
+      frequencies will be shifted by different amounts of phase. Some
+      will add constructively and some will add destructively. Thus,
+      some frequencies will be emphasized over others, often creating a
+      buzz at grain rate. The phase vocoder attempts to eliminate this
+      artifact by adjusting all phases to be coherent.<br>
+    </p>
+    <h2>The Parameters</h2>
+    <tt>input</tt> is the input sound. It can be any mono sound.<br>
+    <br>
+    <tt>map</tt> is also a sound type, but it is a control function that
+    maps output to input. For example, if we want to stretch a sound by
+    a factor of two with a result that has a duration of 6 seconds, we
+    should make a control function that is 6 seconds long (the output
+    duration is determined by the duration of <tt>map</tt>). This <tt>map</tt>
+    function should increase from 0 to 3 (because if we stretch by a
+    factor of two, output time 6 will correspond to input time 6). Thus,
+    the <tt>map</tt> parameter could be <tt>pwl(6, 3, 6)</tt> or <tt>ramp(6)
+
+
+      * 3</tt>.<br>
+    <br>
+    <tt>fftsize</tt> is the size of the analysis and synthesis grains.
+    This number must be a power of 2. The default is 2048. Smaller
+    values give less smearing, especially at onsets or percussive sounds
+    that do not meet the sinusoidal content assumption. Larger values
+    give more accurate analysis, especially with dense spectra that do
+    not meet the "FFT can resolve these sinusoids into separate
+    components" assumption.<br>
+    <br>
+    <tt>hopsize</tt> defaults to <tt>fftsize / 8</tt>. The hopsize
+    should be chosen to be at most <tt>fftsize / 4</tt>, should be a
+    power of 2, and should be less than <tt>fftsize * stretchfactor / 3</tt>.&nbsp;
+
+
+
+    E.g. if the stretch factor is 0.25 (output sounds 4 times as fast as
+    the input), <tt>hopsize</tt> should be decreased to <tt>fftsize /
+      16</tt>.<tt><br>
+      <br>
+    </tt><tt>mode</tt> is an integer that controls some algorithmic
+    details. The default is <tt>0</tt> which gives a standard phase
+    vocoder. The value 1 uses an alternative computation for phase
+    adjustments that preserves the phase relationship between spectral
+    peaks and nearby bins. The value 2 produces a "robot voice" effect
+    where phase is fixed in each grain, creating a vocoder-like effect.<br>
+    <h2> Example</h2>
+    <p>Read the audio from <tt>demos/audio/happy.wav</tt> and stretch
+      the first 4 seconds by a factor of 4 so that the output duration
+      is 16 seconds:<br>
+    </p>
+    <pre>function test9()
+  begin
+    with inp = s-read("../audio/happy.wav")
+    play phasevocoder(inp, pwlv(0, 16, 4))
+  end
+</pre>
+    <h2>Time and Pitch Manipulation</h2>
+    <p>The <tt>pv-time-pitch</tt> function can be used to
+      simultaneously stretch and pitch shift an input signal. It shifts
+      pitch by resampling after phase vocoding. E.g. by stretching by a
+      factor of two and then resampling by a factor of two, the input
+      can be raised one octave in pitch without changing the duration.<br>
+    </p>
+    <p>The parameters are:<br>
+    </p>
+    <blockquote>
+      <p><tt>pv-time-pitch(input, stretchfn, pitchfn, dur,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fftsize,
+
+
+          hopsize, mode)<br>
+        </tt></p>
+    </blockquote>
+    <p>where <tt>input</tt> is the input sound to be altered, <tt>stretchfn</tt>
+      controls stretching, <tt>pitchfn</tt> controls pitch shifting, <tt>dur</tt>
+      is the approximate duration, and the remaining parameters are
+      optional parameters passed to the <tt>phasevocoder</tt> function.<br>
+    </p>
+    <p><tt>stretchfn</tt> and <tt>pitchfn</tt> work differently from
+      the <tt>map</tt> parameter passed to <tt>phasevocoder</tt>. <tt>stretchfn</tt>
+      gives the amount by which the input should be stretched at each
+      point in time.&nbsp; Thus, if you want the input at time 3.1 to be
+      stretched by a factor of 1.5, the value of <tt>stretchfn</tt> at
+      time 3.1 should be 1.5. Similarly, <tt>pitchfn</tt> is the pitch
+      shift amount (a frequency multiplier) to use at each point of time
+      in the input. If the pitch should be unaltered, the function value
+      should be 1. To raise the pitch, use values greater than 1 (e.g. 2
+      means go up by one octave).<br>
+    </p>
+    <h3>Example</h3>
+    <p>In this example, we will alter a familiar tune, Happy Birthday,
+      to another familiar tune, Twinkle Twinkle, using <tt>pv-time-pitch</tt>.
+      To begin, I downloaded a rendition of Happy Birthday from YouTube.
+      (Credit: Artist is unknown, but the URL is <tt>https://www.youtube.com/watch?v=vRJQ3QxLjG0</tt>).
+Next,
+
+
+      I used Audacity to extract a segment of the music and save it to <tt>demos/audio/happy.wav</tt>.
+      I also labeled each syllable with a label track in Audacity and
+      exported the labels to <tt>demos/audio/labels.txt</tt><i>. </i></p>
+    <p><i> </i></p>
+    <p>Let's work on <tt>stretchfn</tt> first. We want to make the
+      rhythm mostly quarter notes. For simplicity, let's make the tempo
+      120, so each quarter note is 0.5s. The stretch factor for a note
+      of length x to become length 0.5 will be 0.5/x. Thus, we need to
+      construct <tt>stretchfn</tt> to have a constant stretch factor
+      for each note, where the stretch factor is 0.5/(t2 - t1) where t2
+      is the time of the next note and t1 is the time of the note to be
+      stretched, i.e. (t2 - t1) is the duration.<br>
+    </p>
+    <p>We'll get the note times from the labels file:<br>
+    </p>
+    <pre>0.000000	0.000000	Hap
+0.166198	0.166198	py
+0.369078	0.369078	birth
+1.085618	1.085618	day
+1.733822	1.733822	to
+2.209605	2.209605	you
+3.578676	3.578676	hap
+3.857731	3.857731	py
+4.055933	4.055933	birth
+4.776379	4.776379	day
+5.425378	5.425378	to
+5.905255	5.905255	you
+7.271426	7.271426	hap
+7.550667	7.550667	py
+7.746811	7.746811	birth
+8.494934	8.494934	day
+</pre>
+    I assigned each time to a short local variable to make the
+    calculations simpler (although I probably could have created an
+    array and automated things a bit more):<br>
+    <pre>    with h1 = 0.000000,
+         p1 = 0.166198, 
+         b1 = 0.369078,
+         d1 = 1.085618,
+         t1 = 1.733822,
+         y1 = 2.209605,
+         h2 = 3.578676,
+         p2 = 3.857731,
+         b2 = 4.055933,
+         d2 = 4.776379,
+         t2 = 5.425378,
+         y2 = 5.905255,
+         h3 = 7.271426,
+         p3 = 7.550667,
+         b3 = 7.746811,
+         d3 = 8.494934
+</pre>
+    Next, I calculate stretch factors for each note, being careful to
+    make notes 7 and 14 half notes (using 1.0 instead of 0.5 as the
+    target duration):<br>
+    <pre>         u1 = 0.5 / (p1 - h1),
+         u2 = 0.5 / (b1 - p1),
+         u3 = 0.5 / (d1 - b1),
+         u4 = 0.5 / (t1 - d1),
+         u5 = 0.5 / (y1 - t1),
+         u6 = 0.5 / (h2 - y1),
+         u7 = 1.0 / (p2 - h2),
+         u8 = 0.5 / (b2 - p2),
+         u9 = 0.5 / (d2 - b2),
+         u10 = 0.5 / (t2 - d2),
+         u11 = 0.5 / (y2 - t2),
+         u12 = 0.5 / (h3 - y2),
+         u13 = 0.5 / (p3 - h3),
+         u14 = 1.0 / (b3 - p3)   
+</pre>
+    Next, I create the <tt>stretchfn</tt> using <tt>pwlv</tt>. This is
+    a little awkward because to obtain steps in the function, each time
+    point must have a time and value for the previous note, then the
+    same time but a new value for the next note, creating a step in the
+    function:<br>
+    <pre>    set *stretch* = pwlv(    u1, p1, u1, p1, u2, b1, u2,
+                         b1, u3, d1, u3, d1, u4, t1, u4,
+                         t1, u5, y1, u5, y1, u6, h2, u6,
+                         h2, u7, p2, u7, p2, u8, b2, u8,
+                         b2, u9, d2, u9, d2, u10, t2, u10,
+                         t2, u11, y2, u11, y2, u12, h3, u12,
+                         h3, u13, p3, u13, p3, u14, b3, u14)
+</pre>
+    The function is assigned to a global variable. This is not generally
+    recommended, but it will make it easy for us to plot and inspect the
+    function when debugging.<br>
+    <br>
+    Next, we construct the <tt>pitchfn</tt> based on the difference in
+    pitch between the two melodies. Let's write out the melodies
+    side-by-side using step numbers (only relative pitch matters here):<br>
+    <pre>    67 Hap   60 Twin
+    67 py    60 kle
+    69 Birth 67 Twin
+    67 Day   67 kle
+    72 To    69 Lit
+    71 You   69 tle
+    67 Hap   67 Star
+    67 py    65 How
+    69 Birth 65 I
+    67 day   64 Won
+    74 To    64 der
+    72 You   62 Who
+    67 Hap   62 You
+    67 py    60 Are
+</pre>
+    <p>We'll need another function similar to <tt>*stretch*</tt> only
+      using the pitch differences to create a transposition amount.
+      Let's make <tt>v1</tt> through <tt>v14</tt> and substitute for <tt>u1</tt>
+      through <tt>u14</tt> to make another <tt>pwl</tt> function.</p>
+    <p>Here are the v<i>n</i> variables, based on the numbers above
+      (pairs are reversed, e.g. to go from the 67 “Hap” to 60 “Twin,” we
+      call <tt>to-ratio(67, 60)</tt>), the function <tt>to-ratio</tt>,
+      and finally, the pitch control function: </p>
+    <pre>         v1 = to-ratio(60, 67),
+         v2 = to-ratio(60, 67),
+         v3 = to-ratio(67, 69),
+         v4 = to-ratio(67, 67),
+         v5 = to-ratio(69, 72),
+         v6 = to-ratio(69, 71),
+         v7 = to-ratio(67, 67),
+         v8 = to-ratio(65, 67),
+         v9 = to-ratio(65, 69),
+         v10 = to-ratio(64, 67),
+         v11 = to-ratio(64, 74),
+         v12 = to-ratio(62, 72),
+         v13 = to-ratio(62, 67),
+         v14 = to-ratio(60, 67)
+
+function to-ratio(a, b) return step-to-hz(a) / step-to-hz(b)
+
+    set *pitch* = pwlv(    v1, p1, v1, p1, v2, b1, v2,
+                       b1, v3, d1, v3, d1, v4, t1, v4,
+                       t1, v5, y1, v5, y1, v6, h2, v6,
+                       h2, v7, p2, v7, p2, v8, b2, v8,
+                       b2, v9, d2, v9, d2, v10, t2, v10,
+                       t2, v11, y2, v11, y2, v12, h3, v12,
+                       h3, v13, p3, v13, p3, v14, b3, v14)
+</pre>
+    <p>Here is the entire program. (You might need to change the path to
+      <tt>happy.wav</tt> depending on where you run the program. The
+      program is in <tt>demos/src/phasevocoder.sal</tt> and it should
+      run from there.)<br>
+    </p>
+    <pre>;; test 9 -- happy birthday to twinkle twinkle
+function test9()
+  begin
+    with h1 = 0.000000,
+         p1 = 0.166198, 
+         b1 = 0.369078,
+         d1 = 1.085618,
+         t1 = 1.733822,
+         y1 = 2.209605,
+         h2 = 3.578676,
+         p2 = 3.857731,
+         b2 = 4.055933,
+         d2 = 4.776379,
+         t2 = 5.425378,
+         y2 = 5.905255,
+         h3 = 7.271426,
+         p3 = 7.550667,
+         b3 = 7.746811,
+         d3 = 8.494934,
+         u1 = 0.5 / (p1 - h1),
+         u2 = 0.5 / (b1 - p1),
+         u3 = 0.5 / (d1 - b1),
+         u4 = 0.5 / (t1 - d1),
+         u5 = 0.5 / (y1 - t1),
+         u6 = 0.5 / (h2 - y1),
+         u7 = 1.0 / (p2 - h2),
+         u8 = 0.5 / (b2 - p2),
+         u9 = 0.5 / (d2 - b2),
+         u10 = 0.5 / (t2 - d2),
+         u11 = 0.5 / (y2 - t2),
+         u12 = 0.5 / (h3 - y2),
+         u13 = 0.5 / (p3 - h3),
+         u14 = 1.0 / (b3 - p3),
+         v1 = to-ratio(60, 67),
+         v2 = to-ratio(60, 67),
+         v3 = to-ratio(67, 69),
+         v4 = to-ratio(67, 67),
+         v5 = to-ratio(69, 72),
+         v6 = to-ratio(69, 71),
+         v7 = to-ratio(67, 67),
+         v8 = to-ratio(65, 67),
+         v9 = to-ratio(65, 69),
+         v10 = to-ratio(64, 67),
+         v11 = to-ratio(64, 74),
+         v12 = to-ratio(62, 72),
+         v13 = to-ratio(62, 67),
+         v14 = to-ratio(60, 67)
+ 
+    set *in* = s-read("/Users/rbd/nyquist/demos/audio/happy.wav")
+    set *stretch* = pwlv(    u1, p1, u1, p1, u2, b1, u2,
+                         b1, u3, d1, u3, d1, u4, t1, u4,
+                         t1, u5, y1, u5, y1, u6, h2, u6,
+                         h2, u7, p2, u7, p2, u8, b2, u8,
+                         b2, u9, d2, u9, d2, u10, t2, u10,
+                         t2, u11, y2, u11, y2, u12, h3, u12,
+                         h3, u13, p3, u13, p3, u14, b3, u14)
+    set *pitch* = pwlv(    v1, p1, v1, p1, v2, b1, v2,
+                       b1, v3, d1, v3, d1, v4, t1, v4,
+                       t1, v5, y1, v5, y1, v6, h2, v6,
+                       h2, v7, p2, v7, p2, v8, b2, v8,
+                       b2, v9, d2, v9, d2, v10, t2, v10,
+                       t2, v11, y2, v11, y2, v12, h3, v12,
+                       h3, v13, p3, v13, p3, v14, b3, v14)
+    play pv-time-pitch(*in*, *stretch*, *pitch*, 10)
+  end
+
+function to-ratio(a, b) return step-to-hz(a) / step-to-hz(b)
+
+</pre>
+  </body>
+</html>

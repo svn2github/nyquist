@@ -1,0 +1,89 @@
+function midinote(seq, time, dur, voice, pitch, vel)
+  begin
+    set time = round(time * 1000)
+    set dur = round(dur * 1000)
+    set pitch = round(pitch)
+    set vel = round(vel)
+    exec seq-insert-note(seq, time, 0, voice + 1, pitch, dur, vel)
+  end
+
+function test()
+  begin
+    set *seq* = seq-create()
+    exec midinote(*seq*, 0.0, 1.0, 1, c4, 100)
+    exec midinote(*seq*, 1.0, 0.5, 1, d4, 100)
+    exec midinote(*seq*, 2.0, 0.8, 1, a4, 100)
+    set seqfile = open-binary("test.mid", direction: :output)
+    exec seq-write-smf(*seq*, seqfile)
+    exec close(seqfile)
+  end
+
+exec test()
+
+function fm-note(chan, p, vel)
+  begin
+    display chan, p, vel
+    return pwl(0.01, 1, .5, 1, 1) *
+         fmosc(p, step-to-hz(p) * pwl(0.01, 6, 0.5, 4, 1) * osc(p))
+  end
+
+
+function melody(seq, onsets)
+  loop for onset in onsets
+    display "meloday loop", onset
+    exec midinote(seq, onset, sixteenth, 1, 48 + random(24), 100)
+  end
+
+;; create list of random times and sort it
+;; dur in ms.
+function poisson-gen(len, average-ioi)
+  begin
+    with dur = len * average-ioi, poisson-list
+    loop repeat len
+      exec push(dur * random(10000) * 0.0001,
+                poisson-list)
+    end
+    ;; to name the "less than" function, we cannot type
+    ;; '<' because that is not a symbol name in SAL. Therefore
+    ;; we use the string "<" and look up the symbol using
+    ;; intern("<").
+    set poisson-list = sort(poisson-list, intern("<"))
+    display "initial list", poisson-list
+    ;; map list to 24ths:
+    return quantize-times-to-24ths(poisson-list)
+  end
+
+function set-tempo(tempo)
+  begin
+    set qtr = 60.0 / tempo
+    set eighth = qtr * 0.5
+    set half = qtr * 2
+    set whole = qtr * 4
+    set sixteenth = qtr * 0.25
+  end
+
+if ! boundp(quote(qtr)) then exec set-tempo(100)
+
+function quantize-times-to-24ths(list)
+  return mapcar(quote(quantize-time-to-24ths), list)
+
+function quantize-time-to-24ths(time)
+  return (qtr / 24.0) *
+         round(24 * time / qtr)
+
+function poisson-melody()
+  begin
+    set *seq* = seq-create()
+    ;; adds notes to *seq*
+    exec melody(*seq*, poisson-gen(50, eighth))
+    set seqfile = open-binary("pois.mid", direction: :output)
+    exec seq-write-smf(*seq*, seqfile)
+    exec close(seqfile)
+  end
+
+exec poisson-melody()
+
+exec seq-write(*seq*, *standard-output*, nil)
+
+play seq-midi-sal(*seq*, quote(fm-note))
+
