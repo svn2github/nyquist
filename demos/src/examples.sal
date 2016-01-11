@@ -568,11 +568,13 @@ define function ex-global ()
     play gran-osc()
     play piano-osc()
     exec autonorm-on() ; back on after osc-test.lsp
-    load "plight/drum.lsp"
-    exec play-drum-example()
+    load "../plight/drum.lsp"
+    ;; windows user may not have drums installed so test first
+    if fboundp(quote(play-drum-example)) then
+      exec play-drum-example()
     load "pmorales/all.lsp"
-    load "sdl/inv-08.lsp"
-    load "sdl/ej2.lsp"
+    load "../sdl/inv-08.lsp"
+    load "../sdl/ej2.lsp"
     load "shepard.lsp"
     exec playscale(majorscale(60))
     exec playparadoxscale(chromascale(60))
