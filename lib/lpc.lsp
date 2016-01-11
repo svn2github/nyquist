@@ -63,7 +63,8 @@
 (setf lpc-file-class (send class :new '(file)))
 
 (send lpc-file-class :answer :isnew '(filename) '(
-  (setf file (open filename))))
+  (setf file (open filename))
+  (if (null file) (error "lpc-file-class could not open file" filename))))
 
 (send lpc-file-class :answer :next '() '(
   (read file)))
