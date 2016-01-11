@@ -122,7 +122,9 @@ void down_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                     susp_took(s_cnt, 1);
                     s_pHaSe_ReG -= 1.0;
                 } else { /* jump over as much input as possible */
-                    int take = s_pHaSe_ReG; /* rounds down */
+                    int take = (int) s_pHaSe_ReG; /* rounds down */
+                    take--; /* leave s_pHaSe_ReG > 1 so we stay in loop */
+                    /* next iteration will set s_x1_sample_reg */
                     if (take > susp->s_cnt) take = susp->s_cnt;
                     susp->s_ptr += take;
                     susp_took(s_cnt, take);

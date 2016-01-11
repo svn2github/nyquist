@@ -17,12 +17,12 @@ cp ~/nyquist/sys/mac/README.txt nyquist/doc/readme-mac.txt
 echo "type the version string, e.g. \"232\" : "
 read versionstring
 # to get NyquistIDE.app in the right place in the zip file, move it to here
-mv ~/nyquist/macosxproject/build/Deployment/NyquistIDE.app .
+mv ~/nyquist/jnyqide/NyquistIDE.app .
 # add a copy of the README.txt for OSX
 cp ~/nyquist/sys/mac/README.txt .
 tar cvfz "nyqosx"$versionstring".tgz" NyquistIDE.app nyquist README.txt
 # restore NyquistIDE.app to its original location
-mv NyquistIDE.app ~/nyquist/macosxproject/build/Deployment/NyquistIDE.app
+mv NyquistIDE.app ~/nyquist/jnyqide/NyquistIDE.app
 mv nyqosx*.tgz ~/nyquist
 # Make source release
 cd ~/nyquist
@@ -44,4 +44,4 @@ zip -r "nyqsrc"$versionstring".zip" nyquist
 echo go to sourceforge.net/projects/nyquist, Files, open nyquist
 echo Add Folder for current version, click the folder to open it
 echo Add File and browse to ~/nyquist/nyqsrcNNN.zip
-echo Add File and browse to ~/nyquist/nyqosxNNN.zip
+echo Add File and browse to ~/nyquist/nyqosxNNN.tgz

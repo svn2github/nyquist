@@ -249,8 +249,8 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
        termination time */
     if (!pvs->g_terminated) {
         /* now interpolate to get the value of g at g_count */
-        double g = pvs->g_prev + (pvs->g_next - pvs->g_prev) *
-                                 (g_count - (pvs->g_count - 1));
+        g = pvs->g_prev + (pvs->g_next - pvs->g_prev) *
+                          (g_count - (pvs->g_count - 1));
         /* (3) get the first sample we need from f. */
         /* g is now the sample time we want for center of f window */
         f_start = round(g * susp->f->sr) - pvs->fftsize / 2;
