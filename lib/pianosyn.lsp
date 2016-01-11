@@ -342,8 +342,7 @@
   (setf (aref cw pncount) (make-array (aref nhar pncount)))
   (setf (aref phase pncount) (make-array (aref nhar pncount)))
   (dotimes (count (aref nhar pncount)) 
-           (setf (aref (aref cw pncount) count) (setf rffp (read-float fp)))
-           (display "read cw" count rffp))
+           (setf (aref (aref cw pncount) count) (read-float fp)))
   (dotimes (count (aref nhar pncount)) 
            (setf (aref (aref phase pncount) count) (read-float fp)))
 

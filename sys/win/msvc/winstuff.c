@@ -235,9 +235,9 @@ FILE *osbopen(const char *name, const char *mode) {
     char nmode[4];
     strcpy (nmode, mode); strcat (nmode, "b");
 #ifdef SAFE_NYQUIST
-    if (ok_to_open(name, mode))
+    if (ok_to_open(name, nmode))
 #endif
-      fp = fopen (name, mode);
+      fp = fopen (name, nmode);
     return fp;
 }
 
