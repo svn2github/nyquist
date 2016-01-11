@@ -228,18 +228,18 @@ define function ex25()
 
 define function ex26()
   begin
-    exec s-save(a-snd, 1000000000, "./a-snd-file.snd")
-    play "./a-snd-file.snd"
-    exec system("rm ./a-snd-file.snd")
+    exec s-save(a-snd, 1000000000, "a-snd-file.snd")
+    play "a-snd-file.snd"
+    exec system(strcat("rm ", *default-sf-dir*, "a-snd-file.snd"))
   end
 
 
 define function ex27()
   begin
-    set my-sound-file = "./a-snd-file.snd"
+    set my-sound-file = "a-snd-file.snd"
     exec s-save(a-snd, 1000000000, my-sound-file)
     exec play-file(my-sound-file)
-    exec system(strcat("rm ", my-sound-file))
+    exec system(strcat("rm ", *default-sf-dir*, my-sound-file))
   end
 
 
@@ -543,7 +543,7 @@ define function ex-global ()
     exec mod-test-wws()
     load "lpcdemo.lsp"
     exec ex-1()
-    exec ex-2()
+    ; exec ex-2() -- cannot save to installation; dirs are read-only
     exec ex-4()
     exec ex-7()
     exec ex-8()
@@ -582,5 +582,5 @@ define function ex-global ()
   end
 
 exec format(t, "\n\"exec ex-all()\" in SAL or (ex-all) in Lisp will compute and play all examples for testing purposes.\n")
-exec format(t, "\"exec ex-global\" in SAL or (ex-global) in Lisp will load and play all demos (good for testing, but not much indication of where sounds are coming from).\n")
+exec format(t, "\"exec ex-global()\" in SAL or (ex-global) in Lisp will load and play all demos (good for testing, but not much indication of where sounds are coming from).\n")
 
