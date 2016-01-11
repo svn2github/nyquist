@@ -105,7 +105,6 @@ long pvst_offset = -1000; // -1 means we haven't seen first frame yet
 #define LOGFFTSIZE_DEFAULT 11
 #define RATIO_DEFAULT 1
 #define BOOL int
-#define _USE_MATH_DEFINES
 #define FALSE 0
 #define TRUE 1
 #define TWOPI (2.0 * M_PI)
@@ -322,7 +321,7 @@ void pv_set_ratio(Phase_vocoder x, float ratio)
     PV *pv = (PV *)x;
     assert(pv->phase == PV_START || pv->phase == PV_UNINITIALIZED);
     pv->pre_ratio = pv->ratio;
-    pv->ratio = 1.0 / ratio;
+    pv->ratio = 1.0F / ratio;
 }
 
 void pv_set_syn_hopsize(Phase_vocoder x, int n)
@@ -363,7 +362,7 @@ void pv_initialize(Phase_vocoder x)
         //    number of frames we must compute to form blocksize samples 
         //    of output is blocksize / hopsize.
         pv->input_buffer_len = pv->fftsize + 2 /* to avoid rounding error */ +
-            round(((pv->blocksize / pv->syn_hopsize) - 1) * (pv->fftsize / 3));
+            lroundf((((float) pv->blocksize / pv->syn_hopsize) - 1) * (pv->fftsize / 3.0F));
     }
     if (! pv->absolute) {
         PVREALLOC(input_buffer, pv->input_buffer_len);
@@ -412,7 +411,7 @@ void pv_initialize(Phase_vocoder x)
     // bin frequency, used in phase unwrapping
     PVREALLOC(bin_freq, pv->fftsize / 2 + 1);
     for (int i = 0; i <= pv->fftsize / 2; i++)
-        pv->bin_freq[i] = TWOPI * i / pv->fftsize;
+        pv->bin_freq[i] = (float) (TWOPI * i / pv->fftsize);
     // get_effective_pos() maps from the beginning of the
     // next block to the corresponding input sample. Since
     // the output hopsize is fixed, the next output sample
@@ -476,7 +475,7 @@ float *pv_window(Phase_vocoder x, float (*window_type)(double x))
     }
     COLA_factor = sum_window_square / pv->syn_hopsize;
     for (int i = 0; i <= pv->fftsize - 1; i++)
-        window[i] = window[i] / sqrt(COLA_factor);
+        window[i] = (float) (window[i] / sqrt(COLA_factor));
     return window;
 }
 
@@ -484,7 +483,7 @@ float *pv_window(Phase_vocoder x, float (*window_type)(double x))
 int pv_get_input_count(Phase_vocoder x)
 {
     PV *pv = (PV*)x;
-    int ana_hopsize = round((pv->syn_hopsize) * (pv->ratio));
+    int ana_hopsize = lroundf((pv->syn_hopsize) * (pv->ratio));
     if (ana_hopsize > pv->max_ana_hopsize) {
         ana_hopsize = pv->max_ana_hopsize;
     }
@@ -509,19 +508,19 @@ int pv_get_input_count(Phase_vocoder x)
         // frames overlapping fft frames of size framesize.
         need = pv->fftsize + ana_hopsize * (frames - 1);
         // Now how many input samples do we have already?
-        long have = pv->input_rear - pv->input_head;
+        long have = (long) (pv->input_rear - pv->input_head);
         need -= have;
         // See if we have room for need samples in the buffer:
         if (pv->input_rear + need > pv->input_buffer + pv->input_buffer_len) {
             // not enough room. Shift the input buffer to make space.
-            long shift = pv->input_head - pv->input_buffer;
+            long shift = (long) (pv->input_head - pv->input_buffer);
             memmove(pv->input_buffer, pv->input_head,
                    (pv->input_rear - pv->input_head) * 
                    sizeof(*(pv->input_buffer)));
             pv->input_head -= shift;
             pv->input_rear -= shift;
             D printf("    after input shift by %ld, head at %ld\n",
-                     shift, pv->input_head - pv->input_buffer);
+                     shift, (long) (pv->input_head - pv->input_buffer));
         }
         // make sure our assumptions are true and we now have space:
         assert(pv->input_rear + need <= 
@@ -532,7 +531,7 @@ int pv_get_input_count(Phase_vocoder x)
                 (frames - 1) * pv->syn_hopsize + pv->fftsize;
         if (last_output > pv->output_buffer + pv->output_buffer_len) {
             // not enough room. Shift the output buffer to make space.
-            long shift = pv->out_next - pv->output_buffer;
+            long shift = (long) (pv->out_next - pv->output_buffer);
             memmove(pv->output_buffer, pv->out_next,
                    (pv->fftsize - pv->syn_hopsize) * 
                    sizeof(*(pv->output_buffer)));
@@ -610,7 +609,7 @@ void pv_put_input(Phase_vocoder x, int size, float *samples)
     // size must agree with the value computed by pv_get_input_count:
     assert(pv->expected_input == size);
     D printf("pv_put_input: size %d, %g at %ld\n", 
-             size, *samples, pv->input_rear - pv->input_buffer);
+             size, *samples, (long) (pv->input_rear - pv->input_buffer));
     if (size > 0) {
         memcpy(pv->input_rear, samples, size * sizeof(*pv->input_rear));
         pv->input_rear += size;
@@ -805,8 +804,8 @@ void compute_one_frame(PV *pv, int ana_hopsize)
             if (j == 8)
                 printf("phase_increment %g hopsize %d\n", phase_increment, ana_hopsize);
             DBG*/
-            float estimate_freq = phase_increment / ana_hopsize +
-                                  bin_freq[j];
+            float estimate_freq = (float) (phase_increment / ana_hopsize +
+                                           bin_freq[j]);
             // get synthesis phase adjustment
             phase_increment = pre_syn_phase[j] + 
                 syn_hopsize * estimate_freq - ana_phase[j];
@@ -817,7 +816,8 @@ void compute_one_frame(PV *pv, int ana_hopsize)
             DBG*/
             // update the range of bins:
             for (i = prev_min_x; i < next_min_x; i++) {
-                syn_phase[i] = fmod(ana_phase[i] + phase_increment, TWOPI);
+                syn_phase[i] = fmodf((float) (ana_phase[i] + phase_increment),
+                                     (float) TWOPI);
             }
             /*DBG
             if (j == 8) printf("syn_phase[8] %g\n", syn_phase[8]);
@@ -845,11 +845,12 @@ void compute_one_frame(PV *pv, int ana_hopsize)
             phase_increment -= M_PI;
 
             // estimated frequency from phase unwrapping
-            float estimate_freq = phase_increment / ana_hopsize +
-                                  bin_freq[i];
+            float estimate_freq = (float) (phase_increment / ana_hopsize +
+                                           bin_freq[i]);
             // set synthesis phase
-            syn_phase[i] = fmod(pre_syn_phase[i] +
-                                syn_hopsize * estimate_freq, TWOPI);
+            syn_phase[i] = fmodf((float) (pre_syn_phase[i] +
+                                          syn_hopsize * estimate_freq),
+                                 (float) TWOPI);
         }
     } else if (pv->mode == PV_MODE_ROBOVOICE) {
         ; // syn_phase[] is unmodified, i.e. constant
@@ -862,13 +863,13 @@ void compute_one_frame(PV *pv, int ana_hopsize)
         pre_syn_phase[i] = syn_phase[i];
         
         // update realpart and imagpart
-        syn_frame[i * 2] = mag[i] * cos(syn_phase[i]);
-        syn_frame[i * 2 + 1] = mag[i] * sin(syn_phase[i]);
+        syn_frame[i * 2] = (float) (mag[i] * cos(syn_phase[i]));
+        syn_frame[i * 2 + 1] = (float) (mag[i] * sin(syn_phase[i]));
     }
     pre_ana_phase[i] = ana_phase[i];
     pre_syn_phase[i] = syn_phase[i];
     // update realpart and imagpart
-    syn_frame[1] = mag[i] * cos(syn_phase[i]);
+    syn_frame[1] = (float) (mag[i] * cos(syn_phase[i]));
      // inverse FFT
     riffts(syn_frame, log2_fft, 1);
     
@@ -880,7 +881,7 @@ void compute_one_frame(PV *pv, int ana_hopsize)
     // window the frame and then add it to the output buffer
     // assume here that there is room to add in syn_frame
     D printf("    add to frame_next: %ld\n", 
-             pv->frame_next - pv->output_buffer);
+             (long) (pv->frame_next - pv->output_buffer));
     /*DBG
     float tmp_frame[4096];
     for (int i = 0; i < fftsize; i++) {
@@ -913,18 +914,18 @@ void update_position_queue(PV *pv, float *ana_center)
     // put the positions of the processed frame into the queue
     if (pv->first_time) {
         // insert a special starting correspondence:
-        pv->pos_buffer_rear->ana_pos = round(-pv->ratio * fftsize / 2);
+        pv->pos_buffer_rear->ana_pos = lroundf(-pv->ratio * fftsize / 2);
         pv->pos_buffer_rear->syn_pos = 0;
         pv->pos_buffer_rear++;
     }
     // center of analysis window was at ana_center
     // input_total corresponds to input_rear
     pv->pos_buffer_rear->ana_pos = 
-        pv->input_total - (pv->input_rear - ana_center);
+        pv->input_total - (long) (pv->input_rear - ana_center);
     // output window center was at frame_next - syn_hopsize + fftsize / 2
     // output_total corresponds to out_next
     pv->pos_buffer_rear->syn_pos = pv->output_total +
-        ((frame_next - syn_hopsize + (fftsize / 2)) - out_next);
+        (long) ((frame_next - syn_hopsize + (fftsize / 2)) - out_next);
     
     // set pos_buffer_rear to new last element in the queue
     pv->pos_buffer_rear++;
@@ -951,7 +952,7 @@ float *finish_output(PV *pv)
     pv->out_next = block + pv->blocksize;
     pv->output_total += pv->blocksize;
     D printf("    return offset %ld = %g\n", 
-             pv->out_next - pv->output_buffer, *(pv->out_next));
+             (long) (pv->out_next - pv->output_buffer), *(pv->out_next));
     /* DEBUG: To produce a 32767-sample-long sawtooth from 0 to 1 (roughly)
      * as output, uncomment the following loop. This might be the first step
      * in debugging. If you do not get a smoothly increasing ramp for 32K
@@ -981,7 +982,7 @@ float *pv_get_output(Phase_vocoder x)
     float *ana_frame = pv->ana_frame;
     float *ana_center;
     
-    int ana_hopsize = round(syn_hopsize * ratio);
+    int ana_hopsize = lroundf(syn_hopsize * ratio);
     if (ana_hopsize > pv->max_ana_hopsize) {
         ana_hopsize = pv->max_ana_hopsize;
     }
@@ -995,7 +996,7 @@ float *pv_get_output(Phase_vocoder x)
             ana_frame[i] = input_head[i] * ana_win[i];
         ana_center = input_head + fftsize / 2;
         D printf("    mid ana_frame->%g at %ld\n", *ana_center,
-                 ana_center - pv->input_buffer);
+                 (long) (ana_center - pv->input_buffer));
         if (frame < frames_to_compute - 1) {
             input_head += ana_hopsize; // get ready for next iteration,
             // but on the last iteration, we do not add hopsize because
@@ -1034,22 +1035,23 @@ float *pv_get_output2(Phase_vocoder x)
 
     D printf("pv_get_output2: blocksize %ld frame_next %ld "
            "out_next %ld buffer offset %ld\n",
-           blocksize, pv->frame_next - output_buffer, out_next - output_buffer,
-           pv->output_total - (out_next - output_buffer));
+           blocksize, (long) (pv->frame_next - output_buffer), 
+           (long) (out_next - output_buffer),
+           (long) (pv->output_total - (out_next - output_buffer)));
 
     // To produce blocksize, how many samples do we need? The next
     // sample to output is at out_next, and the next frame will be
     // addded at frame_next, so we've already computed 
     // out_next - frame_next:
     while (blocksize > (pv->frame_next - out_next)) {
-        long out_cnt = pv->output_total + (pv->frame_next - out_next) + 
-                       fftsize / 2;
+        long out_cnt = (long) (pv->output_total + (pv->frame_next - out_next) + 
+                       fftsize / 2);
         // if there's no room in the output buffer, shift the samples.
         // This is done here to avoid extra work (sometimes pv_get_output2
         // can be called and the samples are already in the buffer so there's
         // no need to shift.
         if (pv->frame_next + fftsize > output_buffer + output_buffer_len) {
-            long shift = out_next - output_buffer;
+            long shift = (long) (out_next - output_buffer);
             D printf("shift output by %ld\n", shift);
             memmove(output_buffer, out_next,
                     (output_buffer_len - shift) * sizeof(*output_buffer));
@@ -1075,12 +1077,12 @@ float *pv_get_output2(Phase_vocoder x)
         pv->first_time = FALSE;
         D printf("pv_get_output2: blocksize %ld frame_next %ld "
                "out_next %ld buffer offset %ld\n",
-               blocksize, pv->frame_next - output_buffer, 
-               out_next - output_buffer,
-               pv->output_total - (out_next - output_buffer));
+               blocksize, (long) (pv->frame_next - output_buffer), 
+               (long) (out_next - output_buffer),
+               (long) (pv->output_total - (out_next - output_buffer)));
     }
     D printf("pv_get_output2 returning at offset %ld abs %ld\n", 
-           pv->out_next - pv->output_buffer, pv->output_total);
+             (long) (pv->out_next - pv->output_buffer), pv->output_total);
     /*DBG out_next position is output_total, so if we subtract out_next - output_buffer,
        we get the absolute position of the output_buffer
     write_pv_frame(pv->output_total - (pv->out_next - pv->output_buffer), 

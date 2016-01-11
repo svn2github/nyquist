@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId=3E29123D-0726-441C-8A38-42836B05F74C
 AppName=NyquistIDE
-AppVerName=NyquistIDE 3.08
+AppVerName=NyquistIDE 3.10
 AppPublisher=Roger B. Dannenberg
 AppPublisherURL=http://www.cs.cmu.edu/~music/nyquist
 AppSupportURL=http://www.cs.cmu.edu/~music/nyquist
@@ -19,7 +19,7 @@ InfoAfterFile=nyqrelide\Readme.txt
 OutputDir=setup
 OutputBaseFilename=setupnyqiderun
 SetupIconFile=sys\win\wingui\nycon.ico
-SourceDir=c:\Users\Roger\research\nyquist
+SourceDir=c:\Users\Roger\nyquist
 Compression=lzma
 SolidCompression=yes
 
@@ -34,7 +34,7 @@ Source: "nyqrelide\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs cre
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
-Root: HKLM32; Subkey: "Software\CMU\Nyquist"; ValueType: string; ValueName: "XLISPPATH"; ValueData: "{app}\runtime,{app}\lib"
+Root: HKLM32; Subkey: "Software\CMU\Nyquist"; ValueType: string; ValueName: "XLISPPATH"; ValueData: "{app}\runtime,{app}\lib,{app}\demos"
 
 [Icons]
 Name: "{group}\NyquistIDE"; Filename: "{app}\jnyqide.bat"; WorkingDir: "{app}"

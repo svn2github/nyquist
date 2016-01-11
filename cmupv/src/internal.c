@@ -10,12 +10,12 @@
 
 float hann(double x)
 {
-    return 0.5 * (1.0 - cos(2 * M_PI * x));
+    return (float) (0.5 * (1.0 - cos(2 * M_PI * x)));
 }
 
 float hamm(double x)
 {
-    return 0.54 - 0.46 * cos(2 * M_PI * x);
+    return (float) (0.54 - 0.46 * cos(2 * M_PI * x));
 }
 
 void OneDimensionFFTshift(float vector[], int VectorLength)

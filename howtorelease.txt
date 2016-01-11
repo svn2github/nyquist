@@ -117,12 +117,6 @@ make sure nyquist/ny exists for execution by misc/cmu/cmuinstall.sh
 cd misc/cmu
 run cmuinstall.bat or source cmuinstall.sh
 
-IGNORE THIS -- DELETE AFTER VERSION 3.02
-same thing on PPC, but use
-cd ~/nyquist/misc/cmu
-bash cmuinstallmac.sh
---- and use something like 232ppc for the version number
-
 FOR THE MAC TO BUILD RELEASE FOR UNIX
 
 the cmuinstall.sh file builds a source zip file and installs it

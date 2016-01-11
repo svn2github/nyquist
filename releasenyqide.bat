@@ -28,7 +28,6 @@ del nyqrelide\demos\CVS /q
 rmdir nyqrelide\demos\CVS /q
 del nyqrelide\demos\pmorales\CVS /q
 rmdir nyqrelide\demos\pmorales\CVS /q
-copy WinRel\nyquist.exe nyqrelide
 copy liblo\test-client\Release\osc-test-client.exe nyqrelide
 copy liblo\ser-to-osc\Release\ser-to-osc.exe nyqrelide
 copy NyqIDE\NyqIDE.exe nyqrelide
@@ -40,7 +39,7 @@ copy readme.txt nyqrelide
 copy todo.txt nyqrelide
 copy license.txt nyqrelide
 mkdir nyqrelide\jnyqide
+copy Release\ny.exe nyqrelide\jnyqide\nyquist.exe
 copy jnyqide\NyquistWords.txt nyqrelide\jnyqide
-copy jnyqide\keywords.txt nyqrelide\jnyqide
 copy jnyqide\jNyqIDE.jar nyqrelide\jnyqide
 copy jnyqide.bat nyqrelide\jnyqide.bat

@@ -685,7 +685,8 @@ add_executable(ny ${nyquist_SRCS})
 
 #include directories 
 target_include_directories(ny PRIVATE  
-    ffts/src snd cmt xlisp tran nyqsrc nyqstk nyqstk/include cmupv/src) 
+    ffts/src snd cmt xlisp tran nyqsrc nyqstk nyqstk/include
+    cmupv/src portaudio/include) 
 
 if(UNIX)
     target_include_directories(ny PRIVATE sys/unix)

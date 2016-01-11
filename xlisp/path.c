@@ -77,7 +77,10 @@ const char *windows_return_xlisp_path()
            "empty string if you really want no search path.");
         errputstr(paths);
     }
-
+    /* for debugging: 
+      errputstr("windows_return_xlisp_path() returns ");
+      errputstr(paths);
+      errputstr("\n"); */
     return paths;
 }
 

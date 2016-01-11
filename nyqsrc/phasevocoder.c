@@ -317,7 +317,7 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
         pvs->g0 = g;
     } else { /* g has terminated, so we just fill input with zeros */
              /* hopsize does not matter, so we'll set it to fftsize/8 */
-        bzero(samples, pvs->fftsize * sizeof(*samples));
+        memset(samples, 0, pvs->fftsize * sizeof(*samples));
         hop = pvs->fftsize / 8;
         /* printf("filled samples with 0, hop %d\n", hop); */
     }
