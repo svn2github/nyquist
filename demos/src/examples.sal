@@ -73,7 +73,7 @@ define function ex7()
 ;(format t "either set *default-sf-dir* or copy demo-snd.aiff~%")
 ;(format t "where Nyquist will find it.~%")
 
-set a-snd = s-read(strcat(current-path(), "demo-snd.aiff"))
+set a-snd = s-read(strcat(current-path(), "../audio/demo-snd.aiff"))
 
 
 define function ex8()

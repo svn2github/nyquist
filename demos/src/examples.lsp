@@ -68,7 +68,7 @@
          
 (if (not (boundp 'a-snd)) 
     (setf a-snd (s-read (strcat (current-path) 
-                                "demo-snd.aiff"))))
+                                "/../audio/demo-snd.aiff"))))
 
 (defun ex8 ()
   (play a-snd))

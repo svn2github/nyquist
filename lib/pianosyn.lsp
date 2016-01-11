@@ -306,15 +306,12 @@
                          ".cod"))
   (setq filename (strcat *pianosyn-path* "piano"
                          (string *file-separator*) filename))
-  (display "open cod file" filename)
   (setq fp (open-binary filename))
-  (display "open cod file" fp)
 
   ;; Read cwdHdr in cwxx.cwd
   (setq cwdHdr-ckID (read-int fp) cwdHdr-type (read-int fp))  
   ;; "CNDN" == 1129202766
-  (display "read data" cwdHdr-ckID cwdHdr-type)
-  
+
   ;; That is for "FORM"==cwdHdr-ckID
   ;;(if (and (= cwdHdr-ckID 1179603533) (= cwdHdr-type 1129202766))
   ;;    ()
@@ -344,16 +341,14 @@
   (setf (aref nhar pncount) (read-int fp))
   (setf (aref cw pncount) (make-array (aref nhar pncount)))
   (setf (aref phase pncount) (make-array (aref nhar pncount)))
-  (display "cw" (aref nhar pncount))
   (dotimes (count (aref nhar pncount)) 
-           (setf (aref (aref cw pncount) count) (read-float fp)))
-  (display "phase" (aref nhar pncount))
+           (setf (aref (aref cw pncount) count) (setf rffp (read-float fp)))
+           (display "read cw" count rffp))
   (dotimes (count (aref nhar pncount)) 
            (setf (aref (aref phase pncount) count) (read-float fp)))
 
   ;; Read GRUPCK in cwxx.cwd
-  (setq GRUPCK-ckID (read-int fp))
-  (display "grupck" grupck-ckid fp)
+  (setq GRUPCK-ckID (read-int fp))  
   (if (= GRUPCK-ckID 1196578128) () (error "GRUPCK chunk not found."))
   (setf (aref hfrom pncount) (make-array (aref ngroup pncount)))
   (setf (aref hto pncount) (make-array (aref ngroup pncount)))  
