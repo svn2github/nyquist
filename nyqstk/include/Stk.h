@@ -14,6 +14,7 @@
 
 #ifndef STK_STK_H
 #define STK_STK_H
+#ifdef WIN32
 // this is a fix for Visual Studio 14; not sure if it will cause problems elsewhere
 typedef signed __int8     int8_t;
 typedef signed __int16    int16_t;
@@ -41,6 +42,7 @@ typedef uint32_t uint_fast32_t;
 typedef uint64_t uint_fast64_t;
 typedef int64_t  intmax_t;
 typedef uint64_t uintmax_t;
+#endif
 
 #include <string>
 #include <iostream>
