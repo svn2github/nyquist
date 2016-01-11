@@ -137,7 +137,7 @@
 ;; Notice that I am using simrep to mix four copies of sf-granulate output.
 ;; Since there are random timings involved, the layers are not identical.
 ;;
-(setf *granfile* "../demos/audio/demo-snd.aiff")
+(setf *granfile* (strcat (current-path) "../demos/audio/demo-snd.aiff"))
 
 (defun gran-test ()
   (play (stretch 4
