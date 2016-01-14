@@ -29,32 +29,33 @@ configures itself differently on Debian and doesn't need ALSA.
 
 Note 3: You will also need Java and ant
 
-After unzipping sources, type:
+Note 4: (The bad news...) Nyquist has recently switched from a
+home-brew makefile system to CMake. You'll need to install cmake if
+you do not have it. At present, the cmake files work for Windows and
+OS X, but there are likely to be some problems with Linux that need
+to be solved.
+
+Unzip sources, creating a nyquist directory and some  
+subdirectories, and use cd to change the current directory:
 
     gunzip nyqsrc3<nn>.zip
     cd nyquist
-    # In the following line, Debian linux users should
-    #   type "nonalsa" in place of "alsa":
-    ln -s sys/unix/alsa/Makefile Makefile      
-    setenv XLISPPATH `pwd`/runtime:`pwd`/lib
+
+Build Nyquist with cmake and make:
+
+    *** to be described ***
     make
+    
+Set the search path (in bash), which tells Nyquist where to search
+for lisp files to be loaded when a file is not found in the current
+directory. See SHELL STARTUP below for information about how to
+automate this.
 
-(For bash shell users, instead of the setenv command, use this:
+    export XLISPPATH=`pwd`/runtime:`pwd`/lib 
 
-    export XLISPPATH=`pwd`/runtime:`pwd`/lib
+(Alternatively, tcsh users can type
+    setenv XLISPPATH `pwd`/runtime:`pwd`/lib 
 )
-
-The first line creates a nyquist directory and some
-subdirectories. The second line (cd) changes directories to the new
-nyquist directory. The third line (ln) makes a link from the top-level
-directory to the Makefile for your system. In place of "alsa" in
-sys/unix/alsa/Makefile, you should substitute your system
-type. Current systems are alsa, nonalsa, next, pmax, rs6k, sgi, and
-sparc, but since only the alsa and nonalsa versions have been tested
-in recent years, do not expect anything else to work.  The setenv (or
-export) command tells Nyquist where to search for lisp files to be
-loaded when a file is not found in the current directory. See 
-SHELL STARTUP below for information about how to automate this.
 
 64-BIT UBUNTU
 =============
@@ -144,9 +145,9 @@ You can modify system.lsp to accomplish this.
 
 SHELL STARTUP
 =============
-The (runtime
-directory should always be on your XLISPPATH when you run Nyquist, so
-you may want to set XLISPPATH in your shell startup file, e.g. .cshrc.
+The runtime directory should always be on your XLISPPATH when you
+run Nyquist, so you may want to set XLISPPATH in your shell startup
+file, e.g. .cshrc.
 
 Which shell are you using?  echo $SHELL will tell you. If you use
 /bin/bash, your startup file is probably ~/.profile. (Remember that
@@ -161,7 +162,7 @@ directory when .profile is loaded.
 
 If you use /bin/csh (the C Shell), your startup file is probably
 ~/.cshrc. (Remember that "~/" means your home directory, so the file
-will be something like /home/rbd/.profile).  In this file, you can add
+will be something like /home/rbd/.cshrc).  In this file, you can add
 a line such as:
 
 setenv XLISPPATH "/home/rbd/nyquist/runtime:/home/rbd/nyquist/lib"
