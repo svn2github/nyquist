@@ -311,7 +311,21 @@ else(UNIX)
       portaudio/src/os/win/pa_x86_plain_converters.h
       portaudio/src/hostapi/wasapi/pa_win_wasapi.c
       portaudio/src/hostapi/wmme/pa_win_wmme.c)
+
+  # release will use static runtime library
+  foreach(flag_var CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS_RELEASE)
+    if(${flag_var} MATCHES "/MD")
+      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+    endif(${flag_var} MATCHES "/MD")
+  endforeach(flag_var)
+  message(STATUS 
+    "Note: overriding CMAKE_*_FLAGS_* to use Visual C static multithread library")
+  set(VERBOSE_WARNINGS 0 CACHE BOOL "Do not use _CRT_SECURE_NO_WARNINGS to disable suggestions to use 'secure' versions of strcpy, etc.")
+  if(NOT VERBOSE_WARNINGS)
+    list(APPEND COMMON_DEFINITIONS "_CRT_SECURE_NO_WARNINGS")
+  endif(NOT VERBOSE_WARNINGS)
 endif(UNIX)
+
 add_library(portaudio_static STATIC ${portaudio_SRCS})
 target_include_directories(portaudio_static PRIVATE
   PROPERTY INCLUDE_DIRECTORIES
