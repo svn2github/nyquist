@@ -790,6 +790,7 @@ endif()
 add_definitions("-DOSC")
 add_definitions("-DSTK_NYQUIST")
 
+set(EXTRA_NYQUIST_LIBS )
 if(UNIX)
   if(APPLE)
     include_directories(${CMAKE_OSX_SYSROOT}/Developer/Headers/FlatCarbon
@@ -801,7 +802,7 @@ if(UNIX)
     set(CORESERVICES_LIB "${FRAMEWORK_PATH}/CoreServices.framework")
     set(AUDIOTOOLBOX_LIB "${FRAMEWORK_PATH}/AudioToolbox.framework")
     set(AUDIOUNIT_LIB "${FRAMEWORK_PATH}/AudioUnit.framework")
-    set(EXTRA_NEEDED_LIBS ${COREAUDIO_LIB} ${COREFOUNDATION_LIB}
+    set(EXTRA_PA_LIBS ${COREAUDIO_LIB} ${COREFOUNDATION_LIB}
                        ${CORESERVICES_LIB}
                        ${AUDIOTOOLBOX_LIB} ${AUDIOUNIT_LIB})
 
@@ -817,7 +818,7 @@ if(UNIX)
     add_definitions("-Dmacintosh")
   else(APPLE)
     # Linux
-    set(EXTRA_NEEDED_LIBS asound pthread)
+    set(EXTRA_PA_LIBS asound pthread m)
   endif(APPLE)
   # useing ../liblo/liblo_s.a. The builder must explicitly make a 
   # static liblo library with --enable-static and copy the result,
@@ -831,10 +832,11 @@ if(UNIX)
 else(UNIX)
   # the liblo project builds liblo.lib, not lo.lib
   # Iphlpapi is for GetAdaptersAddresses() in address.c
-  set(EXTRA_NEEDED_LIBS winmm.lib ws2_32.lib Iphlpapi.lib)
+  set(EXTRA_PA_LIBS winmm.lib)
+  set(EXTRA_NYQUIST_LIBS ws2_32.lib Iphlpapi.lib)  
 endif(UNIX)
 
-target_link_libraries(ny ${EXTRA_NEEDED_LIBS})
+target_link_libraries(ny ${EXTRA_NYQUIST_LIBS} ${EXTRA_PA_LIBS})
 
 # Create args for intgen  
 set(sndfnint_args "")  
@@ -869,4 +871,4 @@ add_custom_target(XLISP_C_Interfaces
 add_executable(syncwritetest portaudio_test/syncwrite.c)
 target_include_directories(syncwritetest PRIVATE portaudio/include)
 target_link_libraries(syncwritetest ${PORTAUDIO_LIBRARY})
-target_link_libraries(syncwritetest asound pthread m) 
+target_link_libraries(syncwritetest ${EXTRA_PA_LIBS})
