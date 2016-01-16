@@ -29,7 +29,7 @@ configures itself differently on Debian and doesn't need ALSA.
 
 Note 3: You will also need Java and ant
 
-Note 4: (The bad news...) Nyquist has recently switched from a
+Note 4: Nyquist has recently switched from a
 home-brew makefile system to CMake. You'll need to install cmake if
 you do not have it. At present, the cmake files work for Windows and
 OS X, but there are likely to be some problems with Linux that need
@@ -43,7 +43,9 @@ subdirectories, and use cd to change the current directory:
 
 Build Nyquist with cmake and make:
 
-    *** to be described ***
+    ccmake .
+        change configuration to Release
+        type c to configure, g to generate and exit
     make
     
 Set the search path (in bash), which tells Nyquist where to search

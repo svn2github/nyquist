@@ -410,7 +410,8 @@ void pv_initialize(Phase_vocoder x)
     PVREALLOC(pre_syn_phase, pv->fftsize / 2 + 1);
     // bin frequency, used in phase unwrapping
     PVREALLOC(bin_freq, pv->fftsize / 2 + 1);
-    for (int i = 0; i <= pv->fftsize / 2; i++)
+    int i;
+    for (i = 0; i <= pv->fftsize / 2; i++)
         pv->bin_freq[i] = (float) (TWOPI * i / pv->fftsize);
     // get_effective_pos() maps from the beginning of the
     // next block to the corresponding input sample. Since
@@ -468,13 +469,14 @@ float *pv_window(Phase_vocoder x, float (*window_type)(double x))
     float sum_window_square = 0, COLA_factor;
     int window_length = pv->fftsize;
     float *window = (float *)pv->malloc(window_length * sizeof(float));
-    for (int i = 0; i < window_length; i++) {
+    int i;
+    for (i = 0; i < window_length; i++) {
         window[i] = window_type((double)i / window_length);
         // note that the computation is all double even if window[i] is float
         sum_window_square += window[i] * window[i];
     }
     COLA_factor = sum_window_square / pv->syn_hopsize;
-    for (int i = 0; i <= pv->fftsize - 1; i++)
+    for (i = 0; i <= pv->fftsize - 1; i++)
         window[i] = (float) (window[i] / sqrt(COLA_factor));
     return window;
 }
@@ -654,7 +656,7 @@ void compute_one_frame(PV *pv, int ana_hopsize)
     ana_phase[0] = 0;
     mag[fftsize / 2] = ana_frame[1];
     ana_phase[fftsize / 2] = 0;
-    for (int i = 1; i < fftsize / 2; i++) {
+    for (i = 1; i < fftsize / 2; i++) {
         float real = ana_frame[2 * i];
         float imag = ana_frame[2 * i + 1];
         mag[i] = (float)sqrt(real * real + imag * imag);
@@ -829,7 +831,7 @@ void compute_one_frame(PV *pv, int ana_hopsize)
 
         }
     } else if (pv->mode == PV_MODE_STANDARD) {
-        for (int i = 0; i <= fftsize / 2; i++) {
+        for (i = 0; i <= fftsize / 2; i++) {
             // increment between actual phase increment value
             // and the phase increment value got when the
             // it's the nearest bin frequency. Used
@@ -990,9 +992,11 @@ float *pv_get_output(Phase_vocoder x)
     // compute frames and add them to the output_buffer until there
     // are blocksize samples ready to deliver
     D printf("pv_get_output: frames_to_compute %d\n", frames_to_compute);
-    for (int frame = 0; frame < frames_to_compute; frame++) {
+    int frame;
+    for (frame = 0; frame < frames_to_compute; frame++) {
         assert(pv->frame_next - out_next < blocksize);
-        for (int i = 0; i < fftsize; i++) // get and window the buffer
+	int i;
+        for (i = 0; i < fftsize; i++) // get and window the buffer
             ana_frame[i] = input_head[i] * ana_win[i];
         ana_center = input_head + fftsize / 2;
         D printf("    mid ana_frame->%g at %ld\n", *ana_center,
@@ -1072,7 +1076,8 @@ float *pv_get_output2(Phase_vocoder x)
         /*DBG
         write_pv_frame(out_cnt - fftsize / 2, ana_frame, fftsize, "pvana");
         DBG*/
-        for (int i = 0; i < fftsize; i++) ana_frame[i] *= ana_win[i];
+	int i;
+        for (i = 0; i < fftsize; i++) ana_frame[i] *= ana_win[i];
         compute_one_frame(pv, ana_hopsize);
         pv->first_time = FALSE;
         D printf("pv_get_output2: blocksize %ld frame_next %ld "

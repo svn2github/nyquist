@@ -21,7 +21,8 @@ float hamm(double x)
 void OneDimensionFFTshift(float vector[], int VectorLength)
 {
     float temp;
-    for (int i = 0; i <= VectorLength / 2 - 1; i++)
+    int i;
+    for (i = 0; i <= VectorLength / 2 - 1; i++)
     {
         temp = vector[i];
         vector[i] = vector[VectorLength / 2 + i];

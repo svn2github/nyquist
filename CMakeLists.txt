@@ -340,12 +340,14 @@ if(APPLE)
 else(APPLE)
     # Linux
     set(USE_ALSA 1 CACHE BOOL "Use ALSA audio rather than OSS")
+    
     if(USE_ALSA)
-      set_target_properties(portaudio_static PROPERTIES COMPILE_FLAGS
-            "-DPA_USE_ALSA=1")
+      set(ALSA_FLAGS "-DPA_USE_ALSA=1")
+    else(USE_ALSA)
+      set(ALSA_FLAGS "")
     endif(USE_ALSA)
     set_target_properties(portaudio_static PROPERTIES COMPILE_FLAGS 
-            "-DPA_USE_OSS=1 -DHAVE_LINUX_SOUNDCARD_H")
+      "-DPA_USE_OSS=1 -DHAVE_LINUX_SOUNDCARD_H ${ALSA_FLAGS}")
 endif(APPLE)
 else(UNIX)
     # Windows
@@ -755,6 +757,11 @@ else()
     add_dependencies(NyquistIDE ny)
   else(APPLE)
     if(UNIX) # Linux
+      if(USE_ALSA)
+	set(SYSTEM_LSP sys/unix/alsa/system.lsp)
+      else(USE_ALSA)
+	set(SYSTEM_LSP sys/unix/nonalsa/system.lsp)
+      endif(USE_ALSA)
       add_custom_target(jNyqIDE ALL 
           mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden
         COMMAND javac jnyqide/*.java
@@ -763,6 +770,9 @@ else()
         COMMAND rm -f jnyqide/jNyqIDE.jar
         COMMAND 
           jar -cfm jnyqide/jNyqIDE.jar jnyqide/manifest.txt jnyqide/*.class
+	COMMAND rm -f jnyqide/ny
+        COMMAND ln -s ../ny jnyqide/ny
+	COMMAND cp ${SYSTEM_LSP} runtime
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	COMMENT "Building jnyqide/jNyqIDE.jar")
       add_dependencies(jNyqIDE ny)
@@ -855,3 +865,8 @@ add_custom_target(XLISP_C_Interfaces
   COMMAND intgen nyqsrc/sndfnint ${sndfnint_args}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   SOURCES ${sndfnint_args} ${seqfnint_args})
+
+add_executable(syncwritetest portaudio_test/syncwrite.c)
+target_include_directories(syncwritetest PRIVATE portaudio/include)
+target_link_libraries(syncwritetest ${PORTAUDIO_LIBRARY})
+target_link_libraries(syncwritetest asound pthread m) 

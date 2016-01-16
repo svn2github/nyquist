@@ -71,7 +71,8 @@
 void fft_shift(float *x, int len)
 {
     int j = len / 2;
-    for (int i = 0; i < len / 2; i++) {
+    int i;
+    for (i = 0; i < len / 2; i++) {
         float temp = x[i];
         x[i] = x[j];
         x[j++] = temp;
