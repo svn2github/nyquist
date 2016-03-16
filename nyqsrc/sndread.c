@@ -176,7 +176,7 @@ LVAL snd_make_read(
 
     if (!susp->sndfile) {
         char error[240];
-        sprintf(error, "SND-READ: Cannot open file '%s' because of %s", filename,
+        snprintf(error, 240, "SND-READ: Cannot open file '%s' because of %s", filename,
                 sf_strerror(susp->sndfile));
         xlfail(error);
     }

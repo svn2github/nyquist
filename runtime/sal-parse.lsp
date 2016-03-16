@@ -830,6 +830,7 @@
                 (not (fboundp sym)) ; existing functions not suspicious
                 (not (boundp sym))  ; existing globals not suspicious
                 (not (member sym *sal-local-variables*))
+                (not (eq sym '->))  ; used by make-markov, so let it pass
                 (contains-op-char str)) ; suspicious if embedded operators
            (sal-warning
              (strcat "Identifier contains operator character(s).\n"
@@ -866,7 +867,7 @@
                (equal str "->")) ; symbol can be "->"
            (let ((info ()) sym)
              (if pkg (push (cons ':pkg pkg) info))
-             (if dot (push (cons ':slot dot) info))             
+             (if dot (push (cons ':slot dot) info))
              ;(display "in symbol-token?" str)
              (setf sym (sal-string-to-symbol str))
              (make-token :type ':id :string str
@@ -886,6 +887,7 @@
           ;     (errexit errf input bad pos )
           ;     (setq ltr 0)
           ;     ))
+          ((char= chr #\$) (incf ltr)) ;; "$" is treated as a letter
           ((char= chr #\:)
            ; allowable forms are :foo, foo:bar, :foo:bar
            (if (> i 0) ;; lisp keyword symbols ok
@@ -1782,6 +1784,8 @@
     (while (not (token-is :rc))
            (cond ((token-is '(:int :float :id :bool :key :string))
                   (push (token-lisp (parse-token)) elts))
+                 ((token-is *sal-operators*)
+                  (push (intern (token-string (parse-token))) elts))
                  ((token-is :lc)
                   (push (parse-list) elts))
                  (t

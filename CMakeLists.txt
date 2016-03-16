@@ -393,7 +393,7 @@ target_include_directories(lo_static PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/liblo/src 
   ${LIBLO_EXTRA_INCLUDES})
 
-else()
+else(USE_SOURCE_LIBS)
 
 # sndfile
 find_library(LIBSNDFILE_LIBRARY sndfile)
@@ -421,7 +421,7 @@ if(NOT LIBLO_LIBRARY)
   message(FATAL_ERROR "Nyquist requires the liblo library")
 endif()
  
-endif()
+endif(USE_SOURCE_LIBS)
 
 #######################
 # BUILD CONFIGURATION #

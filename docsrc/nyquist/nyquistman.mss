@@ -132,7 +132,8 @@ machine software. The Xmusic library, particularly the pattern specification,
 was inspired by Rick Taube's Common Music. The functions for generating
 probability distributions were implemented by Andreas Pfenning. John Chowning 
 and Jorge Sastre contributed a SAL implementation of Chowning's voice 
-synthesis technique.
+synthesis technique. Chen Ziheng implemented the majority of the cmupv
+phase vocoder library used for Nyquist's phasevocoder and pv-pitch-time functions.
 
 Starting with Version 3, Nyquist supports a version of SAL, providing
 an alternative to Lisp syntax. SAL was designed by Rick Taube, and the
@@ -820,6 +821,7 @@ Note: these dynamics values are subject to change.
 @end(display)
 
 @b(Pitches@index(pitch notation)) 
+@index(tuning)@index(A440)@index(scale, tuning)
 Pitches are based on an A4 of 440Hz.  To achieve a different tuning,
 set @code(*A4-Hertz*) to the desired frequency for A4, and call
 @code[(set-pitch-names)].  This will recompute the names listed below with a
@@ -2504,6 +2506,18 @@ is an expression for ``play minus file,'' where @code(play) and @code(file) are
 two separate identifiers. Fortunately, no spaces are needed around commas
 and parentheses.
 
+The set SAL identifiers is difficult to describe due to a number of interacting
+rules designed to prevent surprising or confusing code. The exact details can be
+found in the @code(symbol-token?) function in @code(sal-parse.lsp). To determine
+if an identifier is allowed, you can also follow the following example, which tests
+whether @code($a@@) is a valid identifier:
+
+@begin(example)
+SAL> print type-of(quote($a@@))
+@end(example)
+
+If this statement prints @code(SYMBOL), then the quoted expression is a valid identifier. If SAL reports a "parse error" or some other type, then the quoted expression is not a valid identifier.
+
 In SAL, whitespace (any sequence of space, newline, or tab characters)
 is sometimes necessary to separate lexical tokens, but
 otherwise, spaces and indentation are ignored. To make SAL readable,
@@ -2553,7 +2567,7 @@ variable is determined at runtime by its value.
 
 Additional simple expressions in SAL are:
 @begin(itemize)
-lists such as @code[{c 60 e 64}]. Note that there are no commas to separate list elements, and symbols in lists are not evaluated as variables but stand for themselves. Lists may contain numbers, booleans, symbols, strings, and other lists.
+lists such as @code[{c 60 e 64}]. Note that there are no commas to separate list elements, and symbols in lists are not evaluated as variables but stand for themselves. Lists may contain numbers, booleans (which represent XLisp's @code(T) or @code(NIL), SAL identifiers (representing XLisp symbols), strings, SAL operators (representing XLisp symbols), and nested lists.
 
 Booleans: SAL interprets @code(#t)@index(#t) as true and @code(#f)@index(#f)
 as false. (As far
@@ -3616,7 +3630,7 @@ rounded or clipped. The input parameter must be a @code(FIXNUM) or
 @codef[set-sound-srate(@pragma(defn)@index(set-sound-srate)@index(sampling rate)@i(rate))] @c{[sal]}@*
 @altdef{@code[(set-sound-srate @i(rate))] @c{[lisp]}}@\Sets the default sampling rate for audio signals to @i(rate) by setting @code(*default-sound-srate*) and reinitializing the environment.  Do not call this within any synthesis function (see the @code(sound-srate-abs) transformation, Section @ref(sound-srate-abs-sec)).
 
-@codef[set-pitch-names(@pragma(defn)@index(set-pitch-names))] @c{[sal]}@*
+@codef[set-pitch-names(@pragma(defn)@index(set-pitch-names)@index(tuning)@index(scale, tuning))] @c{[sal]}@*
 @altdef{@code[(set-pitch-names)] @c{[lis]}}@\Initializes pitch 
 variables (@code(c0), @code(cs0), @code(df0), @code(d0), ... @code(b0), 
  @code(c1), ... @code(b7)).  A440 (the default tuning) is represented by
@@ -3678,8 +3692,8 @@ velocity 1 to -60 dB and 127 to 0 dB. The amplitude is proportional to
 the square of MIDI velocity. The input @i(x) can be a @code(FIXNUM) or
 @code(FLONUM) but not a sound. The result is a @code[FLONUM].
 
-@code[vel-to-linear(@pragma(defn)@index(vel-to-linear)@i(x))]
-@c{[sal]}@* @altdef{@code[(vel-to-linear @i(x))] @c{[lisp]}}@\Returns
+@codef[vel-to-linear(@pragma(defn)@index(vel-to-linear)@i(x))] @c{[sal]}@*
+@altdef{@code[(vel-to-linear @i(x))] @c{[lisp]}}@\Returns
 the conversion of @i(x) from MIDI velocity to linear amplitude
 ratio using a rule that maps MIDI 
 velocity 1 to -60 dB (0.001) and 127 to unity gain. The amplitude is proportional to
@@ -4706,7 +4720,7 @@ cost of greater computation). The @i(mode) is a FIXNUM that defaults to
 that attempts to reduce phase artifacts by preserving the phase relationships
 between peaks and nearby bins. A value of 2 invokes a ``robot voice'' mode
 that assigns fixed phases and creates a constant pitch (controlled
-by the hopsize) vocoder-like effect.
+by the hopsize) vocoder-like effect. (Thanks to M.C.Sharma for this idea.)
 
 @codef{pv-time-pitch(@pragma(defn)@index(pv-time-pitch)@index(transpose)@index(pitch shift)@i(s),
     @i(stretchfn), @i(pitchfn), @i(dur), [@i(fftsize), @i(hopsize), @i(mode)])} @c{[sal]}@*
@@ -5078,8 +5092,10 @@ Note that @code(play) is a command in SAL. In XLISP, it is a function,
 so the syntax is @code[(play @i(sound))], and in SAL, you can call the
 XLISP function as @code[#play(@i(sound))].
 The @code(play) command or function 
-writes a file and plays it.  The details of this
-are system-dependent, but @code(play) is defined in the file
+writes a file and plays it.  The @i(sound) is any expression that
+evaluates to a SOUND. Typically, this should be function call,
+in which case the samples are computed incrementally and not retained in main memory (an advantage for large sounds). If the expression is a variable containing a SOUND (which may or may not be fully evaluated yet), the SOUND is fully evaluated and all samples are retained in the variable. The 
+ @code(play) function is defined in the file
 @code(system.lsp).  The variable @code(*default-sf-dir*)@index(sound file directory default)@index(directory, default sound file)@index(default sound file directory)@index(temporary sound files directory)
 @index(*default-sf-dir*) names a directory into which to save a sound file. Be careful not to call @code(play) or @code(sound-play) within a function and then
 invoke that function from another @code(play) command.@pragma{forceparagraph}
@@ -7666,7 +7682,7 @@ might be @code[(C A C) (A B C)].
 @begin(fndefs)
 @codef{make-markov(@pragma(defn)@index(make-markov)@index(markov pattern)@index(pattern, markov)@i(rules), past: @i(past), produces: @i(produces), for: @i(for), name: @i(name), trace: @i(trace))} @c{[sal]}@*
 @altdef{@code{(make-markov @i(rules) @i(past) :produces @i(produces) :for @i(for) :name @i(name) :trace @i(trace))} @c{[lisp]}}@\Generate a sequence
-of items from a Markov process. The @i(rules) parameter has the form: 
+of items from a Markov process. The @i(rules) parameter is a list of rules where each rule has the form: 
 @code[(@i(prev1) @i(prev2) ... @i(prevn) -> @i(next1) @i(next2) ... @i(nextn))]
 where @i(prev1) through @i(prevn) represent a sequence of most recent
 (past) states. The symbol @code(*) is treated specially: it matches any

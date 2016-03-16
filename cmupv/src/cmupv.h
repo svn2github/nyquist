@@ -120,7 +120,8 @@ void pv_set_syn_window(Phase_vocoder x, float *window);
 //      be refined in the future. It is inspired by Jean Laroche and
 //      Mark Dolson, "Phase-Vocoder: About this phasiness business"
 //   PV_MODE_ROBOVOICE, fixes the phases to create a deliberate
-//      modulation, generating a pitch due to the hopsize period
+//      modulation, generating a pitch due to the hopsize period.
+//      Thanks to M.C.Sharma for this idea.
 //   illegal mode values are ignored
 void pv_set_mode(Phase_vocoder x, int mode);
 

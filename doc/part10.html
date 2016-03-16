@@ -4,7 +4,7 @@
 <body bgcolor="ffffff">
 <a href = "part9.html">Previous Section</a> | <a href = "part11.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
 <hr>
-<a name = "109"><h2>Interactive Nyquist</h2></a><a name="index859"></a>
+<a name = "109"><h2>Interactive Nyquist</h2></a><a name="index864"></a>
 
 <p>
 Nyquist is not intended for real-time performance, but it has some
@@ -70,7 +70,7 @@ These will send values into the sliders array in the Nyquist
 process. To control a sound, you use built-in functions to retrieve
 real-time values from the sliders array as sound is being played.
 Further discussion and examples can be found in 
-<code>demos/slider-demos.sal</code><a name="index860"></a><a name="index861"></a>. 
+<code>demos/slider-demos.sal</code><a name="index865"></a><a name="index866"></a>. 
 <p>
 <a name = "111"><h4>Creating a Control Panel</h4></a>
 A control panel is created with <code>make-slider-panel</code>, which takes
@@ -82,7 +82,7 @@ code by calling <code>close-slider-panel</code>.
 <p>
 <dl>
 <dt>
-<code>make-slider-panel(<a name="index862"></a><a name="index863"></a><a name="index864"></a><i>name</i>, <i>color</i>)</code> [SAL]<br>
+<code>make-slider-panel(<a name="index867"></a><a name="index868"></a><a name="index869"></a><i>name</i>, <i>color</i>)</code> [SAL]<br>
 
 <code>(make-slider-panel <i>name</i> <i>color</i>)</code> [LISP]<dd>Create
 a control panel in the IDE. The title of the control panel window is
@@ -91,7 +91,7 @@ given by <i>name</i>, a STRING. The color of the panel is given by
 colors are implementation-dependent, but different numbers give
 distinguishable colors. You must load <code>sliders.lsp</code> to access
 this function.<br><br>
-<dt><code>close-slider-panel(<a name="index865"></a><i>name</i>)</code> [SAL]<br>
+<dt><code>close-slider-panel(<a name="index870"></a><i>name</i>)</code> [SAL]<br>
 
 <code>(close-slider-panel <i>name</i>)</code>
 [LISP]<dd>Close 
@@ -110,7 +110,7 @@ and changes back when the mouse button is released.
 <p>
 <dl>
 <dt>
-<code>make-slider(<a name="index866"></a><a name="index867"></a><i>name</i>,
+<code>make-slider(<a name="index871"></a><a name="index872"></a><i>name</i>,
 <i>init</i>, <i>low</i>, <i>high</i>)</code> [SAL]<br>
 
 <code>(make-slider <i>name</i> <i>init</i> <i>low</i> <i>high</i>)</code> [LISP]<dd>Create
@@ -122,7 +122,7 @@ value specified by <i>low</i>, a FLONUM, and a maximum value specified by
 <i>high</i>, a FLONUM. Sliders are added to the current panel in order from top
 to bottom. You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>make-button(<a name="index868"></a><a name="index869"></a><i>name</i>
+<dt><code>make-button(<a name="index873"></a><a name="index874"></a><i>name</i>
 [, <i>normal</i>])</code> [SAL]<br>
 
 <code>(make-button <i>name</i> [<i>normal</i>])</code> 
@@ -147,7 +147,7 @@ can then access these values with either <code>slider</code>,
 <p>
 <dl>
 <dt>
-<code>slider(<a name="index870"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
+<code>slider(<a name="index875"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
 
 <code>slider(<i>name</i> [, <i>dur</i>])</code> [SAL]<br>
 
@@ -169,7 +169,7 @@ named <i>name</i> to determine the value. In all cases, the optional
 <i>dur</i>, a FLONUM, is used to determine the duration of the
 sound. This duration is scaled by the environment in the usual way. You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>lpslider(<a name="index871"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
+<dt><code>lpslider(<a name="index876"></a><i>number</i> [, <i>dur</i>])</code> [SAL]<br>
 
 <code>lpslider(<i>name</i> [, <i>dur</i>])</code> [SAL]<br>
 
@@ -187,7 +187,7 @@ control value is adjusted. The low-pass filter cutoff is determined by
 <code>*lpslider-cutoff*</code>, which is initialized to 20Hz when
 <code>slider.lsp</code> is loaded. You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>get-slider-value(<a name="index872"></a><i>number</i>)</code> [SAL]<br>
+<dt><code>get-slider-value(<a name="index877"></a><i>number</i>)</code> [SAL]<br>
 
 <code>get-slider-value(<i>name</i>)</code> [SAL]<br>
 
@@ -206,7 +206,7 @@ most recently created control panel by <i>name</i>, a STRING, if only
 the named panel is searched for the named control. The result is a FLONUM.
 You must
 load <code>sliders.lsp</code> to access this function.<br><br>
-<dt><code>snd-slider(<a name="index873"></a><i>index</i>, <i>t0</i>, <i>srate</i>, <i>duration</i>)</code> [SAL]<br>
+<dt><code>snd-slider(<a name="index878"></a><i>index</i>, <i>t0</i>, <i>srate</i>, <i>duration</i>)</code> [SAL]<br>
 
 <code>(snd-slider <i>index</i> <i>t0</i> <i>srate</i> <i>duration</i>)</code> [LISP]<dd>Create
 a sound controlled by the slider named by <i>index</i> (an integer 
@@ -263,7 +263,7 @@ Here, a button control changes value from 0 to 1 when the button is
 <p>
 <dl>
 <dt>
-<code>stop-on-zero(<a name="index874"></a><i>s</i>)</code> [SAL]<br>
+<code>stop-on-zero(<a name="index879"></a><i>s</i>)</code> [SAL]<br>
 
 <code>(stop-on-zero <i>s</i>)</code>
 [LISP]<dd>Return a <code>SOUND</code> that is identical
@@ -275,7 +275,7 @@ interactively. (See the example above.)
 You must
 load <code>sliders.lsp</code> to access this function.<br><br>
 <dt>
-<code>trigger(<a name="index875"></a><i>s</i>, <i>beh</i>)</code> [SAL]<br>
+<code>trigger(<a name="index880"></a><i>s</i>, <i>beh</i>)</code> [SAL]<br>
 
 <code>(trigger <i>s</i> <i>beh</i>)</code> [LISP]<dd>Returns a sound which is the
 sum of zero or more possibly overlapping instances of the behavior <i>beh</i>.
@@ -300,12 +300,12 @@ and therefore would not work with real-time inputs, which was the motivation
 for <code>trigger</code> in the first place.
 </small>
 <br><br>
-<dt><code>snd-stoponzero(<a name="index876"></a><i>s</i>)</code> [SAL]<br>
+<dt><code>snd-stoponzero(<a name="index881"></a><i>s</i>)</code> [SAL]<br>
 
 <code>(snd-stoponzero <i>s</i>)</code>
 [LISP]<dd>This function is identical to
 <code>stop-on-zero</code>. You should use <code>stop-on-zero</code> instead.<br><br>
-<dt><code>snd-trigger(<a name="index877"></a><i>s</i>, <i>closure</i>)</code> [SAL]<br>
+<dt><code>snd-trigger(<a name="index882"></a><i>s</i>, <i>closure</i>)</code> [SAL]<br>
 
 <code>(snd-trigger <i>s</i> <i>closure</i>)</code> [LISP]<dd>This is a
 low-level support function for <code>trigger</code>. The <i>closure</i> takes a
@@ -314,7 +314,7 @@ details. Use <code>trigger</code> as described above and do not call this functi
 directly.
 </dl>
 <p>
-<a name = "115"><h3>Using Open Sound Control</h3></a><a name="index878"></a>
+<a name = "115"><h3>Using Open Sound Control</h3></a><a name="index883"></a>
 
 Open Sound Control (OSC) is a simple protocol for communicating music
 control parameters between software applications and across
@@ -340,7 +340,7 @@ Note: Open Sound Control must be enabled by calling
 installation instructions in <code>sys/win/README.txt</code> regarding
 <code>SystemRoot</code>.
 <p>
-<code>osc-enable(<a name="index879"></a><a name="index880"></a><a name="index881"></a><i>flag</i>)</code> [SAL]<br>
+<code>osc-enable(<a name="index884"></a><a name="index885"></a><a name="index886"></a><i>flag</i>)</code> [SAL]<br>
 
 <code>(osc-enable <i>flag</i>)</code> [LISP]Enable or disable Open Sound Control.
 (See Section <a href = "#115">"Using Open Sound Control"</a>.)
@@ -352,9 +352,9 @@ slider values accessed by the <code>slider</code> and
 <code>get-slider-value</code> functions. The second is of the form
 <code>/wii/orientation</code> with 
 two floating point values. This message is a special case to 
-support the DarwiinRemoteOsc<a name="index882"></a> program
+support the DarwiinRemoteOsc<a name="index887"></a> program
  which can relay data from
-a Nintendo<a name="index883"></a> WiiMote<a name="index884"></a>
+a Nintendo<a name="index888"></a> WiiMote<a name="index889"></a>
  device to Nyquist via OSC. The two orientation
 values control sliders 0 and 1.
 Disabling terminates the service (polling for messages) 
