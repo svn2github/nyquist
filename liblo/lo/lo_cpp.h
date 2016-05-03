@@ -522,7 +522,7 @@ namespace lo {
                 _bundle_handlers.get());
         }
 
-        int socket_fd() const
+        socket_type socket_fd() const
             { return lo_server_get_socket_fd(server); }
 
         int port() const

@@ -62,7 +62,7 @@ lo_address lo_address_new_with_proto(int proto, const char *host,
 
     a->ai = NULL;
     a->ai_first = NULL;
-    a->socket = -1;
+    a->socket = INVALID_SOCKET;
     a->ownsocket = 1;
     a->protocol = proto;
     a->flags = 0;
@@ -286,7 +286,7 @@ char *lo_address_get_url(lo_address a)
 void lo_address_free(lo_address a)
 {
     if (a) {
-        if (a->socket != -1 && a->ownsocket) {
+        if (a->socket != INVALID_SOCKET && a->ownsocket) {
 #ifdef SHUT_WR
             shutdown(a->socket, SHUT_WR);
 #endif
@@ -310,7 +310,7 @@ void lo_address_free_mem(lo_address a)
             free(a->addr.iface);
 
         memset(a, 0, sizeof(struct _lo_address));
-        a->socket = -1;
+        a->socket = INVALID_SOCKET;
     }
 }
 
@@ -498,7 +498,7 @@ static
 void lo_address_set_flags(lo_address t, int flags)
 {
     if (((t->flags & LO_NODELAY) != (flags & LO_NODELAY))
-        && t->socket > 0)
+        && t->socket != INVALID_SOCKET)
     {
         int option = (t->flags & LO_NODELAY)!=0;
         setsockopt(t->socket, IPPROTO_TCP, TCP_NODELAY,
@@ -539,7 +539,7 @@ void lo_address_copy(lo_address to, lo_address from)
 
 void lo_address_init_with_sockaddr(lo_address a,
                                    void *sa, size_t sa_len,
-                                   int sock, int prot)
+                                   socket_type sock, int prot)
 {
     int err = 0;
     assert(a != NULL);

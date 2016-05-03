@@ -1420,6 +1420,14 @@ The Xlisp 2.0 release has been extended with a profiling facility, which counts 
             @i<test>  @itemsep    the comparison function
 
             returns   @itemsep  the sorted list
+
+          Note: The comparison function should have two parameters and return true if the first parameter should come before the second parameter in the sorted result. For a list of numbers, built-in comparison functions can be used, e.g. @t[(sort '(3 2 1) #'<)] returns @t[(1 2 3)]. To sort a list of lists by the first element of each list, you can write a function to access the keys and compare them, e.g. 
+ @t[(sort '((3 c) (2 b) (1 a)) #'(lambda (x y) (< (car x) (car y))))] returns
+ @t[((1 A) (2 B) (3 C))]. In SAL, you could write@*
+ @t[function my-sort(a, b) return first(a) < first(b)]@*
+ @t[print sort({{3 c} {2 b} {1 a}}, quote(my-sort))], which will print
+ @t[{{1 A} {2 B} {3 C}}].
+
 @end(pdescription)
 @blankspace(1)
 @end(fdescription)

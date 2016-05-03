@@ -92,7 +92,57 @@
 
 (nyq:environment-init)
 
+(defun multichannel-soundp (v)
+  (prog ((rslt t))
+    (if (not (arrayp v)) (return nil))
+    (dotimes (i (length v))
+      (cond ((not (soundp (aref v i)))
+             (setf rslt nil)
+             (return nil))))
+    (return rslt)))
+
+(defun multichannelp (v)
+  (prog ((rslt t))
+    (if (not (arrayp v)) (return nil))
+    (dotimes (i (length v))
+      (cond ((not (or (numberp (aref v i)) (soundp (aref v i))))
+             (setf rslt nil)
+             (return nil))))
+    (return rslt)))
+
+(defun numbersp (v)
+  (prog ((rslt t))
+    (if (not (arrayp v)) (return nil))
+    (dotimes (i (length v))
+      (cond ((not (numberp (aref v i)))
+             (setf rslt nil)
+             (return nil))))
+    (return rslt)))
+
+(defun param-type (param)
+  (cond ((multichannel-soundp param)
+         "a multichannel SOUND")
+        ((null param) "NIL")
+        (t (symbol-name (type-of param)))))
+
+(defun param-to-string (param)
+  (if param
+      (format nil "~A, which is a ~A" param (param-type param))
+      (format nil "NIL")))
+
+(defun ny:assert (test msg &optional (param nil first-param)
+                                     (param2 nil second-param))
+  (cond ((not test)
+     (if first-param
+         (setf msg (strcat msg ", got " (param-to-string param) "")))
+     (if second-param
+         (setf msg (strcat msg ", and " (param-to-string param2))))
+     (error msg))))
+
+
 (defun get-duration (dur)
+  (ny:assert (numberp dur)
+          "GET-DURATION expects a number" dur)
   (let ((duration 
          (- (local-to-global (* (get-sustain) dur))
             (setf *rslt* (local-to-global 0)))))
@@ -147,7 +197,17 @@ functions assume durations are always positive.")))
 ;; OSCILATORS
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun build-harmonic (n table-size) (snd-sine 0 n table-size 1))
+(defun build-harmonic (n table-size)
+  (ny:assert (integerp table-size)
+    "In BUILD-HARMONIC, 2nd argument (table-size) must be an integer"
+    table-size)
+  (ny:assert (integerp n)
+    "In BUILD-HARMONIC, 1st argument (n) must be an integer harmonic number"
+    n)
+  (ny:assert (<= n (/ table-size 2))
+    "In BUiLD-HARMONIC, harmonic number should be less than half the table size"
+    (list n table-size))
+  (snd-sine 0 n table-size 1))
 
 (setf *SINE-TABLE* (list (build-harmonic 1 2048)
              (hz-to-step 1.0)
@@ -170,9 +230,69 @@ functions assume durations are always positive.")))
     hz))
 
 
+(defun ny:assert-table (fn-name index formal actual)
+  (if (not (and (listp actual) (= 3 (length actual))))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list of 3 elements"
+       fun-name index formal actual)))
+  (if (not (soundp (car actual)))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list beginning with a sound"
+       fun-name index formal actual)))
+  (if (not (numberp (second actual)))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch)"
+       fun-name index formal actual)))
+  (if (not (third actual))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list whose 3rd element is true"
+       fun-name index formal actual))))
+      
+
+(defun ny:assert-sample (fn-name index formal actual)
+  (if (not (and (listp actual) (= 3 (length actual))))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list of 3 elements"
+       fun-name index formal actual)))
+  (if (not (soundp (car actual)))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list beginning with a sound"
+       fun-name index formal actual)))
+  (if (not (numberp (second actual)))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch)"
+       fun-name index formal actual)))
+  (if (not (numberp (third actual)))
+      (error (format nil
+       "In ~A, ~A argument (~A) should be a list whose 3rd element is the sample start time"
+       fun-name index formal actual))))
+
+(defun ny:env-spec-p (env-spec)
+  (prog (len (rslt t))
+    (if (not (listp env-spec)) (return nil))
+    (setf len (length env-spec))
+    (if (< len 6) (return nil))
+    (if (> len 7) (return nil))
+    (dolist (x env-spec)
+      (cond ((not (numberp x))
+             (setf rslt nil)
+             (return nil))))
+    (return rslt)))
+
+
 ;; AMOSC
 ;;
 (defun amosc (pitch modulation &optional (sound *table*) (phase 0.0))
+  (ny:assert (numberp pitch)
+    "In AMOSC, 1st argument (pitch) should be a number"
+    pitch)
+  (ny:assert (soundp modulation)
+    "In AMOSC, 2nd argument (modulation) should be a sound"
+    modulation)
+  (ny:assert-table "AMOSC" "3rd" "table" sound)
+  (ny:assert (numberp phase)
+    "In AMOSC, 4th argument (phase) should be a number"
+    phase)
   (let ((modulation-srate (snd-srate modulation))
         (hz (calculate-hz pitch "amosc")))
     (scale-db (get-loud)
@@ -193,6 +313,16 @@ functions assume durations are always positive.")))
 ;; handle upsampling cases internally.
 ;;
 (defun fmosc (pitch modulation &optional (sound *table*) (phase 0.0))
+  (ny:assert (numberp pitch)
+    "In FMOSC, 1st argument (pitch) should be a number"
+    pitch)
+  (ny:assert (soundp modulation)
+    "In FMOSC, 2nd argument (modulation) should be a sound"
+    modulation)
+  (ny:assert-table "FMOSC" "3rd" "table" sound)
+  (ny:assert (numberp phase)
+    "In FMOSC, 4th argument (phase) should be a number"
+    phase)
   (let ((modulation-srate (snd-srate modulation))
         (hz (calculate-hz pitch "fmosc")))
     (scale-db (get-loud)
@@ -211,6 +341,15 @@ functions assume durations are always positive.")))
 ;; this code is based on FMOSC above
 ;;
 (defun fmfb (pitch index &optional (dur 1.0))
+  (ny:assert (numberp pitch)
+    "In FMFB, 1st argument (pitch) should be a number"
+    pitch)
+  (ny:assert (or (numberp index) (soundp index))
+    "In FMFB, 2nd argument (index) should be a number of sound"
+    index)
+  (ny:assert (numberp dur)
+    "In FMFB, 3rd argument (dur) should be a number"
+    phase)
  (let ((hz (calculate-hz pitch "fmfb")))
    (setf dur (get-duration dur))
    (cond ((soundp index) (ny:fmfbv hz index))
@@ -235,6 +374,13 @@ functions assume durations are always positive.")))
 ;;            ("time_type" "t0") ("sound_type" "s_fm"))
 ;; 
 (defun buzz (n pitch modulation)
+  (ny:assert (integer n)
+    "In BUZZ, 1st argument (n) should be an integer number (of harmonics)"
+    n)
+  (ny:assert (numberp pitch)
+    "In BUZZ, 2nd argument (pitch) should be a step number" pitch)
+  (ny:assert (soundp modulation)
+    "In BUZZ, 3rd argument (modulation) should be a sound" modulation)
   (let ((modulation-srate (snd-srate modulation))
 	(hz (calculate-hz pitch "buzz nominal")))
     (cond ((< *SOUND-SRATE* modulation-srate)
@@ -255,6 +401,11 @@ functions assume durations are always positive.")))
 ;; also, hz may be a scalar or a sound
 ;;
 (defun hzosc (hz &optional (sound *table*) (phase 0.0))
+  (ny:assert (numberp hz)
+    "In HZOSC, 1st argument (hz) should be a number" hz)
+  (ny:assert-table "HZOSC" "2nd" "table" sound)
+  (ny:assert (numberp phase)
+    "In HZOSC, 3rd argument (phase) should be a number" phase)
   (let (hz-srate)
     (cond ((numberp hz)
            (osc (hz-to-step hz) 1.0 sound phase))
@@ -287,39 +438,38 @@ functions assume durations are always positive.")))
 ;; length note.
 
 (defun siosc-breakpoints (breakpoints)
-  (display "siosc-breakpoints" breakpoints)
   (prog (sample-count result (last-count 0) time-factor)
     (setf time-factor
       (- (local-to-global (get-sustain))
          (local-to-global 0.0)))
     (setf time-factor (* time-factor *SOUND-SRATE*))
-    (cond ((and (listp breakpoints)
-        (cdr breakpoints)
-        (cddr breakpoints)))
-      (t (error "SIOSC table list must have at least 3 elements")))
+    (ny:assert (and (listp breakpoints)
+                    (cdr breakpoints)
+                    (cddr breakpoints))
+      "In SIOSC, 3rd argument (breakpoints) must be a list with at least 3 elements"
+      breakpoints)
 loop
-    (cond ((and (listp breakpoints)
-           (soundp (car breakpoints)))
-       (push (car breakpoints) result)
-       (setf breakpoints (cdr breakpoints)))
-      (t
-       (error "SIOSC expecting SOUND in table list")))
-    (cond ((and breakpoints
-        (listp breakpoints)
-        (numberp (car breakpoints)))
-       (setf sample-count (truncate
-        (+ 0.5 (* time-factor (car breakpoints)))))
-       (cond ((< sample-count last-count)
-          (setf sample-count (1+ last-count))))
-       (push sample-count result)
-       (setf last-count sample-count)
-       (setf breakpoints (cdr breakpoints))
-       (cond (breakpoints
-          (go loop))))
-      (breakpoints
-       (error "SIOSC expecting number (time) in table list")))
+    (ny:assert (and (listp breakpoints)
+                    (soundp (car breakpoints)))
+      "In SIOSC, expected a sound in breakpoints list"
+      (car breakpoints))
+    (push (car breakpoints) result)
+    (setf breakpoints (cdr breakpoints))
+    (cond (breakpoints
+           (ny:assert (and (listp breakpoints)
+                      (numberp (car breakpoints)))
+             "In SIOSC, expected a number (time) in breakpoints list"
+             (car breakpoints))
+           (setf sample-count (truncate
+                               (+ 0.5 (* time-factor (car breakpoints)))))
+           (cond ((< sample-count last-count)
+                  (setf sample-count (1+ last-count))))
+           (push sample-count result)
+           (setf last-count sample-count)
+           (setf breakpoints (cdr breakpoints))
+           (cond (breakpoints
+                  (go loop)))))
     (setf result (reverse result))
-    (display "siosc-breakpoints" result)
     (return result)))
 
 ;; SIOSC -- spectral interpolation oscillator
@@ -329,6 +479,10 @@ loop
 ;; handle upsampling cases internally.
 ;;
 (defun siosc (pitch modulation breakpoints)
+  (ny:assert (numberp pitch)
+    "In SIOSC, 1st argument (pitch) should be a step number" pitch)
+  (ny:assert (soundp modulation)
+    "In SIOSC, 2nd argument (modulation) should be a sound" modulation)
   (let ((modulation-srate (snd-srate modulation))
 	(hz (calculate-hz pitch "siosc nominal")))
     (cond ((< *SOUND-SRATE* modulation-srate)
@@ -349,6 +503,13 @@ loop
 ;;
 (defun lfo (freq &optional (duration 1.0)
          (sound *SINE-TABLE*) (phase 0.0))
+  (ny:assert (numberp freq)
+    "In LFO, 1st argument (freq) should be a number" freq)
+  (ny:assert (numberp duration)
+    "In LFO, 2nd argument (duration) should be a number" duration)
+  (ny:assert-table "LFO" "3rd" "table" sound)
+  (ny:assert (numberp phase)
+    "In LFO, 4th argument (phase) should be a number" phase)
   (let ((d (get-duration duration)))
     (if (minusp d) (setf d 0))
     (cond ((> freq (/ *CONTROL-SRATE* 2))
@@ -369,6 +530,13 @@ loop
 ;; FMLFO -- like LFO but uses frequency modulation
 ;;
 (defun fmlfo (freq &optional (sound *SINE-TABLE*) (phase 0.0))
+  (ny:assert (soundp freq)
+    "In FMLFO, 1st argument (freq) should be a sound"
+    freq)
+  (ny:assert-table "FMLFO" "2nd" "table" sound)
+  (ny:assert (numberp phase)
+    "In FMLFO, 3rd argument (phase) should be a number"
+    phase)
   (let ()
     (cond ((numberp freq)
            (lfo freq 1.0 sound phase))
@@ -385,8 +553,16 @@ loop
 ;;
 (defun osc (pitch &optional (duration 1.0) 
             (sound *TABLE*) (phase 0.0))
+  (ny:assert (numberp pitch)
+    "In OSC, 1st argument (pitch) should be a number" pitch)
+  (ny:assert (numberp duration)
+    "In OSC, 2nd argument (duration) should be a number" duration)
+  (ny:assert-table "OSC" "3rd" "table" sound)
+  (ny:assert (numberp phase)
+    "In OSC, 4th argument (phase) should be a number" phase)
   (let ((d  (get-duration duration))
-	(hz (calculate-hz pitch "osc")))
+        (hz (calculate-hz pitch "osc")))
+    (display "in osc" d)
     (set-logical-stop
       (scale-db (get-loud)
         (snd-osc 
@@ -403,6 +579,10 @@ loop
 ;; PARTIAL -- sine osc with built-in envelope scaling
 ;;
 (defun partial (steps env)
+  (ny:assert (numberp steps)
+    "In PARTIAL, 1st argument (steps) should be a number" freq)
+  (ny:assert (soundp env)
+    "In PARTIAL, 2nd argument (env) should be a sound" env)
   (let ((hz (calculate-hz steps "partial")))
     (scale-db (get-loud)
       (snd-partial *sound-srate* hz
@@ -413,6 +593,14 @@ loop
 ;;
 (defun sampler (pitch modulation 
                 &optional (sample *table*) (npoints 2))
+  (ny:assert (numberp pitch)
+    "In SAMPLER, 1st argument (pitch) should be a step number" pitch)
+  (ny:assert (soundp modulation)
+    "In SAMPLER, 2nd argument (modulation) should be a sound" modulation)
+  (ny:assert-sample "SAMPLER" "3rd" "table" sample)
+  (ny:assert (integer npoints)
+    "In BUZZ, 3rd argument (npoints) should be an integer number"
+    npoints)
   (let ((samp (car sample))
         (samp-pitch (cadr sample))
         (samp-loop-start (caddr sample))
@@ -435,6 +623,12 @@ loop
 ;; SINE -- simple sine oscillator
 ;;
 (defun sine (steps &optional (duration 1.0))
+  (ny:assert (numberp steps)
+    "In SINE, 1st argument (steps) should be a number"
+    steps)
+  (ny:assert (numberp duration)
+    "In SINE, 2nd argument (duration) should be a number"
+    duration)
   (let ((hz (calculate-hz steps "sine"))
         (d (get-duration duration)))
     (set-logical-stop
@@ -449,6 +643,15 @@ loop
 ;;            ("time_type" "d") ("double" "final_amp"))
 ;;
 (defun pluck (steps &optional (duration 1.0) (final-amp 0.001))
+  (ny:assert (numberp steps)
+    "In PLUCK, 1st argument (steps) should be a number"
+    steps)
+  (ny:assert (numberp duration)
+    "In PLUCK, 2nd argument (duration) should be a number"
+    duration)
+  (ny:assert (numberp final-amp)
+    "In PLUCK, 2nd argument (final-amp) should be a number"
+    final-amp)
   (let ((hz (calculate-hz steps "pluck"))
         (d (get-duration duration)))
     (set-logical-stop
@@ -505,10 +708,13 @@ loop
 
 
 (defmacro at (x s)
- `(progv '(*WARP*) (list (list (+ (warp-time *WARP*) 
-                  (* (warp-stretch *WARP*) ,x))
-                   (warp-stretch *WARP*)
-                   (warp-function *WARP*)))
+ `(progv '(*WARP*)
+         (progn (ny:assert (numberp ,x)
+                  "1st argument of AT (or 2nd argument of SAL's @ operator) should be a time offset number" ,x)
+                (list (list (+ (warp-time *WARP*) 
+                            (* (warp-stretch *WARP*) ,x))
+                            (warp-stretch *WARP*)
+                            (warp-function *WARP*))))
       ,s))
 
 
@@ -525,11 +731,13 @@ loop
 ;;
 (defmacro at-abs (x s)
  `(progv '(*WARP*)
-         (if (warp-function *WARP*)
-             (list (list (sref-inverse (warp-function *WARP*) ,x)
-                         (warp-stretch *WARP*)
-                         (warp-function *WARP*)))
-             (list (list ,x (warp-stretch *WARP*) NIL)))
+         (progn (ny:assert (numberp ,x)
+           "1st argument of AT-ABS (or 2nd argument of SAL's @@ operator) should be a number (start time)" ,x)
+           (if (warp-function *WARP*)
+               (list (list (sref-inverse (warp-function *WARP*) ,x)
+                           (warp-stretch *WARP*)
+                           (warp-function *WARP*)))
+               (list (list ,x (warp-stretch *WARP*) NIL))))
     ;; issue warning if sound starts in the past
     (check-t0 ,s ',s)))
 
@@ -552,17 +760,22 @@ loop
 ;; (CLIP S1 VALUE) - clip maximum amplitude to value
 ;
 (defun clip (x v)
+  (ny:assert (or (numberp x) (soundp x) (multichannelp x))
+    "In CLIP, 1st argument must be a number, sound, or array thereof"
+    x)
+  (ny:assert (numberp v)
+    "In CLIP, 2nd argument must be a number" v)
   (cond ((numberp x)
-     (max (min x v) (- v)))
-    ((arrayp x)
-     (let* ((len (length x))
-        (result (make-array len)))
-        (dotimes (i len)
-        (setf (aref result i) 
-              (snd-clip (aref x i) v)))
-        result))
-    (t
-     (snd-clip x v))))
+         (max (min x v) (- v)))
+        ((arrayp x)
+         (let* ((len (length x))
+           (result (make-array len)))
+           (dotimes (i len)
+             (setf (aref result i) 
+             (snd-clip (aref x i) v)))
+         result))
+        (t ;; x is a sound
+         (snd-clip x v))))
 
 
 ;; (NYQ:COERCE-TO S1 S2) - expand sound s1 to type of s2
@@ -587,7 +800,11 @@ loop
 
 
 (defmacro control-srate-abs (r s)
-  `(progv '(*CONTROL-SRATE*) (list ,r)
+  `(progv '(*CONTROL-SRATE*)
+          (progn (ny:assert (numberp ,r)
+                   "In CONTROL-SRATE-ABS, 1st argument should be a number (sample rate)"
+                   ,r)
+                 (list ,r))
       ,s))
 
 ; db = 20log(ratio)
@@ -599,6 +816,9 @@ loop
 (setf ln10over20 (/ (log 10.0) 20))
 
 (defun db-to-linear (x) 
+  (ny:assert (or (numberp x) (soundp x) (multichannel x))
+    "In DB-TO-LINEAR, argument must be a number, sound, or array thereof"
+    x)
   (cond ((numberp x)
      (exp (* ln10over20 x)))
     ((arrayp x)
@@ -613,6 +833,9 @@ loop
 
 
 (defun linear-to-db (x) 
+  (ny:assert (or (numberp x) (soundp x) (multichannelp x))
+    "In LINEAR-TO-DB, argument must be a number, sound, or array thereof"
+    x)
   (cond ((numberp x)
      (/ (log (float x)) ln10over20))
     ((arrayp x)
@@ -632,6 +855,9 @@ loop
 
 
 (defun step-to-hz (x)
+  (ny:assert (or (numberp x) (soundp x) (multichannelp x))
+    "In STEP-TO-HZ, argument must be a number, sound, or array thereof"
+    x)
   (cond ((numberp x)
          (scalar-step-to-hz x))
         ((arrayp x)
@@ -645,6 +871,9 @@ loop
                             2.1011784386926213)))))
 
 (defun hz-to-step (x)
+  (ny:assert (or (numberp x) (soundp x) (multichannelp x))
+    "In HZ-TO-STEP, argument must be a number, sound, or array thereof"
+    x)
   (cond ((numberp x)
          (scalar-hz-to-step x))
         ((arrayp x)
@@ -661,12 +890,22 @@ loop
 ; sref - access a sound at a given time point
 ;    note that the time is transformed to global
 (defun sref (sound point)
+  (ny:assert (soundp sound)
+    "In SREF, 1st argument must be a sound" sound)
+  (ny:assert (numberp point)
+    "In SREF, 2nd argument must be a number (time)", point)
   (snd-sref sound (local-to-global point)))
 
 
 ; extract - start is stretched and shifted as is stop
 ;  result is shifted to start at local time zero
 (defun extract (start stop sound)
+  (ny:assert (numberp start)
+    "In EXTRACT, 1st argument (start) must be a number" start)
+  (ny:assert (numberp stop)
+    "In EXTRACT, 2nd argument (stop) must be a number" stop)
+  (ny:assert (soundp sound)
+    "In EXTRACT, 3rd argument (sound) must be a sound" sound)
   (extract-abs (local-to-global start) (local-to-global stop) sound
                (local-to-global 0)))
 
@@ -680,6 +919,14 @@ loop
 ;  The solution is that if t0 > start_time, subtract the difference
 ;  from start and stop to shift them appropriately.
 (defun extract-abs (start stop sound &optional (start-time 0))
+  (ny:assert (numberp start)
+    "In EXTRACT, 1st argument (start) must be a number" start)
+  (ny:assert (numberp stop)
+    "In EXTRACT, 2nd argument (stop) must be a number" stop)
+  (ny:assert (soundp sound)
+    "In EXTRACT, 3rd argument (sound) must be a sound" sound)
+  (ny:assert (numberp start-time)
+    "In EXTRACT, 4th argument (start-time) must be a number" start-time)
   (let ((t0 (snd-t0 sound)) offset)
     (cond ((/= t0 start-time)
            (setf offset (- t0 start-time))
@@ -689,6 +936,9 @@ loop
      
 
 (defun local-to-global (local-time)
+  (ny:assert (numberp local-time)
+    "In LOCAL-TO-GLOBAL, argument (local-time) must be a number"
+    local-time)
   (let ((d (warp-time *WARP*))
     (s (warp-stretch *WARP*))
     (w (warp-function *WARP*))
@@ -698,12 +948,18 @@ loop
 
 
 (defmacro loud (x s)
- `(progv '(*LOUD*) (list (sum *LOUD* ,x))
+ `(progv '(*LOUD*)
+         (progn (ny:assert (numberp x)
+                  "In LOUD, 1st argument must be a number", x)
+                (list (sum *LOUD* ,x)))
      ,s))
 
 
 (defmacro loud-abs (x s)
- `(progv '(*LOUD*) (list ,x)
+ `(progv '(*LOUD*)
+         (progn (ny:assert (numberp x)
+                  "In LOUD-ABS, 1st argument must be a number", x)
+                (list ,x))
      ,s))
 
 (defun must-be-sound (x)
@@ -714,13 +970,22 @@ loop
 ;; SCALE-DB -- same as scale, but argument is in db
 ;;
 (defun scale-db (factor sound)
-  (scale (db-to-linear factor) sound))
+  (ny:assert (or (numberp factor) (numbersp factor))
+    "In SCALE-DB, 1st argument must be number (scale factor in dB) or array of numbers" factor)
+  (ny:assert (or (soundp sound) (multichannel-soundp sound))
+    "In SCALE-DB, 2nd argument must be a sound or multichannel sound" sound)
+  (multichan-expand "SCALE-DB" #'scale (db-to-linear factor) sound))
+
 
 (defun set-control-srate (rate)
+  (ny:assert (numberp rate)
+    "In SET-CONTROL-SRATE, argument (rate) should be a number" rate)
   (setf *default-control-srate* (float rate))
   (nyq:environment-init))
 
 (defun set-sound-srate (rate) 
+  (ny:assert (numberp rate)
+    "In SET-SOUND-SRATE, argument (rate) should be a number" rate)
   (setf *default-sound-srate* (float rate))
   (nyq:environment-init))
 
@@ -734,6 +999,16 @@ loop
 ;     plot the points that exist.
 ;
 (defun s-plot (snd &optional (dur 2.0) (n 1000))
+  (ny:assert (soundp snd)
+    "In S-PLOT (or PLOT command), 1st argument should be a sound",
+    snd)
+  (ny:assert (numberp dur)
+    "In S-PLOT (or PLOT command), 2nd argument (dur) should be a number",
+    dur)
+  (ny:assert (integerp n)
+    "In S-PLOT (or PLOT command), 3rd argument (n) should be an integer number of points",
+    n)
+
   (prog* ((sr (snd-srate snd))
           (t0 (snd-t0 snd))
           (filename (soundfilename *default-plot-file*))
@@ -809,35 +1084,51 @@ loop
 
 
 (defmacro sound-srate-abs (r s)
-  `(progv '(*SOUND-SRATE*) (list ,r)
+  `(progv '(*SOUND-SRATE*) 
+          (progn (ny:assert (numberp ,r)
+                   "In SOUND-SRATE-ABS, 1st argument should be a number (sample rate)"
+                   ,r)
+                 (list ,r))
       ,s))
 
 
 (defmacro stretch (x s)
- `(progv '(*WARP*) (list (list (warp-time *WARP*) 
-                   (* (warp-stretch *WARP*) ,x)
-                   (warp-function *WARP*)))
+ `(progv '(*WARP*)
+         (progn (ny:assert (numberp ,x)
+                  "1st argument of STRETCH (or 2nd argument of SAL's ~ operator) should be a number (stretch factor)", x)
+                (list (list (warp-time *WARP*) 
+                            (* (warp-stretch *WARP*) ,x)
+                            (warp-function *WARP*))))
      (if (minusp (warp-stretch *WARP*))
          (break "Negative stretch factor is not allowed"))
-             ,s))
+     ,s))
 
          
 (defmacro stretch-abs (x s)
- `(progv '(*WARP*) (list (list (local-to-global 0)
-                   ,x
-                   nil))
+ `(progv '(*WARP*)
+         (progn (ny:assert (numberp ,x)
+                  "1st argument of STRETCH (or 2nd argument of SAL's ~ operator) should be a number (stretch factor)", x)
+                (list (list (local-to-global 0)
+                            ,x
+                            nil)))
      (if (minusp (warp-stretch *WARP*))
          (break "Negative stretch factor is not allowed"))
-             ,s))
+     ,s))
 
 
 (defmacro sustain (x s)
- `(progv '(*SUSTAIN*) (list (prod *SUSTAIN* ,x))
+ `(progv '(*SUSTAIN*)
+         (progn (ny:assert (numberp x)
+                  "In SUSTAIN, 1st argument must be a number", x)
+                (list (prod *SUSTAIN* ,x)))
       ,s))
 
 
 (defmacro sustain-abs (x s)
- `(progv '(*SUSTAIN*) (list ,x)
+ `(progv '(*SUSTAIN*)
+         (progn (ny:assert (numberp x)
+                  "In SUSTAIN-ABS, 1st argument must be a number", x)
+                (list ,x))
       ,s))
 
 
@@ -857,12 +1148,18 @@ loop
 
 
 (defmacro transpose (x s)
- `(progv '(*TRANSPOSE*) (list (sum *TRANSPOSE* ,x))
+ `(progv '(*TRANSPOSE*)
+         (progn (ny:assert (numberp x)
+                  "In TRANSPOSE, 1st argument must be a number", x)
+                (list (sum *TRANSPOSE* ,x)))
       ,s))
 
 
 (defmacro transpose-abs (x s)
- `(progv '(*TRANSPOSE*) (list ,x)
+ `(progv '(*TRANSPOSE*)
+         (progn (ny:assert (numberp x)
+                  "In TRANSPOSE-ABS, 1st argument must be a number", x)
+                (list ,x))
       ,s))
 
 
@@ -909,7 +1206,16 @@ Your id please: ")
 ;; CONTROL-WARP -- apply a warp function to a control function
 ;; 
 (defun control-warp (warp-fn control &optional wrate)
+  (ny:assert (soundp warp-fn)
+    "In CONTROL-WARP, 1st argument (warp-fn) must be a sound"
+    warp-fn)
+  (ny:assert (soundp control)
+    "In CONTROL-WARP, 2nd argument (control) must be a sound"
+    control)
   (cond (wrate
+     (ny:assert (numberp wrate)
+       "In CONTROL-WARP, 3rd argument (wrate) must be a number"
+       wrate)
      (snd-resamplev control *control-srate*
             (snd-inverse warp-fn (local-to-global 0) wrate)))
     (t
@@ -922,6 +1228,8 @@ Your id please: ")
 ;; *START*, and *STOP* values to the argument.  The logical start time is at
 ;; local time 0.
 (defun cue (sound)
+  (ny:assert (or (soundp sound) (multichannel-soundp sound))
+    "In CUE, argument must be a sound or multichannel sound" sound)
   (cond ((arrayp sound)
      (let* ((len (length sound))
         (result (make-array len)))
@@ -981,6 +1289,8 @@ Your id please: ")
 
 
 (defun sound (sound)
+  (ny:assert (or (soundp sound) (multichannel-soundp sound))
+    "In SOUND, argument must be a sound or multichannel sound" sound)
   (cond ((arrayp sound)
      (nyq:sound-of-array sound))
     (t
@@ -990,6 +1300,10 @@ Your id please: ")
 ;; (SCALE-SRATE SOUND SCALE)
 ;; multiplies the sample rate by scale
 (defun scale-srate (sound scale)
+  (ny:assert (soundp sound)
+    "In SCALE-SRATE, 1st argument (sound) must be a sound" sound)
+  (ny:assert (numberp scale)
+    "In SCALE-SRATE, 2nd argument (scale) must be a number" scale)
   (let ((new-srate (* scale (snd-srate sound))))
     (snd-xform sound new-srate (snd-time sound) 
            MIN-START-TIME MAX-STOP-TIME 1.0)))
@@ -1001,6 +1315,10 @@ Your id please: ")
 ;; you look at plots, the shifted sound will move *right* when SHIFT
 ;; is positive.  
 (defun shift-time (sound shift)
+  (ny:assert (soundp sound)
+    "In SHIFT-TIME, 1st argument (sound) must be a sound" sound)
+  (ny:assert (numberp scale)
+    "In SHIFT-TIME, 2nd argument (shift) must be a number" shift)
   (snd-xform sound (snd-srate sound) (+ (snd-t0 sound) shift)
          MIN-START-TIME MAX-STOP-TIME 1.0))
 
@@ -1017,13 +1335,21 @@ Your id please: ")
 ;; (control sound)
 ;;    Same as (sound sound), except this is used for control signals.  
 ;;    This code is identical to sound.
-(setfn control sound)
+(defun control (sound)
+  (ny:assert (or (soundp sound) (multichannel-soundp sound))
+    "In CONTROL, argument must be a sound or multichannel sound" sound)
+  (cond ((arrayp sound)
+     (nyq:sound-of-array sound))
+    (t
+     (nyq:sound sound))))
 
 
 ;; (cue-file string)
 ;;    Loads a sound file with the given name, returning a sound which is
 ;; transformed to the current environment.
 (defun cue-file (name)
+    (ny:assert (stringp name)
+      "In CUE-FILE, argument (name) must be a string filename" name)
     (cue (force-srate *SOUND-SRATE* (s-read name))))
 
 
@@ -1046,6 +1372,12 @@ Your id please: ")
 ;; the proper starting time.
 ;;
 (defun env (t1 t2 t4 l1 l2 l3 &optional (duration 1.0))
+  (ny:assert (and (numberp t1) (numberp t2) (numberp t4)
+                  (numberp l1) (numberp l2) (numberp l3))
+    "In ENV, expected 6 numbers (t1, t2, t4, l1, l2, l3)"
+    (list t1 t2 t4 l1 l2 l3))
+  (ny:assert (numberp duration)
+    "In ENV, 7th argument (duration) must be a number" duration)
   (let (actual-dur min-dur ratio t3
     (actual-dur (get-duration duration)))
     (setf min-dur (+ t1 t2 t4 0.002))
@@ -1066,6 +1398,18 @@ Your id please: ")
 
 
 (defun gate (sound lookahead risetime falltime floor threshold)
+    (ny:assert (soundp sound)
+      "In GATE, 1st argument (sound) must be a sound" sound)
+    (ny:assert (numberp lookahead)
+      "In GATE, 2nd argument (lookahead) must be a number" lookahead)
+    (ny:assert (numberp risetime)
+      "In GATE, 3rd argument (risetime) must be a number" risetime)
+    (ny:assert (numberp falltime)
+      "In GATE, 4th argument (falltime) must be a number" falltime)
+    (ny:assert (numberp floor)
+      "In GATE, 5th argument (floor) must be a number" floor)
+    (ny:assert (numberp threshold)
+      "In GATE, 6th argument (threshold) must be a number" threshold)
     (cond ((< lookahead risetime)
            (break "lookahead must be greater than risetime in GATE function"))
           ((or (< risetime 0) (< falltime 0) (< floor 0))
@@ -1087,6 +1431,16 @@ Your id please: ")
                (env-spec '(0.02 0.1 0.3 1.0 .8 .7))
                (volume 0.0)
                (table *TABLE*))
+  (ny:assert (numberp pitch)
+    "In OSC-NOTE, 1st argument (pitch) must be a number" pitch)
+  (ny:assert (numberp duration)
+    "In OSC-NOTE, 2nd argument (duration) must be a number" duration)
+  (ny:assert-env-spec env-spec
+    "In OSC-NOTE, 3rd argument (env-spec) must be a  list of 6 or 7 numbers to pass as arguments to ENV" env-spec)
+  (ny:assert (numberp volume)
+    "In OSC-NOTE, 4th argument (volume) must be a number (scale factor)" volume)
+  (ny:assert-table "OSC-NOTE" "5th" "table" table)
+    
   (set-logical-stop
    (mult (loud volume (osc pitch duration table))
      (if (listp env-spec)
@@ -1098,8 +1452,12 @@ Your id please: ")
 ;; force-srate -- resample snd if necessary to get sample rate
 ;
 (defun force-srate (sr snd)
-  (cond ((not (numberp sr))
-     (error "force-srate: SR should be a number")))
+  (ny:assert (numberp sr)
+    "In FORCE-SRATE, 1st argument (sr) must be a number (sample rate)"
+    sr)
+  (ny:assert (or (soundp snd) (multichannel-soundp snd))
+    "In FORCE-SRATE, 2nd argument (snd) must be a sound or a multichannel sound"
+    snd)
   (cond ((arrayp snd)
      (let* ((len (length snd))
         (result (make-array len)))
@@ -1141,10 +1499,15 @@ Your id please: ")
 ;; recursive version (in comments now), so it was rewritten as an
 ;; iteration.
 ;;
-(defun breakpoints-convert (list t0)
+(defun breakpoints-convert (list t0 source)
   (prog (sample-count result sust (last-count 0))
     (setf sust (get-sustain))
+    (ny:assert (consp list)
+      (format nil "In ~A, expected a list of numbers" list))
  loop
+    (ny:assert (numberp (car list))
+      (format nil "In ~A, expected all numbers in breakpoint list" source)
+      (car list))
     (setf sample-count 
       (truncate (+ 0.5 (* (- (local-to-global (* (car list) sust)) t0)
                  *control-srate*))))
@@ -1156,20 +1519,22 @@ Your id please: ")
     (push sample-count result)
     (cond ((cdr list)
        (setf list (cdr list))
+       (ny:assert (numberp (car list))
+         (format nil "In ~A, expected all numbers in breakpoint list" source)
+         (car list))
        (push (float (car list)) result)))
     (setf list (cdr list))
     (cond (list
        (go loop)))
     (return (reverse result))))
 
-      
  
 ;; (pwl t1 l1 t2 l2 ... tn)
 ;;   Creates a piece-wise linear envelope from breakpoint data.
 ;;
-(defun pwl (&rest breakpoints) (pwl-list breakpoints))
+(defun pwl (&rest breakpoints) (pwl-list breakpoints "PWL"))
 
-(defun pwlr (&rest breakpoints) (pwlr-list breakpoints))
+(defun pwlr (&rest breakpoints) (pwlr-list breakpoints "PWLR"))
 
 ;; (breakpoints-relative list)
 ;;  converts list, which has the form (value dur value dur value ...)
@@ -1190,13 +1555,22 @@ Your id please: ")
      (return (reverse result))))
 
 
-(defun breakpoints-relative (breakpoints)
+(defun breakpoints-relative (breakpoints source)
   (prog (result (sum 0.0))
+    (ny:assert (consp breakpoints)
+      (format nil "In ~A, expected list of numbers, got ~~A" source)
+      breakpoints)
  loop
+    (ny:assert (numberp (car breakpoints))
+      (format nil "In ~A, expected numbers, got ~~A" source)
+      (car breakpoints))
     (setf sum (+ sum (car breakpoints)))
     (push sum result)
     (cond ((cdr breakpoints)
        (setf breakpoints (cdr breakpoints))
+       (ny:assert (numberp (car breakpoints))
+         (format nil "In ~A, expected numbers, got ~~A" source)
+         (car breakpoints))
        (push (car breakpoints) result)))
     (setf breakpoints (cdr breakpoints))
     (cond (breakpoints
@@ -1204,12 +1578,12 @@ Your id please: ")
     (return (reverse result))))
 
 
-(defun pwlr-list (breakpoints)
-  (pwl-list (breakpoints-relative breakpoints)))
+(defun pwlr-list (breakpoints &optional (source "PWLR-LIST"))
+  (pwl-list (breakpoints-relative breakpoints source) source))
 
-(defun pwl-list (breakpoints)
+(defun pwl-list (breakpoints &optional (source "PWL-LIST"))
   (let ((t0 (local-to-global 0)))
-    (snd-pwl t0 *control-srate* (breakpoints-convert breakpoints t0))))
+    (snd-pwl t0 *control-srate* (breakpoints-convert breakpoints t0 source))))
 
 ;; (pwlv l1 t1 l2 t2 ... ln)
 ;; Creates a piece-wise linear envelope from breakpoint data;
@@ -1218,61 +1592,95 @@ Your id please: ")
 (defun pwlv (&rest breakpoints)
   ;use pwl, modify breakpoints with initial and final changes
   ;need to put initial time of 0, and final time of 0
-  (pwlv-list breakpoints))
+  (pwlv-list breakpoints "PWLV"))
 
-(defun pwlv-list (breakpoints)
-    (pwl-list (cons 0.0 breakpoints)))
+(defun pwlv-list (breakpoints &optional (source "PWLV-LIST"))
+    (ny:assert (consp breakpoints)
+      (format nil "In ~A, expected list of numbers, got ~~A" source)
+      breakpoints)
+    (pwl-list (cons 0.0 breakpoints) source))
 
-(defun pwlvr (&rest breakpoints) (pwlvr-list breakpoints))
+(defun pwlvr (&rest breakpoints) (pwlvr-list breakpoints "PWLVR"))
 
-(defun pwlvr-list (breakpoints)
-  (pwlr-list (cons 0.0 breakpoints)))
+(defun pwlvr-list (breakpoints &optional (source "PWLVR-LIST"))
+  (ny:assert (consp breakpoints)
+     (format nil "In ~A, expected list of numbers, got ~~A" source))
+  (pwlr-list (cons 0.0 breakpoints) source))
 
 (defun pwe (&rest breakpoints)
-  (pwe-list breakpoints))
+  (pwe-list breakpoints "PWE"))
 
-(defun pwe-list (breakpoints)
-  (pwev-list (cons 1.0 breakpoints)))
+(defun pwe-list (breakpoints &optional (source "PWE-LIST"))
+  (ny:assert (consp breakpoints)
+    (format nil "In ~A, expected list of numbers, got ~~A" source)
+    breakpoints)
+  (pwev-list (cons 1.0 breakpoints) source))
 
-(defun pwer (&rest breakpoints) (pwer-list breakpoints))
+(defun pwer (&rest breakpoints)
+  (pwer-list breakpoints "PWER"))
 
-(defun pwer-list (breakpoints)
-  (pwe-list (breakpoints-relative breakpoints)))
+(defun pwer-list (breakpoints &optional (source "PWER-LIST"))
+  (pwe-list (breakpoints-relative breakpoints source) source))
 
 (defun pwev (&rest breakpoints)
-  (pwev-list breakpoints))
+  (pwev-list breakpoints "PWEV"))
 
-(defun pwev-list (breakpoints)
-  (let ((lis (breakpoints-log breakpoints)))
+(defun pwev-list (breakpoints &optional (source "PWEV-LIST"))
+  (let ((lis (breakpoints-log breakpoints source)))
     (s-exp (pwl-list lis))))
 
 (defun pwevr (&rest breakpoints) (pwevr-list breakpoints))
 
-(defun pwevr-list (breakpoints)
-  (pwev-list (cdr (breakpoints-relative (cons 0.0 breakpoints)))))
+(defun pwevr-list (breakpoints &optional (source "PWEVR-LIST"))
+  (ny:assert (consp breakpoints)
+    (format nil "In ~A, expected list of numbers, got ~~A" source)
+    breakpoints)
+  (pwev-list (cdr (breakpoints-relative (cons 0.0 breakpoints) source)) source))
 
 
-;; input is 3 or more numbers representing val, time, val, time, ...
+;; input is 2 or more numbers representing val, time, val, time, ...
 ;; output is odd number of 1 or more numbers representing
 ;;     time, val, time, val, ..., time
-(defun breakpoints-log (breakpoints)
+;; 
+;;
+(defun breakpoints-log (breakpoints source)
   (prog ((result '(0.0)) val tim)
 loop
+    (ny:assert (consp breakpoints)
+      (format nil "In ~A, expected list of numbers, got ~~A" source)
+      breakpoints)
+    (ny:assert (numberp (car breakpoints))
+      (format nil "In ~A, expected number in breakpoint list, got ~~A" source)
+      (car breakpoints))
+
     (setf val (float (car breakpoints)))
     (setf breakpoints (cdr breakpoints))
+
     (cond (breakpoints
+       (ny:assert (consp breakpoints)
+         (format nil "In ~A, expected list of numbers, got ~~A" source)
        (setf tim (car breakpoints))
        (setf breakpoints (cdr breakpoints))))
+       (ny:assert (numberp tim)
+         (format nil "In ~A, expected number in breakpoint list, got ~~A" source)
+         tim))
+
     (setf result (cons tim (cons (log val) result)))
     (cond ((null breakpoints)
-       (return (reverse result))))
+           (return (reverse result))))
     (go loop)))
 
 
 ;; SOUND-WARP -- apply warp function to a sound
 ;; 
 (defun sound-warp (warp-fn signal &optional wrate)
+  (ny:assert (soundp warp-fn)
+    "In SOUND-WARP, 1st argument (warp-fn) must be a sound" warp-fn)
+  (ny:assert (soundp signal)
+    "In SOUND-WARP, 2nd argument (signal) must be a sound" signal)
   (cond (wrate
+     (ny:assert (numberp wrate)
+       "In SOUND-WARP, 3rd argument (wrate) must be a number" wrate)
      (snd-resamplev signal *sound-srate*
             (snd-inverse warp-fn (local-to-global 0) wrate)))
     (t
@@ -1280,6 +1688,11 @@ loop
               (snd-inverse warp-fn (local-to-global 0) *sound-srate*)))))
 
 (defun snd-extent (sound maxsamples) 
+    (ny:assert (soundp sound)
+      "In SND-EXTENT, 1st argument (sound) must be a sound" sound)
+    (ny:assert (integerp maxsamples)
+      "In SND-EXTENT, 1st argument (maxsamples) must be an integer"
+      maxsamples)
     (list (snd-t0 sound)
       (+ (snd-t0 sound) (/ (snd-length sound maxsamples)
                    (snd-srate sound)))))
@@ -1291,6 +1704,8 @@ loop
 ;;   in sound represent one period.  The sound must start at time 0.
 
 (defun maketable (sound)
+  (ny:assert (soundp sound)
+    "In MAKETABLE, argument must be a sound" sound)
   (list sound
     (hz-to-step 
      (/ 1.0
@@ -1298,18 +1713,14 @@ loop
     T))
 
 
-;(defmacro endTime (sound)
-;   `(get-logical-stop ,sound))
-
-
-;(defmacro beginTime (sound)
-;   `(car (snd-extent ,sound)))
-
-
 ; simple stereo pan: as where goes from 0 to 1, sound
 ; is linearly panned from left to right
 ;
 (defun pan (sound where)
+  (ny:assert (soundp sound)
+    "In PAN, 1st argument must be a sound" sound)
+  (ny:assert (or (soundp sound) (numberp sound))
+    "In PAN, 2nd argument (where) must be a sound or number" where)
   (vector (mult sound (sum 1 (mult -1 where)))
       (mult sound where)))
 
@@ -1332,8 +1743,9 @@ loop
 (defun nyq:prod-of-arrays (s1 s2)
   (let* ((n (length s1))
      (p (make-array n)))
-    (cond ((/= n (length s2))
-       (error "unequal number of channels in prod")))
+    (ny:assert (= n (length s2))
+       "In PROD (or * in SAL), unequal number of channels"
+       s1 s2)
     (dotimes (i n)
       (setf (aref p i) (nyq:prod2 (aref s1 i) (aref s2 i))))
     p))
@@ -1356,17 +1768,26 @@ loop
   (cond ((numberp s1)
          (cond ((numberp s2)
                 (* s1 s2))
+               (soundp s2
+                (scale s1 s2))
                (t
-                (scale s1 s2))))
+                (ny:assert nil
+                  "In PROD (or * in SAL), arguments must be numbers or sounds or multichannel sounds" s1 s2))))
         ((numberp s2)
+         (ny:assert (soundp s1)
+           "In PROD (or * in SAL), arguments must be numbers or sounds or multichannel sounds" s1 s2)
          (scale s2 s1))
+        ((and (soundp s1) (soundp s2))
+         (snd-prod s1 s2))
         (t
-         (snd-prod s1 s2))))
+         (ny:assert nil
+           "In PROD (or * in SAL), arguments must be numbers or sounds or multichannel sounds" s1 s2))))
 
 
 ;; RAMP -- linear ramp from 0 to x
 ;;
 (defun ramp (&optional (x 1))
+  (ny:assert (numberp x) "In RAMP, argument must be a number" x)
   (let* ((duration (get-duration x)))
     (set-logical-stop
       (warp-abs nil
@@ -1377,6 +1798,10 @@ loop
 
 
 (defun resample (snd rate)
+  (ny:assert (or (soundp snd) (multichannel-soundp snd))
+    "In RESAMPLE, 1st argument must be a sound or multichannel sound" snd)
+  (ny:assert (numberp rate)
+    "In RESAMPLE, 2nd argument must be a number" rate)
   (cond ((arrayp snd)
      (let* ((len (length snd))
         (result (make-array len)))
@@ -1389,14 +1814,12 @@ loop
 
 
 (defun scale (amt snd)
-  (cond ((arrayp snd)
-     (let* ((len (length snd))
-        (result (make-array len)))
-        (dotimes (i len)
-        (setf (aref result i) (snd-scale amt (aref snd i))))
-        result))
-    (t
-     (snd-scale amt snd))))
+  (ny:assert (or (numberp amt) (numbersp amt))
+    "In SCALE, 1st argument must be number (scale factor) or array of numbers" amt)
+  (ny:assert (or (soundp snd) (multichannel-soundp snd))
+    "In SCALE, 2nd argument must be a sound or multichannel sound" snd)
+    
+  (multichan-expand "SCALE" #'snd-scale amt snd))
 
 
 (setfn s-print-tree snd-print-tree)
@@ -1420,7 +1843,10 @@ loop
 
 (defun nyq:max-of-arrays (s1 s2)
   (let* ((n (length s1))
-     (p (make-array n)))
+         (p (make-array n)))
+    (ny:assert (= n (length s2))
+       "In S-MAX, unequal number of channels"
+       s1 s2)
     (cond ((/= n (length s2))
        (error "unequal number of channels in max")))
     (dotimes (i n)
@@ -1431,15 +1857,25 @@ loop
   (cond ((numberp s1)
          (cond ((numberp s2)
                 (max s1 s2))
-               (t
+               ((soundp s2)
                 (snd-maxv s2
                           (snd-const s1 (local-to-global 0.0)
-                                     (snd-srate s2) (get-duration 1.0))))))
+                                     (snd-srate s2) (get-duration 1.0))))
+               (t
+                (ny:assert nil
+                  "In S-MAX, arguments must be numbers or sounds or multichannel sounds"
+                  s1 s2))))
         ((numberp s2)
+         (ny:assert (soundp s1)
+           "In S-MAX, arguments must be numbers or sounds or multichannel sounds" s1 s2)
          (snd-maxv s1 (snd-const s2 (local-to-global 0.0)
                    (snd-srate s1) (get-duration 1.0))))
+        ((and (soundp s1) (soundp s2))
+         (snd-maxv s1 s2))
         (t
-         (snd-maxv s1 s2))))
+         (ny:assert nil
+           "In S-MAX, arguments must be numbers or sounds or multichannel sounds" s1 s2))))
+
 
 
 (defun s-min (s1 s2)
@@ -1452,7 +1888,10 @@ loop
 
 (defun nyq:min-of-arrays (s1 s2)
   (let* ((n (length s1))
-     (p (make-array n)))
+         (p (make-array n)))
+    (ny:assert (= n (length s2))
+       "In S-MIN, unequal number of channels"
+       s1 s2)
     (cond ((/= n (length s2))
        (error "unequal number of channels in max")))
     (dotimes (i n)
@@ -1463,15 +1902,24 @@ loop
   (cond ((numberp s1)
          (cond ((numberp s2)
                 (min s1 s2))
-               (t
+               ((soundp s2)
                 (snd-minv s2
                           (snd-const s1 (local-to-global 0.0)
-                                     (snd-srate s2) (get-duration 1.0))))))
+                                     (snd-srate s2) (get-duration 1.0))))
+               (t
+                (ny:assert nil
+                  "In S-MIN, arguments must be numbers or sounds or multichannel sounds"
+                  s1 s2))))
         ((numberp s2)
+         (ny:assert (soundp s1)
+           "In S-MIN, arguments must be numbers or sounds or multichannel sounds" s1 s2)
          (snd-minv s1 (snd-const s2 (local-to-global 0.0)
                    (snd-srate s1) (get-duration 1.0))))
-       (t
-        (snd-minv s1 s2))))
+        ((and (soundp s1) (soundp s2))
+         (snd-minv s1 s2))
+        (t
+         (ny:assert nil
+           "In S-MIN, arguments must be numbers or sounds or multichannel sounds" s1 s2))))
 
 
 (defun snd-minv (s1 s2)
@@ -1485,37 +1933,72 @@ loop
 ; set-logical-stop - modify the sound and return it, time is shifted and
 ;			 stretched
 (defun set-logical-stop (snd tim)
+  (multichan-expand "SET-LOGICAL-STOP" #'ny:set-logical-stop snd tim))
+
+(defun ny:set-logical-stop (snd tim)
+  (ny:assert (soundp snd)
+    "In SET-LOGICAL-STOP, 1st argument must be a sound or multichannel sound"
+    snd)
+  (ny:assert (numberp tim)
+    "In SET-LOGICAL-STOP, 2nd argument must be a number (logical stop time)"
+    tim)
   (let ((d (local-to-global tim)))
-    (multichan-expand #'set-logical-stop-abs snd d)))
-
-
+    (print "returning from ny:set-logical-stop")
+    (print (snd-set-logical-stop snd d))))
+  
 ; set-logical-stop-abs - modify the sound and return it
 ; 
-(defun set-logical-stop-abs (snd tim) (snd-set-logical-stop snd tim) snd)
+(defun set-logical-stop-abs (snd tim)
+  (multichan-expand "SET-LOGICAL-STOP-ABS" #'ny:set-logical-stop-abs snd d))
 
+(defun ny:set-logical-stop (snd tim)
+  (ny:assert (soundp snd)
+    "In SET-LOGICAL-STOP-ABS, 1st argument must be a sound or multichannel sound"
+    snd)
+  (ny:assert (numberp tim)
+    "In SET-LOGICAL-STOP-ABS, 2nd argument must be a number (logical stop time)"
+    tim)
+  (snd-set-logical-stop snd tim))
+  
 
 (defmacro simrep (pair sound)
   `(let (_snds)
      (dotimes ,pair (push ,sound _snds))
-     (sim-list _snds)))
+     (sim-list _snds "SIMREP")))
 
 (defun sim (&rest snds)
-  (sim-list snds))
+  (sim-list snds "SIM or SUM (or + in SAL)"))
 
 (setfn sum sim)
 
-(defun sim-list (snds)
+(defun sim-list (snds source)
   (cond ((null snds)
          (snd-zero (local-to-global 0) *sound-srate*))
         ((null (cdr snds))
+         (ny:assert (or (soundp (car snds)) (multichannel-soundp (car snds)))
+           (strcat "In " source ", arguments must be sounds or multichannel sounds")
+           (car snds))
          (car snds))
         ((null (cddr snds))
+         (ny:assert (or (soundp (car snds)) (multichannel-soundp (car snds)))
+           (strcat "In " source ", arguments must be sounds or multichannel sounds")
+           (car snds))
+         (ny:assert (or (soundp (cadr snds)) (multichannel-soundp (cadr snds)))
+           (strcat "In " source ", arguments must be sounds or multichannel sounds")
+           (cadr snds))
          (nyq:add2 (car snds) (cadr snds)))
         (t
+         (ny:assert (or (soundp (car snds)) (multichannel-soundp (car snds)))
+           (strcat "In " source ", arguments must be sounds or multichannel sounds")
+           (car snds))
          (nyq:add2 (car snds) (sim-list (cdr snds))))))
 
 
 (defun s-rest (&optional (dur 1.0) (chans 1))
+  (ny:assert (numberp dur)
+    "In S-REST, 1st argument (dur) must be a number" dur)
+  (ny:assert (integerp chans)
+    "In S-REST, 2nd argument (chans) must be an integer" chans)
   (let ((d (get-duration dur))
         r)
     (cond ((= chans 1)
@@ -1528,6 +2011,8 @@ loop
 
 
 (defun tempo (warpfn)
+  (ny:assert (soundp warpfn)
+    "In TEMPO, parameter (warpfn) must be a sound" warpfn)
   (slope (snd-inverse warpfn (local-to-global 0) *control-srate*)))
 
 
@@ -1538,6 +2023,10 @@ loop
 ; corresponding channels are added, extras are copied
 ; 
 (defun sum-of-arrays (s1 s2)
+  (ny:assert (multichannel-soundp s1)
+    "In SUM or SIM (or + in SAL), array parameter contains a non-sound" s1)
+  (ny:assert (multichannel-soundp s2)
+    "In SUM or SIM (or + in SAL), array parameter contains a non-sound" s2)
   (let* ((n1 (length s1))
      (n2 (length s2))
      (n (min n1 n2))
@@ -1574,21 +2063,29 @@ loop
 ;;                    = (snd-offset (scale s g) d)
 
 (defmacro warp (x s)
- `(progv '(*WARP*) (list 
-            (list 0.0 1.0
-              (if (warp-function *WARP*)
-                  (snd-compose (shift-time (warp-function *WARP*) 
-                                           (- (warp-time *WARP*)))
-                               (scale (warp-stretch *WARP*) 
-                                      (must-be-sound ,x)))
-                  (snd-offset (scale (warp-stretch *WARP*) 
-                                     (must-be-sound ,x))
-                              (warp-time *WARP*)))))
+ `(progv '(*WARP*)
+     (let ((x ,x))
+       (list (list 0.0 1.0
+              (cond ((warp-function *WARP*)
+                     (ny:assert (soundp x)
+                       "In WARP, 1st parameter must be a sound" x)
+                     (snd-compose (shift-time (warp-function *WARP*) 
+                                              (- (warp-time *WARP*)))
+                                  (scale (warp-stretch *WARP*) x)))
+                    (t
+                     (ny:assert (soundp x)
+                       "In WARP, 1st parameter must be a sound" x)
+                     (snd-offset (scale (warp-stretch *WARP*) x)
+                                 (warp-time *WARP*)))))))
      ,s))
 
 
 (defmacro warp-abs (x s)
- `(progv '(*WARP*) (list (list 0.0 1.0 ,x))
+ `(progv '(*WARP*)
+     (let ((x ,x))
+       (ny:assert (soundp x)
+         "In WARP-ABS, 1st parameter must be a sound" x)
+       (list (list 0.0 1.0 x)))
      ,s))
 
 
@@ -1601,29 +2098,31 @@ loop
 ;; fn for the i'th channel are either the i'th element of an array
 ;; argument, or just a copy of a non-array argument.
 ;;
-(defun multichan-expand (fn &rest args)
-  (let (len newlen result) ; len is a flag as well as a count
+(defun multichan-expand (src fn &rest args)
+  (let (len newlen result prev) ; len is a flag as well as a count
     (dolist (a args)
-        (cond ((arrayp a)
-           (setf newlen (length a))
-           (cond ((and len (/= len newlen))
-              (error (format nil "In ~A, two arguments are vectors of differing length." fn))))
-           (setf len newlen))))
+      (cond ((arrayp a)
+             (setf newlen (length a))
+             (ny:assert (or (not len) (= len newlen))
+               (strcat "In " src
+                 ", two arguments are multichannels of differing length.")
+               prev a)
+             (setf prev a)
+             (setf len newlen))))
     (cond (len
-       (setf result (make-array len))
-       ; for each channel, call fn with args
-       (dotimes (i len)
-           (setf (aref result i)
-             (apply fn
-            (mapcar
-                #'(lambda (a)
-                ; take i'th entry or replicate:
-                (cond ((arrayp a) (aref a i))
-                      (t a)))
-                args))))
-       result)
-      (t
-       (apply fn args)))))
+           (setf result (make-array len))
+           ; for each channel, call fn with args
+           (dotimes (i len)
+             (setf (aref result i)
+                   (apply fn
+                     (mapcar
+                       #'(lambda (a) ; take i'th entry or replicate:
+                           (cond ((arrayp a) (aref a i))
+                                 (t a)))
+                       args))))
+           result)
+          (t
+           (apply fn args)))))
 
 
 ;; SELECT-IMPLEMENTATION-? -- apply an implementation according to args
@@ -1637,24 +2136,50 @@ loop
 
 ;; SELECT-IMPLEMENTATION-1-1 -- 1 sound arg, 1 selector
 ;;
-(defun select-implementation-1-1 (fns snd sel1 &rest others)
-  (if (numberp sel1)
-    (apply (aref fns 0) (cons snd (cons sel1 others)))
-    (apply (aref fns 1) (cons snd (cons sel1 others)))))
+(defun select-implementation-1-1 (source fns snd sel1 &rest others)
+ (ny:assert (soundp snd)
+   (strcat "In " source ", 1st argument must be a sound or multichannel sound")
+   snd)
+  (cond ((numberp sel1)
+         (apply (aref fns 0) (cons snd (cons sel1 others)))
+        ((soundp sel1)
+         (apply (aref fns 1) (cons snd (cons sel1 others)))))
+        (t
+         (ny:assert nil
+           (strcat "In " source
+            ", 2nd argument must be a number, a sound, or an array thereof")
+           sel1))))
 
 
 ;; SELECT-IMPLEMENTATION-1-2 -- 1 sound arg, 2 selectors
 ;;
-;; choose implemenation according to args 2 and 3
+;; choose implemenation according to args 2 and 3. In this implementation,
+;; since we have two arguments to test for types, we return from prog
+;; if we find good types. That way, we can fall through the decision tree
+;; and all paths lead to one call to ERROR if good types are not found.
 ;;
-(defun select-implementation-1-2 (fns snd sel1 sel2 &rest others)
-  (if (numberp sel2)
-    (if (numberp sel1)
-      (apply (aref fns 0) (cons snd (cons sel1 (cons sel2 others))))
-      (apply (aref fns 1) (cons snd (cons sel1 (cons sel2 others)))))
-    (if (numberp sel1)
-      (apply (aref fns 2) (cons snd (cons sel1 (cons sel2 others))))
-      (apply (aref fns 3) (cons snd (cons sel1 (cons sel2 others)))))))
+(defun select-implementation-1-2 (src fns snd sel1 sel2 &rest others)
+  (prog ()
+    (ny:assert (soundp snd)
+      (strcat "In " source ", 1st argument must be a sound or multichannel sound")
+      snd)
+    (cond ((numberp sel2)
+           (cond ((numberp sel1)
+                  (return (apply (aref fns 0)
+                                 (cons snd (cons sel1 (cons sel2 others))))))
+                 ((soundp sel1)
+                  (return (apply (aref fns 1)
+                                 (cons snd (cons sel1 (cons sel2 others))))))))
+          ((soundp sel2)
+           (cond ((numberp sel1)
+                  (return (apply (aref fns 2)
+                          (cons snd (cons sel1 (cons sel2 others))))))
+                 ((soundp sel1)
+                  (return (apply (aref fns 3)
+                          (cons snd (cons sel1 (cons sel2 others)))))))))
+    (ny:assert nil (strcat "In " src
+      ", 2nd and 3rd arguments must be numbers, sounds, or arrays thereof"
+      sel1 sel2))))
 
 ;; some waveforms
 

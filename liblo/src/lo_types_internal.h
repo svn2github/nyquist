@@ -29,6 +29,10 @@ typedef unsigned __int64 uint64_t;
 typedef unsigned __int32 uint32_t;
 typedef __int64 int64_t;
 typedef __int32 int32_t;
+typedef SOCKET socket_type;
+#else
+typedef int socket_type;
+#define INVALID_SOCKET (-1)
 #endif
 
 #ifdef ENABLE_THREADS
@@ -72,8 +76,8 @@ typedef struct _lo_inaddr {
 
 typedef struct _lo_address {
     char *host;
-    int socket;
-    int ownsocket;
+    socket_type socket;
+    int ownsocket; // (boolean)
     char *port;
     int protocol;
     lo_proto_flags flags;
@@ -151,7 +155,7 @@ typedef struct _lo_server {
     struct pollfd *sockets;
 #else
     struct {
-        int fd;
+        socket_type fd; // large enough for Win64 sockets
     } *sockets;
 #endif
 
@@ -220,8 +224,8 @@ typedef union {
 } lo_pcast64;
 
 extern struct lo_cs {
-    int udp;
-    int tcp;
+    socket_type udp;
+    socket_type tcp;
 } lo_client_sockets;
 
 #endif

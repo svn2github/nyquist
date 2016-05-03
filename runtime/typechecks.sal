@@ -1,0 +1,274 @@
+print get-duration(osc(c4))  ; error
+print get-duration(1)
+print get-duration(1) ~ 2
+print get-loud()
+print loud(2, get-loud())
+print get-sustain()
+print get-sustain() ~ 2
+print get-tempo()
+print get-tempo() ~ 2
+print get-transpose()
+print transpose(2, get-transpose())
+plot get-warp()
+plot get-warp() ~ 2
+plot build-harmonic(3, 128)
+plot build-harmonic(3, 128.1)
+plot build-harmonic(3.1, 128)
+plot amosc(a4, pwl(0.5, 1, 1))
+plot amosc(const(a4), pwl(0.5, 1, 1)) ; error
+plot amosc(a4, 2) ; error
+plot amosc(a4, pwl(0.5, 1, 1), *sine-table*)
+plot amosc(a4, pwl(0.5, 1, 1), lfo(1)) ; error
+plot amosc(a4, pwl(0.5, 1, 1), *sine-table*, 1.0)
+plot amosc(a4, pwl(0.5, 1, 1), *sine-table*, osc(c4)) ; error
+plot fmosc(a4, lfo(6))
+plot fmosc(const(a4), lfo(6)) ; error
+plot fmosc(a4, 6) ; error
+plot fmosc(a4, lfo(6), *sine-table*)
+plot fmosc(a4, lfo(6), lfo(1)) ; error
+plot fmosc(a4, lfo(6), *sine-table*, 1.0)
+plot fmosc(a4, lfo(6), *sine-table*, osc(c4)) ; error
+plot fmfb(a4, 1.1)
+plot fmfb(const(a4), 1.1) ; error
+plot fmfb(a4, const(1.1))
+plot fmfb(a4, 1.1, 2.0)
+plot fmfb(a4, 1.1, const(2, 2)) ; error
+plot buzz(4, a4, lfo(6))
+plot buzz(4.1, a4, lfo(6)) ; error
+plot buzz(4, const(a4), lfo(6)) ; error
+plot buzz(4, a4, 6) ; error
+plot hzosc(440)
+plot hzosc(440, *sine-table*)
+plot hzosc(const(440), *sine-table*) ; error
+plot hzosc(440, osc(c4)) ; error
+plot hzosc(440, list(1, 2, 3)) ; error
+plot hzosc(440, *sine-table*, 1.0)
+plot hzosc(440, *sine-table*, const(1.0)) ; error
+plot siosc(a4, lfo(6), list(list(0, build-harmonic(1, 512)),
+                            list(1, build-harmonic(2, 512))))
+
+plot siosc(const(a4), lfo(6), list(list(0, build-harmonic(1, 512)), 
+                            list(1, build-harmonic(2, 512)))) ; error
+
+plot siosc(a4, 6, list(list(0, build-harmonic(1, 512)),
+                            list(1, build-harmonic(2, 512)))) ; error
+
+plot siosc(a4, lfo(6), list(list(0, build-harmonic(1, 512)),
+                            list(1, 2))) ; error
+plot lfo(6)
+plot lfo(const(6)) ; error
+plot lfo(6, 2) 
+plot lfo(6, const(2)) ; error
+plot lfo(6, 2, *sine-table*) 
+plot lfo(6, 2, osc(c4)) ; error
+plot lfo(6, 2, *sine-table*, 1.0)
+plot lfo(6, 2, *sine-table*, lfo(1.0)) ; error
+plot fmlfo(6)
+plot fmlfo(const(6)) ; error
+plot fmlfo(6, *sine-table*)
+plot fmlfo(6, lfo(1)) ; error
+plot fmlfo(6, *sine-table*, 1.0)
+plot fmlfo(6, *sine-table*, const(1.0)) ; error
+plot osc(a4)
+plot osc(a4, 2.0)
+plot osc(a4, 2.0, *sine-table*)
+plot osc(a4, 2.0, *sine-table*, 1.0)
+plot osc(const(a4)) ; error
+plot osc(a4, const(2.0)) ; error
+plot osc(a4, 2.0, osc(c4)) ; error
+plot osc(a4, 2.0, *sine-table*, const(1.0)) ; error
+plot partial(a4, pwl(0.5, 1, 1))
+plot partial(const(a4), pwl(0.5, 1, 1)) ; error
+plot partial(a4, 2) ; error
+plot sampler(a4, pwl(0.5, 1, 1))
+plot sampler(const(a4), pwl(0.5, 1, 1)) ; error
+plot sampler(a4, 2) ; error
+plot sampler(a4, pwl(0.5, 1, 1), *sine-table*)
+plot sampler(a4, pwl(0.5, 1, 1), hzosc(1.0)) ; error
+plot sampler(a4, pwl(0.5, 1, 1), *sine-table*, 2)
+plot sampler(a4, pwl(0.5, 1, 1), *sine-table*, 2.1) ; error
+plot sine(a4)
+plot sine(const(a4)) ; error
+plot sine(a4, 1.0)
+plot sine(a4, const(1.0)) ; error
+plot pluck(a4)
+plot pluck(const(a4)) ; error
+plot pluck(a4, 2)
+plot pluck(a4, const(2)) ; error
+plot pluck(a4, 2, 0.01)
+plot pluck(a4, 2, const(0.01)) ; error
+plot osc(c4) @ 1
+plot osc(c4) @ lfo(1)
+plot osc(c4) @@ 1
+plot osc(c4) @@ lfo(1)
+plot clip(osc(c4), 0.5)
+plot clip(0.6, 0.5)
+plot clip(vector(osc(c4), osc(c4)), 0.5)
+plot clip("bad", 0.5)
+plot clip(osc(c4), "bad")
+plot control-srate-abs(100, lfo(100))
+plot control-srate-abs(osc(c4), lfo(100))
+plot db-to-linear(-6)
+plot db-to-linear(lfo(1))
+plot db-to-linear(vector(lfo(1), lfo(2)))
+plot db-to-linear("bad")
+print linear-to-db(2)
+plot linear-to-db(1 + lfo(1))
+print linear-to-db(1 + vector(lfo(1), lfo(2)))
+print linear-to-db("bad")
+print step-to-hz(67)
+plot step-to-hz(67 + lfo(4) * 4)
+print step-to-hz(60 + vector(lfo(4), lfo(6)))
+print step-to-hz("bad")
+print hz-to-step(440)
+plot hz-to-step(440 + lfo(4) * 4)
+print hz-to-step(60 + vector(lfo(40), lfo(60)))
+print hz-to-step("bad")
+print sref(lfo(6), 0.5)
+print sref(vector(lfo(6), lfo(5)), 0.5)
+print sref(lfo(6), lfo(0.5))
+plot extract(0, 1, lfo(5))
+plot extract(lfo(1), 1, lfo(5))
+plot extract(0, lfo(1), lfo(5))
+plot extract(0, 1, 2)
+plot extract-abs(0, 1, lfo(1))
+plot extract-abs(0, 1, lfo(1), 0.1)
+plot extract-abs(lfo(1), 1, lfo(1))
+plot extract-abs(0, lfo(1), lfo(1))
+plot extract-abs(0, 1, 2)
+plot extract-abs(0, 1, lfo(1), lfo(2))
+print local-to-global(0.5)
+print local-to-global(lfo(0.5))
+plot loud(2, lfo(1))
+plot loud(2 + lfo(2), lfo(1))
+plot loud-abs(2, lfo(1))
+plot loud-abs(2 + lfo(2), lfo(1))
+plot scale-db(6, lfo(6))
+plot scale-db(vector(6, 12), lfo(6))
+plot scale-db(6, vector(lfo(6), lfo(5)))[0]
+plot scale-db(vector(6, 12), vector(lfo(6), lfo(5)))[0]
+plot scale-db("bad", lfo(6))
+plot scale-db(6, 12)
+exec set-control-srate(2205)
+exec set-control-srate("bad")
+exec set-sound-srate(2205)
+exec set-sound-srate("bad")
+exec s-plot(3)
+exec s-plot(lfo(6), 3)
+exec s-plot(lfo(6), "bad")
+exec s-plot(lfo(6), 3, 100)
+exec s-plot(lfo(6), 3, 4.1)
+plot sound-srate-abs(100, lfo(6))
+plot sound-srate-abs("bad", lfo(6))
+plot stretch(2, lfo(6))
+plot stretch("bad", lfo(6))
+plot stretch-abs(2, lfo(6))
+plot stretch-abs("bad", lfo(6))
+plot sustain(2, lfo(6))
+plot sustain("bad", lfo(6))
+plot sustain-abs(2, lfo(6))
+plot sustain-abs("bad", lfo(6))
+plot transpose(2, lfo(6))
+plot transpose("bad", lfo(6))
+plot transpose-abs(2, lfo(6))
+plot transpose-abs("bad", lfo(6))
+plot control-warp(ramp() ~ 2, lfo(6))
+plot control-warp("bad", lfo(6))
+plot control-warp(ramp() ~ 2, "bad")
+plot control-warp(ramp() ~ 2, lfo(6), 100)
+plot control-warp(ramp() ~ 2, lfo(6), "bad")
+plot cue(lfo(6))
+plot cue(vector(lfo(6), lfo(4)))[0]
+plot cue("bad")
+plot sound(lfo(6))
+plot sound(vector(lfo(6), lfo(4)))[0]
+plot sound("bad")
+plot scale-srate(lfo(6), 2)
+plot scale-srate("bad", 2)
+plot scale-srate(lfo(6), "bad")
+plot shift-time(lfo(6), 1)
+plot shift-time("bad", 1)
+plot shift-time(lfo(6), "bad")
+plot control(lfo(6))
+plot control(vector(lfo(6), lfo(4)))[0]
+plot control("bad")
+plot cue-file("soundfile")
+plot cue-file(lfo(1))
+plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8)
+plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, 2.0)
+plot env("bad", 0.2, 0.3, 1, 0.9, 0.8, 2.0)
+plot env(0.1, "bad", 0.3, 1, 0.9, 0.8, 2.0)
+plot env(0.1, 0.2, "bad", 1, 0.9, 0.8, 2.0)
+plot env(0.1, 0.2, 0.3, "bad", 0.9, 0.8, 2.0)
+plot env(0.1, 0.2, 0.3, 1, "bad", 0.8, 2.0)
+plot env(0.1, 0.2, 0.3, 1, 0.9, "bad", 2.0)
+plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, "bad")
+plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, 0.3)
+plot gate("bad", 0.01, 0.01, 0.01, 0.01, 0.3)
+plot gate(lfo(4), "bad", 0.01, 0.01, 0.01, 0.3)
+plot gate(lfo(4), 0.01, "bad", 0.01, 0.01, 0.3)
+plot gate(lfo(4), 0.01, 0.01, "bad", 0.01, 0.3)
+plot gate(lfo(4), 0.01, 0.01, 0.01, "bad", 0.3)
+plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, "bad")
+plot osc-note(c4)
+plot osc-note(c4, 2)
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7})
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8)
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, *TABLE*)
+plot osc-note("bad")
+plot osc-note(c4, "bad")
+plot osc-note(c4, 1, "bad")
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, "bad")
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, "bad")
+plot force-srate(100, lfo(4))
+plot force-srate(lfo(5), lfo(4))
+plot force-srate(100, 50)
+plot pwl(1, 1, 2)
+plot pwl(1, 1, nil)
+plot pwl({1, 1, 2})
+plot pwlr(1, 1, 1)
+plot pwlr({1, 1, 2})
+plot pwlr(1, 1, nil)
+plot pwl-list({1, 1, 2})
+plot pwl-list({1, 1, nil})
+plot pwl-list(1, 1, 2)
+plot pwlr-list({1, 1, 1})
+plot pwlr-list({1, 1, nil})
+plot pwlr-list(1, 1, 1)
+plot pwlv(1, 1, 2)
+plot pwlv(1, 1, nil)
+plot pwlv({1, 1, 2})
+plot pwlv-list({1, 1, 2})
+plot pwlv-list({1, 1, nil})
+plot pwlv-list(1, 1, 2)
+plot pwlvr(1, 1, 1)
+plot pwlvr(1, 1, nil)
+plot pwlvr({1, 1, 1})
+plot pwlvr-list({1, 1, 1})
+plot pwlvr-list({1, 1, nil})
+plot pwlvr-list(1, 1, 1)
+NEXT IS PWE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

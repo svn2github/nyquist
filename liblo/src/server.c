@@ -73,21 +73,21 @@ typedef struct {
     lo_timetag ts;
     char *path;
     lo_message msg;
-    int sock;
+    socket_type sock;
     void *next;
 } queued_msg_list;
 
-struct lo_cs lo_client_sockets = { -1, -1 };
+struct lo_cs lo_client_sockets = { INVALID_SOCKET, INVALID_SOCKET };
 
 static int lo_can_coerce_spec(const char *a, const char *b);
 static int lo_can_coerce(char a, char b);
 static void dispatch_method(lo_server s, const char *path,
-                            lo_message msg, int sock);
+                            lo_message msg, socket_type sock);
 static int dispatch_data(lo_server s, void *data,
-                         size_t size, int sock);
+                         size_t size, socket_type sock);
 static int dispatch_queued(lo_server s, int dispatch_all);
 static void queue_data(lo_server s, lo_timetag ts, const char *path,
-                       lo_message msg, int sock);
+                       lo_message msg, socket_type sock);
 static lo_server lo_server_new_with_proto_internal(const char *group,
                                                    const char *port,
                                                    const char *iface,
@@ -126,7 +126,7 @@ char *WSAAPI gai_strerrorA(int ecode)
 }
 #endif
 
-static int stateWSock = -1;
+static int stateWSock = INVALID_SOCKET;
 
 int initWSock()
 {
@@ -354,7 +354,7 @@ lo_server lo_server_new_with_proto_internal(const char *group,
         return 0;
     }
 
-    s->sockets[0].fd = -1;
+    s->sockets[0].fd = INVALID_SOCKET;
 
     memset(&hints, 0, sizeof(hints));
 
@@ -369,7 +369,7 @@ lo_server lo_server_new_with_proto_internal(const char *group,
         struct sockaddr_un sa;
 
         s->sockets[0].fd = socket(PF_UNIX, SOCK_DGRAM, 0);
-        if (s->sockets[0].fd == -1) {
+        if (s->sockets[0].fd == INVALID_SOCKET) {
             err = geterror();
             used = NULL;
             lo_throw(s, err, strerror(err), "socket()");
@@ -435,7 +435,7 @@ lo_server lo_server_new_with_proto_internal(const char *group,
         ret = getaddrinfo(NULL, service, &hints, &ai);
 
         s->ai = ai;
-        s->sockets[0].fd = -1;
+        s->sockets[0].fd = INVALID_SOCKET;
         s->port = 0;
 
         if (ret != 0) {
@@ -446,11 +446,11 @@ lo_server lo_server_new_with_proto_internal(const char *group,
 
         used = NULL;
 
-        for (it = ai; it && s->sockets[0].fd == -1; it = it->ai_next) {
+        for (it = ai; it && s->sockets[0].fd == INVALID_SOCKET; it = it->ai_next) {
             used = it;
             s->sockets[0].fd = socket(it->ai_family, hints.ai_socktype, 0);
 
-            if (s->sockets[0].fd != -1
+            if (s->sockets[0].fd != INVALID_SOCKET
                 && it->ai_family == AF_INET
                 && hints.ai_socktype == SOCK_DGRAM)
             {
@@ -459,7 +459,7 @@ lo_server lo_server_new_with_proto_internal(const char *group,
 						   (char*)&opt, sizeof(int));
             }
         }
-        if (s->sockets[0].fd == -1) {
+        if (s->sockets[0].fd == INVALID_SOCKET) {
             err = geterror();
             used = NULL;
             lo_throw(s, err, strerror(err), "socket()");
@@ -708,17 +708,17 @@ void lo_server_free(lo_server s)
         int i;
 
         for (i = s->sockets_len - 1; i >= 0; i--) {
-            if (s->sockets[i].fd != -1) {
+            if (s->sockets[i].fd != INVALID_SOCKET) {
                 if (s->protocol == LO_UDP
                     && s->sockets[i].fd == lo_client_sockets.udp) {
-                    lo_client_sockets.udp = -1;
+                    lo_client_sockets.udp = INVALID_SOCKET;
                 } else if (s->protocol == LO_TCP
                            && s->sockets[i].fd == lo_client_sockets.tcp) {
-                    lo_client_sockets.tcp = -1;
+                    lo_client_sockets.tcp = INVALID_SOCKET;
                 }
 
                 closesocket(s->sockets[i].fd);
-                s->sockets[i].fd = -1;
+                s->sockets[i].fd = INVALID_SOCKET;
             }
         }
         if (s->ai) {
@@ -752,7 +752,7 @@ void lo_server_free(lo_server s)
             free(s->addr_if.iface);
 
         for (i=0; i < s->sockets_len; i++) {
-            if (s->sockets[i].fd > -1) {
+            if (s->sockets[i].fd > INVALID_SOCKET) {
 #ifdef SHUT_WR
                 shutdown(s->sockets[i].fd, SHUT_WR);
 #endif
@@ -1118,13 +1118,13 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
 }
 
 static
-void *lo_server_recv_raw_stream(lo_server s, size_t * size, int *psock)
+void *lo_server_recv_raw_stream(lo_server s, size_t * size, socket_type *psock)
 {
     struct sockaddr_storage addr;
     socklen_t addr_len = sizeof(addr);
     int i;
     void *data = NULL;
-    int sock = -1;
+    socket_type sock = INVALID_SOCKET;
 #ifdef HAVE_SELECT
 #ifndef HAVE_POLL
     fd_set ps;
@@ -1199,7 +1199,7 @@ void *lo_server_recv_raw_stream(lo_server s, size_t * size, int *psock)
 #endif
 #endif
 
-            if (sock == -1)
+            if (sock == INVALID_SOCKET)
                 return NULL;
 
             /* zeroeth socket is listening for new connections */
@@ -1275,8 +1275,8 @@ int lo_server_wait(lo_server s, int timeout)
     {
         if (s->protocol == LO_TCP)
         {
-            int sock = accept(s->sockets[0].fd,
-                              (struct sockaddr *) &addr, &addr_len);
+            socket_type sock = accept(s->sockets[0].fd,
+                                      (struct sockaddr *) &addr, &addr_len);
 
             i = lo_server_add_socket(s, sock, 0, &addr, addr_len);
             if (i < 0)
@@ -1343,7 +1343,7 @@ int lo_server_wait(lo_server s, int timeout)
         // If select() was reporting a new connection on the listening
         // socket rather than a ready message, accept it and check again.
         if (FD_ISSET(s->sockets[0].fd, &ps)) {
-            int sock = accept(s->sockets[0].fd,
+            socket_type sock = accept(s->sockets[0].fd,
                               (struct sockaddr *) &addr, &addr_len);
             double diff;
             struct timeval tvdiff;
@@ -1401,7 +1401,7 @@ int lo_server_recv(lo_server s)
     void *data;
     size_t size;
     double sched_time = lo_server_next_event_delay(s);
-    int sock = -1;
+    socket_type sock = INVALID_SOCKET;
     int i;
 #ifdef HAVE_SELECT
 #ifndef HAVE_POLL
@@ -1507,7 +1507,7 @@ int lo_server_recv(lo_server s)
     return size;
 }
 
-int lo_server_add_socket(lo_server s, int socket, lo_address a,
+int lo_server_add_socket(lo_server s, socket_type socket, lo_address a,
                          struct sockaddr_storage *addr,
                          socklen_t addr_len)
 {
@@ -1548,7 +1548,7 @@ int lo_server_add_socket(lo_server s, int socket, lo_address a,
 
     /* Update socket-indexed array of sources */
     if (socket >= s->sources_len) {
-        int L = socket * 2;
+        socket_type L = socket * 2;
         s->sources = realloc(s->sources,
                              sizeof(struct _lo_address) * L);
         memset(s->sources + s->sources_len, 0,
@@ -1566,7 +1566,7 @@ int lo_server_add_socket(lo_server s, int socket, lo_address a,
     return s->sockets_len - 1;
 }
 
-void lo_server_del_socket(lo_server s, int index, int socket)
+void lo_server_del_socket(lo_server s, int index, socket_type socket)
 {
     int i;
 
@@ -1588,7 +1588,7 @@ void lo_server_del_socket(lo_server s, int index, int socket)
 }
 
 static int dispatch_data(lo_server s, void *data,
-                         size_t size, int sock)
+                         size_t size, socket_type sock)
 {
     int result = 0;
     char *path = data;
@@ -1702,7 +1702,7 @@ double lo_server_next_event_delay(lo_server s)
 }
 
 static void dispatch_method(lo_server s, const char *path,
-                            lo_message msg, int sock)
+                            lo_message msg, socket_type sock)
 {
     char *types = msg->types + 1;
     int argc = strlen(types);
@@ -1872,7 +1872,7 @@ int lo_server_events_pending(lo_server s)
 }
 
 static void queue_data(lo_server s, lo_timetag ts, const char *path,
-                       lo_message msg, int sock)
+                       lo_message msg, socket_type sock)
 {
     /* insert blob into future dispatch queue */
     queued_msg_list *it = s->queued;
@@ -1926,7 +1926,7 @@ static int dispatch_queued(lo_server s, int dispatch_all)
     do {
         char *path;
         lo_message msg;
-        int sock;
+        socket_type sock;
         tailhead = head->next;
         path = ((queued_msg_list *) s->queued)->path;
         msg = ((queued_msg_list *) s->queued)->msg;
@@ -2042,7 +2042,7 @@ int lo_server_add_bundle_handlers(lo_server s,
     return 0;
 }
 
-int lo_server_get_socket_fd(lo_server s)
+socket_type lo_server_get_socket_fd(lo_server s)
 {
     if (s->protocol != LO_UDP && s->protocol != LO_TCP
 #if !defined(WIN32) && !defined(_MSC_VER)
@@ -2120,7 +2120,7 @@ void lo_server_pp(lo_server s)
 {
     lo_method it;
 
-    printf("socket: %d\n\n", s->sockets[0].fd);
+    printf("socket: %ld\n\n", (long) (s->sockets[0].fd));
     printf("Methods\n");
     for (it = s->first; it; it = it->next) {
         printf("\n");

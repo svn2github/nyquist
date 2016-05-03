@@ -241,6 +241,9 @@ LVAL newvector(int size)
     xlsave1(vect);
     vect = newnode(VECTOR);
     vect->n_vsize = 0;
+    if (size < 0) xlfail("negative vector size requested");
+    if (size > INT_MAX / sizeof(LVAL))
+        xlfail("too large vector size requested");
     if ((bsize = size * sizeof(LVAL))) {
         if ((vect->n_vdata = (LVAL *)calloc(1,bsize)) == NULL) {
             findmem();

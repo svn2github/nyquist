@@ -309,7 +309,7 @@ static int create_socket(lo_address a)
     if (a->protocol == LO_UDP || a->protocol == LO_TCP) {
 
         a->socket = socket(a->ai->ai_family, a->ai->ai_socktype, 0);
-        if (a->socket == -1) {
+        if (a->socket == INVALID_SOCKET) {
             a->errnum = geterror();
             a->errstr = NULL;
             return -1;
@@ -321,7 +321,7 @@ static int create_socket(lo_address a)
                 a->errnum = geterror();
                 a->errstr = NULL;
                 closesocket(a->socket);
-                a->socket = -1;
+                a->socket = INVALID_SOCKET;
                 return -1;
             }
         }
@@ -347,7 +347,7 @@ static int create_socket(lo_address a)
         struct sockaddr_un sa;
 
         a->socket = socket(PF_UNIX, SOCK_DGRAM, 0);
-        if (a->socket == -1) {
+        if (a->socket == INVALID_SOCKET) {
             a->errnum = geterror();
             a->errstr = NULL;
             return -1;
@@ -360,7 +360,7 @@ static int create_socket(lo_address a)
             a->errnum = geterror();
             a->errstr = NULL;
             closesocket(a->socket);
-            a->socket = -1;
+            a->socket = INVALID_SOCKET;
             return -1;
         }
     }
@@ -428,7 +428,7 @@ static int send_data(lo_address a, lo_server from, char *data,
                      const size_t data_len)
 {
     ssize_t ret = 0;
-    int sock = -1;
+    socket_type sock = INVALID_SOCKET;
 
 #if defined(WIN32) || defined(_MSC_VER)
     if (!initWSock())
@@ -450,10 +450,10 @@ static int send_data(lo_address a, lo_server from, char *data,
     // Re-use existing socket?
     if (from && a->protocol == LO_UDP) {
         sock = from->sockets[0].fd;
-    } else if (a->protocol == LO_UDP && lo_client_sockets.udp != -1) {
+    } else if (a->protocol == LO_UDP && lo_client_sockets.udp != INVALID_SOCKET) {
         sock = lo_client_sockets.udp;
     } else {
-        if (a->socket == -1) {
+        if (a->socket == INVALID_SOCKET) {
             ret = create_socket(a);
             if (ret)
                 return ret;
@@ -535,7 +535,7 @@ static int send_data(lo_address a, lo_server from, char *data,
             if (from)
                 lo_server_del_socket(from, -1, a->socket);
             closesocket(a->socket);
-            a->socket = -1;
+            a->socket = INVALID_SOCKET;
         }
 
         a->errnum = geterror();

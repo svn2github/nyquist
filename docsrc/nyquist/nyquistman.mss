@@ -6532,7 +6532,7 @@ load @code(sliders.lsp) to access this function.
 
 @codef{get-slider-value(@pragma(defn)@index(get-slider-value)@i(number))} @c{[sal]}@*
 @altdef{@codef{get-slider-value(@i(name))} @c{[sal]}}@*
-@altdef{@codef{get-slider-value(@i(panel), @i(name) [, @i(dur)])} @c{[sal]}}@*
+@altdef{@codef{get-slider-value(@i(panel), @i(name))} @c{[sal]}}@*
 @altdef{@codef{(get-slider-value @i(number))} @c{[lisp]}}@*
 @altdef{@codef{(get-slider-value @i(name))} @c{[lisp]}}@*
 @altdef{@codef{(get-slider-value @i(panel) @i(name))}

@@ -80,7 +80,7 @@ int lo_inaddr_find_iface(lo_inaddr t, int fam,
  *  \param socket The socket number to add.
  *  \return The index number of the added socket, or -1 on failure.
  */
-int lo_server_add_socket(lo_server s, int socket, lo_address a,
+int lo_server_add_socket(lo_server s, socket_type socket, lo_address a,
                                 struct sockaddr_storage *addr,
                                 socklen_t addr_len);
 
@@ -90,7 +90,7 @@ int lo_server_add_socket(lo_server s, int socket, lo_address a,
  *  \param socket The socket number to delete, -1 if index is provided.
  *  \return The index number of the added socket.
  */
-void lo_server_del_socket(lo_server s, int index, int socket);
+void lo_server_del_socket(lo_server s, int index, socket_type socket);
 
 /** \internal \brief Copy a lo_address into pre-allocated memory. */
 void lo_address_copy(lo_address to, lo_address from);

@@ -1533,7 +1533,7 @@
 ;; OR-IZE -- compute the OR of a list of expressions
 ;;
 (defun or-ize (exprs)
- (if (> 1 (length exprs)) (cons 'or exprs)
+ (if (> (length exprs) 1) (cons 'or exprs)
      (car exprs)))
 
 

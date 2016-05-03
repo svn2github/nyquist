@@ -842,7 +842,7 @@ int lo_server_add_bundle_handlers(lo_server s,
  * lo_server_next_event_delay() can be used to tell if there are pending
  * events and how long before you should attempt to receive them.
  */
-int lo_server_get_socket_fd(lo_server s);
+socket_type lo_server_get_socket_fd(lo_server s);
 
 /**
  * \brief Return the port number that the server has bound to.

@@ -1,14 +1,4 @@
-implement logical stop in pv
-
-implement terminate in pv
-
-test pv
-
-test convolution
-
-moving code into libsndfile_static -- need to copy search paths from nyquist
-
-then test to see if libsndfile_static can be linked into scorealign
+Edward Williamson May 3, 9:12am -- security flaws
 
 nyquist plugins in Audacity slower on Linux than Windows:
 On Linux, Nyquist plug-ins are much slower than on Win XP.
