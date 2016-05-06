@@ -92,54 +92,6 @@
 
 (nyq:environment-init)
 
-(defun multichannel-soundp (v)
-  (prog ((rslt t))
-    (if (not (arrayp v)) (return nil))
-    (dotimes (i (length v))
-      (cond ((not (soundp (aref v i)))
-             (setf rslt nil)
-             (return nil))))
-    (return rslt)))
-
-(defun multichannelp (v)
-  (prog ((rslt t))
-    (if (not (arrayp v)) (return nil))
-    (dotimes (i (length v))
-      (cond ((not (or (numberp (aref v i)) (soundp (aref v i))))
-             (setf rslt nil)
-             (return nil))))
-    (return rslt)))
-
-(defun numbersp (v)
-  (prog ((rslt t))
-    (if (not (arrayp v)) (return nil))
-    (dotimes (i (length v))
-      (cond ((not (numberp (aref v i)))
-             (setf rslt nil)
-             (return nil))))
-    (return rslt)))
-
-(defun param-type (param)
-  (cond ((multichannel-soundp param)
-         "a multichannel SOUND")
-        ((null param) "NIL")
-        (t (symbol-name (type-of param)))))
-
-(defun param-to-string (param)
-  (if param
-      (format nil "~A, which is a ~A" param (param-type param))
-      (format nil "NIL")))
-
-(defun ny:assert (test msg &optional (param nil first-param)
-                                     (param2 nil second-param))
-  (cond ((not test)
-     (if first-param
-         (setf msg (strcat msg ", got " (param-to-string param) "")))
-     (if second-param
-         (setf msg (strcat msg ", and " (param-to-string param2))))
-     (error msg))))
-
-
 (defun get-duration (dur)
   (ny:assert (numberp dur)
           "GET-DURATION expects a number" dur)
@@ -904,6 +856,14 @@ loop
     "In EXTRACT, 1st argument (start) must be a number" start)
   (ny:assert (numberp stop)
     "In EXTRACT, 2nd argument (stop) must be a number" stop)
+  ;; It would be clearer to say "stop must be greater than start", but
+  ;; then when we print the parameter values, it would be unclear which
+  ;; one is start and which one is stop. This error wording is a little
+  ;; bit backwards, but then we can list the parameters in order, which
+  ;; I think is less ambiguous (alternatively, we could make an entirely
+  ;; custom version of ny:assert, but that seems like overkill.
+  (ny:assert (>= stop start) 
+    "In EXTRACT, start must be less than stop" start stop)
   (ny:assert (soundp sound)
     "In EXTRACT, 3rd argument (sound) must be a sound" sound)
   (extract-abs (local-to-global start) (local-to-global stop) sound
@@ -920,13 +880,15 @@ loop
 ;  from start and stop to shift them appropriately.
 (defun extract-abs (start stop sound &optional (start-time 0))
   (ny:assert (numberp start)
-    "In EXTRACT, 1st argument (start) must be a number" start)
+    "In EXTRACT-ABS, 1st argument (start) must be a number" start)
   (ny:assert (numberp stop)
-    "In EXTRACT, 2nd argument (stop) must be a number" stop)
+    "In EXTRACT-ABS, 2nd argument (stop) must be a number" stop)
+  (ny:assert (>= stop start) 
+    "In EXTRACT-ABS, start must be less than stop" start stop)
   (ny:assert (soundp sound)
-    "In EXTRACT, 3rd argument (sound) must be a sound" sound)
+    "In EXTRACT-ABS, 3rd argument (sound) must be a sound" sound)
   (ny:assert (numberp start-time)
-    "In EXTRACT, 4th argument (start-time) must be a number" start-time)
+    "In EXTRACT-ABS, 4th argument (start-time) must be a number" start-time)
   (let ((t0 (snd-t0 sound)) offset)
     (cond ((/= t0 start-time)
            (setf offset (- t0 start-time))
@@ -1000,13 +962,13 @@ loop
 ;
 (defun s-plot (snd &optional (dur 2.0) (n 1000))
   (ny:assert (soundp snd)
-    "In S-PLOT (or PLOT command), 1st argument should be a sound",
+    "In S-PLOT (or PLOT command), 1st argument should be a sound"
     snd)
   (ny:assert (numberp dur)
-    "In S-PLOT (or PLOT command), 2nd argument (dur) should be a number",
+    "In S-PLOT (or PLOT command), 2nd argument (dur) should be a number"
     dur)
   (ny:assert (integerp n)
-    "In S-PLOT (or PLOT command), 3rd argument (n) should be an integer number of points",
+    "In S-PLOT (or PLOT command), 3rd argument (n) should be an integer number of points"
     n)
 
   (prog* ((sr (snd-srate snd))
@@ -1933,15 +1895,15 @@ loop
 ; set-logical-stop - modify the sound and return it, time is shifted and
 ;			 stretched
 (defun set-logical-stop (snd tim)
+  (ny:assert (numberp tim)
+    "In SET-LOGICAL-STOP, 2nd argument must be a number (logical stop time)"
+    tim)
   (multichan-expand "SET-LOGICAL-STOP" #'ny:set-logical-stop snd tim))
 
 (defun ny:set-logical-stop (snd tim)
   (ny:assert (soundp snd)
     "In SET-LOGICAL-STOP, 1st argument must be a sound or multichannel sound"
     snd)
-  (ny:assert (numberp tim)
-    "In SET-LOGICAL-STOP, 2nd argument must be a number (logical stop time)"
-    tim)
   (let ((d (local-to-global tim)))
     (print "returning from ny:set-logical-stop")
     (print (snd-set-logical-stop snd d))))
@@ -1949,6 +1911,9 @@ loop
 ; set-logical-stop-abs - modify the sound and return it
 ; 
 (defun set-logical-stop-abs (snd tim)
+  (ny:assert (numberp tim)
+    "In SET-LOGICAL-STOP-ABS, 2nd argument must be a number (logical stop time)"
+    tim)
   (multichan-expand "SET-LOGICAL-STOP-ABS" #'ny:set-logical-stop-abs snd d))
 
 (defun ny:set-logical-stop (snd tim)
@@ -2193,6 +2158,12 @@ loop
 (setf *step-shape* (seq (const -1) (const 1 1.01)))  ; hard step at zero
 
 (defun exp-dec (hold halfdec length)
+  (ny:assert (numberp hold)
+    "In EXP-DEC, 1st argument (hold) must be a number" hold)
+  (ny:assert (numberp halfdec)
+    "In EXP-DEC, 2nd argument (halfdec) must be a number" halfdec)
+  (ny:assert (numberp length)
+    "In EXP-DEC, 3rd argument (length) must be a number" length)
   (let* ((target (expt 0.5 (/ length halfdec)))
      (expenv (pwev 1 hold 1 length target)))
     expenv)
@@ -2226,3 +2197,38 @@ loop
 ;(tapv snd offset vardelay maxdelay)
 (setfn tapv snd-tapv) ;; linear interpolation
 (setfn tapf snd-tapf) ;; no interpolation
+
+;; autoload functions -- SELF-MODIFYING CODE!
+;; these functions replace themselves by loading more files
+;; and then re-call themselves as if they were already loaded
+
+(defun spec-plot (&rest args)
+  (if (load "spec-plot.lsp")
+      (apply 'spec-plot args)
+      (error "Could not load spec-plot.lsp")))
+
+(defun sa-init (&rest args)
+  (if (load "spectral-analysis.lsp")
+      (apply 'sa-init args)
+      (error "Could not load spec-plot.lsp")))
+
+(defun piano-note-2 (step dynamic)
+  (if (load "pianosyn.lsp")
+      (piano-note-2 step dynamic)
+      (error "Could not load pianosyn.lsp")))
+
+(defun piano-note (duration step dynamic)
+  (if (load "pianosyn.lsp")
+      (piano-note duration step dynamic)
+      (error "Could not load pianosyn.lsp")))
+
+(defun piano-midi (midi-file-name)
+  (if (load "pianosyn.lsp")
+      (piano-midi midi-file-name)
+      (error "Could not load pianosyn.lsp")))
+
+(defun piano-midi2file (midi-file-name sound-file-name)
+  (if (load "pianosyn.lsp")
+      (piano-midi midi-file-name sound-file-name)
+      (error "Could not load pianosyn.lsp")))
+

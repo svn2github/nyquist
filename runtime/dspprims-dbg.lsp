@@ -816,27 +816,3 @@
     (setf w (integrate (snd-recip (snd-compose pitchfn v))))
     (sound-warp w (phasevocoder input v fftsize hopsize mode) wrate)))
 
-#|  ORIGINAL SAL IMPLEMENTATION
-;; PV-TIME-PITCH -- control time stretch and transposition 
-;;
-;; stretchfn maps from input time to output time
-;; pitchfn maps from input time to transposition factor (2 means octave up)
-function pv-time-pitch(input, stretchfn, pitchfn, dur, fftsize: 2048, hopsize: nil, mode: 0)
-  begin with wrate, u, v, w, v-inv, w-inv
-    if ! hopsize then set hopsize = fftsize / 8
-    set wrate = 3000 / dur
-    set vinv = integrate(stretchfn * pitchfn)
-    set v = snd-inverse(vinv, local-to-global(0), wrate)
-    set w = integrate(snd-recip(snd-compose(pitchfn, v)))
-    return sound-warp(w, phasevocoder(input, v, fftsize, hopsize), wrate)
-
-    set s = slope(warpfn)
-    set sp = s * pitchfn
-    set spi = integrate(sp)
-    set spi-inv = snd-inverse(spi, local-to-global(0), wrate)
-    set sw = snd-compose(pitchfn, spi-inv)
-    set swi = integrate(sw)
-    set swi-int = snd-inverse(swi, local-to-global(0), wrate)
-    return sound-warp(swi-int, phasevocoder(input, spi-inv), wrate)
-  end
-|#

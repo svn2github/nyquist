@@ -43,7 +43,7 @@ public class PlotFrame extends JPanel { //JPANEL: JInternalFrame {
     int graphBufferWidth;
     // height of plot area (without labels)
     int graphBufferHeight;
-    int axisMinSpacing = 30;
+    int axisMinSpacing = 50;
     //JPANEL: int gadgetHeight = 10;    
     
     public void CalcBufferSize()
@@ -91,44 +91,6 @@ public class PlotFrame extends JPanel { //JPANEL: JInternalFrame {
     }
 
         
-
-    //JPANEL: This is old code to put a plot in a JInternalFrame
-    //    public PlotFrame(JDesktopPane jDesktop, Vector d, double minx, double miny, 
-    //                     double maxx, double maxy) {
-    //        minX = minx;
-    //        minY = miny;
-    //        height = maxy - miny;
-    //        width = maxx - minx;
-    //        data = d;
-    //        mouse = new PlotMouseAdapter(this);
-    //
-    //        setSize(new Dimension(720, 520));
-    //        //JPANEL: setResizable(true);
-    //        //JPANEL: this.setClosable(true);
-    //        //JPANEL: this.setIconifiable(true);
-    //
-    //        addMouseMotionListener(mouse);
-    //        addMouseListener(mouse);
-    //
-    //        //JPANEL: setTitle("Plot");
-    //        setVisible(true);
-    //        jDesktop.add(this);
-    //        CalcBufferSize();
-    //        
-    //        renderGraph();
-    //    }
-    //
-    //    private int degree(double n)
-    //    {
-    //        int deg = 0;
-    //        while (n < 10) {
-    //            n *= 10.0;
-    //            deg++;
-    //        }
-    //        return deg;
-    //    }
-    // (END JPANEL:)
-
 	// do label layouts for x and y axes. Returns values by setting
 	// spacing, minLabel, and numLines
 	//
@@ -246,21 +208,25 @@ public class PlotFrame extends JPanel { //JPANEL: JInternalFrame {
             gGraph.drawOval(x1, y1, dotSize, dotSize);
 
         double x = minXlabel;
-        for (int i = 0; i < numXlines; i++) {
+        // draw twice as many vertical lines as labels
+        Color light = new Color(170, 170, 170);
+        Color verylight = new Color(200, 200, 200);
+        for (int i = 0; i < numXlines * 2; i++) {
             //System.out.println(x);
-            int axisX = (int) (((x - minXlabel) / ((numXlines - 1) * xSpacing)) * 
+            int axisX = (int) (((x - minXlabel) / ((numXlines - 1) * 2 * xSpacing)) * 
 			                   graphBufferWidth + 0.5);
-            gGraph.setColor(new Color(170, 170, 170));
+            gGraph.setColor((i & 1) == 0 ? light : verylight);
             gGraph.drawLine(axisX, 0, axisX, graphBufferHeight );
 			x += xSpacing;
         }
 
         double y = minYlabel;
-        for (int i = 0; i < numYlines; i++) {
+        // draw twice as many vertical lines as labels
+        for (int i = 0; i < numYlines * 2; i++) {
 		//double y = minYlabel; y < minYlabel + height; y += ySpacing) {
-            int axisY = (int) ((1.0 - ((y - minYlabel) / ((numYlines - 1) * ySpacing))) * 
+            int axisY = (int) ((1.0 - ((y - minYlabel) / ((numYlines - 1) * 2 * ySpacing))) * 
                                graphBufferHeight + 0.5);
-            gGraph.setColor(new Color(170, 170, 170));
+            gGraph.setColor((i & 1) == 0 ? light : verylight);
             gGraph.drawLine(0, axisY, graphBufferWidth, axisY );
 			y += ySpacing;
         }

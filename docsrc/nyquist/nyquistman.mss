@@ -5336,7 +5336,7 @@ sound file with a header (not a raw sound file).
 @altdef{@code[(sf-info @i(filename))] @c{[lisp]}}@\Prints information about a sound file. The parameter @i(filename) is a string.  The file is assumed to be in *default-sf-dir* (see @code(soundfilename) below) unless the filename begins with ``.'' or ``/''. The source for this function is in the @code(runtime) and provides an example of how to determine sound file parameters. 
 
 @codef{soundfilename(@pragma(defn)@index(soundfilename)@i(name))} @c{[sal]}@*
-@altdef{@code[(soundfilename @i(name))] @c{[lisp]}}@\Converts a string @i(name) to a soundfile name.  If @i(name) begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from @code(*default-sf-dir*) is prepended to @i(name).  The @code(s-plot), @code(s-read), and @code(s-save) functions all use @code(soundfilename) translate filenames.
+@altdef{@code[(soundfilename @i(name))] @c{[lisp]}}@\Converts a string @i(name) to a soundfile name.  If @i(name) begins with ``.'' or ``/'', the name is returned without alteration.  Otherwise,  a path taken from @code(*default-sf-dir*) is prepended to @i(name).  The @code(s-plot), @code(s-read), and @code(s-save) functions all use @code(soundfilename) to translate filenames.
 
 @label(s-plot-sec)
 @codef{s-plot(@pragma(defn)@index(s-plot)@index(plot)@i(sound) 
@@ -5353,6 +5353,41 @@ to have @i(n) samples before plotting.
 The data file used is @code(*default-plot-file*):
 
 @codef(*default-plot-file*)@pragma(defn)@index(*default-plot-file*)@\The file containing the data points, defaults to "points.dat".
+
+@codef{spec-plot(@pragma(defn)@index(spec-plot)@index(plot)@index(spectrum plot)@index(magnitude spectrum plot)@i(sound) [, @i(offset), res: @i(res), bw: @i(bw), db: @i(db)])} @c{[sal]}@*
+@altdef{@code{(spec-plot @i(sound) [@i(offset) :res @i(res) :bw @i(bw) :db @i(db)])} @c{[lisp]}}@\Computes
+and plots the short-time magnitude spectrum of sound. The bandwidth of each bin
+is given by the @i(res)
+(resolution) keyword parameter, which defaults to @code(*spec-plot-res*. Since one
+is often interested in lower frequencies, the @i(bw) (bandwidth) keyword parameter
+limits the range of bins which are plotted, and defaults to @code(*spec-plot-bw*).
+The output can be presented on a dB scale by setting the @i(db) keyword parameter to
+@code(t) (true). The defaults is to use a linear scale.
+The optional @i(offset) (in seconds) skips initial samples before taking a frame of
+samples from @i(sound). The magnitude spectrum is sent to @code(s-plot) as a signal.
+The sample rate of the signal is set so that the plot labels on the horizontal axis
+represent Hz (not bin numbers.) To align bins with grid lines, one normally specifies
+@i(res) values in round numbers, e.g. 10 or 20. To achieve an arbitrary bin size,
+@code(spec-plot) resamples @i(sound) to a carefully computed sample rate that, after
+a power-of-2-sized FFT, yields the desired bin size.
+
+@codef(*spec-plot-res*)@pragma(defn)@index(*spec-plot-res*)@\The default bin resolution
+(separation in Hz between adjacent bins) for @code(spec-plot). Defaults to 20 Hz. You
+can override this by using a keyword parameter when you call @code(spec-plot), or for
+convenience, you can change this variable which will affect all future calls to
+@code(spec-plot) where the keyword parameter is omitted.
+
+@codef(*spec-plot-bw*)@pragma(defn)@index(*spec-plot-bw*)@\The default highest frequency to
+include in @code(spec-plot). Defaults to 8000 Hz. You
+can override this by using a keyword parameter when you call @code(spec-plot), or for
+convenience, you can change this variable which will affect all future calls to
+@code(spec-plot) where the keyword parameter is omitted.
+
+@codef(*spec-plot-db*)@pragma(defn)@index(*spec-plot-db*)@\The default output from
+@code(spec-plot) displays magnitude on a linear scale, but there is an option to
+display on a dB scale. You can change the default behavior by setting this variable to
+@code(t) (true), or you can override the default in any call to 
+@code(spec-plot) using a keyword parameter.
 
 @codef{s-print-tree(@pragma(defn)@index(s-print-tree)@index(snd-print-tree)@i(sound))} @c{[sal]}@*
 @altdef{@code[(s-print-tree @i(sound))] @c{[lisp]}}@\Prints an ascii
@@ -8815,7 +8850,8 @@ Hua and Jim Beauchamp, University of Illinois. Please see the notice about
 acknowledgements that prints when you load the file. Further informations and
 example code can be found in 
 @code(demos/piano.htm)@index(demos, piano)@index(piano synthesizer tutorial). 
-There are several useful functions in this library:
+There are several useful functions in this library. These functions auto-load the 
+@code(pianoysn.lsp) library if it is not already loaded:
 @begin(fndefs)
 @codef[piano-note(@pragma(defn)@index(piano-note)@index(piano synthesizer)@i(duration), @i(step), 
  @i(dynamic))] @c{[sal]}@*

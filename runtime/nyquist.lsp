@@ -7,6 +7,62 @@
 ;;;
 (load "fileio.lsp" :verbose NIL)
 
+;; #### Error checking and reporting functions ####
+
+;; MULTICHANNEL-SOUNDP - test for vector of sounds
+(defun multichannel-soundp (v)
+  (prog ((rslt t))
+    (if (not (arrayp v)) (return nil))
+    (dotimes (i (length v))
+      (cond ((not (soundp (aref v i)))
+             (setf rslt nil)
+             (return nil))))
+    (return rslt)))
+
+;; MULTICHANNELP - test for vector of sounds or numbers
+(defun multichannelp (v)
+  (prog ((rslt t))
+    (if (not (arrayp v)) (return nil))
+    (dotimes (i (length v))
+      (cond ((not (or (numberp (aref v i)) (soundp (aref v i))))
+             (setf rslt nil)
+             (return nil))))
+    (return rslt)))
+
+;; NUMBERSP - test for vector of numbers
+(defun numbersp (v)
+  (prog ((rslt t))
+    (if (not (arrayp v)) (return nil))
+    (dotimes (i (length v))
+      (cond ((not (numberp (aref v i)))
+             (setf rslt nil)
+             (return nil))))
+    (return rslt)))
+
+;; PARAM-TYPE - return string description of parameter type
+(defun param-type (param)
+  (cond ((multichannel-soundp param)
+         "a multichannel SOUND")
+        ((null param) "NIL")
+        (t (symbol-name (type-of param)))))
+
+;; PARAM-TO-STRING - make printable parameter for error message
+(defun param-to-string (param)
+  (if param
+      (format nil "~A, which is a ~A" param (param-type param))
+      (format nil "NIL")))
+
+;; NY:ASSERT - general assertion and error messager for Nyquist/SAL functions
+(defun ny:assert (test msg &optional (param nil first-param)
+                                     (param2 nil second-param))
+  (cond ((not test)
+     (if first-param
+         (setf msg (strcat msg ", got " (param-to-string param) "")))
+     (if second-param
+         (setf msg (strcat msg ", and " (param-to-string param2))))
+     (error msg))))
+
+
 (prog ()
    (setq lppp -12.0) (setq lpp -9.0)  (setq lp -6.0)    (setq lmp -3.0)
    (setq lfff 12.0) (setq lff 9.0)  (setq lf 6.0)    (setq lmf 3.0)
@@ -1701,3 +1757,38 @@ loop
 ;(tapv snd offset vardelay maxdelay)
 (setfn tapv snd-tapv) ;; linear interpolation
 (setfn tapf snd-tapf) ;; no interpolation
+
+;; autoload functions -- SELF-MODIFYING CODE!
+;; these functions replace themselves by loading more files
+;; and then re-call themselves as if they were already loaded
+
+(defun spec-plot (&rest args)
+  (if (load "spec-plot.lsp")
+      (apply 'spec-plot args)
+      (error "Could not load spec-plot.lsp")))
+
+(defun sa-init (&rest args)
+  (if (load "spectral-analysis.lsp")
+      (apply 'sa-init args)
+      (error "Could not load spec-plot.lsp")))
+
+(defun piano-note-2 (step dynamic)
+  (if (load "pianosyn.lsp")
+      (piano-note-2 step dynamic)
+      (error "Could not load pianosyn.lsp")))
+
+(defun piano-note (duration step dynamic)
+  (if (load "pianosyn.lsp")
+      (piano-note duration step dynamic)
+      (error "Could not load pianosyn.lsp")))
+
+(defun piano-midi (midi-file-name)
+  (if (load "pianosyn.lsp")
+      (piano-midi midi-file-name)
+      (error "Could not load pianosyn.lsp")))
+
+(defun piano-midi2file (midi-file-name sound-file-name)
+  (if (load "pianosyn.lsp")
+      (piano-midi midi-file-name sound-file-name)
+      (error "Could not load pianosyn.lsp")))
+
