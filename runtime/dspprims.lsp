@@ -51,7 +51,7 @@
     ; convert decay to feedback, iterate over array if necessary
     (setf delay (comb-delay-from-hz hz "comb"))
     (setf feedback (comb-feedback decay delay))
-    (nyq:feedback-delay snd delay feedback)))
+    (nyq:feedback-delay "COMB" snd delay feedback)))
 
 ;; ALPASS - all-pass filter
 ;; 
@@ -87,7 +87,7 @@
 ;; FEEDBACK-DELAY -- (delay is quantized to sample period)
 ;;
 (defun feedback-delay (snd delay feedback)
-  (multichan-expand #'nyq:feedback-delay snd delay feedback))
+  (multichan-expand #'nyq:feedback-delay "FEEDBACK-DELAY" snd delay feedback))
   
 
 ;; SND-DELAY-ERROR -- report type error
@@ -102,8 +102,8 @@
 
 ;; NYQ:FEEDBACK-DELAY -- single channel delay
 ;;
-(defun nyq:feedback-delay (snd delay feedback)
-  (select-implementation-1-2 feedback-delay-implementations 
+(defun nyq:feedback-delay (source snd delay feedback)
+  (select-implementation-1-2 source feedback-delay-implementations 
                              snd delay feedback))
 
 
@@ -155,7 +155,7 @@
 ;; NYQ:ALPASS1 -- single channel alpass
 ;;
 (defun nyq:alpass1 (snd delay feedback min-hz)
-  (select-implementation-1-2 alpass-implementations
+  (select-implementation-1-2 "ALPASS" alpass-implementations
                              snd delay feedback min-hz))
 
 ;; CONGEN -- contour generator, patterned after gated analog env gen

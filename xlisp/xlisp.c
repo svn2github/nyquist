@@ -126,8 +126,8 @@ void xlisp_main_init(int argc, char *argv[])
                 secure_read_path = &argv[i][2];
                 break;
             case 'w':
-	    case 'W':
-	        safe_write_path = &argv[i][2];
+            case 'W':
+                safe_write_path = &argv[i][2];
                 break;
             case 'l':
             case 'L':

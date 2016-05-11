@@ -15,6 +15,7 @@
 
 #include "stdlib.h"
 #include "string.h"
+#include "limits.h"
 #include "xlisp.h"
 
 #ifdef WIN32

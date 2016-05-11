@@ -9,6 +9,7 @@ print get-tempo()
 print get-tempo() ~ 2
 print get-transpose()
 print transpose(2, get-transpose())
+plot get-warp() ~ ramp()
 plot get-warp()
 plot get-warp() ~ 2
 plot build-harmonic(3, 128)
@@ -394,7 +395,7 @@ plot areson(pluck(c4), 300, vector(50, 60))
 plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), 50)
 plot areson(vector(pluck(c4), pluck(g4)), 300, vector(50, 60))
 plot areson(pluck(c4), vector(300, 250), vector(50, 60))
-plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(50, 60))
+plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(50, 60))[0]
 plot areson(c4, 300, 50)
 plot areson(pluck(c4), 300 + lfo(4), 50)
 plot areson(pluck(c4), 300, 50 + lfo(4))
@@ -423,27 +424,29 @@ plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(2), 2.5), vector(50, 60))
 plot comb(c4, 300, 50)
 plot comb(pluck(c4), "bad", 50)
 plot comb(c4, 300, "bad")
+;; RBD STARTING TO TEST HERE
 plot alpass(pluck(c4), 2, 30, 20)
-plot alpass(pluck(c4), const(2), 30, 20)
 plot alpass(pluck(c4), 2, 30 + lfo(2), 20)
-plot alpass(vector(pluck(c4), pluck(d4)), 2, 30, 20)
-plot alpass(vector(pluck(c4), pluck(d4)), const(2), 30, 20)
-plot alpass(vector(pluck(c4), pluck(d4)), 2, 30 + lfo(2), 20)
-plot alpass(pluck(c4), vector(2, 3), 30, 20)
-plot alpass(pluck(c4), vector(const(2), const(3)), 30, 20)
-plot alpass(pluck(c4), vector(2, 3), 30 + lfo(2), 20)
-plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30, 40), 20)
-plot alpass(vector(pluck(c4), pluck(d4)), const(2), vector(30, 40), 20)
-plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20)
+;; TESTED UP TO HERE
+plot alpass(vector(pluck(c4), pluck(d4)), 2, 30, 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), const(2), 30, 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), 2, 30 + lfo(2), 20)[0]
+plot alpass(pluck(c4), vector(2, 3), 30, 20)[0]
+plot alpass(pluck(c4), vector(const(2), const(3)), 30, 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30, 40), 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), const(2), vector(30, 40), 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20)[0]
 plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20 + lfo(1)) ;; bad
+plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40),
+            vector(30 + lfo(2), 20 + lfo(1))) ;; bad
 plot const(2)
 plot const(2, 3)
 plot const(lfo(2))
 plot const(2, lfo(3))
 plot convolve(pluck(c4), osc(c7, 0.01))
-plot convolve(vector(pluck(c4), pluck(d4)), osc(c7, 0.01))
-plot convolve(pluck(c4), vector(osc(c7, 0.01), osc(c8, 0.01)))
-plot convolve(vector(pluck(c4), pluck(d4)), vector(osc(c7, 0.01), osc(c8, 0.01)))
+plot convolve(vector(pluck(c4), pluck(d4)), osc(c7, 0.01))[0]
+plot convolve(pluck(c4), vector(osc(c7, 0.01), osc(c8, 0.01)))[0]
+plot convolve(vector(pluck(c4), pluck(d4)), vector(osc(c7, 0.01), osc(c8, 0.01)))[0]
 plot convolve(pluck(c4), 100)
 plot convolve(100, pluck(c4))
 plot feedback-delay(pluck(c4), 0.1, 0.2)

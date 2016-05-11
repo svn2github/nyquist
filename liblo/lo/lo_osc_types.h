@@ -23,6 +23,7 @@
  */
 
 #ifdef _MSC_VER
+typedef SOCKET socket_type;
 #ifndef UINTSDEFINED
 #define UINTSDEFINED
 #define int32_t __int32
@@ -32,6 +33,7 @@
 #define uint8_t unsigned __int8
 #endif
 #else
+typedef int socket_type;
 #include <stdint.h>
 #endif
 

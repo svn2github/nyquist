@@ -467,7 +467,7 @@
 ;; read-eval-print loop for sal commands
 (defun sal ()
   (progv '(*breakenable* *tracenable* *sal-exit* *sal-mode*)
-         (list *sal-break* nil nil t)
+         (list *sal-break* *xlisp-traceback* nil t)
     (let (input line)
       (setf *sal-call-stack* nil)
       (read-line) ; read the newline after the one the user 

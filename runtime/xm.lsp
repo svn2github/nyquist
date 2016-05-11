@@ -1413,6 +1413,24 @@ pattern argument (by default).
 
 ;; ============== score manipulation ===========
 
+(defun must-be-valid-score (caller score)
+  (if (not (score-validp score))
+      (error (strcat "In " caller ", not a valid score") score)))
+
+(defun invalid-score () (return-from 'validp nil))
+(defun score-validp (score)
+  (block validp
+    (if (listp score) nil (invalid-score)) ;; tricky: return nil if NOT condition
+    (dolist (event score)
+      (if (listp event) nil (invalid-score))
+      (if (and (event-time event) (numberp (event-time event))) nil 
+          (invalid-score))
+      (if (and (event-dur event) (numberp (event-dur event))) nil
+          (invalid-score))
+      (if (and (event-expression event) (consp (event-expression event))) nil
+          (invalid-score)))
+    t))
+
 (defun event-before (a b)
   (< (car a) (car b)))
 

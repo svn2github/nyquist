@@ -3,7 +3,10 @@
 ;; ARESON - notch filter
 ;; 
 (defun areson (s c b &optional (n 0))
-  (multichan-expand "ARESON" #'nyq:areson s c b n))
+  (multichan-expand "ARESON" #'nyq:areson
+    '(((SOUND) nil) ((NUMBER SOUND) "center")
+      ((NUMBER SOUND) "bandwidth") ((INTEGER) nil))
+    s c b n))
 
 (setf areson-implementations
       (vector #'snd-areson #'snd-aresonvc #'snd-aresoncv #'snd-aresonvv))
@@ -18,7 +21,8 @@
 ;; hp - highpass filter
 ;; 
 (defun hp (s c)
-  (multichan-expand "HP" #'nyq:hp s c))
+  (multichan-expand "HP" #'nyq:hp
+    '(((SOUND) "snd") ((NUMBER SOUND) "cutoff")) s c))
 
 (setf hp-implementations
       (vector #'snd-atone #'snd-atonev))
@@ -44,32 +48,27 @@
 ;; this is just a feedback-delay with different arguments
 ;;
 (defun comb (snd decay hz)
-  (multichan-expand "COMB" #'nyq:comb snd decay hz))
+  (multichan-expand "COMB" #'nyq:comb
+    '(((SOUND) "snd") ((NUMBER SOUND) "decay") ((POSITIVE) "hz"))
+    snd decay hz))
 
 
 (defun nyq:comb (snd decay hz)
-  (ny:assert (or (numberp decay) (multichannelp decay))
-    "In COMB, 2nd argument (decay) must be a number, sound, or array thereof"
-    decay)
-  (ny:assert (and (numberp hz) (> hz 0))
-    "In COMB, 3rd argument (hz) must be a positive number or array of them" hz)
   (let (delay feedback len d)
     ; convert decay to feedback
-    (setf delay (/ 1.0 (float hz)))
+    (setf delay (/ (float hz)))
     (setf feedback (comb-feedback decay delay))
     (nyq:feedback-delay snd delay feedback "COMB")))
 
 ;; ALPASS - all-pass filter
 ;; 
 (defun alpass (snd decay hz &optional min-hz)
-  (multichan-expand "ALPASS" #'nyq:alpass snd decay hz min-hz))
+  (multichan-expand "ALPASS" #'nyq:alpass
+    '(((SOUND) "snd") ((NUMBER SOUND) "decay")
+      ((POSITIVE SOUND) "hz") ((POSITIVE) "min-hz"))
+    snd decay hz min-hz))
   
 (defun nyq:alpass (snd decay hz min-hz)
-  (ny:assert (or (numberp decay) (soundp decay))
-    "In ALPASS, 2nd argument (decay) must be a number, sound, or array thereof"
-    decay)
-  (ny:assert (or (and (numberp hz) (> hz 0)) (soundp hz))
-    "In ALPASS, 3rd argument (hz) must be a positive number or array thereof" hz)
   (let (delay feedback len d)
     ; convert decay to feedback, iterate over array if necessary
     (setf delay (comb-delay-from-hz hz))
@@ -80,10 +79,10 @@
 ;; CONST -- a constant at control-srate
 ;;
 (defun const (value &optional (dur 1.0))
-  (ny:assert (numberp value)
-    "In CONST, 1st argument must be a number" value)
-  (ny:assert (numberp dur)
-    "In CONST, 2nd argument must be a number" dur)
+  (ny:typecheck (not (numberp value))
+    (ny:error "CONST" 1 '((NUMBER) "value") value))
+  (ny:typecheck (not (numberp dur))
+    (ny:error "CONST" 2 '((NUMBER) "dur") dur))
   (let ((d (get-duration dur)))
     (snd-const value *rslt* *CONTROL-SRATE* d)))
 
@@ -91,20 +90,19 @@
 ;; CONVOLVE - fast convolution
 ;; 
 (defun convolve (s r)
-  (multichan-expand "CONVOLVE" #'nyq:convolve s r))
+  (multichan-expand "CONVOLVE" #'nyq:convolve
+    '(((SOUND) nil) ((SOUND) nil)) s r))
 
 (defun nyq:convolve (s r)
-  (ny:assert (soundp s)
-    "In CONVOLVE, 1st argument must be a sound or multichannel sound" s)
-  (ny:assert (soundp r)
-    "In CONVOLVE, 2nd argument must be a sound or multichannel sound" r)
   (snd-convolve s (force-srate (snd-srate s) r)))
 
 
 ;; FEEDBACK-DELAY -- (delay is quantized to sample period)
 ;;
 (defun feedback-delay (snd delay feedback)
-  (multichan-expand "FEEDBACK-DELAY" #'nyq:feedback-delay snd delay feedback))
+  (multichan-expand "FEEDBACK-DELAY"
+    '(((SOUND) "snd") ((NUMBER) "delay") ((NUMBER SOUND) "feedback"))
+    #'nyq:feedback-delay snd delay feedback))
   
 
 ;; SND-DELAY-ERROR -- report type error
@@ -120,15 +118,6 @@
 ;; NYQ:FEEDBACK-DELAY -- single channel delay
 ;;
 (defun nyq:feedback-delay (snd delay feedback &optional (src "FEEDBACK-DELAY"))
-  (ny:assert (soundp snd)
-    (strcat "In " src ", 1st argument (snd) must be a sound or multichannel sound")
-    snd)
-  (ny:assert (numberp delay)
-    "In FEEDBACK-DELAY, 2nd argument (delay) must be a number or array of numbers"
-    delay)
-  (ny:assert (or (numberp feedback) (soundp feedback))
-    "In FEEDBACK-DELAY, 2nd argument (feedback) must be a number, sound, or array thereof"
-    delay)
   (select-implementation-1-2 src feedback-delay-implementations 
                              snd delay feedback))
 
@@ -149,12 +138,9 @@
 
 (defun nyq:alpassvv (the-snd delay feedback min-hz)
     (let (max-delay)
-      (cond ((or (not (numberp min-hz))
-                 (<= min-hz 0))
-             (ny:assert nil
-              "In ALPASS, 4th parameter (min-hz) must be a number when delay is a sound"
-              min-hz)))
-      (setf max-delay (/ 1.0 min-hz))
+      (ny:typecheck (or (not (numberp min-hz)) (<= min-hz 0))
+        (ny:error "ALPASS" 4 '((POSITIVE) "min-hz") min-hz))
+      (setf max-delay (/ (float min-hz)))
       ; make sure delay is between 0 and max-delay
       ; use clip function, which is symetric, with an offset
       (setf delay (snd-offset (clip (snd-offset delay (* max-delay -0.5))
@@ -189,21 +175,16 @@
 ;; CONGEN -- contour generator, patterned after gated analog env gen
 ;;
 (defun congen (gate rise fall)
-  (ny:assert (or (soundp gate) (multichannel-soundp gate))
-    "In CONGEN, 1st argument (gate) must be a sound or multichannel sound" gate)
-  (ny:assert (or (numberp rise) (numbersp rise))
-    "In CONGEN, 2nd argument (rise) must be a number or array of numbers" rise)
-  (ny:assert (or (numberp fall) (numbersp fall))
-    "In CONGEN, 2nd argument (fall) must be a number or array of numbers" rise)
-  (multichan-expand "CONGEN" #'snd-congen gate rise fall))
+  (multichan-expand "CONGEN" #'snd-congen
+    '(((SOUND) "gate") ((NONNEGATIVE) "rise") ((NONNEGATIVE) "fall"))
+    gate rise fall))
 
 
 ;; S-EXP -- exponentiate a sound
 ;;
 (defun s-exp (s)
-  (ny:assert (or (numberp s) (soundp s) (multichannelp s))
-    "In S-EXP, argument must be a number, sound, or array thereof" s)
-  (multichan-expand "S-EXP" #'nyq:exp s))
+  (multichan-expand "S-EXP" #'nyq:exp
+    '(((NUMBER SOUND) nil)) s))
 
 
 ;; NYQ:EXP -- exponentiate number or sound
@@ -213,73 +194,70 @@
 ;; S-ABS -- absolute value of a sound
 ;;
 (defun s-abs (s)
-  (multichan-expand "S-ABS" #'nyq:abs s))
+  (multichan-expand "S-ABS" #'nyq:abs
+    '((NUMBER SOUND) nil) s))
 
 ;; NYQ:ABS -- absolute value of number or sound
 ;;
 (defun nyq:abs (s)
-  (ny:assert (or (numberp s) (soundp s))
-    "In S-ABS, argument must be a number, sound, or array thereof" s)
   (if (soundp s) (snd-abs s) (abs s)))
 
 ;; S-SQRT -- square root of a sound
 ;;
 (defun s-sqrt (s)
-  (multichan-expand "S-SQRT" #'nyq:sqrt s))
+  (multichan-expand "S-SQRT" #'nyq:sqrt
+    '((NUMBER SOUND) nil) s))
+
 
 ;; NYQ:SQRT -- square root of a number or sound
 ;;
 (defun nyq:sqrt (s)
-  (ny:assert (or (numberp s) (soundp s))
-    "In S-SQRT, argument must be a number, sound, or array thereof" s)
   (if (soundp s) (snd-sqrt s) (sqrt s)))
 
 
 ;; INTEGRATE -- integration
 ;;
 (defun integrate (s)
-  (ny:assert (or (numberp s) (multichannelp s))
-    "In INTEGRATE, argument must be a number, sound, or array thereof" s)
-  (multichan-expand "INTEGRATE" #'snd-integrate s))
+  (multichan-expand "INTEGRATE" #'snd-integrate
+    '(((SOUND) nil)) s))
 
 
 ;; S-LOG -- natural log of a sound
 ;;
 (defun s-log (s)
-  (multichan-expand "S-LOG" #'nyq:log s))
+  (multichan-expand "S-LOG" #'nyq:log
+    '((NUMBER SOUND) nil) s))
 
 
 ;; NYQ:LOG -- log of a number or sound
 ;;
 (defun nyq:log (s)
-  (ny:assert (or (numberp s) (soundp s))
-    "In S-LOG, argument must be a number, sound, or array thereof" s)
   (if (soundp s) (snd-log s) (log s)))
 
 
 ;; NOISE -- white noise
 ;;
 (defun noise (&optional (dur 1.0))
-  (ny:assert (numberp dur)
-    "In NOISE, argument (dur) must be a number" dur)
+  (ny:typecheck (not (numberp dur))
+    (ny:error "NOISE" 1 number-anon dur))
   (let ((d (get-duration dur)))
     (snd-white *rslt* *SOUND-SRATE* d)))
 
 
 (defun noise-gate (snd &optional (lookahead 0.5) (risetime 0.02) (falltime 0.5)
                                                  (floor 0.01) (threshold 0.01))
-  (ny:assert (soundp snd)
-    "In NOISE-GATE, 1st argument must be a sound" snd)
-  (ny:assert (numberp lookahead)
-    "In NOISE-GATE, all 2nd argument (lookahead) must be a number" lookahead)
-  (ny:assert (numberp risetime)
-    "In NOISE-GATE, all 3rd argument (risetime) must be a number" risetime)
-  (ny:assert (numberp falltime)
-    "In NOISE-GATE, all 4th argument (falltime) must be a number" falltime)
-  (ny:assert (numberp floor)
-    "In NOISE-GATE, all 5th argument (floor) must be a number" floor)
-  (ny:assert (numberp threshold)
-    "In NOISE-GATE, all 6th argument (threshold) must be a number" threshold)
+  (ny:typecheck (not (soundp snd))
+    (ny:error "NOISE-GATE" 1 '((SOUND) "snd") snd))
+  (ny:typecheck (not (numberp lookahead))
+    (ny:error "NOISE-GATE" 2 '((NUMBER) "lookahead") lookahead))
+  (ny:typecheck (not (numberp risetime))
+    (ny:error "NOISE-GATE" 3 '((NUMBER) "risetime") risetime))
+  (ny:typecheck (not (numberp falltime))
+    (ny:error "NOISE-GATE" 4 '((NUMBER) "falltime") falltime))
+  (ny:typecheck (not (numberp floor))
+    (ny:error "NOISE-GATE" 5 '((NUMBER) "floor") floor))
+  (ny:typecheck (not (numberp threshold))
+    (ny:error "NOISE-GATE" 6 '((NUMBER) "threshold") threshold))
   (let ((rms (lp (mult snd snd) (/ *control-srate* 10.0))))
     (setf threshold (* threshold threshold))
     (mult snd (gate rms floor risetime falltime lookahead threshold))))
@@ -288,36 +266,32 @@
 ;; QUANTIZE -- quantize a sound
 ;;
 (defun quantize (s f)
-  (ny:assert (or (soundp s) (multichannel-soundp s))
-    "In QUANTIZE, 1st argument must be a sound or multichannel sound" s)
-  (ny:assert (or (numberp f) (numbersp f))
-    "In QUANTIZE, 2nd argument must be a number or array of numbers" f)
-  (multichan-expand "QUANTIZE" #'snd-quantize s f))
+  (multichan-expand "QUANTIZE" #'snd-quantize
+    '(((SOUND) nil) ((POSITIVE) nil)) s f))
 
 
 ;; RECIP -- reciprocal of a sound
 ;;
 (defun recip (s)
-  (multichan-expand "RECIP" #'nyq:recip s))
+  (multichan-expand "RECIP" #'nyq:recip
+    '(((NUMBER SOUND) nil)) s))
 
 
 ;; NYQ:RECIP -- reciprocal of a number or sound
 ;;
 (defun nyq:recip (s)
-  (cond ((soundp s) (snd-recip s))
-        ((numberp s) (/ (float s)))
-        (t (ny:assert nil
-             "In RECIP, argument must be a sound, number, or array thereof"))))
+  (if (soundp s) (snd-recip s) (/ (float s))))
+
 
 
 ;; RMS -- compute the RMS of a sound
 ;;
 (defun rms (s &optional (rate 100.0) window-size)
   (let (rslt step-size)
-    (ny:assert (soundp s)
-      "In RMS, 1st argument must be a sound" s)
-    (ny:assert (numberp rate)
-      "In RMS, 2nd argument (rate) must be a number" rate)
+    (ny:typecheck (not (soundp s))
+      (ny:error "RMS" 1 number-anon s))
+    (ny:typecheck (not (numberp rate))
+      (ny:error "RMS" 2 '((NUMBER) "rate") rate))
     (setf step-size (round (/ (snd-srate s) rate)))
     (cond ((null window-size)
            (setf window-size step-size))
@@ -333,15 +307,11 @@
 ;; RESON - bandpass filter
 ;; 
 (defun reson (s c b &optional (n 0))
-  (ny:assert (or (soundp s) (multichannel-soundp s))
-    "In RESON, 1st argument must be a sound or multichannel sound" s)
-  (ny:assert (or  (numberp c) (soundp c) (multichannelp c))
-    "In RESON, 2nd argument (cutoff) must be a number, sound, or array thereof" c)
-  (ny:assert (or  (numberp b) (soundp b) (multichannelp b))
-    "In RESON, 3rd argument (bandwidth) must be a number, sound, or array thereof" b)
-  (ny:assert (integerp n)
-    "In RESON, 4th argument must be 0, 1 or 2" n)
-  (multichan-expand "RESON" #'nyq:reson s c b n))
+  (multichan-expand "RESON" #'nyq:reson
+    '(((SOUND) "snd") ((NUMBER SOUND) "center")
+      ((NUMBER SOUND) "bandwidth") ((INTEGER) "n"))
+    s c b n))
+
 
 (setf reson-implementations
       (vector #'snd-reson #'snd-resonvc #'snd-resoncv #'snd-resonvv))
@@ -356,21 +326,16 @@
 ;; SHAPE -- waveshaper
 ;;
 (defun shape (snd shape origin)
-  (ny:assert (or (soundp snd) (multichannel-soundp snd))
-    "In SHAPE, 1st argument must be a sound or multichannel sound" snd)
-  (ny:assert (or (soundp shape) (multichannel-soundp shape))
-    "In SHAPE, 2nd argument (shape) must be a sound or multichannel sound" shape)
-  (ny:assert (or (numberp origin) (numbersp origin))
-    "In SHAPE, 3rd argument (origin) must be a number or array of numbers" origin)
-  (multichan-expand "SHAPE" #'snd-shape snd shape origin))
+  (multichan-expand "SHAPE" #'snd-shape
+    '(((SOUND) "snd") ((SOUND) "shape") ((NUMBER) "origin"))
+    snd shape origin))
 
 
 ;; SLOPE -- calculate the first derivative of a signal
 ;;
 (defun slope (s)
-  (ny:assert (or (soundp s) (multichannel-soundp s))
-    "In SLOPE, argument must be a sound or multichannel sound" s)
-  (multichan-expand "SLOPE" #'nyq:slope s))
+  (multichan-expand "SLOPE" #'nyq:slope
+    '(((SOUND) nil)) s))
 
 
 ;; NYQ:SLOPE -- first derivative of single channel
@@ -384,11 +349,8 @@
 ;; lp - lowpass filter
 ;; 
 (defun lp (s c)
-  (ny:assert (or (soundp s) (multichannel-soundp s))
-    "In LP, 1st argument must be a sound or multichannel sound" s)
-  (ny:assert (or (numberp c) (soundp c) (multichannelp c))
-    "In LP, 2nd argument must be a number, sound, or array thereof" c)
-  (multichan-expand "LP" #'nyq:lp s c))
+  (multichan-expand "LP" #'nyq:lp
+    '(((SOUND) "snd") ((NUMBER SOUND) "cutoff")) s c))
 
 (setf lp-implementations
       (vector #'snd-tone #'snd-tonev))
@@ -426,51 +388,46 @@
 
 ; convenient biquad: normalize a0, and use zero initial conditions.
 (defun nyq:biquad (x b0 b1 b2 a0 a1 a2)
-  (if (<= a0 0.0)
-      (error (format nil "a0 < 0 (unstable parameter a0 = ~A) in biquad~%" a0)))
-  (let ((a0r (/ 1.0 a0)))
+  (ny:typecheck (<= a0 0.0)
+    (error (format nil "In BIQUAD, a0 < 0 (unstable parameter a0 = ~A)" a0)))
+  (let ((a0r (/ (float a0))))
     (setf a1 (* a0r a1) 
           a2 (* a0r a2))
-    (if (or (<= a2 -1.0) (<= (- 1.0 a2) (abs a1)))
+    (ny:typecheck (or (<= a2 -1.0) (<= (- 1.0 a2) (abs a1)))
         (error (format nil 
-         "(a2 <= -1) or (1 - a2 <= |a1|) (~A a1 = ~A, a2 = ~A) in biquad~%" 
+         "In BIQUAD, (a2 <= -1) or (1 - a2 <= |a1|) (~A a1 = ~A, a2 = ~A)"
          "unstable parameters" a1 a2)))
     (snd-biquad x (* a0r b0) (* a0r b1) (* a0r b2) 
                   a1 a2 0 0)))
 
 
 (defun biquad (x b0 b1 b2 a0 a1 a2 &optional (source "BIQUAD"))
-  (ny:assert (or (soundp x) (multichannel-soundp x))
-    (strcat "In " source ", 1st argument must be a sound or multichannel sound")
-    x)
-  (ny:assert (and (or (numberp b0) (numbersp b0))
-                  (or (numberp b1) (numbersp b1))
-                  (or (numberp b2) (numbersp b2))
-                  (or (numberp a0) (numbersp a0))
-                  (or (numberp a1) (numbersp a1))
-                  (or (numberp a2) (numbersp a2)))
-    (strcat "In " source
-     ", all but 1st argument must be numbers or arrays of numbers"))
-  (multichan-expand "BIQUAD" #'nyq:biquad x b0 b1 b2 a0 a1 a2))
+  (multichan-expand "BIQUAD" #'nyq:biquad
+    '(((SOUND) "snd") ((NUMBER) "b0") ((NUMBER) "b1")
+      ((NUMBER) "b2") ((NUMBER) "a0") ((NUMBER) "a1")
+      ((NUMBER) "a2"))
+    x b0 b1 b2 a0 a1 a2))
 
 
 ; biquad with Matlab sign conventions for a_i's.
 (defun biquad-m (x b0 b1 b2 a0 a1 a2)
-  (multichan-expand "BIQUAD-M" #'nyq:biquad-m x b0 b1 b2 a0 a1 a2))
+  (multichan-expand "BIQUAD-M" #'nyq:biquad-m
+    '(((SOUND) "snd") ((NUMBER) "b0") ((NUMBER) "b1")
+      ((NUMBER) "b2") ((NUMBER) "a0") ((NUMBER) "a1")
+      ((NUMBER) "a2"))
+    x b0 b1 b2 a0 a1 a2))
 
 (defun nyq:biquad-m (x b0 b1 b2 a0 a1 a2 &optional (source "BIQUAD-M"))
   (nyq:biquad x b0 b1 b2 a0 (- a1) (- a2)))
 
 ; two-pole lowpass
 (defun lowpass2 (x hz &optional (q 0.7071))
-  (multichan-expand "LOWPASS2" #'nyq:lowpass2 x hz q))
+  (multichan-expand "LOWPASS2" #'nyq:lowpass2
+    '(((SOUND) "snd") ((POSITIVE) "hz") ((POSITIVE) "q"))
+    x hz q))
 
 ;; NYQ:LOWPASS2 -- operates on single channel
 (defun nyq:lowpass2 (x hz q)
-  (ny:assert (numberp hz)
-    "In LOWPASS2, 2nd argument (hz) must be a number or array of numbers" hz)
-  (ny:assert (numberp q)
-    "In LOWPASS2, 3rd argument (q) must be a number or array of numbers" q)
   (if (or (> hz (* 0.5 (snd-srate x)))
           (< hz 0))
       (error "cutoff frequency out of range" hz))
@@ -488,13 +445,11 @@
 
 ; two-pole highpass
 (defun highpass2 (x hz &optional (q 0.7071))
-  (multichan-expand "HIGHPASS2" #'nyq:highpass2 x hz q))
+  (multichan-expand "HIGHPASS2" #'nyq:highpass2
+    '(((SOUND) "snd") ((POSITIVE) "hz") ((POSITIVE) "q"))
+    x hz q))
 
 (defun nyq:highpass2 (x hz q)
-  (ny:assert (numberp hz)
-    "In HIGHPASS2, 2nd argument (hz) must be a number or array of numbers" hz)
-  (ny:assert (numberp q)
-    "In HIGHPASS2, 3rd argument (q) must be a number or array of numbers" q)
   (if (or (> hz (* 0.5 (snd-srate x)))
           (< hz 0))
       (error "cutoff frequency out of range" hz))
@@ -512,13 +467,11 @@
 
 ; two-pole bandpass.  max gain is unity.
 (defun bandpass2 (x hz q)
-  (multichan-expand "BANDPASS2" #'nyq:bandpass2 x hz q))
+  (multichan-expand "BANDPASS2" #'nyq:bandpass2
+    '(((SOUND) "snd") ((POSITIVE) "hz") ((POSITIVE) "q"))
+    x hz q))
 
 (defun nyq:bandpass2 (x hz q)
-  (ny:assert (numberp hz)
-    "In BANDPASS2, 2nd argument (hz) must be a number or array of numbers" hz)
-  (ny:assert (numberp q)
-    "In BANDPASS2, 3rd argument (q) must be a number or array of numbers" q)
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (cw (cos w))
          (sw (sin w))
@@ -533,13 +486,11 @@
 
 ; two-pole notch.
 (defun notch2 (x hz q)
-  (multichan-expand "NOTCH2" #'nyq:notch2 x hz q))
+  (multichan-expand "NOTCH2" #'nyq:notch2
+    '(((SOUND) "snd") ((POSITIVE) "hz") ((POSITIVE) "q"))
+    x hz q))
 
 (defun nyq:notch2 (x hz q)
-  (ny:assert (numberp hz)
-    "In NOTCH2, 2nd argument (hz) must be a number or array of numbers" hz)
-  (ny:assert (numberp q)
-    "In NOTCH2, 3rd argument (q) must be a number or array of numbers" q)
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (cw (cos w))
          (sw (sin w))
@@ -555,17 +506,15 @@
 
 ; two-pole allpass.
 (defun allpass2 (x hz q)
-  (multichan-expand "ALLPASS2" #'nyq:allpass x hz q))
+  (multichan-expand "ALLPASS2" #'nyq:allpass
+    '(((SOUND) "snd") ((POSITIVE) "hz") ((POSITIVE) "q"))
+    x hz q))
 
 (defun nyq:allpass (x hz q)
-  (ny:assert (numberp hz)
-    "In ALLPASS2, 2nd argument (hz) must be a number or array of numbers" hz)
-  (ny:assert (numberp q)
-    "In ALLPASS2, 3rd argument (q) must be a number or array of numbers" q)
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (cw (cos w))
          (sw (sin w))
-         (k (exp (* -0.5 w (/ 1.0 q))))
+         (k (exp (* -0.5 w (/ (float q)))))
          (a0 1.0)
          (a1 (* -2.0 cw k))
          (a2 (* k k))
@@ -578,18 +527,12 @@
 ; bass shelving EQ.  gain in dB; Fc is halfway point.
 ; response becomes peaky at slope > 1.
 (defun eq-lowshelf (x hz gain &optional (slope 1.0))
-  (multichan-expand "EQ-LOWSHELF" #'nyq:eq-lowshelf x hz gain slope))
+  (multichan-expand "EQ-LOWSHELF" #'nyq:eq-lowshelf
+    '(((SOUND) "snd") ((POSITIVE) "hz") ((NUMBER) "gain") ((NUMBER) "slope"))
+    x hz gain slope))
 
 
 (defun nyq:eq-lowshelf (x hz gain slope)
-  (ny:assert (soundp x)
-    "In EQ-LOWSHELF, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In EQ-LOWSHELF, 2nd argument (hz) must be a number or array of numbers" hz)
-  (ny:assert (numberp gain)
-    "In EQ-LOWSHELF, 3rd argument (gain) must be a number or array of numbers" gain)
-  (ny:assert (numberp slope)
-    "In EQ-LOWSHELF, 4th argument (slope) must be a number or array of numbers" slope)
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (sw (sin w))
          (cw (cos w))
@@ -611,17 +554,11 @@
 ; treble shelving EQ.  gain in dB; Fc is halfway point.
 ; response becomes peaky at slope > 1.
 (defun eq-highshelf (x hz gain &optional (slope 1.0))
-  (multichan-expand "EQ-HIGHSHELF" #'nyq:eq-highshelf x hz gain slope))
+  (multichan-expand "EQ-HIGHSHELF" #'nyq:eq-highshelf
+    '(((SOUND) "snd") ((POSITIVE) "hz") ((NUMBER) "gain") ((NUMBER) "slope"))
+    x hz gain slope))
 
 (defun nyq:eq-highshelf (x hz gain slope)
-  (ny:assert (soundp x)
-    "In EQ-HIGHSHELF, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In EQ-HIGHSHELF, 2nd argument (hz) must be a number or array of numbers" hz)
-  (ny:assert (numberp gain)
-    "In EQ-HIGHSHELF, 3rd argument (gain) must be a number or array of numbers" gain)
-  (ny:assert (numberp slope)
-    "In EQ-HIGHSHELF, 4th argument (slope) must be a number or array of numbers" slope)
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (sw (sin w))
          (cw (cos w))
@@ -640,24 +577,24 @@
     (nyq:biquad-m x b0 b1 b2 a0 a1 a2)))
     
 (defun nyq:eq-band (x hz gain width)
-  (ny:assert (soundp x)
-    "In EQ-BAND, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (or (numberp hz) (soundp hz))
-    "In EQ-BAND, 2nd argument (hz) must be a number, sound, or array thereof" hz)
-  (ny:assert (or (numberp gain) (soundp hz))
-    "In EQ-BAND, 3rd argument (gain) must be a number, sound, or array thereof" gain)
-  (ny:assert (or (numberp width) (soundp hz))
-    "In EQ-BAND, 4th argument (width) must be a number, sound, or array thereof" width)
   (cond ((and (numberp hz) (numberp gain) (numberp width))
          (eq-band-ccc x hz gain width))
         ((and (soundp hz) (soundp gain) (soundp width))
          (snd-eqbandvvv x hz (db-to-linear gain) width))
-        (t
-         (error "In EQ-BAND, hz, gain, and width must be all numbers or all sounds"))))
+        (t (error
+            (strcat
+             "In EQ-BAND, hz, gain, and width must be all numbers"
+             " or all sounds (if any parameter is an array, there"
+             " is a problem with at least one channel), hz is "
+             (param-to-string hz) ", gain is " (param-to-string gain)
+             ", width is " (param-to-string width)) )) ))
 
 ; midrange EQ.  gain in dB, width in octaves (half-gain width).
 (defun eq-band (x hz gain width)
-  (multichan-expand "EQ-BAND" #'nyq:eq-band x hz gain width))
+  (multichan-expand "EQ-BAND" #'nyq:eq-band
+    '(((SOUND) "snd") ((POSITIVE SOUND) "hz")
+      ((NUMBER SOUND) "gain") ((POSITIVE SOUND) "width"))
+    x hz gain width))
   
   
 (defun eq-band-ccc (x hz gain width)
@@ -680,28 +617,28 @@
 
 ; four-pole Butterworth lowpass
 (defun lowpass4 (x hz)
-  (ny:assert (soundp x)
-    "In LOWPASS4, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In LOWPASS4, 2nd argument (hz) must be a number or array of numbers" hz)
+  (ny:typecheck (not (soundp x))
+    (ny:error "LOWPASS4" 1 number-anon x t))
+  (ny:typecheck (not (numberp hz))
+    (ny:error "LOWPASS4" 2 '((NUMBER) "hz") hz t))
   (lowpass2 (lowpass2 x hz 0.60492333) hz 1.33722126))
 
 ; six-pole Butterworth lowpass
 (defun lowpass6 (x hz)
-  (ny:assert (soundp x)
-    "In LOWPASS6, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In LOWPASS6, 2nd argument (hz) must be a number or array of numbers" hz)
+  (ny:typecheck (not (soundp x))
+    (ny:error "LOWPASS6" 1 number-anon x t))
+  (ny:typecheck (not (numberp hz))
+    (ny:error "LOWPASS6" 2 '((NUMBER) "hz") hz t))
   (lowpass2 (lowpass2 (lowpass2 x hz 0.58338080) 
                                   hz 0.75932572) 
                                   hz 1.95302407))
 
 ; eight-pole Butterworth lowpass
 (defun lowpass8 (x hz)
-  (ny:assert (soundp x)
-    "In LOWPASS8, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In LOWPASS8, 2nd argument (hz) must be a number or array of numbers" hz)
+  (ny:typecheck (not (soundp x))
+    (ny:error "LOWPASS8" 1 '((SOUND) nil) x t))
+  (ny:typecheck (not (numberp hz))
+    (ny:error "LOWPASS8" 2 '((NUMBER) "hz") hz t))
   (lowpass2 (lowpass2 (lowpass2 (lowpass2 x hz 0.57622191)
                                             hz 0.66045510) 
                                             hz 0.94276399)
@@ -709,28 +646,28 @@
 
 ; four-pole Butterworth highpass
 (defun highpass4 (x hz)
-  (ny:assert (soundp x)
-    "In HIGHPASS4, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In HIGHPASS4, 2nd argument (hz) must be a number or array of numbers" hz)
+  (ny:typecheck (not (soundp x))
+    (ny:error "HIGHPASS4" 1 '((SOUND) "x") x t))
+  (ny:typecheck (not (numberp hz))
+    (ny:error "HIGHPASS4" 2 '((NUMBER) "hz") hz t))
   (highpass2 (highpass2 x hz 0.60492333) hz 1.33722126))
 
 ; six-pole Butterworth highpass
 (defun highpass6 (x hz)
-  (ny:assert (soundp x)
-    "In HIGHPASS6, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In HIGHPASS6, 2nd argument (hz) must be a number or array of numbers" hz)
+  (ny:typecheck (not (soundp x))
+    (ny:error "HIGHPASS6" 1 '((SOUND) "x") x t))
+  (ny:typecheck (not (numberp hz))
+    (ny:error "HIGHPASS6" 2 '((NUMBER) "hz") hz t))
   (highpass2 (highpass2 (highpass2 x hz 0.58338080) 
                                      hz 0.75932572) 
                                      hz 1.95302407))
 
 ; eight-pole Butterworth highpass
 (defun highpass8 (x hz)
-  (ny:assert (soundp x)
-    "In HIGHPASS8, 1st argument must be a sound or multichannel sound" x)
-  (ny:assert (numberp hz)
-    "In HIGHPASS8, 2nd argument (hz) must be a number or array of numbers" hz)
+  (ny:typecheck (not (soundp x))
+    (ny:error "HIGHPASS8" 1 number-anon x t))
+  (ny:typecheck (not (numberp hz))
+    (ny:error "HIGHPASS8" 2 '((NUMBER) "hz") hz t))
   (highpass2 (highpass2 (highpass2 (highpass2 x hz 0.57622191)
                                                 hz 0.66045510) 
                                                 hz 0.94276399)
@@ -739,29 +676,29 @@
 ; YIN
 ; maybe this should handle multiple channels, etc.
 (defun yin (sound minstep maxstep stepsize)
-  (ny:assert (soundp sound)
-    "In YIN, 1st argument (sound) must be a sound" sound)
-  (ny:assert (numberp minstep)
-    "In YIN, 2st argument (minstep) must be a number" minstep)
-  (ny:assert (numberp maxstep)
-    "In YIN, 3rd argument (maxstep) must be a number" maxstep)
-  (ny:assert (numberp stepsize)
-    "In YIN, 4th argument (stepsize) must be a number" stepsize)
+  (ny:typecheck (not (soundp sound))
+    (ny:error "YIN" 1 '((SOUND) "sound") sound))
+  (ny:typecheck (not (numberp minstep))
+    (ny:error "YIN" 2 '((NUMBER) "minstep") minstep))
+  (ny:typecheck (not (numberp maxstep))
+    (ny:error "YIN" 3 '((NUMBER) "maxstep") maxstep))
+  (ny:typecheck (not (numberp stepsize))
+    (ny:error "YIN" 4 '((NUMBER) "stepsize") stepsize))
   (snd-yin sound minstep maxstep stepsize))
 
 
 ; FOLLOW
 (defun follow (sound floor risetime falltime lookahead)
-  (ny:assert (soundp sound)
-    "In FOLLOW, 1st argument (sound) must be a sound" sound)
-  (ny:assert (numberp floor)
-    "In FOLLOW, 2st argument (floor) must be a number" floor)
-  (ny:assert (numberp risetime)
-    "In FOLLOW, 3rd argument (risetime) must be a number" risetime)
-  (ny:assert (numberp falltime)
-    "In FOLLOW, 4th argument (stepsize) must be a number" falltime)
-  (ny:assert (numberp lookahead)
-    "In FOLLOW, 5th argument (lookahead) must be a number" lookahead)
+  (ny:typecheck (not (soundp sound))
+    (ny:error "FOLLOW" 1 '((SOUND) "sound") sound))
+  (ny:typecheck (not (numberp floor))
+    (ny:error "FOLLOW" 2 '((NUMBER) "floor") floor))
+  (ny:typecheck (not (numberp risetime))
+    (ny:error "FOLLOW" 3 '((NUMBER) "risetime") risetime))
+  (ny:typecheck (not (numberp falltime))
+    (ny:error "FOLLOW" 4 '((NUMBER) "stepsize") falltime))
+  (ny:typecheck (not (numberp lookahead))
+    (ny:error "FOLLOW" 5 '((NUMBER) "lookahead") lookahead))
   ;; use 10000s as "infinite" -- that's about 2^30 samples at 96K
   (setf lookahead (round (* lookahead (snd-srate sound))))
   (extract (/ lookahead (snd-srate sound)) 10000
@@ -770,17 +707,10 @@
 
 ;; PHASE VOCODER
 (defun phasevocoder (s map &optional (fftsize -1) (hopsize -1) (mode 0))
-  (ny:assert (or (soundp s) (multichannel-soundp s))
-    "In PHASEVOCODER, 1st argument must be a sound" s)
-  (ny:assert (or (soundp map) (multichannel-soundp map))
-    "In PHASEVOCODER, 2nd argument (map) must be a sound" map)
-  (ny:assert (integerp fftsize)
-    "In PHASEVOCODER, 3rd argument (fftsize) must be an integer" fftsize)
-  (ny:assert (integerp hopsize)
-    "In PHASEVOCODER, 4th argument (hopsize) must be an integer" hopsize)
-  (ny:assert (integerp mode)
-    "In PHASEVOCODER, 5th argument (mode) must be an integer" mode)
-  (multichan-expand "PHASEVOCODER" #'snd-phasevocoder s map fftsize hopsize mode))
+  (multichan-expand "PHASEVOCODER" #'snd-phasevocoder
+    '(((SOUND) nil) ((SOUND) "map") ((INTEGER) "fftsize")
+      ((INTEGER) "hopsize") ((INTEGER) "mode"))
+    s map fftsize hopsize mode))
 
 
 ;; PV-TIME-PITCH
@@ -790,23 +720,12 @@
 ;; pitchfn maps from input time to transposition factor (2 means octave up)
 (defun pv-time-pitch (input stretchfn pitchfn dur &optional
                       (fftsize 2048) (hopsize nil) (mode 0))
-  (ny:assert (or (soundp input) (multichannel-soundp input))
-    "In PV-TIME-PITCH, 1st argument must be a sound" input)
-  (ny:assert (or (soundp stretchfn) (multichannel-soundp stretchfn))
-    "In PV-TIME-PITCH, 2nd argument (stretchfn) must be a sound" stretchfn)
-  (ny:assert (or (soundp pitchfn) (multichannel-soundp pitchfn))
-    "In PV-TIME-PITCH, 3rd argument (pitchfn) must be a sound" pitchfn)
-  (ny:assert (numberp dur)
-    "In PV-TIME-PITCH, 4th argument (dur) must be a number" dur)
-  (ny:assert (integerp fftsize)
-    "In PV-TIME-PITCH, 5th argument (fftsize) must be an integer" fftsize)
   (if (null hopsize) (setf hopsize (/ fftsize 8)))
-  (ny:assert (integerp hopsize)
-    "In PV-TIME-PITCH, 6th argument (hopsize) must be an integer" hopsize)
-  (ny:assert (integerp mode)
-    "In PV-TIME-PITCH, 7th argument (mode) must be an integer" mode)
-  (multichan-expand "PV-TIME-PITCH" #'nyq:pv-time-pitch input
-                    stretchfn pitchfn dur fftsize hopsize mode))
+  (multichan-expand "PV-TIME-PITCH" #'nyq:pv-time-pitch
+    '(((SOUND) "input") ((SOUND) "stretchfn") ((SOUND) "pitchfn")
+      ((NUMBER) "dur") ((INTEGER) "fftsize") ((INTEGER) "hopsize")
+      ((INTEGER) "mode"))
+    input stretchfn pitchfn dur fftsize hopsize mode))
 
 (defun nyq:pv-time-pitch (input stretchfn pitchfn dur fftsize hopsize mode)
   (let (wrate u v w vinv)
@@ -815,4 +734,3 @@
     (setf v (snd-inverse vinv (local-to-global 0) wrate))
     (setf w (integrate (snd-recip (snd-compose pitchfn v))))
     (sound-warp w (phasevocoder input v fftsize hopsize mode) wrate)))
-

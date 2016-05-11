@@ -3785,13 +3785,21 @@ frequency in Hz. Initial @i(phase) is a @code(FLONUM) in degrees. The duration o
 @altdef{@code[(maketable @i(sound))] @c{[lisp]}}@\Assumes that
 the samples in @i(sound) constitute one period of a wavetable, and returns a wavetable
 suitable for use as the @i(table) argument to the @code(osc) function (see
-below).  Currently, tables are limited to 1,000,000 samples.  This limit is the compile-time constant @code(max_table_len) set in @code(sound.h).
+below).  Currently, tables are limited to 1,000,000 samples.  This limit is the compile-time constant @code(max_table_len) set in @code(sound.h). A wavetable is a list of the form
+@begin(display)
+(@i(sound) @i(pitch-number) @i(periodic))@end(display) 
+where the first element is a sound, the second is the pitch of the sound 
+(this is not redundant, because the sound may represent any number of
+periods), and the third element is @code(T) if the sound is one period of
+a periodic signal, or @code(nil) if the sound is a sample that should not
+be looped. Wavetables are used by @code(osc), @code(osc), @code(hzosc),
+@code(amosc), @code(fmosc), @code(lfo), and @code(fmlfo).
 
 @codef{build-harmonic(@pragma(defn)@index(build-harmonic)@index(harmonic)@i(n), @i(table-size))} @c{[sal]}@*
 @altdef{@code[(build-harmonic @i(n) @i(table-size))] @c{[lisp]}}@\Intended for
 constructing wavetables@index(wavetables)@index(waveforms), this function returns a sound of length @i(table-size)
 samples containing @i(n) periods of a sinusoid.  These can be scaled and
-summed to form a waveform with the desired harmonic content.  See @pragma(startref) page @pageref(build-harmonic-example) for an example.
+summed to form a waveform with the desired harmonic content.  See @pragma(startref) page @pageref(build-harmonic-example) for an example. A scaled sum of these harmonics can be passed to @code(maketable) to construct a wavetable suitable for @code(osc) and other oscillators.
 
 @codef{control-warp(@pragma(defn)@index(control-warp)@i(warp-fn), @i(signal),   [@i(wrate)])} @c{[sal]}@*
 @altdef{@code[(control-warp @i(warp-fn) @i(signal) @i(wrate))] @c{[lisp]}}@\Applies a
@@ -3926,18 +3934,12 @@ Defaults are:  @i(duration) @code(1.0)
 @i(phase) @code(0.0).  The default value of @code(*table*) is a sinusoid. Duration is stretched by @code(*warp*) and 
 @code(*sustain*), amplitude is nominally 1, but scaled by @code(*loudness*), the start time is logical time 0, transformed by @code(*warp*), and the sample rate is @code(*sound-srate*).
 The effect of time-warping is to warp the starting and ending times only; the
-signal has a constant unwarped frequency.
- @p(Note 1:) @i(table) is a list of the form
-@begin(display)
-(@i(sound) @i(pitch-number) @i(periodic))@end(display) 
-where the first element is a sound, the second is the pitch of the sound 
-(this is not redundant, because the sound may represent any number of
-periods), and the third element is @code(T) if the sound is one period of
-a periodic signal, or @code(nil) if the sound is a sample that should not
-be looped.  The maximum table size is set by @code(max_table_len) in @code(sound.h), and is currently set to 1,000,000.
-@p(Note 2:) in the current implementation, it is assumed that the
+signal has a constant unwarped frequency.@*
+ @p(Note 1:) A @code(table) is 3-element list. See @code(maketable) for a detailed
+ description.@*
+ @p(Note 2:) in the current implementation, it is assumed that the
 output should be periodic.  See @code(snd-down) and @code(snd-up) for resampling one-shot sounds to a desired sample rate.  A future version of @code(osc)
-will handle both cases.  
+will handle both cases.@*
 @p(Note 3:) When @code(osc) is called, memory is allocated for the table, and samples are copied from the sound (the first element of the list which is the @i(table) parameter) to the memory.  Every instance of @code(osc) has a private copy of the table, so the total storage can become large in some cases, for example in granular synthesis with many instances of @code(osc). In some cases, it may make sense to use @code(snd-flatten) (see Section @ref(flatten-sec)) to cause the sound to be fully realized, after which the @code(osc) and its table memory can be reclaimed by garbage collection. The @code(partial) function (see below) does not need a private table and does not use much space.
 
 @label(partial-sec)

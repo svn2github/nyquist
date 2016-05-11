@@ -9,7 +9,6 @@
 (load "sndfnint.lsp" :verbose NIL)
 (load "seqfnint.lsp" :verbose NIL)
 
-(load "dspprims-dbg.lsp" :verbose NIL)
 (load "velocity.lsp" :verbose NIL) ; linear-to-vel etc
 (load "nyquist-dbg.lsp" :verbose NIL)
 (load "compress.lsp" :verbose NIL)

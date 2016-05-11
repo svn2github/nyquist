@@ -227,6 +227,7 @@
 ;;
 (setf MAX-LINEAR-SCORE-LEN 100)
 (defun timed-seq (score)
+  (must-be-valid-score "TIMED-SEQ" score)
   (let ((len (length score))
         pair)
     (cond ((< len MAX-LINEAR-SCORE-LEN)
@@ -250,12 +251,15 @@
     (cons front back)))
 
  
+;; TIMED-SEQ-LINEAR - check to insure that times are strictly increasing
+;;                    and >= 0 and stretches are >= 0
 (defun timed-seq-linear (score)
-  ; check to insure that times are strictly increasing and >= 0 and stretches are >= 0
   (let ((start-time 0) error-msg)
     (dolist (event score)
       (cond ((< (car event) start-time)
-             (error (format nil "Out-of-order time in TIMED-SEQ: ~A" event)))
+             (error (format nil
+                     "Out-of-order time in TIMED-SEQ: ~A, consider using SCORE-SORT"
+                     event)))
             ((< (cadr event) 0)
              (error (format nil "Negative stretch factor in TIMED-SEQ: ~A" event)))
             (t
@@ -266,7 +270,6 @@
     (cond ((and score (car score) 
                 (eq (car (event-expression (car score))) 'score-begin-end))
            (setf score (cdr score)))) ; skip score-begin-end data
-    ; (score-print score) ;; debugging
     (cond ((null score) (s-rest 0))
           (t
            (at (caar score)

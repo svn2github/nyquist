@@ -1,3 +1,5 @@
+(error "loading nyquist")
+
 ;;;
 ;;;   ###########################################################
 ;;;   ### NYQUIST-- A Language for Composition and Synthesis. ###
@@ -5,7 +7,6 @@
 ;;;   ### Copyright (c) 1994-2006 by Roger B. Dannenberg      ###
 ;;;   ###########################################################
 ;;;
-(load "fileio.lsp" :verbose NIL)
 
 ;; #### Error checking and reporting functions ####
 
@@ -198,6 +199,8 @@ functions assume durations are always positive.")))
      (shift-time (scale-srate f (/ (warp-stretch *WARP*)))
              (- (warp-time *WARP*)))))))
 
+(load "dspprims.lsp" :verbose NIL)
+(load "fileio.lsp" :verbose NIL)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; OSCILATORS
@@ -790,6 +793,14 @@ loop
 ;     plot the points that exist.
 ;
 (defun s-plot (snd &optional (dur 2.0) (n 1000))
+  (ny:assert (soundp snd)
+             "In S-PLOT (or SAL's PLOT), 1st argument is not a sound" snd)
+  (ny:assert (numberp dur)
+             "In S-PLOT (or SAL's PLOT), 2nd argument (dur) is not a number"
+             dur)
+  (ny:assert (integerp n)
+             "In S-PLOT (or SAL's PLOT), 3rd argument (number of points) is not an integer"
+             n)
   (prog* ((sr (snd-srate snd))
           (t0 (snd-t0 snd))
           (filename (soundfilename *default-plot-file*))

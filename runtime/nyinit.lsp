@@ -9,7 +9,6 @@
 (load "sndfnint.lsp" :verbose NIL)
 (load "seqfnint.lsp" :verbose NIL)
 
-(load "dspprims.lsp" :verbose NIL)
 (load "velocity.lsp" :verbose NIL) ; linear-to-vel etc
 (load "nyquist.lsp" :verbose NIL)
 (load "compress.lsp" :verbose NIL)
@@ -35,5 +34,6 @@
 (format t "    Version 3.10~%~%")
 
 ;(setf *gc-flag* t)
+(print "DONE")
 
 

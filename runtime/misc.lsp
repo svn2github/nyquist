@@ -42,7 +42,8 @@
 ;                  Typically, you want this on.
 ; *xlisp-traceback* -- print XLISP traceback on error in XLISP mode
 ;                      Typically, you do not want this because the full
-;                      stack can be long and tedious.
+;                      stack can be long and tedious. Also allow XLISP
+;                      traceback in SAL mode if *sal-break* is true.
 
 (setf *sal-mode* nil)
 

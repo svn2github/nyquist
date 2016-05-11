@@ -1,6 +1,6 @@
 ; init.lsp -- default Nyquist startup file
 (print "nyquist/test/init.lsp is loading...")
-(load "nyinit.lsp")
+(load "nyinit-dbg.lsp")
 
 ; add your customizations here:
 ;    e.g. (setf *default-sf-dir* "...")
@@ -28,6 +28,9 @@
 ;(info)
 ;(play (setf xxx (osc c4 35)))
 
-(setf xx (snd-from-array 0 100.0 (vector 0 1 2 3 4 5 6 7 8 9)))
-(setf yy (force-srate 70 xx))
-(print (snd-samples yy 100))
+;(setf xx (snd-from-array 0 100.0 (vector 0 1 2 3 4 5 6 7 8 9)))
+;(setf yy (force-srate 70 xx))
+;(print (snd-samples yy 100))
+
+(s-plot (convolve (pluck c4) (osc c7 0.01)))
+
