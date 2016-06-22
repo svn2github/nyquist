@@ -29,7 +29,7 @@ LOCAL LVAL cviptr(OFFTYPE o);
 LOCAL void writeptr(OFFTYPE off);
 LOCAL void setoffset(void);
 LOCAL void writenode(LVAL node);
-LOCAL void freeimage(void);
+void freeimage(void);
 LOCAL void readnode(int type, LVAL node);
 
 
@@ -261,7 +261,7 @@ done:
 }
 
 /* freeimage - free the current memory image */
-LOCAL void freeimage(void)
+void freeimage(void)
 {
     SEGMENT *seg,*next;
     FILE *fp;
@@ -288,10 +288,20 @@ LOCAL void freeimage(void)
                 if ((fp = getfile(p)) && (fp != stdin && fp != stdout && fp != STDERR))
                     osclose(getfile(p));
                 break;
+            case EXTERN:
+                /* note: currently, there are 2 EXTERN types: SEQ and SOUND */
+                if (getdesc(p)) {
+                    (*(getdesc(p)->free_meth))(getinst(p));
+                }
+                break;
+            default:   /* note: SUBR, FSUBR, CONS, SYMBOL, FIXNUM, FLONUM,   */
+                break; /* CHAR, USTREAM are ignored here because they do not */
+                       /* point outside of the segments that are being freed */
             }
         next = seg->sg_next;
         free((void *) seg);
     }
+    segs = lastseg = NULL;
 }
 
 /* setoffset - output a positioning command if nodes have been skipped */

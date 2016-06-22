@@ -110,7 +110,7 @@ add_library(flac_static STATIC ${flac_SRCS})
 # There's a problem with quotes in XCode, so we need a special case
 if(APPLE)
   set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
-                        "-DVERSION=\\\\\"1.3.1\\\\\" -DHAVE_LROUND") 
+                        "-DVERSION=\\\"1.3.1\\\" -DHAVE_LROUND") 
 else(APPLE)
   if(WIN32)
     set_target_properties(flac_static PROPERTIES COMPILE_FLAGS
@@ -250,7 +250,6 @@ set(portaudio_SRCS
   portaudio/src/common/pa_ringbuffer.c
   portaudio/src/common/pa_ringbuffer.h
   portaudio/src/hostapi/skeleton/pa_hostapi_skeleton.c
-#  portaudio/src/os/mac_osx/pa_mac_hostapis.c
   portaudio/include/portaudio.h
   portaudio/src/common/pa_allocation.h
   portaudio/src/common/pa_converters.c
@@ -284,7 +283,9 @@ if(UNIX)
       portaudio/src/os/unix/pa_unix_util.c)
   if(APPLE)
     set(portaudio_mac_SRCS 
-	  portaudio/include/pa_mac_core.h
+#     correct hostapis seesm to be in pa_unix_hostapis.c
+#      portaudio/src/os/mac_osx/pa_mac_hostapis.c 
+      portaudio/include/pa_mac_core.h
       portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.c
       portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.h
       portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.c
