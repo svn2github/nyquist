@@ -533,7 +533,7 @@ void snd_list_unref(snd_list_type list)
         return;
     }
 
-    while (!list && (list != zero_snd_list)) {
+    while (list && (list != zero_snd_list)) {
         snd_list_type next;
 
         list->refcnt--;
