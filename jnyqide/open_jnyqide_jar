@@ -1,0 +1,5 @@
+#!/bin/sh
+echo $0
+echo `dirname $0`
+cd `dirname $0`/../Java
+java -Xdock:name="NyquistIDE" -Xdock:icon=`dirname $0`/../Resources/Nyquist.icns -Dcom.apple.mrj.application.apple.menu.about.name=NyquistIDE -Dapple.laf.useScreenMenuBar=true -DisOSXbundle=true -jar jnyqide.jar 

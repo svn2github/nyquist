@@ -6,7 +6,9 @@
     <target name="compile">
         <mkdir dir="build/classes"/>
         <javac includeantruntime="false" srcdir="." debug="true" 
-               destdir="build/classes"/>
+               destdir="build/classes">
+          <compilerarg value="-XDignore.symbol.file=true"/>
+        </javac>
     </target>
 
     <target name="jar" depends="compile">

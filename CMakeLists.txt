@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.8.8)
 project(nyquist)
-find_package(Java COMPONENTS Development)
-include(UseJava)
 
 ###########
 # OPTIONS #
@@ -733,26 +731,10 @@ endif()
 
 # NYQUIST IDE
 
-if(NOT Java_JAVAC_EXECUTABLE)
-  message(WARNING "Java Development tools were not found. Not building Nyquist IDE")
-
-else()
-  file(GLOB jnyqide_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.java")
-  file(GLOB jnyqide_RES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" 
-            "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.txt")
-  file(GLOB jnyqide_RES2 RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" 
-            "${CMAKE_CURRENT_SOURCE_DIR}/jnyqide/*.gif")
-
-  set(CMAKE_JAVA_COMPILE_FLAGS -target 1.6 -source 1.6)
-  set(CMAKE_JAVA_JAR_ENTRY_POINT jnyqide/Main)
-  # add_jar didn't work because it wants to copy jnyqide/keywords.txt
-  # to jnyqide/keywords.txt in the temp directory for making the jar,
-  # but jnyqide is not there. It should just be keywords that goes there
-  #add_jar(jnyqide SOURCES ${jnyqide_SRCS})
-  # I could not figure out how to use java, jar, and appbundler
-  # directly, so I'm using ant based on Oracle appbundler example
   if (APPLE)
-    add_custom_target(NyquistIDE ALL ant jar
+    add_custom_target(NyquistIDE ALL
+      rm -f jnyqide/jnyqide.jar
+      COMMAND ./make-osx-app.sh
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide
       COMMENT "Building jnyqide.jar")     
     add_dependencies(NyquistIDE ny)
@@ -765,7 +747,7 @@ else()
       endif(USE_ALSA)
       add_custom_target(jNyqIDE ALL 
           mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden
-        COMMAND javac jnyqide/*.java
+        COMMAND javac jnyqide/*.java 
         COMMAND 
           mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java
         COMMAND rm -f jnyqide/jNyqIDE.jar
@@ -786,7 +768,7 @@ else()
     endif(UNIX)
   endif(APPLE)
   
-endif()
+# endif()
 
 add_definitions("-DOSC")
 add_definitions("-DSTK_NYQUIST")
@@ -808,11 +790,11 @@ if(UNIX)
                        ${AUDIOTOOLBOX_LIB} ${AUDIOUNIT_LIB})
 
     # APPLE NyquistIde.app
-    add_custom_command(TARGET NyquistIDE 
-      POST_BUILD
-      COMMAND ant bundle-nyquist
-      COMMAND sh ./finish-osx-app.sh
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide)
+    # add_custom_command(TARGET NyquistIDE 
+    #  POST_BUILD
+    #  COMMAND ant bundle-nyquist
+    #  COMMAND sh ./finish-osx-app.sh
+    #  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jnyqide)
 
     add_definitions("-DPA_USE_COREAUDIO")
     add_definitions("-DCMTSTUFF")
