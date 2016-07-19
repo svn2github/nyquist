@@ -1,0 +1,731 @@
+; typechecks7.sal -- unit tests for typechecks
+; 
+; This code was generated from typechecks.txt by
+; typecheck-gen.lsp
+
+exec ny:expect("plot lowpass2(pluck(c4), 200, 0.8)",
+               :plot, T)
+exec #print("plot lowpass2(pluck(c4), 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(pluck(c4), 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(vector(pluck(c4), pluck(d4)), 200)[0]",
+               :plot, T)
+exec #print("plot lowpass2(vector(pluck(c4), pluck(d4)), 200)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(vector(pluck(c4), pluck(d4)), 200)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]",
+               :plot, T)
+exec #print("plot lowpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(pluck(c4), vector(200, 250))[0]",
+               :plot, T)
+exec #print("plot lowpass2(pluck(c4), vector(200, 250))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(pluck(c4), vector(200, 250))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(pluck(c4), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot lowpass2(pluck(c4), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(pluck(c4), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]",
+               :plot, T)
+exec #print("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(pluck(c4), 200, vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot lowpass2(pluck(c4), 200, vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(pluck(c4), 200, vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass2(c4, 200, 0.8)",
+               :nyerror, {"LOWPASS2" 1 {{SOUND} "snd"}})
+exec #print("plot lowpass2(c4, 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(c4, 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS2, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot lowpass2(pluck(c4), const(200))",
+               :nyerror, {"LOWPASS2" 2 {{POSITIVE} "hz"}})
+exec #print("plot lowpass2(pluck(c4), const(200))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(pluck(c4), const(200))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS2, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot lowpass2(pluck(c4), 200, const(0.8))",
+               :nyerror, {"LOWPASS2" 3 {{POSITIVE} "q"}})
+exec #print("plot lowpass2(pluck(c4), 200, const(0.8))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass2(pluck(c4), 200, const(0.8))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS2, 3rd argument (q) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot highpass2(pluck(c4), 200)",
+               :plot, T)
+exec #print("plot highpass2(pluck(c4), 200)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(pluck(c4), 200)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(pluck(c4), 200, 0.8)",
+               :plot, T)
+exec #print("plot highpass2(pluck(c4), 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(pluck(c4), 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(vector(pluck(c4), pluck(d4)), 200)[0]",
+               :plot, T)
+exec #print("plot highpass2(vector(pluck(c4), pluck(d4)), 200)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(vector(pluck(c4), pluck(d4)), 200)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]",
+               :plot, T)
+exec #print("plot highpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(pluck(c4), vector(200, 250))[0]",
+               :plot, T)
+exec #print("plot highpass2(pluck(c4), vector(200, 250))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(pluck(c4), vector(200, 250))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(pluck(c4), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot highpass2(pluck(c4), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(pluck(c4), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]",
+               :plot, T)
+exec #print("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(pluck(c4), 200, vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot highpass2(pluck(c4), 200, vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(pluck(c4), 200, vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass2(c4, 200, 0.8)",
+               :nyerror, {"HIGHPASS2" 1 {{SOUND} "snd"}})
+exec #print("plot highpass2(c4, 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(c4, 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS2, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot highpass2(pluck(c4), const(200))",
+               :nyerror, {"HIGHPASS2" 2 {{POSITIVE} "hz"}})
+exec #print("plot highpass2(pluck(c4), const(200))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(pluck(c4), const(200))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS2, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot highpass2(pluck(c4), 200, const(0.8))",
+               :nyerror, {"HIGHPASS2" 3 {{POSITIVE} "q"}})
+exec #print("plot highpass2(pluck(c4), 200, const(0.8))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass2(pluck(c4), 200, const(0.8))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS2, 3rd argument (q) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot notch2(pluck(c4), 200, 0.8)",
+               :plot, T)
+exec #print("plot notch2(pluck(c4), 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(pluck(c4), 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot notch2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]",
+               :plot, T)
+exec #print("plot notch2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot notch2(pluck(c4), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot notch2(pluck(c4), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(pluck(c4), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot notch2(pluck(c4), 200, vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot notch2(pluck(c4), 200, vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(pluck(c4), 200, vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot notch2(c4, 200, 0.8)",
+               :nyerror, {"NOTCH2" 1 {{SOUND} "snd"}})
+exec #print("plot notch2(c4, 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(c4, 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In NOTCH2, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot notch2(pluck(c4), const(200), 0.8)  ",
+               :nyerror, {"NOTCH2" 2 {{POSITIVE} "hz"}})
+exec #print("plot notch2(pluck(c4), const(200), 0.8)  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(pluck(c4), const(200), 0.8)  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In NOTCH2, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot notch2(pluck(c4), 200, const(0.8)) ",
+               :nyerror, {"NOTCH2" 3 {{POSITIVE} "q"}})
+exec #print("plot notch2(pluck(c4), 200, const(0.8)) ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot notch2(pluck(c4), 200, const(0.8)) ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In NOTCH2, 3rd argument (q) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot allpass2(pluck(c4), 200, 0.8)",
+               :plot, T)
+exec #print("plot allpass2(pluck(c4), 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(pluck(c4), 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot allpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]",
+               :plot, T)
+exec #print("plot allpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot allpass2(pluck(c4), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot allpass2(pluck(c4), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(pluck(c4), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot allpass2(pluck(c4), 200, vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot allpass2(pluck(c4), 200, vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(pluck(c4), 200, vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot allpass2(c4, 200, 0.8)",
+               :nyerror, {"ALLPASS2" 1 {{SOUND} "snd"}})
+exec #print("plot allpass2(c4, 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(c4, 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In ALLPASS2, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot allpass2(pluck(c4), const(200), 0.8)  ",
+               :nyerror, {"ALLPASS2" 2 {{POSITIVE} "hz"}})
+exec #print("plot allpass2(pluck(c4), const(200), 0.8)  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(pluck(c4), const(200), 0.8)  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In ALLPASS2, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot allpass2(pluck(c4), 200, const(0.8))",
+               :nyerror, {"ALLPASS2" 3 {{POSITIVE} "q"}})
+exec #print("plot allpass2(pluck(c4), 200, const(0.8))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot allpass2(pluck(c4), 200, const(0.8))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In ALLPASS2, 3rd argument (q) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), 200, 0.8)",
+               :plot, T)
+exec #print("plot eq-lowshelf(pluck(c4), 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), 200, 0.8, 0.5)",
+               :plot, T)
+exec #print("plot eq-lowshelf(pluck(c4), 200, 0.8, 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), 200, 0.8, 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]",
+               :plot, T)
+exec #print("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-lowshelf(c4, 200, 0.8, 0.5)",
+               :nyerror, {"EQ-LOWSHELF" 1 {{SOUND} "snd"}})
+exec #print("plot eq-lowshelf(c4, 200, 0.8, 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(c4, 200, 0.8, 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-LOWSHELF, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), const(200), 0.5)",
+               :nyerror, {"EQ-LOWSHELF" 2 {{POSITIVE} "hz"}})
+exec #print("plot eq-lowshelf(pluck(c4), const(200), 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), const(200), 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-LOWSHELF, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), 200, const(0.8), 0.5)",
+               :nyerror, {"EQ-LOWSHELF" 3 {{NUMBER} "gain"}})
+exec #print("plot eq-lowshelf(pluck(c4), 200, const(0.8), 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), 200, const(0.8), 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-LOWSHELF, 3rd argument (gain) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot eq-lowshelf(pluck(c4), 200, 0.8, const(0.5))",
+               :nyerror, {"EQ-LOWSHELF" 4 {{NUMBER} "slope"}})
+exec #print("plot eq-lowshelf(pluck(c4), 200, 0.8, const(0.5))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-lowshelf(pluck(c4), 200, 0.8, const(0.5))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-LOWSHELF, 4th argument (slope) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot eq-highshelf(pluck(c4), 200, 0.8)",
+               :plot, T)
+exec #print("plot eq-highshelf(pluck(c4), 200, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), 200, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(pluck(c4), 200, 0.8, 0.5)",
+               :plot, T)
+exec #print("plot eq-highshelf(pluck(c4), 200, 0.8, 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), 200, 0.8, 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(pluck(c4), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(pluck(c4), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9))[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]",
+               :plot, T)
+exec #print("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-highshelf(c4, 200, 0.8, 0.5)",
+               :nyerror, {"EQ-HIGHSHELF" 1 {{SOUND} "snd"}})
+exec #print("plot eq-highshelf(c4, 200, 0.8, 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(c4, 200, 0.8, 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-HIGHSHELF, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot eq-highshelf(pluck(c4), const(200), 0.5)",
+               :nyerror, {"EQ-HIGHSHELF" 2 {{POSITIVE} "hz"}})
+exec #print("plot eq-highshelf(pluck(c4), const(200), 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), const(200), 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-HIGHSHELF, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot eq-highshelf(pluck(c4), 200, const(0.8), 0.5)",
+               :nyerror, {"EQ-HIGHSHELF" 3 {{NUMBER} "gain"}})
+exec #print("plot eq-highshelf(pluck(c4), 200, const(0.8), 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), 200, const(0.8), 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-HIGHSHELF, 3rd argument (gain) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot eq-highshelf(pluck(c4), 200, 0.8, const(0.5))",
+               :nyerror, {"EQ-HIGHSHELF" 4 {{NUMBER} "slope"}})
+exec #print("plot eq-highshelf(pluck(c4), 200, 0.8, const(0.5))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-highshelf(pluck(c4), 200, 0.8, const(0.5))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-HIGHSHELF, 4th argument (slope) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot eq-band(pluck(c4), 300, 0.5, 50)",
+               :plot, T)
+exec #print("plot eq-band(pluck(c4), 300, 0.5, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), 300, 0.5, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, 50)[0]",
+               :plot, T)
+exec #print("plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), vector(300, 250), 0.5, 50)[0]",
+               :plot, T)
+exec #print("plot eq-band(pluck(c4), vector(300, 250), 0.5, 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), vector(300, 250), 0.5, 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), 50)[0]",
+               :plot, T)
+exec #print("plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), 300, 0.5, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot eq-band(pluck(c4), 300, 0.5, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), 300, 0.5, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, 50)[0]",
+               :plot, T)
+exec #print("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), 50)[0]",
+               :plot, T)
+exec #print("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), vector(300, 250), 0.5, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot eq-band(pluck(c4), vector(300, 250), 0.5, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), vector(300, 250), 0.5, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(c4, 300, 0.5, 50)",
+               :nyerror, {"EQ-BAND" 1 {{SOUND} "snd"}})
+exec #print("plot eq-band(c4, 300, 0.5, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(c4, 300, 0.5, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-BAND, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot eq-band(pluck(c4), 300 + lfo(4), 0.5, 50)",
+               :error, "In EQ-BAND, hz, gain, and width must be all numbers or all sounds (if any parameter is an array, there is a problem with at least one channel), hz is a SOUND, gain is 0.5, a FLONUM, width is 50, a FIXNUM")
+exec #print("plot eq-band(pluck(c4), 300 + lfo(4), 0.5, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), 300 + lfo(4), 0.5, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), 300, 0.5 + lfo(3) * 0.1, 50)",
+               :error, "In EQ-BAND, hz, gain, and width must be all numbers or all sounds (if any parameter is an array, there is a problem with at least one channel), hz is 300, a FIXNUM, gain is a SOUND, width is 50, a FIXNUM")
+exec #print("plot eq-band(pluck(c4), 300, 0.5 + lfo(3) * 0.1, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), 300, 0.5 + lfo(3) * 0.1, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), 300, 0.5, 50 + lfo(4))",
+               :error, "In EQ-BAND, hz, gain, and width must be all numbers or all sounds (if any parameter is an array, there is a problem with at least one channel), hz is 300, a FIXNUM, gain is 0.5, a FLONUM, width is a SOUND")
+exec #print("plot eq-band(pluck(c4), 300, 0.5, 50 + lfo(4))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), 300, 0.5, 50 + lfo(4))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot eq-band(pluck(c4), \"bad\", 0.5, 50)",
+               :nyerror, {"EQ-BAND" 2 {{POSITIVE SOUND} "hz"}})
+exec #print("plot eq-band(pluck(c4), \"bad\", 0.5, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), \"bad\", 0.5, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-BAND, 2nd argument (hz) must be a positive number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot eq-band(pluck(c4), 300, \"bad\", 50)",
+               :nyerror, {"EQ-BAND" 3 {{NUMBER SOUND} "gain"}})
+exec #print("plot eq-band(pluck(c4), 300, \"bad\", 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), 300, \"bad\", 50)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-BAND, 3rd argument (gain) must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot eq-band(pluck(c4), 300, 0.5, \"bad\")",
+               :nyerror, {"EQ-BAND" 4 {{POSITIVE SOUND} "width"}})
+exec #print("plot eq-band(pluck(c4), 300, 0.5, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot eq-band(pluck(c4), 300, 0.5, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EQ-BAND, 4th argument (width) must be a positive number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot lowpass4(pluck(c4), 500)",
+               :plot, T)
+exec #print("plot lowpass4(pluck(c4), 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass4(pluck(c4), 500)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass4(vector(pluck(c4), pluck(d4)), 500)[0]",
+               :plot, T)
+exec #print("plot lowpass4(vector(pluck(c4), pluck(d4)), 500)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass4(vector(pluck(c4), pluck(d4)), 500)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass4(pluck(c4), vector(500, 600))[0]",
+               :plot, T)
+exec #print("plot lowpass4(pluck(c4), vector(500, 600))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass4(pluck(c4), vector(500, 600))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass4(pluck(c4), const(500))",
+               :nyerror, {"LOWPASS4" 2 {{POSITIVE} "hz"}})
+exec #print("plot lowpass4(pluck(c4), const(500))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass4(pluck(c4), const(500))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS4, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot lowpass4(c4, 500)",
+               :nyerror, {"LOWPASS4" 1 {{SOUND} "snd"}})
+exec #print("plot lowpass4(c4, 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass4(c4, 500)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS4, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot lowpass6(pluck(c4), 500)",
+               :plot, T)
+exec #print("plot lowpass6(pluck(c4), 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass6(pluck(c4), 500)", #t, #f,
+                       "<in typecheck.sal>"))
+

@@ -78,10 +78,10 @@ define function arp4(pitches, len, ioi, dur: 1, instr: quote(note))
 ;; Makeing sequences of arpeggios
 
 ;; First define some pitch patterns:
-define variable c7 = list(c4, e4, g4, bf4, c5, bf4, g4, e4),
-                bf7 = list(bf3, d4, f4, af4, bf4, af4, f4, d4),
-                af7 = list(af3, c4, ef4, gf4, af4, gf4, ef4, c4),
-                g7 = list(g3, b3, d4, f4, g4, f4, d4, b3)
+define variable chd-c7 = list(c4, e4, g4, bf4, c5, bf4, g4, e4),
+                chd-bf7 = list(bf3, d4, f4, af4, bf4, af4, f4, d4),
+                chd-af7 = list(af3, c4, ef4, gf4, af4, gf4, ef4, c4),
+                chd-g7 = list(g3, b3, d4, f4, g4, f4, d4, b3)
 
 ;; now call arp4 to make some scores and splice them together
 
@@ -89,7 +89,7 @@ define function arp-seq()
   begin
     with score = nil
     loop
-      for pitches in list(c7, bf7, af7, g7, c7)
+      for pitches in list(chd-c7, chd-bf7, chd-af7, chd-g7, chd-c7)
       for len in list(16, 16, 16, 16, 33)
       set score = score-append(score, arp4(pitches, len, 0.13, 3))
     end

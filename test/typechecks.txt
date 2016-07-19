@@ -1,0 +1,818 @@
+;; typechecks.sal -- regresson testing for type checks
+;;
+;; redefines sal-print, ny:error to allow testing error reporting
+;;  (eliminates normal error reporting)
+;;
+
+plot sum()
+print sum(1)
+plot sum(lfo(6))
+plot sum(vector(lfo(6)))[0]
+print sum(1, 2)
+print sum(1, 2, 3)
+plot sum(1, lfo(6))
+plot sum(1, lfo(6), lfo(5))
+plot sum(lfo(6), lfo(5))
+plot sum(lfo(6), 2)
+plot sum(lfo(6), 2, 3)
+
+print sum(vector(1, 2))
+print sum(vector(1, 2), 2)
+print sum(1, vector(2, 3))
+plot sum(vector(1, 2), lfo(6))[0]
+plot sum(lfo(6), vector(2, 3))[0]
+plot sum(1, vector(lfo(6), lfo(5)))[0]
+plot sum(vector(lfo(5), lfo(4)), 1)[0]
+plot sum(1, vector(vector(lfo(6)), lfo(5)))
+plot sum(lfo(6), vector(lfo(5)))[0]
+plot sum(lfo(6), vector(lfo(5), lfo(4)))[0]
+plot sum(vector(lfo(5), lfo(4)), lfo(6))[0]
+plot sum(vector(lfo(5), lfo(4)), vector(1, 2))[0]
+plot sum(vector(1, 2), vector(lfo(5), lfo(4)))[0]
+
+print 1 + 2
+print 1 + 2 + 3
+plot 1 + lfo(6)
+plot 1 + lfo(6) + lfo(5)
+plot lfo(6) + lfo(5)
+plot lfo(6) + 2
+plot lfo(6) + 2 + 3
+
+print vector(1, 2) + 2
+print 1 + vector(2, 3)
+plot (vector(1, 2) + lfo(6))[0]
+plot (lfo(6) + vector(2, 3))[0]
+plot (1 + vector(lfo(6), lfo(5)))[0]
+plot (vector(lfo(5) + lfo(4)) + 1)[0]
+plot (1 + vector(vector(lfo(6)), lfo(5)))
+plot (lfo(6) + vector(lfo(5)))[0]
+plot (lfo(6) + vector(lfo(5), lfo(4)))[0]
+plot (vector(lfo(5), lfo(4), lfo(6)))[0]
+plot (vector(lfo(5), lfo(4)) + vector(1, 2))[0]
+plot (vector(1, 2) + vector(lfo(5), lfo(4)))[0]
+
+print get-duration(osc(c4))  ; error
+print get-duration(1)
+print get-duration(1) ~ 2
+print get-loud()
+print loud(2, get-loud())
+print get-sustain()
+print get-sustain() ~ 2
+print get-tempo()
+print get-tempo() ~ 2
+print get-transpose()
+print transpose(2, get-transpose())
+plot get-warp() ~ ramp()
+plot get-warp()
+plot warp(ramp(), get-warp())
+plot build-harmonic(3, 128)
+plot build-harmonic(3, 128.1)
+plot build-harmonic(3.1, 128)
+plot amosc(a4, pwl(0.5, 1, 1))
+plot amosc(const(a4), pwl(0.5, 1, 1)) ; error
+plot amosc(a4, 2) ; error
+plot amosc(a4, pwl(0.5, 1, 1), *sine-table*)
+plot amosc(a4, pwl(0.5, 1, 1), lfo(1)) ; error
+plot amosc(a4, pwl(0.5, 1, 1), *sine-table*, 1.0)
+plot amosc(a4, pwl(0.5, 1, 1), *sine-table*, osc(c4)) ; error
+plot fmosc(a4, lfo(6))
+plot fmosc(const(a4), lfo(6)) ; error
+plot fmosc(a4, 6) ; error
+plot fmosc(a4, lfo(6), *sine-table*)
+plot fmosc(a4, lfo(6), lfo(1)) ; error
+plot fmosc(a4, lfo(6), *sine-table*, 1.0)
+plot fmosc(a4, lfo(6), *sine-table*, osc(c4)) ; error
+plot fmfb(a4, 1.1)
+plot fmfb(const(a4), 1.1) ; error
+plot fmfb(a4, const(1.1))
+plot fmfb(a4, 1.1, 2.0)
+plot fmfb(a4, 1.1, const(2, 2)) ; error
+plot buzz(4, a4, lfo(6))
+plot buzz(4.1, a4, lfo(6)) ; error
+plot buzz(4, const(a4), lfo(6)) ; error
+plot buzz(4, a4, 6) ; error
+plot hzosc(440)
+plot hzosc(440, *sine-table*)
+plot hzosc(const(440), *sine-table*) ; error
+plot hzosc(440, osc(c4)) ; error
+plot hzosc(440, list(1, 2, 3)) ; error
+plot hzosc(440, *sine-table*, 1.0)
+plot hzosc(440, *sine-table*, const(1.0)) ; error
+; good:
+plot siosc(a4, lfo(6), list(build-harmonic(1, 512), 10, build-harmonic(2, 512)))
+
+; only 2 elements in spectra
+plot siosc(a4, lfo(6), list(build-harmonic(1, 512), 10))
+
+plot siosc(const(a4), lfo(6), list(build-harmonic(1, 512), 10, build-harmonic(2, 512))) ; 1st arg error
+
+plot siosc(a4, 6, list(build-harmonic(1, 512), 10, build-harmonic(2, 512))) ; 2nd arg error
+
+plot siosc(a4, lfo(6), list(build-harmonic(1, 512), 10, 20)) ; error 
+
+plot siosc(a4, lfo(6), list(build-harmonic(1, 512), 10, list(20))) ; error 
+
+plot siosc(a4, lfo(6), list(10, build-harmonic(1, 512), 10)) ; error 
+
+plot siosc(a4, lfo(6), list(build-harmonic(1, 512), build-harmonic(2, 512), 10)) ; error 
+
+plot lfo(6)
+plot lfo(const(6)) ; error
+plot lfo(6, 2) 
+plot lfo(6, const(2)) ; error
+plot lfo(6, 2, *sine-table*) 
+plot lfo(6, 2, osc(c4)) ; error
+plot lfo(6, 2, *sine-table*, 1.0)
+plot lfo(6, 2, *sine-table*, lfo(1.0)) ; error
+plot fmlfo(6) ; error
+plot fmlfo(const(6)) 
+plot fmlfo(const(6), *sine-table*)
+plot fmlfo(const(6), lfo(1)) ; error
+plot fmlfo(const(6), *sine-table*, 1.0)
+plot fmlfo(const(6), *sine-table*, const(1.0)) ; error
+plot osc(a4)
+plot osc(a4, 2.0)
+plot osc(a4, 2.0, *sine-table*)
+plot osc(a4, 2.0, *sine-table*, 1.0)
+plot osc(const(a4)) ; error
+plot osc(a4, const(2.0)) ; error
+plot osc(a4, 2.0, osc(c4)) ; error
+plot osc(a4, 2.0, *sine-table*, const(1.0)) ; error
+plot partial(a4, pwl(0.5, 1, 1))
+plot partial(const(a4), pwl(0.5, 1, 1)) ; error
+plot partial(a4, 2) ; error
+plot sampler(a4, pwl(0.5, 1, 1))
+plot sampler(const(a4), pwl(0.5, 1, 1)) ; error
+plot sampler(a4, 2) ; error
+plot sampler(a4, pwl(0.5, 1, 1), *sine-table*)
+plot sampler(a4, pwl(0.5, 1, 1), hzosc(1.0)) ; error
+plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2)
+plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2.1) ; error
+plot sine(a4)
+plot sine(const(a4)) ; error
+plot sine(a4, 1.0)
+plot sine(a4, const(1.0)) ; error
+plot pluck(a4)
+plot pluck(const(a4)) ; error
+plot pluck(a4, 2)
+plot pluck(a4, const(2)) ; error
+plot pluck(a4, 2, 0.01)
+plot pluck(a4, 2, const(0.01)) ; error
+plot osc(c4) @ 1
+plot osc(c4) @ lfo(1)
+plot osc(c4) @@ 1
+plot osc(c4) @@ lfo(1)
+plot clip(osc(c4), 0.5)
+print clip(0.6, 0.5)
+plot clip(vector(osc(c4), osc(c4)), 0.5)[0]
+plot clip("bad", 0.5)
+plot clip(osc(c4), "bad")
+plot control-srate-abs(100, lfo(100))
+plot control-srate-abs(osc(c4), lfo(100))
+print db-to-linear(-6)
+plot db-to-linear(lfo(1))
+plot db-to-linear(vector(lfo(1), lfo(2)))[0]
+plot db-to-linear("bad")
+print linear-to-db(2)
+plot linear-to-db(1 + lfo(1))
+plot linear-to-db(1 + vector(lfo(1), lfo(2)))[0]
+print linear-to-db("bad")
+print step-to-hz(67)
+plot step-to-hz(67 + lfo(4) * 4)
+plot step-to-hz(60 + vector(lfo(4), lfo(6)))[0]
+print step-to-hz("bad")
+print hz-to-step(440)
+plot hz-to-step(440 + lfo(4) * 4)
+plot hz-to-step(60 + vector(lfo(40), lfo(60)))[0]
+print hz-to-step("bad")
+print sref(lfo(6), 0.5)
+print sref(vector(lfo(6), lfo(5)), 0.5)
+print sref(lfo(6), lfo(0.5))
+plot extract(0, 1, lfo(5))
+plot extract(lfo(1), 1, lfo(5))
+plot extract(0, lfo(1), lfo(5))
+plot extract(0, 1, 2)
+plot extract-abs(0, 1, lfo(1))
+plot extract-abs(0, 1, lfo(1), 0.1)
+plot extract-abs(lfo(1), 1, lfo(1))
+plot extract-abs(0, lfo(1), lfo(1))
+plot extract-abs(0, 1, 2)
+plot extract-abs(0, 1, lfo(1), lfo(2))
+print local-to-global(0.5)
+print local-to-global(lfo(0.5))
+plot loud(2, lfo(1))
+plot loud(2 + lfo(2), lfo(1))
+plot loud-abs(2, lfo(1))
+plot loud-abs(2 + lfo(2), lfo(1))
+plot scale-db(6, lfo(6))
+plot scale-db(vector(6, 12), lfo(6))[0]
+plot scale-db(6, vector(lfo(6), lfo(5)))[0]
+plot scale-db(vector(6, 12), vector(lfo(6), lfo(5)))[0]
+plot scale-db("bad", lfo(6))
+plot scale-db(6, 12)
+print set-control-srate(2205)
+print set-control-srate("bad")
+print set-sound-srate(2205)
+print set-sound-srate("bad")
+
+;; since we're overriding s-plot, we can't also test it, so these
+;; tests have to be removed:
+;print s-plot(3)
+;print s-plot(lfo(6), 3)
+;print s-plot(lfo(6), "bad")
+;print s-plot(lfo(6), 3, 100)
+;print s-plot(lfo(6), 3, 4.1)
+
+plot sound-srate-abs(100, lfo(6))
+plot sound-srate-abs("bad", lfo(6))
+plot stretch(2, lfo(6))
+plot stretch("bad", lfo(6))
+plot stretch-abs(2, lfo(6))
+plot stretch-abs("bad", lfo(6))
+plot sustain(2, lfo(6))
+plot sustain("bad", lfo(6))
+plot sustain-abs(2, lfo(6))
+plot sustain-abs("bad", lfo(6))
+plot transpose(2, lfo(6))
+plot transpose("bad", lfo(6))
+plot transpose-abs(2, lfo(6))
+plot transpose-abs("bad", lfo(6))
+plot control-warp(ramp() ~ 2, lfo(6))
+plot control-warp("bad", lfo(6))
+plot control-warp(ramp() ~ 2, "bad")
+plot control-warp(ramp() ~ 2, lfo(6), 100)
+plot control-warp(ramp() ~ 2, lfo(6), "bad")
+plot cue(lfo(6))
+plot cue(vector(lfo(6), lfo(4)))[0]
+plot cue("bad")
+plot sound(lfo(6))
+plot sound(vector(lfo(6), lfo(4)))[0]
+plot sound("bad")
+plot scale-srate(lfo(6), 2)
+plot scale-srate("bad", 2)
+plot scale-srate(lfo(6), "bad")
+plot shift-time(lfo(6), 1)
+plot shift-time("bad", 1)
+plot shift-time(lfo(6), "bad")
+plot control(lfo(6))
+plot control(vector(lfo(6), lfo(4)))[0]
+plot control("bad")
+print s-save(osc(c4), ny:all, "temp.wav")
+plot cue-file("temp.wav")
+plot cue-file(lfo(1))
+plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8)
+plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, 2.0)
+plot env("bad", 0.2, 0.3, 1, 0.9, 0.8, 2.0)
+plot env(0.1, "bad", 0.3, 1, 0.9, 0.8, 2.0)
+plot env(0.1, 0.2, "bad", 1, 0.9, 0.8, 2.0)
+plot env(0.1, 0.2, 0.3, "bad", 0.9, 0.8, 2.0)
+plot env(0.1, 0.2, 0.3, 1, "bad", 0.8, 2.0)
+plot env(0.1, 0.2, 0.3, 1, 0.9, "bad", 2.0)
+plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, "bad")
+plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, 0.3)
+plot gate("bad", 0.01, 0.01, 0.01, 0.01, 0.3)
+plot gate(lfo(4), "bad", 0.01, 0.01, 0.01, 0.3)
+plot gate(lfo(4), 0.01, "bad", 0.01, 0.01, 0.3)
+plot gate(lfo(4), 0.01, 0.01, "bad", 0.01, 0.3)
+plot gate(lfo(4), 0.01, 0.01, 0.01, "bad", 0.3)
+plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, "bad")
+plot osc-note(c4)
+plot osc-note(c4, 2)
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7})
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8)
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, *TABLE*)
+plot osc-note("bad")
+plot osc-note(c4, "bad")
+plot osc-note(c4, 1, "bad")
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, "bad")
+plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, "bad")
+plot force-srate(100, lfo(4))
+plot force-srate(lfo(5), lfo(4))
+plot force-srate(100, 50)
+plot pwl(1, 1, 2)
+plot pwl(1, 1, nil)
+plot pwl({1 1 2})
+plot pwlr(1, 1, 1)
+plot pwlr({1 1 2})
+plot pwlr(1, 1, nil)
+plot pwl-list({1 1 2})
+plot pwl-list({1 1 nil})
+plot pwl-list(1)
+plot pwlr-list({1 1 1})
+plot pwlr-list({1 1 nil})
+plot pwlr-list(1)
+plot pwlv(1, 1, 2)
+plot pwlv(1, 1, nil)
+plot pwlv({1 1 2})
+plot pwlv-list({1 1 2})
+plot pwlv-list({1 1 nil})
+plot pwlv-list(1)
+plot pwlvr(1, 1, 1)
+plot pwlvr(1, 1, nil)
+plot pwlvr({1 1 1})
+plot pwlvr-list({1 1 1})
+plot pwlvr-list({1 1 nil})
+plot pwlvr-list(1)
+
+plot pwe(1, 2, 2)
+plot pwe(1, 2, nil)
+plot pwe({1 2 2})
+plot pwer(1, 2, 1)
+plot pwer({1 2 2})
+plot pwer(1, 2, nil)
+plot pwe-list({1 2 2})
+plot pwe-list({1 2 nil})
+plot pwe-list(1)
+plot pwer-list({1 2 1})
+plot pwer-list({1 2 nil})
+plot pwer-list(1)
+plot pwev(1, 2, 2)
+plot pwev(1, 2, nil)
+plot pwev({1 2 2})
+plot pwev-list({1 2 2})
+plot pwev-list({1 2 nil})
+plot pwev-list(1)
+plot pwevr(1, 2, 2)
+plot pwevr(1, 2, nil)
+plot pwevr({1 2 2})
+plot pwevr-list({1 2 2})
+plot pwevr-list({1 2 nil})
+plot pwevr-list(1)
+
+plot sound-warp(ramp(), lfo(4))
+plot sound-warp(ramp(), lfo(4), 100)
+plot sound-warp(1, lfo(4), 100)
+plot sound-warp(ramp(), 4)
+plot sound-warp(ramp(), lfo(4), "bad")
+print snd-extent(lfo(4), 100000)
+print snd-extent(vector(lfo(4), lfo(3)), 100000)
+print snd-extent(lfo(4), "bad")
+print length(maketable(lfo(4)))
+print maketable(7)
+plot pan(osc(c5), 0.4)[0]
+plot pan(osc(c5), 1 + lfo(3) * 0.5)[0]
+plot pan(10, 0.4)[0]
+plot pan(osc(c5), "bad")[0]
+
+plot prod()
+plot prod(lfo(1))
+plot prod(lfo(1), lfo(2))
+plot prod(lfo(1), lfo(2), lfo(3))
+print prod(1)
+plot prod(2, lfo(2))
+plot prod(lfo(2), 2)
+plot prod(2, lfo(2), lfo(3))
+plot prod(lfo(1), 2, lfo(3))
+plot prod(lfo(1), lfo(2), 3)
+plot prod(vector(lfo(1), lfo(2)), vector(lfo(1), lfo(2)))[0]
+plot prod(lfo(1), vector(lfo(1), lfo(2)))[0]
+plot prod(2, vector(lfo(1), lfo(2)))[0]
+plot prod(vector(lfo(1), lfo(2)), lfo(3))[0]
+plot prod(vector(lfo(1), lfo(2)), 3)[0]
+plot prod(vector(lfo(1), lfo(2)), vector(lfo(1), lfo(2), lfo(3)))[0] ; bad
+plot ramp()
+plot ramp(3)
+plot ramp(lfo(3))
+plot resample(osc(c2), 10000)
+plot resample(vector(osc(c2), osc(d2)), 10000)[0]
+plot scale(0.2, osc(c4))
+plot scale(0.2, vector(osc(c4), osc(c5)))[0]
+plot scale(vector(0.2, 0.3), vector(osc(c4), osc(c5)))[0]
+plot scale(vector(0.2, 0.3, 0.4), vector(osc(c4), osc(c5))) ; bad
+plot scale("Bad", osc(c4))
+plot scale(0.2, "bad")
+print peak(osc(c4), ny:all)
+; these will raise an error from the C implementation of snd-max
+; print peak(vector(osc(c4), osc(c5)), ny:all)
+; print peak(osc(c4), "bad")
+plot s-max(lfo(2), lfo(3))
+plot s-max(vector(lfo(2), lfo(4)), lfo(3))[0]
+plot s-max(lfo(2), vector(lfo(4), lfo(3)))[0]
+plot s-max(2, lfo(3))
+plot s-max(lfo(2), 3)
+plot s-min(lfo(2), lfo(3))
+plot s-min(vector(lfo(2), lfo(4)), lfo(3))[0]
+plot s-min(lfo(2), vector(lfo(4), lfo(3)))[0]
+plot s-min(2, lfo(3))
+plot s-min(lfo(2), 45)
+plot set-logical-stop(osc(c4), 0.5)
+plot set-logical-stop(vector(osc(c4), osc(d4)), 0.5)[0]
+plot set-logical-stop(osc(c4), 0.5)
+plot set-logical-stop(c4, 0.5)
+plot set-logical-stop(osc(c4), vector(2, 3))[0]
+plot set-logical-stop(osc(c4), "bad")
+plot set-logical-stop-abs(osc(c4), 0.5)
+plot set-logical-stop-abs(vector(osc(c4), osc(d4)), 0.5)[0]
+plot set-logical-stop-abs(osc(c4), 0.5)
+plot set-logical-stop-abs(c4, 0.5)
+plot set-logical-stop-abs(osc(c4), vector(2, 3))[0]
+plot set-logical-stop-abs(osc(c4), "bad")
+plot sim(lfo(3))
+plot sim(lfo(3), lfo(4))
+plot sim(lfo(3), lfo(4), lfo(5))
+plot sim(3, lfo(4))
+plot sim(lfo(3), 4)
+plot simrep(i, 2, lfo(i + 4))
+plot simrep(i, 2, #?(i = 0, lfo(3), 5))
+plot simrep(i, 2, vector(lfo(i + 4), lfo(i + 3)))[0]
+plot s-rest()
+plot s-rest(2)
+plot s-rest(2, 2)[0]
+plot s-rest("bad")
+plot s-rest(2, 2.2)[0]
+plot tempo(ramp())
+plot tempo(60)
+plot warp(ramp(2), lfo(3))
+plot warp(2, lfo(3))
+print warp(ramp(2), 3)
+plot warp-abs(ramp(2), lfo(3))
+plot warp-abs(2, lfo(3))
+print warp-abs(ramp(2), 3)
+plot exp-dec(1, 2, 5)  
+plot exp-dec(lfo(1), 2, 5)  
+plot exp-dec(1, lfo(1), 5)  
+plot exp-dec(1, 2, lfo(1))  
+plot lfo(3) - lfo(4)
+plot lfo(3) - 4
+plot 3 - lfo(4)
+print 3 - 4
+plot "bad" - lfo(4)
+print lfo(3) - "bad"
+plot (vector(lfo(1), lfo(2)) - 3)[0]
+plot (3 - vector(lfo(1), lfo(2)))[0]
+plot (vector(lfo(1), lfo(2)) - vector(lfo(3)))[0]
+plot lfo(3) + lfo(4)
+plot lfo(3) + 4
+plot 3 + lfo(4)
+print 3 + 4
+plot "bad" + lfo(4)
+print lfo(3) + "bad"
+plot (vector(lfo(1), lfo(2)) + 3)[0] 
+plot (3 + vector(lfo(1), lfo(2)))[0] 
+plot (vector(lfo(1), lfo(2)) + vector(lfo(3)))[0] 
+plot compare(lfo(3), lfo(4))
+plot compare(lfo(3), 0.8)
+plot compare(0.8, lfo(3))
+plot compare(lfo(3), "bad")
+plot compare("bad", lfo(3))
+plot compare(vector(lfo(1), lfo(2)), 3)[0]
+plot compare(3, vector(lfo(1), lfo(2)))[0]
+plot compare(vector(lfo(1), lfo(2)), vector(lfo(3)))[0] 
+plot compare(vector(lfo(1), lfo(2)), lfo(3))[0]  
+plot compare(lfo(3), vector(lfo(1), lfo(2)))[0]  
+plot osc-saw(400)
+plot osc-saw(lfo(100) + 100)
+plot osc-tri(400)
+plot osc-tri(lfo(100) + 100)
+plot tapv(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    
+plot tapv(c4, 0.1, lfo(2) * 0.02, 0.2)   
+plot tapv(osc(c4), 0.1, 0.02, 0.2)  
+plot tapv(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   
+plot tapv(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  
+plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]
+plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]
+
+plot tapf(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    
+plot tapf(c4, 0.1, lfo(2) * 0.02, 0.2)   
+plot tapf(osc(c4), 0.1, 0.02, 0.2)  
+plot tapf(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   
+plot tapf(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  
+plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]
+plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]
+
+plot areson(pluck(c4), 300, 50)
+plot areson(vector(pluck(c4), pluck(g4)), 300, 50)[0]
+plot areson(pluck(c4), vector(300, 250), 50)[0]
+plot areson(pluck(c4), 300, vector(50, 60))[0]
+plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), 50)[0]
+plot areson(vector(pluck(c4), pluck(g4)), 300, vector(50, 60))[0]
+plot areson(pluck(c4), vector(300, 250), vector(50, 60))[0]
+plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(50, 60))[0]
+plot areson(c4, 300, 50)
+plot areson(pluck(c4), 300 + lfo(4), 50)
+plot areson(pluck(c4), 300, 50 + lfo(4))
+plot hp(pluck(c4), 300)
+plot hp(vector(pluck(c4), pluck(g4)), 300)[0]
+plot hp(pluck(c4), vector(300, 250))[0]
+plot hp(vector(pluck(c4), pluck(g4)), vector(300, 250))[0]
+plot hp(c4, 300)
+plot hp(pluck(c4), 300 + lfo(4))
+plot hp(pluck(c4), "bad")
+plot comb(pluck(c4), 3, 50)
+plot comb(pluck(c4), 3 + lfo(1), 50)
+plot comb(vector(pluck(c4), pluck(g4)), 3, 50)[0]
+plot comb(pluck(c4), vector(3, 2.5), 50)[0]
+plot comb(pluck(c4), vector(3 + lfo(1), 2.5), 50)[0]
+plot comb(pluck(c4), 3, vector(50, 60))[0]
+plot comb(pluck(c4), 3 + lfo(1), vector(50, 60))[0]
+plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), 50)[0]
+plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(1), 2.5), 50)[0]
+plot comb(vector(pluck(c4), pluck(g4)), 3, vector(50, 60))[0]
+plot comb(vector(pluck(c4), pluck(g4)), 3 + lfo(2), vector(50, 60))[0]
+plot comb(pluck(c4), vector(3, 2.5), vector(50, 60))[0]
+plot comb(pluck(c4), vector(3 + lfo(2), 2.5), vector(50, 60))[0]
+plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), vector(50, 60))[0]
+plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(2), 2.5), vector(50, 60))[0]
+plot comb(c4, 300, 50)
+plot comb(pluck(c4), "bad", 50)
+plot comb(pluck(c4), 300, "bad")
+plot alpass(pluck(c4), 2, 30, 20)
+plot alpass(pluck(c4), 2, 30 + lfo(2), 20)
+plot alpass(vector(pluck(c4), pluck(d4)), 2, 30, 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), const(2), 30, 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), 2, 30 + lfo(2), 20)[0]
+plot alpass(pluck(c4), vector(2, 3), 30, 20)[0]
+plot alpass(pluck(c4), vector(const(2), const(3)), 30, 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30, 40), 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), const(2), vector(30, 40), 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20)[0]
+plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20 + lfo(1)) ;; bad
+plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), vector(30 + lfo(2), 20 + lfo(1))) ;; bad
+plot const(2)
+plot const(2, 3)
+plot const(lfo(2))
+plot const(2, lfo(3))
+plot convolve(pluck(c4), osc(c7, 0.01))
+plot convolve(vector(pluck(c4), pluck(d4)), osc(c7, 0.01))[0]
+plot convolve(pluck(c4), vector(osc(c7, 0.01), osc(c8, 0.01)))[0]
+plot convolve(vector(pluck(c4), pluck(d4)), vector(osc(c7, 0.01), osc(c8, 0.01)))[0]
+plot convolve(pluck(c4), 100)
+plot convolve(100, pluck(c4))
+plot feedback-delay(pluck(c4), 0.1, 0.2)
+plot feedback-delay(pluck(c4), const(0.1), 0.2)
+plot feedback-delay(pluck(c4), 0.1, const(0.2))
+plot feedback-delay(vector(pluck(c4), pluck(d4)), 0.1, 0.2)[0]
+plot feedback-delay(vector(pluck(c4), pluck(d4)), const(0.1), 0.2)[0]
+plot feedback-delay(vector(pluck(c4), pluck(d4)), 0.1, const(0.2))[0]
+plot feedback-delay(pluck(c4), vector(0.1, 0.2), 0.2)[0]
+plot feedback-delay(pluck(c4), vector(const(0.1), const(0.2)), 0.2)[0]
+plot feedback-delay(pluck(c4), vector(0.1, 0.2), const(0.2))[0]
+plot feedback-delay(pluck(c4), 0.1, vector(0.2, 0.3))[0]
+plot feedback-delay(pluck(c4), const(0.1), vector(const(0.2), const(0.3)))[0]
+plot feedback-delay(pluck(c4), 0.1, vector(const(0.2), const(0.3)))[0]
+plot congen(pluck(c4), 0.1, 0.1)
+plot congen(vector(pluck(c4), pluck(d3)), 0.1, 0.1)[0]
+plot congen(pluck(c4), vector(0.1, 0.2), 0.1)[0]
+plot congen(pluck(c4), vector(0.1, 0.2), vector(0.1, 0.2))[0]
+plot congen(5, 0.1, 0.1)
+plot congen(pluck(c4), lfo(1), 0.1)
+plot congen(pluck(c4), 0.1, lfo(2))
+print s-exp(2.1)
+plot s-exp(lfo(3))
+;; test for equality on float results will not work, so
+;; change the thing you print to an integer
+print round(s-exp(vector(2.1, 2.4))[0])
+plot s-exp(vector(lfo(3), lfo(4)))[0]
+print s-exp("bad")
+print s-abs(2.1)
+plot s-abs(lfo(3))
+print round(s-abs(vector(2.1, 2.4))[0])
+plot s-abs(vector(lfo(3), lfo(4)))[0]
+print s-abs("bad")
+print s-sqrt(2.1)
+plot s-sqrt(lfo(3))
+print round(s-sqrt(vector(2.1, 2.4))[0])
+plot s-sqrt(vector(lfo(3), lfo(4)))[0]
+print s-sqrt("bad")
+print s-log(2.1)
+plot s-log(lfo(3))
+print round(s-log(vector(2.1, 2.4))[0])
+plot s-log(vector(lfo(3), lfo(4)))[0]
+print s-log("bad")
+plot noise()
+plot noise(1)
+plot noise(const(1))
+plot noise-gate(pluck(c4))
+plot noise-gate(pluck(c4), 0.4)
+plot noise-gate(pluck(c4), lfo(3))
+plot noise-gate(pluck(c4), 0.4, 0.4)
+plot noise-gate(pluck(c4), 0.4, lfo(3))
+plot noise-gate(pluck(c4), 0.4, 0.4, 0.4)
+plot noise-gate(pluck(c4), 0.4, 0.4, lfo(3))
+plot noise-gate(pluck(c4), 0.4, 0.4, 0.4, 0.4)  
+plot noise-gate(pluck(c4), 0.4, 0.4, 0.4, lfo(3))
+plot noise-gate(pluck(c4), 0.4, 0.4, 0.4, 0.4, 0.4)
+plot noise-gate(pluck(c4), 0.4, 0.4, 0.4, 0.4, lfo(3))
+plot quantize(pluck(c4), 256)
+plot quantize(vector(pluck(d4), pluck(c4)), 256)[0]
+plot quantize(pluck(c4), vector(256, 512))[0]
+plot quantize(c4, 256)
+plot quantize(pluck(c4), const(256))
+print recip(4)
+plot recip(2 + lfo(4))
+plot recip(vector(2 + lfo(4), 3 + lfo(4)))[0]
+print recip(vector(4, 5))[0]
+plot recip("bad")
+plot rms(pluck(c5))
+plot rms(pluck(c5), 200)
+plot rms(pluck(c5), 200, 64)
+plot reson(pluck(c4), 300, 50)
+plot reson(vector(pluck(c4), pluck(g4)), 300, 50)[0]
+plot reson(pluck(c4), vector(300, 250), 50)[0]
+plot reson(pluck(c4), 300, vector(50, 60))[0]
+plot reson(vector(pluck(c4), pluck(g4)), vector(300, 250), 50)[0]
+plot reson(vector(pluck(c4), pluck(g4)), 300, vector(50, 60))[0]
+plot reson(pluck(c4), vector(300, 250), vector(50, 60))[0]
+plot reson(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(50, 60))[0]
+plot reson(c4, 300, 50)
+plot reson(pluck(c4), 300 + lfo(4), 50)
+plot reson(pluck(c4), 300, 50 + lfo(4))
+plot shape(osc(c4), ramp(2) - 0.5, 1)
+plot shape(vector(osc(d4), osc(c4)), ramp(2) - 0.5, 1)[0]
+plot shape(osc(c4), vector(ramp(2) - 0.5, ramp(2.2) - 0.4), 1)[0]
+plot shape(osc(c4), ramp(2) - 0.5, vector(1, 1.1))[0]
+plot shape(c4, ramp(2) - 0.5, const(1.2))
+plot shape(osc(c4), 0.5, const(1.2))
+plot shape(osc(c4), ramp(2) - 0.5, const(1.2))
+plot slope(osc(c4))
+plot slope(vector(osc(c4), osc(c5)))[0]
+plot slope(50)
+plot lp(pluck(c4), 500)
+plot lp(vector(pluck(c4), pluck(d4)), 500)[0]
+plot lp(pluck(c4), vector(500, 600))[0]
+plot lp(pluck(c4), const(500))
+plot lp(vector(pluck(c4), pluck(d4)), const(500))[0]
+plot lp(pluck(c4), vector(const(500), const(600)))[0]
+plot lp(pluck(c4), pluck(500, 600))
+plot lp(c4, 500)
+plot lp(pluck(c4), "bad")
+plot lowpass2(pluck(c4), 200)
+plot lowpass2(pluck(c4), 200, 0.8)
+plot lowpass2(vector(pluck(c4), pluck(d4)), 200)[0]
+plot lowpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]
+plot lowpass2(pluck(c4), vector(200, 250))[0]
+plot lowpass2(pluck(c4), vector(200, 250), 0.8)[0]
+plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]
+plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]
+plot lowpass2(pluck(c4), 200, vector(0.8, 0.9))[0]
+plot lowpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]
+plot lowpass2(c4, 200, 0.8)
+plot lowpass2(pluck(c4), const(200))
+plot lowpass2(pluck(c4), 200, const(0.8))
+
+plot highpass2(pluck(c4), 200)
+plot highpass2(pluck(c4), 200, 0.8)
+plot highpass2(vector(pluck(c4), pluck(d4)), 200)[0]
+plot highpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]
+plot highpass2(pluck(c4), vector(200, 250))[0]
+plot highpass2(pluck(c4), vector(200, 250), 0.8)[0]
+plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250))[0]
+plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]
+plot highpass2(pluck(c4), 200, vector(0.8, 0.9))[0]
+plot highpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]
+plot highpass2(c4, 200, 0.8)
+plot highpass2(pluck(c4), const(200))
+plot highpass2(pluck(c4), 200, const(0.8))
+
+plot notch2(pluck(c4), 200, 0.8)
+plot notch2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]
+plot notch2(pluck(c4), vector(200, 250), 0.8)[0]
+plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]
+plot notch2(pluck(c4), 200, vector(0.8, 0.9))[0]
+plot notch2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]
+plot notch2(c4, 200, 0.8)
+plot notch2(pluck(c4), const(200), 0.8)  
+plot notch2(pluck(c4), 200, const(0.8)) 
+
+plot allpass2(pluck(c4), 200, 0.8)
+plot allpass2(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]
+plot allpass2(pluck(c4), vector(200, 250), 0.8)[0]
+plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]
+plot allpass2(pluck(c4), 200, vector(0.8, 0.9))[0]
+plot allpass2(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9))[0]
+plot allpass2(c4, 200, 0.8)
+plot allpass2(pluck(c4), const(200), 0.8)  
+plot allpass2(pluck(c4), 200, const(0.8))
+
+plot eq-lowshelf(pluck(c4), 200, 0.8)
+plot eq-lowshelf(pluck(c4), 200, 0.8, 0.5)
+plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]
+plot eq-lowshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]
+plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8)[0]
+plot eq-lowshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]
+plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]
+plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]
+plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9))[0]
+plot eq-lowshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]
+plot eq-lowshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]
+plot eq-lowshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]
+plot eq-lowshelf(c4, 200, 0.8, 0.5)
+plot eq-lowshelf(pluck(c4), const(200), 0.5)
+plot eq-lowshelf(pluck(c4), 200, const(0.8), 0.5)
+plot eq-lowshelf(pluck(c4), 200, 0.8, const(0.5))
+
+plot eq-highshelf(pluck(c4), 200, 0.8)
+plot eq-highshelf(pluck(c4), 200, 0.8, 0.5)
+plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8)[0]
+plot eq-highshelf(vector(pluck(c4), pluck(d4)), 200, 0.8, 0.5)[0]
+plot eq-highshelf(pluck(c4), vector(200, 250), 0.8)[0]
+plot eq-highshelf(pluck(c4), vector(200, 250), 0.8, 0.5)[0]
+plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8)[0]
+plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), 0.8, 0.5)[0]
+plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9))[0]
+plot eq-highshelf(pluck(c4), 200, vector(0.8, 0.9), 0.5)[0]
+plot eq-highshelf(pluck(c4), 200, 0.8, vector(0.5, 0.4))[0]
+plot eq-highshelf(vector(pluck(c4), pluck(d4)), vector(200, 250), vector(0.8, 0.9), vector(0.5, 0.4))[0]
+plot eq-highshelf(c4, 200, 0.8, 0.5)
+plot eq-highshelf(pluck(c4), const(200), 0.5)
+plot eq-highshelf(pluck(c4), 200, const(0.8), 0.5)
+plot eq-highshelf(pluck(c4), 200, 0.8, const(0.5))
+
+plot eq-band(pluck(c4), 300, 0.5, 50)
+plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, 50)[0]
+plot eq-band(pluck(c4), vector(300, 250), 0.5, 50)[0]
+plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), 50)[0]
+plot eq-band(pluck(c4), 300, 0.5, vector(50, 60))[0]
+plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, 50)[0]
+plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), 50)[0]
+plot eq-band(vector(pluck(c4), pluck(g4)), 300, 0.5, vector(50, 60))[0]
+plot eq-band(pluck(c4), vector(300, 250), 0.5, vector(50, 60))[0]
+plot eq-band(pluck(c4), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]
+plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), 0.5, vector(50, 60))[0]
+plot eq-band(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(0.5, 0.6), vector(50, 60))[0]
+plot eq-band(c4, 300, 0.5, 50)
+plot eq-band(pluck(c4), 300 + lfo(4), 0.5, 50)
+plot eq-band(pluck(c4), 300, 0.5 + lfo(3) * 0.1, 50)
+plot eq-band(pluck(c4), 300, 0.5, 50 + lfo(4))
+plot eq-band(pluck(c4), "bad", 0.5, 50)
+plot eq-band(pluck(c4), 300, "bad", 50)
+plot eq-band(pluck(c4), 300, 0.5, "bad")
+plot lowpass4(pluck(c4), 500)
+plot lowpass4(vector(pluck(c4), pluck(d4)), 500)[0]
+plot lowpass4(pluck(c4), vector(500, 600))[0]
+plot lowpass4(pluck(c4), const(500))
+plot lowpass4(c4, 500)
+plot lowpass6(pluck(c4), 500)
+plot lowpass6(vector(pluck(c4), pluck(d4)), 500)[0]
+plot lowpass6(pluck(c4), vector(500, 600))[0]
+plot lowpass6(pluck(c4), const(500))
+plot lowpass6(c4, 500)
+plot lowpass8(pluck(c4), 500)
+plot lowpass8(vector(pluck(c4), pluck(d4)), 500)[0]
+plot lowpass8(pluck(c4), vector(500, 600))[0]
+plot lowpass8(pluck(c4), const(500))
+plot lowpass8(c4, 500)
+
+plot highpass4(pluck(c4), 500)
+plot highpass4(vector(pluck(c4), pluck(d4)), 500)[0]
+plot highpass4(pluck(c4), vector(500, 600))[0]
+plot highpass4(pluck(c4), const(500))
+plot highpass4(c4, 500)
+plot highpass6(pluck(c4), 500)
+plot highpass6(vector(pluck(c4), pluck(d4)), 500)[0]
+plot highpass6(pluck(c4), vector(500, 600))[0]
+plot highpass6(pluck(c4), const(500))
+plot highpass6(c4, 500)
+plot highpass8(pluck(c4), 500)
+plot highpass8(vector(pluck(c4), pluck(d4)), 500)[0]
+plot highpass8(pluck(c4), vector(500, 600))[0]
+plot highpass8(pluck(c4), const(500))
+plot highpass8(c4, 500)
+
+plot yin(pluck(c4), 30, 80, 100)[0]
+plot yin(c4, 30, 80, 0.01)[0]
+plot yin(pluck(c4), const(30), 80, 0.01)[0]
+plot yin(pluck(c4), 30, const(80), 0.01)[0]
+plot yin(pluck(c4), 30, 80, const(0.01))[0]
+
+plot follow(pluck(c4), 0.01, 0.1, 0.2, 0.1)
+plot follow(c4, 0.01, 0.1, 0.2, 0.1)
+plot follow(pluck(c4), const(0.01), 0.1, 0.2, 0.1)
+plot follow(pluck(c4), 0.01, const(0.1), 0.2, 0.1)
+plot follow(pluck(c4), 0.01, 0.1, const(0.2), 0.1)
+plot follow(pluck(c4), 0.01, 0.1, 0.2, const(0.1))
+
+plot phasevocoder(pluck(c4), ramp())
+plot phasevocoder(pluck(c4), ramp(), 512)
+plot phasevocoder(pluck(c4), ramp(), 512, 128)
+plot phasevocoder(pluck(c4), ramp(), 512, 128, 0)
+plot phasevocoder(vector(pluck(c4), pluck(d4)), ramp())[0]
+plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), 512)[0]
+plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), vector(512, 1024))[0]
+plot phasevocoder(pluck(c4), ramp(), vector(512, 1024), vector(128, 64))[0]
+plot phasevocoder(pluck(c4), ramp(), 512, 128, vector(0, 1))[0]
+plot phasevocoder(c4, ramp())
+plot phasevocoder(pluck(c4), 23)
+plot phasevocoder(pluck(c4), ramp(), 512.0)
+plot phasevocoder(pluck(c4), ramp(), 512, 128.0)
+plot phasevocoder(pluck(c4), ramp(), 512, 128, 0.0)
+
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1)
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512)
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128)
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0)
+plot pv-time-pitch(vector(pluck(c4), pluck(d4)), const(1.1), const(1.2), 1)[0]
+plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1)[0]
+plot pv-time-pitch(pluck(c4), const(1.1), vector(const(1.2), const(1.3)), 1)[0]
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), vector(1, 1.1))[0]
+plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1, vector(512, 1024))[0]
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, vector(512, 1024), vector(128, 64))[0]
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, vector(0, 1))[0]
+plot pv-time-pitch(c4, const(1.1), const(1.2), 1)
+plot pv-time-pitch(pluck(c4), 23, const(1.2), 1)
+plot pv-time-pitch(pluck(c4), const(1.1), 1.2, 1, 512.0)
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), lfo(1), 512, 128)
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512.0, 128)
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128.0)
+plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0.0)
+

@@ -596,6 +596,15 @@
       (setf b (cdr b)))
     (and rslt (null b)))) ;; make sure no leftovers in b
 
+
+(defun sal-plus(a b &optional (source "+ operation in SAL"))
+  (ny:typecheck (not (or (numberp a) (soundp a) (multichannel-soundp a)))
+    (ny:error source 0 number-sound-anon a t))
+  (ny:typecheck (not (or (numberp b) (soundp b) (multichannel-soundp b)))
+    (ny:error source 0 number-sound-anon b t))
+  (nyq:add2 a b))
+
+
 (defun sal-equal (a b)
   (or (and (numberp a) (numberp b) (= a b)) 
       (and (consp a) (consp b) (sal-list-equal a b))

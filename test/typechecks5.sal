@@ -1,0 +1,731 @@
+; typechecks5.sal -- unit tests for typechecks
+; 
+; This code was generated from typechecks.txt by
+; typecheck-gen.lsp
+
+exec ny:expect("plot lfo(3) - 4",
+               :plot, T)
+exec #print("plot lfo(3) - 4")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(3) - 4", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot 3 - lfo(4)",
+               :plot, T)
+exec #print("plot 3 - lfo(4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot 3 - lfo(4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print 3 - 4",
+               :print, -1)
+exec #print("print 3 - 4")
+exec catch(quote(simulated-error), 
+           sal-compile("print 3 - 4", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot \"bad\" - lfo(4)",
+               :nyerror, {"DIFF (or - in SAL)" 0 {{NUMBER SOUND} {}}})
+exec #print("plot \"bad\" - lfo(4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot \"bad\" - lfo(4)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In DIFF (or - in SAL), argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("print lfo(3) - \"bad\"",
+               :nyerror, {"DIFF (or - in SAL)" 0 {{NUMBER SOUND} {}}})
+exec #print("print lfo(3) - \"bad\"")
+exec catch(quote(simulated-error), 
+           sal-compile("print lfo(3) - \"bad\"", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In DIFF (or - in SAL), argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot (vector(lfo(1), lfo(2)) - 3)[0]",
+               :plot, T)
+exec #print("plot (vector(lfo(1), lfo(2)) - 3)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot (vector(lfo(1), lfo(2)) - 3)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot (3 - vector(lfo(1), lfo(2)))[0]",
+               :plot, T)
+exec #print("plot (3 - vector(lfo(1), lfo(2)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot (3 - vector(lfo(1), lfo(2)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot (vector(lfo(1), lfo(2)) - vector(lfo(3)))[0]",
+               :plot, T)
+exec #print("plot (vector(lfo(1), lfo(2)) - vector(lfo(3)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot (vector(lfo(1), lfo(2)) - vector(lfo(3)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lfo(3) + lfo(4)",
+               :plot, T)
+exec #print("plot lfo(3) + lfo(4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(3) + lfo(4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lfo(3) + 4",
+               :plot, T)
+exec #print("plot lfo(3) + 4")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(3) + 4", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot 3 + lfo(4)",
+               :plot, T)
+exec #print("plot 3 + lfo(4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot 3 + lfo(4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print 3 + 4",
+               :print, 7)
+exec #print("print 3 + 4")
+exec catch(quote(simulated-error), 
+           sal-compile("print 3 + 4", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot \"bad\" + lfo(4)",
+               :nyerror, {"+ operation in SAL" 0 {{NUMBER SOUND} {}}})
+exec #print("plot \"bad\" + lfo(4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot \"bad\" + lfo(4)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In + operation in SAL, argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("print lfo(3) + \"bad\"",
+               :nyerror, {"+ operation in SAL" 0 {{NUMBER SOUND} {}}})
+exec #print("print lfo(3) + \"bad\"")
+exec catch(quote(simulated-error), 
+           sal-compile("print lfo(3) + \"bad\"", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In + operation in SAL, argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot (vector(lfo(1), lfo(2)) + 3)[0] ",
+               :plot, T)
+exec #print("plot (vector(lfo(1), lfo(2)) + 3)[0] ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot (vector(lfo(1), lfo(2)) + 3)[0] ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot (3 + vector(lfo(1), lfo(2)))[0] ",
+               :plot, T)
+exec #print("plot (3 + vector(lfo(1), lfo(2)))[0] ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot (3 + vector(lfo(1), lfo(2)))[0] ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot (vector(lfo(1), lfo(2)) + vector(lfo(3)))[0] ",
+               :plot, T)
+exec #print("plot (vector(lfo(1), lfo(2)) + vector(lfo(3)))[0] ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot (vector(lfo(1), lfo(2)) + vector(lfo(3)))[0] ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot compare(lfo(3), lfo(4))",
+               :plot, T)
+exec #print("plot compare(lfo(3), lfo(4))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(lfo(3), lfo(4))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot compare(lfo(3), 0.8)",
+               :plot, T)
+exec #print("plot compare(lfo(3), 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(lfo(3), 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot compare(0.8, lfo(3))",
+               :plot, T)
+exec #print("plot compare(0.8, lfo(3))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(0.8, lfo(3))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot compare(lfo(3), \"bad\")",
+               :nyerror, {"COMPARE" 2 {{SOUND NUMBER} {}}})
+exec #print("plot compare(lfo(3), \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(lfo(3), \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In COMPARE, 2nd argument must be a number or sound, got "bad", a STRING
+
+exec ny:expect("plot compare(\"bad\", lfo(3))",
+               :nyerror, {"COMPARE" 1 {{SOUND NUMBER} {}}})
+exec #print("plot compare(\"bad\", lfo(3))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(\"bad\", lfo(3))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In COMPARE, 1st argument must be a number or sound, got "bad", a STRING
+
+exec ny:expect("plot compare(vector(lfo(1), lfo(2)), 3)[0]",
+               :error, "In COMPARE, either first or second argument must be a sound")
+exec #print("plot compare(vector(lfo(1), lfo(2)), 3)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(vector(lfo(1), lfo(2)), 3)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot compare(3, vector(lfo(1), lfo(2)))[0]",
+               :error, "In COMPARE, either first or second argument must be a sound")
+exec #print("plot compare(3, vector(lfo(1), lfo(2)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(3, vector(lfo(1), lfo(2)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot compare(vector(lfo(1), lfo(2)), vector(lfo(3)))[0] ",
+               :error, "In COMPARE, either first or second argument must be a sound")
+exec #print("plot compare(vector(lfo(1), lfo(2)), vector(lfo(3)))[0] ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(vector(lfo(1), lfo(2)), vector(lfo(3)))[0] ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot compare(vector(lfo(1), lfo(2)), lfo(3))[0]  ",
+               :nyerror, {"COMPARE" 1 {{SOUND NUMBER} {}}})
+exec #print("plot compare(vector(lfo(1), lfo(2)), lfo(3))[0]  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(vector(lfo(1), lfo(2)), lfo(3))[0]  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In COMPARE, 1st argument must be a number or sound, got a 2-channel SOUND
+
+exec ny:expect("plot compare(lfo(3), vector(lfo(1), lfo(2)))[0]  ",
+               :nyerror, {"COMPARE" 2 {{SOUND NUMBER} {}}})
+exec #print("plot compare(lfo(3), vector(lfo(1), lfo(2)))[0]  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot compare(lfo(3), vector(lfo(1), lfo(2)))[0]  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In COMPARE, 2nd argument must be a number or sound, got a 2-channel SOUND
+
+exec ny:expect("plot osc-saw(400)",
+               :plot, T)
+exec #print("plot osc-saw(400)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-saw(400)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-saw(lfo(100) + 100)",
+               :plot, T)
+exec #print("plot osc-saw(lfo(100) + 100)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-saw(lfo(100) + 100)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-tri(400)",
+               :plot, T)
+exec #print("plot osc-tri(400)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-tri(400)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-tri(lfo(100) + 100)",
+               :plot, T)
+exec #print("plot osc-tri(lfo(100) + 100)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-tri(lfo(100) + 100)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot tapv(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    ",
+               :plot, T)
+exec #print("plot tapv(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapv(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot tapv(c4, 0.1, lfo(2) * 0.02, 0.2)   ",
+               :nyerror, {"TAPV" 1 {{SOUND} "snd"}})
+exec #print("plot tapv(c4, 0.1, lfo(2) * 0.02, 0.2)   ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapv(c4, 0.1, lfo(2) * 0.02, 0.2)   ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPV, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot tapv(osc(c4), 0.1, 0.02, 0.2)  ",
+               :nyerror, {"TAPV" 3 {{SOUND} "vardelay"}})
+exec #print("plot tapv(osc(c4), 0.1, 0.02, 0.2)  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapv(osc(c4), 0.1, 0.02, 0.2)  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPV, 3rd argument (vardelay) must be a sound or multichannel sound, got 0.02, a FLONUM
+
+exec ny:expect("plot tapv(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   ",
+               :nyerror, {"TAPV" 2 {{NUMBER} "offset"}})
+exec #print("plot tapv(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapv(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPV, 2nd argument (offset) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot tapv(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  ",
+               :nyerror, {"TAPV" 4 {{NUMBER} "maxdelay"}})
+exec #print("plot tapv(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapv(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPV, 4th argument (maxdelay) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]",
+               :plot, T)
+exec #print("plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]",
+               :error, "In TAPV, two arguments are multichannels of differing length, got #(0.1 0.2), an ARRAY, and #(0.2), an ARRAY")
+exec #print("plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapv(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot tapf(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    ",
+               :plot, T)
+exec #print("plot tapf(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapf(osc(c4), 0.1, lfo(2) * 0.02, 0.2)    ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot tapf(c4, 0.1, lfo(2) * 0.02, 0.2)   ",
+               :nyerror, {"TAPF" 1 {{SOUND} "snd"}})
+exec #print("plot tapf(c4, 0.1, lfo(2) * 0.02, 0.2)   ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapf(c4, 0.1, lfo(2) * 0.02, 0.2)   ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPF, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot tapf(osc(c4), 0.1, 0.02, 0.2)  ",
+               :nyerror, {"TAPF" 3 {{SOUND} "vardelay"}})
+exec #print("plot tapf(osc(c4), 0.1, 0.02, 0.2)  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapf(osc(c4), 0.1, 0.02, 0.2)  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPF, 3rd argument (vardelay) must be a sound or multichannel sound, got 0.02, a FLONUM
+
+exec ny:expect("plot tapf(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   ",
+               :nyerror, {"TAPF" 2 {{NUMBER} "offset"}})
+exec #print("plot tapf(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapf(osc(c4), const(0.1), lfo(2) * 0.02, 0.2)   ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPF, 2nd argument (offset) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot tapf(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  ",
+               :nyerror, {"TAPF" 4 {{NUMBER} "maxdelay"}})
+exec #print("plot tapf(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapf(osc(c4), 0.1, lfo(2) * 0.02, const(0.2))  ", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TAPF, 4th argument (maxdelay) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]",
+               :plot, T)
+exec #print("plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, 0.2)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]",
+               :error, "In TAPF, two arguments are multichannels of differing length, got #(0.1 0.2), an ARRAY, and #(0.2), an ARRAY")
+exec #print("plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot tapf(vector(osc(c4), osc(c5)), vector(0.1, 0.2), lfo(2) * 0.02, vector(0.2))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(pluck(c4), 300, 50)",
+               :plot, T)
+exec #print("plot areson(pluck(c4), 300, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(pluck(c4), 300, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(vector(pluck(c4), pluck(g4)), 300, 50)[0]",
+               :plot, T)
+exec #print("plot areson(vector(pluck(c4), pluck(g4)), 300, 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(vector(pluck(c4), pluck(g4)), 300, 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(pluck(c4), vector(300, 250), 50)[0]",
+               :plot, T)
+exec #print("plot areson(pluck(c4), vector(300, 250), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(pluck(c4), vector(300, 250), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(pluck(c4), 300, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot areson(pluck(c4), 300, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(pluck(c4), 300, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), 50)[0]",
+               :plot, T)
+exec #print("plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(vector(pluck(c4), pluck(g4)), 300, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot areson(vector(pluck(c4), pluck(g4)), 300, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(vector(pluck(c4), pluck(g4)), 300, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(pluck(c4), vector(300, 250), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot areson(pluck(c4), vector(300, 250), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(pluck(c4), vector(300, 250), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(vector(pluck(c4), pluck(g4)), vector(300, 250), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(c4, 300, 50)",
+               :nyerror, {"ARESON" 1 {{SOUND} {}}})
+exec #print("plot areson(c4, 300, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(c4, 300, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In ARESON, 1st argument must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot areson(pluck(c4), 300 + lfo(4), 50)",
+               :plot, T)
+exec #print("plot areson(pluck(c4), 300 + lfo(4), 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(pluck(c4), 300 + lfo(4), 50)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot areson(pluck(c4), 300, 50 + lfo(4))",
+               :plot, T)
+exec #print("plot areson(pluck(c4), 300, 50 + lfo(4))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot areson(pluck(c4), 300, 50 + lfo(4))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hp(pluck(c4), 300)",
+               :plot, T)
+exec #print("plot hp(pluck(c4), 300)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hp(pluck(c4), 300)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hp(vector(pluck(c4), pluck(g4)), 300)[0]",
+               :plot, T)
+exec #print("plot hp(vector(pluck(c4), pluck(g4)), 300)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hp(vector(pluck(c4), pluck(g4)), 300)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hp(pluck(c4), vector(300, 250))[0]",
+               :plot, T)
+exec #print("plot hp(pluck(c4), vector(300, 250))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hp(pluck(c4), vector(300, 250))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hp(vector(pluck(c4), pluck(g4)), vector(300, 250))[0]",
+               :plot, T)
+exec #print("plot hp(vector(pluck(c4), pluck(g4)), vector(300, 250))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hp(vector(pluck(c4), pluck(g4)), vector(300, 250))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hp(c4, 300)",
+               :nyerror, {"HP" 1 {{SOUND} "snd"}})
+exec #print("plot hp(c4, 300)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hp(c4, 300)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HP, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot hp(pluck(c4), 300 + lfo(4))",
+               :plot, T)
+exec #print("plot hp(pluck(c4), 300 + lfo(4))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hp(pluck(c4), 300 + lfo(4))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hp(pluck(c4), \"bad\")",
+               :nyerror, {"HP" 2 {{NUMBER SOUND} "cutoff"}})
+exec #print("plot hp(pluck(c4), \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hp(pluck(c4), \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HP, 2nd argument (cutoff) must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot comb(pluck(c4), 3, 50)",
+               :plot, T)
+exec #print("plot comb(pluck(c4), 3, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), 3, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(pluck(c4), 3 + lfo(1), 50)",
+               :plot, T)
+exec #print("plot comb(pluck(c4), 3 + lfo(1), 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), 3 + lfo(1), 50)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(vector(pluck(c4), pluck(g4)), 3, 50)[0]",
+               :plot, T)
+exec #print("plot comb(vector(pluck(c4), pluck(g4)), 3, 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(vector(pluck(c4), pluck(g4)), 3, 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(pluck(c4), vector(3, 2.5), 50)[0]",
+               :plot, T)
+exec #print("plot comb(pluck(c4), vector(3, 2.5), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), vector(3, 2.5), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(pluck(c4), vector(3 + lfo(1), 2.5), 50)[0]",
+               :plot, T)
+exec #print("plot comb(pluck(c4), vector(3 + lfo(1), 2.5), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), vector(3 + lfo(1), 2.5), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(pluck(c4), 3, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(pluck(c4), 3, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), 3, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(pluck(c4), 3 + lfo(1), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(pluck(c4), 3 + lfo(1), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), 3 + lfo(1), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), 50)[0]",
+               :plot, T)
+exec #print("plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(1), 2.5), 50)[0]",
+               :plot, T)
+exec #print("plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(1), 2.5), 50)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(1), 2.5), 50)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(vector(pluck(c4), pluck(g4)), 3, vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(vector(pluck(c4), pluck(g4)), 3, vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(vector(pluck(c4), pluck(g4)), 3, vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(vector(pluck(c4), pluck(g4)), 3 + lfo(2), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(vector(pluck(c4), pluck(g4)), 3 + lfo(2), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(vector(pluck(c4), pluck(g4)), 3 + lfo(2), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(pluck(c4), vector(3, 2.5), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(pluck(c4), vector(3, 2.5), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), vector(3, 2.5), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(pluck(c4), vector(3 + lfo(2), 2.5), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(pluck(c4), vector(3 + lfo(2), 2.5), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), vector(3 + lfo(2), 2.5), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(vector(pluck(c4), pluck(g4)), vector(3, 2.5), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(2), 2.5), vector(50, 60))[0]",
+               :plot, T)
+exec #print("plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(2), 2.5), vector(50, 60))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(vector(pluck(c4), pluck(g4)), vector(3 + lfo(2), 2.5), vector(50, 60))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot comb(c4, 300, 50)",
+               :nyerror, {"COMB" 1 {{SOUND} "snd"}})
+exec #print("plot comb(c4, 300, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(c4, 300, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In COMB, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot comb(pluck(c4), \"bad\", 50)",
+               :nyerror, {"COMB" 2 {{NUMBER SOUND} "decay"}})
+exec #print("plot comb(pluck(c4), \"bad\", 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), \"bad\", 50)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In COMB, 2nd argument (decay) must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot comb(pluck(c4), 300, \"bad\")",
+               :nyerror, {"COMB" 3 {{POSITIVE} "hz"}})
+exec #print("plot comb(pluck(c4), 300, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot comb(pluck(c4), 300, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In COMB, 3rd argument (hz) must be a positive number or array of positive numbers, got "bad", a STRING
+
+exec ny:expect("plot alpass(pluck(c4), 2, 30, 20)",
+               :plot, T)
+exec #print("plot alpass(pluck(c4), 2, 30, 20)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(pluck(c4), 2, 30, 20)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(pluck(c4), 2, 30 + lfo(2), 20)",
+               :plot, T)
+exec #print("plot alpass(pluck(c4), 2, 30 + lfo(2), 20)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(pluck(c4), 2, 30 + lfo(2), 20)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), 2, 30, 20)[0]",
+               :plot, T)
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), 2, 30, 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), 2, 30, 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), const(2), 30, 20)[0]",
+               :plot, T)
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), const(2), 30, 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), const(2), 30, 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), 2, 30 + lfo(2), 20)[0]",
+               :plot, T)
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), 2, 30 + lfo(2), 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), 2, 30 + lfo(2), 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(pluck(c4), vector(2, 3), 30, 20)[0]",
+               :plot, T)
+exec #print("plot alpass(pluck(c4), vector(2, 3), 30, 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(pluck(c4), vector(2, 3), 30, 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(pluck(c4), vector(const(2), const(3)), 30, 20)[0]",
+               :plot, T)
+exec #print("plot alpass(pluck(c4), vector(const(2), const(3)), 30, 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(pluck(c4), vector(const(2), const(3)), 30, 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30, 40), 20)[0]",
+               :plot, T)
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30, 40), 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30, 40), 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), const(2), vector(30, 40), 20)[0]",
+               :plot, T)
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), const(2), vector(30, 40), 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), const(2), vector(30, 40), 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20)[0]",
+               :plot, T)
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20 + lfo(1)) ;; bad",
+               :nyerror, {"ALPASS" 4 {{POSITIVE} "min-hz"}})
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20 + lfo(1)) ;; bad")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), 20 + lfo(1)) ;; bad", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In ALPASS, 4th argument (min-hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), vector(30 + lfo(2), 20 + lfo(1))) ;; bad",
+               :nyerror, {"ALPASS" 4 {{POSITIVE} "min-hz"}})
+exec #print("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), vector(30 + lfo(2), 20 + lfo(1))) ;; bad")
+exec catch(quote(simulated-error), 
+           sal-compile("plot alpass(vector(pluck(c4), pluck(d4)), 2, vector(30 + lfo(2), 40), vector(30 + lfo(2), 20 + lfo(1))) ;; bad", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In ALPASS, 4th argument (min-hz) must be a positive number or array of positive numbers, got a 2-channel SOUND
+
+exec ny:expect("plot const(2)",
+               :plot, T)
+exec #print("plot const(2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot const(2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot const(2, 3)",
+               :plot, T)
+exec #print("plot const(2, 3)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot const(2, 3)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot const(lfo(2))",
+               :nyerror, {"CONST" 1 {{NUMBER} "value"}})
+exec #print("plot const(lfo(2))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot const(lfo(2))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CONST, 1st argument (value) must be a number, got a SOUND
+
+exec ny:expect("plot const(2, lfo(3))",
+               :nyerror, {"CONST" 2 {{NUMBER} "dur"}})
+exec #print("plot const(2, lfo(3))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot const(2, lfo(3))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CONST, 2nd argument (dur) must be a number, got a SOUND
+
+exec ny:expect("plot convolve(pluck(c4), osc(c7, 0.01))",
+               :plot, T)
+exec #print("plot convolve(pluck(c4), osc(c7, 0.01))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot convolve(pluck(c4), osc(c7, 0.01))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot convolve(vector(pluck(c4), pluck(d4)), osc(c7, 0.01))[0]",
+               :plot, T)
+exec #print("plot convolve(vector(pluck(c4), pluck(d4)), osc(c7, 0.01))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot convolve(vector(pluck(c4), pluck(d4)), osc(c7, 0.01))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot convolve(pluck(c4), vector(osc(c7, 0.01), osc(c8, 0.01)))[0]",
+               :plot, T)
+exec #print("plot convolve(pluck(c4), vector(osc(c7, 0.01), osc(c8, 0.01)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot convolve(pluck(c4), vector(osc(c7, 0.01), osc(c8, 0.01)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+

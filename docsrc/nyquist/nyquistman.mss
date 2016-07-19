@@ -623,10 +623,10 @@ converts to pitch (in units of steps) as required.
 @begin(example)
 define function mkwave()
   begin
-    set *table* = 0.5 * build-harmonic(1.0, 2048) +
-                  0.25 * build-harmonic(2.0, 2048) +
-                  0.125 * build-harmonic(3.0, 2048) +
-                  0.0625 * build-harmonic(4.0, 2048)
+    set *table* = 0.5 * build-harmonic(1, 2048) +
+                  0.25 * build-harmonic(2, 2048) +
+                  0.125 * build-harmonic(3, 2048) +
+                  0.0625 * build-harmonic(4, 2048)
     set *table* = list(*table*, hz-to-step(1.0), #t)
   end
 @end(example)
@@ -3604,6 +3604,15 @@ constant-rate exponential and set so that a rise from @i(floor) to unity
 occurs in @i(risetime). Similary, the fall is a constant-rate exponential 
 such that a fall from unity to @i(floor) takes @i(falltime).
 
+@codef{noise-gate(@pragma(defn)@index(noise-gate)@i(sound) [, @i(lookahead), @i(risetime), @i(falltime), @i(floor), @i(threshold)])} @c{[sal]}@*
+@altdef{@code{(noise-gate @i(sound) [@i(lookahead) @i(risetime) @i(falltime) @i(floor) @i(threshold)])} @c{[lisp]}}@\A
+simple noise gate implementation based on @code(gate). All parameters
+except @i(snd) are optional and default values are @i(lookahead):
+0.5, @i(risetime): 0.02, @i(falltime): 0.5, @i(floor): 0.01,
+@i(threshold): 0.01. The result is the input @i(snd), where below-threshold
+segments of sound are silenced.
+
+
 @codef[hz-to-step(@pragma(defn)@index(hz-to-step)@i(freq))] @c{[sal]}@*
 @altdef{@code[(hz-to-step @i(freq))] @c{[lisp]}}@\Returns a step number for @i(freq) (in hz), which can be either a number of a @code(SOUND). The result has the same type as the argument. See also @code(step-to-hz) (below).
 
@@ -4062,8 +4071,8 @@ without further interpolation.
 beginning to end and then splicing on copies of the same sound from 
 a loop point to the end.  
 The @i(pitch) and @i(modulation) parameters are used as in @code(fmosc)
-described above.  The optional @i(sample) (which defaults to the global
-variable @code(*table*) is a list of the form
+described above.  The optional @i(sample) (which defaults to 2048-point
+sinusoid) is a list of the form
 @begin(display)
 (@i(sound) @i(pitch-number) @i(loop-start))@end(display) where the first element is a sound containing the sample, the second is the
 pitch of the sample, and the third element is the time of the loop point. If
@@ -5030,13 +5039,26 @@ or detected, but may cause a run-time error or crash. In LISP, the syntax is
 
 @label(sim-sec)
 @codef{sim(@pragma(defn)@index(sim)[@i(beh@-[1]), @i(beh@-[2]), @r(...)])} @c{[sal]}@*
-@altdef{@code{(sim [@i(beh@-[1]) @i(beh@-[2]) @r(...)])} @c{[lisp]}}@\Returns a sound which is the 
-sum of the given behaviors evaluated with current value of @code(*warp*).
-If behaviors return multiple channel sounds, the corresponding channels are
-added.  If the number of channels does not match, the result has the
-maximum.  For example, if a two-channel sound [L, R] is added to a four-channel
-sound [C1, C2, C3, C4], the result is [L + C1, R + C2, C3, C4].  Arguments to @code(sim) may also be numbers.  If all arguments are numbers, @code(sim) is equivalent (although slower than) the @code(+) function.  If a number is added to a sound, @code(snd-offset) is used to add the number to each sample of the sound.  The result of adding a number to two or more sounds with different durations is not defined.  Use @code(const) to coerce a number to a sound of a specified duration.  An important limitation of @code(sim) is that it cannot handle hundreds of behaviors due to a stack size limitation in XLISP.  To compute hundreds of sounds (e.g. notes) at specified times, see @code(timed-seq), below.
-See also @code(sum) below.
+@altdef{@code{(sim [@i(beh@-[1]) @i(beh@-[2]) @r(...)])} @c{[lisp]}}@\Returns 
+a sound which is the sum of the given behaviors evaluated with the current
+value of @code(*warp*).  If behaviors return multiple channel sounds,
+the corresponding channels are added.  If the number of channels does
+not match, the result has as many channels as the argument with the
+most channels.  For example, if a two-channel
+sound [L, R] is added to a four-channel sound [C1, C2, C3, C4], the
+result is [L + C1, R + C2, C3, C4].  Arguments to @code(sim) may also
+be numbers.  If all arguments are numbers, @code(sim) is equivalent
+(although slower than) the LISP @code(+) function.  If a number is added to
+a sound, @code(snd-offset) is used to add the number to each sample of
+the sound.  The result of adding a number to two or more sounds with
+different durations is not defined.  Use @code(const) to coerce a
+number to a sound of a specified duration.  An important limitation of
+@code(sim) is that it cannot handle hundreds of behaviors due to a
+stack size limitation in XLISP.  To compute hundreds of sounds
+(e.g. notes) at specified times, see @code(timed-seq), below.  See
+also @code(sum) below. Notce that @code(sim) is not transitive due to
+coercion rules: Using SAL syntax, @code{sim(a, sim(b, c))} may not produce the
+same result as @code{sim(sim(a, b), c)}.
 
 @codef{simrep(@pragma(defn)@index(simrep)@i(var), @i(limit), @i(beh))} @c{[sal]}@*
 @altdef{@code[(simrep @i(var) @i(limit) @i(beh))] @c{[lisp]}}@\Iteratively 
@@ -5050,8 +5072,12 @@ In LISP, the syntax is
 @altdef{@code[(set-logical-stop @i(beh) @i(time))] @c{[lisp]}}@\Returns a sound with @i(time) as 
 the logical stop time.
 
-@codef{sum(@pragma(defn)@index(sum)@index(mix)@i(a) [, @i(b), @r(...)])} @c{[sal]}@*
-@altdef{@code{(sum @i(a) [@i(b) @r(...)])} @c{[lisp]}}@\Returns the sum of @i(a), @i(b), ..., allowing mixed addition of sounds, multichannel sounds and numbers.  Identical to @i(sim). In SAL, use the infix ``+'' operator.
+@codef{sum(@pragma(defn)@index(sum)@index(mix)@i(a) [, @i(b), @r(...)])}@c{[sal]}@*
+@altdef{@code{(sum @i(a) [@i(b) @r(...)])} @c{[lisp]}}@\Returns
+the sum of @i(a), @i(b), ..., allowing mixed addition of sounds, 
+multichannel sounds and numbers.  Identical to @i(sim). In SAL, 
+use the infix ``+'' operator. See @code(sim) just above for more
+detail.
 
 @codef{mult(@pragma(defn)@index(mult)@index(product)@index(multiply signals)@i(a) [, @i(b), @r(...)])} @c{[sal]}@*
 @altdef{@code{(mult @i(a) [@i(b) @r(...)])} @c{[lisp]}}@\Returns the product of @i(a), @i(b), ..., allowing mixed multiplication of sounds, multichannel sounds and numbers.

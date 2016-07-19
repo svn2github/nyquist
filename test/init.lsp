@@ -1,11 +1,11 @@
 ; init.lsp -- default Nyquist startup file
 (print "nyquist/test/init.lsp is loading...")
-(load "nyinit-dbg.lsp")
+(load "nyinit.lsp")
 
 ; add your customizations here:
 ;    e.g. (setf *default-sf-dir* "...")
 
-(echoenabled nil)
+;(echoenabled nil)
 ;(play (pluck c4 0.1))
 ;(print "type something to continue")
 ;(read)
@@ -18,7 +18,7 @@
 
 ;(play (snd-convolve (pluck c4 4.0) echoes))
 
-(echoenabled nil)
+;(echoenabled nil)
 ;(sal-load "phasevocoder.sal")
 ;(load "long.lsp")
 
@@ -32,5 +32,15 @@
 ;(setf yy (force-srate 70 xx))
 ;(print (snd-samples yy 100))
 
-(s-plot (convolve (pluck c4) (osc c7 0.01)))
+;(s-plot (convolve (pluck c4) (osc c7 0.01)))
+;(sal)
 
+;(load "typecheck-gen.lsp")
+
+
+;(load "typecheck-fns.lsp")
+;(load "typechecks.lsp")
+
+(load "regression-test.lsp")
+
+(exit)

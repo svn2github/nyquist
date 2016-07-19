@@ -1,0 +1,505 @@
+; typechecks8.sal -- unit tests for typechecks
+; 
+; This code was generated from typechecks.txt by
+; typecheck-gen.lsp
+
+exec ny:expect("plot lowpass6(vector(pluck(c4), pluck(d4)), 500)[0]",
+               :plot, T)
+exec #print("plot lowpass6(vector(pluck(c4), pluck(d4)), 500)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass6(vector(pluck(c4), pluck(d4)), 500)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass6(pluck(c4), vector(500, 600))[0]",
+               :plot, T)
+exec #print("plot lowpass6(pluck(c4), vector(500, 600))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass6(pluck(c4), vector(500, 600))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass6(pluck(c4), const(500))",
+               :nyerror, {"LOWPASS6" 2 {{POSITIVE} "hz"}})
+exec #print("plot lowpass6(pluck(c4), const(500))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass6(pluck(c4), const(500))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS6, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot lowpass6(c4, 500)",
+               :nyerror, {"LOWPASS6" 1 {{SOUND} "snd"}})
+exec #print("plot lowpass6(c4, 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass6(c4, 500)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS6, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot lowpass8(pluck(c4), 500)",
+               :plot, T)
+exec #print("plot lowpass8(pluck(c4), 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass8(pluck(c4), 500)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass8(vector(pluck(c4), pluck(d4)), 500)[0]",
+               :plot, T)
+exec #print("plot lowpass8(vector(pluck(c4), pluck(d4)), 500)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass8(vector(pluck(c4), pluck(d4)), 500)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass8(pluck(c4), vector(500, 600))[0]",
+               :plot, T)
+exec #print("plot lowpass8(pluck(c4), vector(500, 600))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass8(pluck(c4), vector(500, 600))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lowpass8(pluck(c4), const(500))",
+               :nyerror, {"LOWPASS8" 2 {{POSITIVE} "hz"}})
+exec #print("plot lowpass8(pluck(c4), const(500))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass8(pluck(c4), const(500))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS8, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot lowpass8(c4, 500)",
+               :nyerror, {"LOWPASS8" 1 {{SOUND} "snd"}})
+exec #print("plot lowpass8(c4, 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lowpass8(c4, 500)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOWPASS8, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot highpass4(pluck(c4), 500)",
+               :plot, T)
+exec #print("plot highpass4(pluck(c4), 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass4(pluck(c4), 500)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass4(vector(pluck(c4), pluck(d4)), 500)[0]",
+               :plot, T)
+exec #print("plot highpass4(vector(pluck(c4), pluck(d4)), 500)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass4(vector(pluck(c4), pluck(d4)), 500)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass4(pluck(c4), vector(500, 600))[0]",
+               :plot, T)
+exec #print("plot highpass4(pluck(c4), vector(500, 600))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass4(pluck(c4), vector(500, 600))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass4(pluck(c4), const(500))",
+               :nyerror, {"HIGHPASS4" 2 {{POSITIVE} "hz"}})
+exec #print("plot highpass4(pluck(c4), const(500))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass4(pluck(c4), const(500))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS4, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot highpass4(c4, 500)",
+               :nyerror, {"HIGHPASS4" 1 {{SOUND} "snd"}})
+exec #print("plot highpass4(c4, 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass4(c4, 500)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS4, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot highpass6(pluck(c4), 500)",
+               :plot, T)
+exec #print("plot highpass6(pluck(c4), 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass6(pluck(c4), 500)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass6(vector(pluck(c4), pluck(d4)), 500)[0]",
+               :plot, T)
+exec #print("plot highpass6(vector(pluck(c4), pluck(d4)), 500)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass6(vector(pluck(c4), pluck(d4)), 500)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass6(pluck(c4), vector(500, 600))[0]",
+               :plot, T)
+exec #print("plot highpass6(pluck(c4), vector(500, 600))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass6(pluck(c4), vector(500, 600))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass6(pluck(c4), const(500))",
+               :nyerror, {"HIGHPASS6" 2 {{POSITIVE} "hz"}})
+exec #print("plot highpass6(pluck(c4), const(500))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass6(pluck(c4), const(500))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS6, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot highpass6(c4, 500)",
+               :nyerror, {"HIGHPASS6" 1 {{SOUND} "snd"}})
+exec #print("plot highpass6(c4, 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass6(c4, 500)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS6, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot highpass8(pluck(c4), 500)",
+               :plot, T)
+exec #print("plot highpass8(pluck(c4), 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass8(pluck(c4), 500)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass8(vector(pluck(c4), pluck(d4)), 500)[0]",
+               :plot, T)
+exec #print("plot highpass8(vector(pluck(c4), pluck(d4)), 500)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass8(vector(pluck(c4), pluck(d4)), 500)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass8(pluck(c4), vector(500, 600))[0]",
+               :plot, T)
+exec #print("plot highpass8(pluck(c4), vector(500, 600))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass8(pluck(c4), vector(500, 600))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot highpass8(pluck(c4), const(500))",
+               :nyerror, {"HIGHPASS8" 2 {{POSITIVE} "hz"}})
+exec #print("plot highpass8(pluck(c4), const(500))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass8(pluck(c4), const(500))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS8, 2nd argument (hz) must be a positive number or array of positive numbers, got a SOUND
+
+exec ny:expect("plot highpass8(c4, 500)",
+               :nyerror, {"HIGHPASS8" 1 {{SOUND} "snd"}})
+exec #print("plot highpass8(c4, 500)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot highpass8(c4, 500)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HIGHPASS8, 1st argument (snd) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot yin(pluck(c4), 30, 80, 100)[0]",
+               :plot, T)
+exec #print("plot yin(pluck(c4), 30, 80, 100)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot yin(pluck(c4), 30, 80, 100)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot yin(c4, 30, 80, 0.01)[0]",
+               :nyerror, {"YIN" 1 {{SOUND} "sound"}})
+exec #print("plot yin(c4, 30, 80, 0.01)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot yin(c4, 30, 80, 0.01)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In YIN, 1st argument (sound) must be a sound, got 60, a FLONUM
+
+exec ny:expect("plot yin(pluck(c4), const(30), 80, 0.01)[0]",
+               :nyerror, {"YIN" 2 {{NUMBER} "minstep"}})
+exec #print("plot yin(pluck(c4), const(30), 80, 0.01)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot yin(pluck(c4), const(30), 80, 0.01)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In YIN, 2nd argument (minstep) must be a number, got a SOUND
+
+exec ny:expect("plot yin(pluck(c4), 30, const(80), 0.01)[0]",
+               :nyerror, {"YIN" 3 {{NUMBER} "maxstep"}})
+exec #print("plot yin(pluck(c4), 30, const(80), 0.01)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot yin(pluck(c4), 30, const(80), 0.01)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In YIN, 3rd argument (maxstep) must be a number, got a SOUND
+
+exec ny:expect("plot yin(pluck(c4), 30, 80, const(0.01))[0]",
+               :nyerror, {"YIN" 4 {{INTEGER} "stepsize"}})
+exec #print("plot yin(pluck(c4), 30, 80, const(0.01))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot yin(pluck(c4), 30, 80, const(0.01))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In YIN, 4th argument (stepsize) must be a integer, got a SOUND
+
+exec ny:expect("plot follow(pluck(c4), 0.01, 0.1, 0.2, 0.1)",
+               :plot, T)
+exec #print("plot follow(pluck(c4), 0.01, 0.1, 0.2, 0.1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot follow(pluck(c4), 0.01, 0.1, 0.2, 0.1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot follow(c4, 0.01, 0.1, 0.2, 0.1)",
+               :nyerror, {"FOLLOW" 1 {{SOUND} "sound"}})
+exec #print("plot follow(c4, 0.01, 0.1, 0.2, 0.1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot follow(c4, 0.01, 0.1, 0.2, 0.1)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FOLLOW, 1st argument (sound) must be a sound, got 60, a FLONUM
+
+exec ny:expect("plot follow(pluck(c4), const(0.01), 0.1, 0.2, 0.1)",
+               :nyerror, {"FOLLOW" 2 {{NUMBER} "floor"}})
+exec #print("plot follow(pluck(c4), const(0.01), 0.1, 0.2, 0.1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot follow(pluck(c4), const(0.01), 0.1, 0.2, 0.1)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FOLLOW, 2nd argument (floor) must be a number, got a SOUND
+
+exec ny:expect("plot follow(pluck(c4), 0.01, const(0.1), 0.2, 0.1)",
+               :nyerror, {"FOLLOW" 3 {{NUMBER} "risetime"}})
+exec #print("plot follow(pluck(c4), 0.01, const(0.1), 0.2, 0.1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot follow(pluck(c4), 0.01, const(0.1), 0.2, 0.1)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FOLLOW, 3rd argument (risetime) must be a number, got a SOUND
+
+exec ny:expect("plot follow(pluck(c4), 0.01, 0.1, const(0.2), 0.1)",
+               :nyerror, {"FOLLOW" 4 {{NUMBER} "stepsize"}})
+exec #print("plot follow(pluck(c4), 0.01, 0.1, const(0.2), 0.1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot follow(pluck(c4), 0.01, 0.1, const(0.2), 0.1)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FOLLOW, 4th argument (stepsize) must be a number, got a SOUND
+
+exec ny:expect("plot follow(pluck(c4), 0.01, 0.1, 0.2, const(0.1))",
+               :nyerror, {"FOLLOW" 5 {{NUMBER} "lookahead"}})
+exec #print("plot follow(pluck(c4), 0.01, 0.1, 0.2, const(0.1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot follow(pluck(c4), 0.01, 0.1, 0.2, const(0.1))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FOLLOW, 5th argument (lookahead) must be a number, got a SOUND
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp())",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), ramp())")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp())", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), 512)",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), ramp(), 512)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), 512)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), 512, 128)",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), ramp(), 512, 128)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), 512, 128)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), 512, 128, 0)",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), ramp(), 512, 128, 0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), 512, 128, 0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(vector(pluck(c4), pluck(d4)), ramp())[0]",
+               :plot, T)
+exec #print("plot phasevocoder(vector(pluck(c4), pluck(d4)), ramp())[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(vector(pluck(c4), pluck(d4)), ramp())[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), 512)[0]",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), 512)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), 512)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), vector(512, 1024))[0]",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), vector(512, 1024))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), vector(ramp(), ramp() * 2), vector(512, 1024))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), vector(512, 1024), vector(128, 64))[0]",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), ramp(), vector(512, 1024), vector(128, 64))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), vector(512, 1024), vector(128, 64))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), 512, 128, vector(0, 1))[0]",
+               :plot, T)
+exec #print("plot phasevocoder(pluck(c4), ramp(), 512, 128, vector(0, 1))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), 512, 128, vector(0, 1))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot phasevocoder(c4, ramp())",
+               :nyerror, {"PHASEVOCODER" 1 {{SOUND} {}}})
+exec #print("plot phasevocoder(c4, ramp())")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(c4, ramp())", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PHASEVOCODER, 1st argument must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot phasevocoder(pluck(c4), 23)",
+               :nyerror, {"PHASEVOCODER" 2 {{SOUND} "map"}})
+exec #print("plot phasevocoder(pluck(c4), 23)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), 23)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PHASEVOCODER, 2nd argument (map) must be a sound or multichannel sound, got 23, a FIXNUM
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), 512.0)",
+               :nyerror, {"PHASEVOCODER" 3 {{INTEGER} "fftsize"}})
+exec #print("plot phasevocoder(pluck(c4), ramp(), 512.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), 512.0)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PHASEVOCODER, 3rd argument (fftsize) must be a integer or array of integers, got 512, a FLONUM
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), 512, 128.0)",
+               :nyerror, {"PHASEVOCODER" 4 {{INTEGER} "hopsize"}})
+exec #print("plot phasevocoder(pluck(c4), ramp(), 512, 128.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), 512, 128.0)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PHASEVOCODER, 4th argument (hopsize) must be a integer or array of integers, got 128, a FLONUM
+
+exec ny:expect("plot phasevocoder(pluck(c4), ramp(), 512, 128, 0.0)",
+               :nyerror, {"PHASEVOCODER" 5 {{INTEGER} "mode"}})
+exec #print("plot phasevocoder(pluck(c4), ramp(), 512, 128, 0.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot phasevocoder(pluck(c4), ramp(), 512, 128, 0.0)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PHASEVOCODER, 5th argument (mode) must be a integer or array of integers, got 0, a FLONUM
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1)",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512)",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128)",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0)",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(vector(pluck(c4), pluck(d4)), const(1.1), const(1.2), 1)[0]",
+               :plot, T)
+exec #print("plot pv-time-pitch(vector(pluck(c4), pluck(d4)), const(1.1), const(1.2), 1)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(vector(pluck(c4), pluck(d4)), const(1.1), const(1.2), 1)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1)[0]",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), vector(const(1.2), const(1.3)), 1)[0]",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), vector(const(1.2), const(1.3)), 1)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), vector(const(1.2), const(1.3)), 1)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), vector(1, 1.1))[0]",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), vector(1, 1.1))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), vector(1, 1.1))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1, vector(512, 1024))[0]",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1, vector(512, 1024))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), vector(const(1.1), const(1.1) * 2), const(1.2), 1, vector(512, 1024))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, vector(512, 1024), vector(128, 64))[0]",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, vector(512, 1024), vector(128, 64))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, vector(512, 1024), vector(128, 64))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, vector(0, 1))[0]",
+               :plot, T)
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, vector(0, 1))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, vector(0, 1))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pv-time-pitch(c4, const(1.1), const(1.2), 1)",
+               :nyerror, {"PV-TIME-PITCH" 1 {{SOUND} "input"}})
+exec #print("plot pv-time-pitch(c4, const(1.1), const(1.2), 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(c4, const(1.1), const(1.2), 1)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PV-TIME-PITCH, 1st argument (input) must be a sound or multichannel sound, got 60, a FLONUM
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), 23, const(1.2), 1)",
+               :nyerror, {"PV-TIME-PITCH" 2 {{SOUND} "stretchfn"}})
+exec #print("plot pv-time-pitch(pluck(c4), 23, const(1.2), 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), 23, const(1.2), 1)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PV-TIME-PITCH, 2nd argument (stretchfn) must be a sound or multichannel sound, got 23, a FIXNUM
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), 1.2, 1, 512.0)",
+               :nyerror, {"PV-TIME-PITCH" 3 {{SOUND} "pitchfn"}})
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), 1.2, 1, 512.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), 1.2, 1, 512.0)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PV-TIME-PITCH, 3rd argument (pitchfn) must be a sound or multichannel sound, got 1.2, a FLONUM
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), lfo(1), 512, 128)",
+               :nyerror, {"PV-TIME-PITCH" 4 {{NUMBER} "dur"}})
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), lfo(1), 512, 128)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), lfo(1), 512, 128)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PV-TIME-PITCH, 4th argument (dur) must be a number or array of numbers, got a SOUND
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512.0, 128)",
+               :nyerror, {"PV-TIME-PITCH" 5 {{INTEGER} "fftsize"}})
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512.0, 128)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512.0, 128)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PV-TIME-PITCH, 5th argument (fftsize) must be a integer or array of integers, got 512, a FLONUM
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128.0)",
+               :nyerror, {"PV-TIME-PITCH" 6 {{INT-OR-NULL} "hopsize"}})
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128.0)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PV-TIME-PITCH, 6th argument (hopsize) must be a integer, NIL or array thereof, got 128, a FLONUM
+
+exec ny:expect("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0.0)",
+               :nyerror, {"PV-TIME-PITCH" 7 {{INTEGER} "mode"}})
+exec #print("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pv-time-pitch(pluck(c4), const(1.1), const(1.2), 1, 512, 128, 0.0)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PV-TIME-PITCH, 7th argument (mode) must be a integer or array of integers, got 0, a FLONUM
+

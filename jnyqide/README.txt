@@ -1,5 +1,6 @@
 Notes on building a Java app for OS X:
 
+---BEGIN OBSOLETE COMMENTS ON APPBUNDLER---
 In this directory, 
    ant jar
 builds the Java jar file containing the NyquistIDE
@@ -14,6 +15,38 @@ Here's how to run jnyqide.jar from command line:
 (This does everything right except the displayed name on menu bar will
     be Main instead of NyquistIDE, which is what you see when you open
     the .app bundle.)
+---END OBSOLETE COMMENTS ON APPBUNDLER---
+
+----------------------------
+some comments on building a Java-based App:
+
+Thanks for all the info. It seems like Apple and Oracle make incompatible changes very frequently. Why go to all the trouble to hide application and version details in JavaAppLauncher and then make it all version-dependent? I went through the ant and app bundler hell less than a year ago, and today I found myself starting all over. I had even less luck than you with JavaAppLauncher (in retrospect, maybe I accidentally left a Java 6 spec in my CMakeFile that build the jar, but that's just one more indication of how brain-damaged all these tools have become).
+
+Here's an alternative approach:
+
+Get your Java app to run from the command line with something like:
+
+java -jar myapp.jar
+
+add some switches to get your app name in the menu bar and your icon to display. Try -Xdock:name and -Xdock:icon. I ended up with more switches, but I'm nor really sure what's necessary:
+
+java -Xdock:name="NyquistIDE" -Xdock:icon=`dirname $0`/../Resources/Nyquist.icns -Dcom.apple.mrj.application.apple.menu.about.name=NyquistIDE -Dapple.laf.useScreenMenuBar=true -DisOSXbundle=true -jar jnyqide.jar 
+
+When that's working, write your own launcher as a shell script. Mine is basically a cd and the previous java command:
+
+#!/bin/sh
+cd `dirname $0`/../Java
+java -Xdock:name="NyquistIDE" -Xdock:icon=`dirname $0`/../Resources/Nyquist.icns -Dcom.apple.mrj.application.apple.menu.about.name=NyquistIDE -Dapple.laf.useScreenMenuBar=true -DisOSXbundle=true -jar jnyqide.jar 
+
+Modify Info.plist so that the "Bundle Executable" is the shell script (make sure the shell script has the execute flag set).
+
+I took out all references to java and jvm in the Info.plist file. Effectively, I believe this means everything relies on the "java" command running a suitable version of Java.
+
+My whole script to compile Java, build the jar, create an Application Bundle, and populate it with lots of auxiliary files is 55 lines. My CMakeLists.txt now has about 6 lines to delete any existing Application Bundle and run the script -- it was much more complicated before.
+
+I make no promises this will work out in practice: If there are Java version problems, I don't know what sorts of errors users will see, but at least you can run the "launcher" or the java command from the command line and see what's going on, as opposed to pop-up mystery messages like "I think you need to install legacy Java 6 but I'm not going to tell you why." 
+ 
+-------------------------------------------------------------------
 
 Documentation from original implementation by
   Dave Mowatt, dmowatt@andrew.cmu.edu

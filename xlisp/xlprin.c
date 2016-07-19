@@ -209,7 +209,7 @@ LOCAL void putqstring(LVAL fptr, LVAL str)
     for (p = getstring(str); (ch = *p) != '\0'; ++p)
 
         /* check for a control character */
-        if (ch < 040 || ch == '\\' || ch > 0176) {
+        if (ch < 040 || ch == '\\' || ch > 0176 || ch == '"') {
             xlputc(fptr,'\\');
             switch (ch) {
             case '\011':
@@ -226,6 +226,9 @@ LOCAL void putqstring(LVAL fptr, LVAL str)
                     break;
             case '\\':
                     xlputc(fptr,'\\');
+                    break;
+            case '"':
+                    xlputc(fptr, '"');
                     break;
             default:
                     putoct(fptr,ch);

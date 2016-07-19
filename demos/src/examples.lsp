@@ -11,10 +11,10 @@
 ;(defun build-harmonic (n) (snd-sine 0 n tablesize 1))
 
 (defun mkwave ()
-  (setf *table* (sim (scale 0.5  (build-harmonic 1.0 2048))
-                    (scale 0.25  (build-harmonic 2.0 2048))
-                    (scale 0.125 (build-harmonic 3.0 2048))
-                    (scale 0.062 (build-harmonic 4.0 2048))))
+  (setf *table* (sim (scale 0.5  (build-harmonic 1 2048))
+                    (scale 0.25  (build-harmonic 2 2048))
+                    (scale 0.125 (build-harmonic 3 2048))
+                    (scale 0.062 (build-harmonic 4 2048))))
   (setf *table* (list *table* (hz-to-step 1) T)))
 
 (cond ((not (boundp '*mkwave*))

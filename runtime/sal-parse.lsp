@@ -45,7 +45,7 @@
 
 (defparameter +operators+
   ;; each op is: (<token-class> <sal-name> <lisp-form>)
-  '((:+ "+" sum)
+  '((:+ "+" sal-plus)
     (:- "-" diff)
     (:* "*" mult)
     (:/ "/" /)
@@ -973,7 +973,7 @@
 ;;   read later (maybe) by ERREXIT. 
 ;; If input is a token list, it is assumed these are leftovers
 ;;   from tokenized text, so *sal-input-text* is already valid.
-;; *Therfore*, do not call sal-parse with tokens unless 
+;; *Therefore*, do not call sal-parse with tokens unless 
 ;;   *sal-input-text* is set to the corresponding text.
 ;;
 (defun sal-parse (grammar pat input multiple-statements file)
@@ -1788,6 +1788,8 @@
                   (push (intern (token-string (parse-token))) elts))
                  ((token-is :lc)
                   (push (parse-list) elts))
+                 ((token-is :co)
+                  (errexit "expected list element or right brace; do not use commas inside braces {}"))
                  (t
                   (errexit "expected list element or right brace"))))
     (parse-token)

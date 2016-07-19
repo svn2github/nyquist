@@ -1,0 +1,744 @@
+; typechecks2.sal -- unit tests for typechecks
+; 
+; This code was generated from typechecks.txt by
+; typecheck-gen.lsp
+
+exec ny:expect("plot lfo(6, 2) ",
+               :plot, T)
+exec #print("plot lfo(6, 2) ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(6, 2) ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lfo(6, const(2)) ; error",
+               :nyerror, {"LFO" 2 {{NUMBER} "duration"}})
+exec #print("plot lfo(6, const(2)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(6, const(2)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LFO, 2nd argument (duration) must be a number, got a SOUND
+
+exec ny:expect("plot lfo(6, 2, *sine-table*) ",
+               :plot, T)
+exec #print("plot lfo(6, 2, *sine-table*) ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(6, 2, *sine-table*) ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lfo(6, 2, osc(c4)) ; error",
+               :error, "In LFO, 3rd argument (table) should be a list of 3 elements")
+exec #print("plot lfo(6, 2, osc(c4)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(6, 2, osc(c4)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lfo(6, 2, *sine-table*, 1.0)",
+               :plot, T)
+exec #print("plot lfo(6, 2, *sine-table*, 1.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(6, 2, *sine-table*, 1.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot lfo(6, 2, *sine-table*, lfo(1.0)) ; error",
+               :nyerror, {"LFO" 4 {{NUMBER} "phase"}})
+exec #print("plot lfo(6, 2, *sine-table*, lfo(1.0)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot lfo(6, 2, *sine-table*, lfo(1.0)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LFO, 4th argument (phase) must be a number, got a SOUND
+
+exec ny:expect("plot fmlfo(6) ; error",
+               :nyerror, {"FMLFO" 1 {{SOUND} "freq"}})
+exec #print("plot fmlfo(6) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot fmlfo(6) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FMLFO, 1st argument (freq) must be a sound, got 6, a FIXNUM
+
+exec ny:expect("plot fmlfo(const(6)) ",
+               :plot, T)
+exec #print("plot fmlfo(const(6)) ")
+exec catch(quote(simulated-error), 
+           sal-compile("plot fmlfo(const(6)) ", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot fmlfo(const(6), *sine-table*)",
+               :plot, T)
+exec #print("plot fmlfo(const(6), *sine-table*)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot fmlfo(const(6), *sine-table*)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot fmlfo(const(6), lfo(1)) ; error",
+               :error, "In FMLFO, 2nd argument (table) should be a list of 3 elements")
+exec #print("plot fmlfo(const(6), lfo(1)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot fmlfo(const(6), lfo(1)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot fmlfo(const(6), *sine-table*, 1.0)",
+               :plot, T)
+exec #print("plot fmlfo(const(6), *sine-table*, 1.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot fmlfo(const(6), *sine-table*, 1.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot fmlfo(const(6), *sine-table*, const(1.0)) ; error",
+               :nyerror, {"FMLFO" 3 {{NUMBER} "phase"}})
+exec #print("plot fmlfo(const(6), *sine-table*, const(1.0)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot fmlfo(const(6), *sine-table*, const(1.0)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FMLFO, 3rd argument (phase) must be a number, got a SOUND
+
+exec ny:expect("plot osc(a4)",
+               :plot, T)
+exec #print("plot osc(a4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(a4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(a4, 2.0)",
+               :plot, T)
+exec #print("plot osc(a4, 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(a4, 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(a4, 2.0, *sine-table*)",
+               :plot, T)
+exec #print("plot osc(a4, 2.0, *sine-table*)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(a4, 2.0, *sine-table*)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(a4, 2.0, *sine-table*, 1.0)",
+               :plot, T)
+exec #print("plot osc(a4, 2.0, *sine-table*, 1.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(a4, 2.0, *sine-table*, 1.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(const(a4)) ; error",
+               :nyerror, {"OSC" 1 {{STEP} "pitch"}})
+exec #print("plot osc(const(a4)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(const(a4)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In OSC, 1st argument (pitch) must be a step number, got a SOUND
+
+exec ny:expect("plot osc(a4, const(2.0)) ; error",
+               :nyerror, {"OSC" 2 {{NUMBER} "duration"}})
+exec #print("plot osc(a4, const(2.0)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(a4, const(2.0)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In OSC, 2nd argument (duration) must be a number, got a SOUND
+
+exec ny:expect("plot osc(a4, 2.0, osc(c4)) ; error",
+               :error, "In OSC, 3rd argument (table) should be a list of 3 elements")
+exec #print("plot osc(a4, 2.0, osc(c4)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(a4, 2.0, osc(c4)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(a4, 2.0, *sine-table*, const(1.0)) ; error",
+               :nyerror, {"OSC" 4 {{NUMBER} "phase"}})
+exec #print("plot osc(a4, 2.0, *sine-table*, const(1.0)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(a4, 2.0, *sine-table*, const(1.0)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In OSC, 4th argument (phase) must be a number, got a SOUND
+
+exec ny:expect("plot partial(a4, pwl(0.5, 1, 1))",
+               :plot, T)
+exec #print("plot partial(a4, pwl(0.5, 1, 1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot partial(a4, pwl(0.5, 1, 1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot partial(const(a4), pwl(0.5, 1, 1)) ; error",
+               :nyerror, {"PARTIAL" 1 {{STEP} "steps"}})
+exec #print("plot partial(const(a4), pwl(0.5, 1, 1)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot partial(const(a4), pwl(0.5, 1, 1)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PARTIAL, 1st argument (steps) must be a step number, got a SOUND
+
+exec ny:expect("plot partial(a4, 2) ; error",
+               :nyerror, {"PARTIAL" 2 {{SOUND} "env"}})
+exec #print("plot partial(a4, 2) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot partial(a4, 2) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PARTIAL, 2nd argument (env) must be a sound, got 2, a FIXNUM
+
+exec ny:expect("plot sampler(a4, pwl(0.5, 1, 1))",
+               :plot, T)
+exec #print("plot sampler(a4, pwl(0.5, 1, 1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sampler(a4, pwl(0.5, 1, 1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sampler(const(a4), pwl(0.5, 1, 1)) ; error",
+               :nyerror, {"SAMPLER" 1 {{STEP} "pitch"}})
+exec #print("plot sampler(const(a4), pwl(0.5, 1, 1)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sampler(const(a4), pwl(0.5, 1, 1)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SAMPLER, 1st argument (pitch) must be a step number, got a SOUND
+
+exec ny:expect("plot sampler(a4, 2) ; error",
+               :nyerror, {"SAMPLER" 2 {{SOUND} "modulation"}})
+exec #print("plot sampler(a4, 2) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sampler(a4, 2) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SAMPLER, 2nd argument (modulation) must be a sound, got 2, a FIXNUM
+
+exec ny:expect("plot sampler(a4, pwl(0.5, 1, 1), *sine-table*)",
+               :error, "In SAMPLER, 3rd argument (table) should be a list whose 3rd element is the sample start time")
+exec #print("plot sampler(a4, pwl(0.5, 1, 1), *sine-table*)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sampler(a4, pwl(0.5, 1, 1), *sine-table*)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sampler(a4, pwl(0.5, 1, 1), hzosc(1.0)) ; error",
+               :error, "In SAMPLER, 3rd argument (table) should be a list of 3 elements")
+exec #print("plot sampler(a4, pwl(0.5, 1, 1), hzosc(1.0)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sampler(a4, pwl(0.5, 1, 1), hzosc(1.0)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2)",
+               :plot, T)
+exec #print("plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2.1) ; error",
+               :nyerror, {"BUZZ" 3 {{INTEGER} "npoints"}})
+exec #print("plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2.1) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sampler(a4, pwl(0.5, 1, 1), *sine-sample*, 2.1) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In BUZZ, 3rd argument (npoints) must be a integer, got 2.1, a FLONUM
+
+exec ny:expect("plot sine(a4)",
+               :plot, T)
+exec #print("plot sine(a4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sine(a4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sine(const(a4)) ; error",
+               :nyerror, {"SINE" 1 {{STEP} "steps"}})
+exec #print("plot sine(const(a4)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sine(const(a4)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SINE, 1st argument (steps) must be a step number, got a SOUND
+
+exec ny:expect("plot sine(a4, 1.0)",
+               :plot, T)
+exec #print("plot sine(a4, 1.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sine(a4, 1.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sine(a4, const(1.0)) ; error",
+               :nyerror, {"SINE" 2 {{NUMBER} "duration"}})
+exec #print("plot sine(a4, const(1.0)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sine(a4, const(1.0)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SINE, 2nd argument (duration) must be a number, got a SOUND
+
+exec ny:expect("plot pluck(a4)",
+               :plot, T)
+exec #print("plot pluck(a4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pluck(a4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pluck(const(a4)) ; error",
+               :nyerror, {"PLUCK" 1 {{NUMBER} "steps"}})
+exec #print("plot pluck(const(a4)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pluck(const(a4)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PLUCK, 1st argument (steps) must be a number, got a SOUND
+
+exec ny:expect("plot pluck(a4, 2)",
+               :plot, T)
+exec #print("plot pluck(a4, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pluck(a4, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pluck(a4, const(2)) ; error",
+               :nyerror, {"PLUCK" 2 {{NUMBER} "duration"}})
+exec #print("plot pluck(a4, const(2)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pluck(a4, const(2)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PLUCK, 2nd argument (duration) must be a number, got a SOUND
+
+exec ny:expect("plot pluck(a4, 2, 0.01)",
+               :plot, T)
+exec #print("plot pluck(a4, 2, 0.01)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pluck(a4, 2, 0.01)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pluck(a4, 2, const(0.01)) ; error",
+               :nyerror, {"PLUCK" 3 {{NUMBER} "final-amp"}})
+exec #print("plot pluck(a4, 2, const(0.01)) ; error")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pluck(a4, 2, const(0.01)) ; error", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In PLUCK, 3rd argument (final-amp) must be a number, got a SOUND
+
+exec ny:expect("plot osc(c4) @ 1",
+               :plot, T)
+exec #print("plot osc(c4) @ 1")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(c4) @ 1", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(c4) @ lfo(1)",
+               :error, "1st argument of AT (or 2nd argument of SAL's @ operator) should be a time offset number")
+exec #print("plot osc(c4) @ lfo(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(c4) @ lfo(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(c4) @@ 1",
+               :plot, T)
+exec #print("plot osc(c4) @@ 1")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(c4) @@ 1", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc(c4) @@ lfo(1)",
+               :error, "1st argument of AT-ABS (or 2nd argument of SAL's @@ operator) should be a number (start time)")
+exec #print("plot osc(c4) @@ lfo(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc(c4) @@ lfo(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot clip(osc(c4), 0.5)",
+               :plot, T)
+exec #print("plot clip(osc(c4), 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot clip(osc(c4), 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print clip(0.6, 0.5)",
+               :print, 0.5)
+exec #print("print clip(0.6, 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("print clip(0.6, 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot clip(vector(osc(c4), osc(c4)), 0.5)[0]",
+               :plot, T)
+exec #print("plot clip(vector(osc(c4), osc(c4)), 0.5)[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot clip(vector(osc(c4), osc(c4)), 0.5)[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot clip(\"bad\", 0.5)",
+               :nyerror, {"CLIP" 1 {{NUMBER SOUND} {}}})
+exec #print("plot clip(\"bad\", 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot clip(\"bad\", 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CLIP, 1st argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("plot clip(osc(c4), \"bad\")",
+               :nyerror, {"CLIP" 2 {{NUMBER} {}}})
+exec #print("plot clip(osc(c4), \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot clip(osc(c4), \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CLIP, 2nd argument must be a number, got "bad", a STRING
+
+exec ny:expect("plot control-srate-abs(100, lfo(100))",
+               :plot, T)
+exec #print("plot control-srate-abs(100, lfo(100))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control-srate-abs(100, lfo(100))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot control-srate-abs(osc(c4), lfo(100))",
+               :nyerror, {"CONTROL-SRATE-ABS" 1 {{NUMBER} "sample rate"}})
+exec #print("plot control-srate-abs(osc(c4), lfo(100))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control-srate-abs(osc(c4), lfo(100))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CONTROL-SRATE-ABS, 1st argument (sample rate) must be a number, got a SOUND
+
+exec ny:expect("print db-to-linear(-6)",
+               :print, 0.501187)
+exec #print("print db-to-linear(-6)")
+exec catch(quote(simulated-error), 
+           sal-compile("print db-to-linear(-6)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot db-to-linear(lfo(1))",
+               :plot, T)
+exec #print("plot db-to-linear(lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot db-to-linear(lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot db-to-linear(vector(lfo(1), lfo(2)))[0]",
+               :plot, T)
+exec #print("plot db-to-linear(vector(lfo(1), lfo(2)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot db-to-linear(vector(lfo(1), lfo(2)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot db-to-linear(\"bad\")",
+               :nyerror, {"DB-TO-LINEAR" 0 {{NUMBER SOUND} {}}})
+exec #print("plot db-to-linear(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot db-to-linear(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In DB-TO-LINEAR, argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("print linear-to-db(2)",
+               :print, 6.0206)
+exec #print("print linear-to-db(2)")
+exec catch(quote(simulated-error), 
+           sal-compile("print linear-to-db(2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot linear-to-db(1 + lfo(1))",
+               :plot, T)
+exec #print("plot linear-to-db(1 + lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot linear-to-db(1 + lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot linear-to-db(1 + vector(lfo(1), lfo(2)))[0]",
+               :plot, T)
+exec #print("plot linear-to-db(1 + vector(lfo(1), lfo(2)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot linear-to-db(1 + vector(lfo(1), lfo(2)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print linear-to-db(\"bad\")",
+               :nyerror, {"LINEAR-TO-DB" 0 {{NUMBER SOUND} {}}})
+exec #print("print linear-to-db(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("print linear-to-db(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LINEAR-TO-DB, argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("print step-to-hz(67)",
+               :print, 391.995)
+exec #print("print step-to-hz(67)")
+exec catch(quote(simulated-error), 
+           sal-compile("print step-to-hz(67)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot step-to-hz(67 + lfo(4) * 4)",
+               :plot, T)
+exec #print("plot step-to-hz(67 + lfo(4) * 4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot step-to-hz(67 + lfo(4) * 4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot step-to-hz(60 + vector(lfo(4), lfo(6)))[0]",
+               :plot, T)
+exec #print("plot step-to-hz(60 + vector(lfo(4), lfo(6)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot step-to-hz(60 + vector(lfo(4), lfo(6)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print step-to-hz(\"bad\")",
+               :nyerror, {"STEP-TO-HZ" 0 {{NUMBER SOUND} {}}})
+exec #print("print step-to-hz(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("print step-to-hz(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In STEP-TO-HZ, argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("print hz-to-step(440)",
+               :print, 69)
+exec #print("print hz-to-step(440)")
+exec catch(quote(simulated-error), 
+           sal-compile("print hz-to-step(440)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hz-to-step(440 + lfo(4) * 4)",
+               :plot, T)
+exec #print("plot hz-to-step(440 + lfo(4) * 4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hz-to-step(440 + lfo(4) * 4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot hz-to-step(60 + vector(lfo(40), lfo(60)))[0]",
+               :plot, T)
+exec #print("plot hz-to-step(60 + vector(lfo(40), lfo(60)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot hz-to-step(60 + vector(lfo(40), lfo(60)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print hz-to-step(\"bad\")",
+               :nyerror, {"HZ-TO-STEP" 0 {{NUMBER SOUND} {}}})
+exec #print("print hz-to-step(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("print hz-to-step(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In HZ-TO-STEP, argument must be a number, sound or array thereof, got "bad", a STRING
+
+exec ny:expect("print sref(lfo(6), 0.5)",
+               :print, 0)
+exec #print("print sref(lfo(6), 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("print sref(lfo(6), 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print sref(vector(lfo(6), lfo(5)), 0.5)",
+               :nyerror, {"SREF" 1 {{SOUND} "sound"}})
+exec #print("print sref(vector(lfo(6), lfo(5)), 0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("print sref(vector(lfo(6), lfo(5)), 0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SREF, 1st argument (sound) must be a sound, got a 2-channel SOUND
+
+exec ny:expect("print sref(lfo(6), lfo(0.5))",
+               :nyerror, {"SREF" 2 {{NUMBER} "time"}})
+exec #print("print sref(lfo(6), lfo(0.5))")
+exec catch(quote(simulated-error), 
+           sal-compile("print sref(lfo(6), lfo(0.5))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SREF, 2nd argument (time) must be a number, got a SOUND
+
+exec ny:expect("plot extract(0, 1, lfo(5))",
+               :plot, T)
+exec #print("plot extract(0, 1, lfo(5))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract(0, 1, lfo(5))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot extract(lfo(1), 1, lfo(5))",
+               :nyerror, {"EXTRACT" 1 {{NUMBER} "start"}})
+exec #print("plot extract(lfo(1), 1, lfo(5))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract(lfo(1), 1, lfo(5))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EXTRACT, 1st argument (start) must be a number, got a SOUND
+
+exec ny:expect("plot extract(0, lfo(1), lfo(5))",
+               :nyerror, {"EXTRACT" 2 {{NUMBER} "stop"}})
+exec #print("plot extract(0, lfo(1), lfo(5))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract(0, lfo(1), lfo(5))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EXTRACT, 2nd argument (stop) must be a number, got a SOUND
+
+exec ny:expect("plot extract(0, 1, 2)",
+               :nyerror, {"EXTRACT" 3 {{SOUND} "sound"}})
+exec #print("plot extract(0, 1, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract(0, 1, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EXTRACT, 3rd argument (sound) must be a sound, got 2, a FIXNUM
+
+exec ny:expect("plot extract-abs(0, 1, lfo(1))",
+               :plot, T)
+exec #print("plot extract-abs(0, 1, lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract-abs(0, 1, lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot extract-abs(0, 1, lfo(1), 0.1)",
+               :plot, T)
+exec #print("plot extract-abs(0, 1, lfo(1), 0.1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract-abs(0, 1, lfo(1), 0.1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot extract-abs(lfo(1), 1, lfo(1))",
+               :nyerror, {"EXTRACT-ABS" 1 {{NUMBER} "start"}})
+exec #print("plot extract-abs(lfo(1), 1, lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract-abs(lfo(1), 1, lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EXTRACT-ABS, 1st argument (start) must be a number, got a SOUND
+
+exec ny:expect("plot extract-abs(0, lfo(1), lfo(1))",
+               :nyerror, {"EXTRACT-ABS" 2 {{NUMBER} "stop"}})
+exec #print("plot extract-abs(0, lfo(1), lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract-abs(0, lfo(1), lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EXTRACT-ABS, 2nd argument (stop) must be a number, got a SOUND
+
+exec ny:expect("plot extract-abs(0, 1, 2)",
+               :nyerror, {"EXTRACT-ABS" 3 {{SOUND} "sound"}})
+exec #print("plot extract-abs(0, 1, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract-abs(0, 1, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EXTRACT-ABS, 3rd argument (sound) must be a sound, got 2, a FIXNUM
+
+exec ny:expect("plot extract-abs(0, 1, lfo(1), lfo(2))",
+               :nyerror, {"EXTRACT-ABS" 4 {{NUMBER} "start-time"}})
+exec #print("plot extract-abs(0, 1, lfo(1), lfo(2))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot extract-abs(0, 1, lfo(1), lfo(2))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In EXTRACT-ABS, 4th argument (start-time) must be a number, got a SOUND
+
+exec ny:expect("print local-to-global(0.5)",
+               :print, 0.5)
+exec #print("print local-to-global(0.5)")
+exec catch(quote(simulated-error), 
+           sal-compile("print local-to-global(0.5)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print local-to-global(lfo(0.5))",
+               :nyerror, {"LOCAL-TO-GLOBAL" 0 {{NUMBER} "local-time"}})
+exec #print("print local-to-global(lfo(0.5))")
+exec catch(quote(simulated-error), 
+           sal-compile("print local-to-global(lfo(0.5))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In LOCAL-TO-GLOBAL, argument (local-time) must be a number, got a SOUND
+
+exec ny:expect("plot loud(2, lfo(1))",
+               :plot, T)
+exec #print("plot loud(2, lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot loud(2, lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot loud(2 + lfo(2), lfo(1))",
+               :plot, T)
+exec #print("plot loud(2 + lfo(2), lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot loud(2 + lfo(2), lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot loud-abs(2, lfo(1))",
+               :plot, T)
+exec #print("plot loud-abs(2, lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot loud-abs(2, lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot loud-abs(2 + lfo(2), lfo(1))",
+               :plot, T)
+exec #print("plot loud-abs(2 + lfo(2), lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot loud-abs(2 + lfo(2), lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot scale-db(6, lfo(6))",
+               :plot, T)
+exec #print("plot scale-db(6, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-db(6, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot scale-db(vector(6, 12), lfo(6))[0]",
+               :plot, T)
+exec #print("plot scale-db(vector(6, 12), lfo(6))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-db(vector(6, 12), lfo(6))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot scale-db(6, vector(lfo(6), lfo(5)))[0]",
+               :plot, T)
+exec #print("plot scale-db(6, vector(lfo(6), lfo(5)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-db(6, vector(lfo(6), lfo(5)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot scale-db(vector(6, 12), vector(lfo(6), lfo(5)))[0]",
+               :plot, T)
+exec #print("plot scale-db(vector(6, 12), vector(lfo(6), lfo(5)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-db(vector(6, 12), vector(lfo(6), lfo(5)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot scale-db(\"bad\", lfo(6))",
+               :nyerror, {"SCALE-DB" 1 {{NUMBER} "factor"}})
+exec #print("plot scale-db(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-db(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SCALE-DB, 1st argument (factor) must be a number or array of numbers, got "bad", a STRING
+
+exec ny:expect("plot scale-db(6, 12)",
+               :nyerror, {"SCALE-DB" 2 {{SOUND} "sound"}})
+exec #print("plot scale-db(6, 12)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-db(6, 12)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SCALE-DB, 2nd argument (sound) must be a sound or multichannel sound, got 12, a FIXNUM
+
+exec ny:expect("print set-control-srate(2205)",
+               :print, T)
+exec #print("print set-control-srate(2205)")
+exec catch(quote(simulated-error), 
+           sal-compile("print set-control-srate(2205)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print set-control-srate(\"bad\")",
+               :nyerror, {"SET-CONTROL-SRATE" 0 {{NUMBER} "rate"}})
+exec #print("print set-control-srate(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("print set-control-srate(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SET-CONTROL-SRATE, argument (rate) must be a number, got "bad", a STRING
+
+exec ny:expect("print set-sound-srate(2205)",
+               :print, T)
+exec #print("print set-sound-srate(2205)")
+exec catch(quote(simulated-error), 
+           sal-compile("print set-sound-srate(2205)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("print set-sound-srate(\"bad\")",
+               :nyerror, {"SET-SOUND-SRATE" 0 {{NUMBER} "rate"}})
+exec #print("print set-sound-srate(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("print set-sound-srate(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SET-SOUND-SRATE, argument (rate) must be a number, got "bad", a STRING
+
+exec ny:expect("plot sound-srate-abs(100, lfo(6))",
+               :plot, T)
+exec #print("plot sound-srate-abs(100, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sound-srate-abs(100, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sound-srate-abs(\"bad\", lfo(6))",
+               :nyerror, {"SOUND-SRATE-ABS" 1 {{NUMBER} "sample rate"}})
+exec #print("plot sound-srate-abs(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sound-srate-abs(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SOUND-SRATE-ABS, 1st argument (sample rate) must be a number, got "bad", a STRING
+
+exec ny:expect("plot stretch(2, lfo(6))",
+               :plot, T)
+exec #print("plot stretch(2, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot stretch(2, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot stretch(\"bad\", lfo(6))",
+               :error, "1st argument of STRETCH (or 2nd argument of SAL's ~ operator) should be a number (stretch factor)")
+exec #print("plot stretch(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot stretch(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+

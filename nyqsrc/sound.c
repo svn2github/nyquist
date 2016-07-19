@@ -534,7 +534,7 @@ void snd_list_unref(snd_list_type list)
     }
 
     while (list && (list != zero_snd_list)) {
-        snd_list_type next;
+        snd_list_type next = NULL;
 
         list->refcnt--;
         if (list->refcnt != 0) {
@@ -553,7 +553,6 @@ void snd_list_unref(snd_list_type list)
             /* free suspension structure */
             /* nyquist_printf("freeing susp@%p\n", list->u.susp); */
             (*(list->u.susp->free))(list->u.susp);
-            next = NULL;
         }
         /* if (list == list_watch) 
                printf("freeing watched snd_list %p\n", list); */

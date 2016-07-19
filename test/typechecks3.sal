@@ -1,0 +1,732 @@
+; typechecks3.sal -- unit tests for typechecks
+; 
+; This code was generated from typechecks.txt by
+; typecheck-gen.lsp
+
+exec ny:expect("plot stretch-abs(2, lfo(6))",
+               :plot, T)
+exec #print("plot stretch-abs(2, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot stretch-abs(2, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot stretch-abs(\"bad\", lfo(6))",
+               :error, "1st argument of STRETCH-ABS (or 2nd argument of SAL's ~~ operator) should be a number (stretch factor)")
+exec #print("plot stretch-abs(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot stretch-abs(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sustain(2, lfo(6))",
+               :plot, T)
+exec #print("plot sustain(2, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sustain(2, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sustain(\"bad\", lfo(6))",
+               :nyerror, {"SUSTAIN" 1 {{NUMBER SOUND} {}}})
+exec #print("plot sustain(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sustain(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SUSTAIN, 1st argument must be a number or sound, got "bad", a STRING
+
+exec ny:expect("plot sustain-abs(2, lfo(6))",
+               :plot, T)
+exec #print("plot sustain-abs(2, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sustain-abs(2, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sustain-abs(\"bad\", lfo(6))",
+               :nyerror, {"SUSTAIN-ABS" 1 {{NUMBER SOUND} {}}})
+exec #print("plot sustain-abs(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sustain-abs(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SUSTAIN-ABS, 1st argument must be a number or sound, got "bad", a STRING
+
+exec ny:expect("plot transpose(2, lfo(6))",
+               :plot, T)
+exec #print("plot transpose(2, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot transpose(2, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot transpose(\"bad\", lfo(6))",
+               :nyerror, {"TRANSPOSE" 1 {{NUMBER SOUND} {}}})
+exec #print("plot transpose(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot transpose(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TRANSPOSE, 1st argument must be a number or sound, got "bad", a STRING
+
+exec ny:expect("plot transpose-abs(2, lfo(6))",
+               :plot, T)
+exec #print("plot transpose-abs(2, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot transpose-abs(2, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot transpose-abs(\"bad\", lfo(6))",
+               :nyerror, {"TRANSPOSE-ABS" 1 {{NUMBER} {}}})
+exec #print("plot transpose-abs(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot transpose-abs(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In TRANSPOSE-ABS, 1st argument must be a number, got "bad", a STRING
+
+exec ny:expect("plot control-warp(ramp() ~ 2, lfo(6))",
+               :plot, T)
+exec #print("plot control-warp(ramp() ~ 2, lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control-warp(ramp() ~ 2, lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot control-warp(\"bad\", lfo(6))",
+               :nyerror, {"CONTROL-WARP" 1 {{SOUND} "warp-fn"}})
+exec #print("plot control-warp(\"bad\", lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control-warp(\"bad\", lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CONTROL-WARP, 1st argument (warp-fn) must be a sound, got "bad", a STRING
+
+exec ny:expect("plot control-warp(ramp() ~ 2, \"bad\")",
+               :nyerror, {"CONTROL-WARP" 2 {{SOUND} "control"}})
+exec #print("plot control-warp(ramp() ~ 2, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control-warp(ramp() ~ 2, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CONTROL-WARP, 2nd argument (control) must be a sound, got "bad", a STRING
+
+exec ny:expect("plot control-warp(ramp() ~ 2, lfo(6), 100)",
+               :plot, T)
+exec #print("plot control-warp(ramp() ~ 2, lfo(6), 100)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control-warp(ramp() ~ 2, lfo(6), 100)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot control-warp(ramp() ~ 2, lfo(6), \"bad\")",
+               :nyerror, {"CONTROL-WARP" 3 {{NUMBER} "wrate"}})
+exec #print("plot control-warp(ramp() ~ 2, lfo(6), \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control-warp(ramp() ~ 2, lfo(6), \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CONTROL-WARP, 3rd argument (wrate) must be a number, got "bad", a STRING
+
+exec ny:expect("plot cue(lfo(6))",
+               :plot, T)
+exec #print("plot cue(lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot cue(lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot cue(vector(lfo(6), lfo(4)))[0]",
+               :plot, T)
+exec #print("plot cue(vector(lfo(6), lfo(4)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot cue(vector(lfo(6), lfo(4)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot cue(\"bad\")",
+               :nyerror, {"CUE" 0 {{SOUND} {}}})
+exec #print("plot cue(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot cue(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CUE, argument must be a sound or multichannel sound, got "bad", a STRING
+
+exec ny:expect("plot sound(lfo(6))",
+               :plot, T)
+exec #print("plot sound(lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sound(lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sound(vector(lfo(6), lfo(4)))[0]",
+               :plot, T)
+exec #print("plot sound(vector(lfo(6), lfo(4)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sound(vector(lfo(6), lfo(4)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot sound(\"bad\")",
+               :nyerror, {"SOUND" 0 {{SOUND} {}}})
+exec #print("plot sound(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot sound(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SOUND, argument must be a sound or multichannel sound, got "bad", a STRING
+
+exec ny:expect("plot scale-srate(lfo(6), 2)",
+               :plot, T)
+exec #print("plot scale-srate(lfo(6), 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-srate(lfo(6), 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot scale-srate(\"bad\", 2)",
+               :nyerror, {"SCALE-SRATE" 1 {{SOUND} "sound"}})
+exec #print("plot scale-srate(\"bad\", 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-srate(\"bad\", 2)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SCALE-SRATE, 1st argument (sound) must be a sound, got "bad", a STRING
+
+exec ny:expect("plot scale-srate(lfo(6), \"bad\")",
+               :nyerror, {"SCALE-SRATE" 2 {{NUMBER} "scale"}})
+exec #print("plot scale-srate(lfo(6), \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot scale-srate(lfo(6), \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SCALE-SRATE, 2nd argument (scale) must be a number, got "bad", a STRING
+
+exec ny:expect("plot shift-time(lfo(6), 1)",
+               :plot, T)
+exec #print("plot shift-time(lfo(6), 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot shift-time(lfo(6), 1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot shift-time(\"bad\", 1)",
+               :nyerror, {"SHIFT-TIME" 1 {{SOUND} "sound"}})
+exec #print("plot shift-time(\"bad\", 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot shift-time(\"bad\", 1)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SHIFT-TIME, 1st argument (sound) must be a sound, got "bad", a STRING
+
+exec ny:expect("plot shift-time(lfo(6), \"bad\")",
+               :nyerror, {"SHIFT-TIME" 2 {{NUMBER} "shift"}})
+exec #print("plot shift-time(lfo(6), \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot shift-time(lfo(6), \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In SHIFT-TIME, 2nd argument (shift) must be a number, got "bad", a STRING
+
+exec ny:expect("plot control(lfo(6))",
+               :plot, T)
+exec #print("plot control(lfo(6))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control(lfo(6))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot control(vector(lfo(6), lfo(4)))[0]",
+               :plot, T)
+exec #print("plot control(vector(lfo(6), lfo(4)))[0]")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control(vector(lfo(6), lfo(4)))[0]", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot control(\"bad\")",
+               :nyerror, {"CONTROL" 0 {{SOUND} {}}})
+exec #print("plot control(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot control(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CONTROL, argument must be a sound or multichannel sound, got "bad", a STRING
+
+exec ny:expect("print s-save(osc(c4), ny:all, \"temp.wav\")",
+               :print, 0.999999)
+exec #print("print s-save(osc(c4), ny:all, \"temp.wav\")")
+exec catch(quote(simulated-error), 
+           sal-compile("print s-save(osc(c4), ny:all, \"temp.wav\")", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot cue-file(\"temp.wav\")",
+               :plot, T)
+exec #print("plot cue-file(\"temp.wav\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot cue-file(\"temp.wav\")", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot cue-file(lfo(1))",
+               :nyerror, {"CUE-FILE" 0 {{STRING} "name"}})
+exec #print("plot cue-file(lfo(1))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot cue-file(lfo(1))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In CUE-FILE, argument (name) must be a string, got a SOUND
+
+exec ny:expect("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8)",
+               :plot, T)
+exec #print("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, 2.0)",
+               :plot, T)
+exec #print("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(\"bad\", 0.2, 0.3, 1, 0.9, 0.8, 2.0)",
+               :error, "In ENV, expected 6 numbers (t1, t2, t4, l1, l2, l3)")
+exec #print("plot env(\"bad\", 0.2, 0.3, 1, 0.9, 0.8, 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(\"bad\", 0.2, 0.3, 1, 0.9, 0.8, 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(0.1, \"bad\", 0.3, 1, 0.9, 0.8, 2.0)",
+               :error, "In ENV, expected 6 numbers (t1, t2, t4, l1, l2, l3)")
+exec #print("plot env(0.1, \"bad\", 0.3, 1, 0.9, 0.8, 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, \"bad\", 0.3, 1, 0.9, 0.8, 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(0.1, 0.2, \"bad\", 1, 0.9, 0.8, 2.0)",
+               :error, "In ENV, expected 6 numbers (t1, t2, t4, l1, l2, l3)")
+exec #print("plot env(0.1, 0.2, \"bad\", 1, 0.9, 0.8, 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, 0.2, \"bad\", 1, 0.9, 0.8, 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(0.1, 0.2, 0.3, \"bad\", 0.9, 0.8, 2.0)",
+               :error, "In ENV, expected 6 numbers (t1, t2, t4, l1, l2, l3)")
+exec #print("plot env(0.1, 0.2, 0.3, \"bad\", 0.9, 0.8, 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, 0.2, 0.3, \"bad\", 0.9, 0.8, 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(0.1, 0.2, 0.3, 1, \"bad\", 0.8, 2.0)",
+               :error, "In ENV, expected 6 numbers (t1, t2, t4, l1, l2, l3)")
+exec #print("plot env(0.1, 0.2, 0.3, 1, \"bad\", 0.8, 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, 0.2, 0.3, 1, \"bad\", 0.8, 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(0.1, 0.2, 0.3, 1, 0.9, \"bad\", 2.0)",
+               :error, "In ENV, expected 6 numbers (t1, t2, t4, l1, l2, l3)")
+exec #print("plot env(0.1, 0.2, 0.3, 1, 0.9, \"bad\", 2.0)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, 0.2, 0.3, 1, 0.9, \"bad\", 2.0)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, \"bad\")",
+               :nyerror, {"ENV" 7 {{NUMBER} "duration"}})
+exec #print("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot env(0.1, 0.2, 0.3, 1, 0.9, 0.8, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In ENV, 7th argument (duration) must be a number, got "bad", a STRING
+
+exec ny:expect("plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, 0.3)",
+               :plot, T)
+exec #print("plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, 0.3)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, 0.3)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot gate(\"bad\", 0.01, 0.01, 0.01, 0.01, 0.3)",
+               :nyerror, {"GATE" 1 {{SOUND} "sound"}})
+exec #print("plot gate(\"bad\", 0.01, 0.01, 0.01, 0.01, 0.3)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot gate(\"bad\", 0.01, 0.01, 0.01, 0.01, 0.3)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In GATE, 1st argument (sound) must be a sound, got "bad", a STRING
+
+exec ny:expect("plot gate(lfo(4), \"bad\", 0.01, 0.01, 0.01, 0.3)",
+               :nyerror, {"GATE" 2 {{NUMBER} "lookahead"}})
+exec #print("plot gate(lfo(4), \"bad\", 0.01, 0.01, 0.01, 0.3)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot gate(lfo(4), \"bad\", 0.01, 0.01, 0.01, 0.3)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In GATE, 2nd argument (lookahead) must be a number, got "bad", a STRING
+
+exec ny:expect("plot gate(lfo(4), 0.01, \"bad\", 0.01, 0.01, 0.3)",
+               :nyerror, {"GATE" 3 {{NUMBER} "risetime"}})
+exec #print("plot gate(lfo(4), 0.01, \"bad\", 0.01, 0.01, 0.3)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot gate(lfo(4), 0.01, \"bad\", 0.01, 0.01, 0.3)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In GATE, 3rd argument (risetime) must be a number, got "bad", a STRING
+
+exec ny:expect("plot gate(lfo(4), 0.01, 0.01, \"bad\", 0.01, 0.3)",
+               :nyerror, {"GATE" 4 {{NUMBER} "falltime"}})
+exec #print("plot gate(lfo(4), 0.01, 0.01, \"bad\", 0.01, 0.3)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot gate(lfo(4), 0.01, 0.01, \"bad\", 0.01, 0.3)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In GATE, 4th argument (falltime) must be a number, got "bad", a STRING
+
+exec ny:expect("plot gate(lfo(4), 0.01, 0.01, 0.01, \"bad\", 0.3)",
+               :nyerror, {"GATE" 5 {{NUMBER} "floor"}})
+exec #print("plot gate(lfo(4), 0.01, 0.01, 0.01, \"bad\", 0.3)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot gate(lfo(4), 0.01, 0.01, 0.01, \"bad\", 0.3)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In GATE, 5th argument (floor) must be a number, got "bad", a STRING
+
+exec ny:expect("plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, \"bad\")",
+               :nyerror, {"GATE" 6 {{NUMBER} "threshold"}})
+exec #print("plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot gate(lfo(4), 0.01, 0.01, 0.01, 0.01, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In GATE, 6th argument (threshold) must be a number, got "bad", a STRING
+
+exec ny:expect("plot osc-note(c4)",
+               :plot, T)
+exec #print("plot osc-note(c4)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-note(c4, 2)",
+               :plot, T)
+exec #print("plot osc-note(c4, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7})",
+               :plot, T)
+exec #print("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8)",
+               :plot, T)
+exec #print("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, *TABLE*)",
+               :plot, T)
+exec #print("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, *TABLE*)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, *TABLE*)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-note(\"bad\")",
+               :nyerror, {"OSC-NOTE" 1 {{STEP} "pitch"}})
+exec #print("plot osc-note(\"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(\"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In OSC-NOTE, 1st argument (pitch) must be a step number, got "bad", a STRING
+
+exec ny:expect("plot osc-note(c4, \"bad\")",
+               :nyerror, {"OSC-NOTE" 2 {{NUMBER} "duration"}})
+exec #print("plot osc-note(c4, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In OSC-NOTE, 2nd argument (duration) must be a number, got "bad", a STRING
+
+exec ny:expect("plot osc-note(c4, 1, \"bad\")",
+               :error, "In OSCNOTE, 3rd argument (env-spec) must be a  list of 6 or 7 numbers to pass as arguments to ENV")
+exec #print("plot osc-note(c4, 1, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, 1, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, \"bad\")",
+               :nyerror, {"OSC-NOTE" 4 {{NUMBER} "volume"}})
+exec #print("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In OSC-NOTE, 4th argument (volume) must be a number, got "bad", a STRING
+
+exec ny:expect("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, \"bad\")",
+               :error, "In OSC-NOTE, 5th argument (table) should be a list of 3 elements")
+exec #print("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, \"bad\")")
+exec catch(quote(simulated-error), 
+           sal-compile("plot osc-note(c4, 1, {0.1 0.2 0.3 1 0.8 0.7}, 0.8, \"bad\")", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot force-srate(100, lfo(4))",
+               :plot, T)
+exec #print("plot force-srate(100, lfo(4))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot force-srate(100, lfo(4))", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot force-srate(lfo(5), lfo(4))",
+               :nyerror, {"FORCE-SRATE" 1 {{NUMBER} "sr"}})
+exec #print("plot force-srate(lfo(5), lfo(4))")
+exec catch(quote(simulated-error), 
+           sal-compile("plot force-srate(lfo(5), lfo(4))", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FORCE-SRATE, 1st argument (sr) must be a number, got a SOUND
+
+exec ny:expect("plot force-srate(100, 50)",
+               :nyerror, {"FORCE-SRATE" 2 {{SOUND} "snd"}})
+exec #print("plot force-srate(100, 50)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot force-srate(100, 50)", #t, #f,
+                       "<in typecheck.sal>"))
+; ERROR MSG: In FORCE-SRATE, 2nd argument (snd) must be a sound or multichannel sound, got 50, a FIXNUM
+
+exec ny:expect("plot pwl(1, 1, 2)",
+               :plot, T)
+exec #print("plot pwl(1, 1, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwl(1, 1, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwl(1, 1, nil)",
+               :error, "In PWL, expected only numbers in breakpoint list, got NIL")
+exec #print("plot pwl(1, 1, nil)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwl(1, 1, nil)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwl({1 1 2})",
+               :error, "In PWL, expected only numbers in breakpoint list, got (1 1 2)")
+exec #print("plot pwl({1 1 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwl({1 1 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlr(1, 1, 1)",
+               :plot, T)
+exec #print("plot pwlr(1, 1, 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlr(1, 1, 1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlr({1 1 2})",
+               :error, "In PWLR, expected only numbers in breakpoints list, got (1 1 2)")
+exec #print("plot pwlr({1 1 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlr({1 1 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlr(1, 1, nil)",
+               :error, "In PWLR, expected only numbers in breakpoints list, got NIL")
+exec #print("plot pwlr(1, 1, nil)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlr(1, 1, nil)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwl-list({1 1 2})",
+               :plot, T)
+exec #print("plot pwl-list({1 1 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwl-list({1 1 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwl-list({1 1 nil})",
+               :error, "In PWL-LIST, expected only numbers in breakpoint list, got NIL")
+exec #print("plot pwl-list({1 1 nil})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwl-list({1 1 nil})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwl-list(1)",
+               :error, "In PWL-LIST, expected a list of numbers")
+exec #print("plot pwl-list(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwl-list(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlr-list({1 1 1})",
+               :plot, T)
+exec #print("plot pwlr-list({1 1 1})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlr-list({1 1 1})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlr-list({1 1 nil})",
+               :error, "In PWLR-LIST, expected only numbers in breakpoints list, got NIL")
+exec #print("plot pwlr-list({1 1 nil})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlr-list({1 1 nil})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlr-list(1)",
+               :error, "In PWLR-LIST, expected list of numbers, got 1")
+exec #print("plot pwlr-list(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlr-list(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlv(1, 1, 2)",
+               :plot, T)
+exec #print("plot pwlv(1, 1, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlv(1, 1, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlv(1, 1, nil)",
+               :error, "In PWLV, expected only numbers in breakpoint list")
+exec #print("plot pwlv(1, 1, nil)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlv(1, 1, nil)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlv({1 1 2})",
+               :error, "In PWLV, expected only numbers in breakpoint list")
+exec #print("plot pwlv({1 1 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlv({1 1 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlv-list({1 1 2})",
+               :plot, T)
+exec #print("plot pwlv-list({1 1 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlv-list({1 1 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlv-list({1 1 nil})",
+               :error, "In PWLV-LIST, expected only numbers in breakpoint list")
+exec #print("plot pwlv-list({1 1 nil})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlv-list({1 1 nil})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlv-list(1)",
+               :error, "In PWLV-LIST, expected list of numbers, got 1")
+exec #print("plot pwlv-list(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlv-list(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlvr(1, 1, 1)",
+               :plot, T)
+exec #print("plot pwlvr(1, 1, 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlvr(1, 1, 1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlvr(1, 1, nil)",
+               :error, "In PWLVR, expected only numbers in breakpoints list, got NIL")
+exec #print("plot pwlvr(1, 1, nil)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlvr(1, 1, nil)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlvr({1 1 1})",
+               :error, "In PWLVR, expected only numbers in breakpoints list, got (1 1 1)")
+exec #print("plot pwlvr({1 1 1})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlvr({1 1 1})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlvr-list({1 1 1})",
+               :plot, T)
+exec #print("plot pwlvr-list({1 1 1})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlvr-list({1 1 1})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlvr-list({1 1 nil})",
+               :error, "In PWLVR-LIST, expected only numbers in breakpoints list, got NIL")
+exec #print("plot pwlvr-list({1 1 nil})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlvr-list({1 1 nil})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwlvr-list(1)",
+               :error, "In PWLVR-LIST, expected list of numbers, got 1")
+exec #print("plot pwlvr-list(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwlvr-list(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwe(1, 2, 2)",
+               :plot, T)
+exec #print("plot pwe(1, 2, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwe(1, 2, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwe(1, 2, nil)",
+               :error, "In PWE, expected number in breakpoint list, got NIL")
+exec #print("plot pwe(1, 2, nil)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwe(1, 2, nil)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwe({1 2 2})",
+               :error, "In PWE, expected number in breakpoint list, got (1 2 2)")
+exec #print("plot pwe({1 2 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwe({1 2 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwer(1, 2, 1)",
+               :plot, T)
+exec #print("plot pwer(1, 2, 1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwer(1, 2, 1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwer({1 2 2})",
+               :error, "In PWER, expected only numbers in breakpoints list, got (1 2 2)")
+exec #print("plot pwer({1 2 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwer({1 2 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwer(1, 2, nil)",
+               :error, "In PWER, expected only numbers in breakpoints list, got NIL")
+exec #print("plot pwer(1, 2, nil)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwer(1, 2, nil)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwe-list({1 2 2})",
+               :plot, T)
+exec #print("plot pwe-list({1 2 2})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwe-list({1 2 2})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwe-list({1 2 nil})",
+               :error, "In PWE-LIST, expected number in breakpoint list, got NIL")
+exec #print("plot pwe-list({1 2 nil})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwe-list({1 2 nil})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwe-list(1)",
+               :error, "In PWE-LIST, expected list of numbers, got 1")
+exec #print("plot pwe-list(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwe-list(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwer-list({1 2 1})",
+               :plot, T)
+exec #print("plot pwer-list({1 2 1})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwer-list({1 2 1})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwer-list({1 2 nil})",
+               :error, "In PWER-LIST, expected only numbers in breakpoints list, got NIL")
+exec #print("plot pwer-list({1 2 nil})")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwer-list({1 2 nil})", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwer-list(1)",
+               :error, "In PWER-LIST, expected list of numbers, got 1")
+exec #print("plot pwer-list(1)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwer-list(1)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwev(1, 2, 2)",
+               :plot, T)
+exec #print("plot pwev(1, 2, 2)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwev(1, 2, 2)", #t, #f,
+                       "<in typecheck.sal>"))
+
+exec ny:expect("plot pwev(1, 2, nil)",
+               :error, "In PWEV, expected number in breakpoint list, got NIL")
+exec #print("plot pwev(1, 2, nil)")
+exec catch(quote(simulated-error), 
+           sal-compile("plot pwev(1, 2, nil)", #t, #f,
+                       "<in typecheck.sal>"))
+

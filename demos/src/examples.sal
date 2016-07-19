@@ -18,10 +18,10 @@ define function ex2()
 
 define function mkwave()
   begin
-    set *table* = 0.5 * build-harmonic(1.0, 2048) +
-                  0.25 * build-harmonic(2.0, 2048) +
-                  0.125 * build-harmonic(3.0, 2048) +
-                  0.0625 * build-harmonic(4.0, 2048)
+    set *table* = 0.5 * build-harmonic(1, 2048) +
+                  0.25 * build-harmonic(2, 2048) +
+                  0.125 * build-harmonic(3, 2048) +
+                  0.0625 * build-harmonic(4, 2048)
     set *table* = list(*table*, hz-to-step(1.0), #t)
   end
 
