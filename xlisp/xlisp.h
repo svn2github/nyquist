@@ -49,7 +49,7 @@ HISTORY
 #define NNODES		2000
 #define AFMT		"%lx"
 #define OFFTYPE		long
-#define SAVERESTORE
+/* #define SAVERESTORE */
 #define XL_LITTLE_ENDIAN
 #endif
 
@@ -61,7 +61,7 @@ HISTORY
 #define CVPTR(x)	ptrtoabs(x)
 #define NIL		(void *)0
 extern long ptrtoabs();
-#define SAVERESTORE
+/* #define SAVERESTORE */
 #define XL_LITTLE_ENDIAN
 #endif
 
