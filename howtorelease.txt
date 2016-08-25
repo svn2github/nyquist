@@ -80,8 +80,12 @@ in XCode, choose ny target and Product > Build For > Archiving
   result should end up in /Users/rbd/nyquist/macosxproject/build/Release/ny
 copy result to jnyqide/ny  
 
-in XCode, choose NyquistIDE target and Product > Build For > Archiving
-  result should end up in /Users/rbd/nyquist/jnyqide/NyquistIDE.app
+in XCode,
+   make sure you are building a release version
+   make sure you are building for OS X 10.7 or whatever version you want
+   build ny (just to make sure)
+   build NyquistIDE
+   result should end up in /Users/rbd/nyquist/jnyqide/NyquistIDE.app
 
 run NyquistIDE.app just to make sure it works: cd jnyqide; open NyquistIDE.app
 
