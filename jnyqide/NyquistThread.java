@@ -70,7 +70,11 @@ public class NyquistThread extends Thread {
             // build XLISPPATH environment specification
             String path = System.getenv("XLISPPATH"); // use getenv
             if (path == null) { // getenv failed, use a default setting
-                path = cwd + "/lib/;" + cwd + "/runtime/;" + cwd + "/demos/;";
+                // note: used to use cwd here instead of nd, but on Win7
+                // cwd was the jnyqide directory, not the Nyquist directory
+                // where we ran jnyqide.bat
+                String nd = main.nyquistDir;
+                path = nd + "/lib/;" + nd + "/runtime/;" + nd + "/demos/;";
             }
             // if xlisppath file exists, use it instead
             path = "XLISPPATH=" + StringFromFile("xlisppath", path);
