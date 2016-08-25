@@ -19,7 +19,9 @@ ls -l $EXE_FOLDER
 cd $JNYQIDE_ROOT
 echo "current directory (should be JNYQIDE_ROOT):"
 pwd
-javac -XDignore.symbol.file=true *.java 
+BOOTCLASSPATH=/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/jce.jar:/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/dt.jar
+
+javac -source 1.7 -target 1.7 -XDignore.symbol.file=true *.java 
 
 # Important: run jar in parent dir because everything is in package jnyqide
 cd ..

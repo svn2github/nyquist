@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.10
-10 Jan 2016
+README file for Nyquist Version 3.11
+20 Aug 2016
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -27,6 +27,9 @@ other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.11 provides:
+    Significantly more parameter checking and error reporting for
+        Nyquist primitives.
 Version 3.10 provides:
     phasevocoder -- new phase vocoder function
     pv-pitch-time -- phase vocoder + resampling for independent pitch
@@ -39,39 +42,33 @@ Version 3.10 provides:
     bug fix to snd-down (called by force-srate) that could crash Nyquist
     adjustable upper limit on memory allocated for sounds, see
         snd-set-max-audio-mem function
-
 Version 3.09 provides:
     Various bug fixes
     OS X version is significantly faster
     Security features added to limit CPU, memory, file access (default
         is still unrestricted; this feature is to protect servers)
-
 Version 3.08 provides:
     NyquistIDE opens documentation properly on default browser
     NyquistIDE forcefully terminates nyquist process on exit if needed
     bug fix for mixed sample rate signal handling, affects many primitives
     timed-seq and score-play avoid stack overflow on finely spaced events
     sampler() primitive does error checking to avoid infinite loop
-    
 Version 3.07 provides:
     Bug fixes in NyquistIDE Envelope Editor
     NyquistIDE installs symbolic links to lib and demos
       directories from nyquist directory (where documentation
       is kept) so these folders are not hidden in the app bundle.
     Bug fix in quantize and snd-quantize functions. 
-
 Version 3.06 provides:
     64-bit architecture support
     Access to OGG and FLAC file formats
     Updates for MSVC++2010, VS2012, XCode 4.5
     This is a deadline-driven release. Expect an update soon.
-
 Version 3.05 provides:
     New "UPIC Editor" window in NyquistIDE
     Fix to escape backslashes in default windows directory
     Fix to other problems with Preferences
     Arpeggiator example in nyquist/demos
-
 Version 3.04 provides:
     Updates to libraries, including liblo and PortAudio
     Documentation uses both syntax SAL and Lisp syntax

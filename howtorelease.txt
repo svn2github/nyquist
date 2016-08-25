@@ -20,7 +20,8 @@ Edit Readme.txt to contain correct version number at top.
 
 Add changes to Readme.txt changelog.
 
-Edit runtime/nyinit.lsp to contain correct version number.
+Edit runtime/nyinit.lsp to contain correct version number and
+copyright years.
 
 Edit documentation to contain correct version number.
 
@@ -28,6 +29,9 @@ Is documentation current and installed?
 [Update and Commit via SVN]
 
 To rebuild documentation:
+    if needed, install mactex
+    if needed, install changepage package using:
+       sudo tlmgr install changepage needspace enumitem.sty
     cd docsrc/s2h
     . render-latex.sh -- will run init.lsp which runs
          scribe-to-html-and-latex. Pay close attention

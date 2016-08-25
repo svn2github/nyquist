@@ -160,7 +160,7 @@ extern long ptrtoabs();
 #define AFMT "%lx"
 #define OFFTYPE long
 #define NIL (void *)0
-#define SAVERESTORE
+/* #define SAVERESTORE */
 #include <sys/types.h>
 /* #if __BYTE_ORDER == __LITTLE_ENDIAN */
 #if defined(__LITTLE_ENDIAN__)

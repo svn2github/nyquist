@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 2.8.8)
+
+# if this is OS X, use an old SDK for backward compatibility
+set(CMAKE_OSX_SYSROOT
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
+CACHE STRING "SDK for OSX")
+
+set(MACOSX_DEPLOYMENT_TARGET 10.7 CACHE STRING "minimum OS X target version")
+
 project(nyquist)
 
 ###########
@@ -747,7 +755,7 @@ endif()
       endif(USE_ALSA)
       add_custom_target(jNyqIDE ALL 
           mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden
-        COMMAND javac jnyqide/*.java 
+        COMMAND javac -source 1.6 jnyqide/*.java 
         COMMAND 
           mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java
         COMMAND rm -f jnyqide/jNyqIDE.jar
