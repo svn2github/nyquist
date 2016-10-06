@@ -42,6 +42,7 @@ public class CodePane extends JScrollPane implements DocumentListener,
 	int caretColumn; // holds current column
 	int fontSize; // the font size
 	JLabel statusBar;
+    boolean indentedByNewline;
 	
 	Font mainFont;
 
@@ -54,6 +55,7 @@ public class CodePane extends JScrollPane implements DocumentListener,
 		fontSize = fontSz;
 		mainFrame = mf;
 		statusBar = sb;
+        indentedByNewline = false;
 		isSal = false;
 		doc = new DefaultStyledDocument();
 		pane = new JTextPane(doc);
@@ -139,7 +141,7 @@ public class CodePane extends JScrollPane implements DocumentListener,
 		try {
 			text = pane.getText();
 		} catch (Exception ex) {
-			System.out.println("exception in keyTyped");
+			System.out.println("exception in updateCaretLoc");
 			return;
 		}
 		int pos = pane.getCaretPosition();
@@ -237,8 +239,7 @@ public class CodePane extends JScrollPane implements DocumentListener,
 	}
 
 	public void keyTyped(KeyEvent ke) {
-		// System.out.println("CodePane keyTyped |" +
-		// ke.getKeyChar() + "|");
+		// System.out.println("CodePane keyTyped |" + ke.getKeyChar() + "|");
 		// cases:
 		// newline
 		// mainFrame
@@ -254,9 +255,15 @@ public class CodePane extends JScrollPane implements DocumentListener,
 		// this is where we put auto parentheses:
 		char ch = ke.getKeyChar();
 		int pos = pane.getCaretPosition();
+        // backspace can take out indentation immediately after newline that
+        // generates indentation, but not otherwise, so clear indentedByNewline
+        // as soon as something is typed (other than backspace):
+        if (ch != '\b') {
+            indentedByNewline = false;
+        }
 		if (ch == '\n') {
 			// insertIndentation(p);
-			if (mainFrame != null) {
+			if (mainFrame != null) { // if this is the command entry window
 				if (evenParens) {
 					if (doc.getLength() == pos) {
 						// only do indentation if newline is at end of text
@@ -272,8 +279,6 @@ public class CodePane extends JScrollPane implements DocumentListener,
 							System.out.println(e);
 							return;
 						}
-						System.out.println("cut newline: newlinePos "
-								+ newlinePos + " pos " + pos);
 						pane.setSelectionStart(newlinePos);
 					} else { // no indentation, just remove newline
 						pane.setSelectionStart(pos - 1);
@@ -288,8 +293,13 @@ public class CodePane extends JScrollPane implements DocumentListener,
 					}
 					insertIndentation(pos);
 				}
-			} else {
-				insertIndentation(pos);
+			} else { // not the command entry window
+				if (insertIndentation(pos) > 1) {
+                    indentedByNewline = true; // if the next char is backspace, all
+                    // the indentation will be removed at once
+                } // otherwise a backspace will either delete one space or one newline
+                // so we do not want the indentedByNewline flag set to enable deleting
+                // more spaces
 			}
 		} else if (ch == '\t') {
 			int spaces = TextColor.INDENT - (caretColumn - 1)
@@ -298,7 +308,23 @@ public class CodePane extends JScrollPane implements DocumentListener,
 			pane.setSelectionStart(pos - 1);
 			pane.setSelectionEnd(pos);
 			pane.replaceSelection("        ".substring(0, spaces));
-			System.out.println("Replaced TAB by " + spaces + " spaces");
+        } else if (ch == '\b' && indentedByNewline) {
+            indentedByNewline = false; // don't do this until another newline
+            // clear all the way back to beginning of line in this case
+            int newlinePos = pos - 1;
+            try {
+                while ((newlinePos >= 0) && !doc.getText(newlinePos, 1).equals("\n")) {
+                    newlinePos -= 1;
+                }
+                // now newlinePos is the position of the typed newline. Delete from
+                // after newline to current position
+                pane.setSelectionStart(newlinePos + 1);
+                pane.setSelectionEnd(pos);
+                pane.replaceSelection("");
+            } catch (BadLocationException e) {
+                System.out.println(e);
+                return;
+            }
 		} else { // ordinary key handling
 			if (ke.getKeyChar() == ')') {
 				// get caret location
@@ -395,7 +421,8 @@ public class CodePane extends JScrollPane implements DocumentListener,
 		return col;
 	}
 
-	private void insertIndentation(int p) {
+    // returns how many spaces we indented
+	private int insertIndentation(int p) {
 		String text;
 		int desired = 0; // desired indentation of the previous line
 		// initialized because compiler can't figure out that it's
@@ -404,7 +431,7 @@ public class CodePane extends JScrollPane implements DocumentListener,
 			text = pane.getText(0, p);
 		} catch (Exception e) {
 			System.out.println("exception in insertIndentation");
-			return;
+			return 0;
 		}
 		int indent;
 		if (isSal) {
@@ -414,9 +441,8 @@ public class CodePane extends JScrollPane implements DocumentListener,
 			indent = autoIndentAmount(text, p);
 		}
 		String indentation = "";
-		while (indent > 0) {
+        for (int i = 0; i < indent; i++) {
 			indentation += " ";
-			indent--;
 		}
 		// System.out.println("before replaceSelection(indentation)");
 		pane.replaceSelection(indentation);
@@ -463,6 +489,7 @@ public class CodePane extends JScrollPane implements DocumentListener,
 			pane.setSelectionStart(p);
 			pane.setSelectionEnd(p);
 		}
+        return indent;
 	}
 
 	private int salIndentAmount(int p) {

@@ -57,7 +57,7 @@
     (:> ">" >)
     (:<= "<=" <=) ; leq and assignment minimization
     (:>= ">=" >=) ; geq and assignment maximization
-    (:~= "~=" sal-almost-equal) ; general equality
+    (:~= "~=" sal-about-equal) ; general equality
     (:+= "+=" +=) ; assignment increment-and-store
     (:-= "-=" -=) ; assignment increment-and-store
     (:*= "*=" *=) ; assignment multiply-and-store

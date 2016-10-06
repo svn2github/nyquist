@@ -624,7 +624,7 @@
 
 (setf *~=tolerance* 0.000001)
 
-(defun sal-almost-equal (a b)
+(defun sal-about-equal (a b)
   (or (and (numberp a) (numberp b) (< (abs (- a b)) *~=tolerance*))
       (and (consp a) (consp b) (sal-list-about-equal a b))
       (equal a b)))

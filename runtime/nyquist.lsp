@@ -98,12 +98,13 @@
 
 ;; NY:ERROR -- construct an error message and raise an error
 (defun ny:error (src index typ val &optional multi (val2 nil second-val))
-  (error (strcat "In " src "," (index-to-string index) " argument"
-          (if (second typ) (strcat " (" (second typ) ")") "")
-          " must be a "
-          (ny:type-list-as-string (first typ) multi)
-          ", got " (param-to-string val)
-          (if second-val (strcat ", and" (param-to-string val2)) ""))))
+  (let ((types-string (ny:type-list-as-string (first typ) multi)))
+    (error (strcat "In " src "," (index-to-string index) " argument"
+            (if (second typ) (strcat " (" (second typ) ")") "")
+            (if (eq (char types-string 0) #\i) " must be an " "must be a ")
+            types-string
+            ", got " (param-to-string val)
+            (if second-val (strcat ", and" (param-to-string val2)) "")))))
 
 
 (prog ()

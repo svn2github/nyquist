@@ -1276,8 +1276,11 @@ loop
           ((eq tok 'altdef)
            (translate))
           ((characterp tok)
-           ;; output completion hints file
-           (cond (*codef* (codef-char tok)))
+           ;; output completion hints file, suppress latex directives
+           ;; (e.g. the xlisp manual inserts "\\\\\\hspace*{15em}" to
+           ;; wrap some long function signatures in the latex output
+           (cond ((and *codef* (not *latex*))
+                  (codef-char tok)))
            (if *capture* (setf *captured* (strcat *captured* (string tok))))
            (output-char tok))
           ((eq tok 'label)

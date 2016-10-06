@@ -12,7 +12,7 @@
 "\\usepackage{makeidx}"
 "\\makeindex"
 "\\usepackage{ifxetex,ifluatex}"
-"\\usepackage{fixltx2e} % provides \\textsubscript"
+"% \\usepackage{fixltx2e} % provides \\textsubscript, but now built-in"
 "\\usepackage{mathptmx}% Times Roman font"
 "\\usepackage[scaled=.90]{helvet}% Helvetica, served as a model for arial"
 "\\usepackage[dvipsnames*,svgnames]{xcolor}"
@@ -297,14 +297,14 @@
          (setf *description-item-is-open* nil))
         (t
          (break "lt-write-dd: *description-item-is-open* is false - were closing a description term, but there was no term to begin with. Turn on *token-trace* and continue to see where you are.")))
-  (format *ltoutf* "]"))
+  (format *ltoutf* "}}]"))
 
 (defun lt-break-dt ()
   (if (not *description-item-is-open*)
       (break "lt-break-dt: *description-item-is-open* is false"))
   (setf *description-item-is-open* nil)
   (setf *skip-white-space* nil)
-  (format *ltoutf* "]"))
+  (format *ltoutf* "}}]"))
 
 (defun write-fdescription-item ()
   ; (let ((item (get-output-stream-string *ltoutf*)))
@@ -354,7 +354,7 @@
   (if *token-trace* (format t "LT-BEGIN-WRITE-DESCRIPTION:OPEN"))
   (format *ltoutf* "\\begin{description2}~%")
   (needspace 3)
-  (format *ltoutf* "\\item["))
+  (format *ltoutf* "\\item[{\\parbox[t]{1.0\\linewidth}{"))
 
 
 (defun lt-end-write-description ()
@@ -364,12 +364,13 @@
 
 (defun lt-description-paragraph ()
   (cond (*description-item-is-open*
-         (format *ltoutf* "]")))
+         (format *ltoutf* "}}]")))
   (setf *description-item-is-open* t)
   (setf *skip-white-space* t)
   (format *ltoutf* "~%")
   (needspace 3)
-  (format *ltoutf* "\\item["))
+  (format *ltoutf* "\\item[{\\parbox[t]{1.0\\linewidth}{"))
+
 
 ;; string-stream captures items in fdescription or pdescription:
 (setf *save-ltoutf* nil)
@@ -396,6 +397,49 @@
   (let ((loc (string-search "\n\n" s)))
     (if loc (strcat (trim (subseq s 0 loc)) "\\\\" (trim (subseq s (+ 2 loc))))
             s)))
+
+
+;; CONVERT-SPACES - from texttt spaces to textrm spaces
+;;   lines is like: ((pdlevel "line1") (pdlevel "line2") (pdlevel "line3") ...)
+;;   result is same, but with texttt spaces converted to textrm environment
+(defun convert-spaces (lines)
+  (let (rslt)
+    ;; use a stack to keep track of texttt environments; when we enter a texttt
+    ;; we push 1, when we find another open brace, we increment the top of the 
+    ;; stack (if the stack is non-empty). When we find a close brace, we 
+    ;; decrement the top of the stack (if non-empty). When the top goes to zero,
+    ;; we pop the stack (we've exited a texttt environment).
+    (setf *texttt-stack* nil)
+    (dolist (line lines)
+      (push (list (car line) (convert-spaces-in-line (cadr line))) rslt))
+    (reverse rslt)))
+
+
+;; CONVERT-SPACES-IN-LINE - helper for CONVERT-SPACES
+(defun convert-spaces-in-line (line)
+  (let (ch (rslt "") (pos 0) (len (length line)))
+    (while (< pos len)
+      (setf ch (char line pos))
+      (cond ((and (eq ch #\space) *texttt-stack*)
+             (setf rslt (strcat rslt "\\textrm{ }")))
+            ((eql (string-search "\\texttt{" line :start pos) pos)
+             (push 1 *texttt-stack*)
+             (setf pos (+ pos 7)) ;; it gets incremented again below
+             (setf rslt (strcat rslt "\\texttt{")))
+            ((and (eq ch #\{) *texttt-stack*)
+             (setf *texttt-stack* (cons (1+ (car *texttt-stack*)) 
+                                        (cdr *texttt-stack*)))
+             (setf rslt (strcat rslt "{")))
+            ((and (eq ch #\}) *texttt-stack*)
+             (setf *texttt-stack* (cons (1- (car *texttt-stack*)) 
+                                        (cdr *texttt-stack*)))
+             (cond ((zerop (car *texttt-stack*))
+                    (pop *texttt-stack*)))
+             (setf rslt (strcat rslt "}")))
+            (t (setf rslt (strcat rslt (string ch)))))
+      (setf pos (1+ pos)))
+    rslt))
+
 
 
 ;; anything not inside <!BEGIN-PDESC> <!END-PDESC> goes into item
@@ -431,16 +475,20 @@
            (go loop1) ))
     (setf lines (reverse lines))
     ;; now we have ((pdlevel "line1") (pdlevel "line2") (pdlevel "line3") ...)
+    ;; convert texttt spaces to textrm spaces -- texttt spaces are too "fat"
+    (display "before" lines)
+    (setf lines (convert-spaces lines))
+    (display "after" lines)
     (if (<= 0 (decf showcount))
       (dolist (x lines) (format t "~A~%" x)))
     ;; collect FDESC (pdlevel == 0) lines as an item
     (while lines
-      (format *ltoutf* "\\item[~A" (cadar lines))
+      (format *ltoutf* "\\item[{\\parbox[t]{1.0\\linewidth}{~A" (cadar lines))
       (setf lines (rest lines))
       (while (and lines (eql 0 (caar lines)))
         (format *ltoutf* "\\\\~%~A" (cadar lines))
         (setf lines (rest lines)))
-      (format *ltoutf* "]~%")
+      (format *ltoutf* "}}]~%")
       (cond ((and lines (/= 0 (caar lines)))
              (format *ltoutf* "~A~A"
                  (if (< 1 (caar lines)) "\\hspace*{3em}" "") (cadar lines))

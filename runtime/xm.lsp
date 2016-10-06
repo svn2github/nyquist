@@ -1417,7 +1417,7 @@ pattern argument (by default).
   (if (not (score-validp score))
       (error (strcat "In " caller ", not a valid score") score)))
 
-(defun invalid-score () (return-from 'validp nil))
+(defun invalid-score () (return-from validp nil))
 (defun score-validp (score)
   (block validp
     (if (listp score) nil (invalid-score)) ;; tricky: return nil if NOT condition

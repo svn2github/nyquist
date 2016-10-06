@@ -82,7 +82,7 @@
             name init low high)))
     ;; make sure we have an active panel
     (cond ((null *active-slider-panel*)
-           (slider-panel "Controls")))
+           (make-slider-panel "Controls")))
     ;; insert new slider into list of sliders in active panel. This
     ;; is aliased with an element in the assoc list *panels-in-use*.
     (rplacd *active-slider-panel* (cons (list name num) 

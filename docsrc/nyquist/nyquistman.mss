@@ -5952,7 +5952,7 @@ value is 6000. The @code(FLONUM) parameters @i(depth) and @i(freq) set the modul
 depth (from 0 to 1) and modulation frequency (in Hz), @i(mix) sets the mixture
 of input sound and chorused sound, where a value of 0.0 means input sound 
 only (dry) and a value of 1.0 means chorused sound only (wet). 
-You should use @code(pitshift) instead
+You should use @code(stkchorus) instead
 (see Section @ref(stkchorus-sec)).
 
 @codef[snd-stkpitshift(@pragma(defn)@index(snd-stkpitshift)@index(pitch shift)@index(effect, pitch shift)@index(STK pitch shift)@i(sound), @i(shift), @i(mix))] @c{[sal]}@*
