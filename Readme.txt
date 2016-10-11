@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.11
-20 Aug 2016
+README file for Nyquist Version 3.11b
+11 Oct 2016
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -27,6 +27,10 @@ other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.11b provides:
+    fix to FFT, apparently only affects only 64-bit Windows
+    improved formatting of reference manual (PDF) and minor
+        documentation changes
 Version 3.11 provides:
     Significantly more parameter checking and error reporting for
         Nyquist primitives.
