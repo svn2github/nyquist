@@ -711,19 +711,24 @@ private void ramp_event(call_args_type args)
 {
     seq_type seq = (seq_type) args->arg[0];
     event_type event = (event_type) args->arg[1];
-    unsigned int value = (unsigned int) args->arg[2];
-    unsigned int to_value = (unsigned int) args->arg[3];
-    int increment = (int) args->arg[4];
+    /* these 2 casts are ok because value (the starting point of the ramp)
+     * and to_value (the ending point) are unsigned int's representing a 
+     * fractional MIDI data value with an 8-bit fractional part. */
+    unsigned int value = (unsigned int) ((size_t) args->arg[2]);
+    unsigned int to_value = (unsigned int) ((size_t) args->arg[3]);
+    /* increment is also a fixed-point fraction, so int is fine */
+    int increment = (int) ((size_t) args->arg[4]);
     time_type step = (time_type) args->arg[5];;
-    int n = (int) args->arg[6];;
+    /* n is the number of steps remaining. int is big enough. */
+    int n = (int) ((size_t) args->arg[6]);
     
     if (seq->runflag) {
         int voice = vc_voice(event->nvoice);
 /*      printf("ramp_event: value %d to_value %d increment %d step %d n %d time %d\n",
                value, to_value, increment, step, n, virttime); */
         if (n == 0) value = to_value;
-        else {
-            args->arg[2] = (void *)(size_t)(value + increment); /* update value */
+        else {/* update value */
+            args->arg[2] = (void *)(size_t)(value + increment); 
             args->arg[6] = (void *)(size_t)(n - 1); /* update n */
             causepri((delay_type)step, 5, ramp_event, args);
         }
@@ -739,7 +744,8 @@ private void ramp_event(call_args_type args)
                        event->u.ramp.u.def.parm_num, value >> 8,
                        event->nline);
         }
-        if (n == 0) seq_end_event(args); /* really passing seq, but it's already in args */
+        /* really passing seq, but it's already in args: */
+        if (n == 0) seq_end_event(args);
     }
 }
 
@@ -1036,8 +1042,10 @@ void seq_midi_touch_meth(seq_type seq, int voice, int value)
 void seq_noteoff_meth(call_args_type args)
 {
     /* seq_type seq = args->arg[0]; -- unused */
-    int voice = (int)args->arg[1];
-    int pitch = (int)args->arg[2];
+    /* these are 8 bit values stored in pointers; coerce
+     * in 2 steps to avoid compiler warnings */
+    int voice = (int) ((size_t) args->arg[1]);
+    int pitch = (int) ((size_t) args->arg[2]);
     midi_note(voice, pitch, 0);
         /*gprintf(TRANS, "_e");*/
     seq_end_event(args);

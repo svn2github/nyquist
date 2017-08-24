@@ -186,6 +186,19 @@ LVAL xlc_seq_get(void)
 }
 
 
+/* xlc_seq_write_smf -- interface to C routine seq_xlwrite_smf */
+/**/
+LVAL xlc_seq_write_smf(void)
+{
+    seq_type arg1 = getseq(xlgaseq());
+    LVAL arg2 = xlgetarg();
+
+    xllastarg();
+    seq_xlwrite_smf(arg1, arg2);
+    return NIL;
+}
+
+
 #include "seqmread.h"
 
 /* xlc_seq_read_smf -- interface to C routine seq_read_smf */
@@ -202,19 +215,6 @@ LVAL xlc_seq_read_smf(void)
 
 
 #include "seqmwrite.h"
-
-/* xlc_seq_write_smf -- interface to C routine seq_write_smf */
-/**/
-LVAL xlc_seq_write_smf(void)
-{
-    seq_type arg1 = getseq(xlgaseq());
-    FILE * arg2 = getfile(xlgastream());
-
-    xllastarg();
-    seq_write_smf(arg1, arg2);
-    return NIL;
-}
-
 
 #include "seqread.h"
 

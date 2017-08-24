@@ -2261,8 +2261,12 @@ exit
                       (seq-insert-note seq (round (* time 1000))
                                        0 (1+ chan) (round pitch)
                                        (round (* dur 1000)) (round vel))))))
-           (if as-adagio (seq-write seq file) (seq-write-smf seq file))
-           (close file)))))
+           (cond (as-adagio
+                  (seq-write seq file)
+                  (close file)) ;; seq-write does not close file, so do it here
+                 (t
+                  (seq-write-smf seq file))))))) ; seq-write-smf closes file
+
 
 
 ;; make a default note function for scores

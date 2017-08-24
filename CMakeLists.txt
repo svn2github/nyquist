@@ -856,6 +856,7 @@ target_include_directories(intgen PRIVATE sys/unix cmt)
 
 add_custom_target(XLISP_C_Interfaces
   COMMAND intgen nyqsrc/sndfnint ${sndfnint_args}
+  COMMAND intgen nyqsrc/seqfnint ${seqfnint_args}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   SOURCES ${sndfnint_args} ${seqfnint_args})
 
