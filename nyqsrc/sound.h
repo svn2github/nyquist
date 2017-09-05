@@ -577,7 +577,7 @@ double step_to_hz(double);
  */
 #define logical_stop_cnt_cvt(sound) \
     (sound->logical_stop_cnt == UNKNOWN ? UNKNOWN : \
-     ROUND((sound->logical_stop_cnt / sound->sr) * susp->susp.sr))
+     ROUND32((sound->logical_stop_cnt / sound->sr) * susp->susp.sr))
 
 
 /* logical_stop_test tests to see if sound has logically stopped; if so,

@@ -100,7 +100,7 @@ void pvshell_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     if (flags & PVSHELL_FLAG_TERMINATE) {
         snd_list_terminate(snd_list);
     } else {
-        snd_list->block_len = n;
+        snd_list->block_len = (short) n;
         susp->susp.current += n;
     }
     /* test for logical stop */

@@ -64,7 +64,7 @@
             threshold = min(1.0, s); \
         } \
         if (s > 1.0) { \
-            s = fmod(s + 1.0, 2.0) - 1.0; \
+            s = (sample_type) (fmod(s + 1.0, 2.0) - 1.0); \
             (x) = s; \
         } \
     } else if (s < -threshold) { \
@@ -73,7 +73,7 @@
             threshold = min(1.0, -s); \
         } \
         if (s < -1.0) { \
-            s = -(fmod(-s + 1.0, 2.0) - 1.0); \
+            s = (sample_type) -(fmod(-s + 1.0, 2.0) - 1.0); \
             (x) = s; \
         } \
     }
@@ -402,7 +402,7 @@ double sound_save(
             }
         }
         /* assume all are the same: */
-        *sr = sf_info.samplerate = ROUND(getsound(getelement(result, 0))->sr); 
+        *sr = sf_info.samplerate = ROUND32(getsound(getelement(result, 0))->sr); 
 
         /* note: if filename is "", then don't write file; therefore,
          * write the file if (filename[0])
@@ -432,7 +432,7 @@ double sound_save(
         if (play != NIL) finish_audio();
     } else if (exttypep(result, a_sound)) {
         *nchans = sf_info.channels = 1;
-        sf_info.samplerate = ROUND((getsound(result))->sr);
+        sf_info.samplerate = ROUND32((getsound(result))->sr);
         *sr = sf_info.samplerate;
         if (filename[0]) {
             sndfile = NULL;
@@ -506,7 +506,7 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     /* use proper scale factor: 8000 vs 7FFF */
     sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
     
-    frames = round(offset * sf_info->samplerate);
+    frames = ROUNDBIG(offset * sf_info->samplerate);
     rslt = sf_seek(sndfile, frames, SEEK_SET);
     if (rslt < 0) {
         snprintf(error, sizeof(error),
@@ -590,7 +590,7 @@ double sound_overwrite(
             }
         }
         sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, channels,
-                                 ROUND(getsound(getelement(result, 0))->sr),
+                                 ROUND32(getsound(getelement(result, 0))->sr),
                                  offset_secs, &buf);
 
         max_sample = sound_save_array(result, n, &sf_info, sndfile, 
@@ -602,7 +602,7 @@ double sound_overwrite(
         SNDFILE *sndfile;  // opened sound file 
         float *buf; // buffer for samples read in from sound file
         sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, 1, 
-                                 ROUND(getsound(result)->sr), 
+                                 ROUND32(getsound(result)->sr), 
                                  offset_secs, &buf);
         max_sample = sound_save_sound(result, n, &sf_info, sndfile, buf, 
                                       &ntotal);
@@ -817,8 +817,8 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
         for (i = 0; i < chans; i++) {
             if (state[i].cnt == 0) {
                 if (sndwrite_trace) {
-                    nyquist_printf("CALLING SOUND_GET_NEXT ON CHANNEL %ld (%lx)\n",
-				   i, (unsigned long) state[i].sound); /* jlh 64 bit issue */
+                    nyquist_printf("CALLING SOUND_GET_NEXT ON CHANNEL %ld (%p)\n",
+				   i, state[i].sound); /* jlh 64 bit issue */
                     sound_print_tree(state[i].sound);
                 }
                 state[i].ptr = sound_get_next(state[i].sound,

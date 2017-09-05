@@ -196,7 +196,7 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
         temp_fft[i] = samples[i] * *window++;
     }
     /* perform the fft: */
-    m = round(log(len) / M_LN2); /* compute log-base-2(len) */
+    m = ROUND32(log(len) / M_LN2); /* compute log-base-2(len) */
     if (1 << m != len) {
         xlfail("FFT len is not a power of two");
     }

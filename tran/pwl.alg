@@ -30,7 +30,7 @@ char *pwl_bad_breakpoint_list = \"bad breakpoint list\";
 boolean compute_lvl(pwl_susp_type susp)
 {
     LVAL lval = susp->bpt_ptr;
-    if (!consp(lval) xlfail(pwl_bad_breakpoint_list);
+    if (!consp(lval)) xlfail(pwl_bad_breakpoint_list);
     lval = cdr(lval);
     if (!lval) return true;
     if (!consp(lval)) xlfail(pwl_bad_breakpoint_list);

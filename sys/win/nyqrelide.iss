@@ -6,10 +6,15 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId=3E29123D-0726-441C-8A38-42836B05F74C
+;; apply next 2 lines (x64) if ny.exe is compiled for
+;; x86_64, but if nyquist is 32-bit, use the default 
+;; values (comment out the next 2 lines). Default puts Nyquist into 
+;; Program Files (x86), and sets registry values in Wow6432Node 
+;; section where 32-bit Nyquist will find the XLISPPATH.
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
 AppName=NyquistIDE
-AppVerName=NyquistIDE 3.11b
+AppVerName=NyquistIDE 3.11e
 AppPublisher=Roger B. Dannenberg
 AppPublisherURL=http://www.cs.cmu.edu/~music/nyquist
 AppSupportURL=http://www.cs.cmu.edu/~music/nyquist
@@ -21,7 +26,7 @@ InfoAfterFile=nyqrelide\Readme.txt
 OutputDir=setup
 OutputBaseFilename=setupnyqiderun
 SetupIconFile=sys\win\wingui\nycon.ico
-SourceDir=c:\Users\Roger\nyquist
+SourceDir=c:\Users\rbd\nyquist
 Compression=lzma
 SolidCompression=yes
 

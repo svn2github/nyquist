@@ -152,7 +152,7 @@ StkFloat Delay :: contentsAt(unsigned long tapDelay)
     return 0.0;
   }
 
-  long tap = inPoint_ - i;
+  intptr_t tap = inPoint_ - i;
   if (tap < 0) // Check for wraparound.
     tap += inputs_.size();
 

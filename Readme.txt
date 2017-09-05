@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.11b
-11 Oct 2016
+README file for Nyquist Version 3.11e
+1 Sep 2017
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -27,6 +27,8 @@ other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.11e provides:
+    Works again as 64-bit executable on Windows 10
 Version 3.11b provides:
     fix to FFT, apparently only affects only 64-bit Windows
     improved formatting of reference manual (PDF) and minor

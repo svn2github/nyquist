@@ -136,7 +136,7 @@ sound_type snd_make_slider(int index, time_type t0, rate_type sr, time_type d)
     susp->susp.fetch = slider__fetch;
     susp->index = index;
 
-    susp->terminate_cnt = round((d) * sr);
+    susp->terminate_cnt = ROUNDBIG((d) * sr);
     /* initialize susp state */
     susp->susp.free = slider_free;
     susp->susp.sr = sr;

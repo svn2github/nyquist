@@ -253,7 +253,7 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
                           (g_count - (pvs->g_count - 1));
         /* (3) get the first sample we need from f. */
         /* g is now the sample time we want for center of f window */
-        f_start = round(g * susp->f->sr) - pvs->fftsize / 2;
+        f_start = ROUNDBIG(g * susp->f->sr) - pvs->fftsize / 2;
 
         /* f_start is now the first sample position of the window */
         /* (4) shift INPUT */
@@ -339,8 +339,8 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
             ((f_logical_stop_count / susp->f->sr - pvs->g0) / (g - pvs->g0));
     }
     if (pvs->g_terminated) {
-        long term_cnt_from_g = round((pvs->g_terminate_count / susp->g->sr) * 
-                                     susp->f->sr);
+        long term_cnt_from_g = ROUNDBIG((pvs->g_terminate_count / susp->g->sr) * 
+                                        susp->f->sr);
         if (f_logically_stopped) { /* take min of g and f log. stop cnt */
             pvs->logical_stop_count = MIN(pvs->logical_stop_count, 
                                           term_cnt_from_g);

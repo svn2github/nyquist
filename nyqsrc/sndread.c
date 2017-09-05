@@ -122,7 +122,7 @@ LVAL snd_make_read(
     falloc_generic(susp, read_susp_node, "snd_make_read");
     memset(&(susp->sf_info), 0, sizeof(SF_INFO));
 
-    susp->sf_info.samplerate = ROUND(*srate);
+    susp->sf_info.samplerate = ROUND32(*srate);
     susp->sf_info.channels = *channels;
 
     switch (*mode) {
@@ -218,7 +218,7 @@ LVAL snd_make_read(
     if (*dur * *srate + 0.5 > (unsigned long) 0xFFFFFFFF) {
         susp->cnt = 0x7FFFFFFF;
     } else {
-        susp->cnt = ROUND((*dur) * *srate);
+        susp->cnt = ROUNDBIG((*dur) * *srate);
     }
 
     switch (susp->sf_info.format & SF_FORMAT_TYPEMASK) {

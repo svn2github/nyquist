@@ -145,10 +145,10 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* don't overflow the output sample block: */
         togo = max_sample_block_len - cnt;
         /* if we need output samples, generate them here */
-        D printf("test R_current at offset %ld\n", susp->R_current - R);
+        D printf("test R_current at offset %td\n", susp->R_current - R);
         if (susp->R_current >= R + N) { // true when we output half of R
             int i = 0;
-            int j, k;
+            int k;
             sample_type *Xj = susp->X + susp->j * N * 2;
             sample_type *H = susp->H;
             sample_type *Y = susp->Y;
@@ -157,7 +157,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             memcpy(R, R + N, N * sizeof(*R));
             memset(R + N, 0, N * sizeof(*R));
             /* Copy N samples of x_snd into Xj and zero fill to size 2N */
-            D printf("Copying N samples of x_snd into Xj at offset %ld\n", Xj - susp->X);
+            D printf("Copying N samples of x_snd into Xj at offset %td\n", Xj - susp->X);
             while (i < N) {
                 if (susp->x_snd_cnt == 0) {
                     susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
@@ -191,7 +191,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             }
             /* zero fill to size 2N */
             memset(Xj + N, 0, N * sizeof(Xj[0]));
-            D printf("Xj at offset %ld: ", Xj - susp->X);
+            D printf("Xj at offset %td: ", Xj - susp->X);
             D for (i = 0; i < susp->N * 2; i++) {
                 printf("%g ", Xj[i]);
             }
@@ -208,7 +208,7 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 /* Compute IFFT of Y in place */
                 riffts(Y, susp->M, 1);
                 /* R += Y */
-                D printf("Output block %d, X offset %ld: ", k, X - susp->X);
+                D printf("Output block %d, X offset %td: ", k, X - susp->X);
                 for (i = 0; i < 2 * N; i++) {
                     R[i] += Y[i];
                     D printf("%g ", Y[i]);
@@ -282,12 +282,12 @@ void convolve_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from x_snd up to final_time for this block of zeros */
-    while ((round((final_time - susp->x_snd->t0) * susp->x_snd->sr)) >=
+    while ((ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr)) >=
 	   susp->x_snd->current)
 	susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->x_snd->t0) * susp->x_snd->sr -
+    n = ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr -
               (susp->x_snd->current - susp->x_snd_cnt));
     susp->x_snd_ptr += n;
     susp_took(x_snd_cnt, n);
@@ -398,7 +398,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     for (i = 0; i < susp->L; i++) {
         int j;
         float *H = susp->H + i * susp->N * 2;
-        D printf("H_%d at %ld: ", i, H - susp->H);
+        D printf("H_%d at %td: ", i, H - susp->H);
         D for (j = 0; j < susp->N * 2; j++) printf("%g ", H[j]);
         D printf("\n");
     }

@@ -174,7 +174,7 @@ out:        togo = 0;   /* indicate termination */
 
             /* here is where the IFFT and windowing should take place */
             //fftnf(1, &n, susp->samples, susp->samples + n, -1, 1.0);
-            m = round(log2(n));
+            m = ROUND32(log2(n));
             if (!fftInit(m)) riffts(susp->samples, m, 1);
             else xlfail("FFT initialization error");
             fft_shift(susp->samples, n);
