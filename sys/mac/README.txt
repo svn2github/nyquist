@@ -27,20 +27,23 @@ Installation
 ------------
 The simplest way to install and run Nyquist is to get the pre-compiled
 NyquistIDE application, which includes executables, documentation, and
-libraries all in one package, which is:
-     NyquistIDE.app
-When you run NyquistIDE.app, it will generate a new directory named
+libraries all in one package and one directory:
+     NyquistIDE.app, and
      nyquist
-in the same directory as NyquistIDE.app. The nyquist directory will
-contain links to lib, demos, and doc directories which are normally
-hidden inside NyquistIDE.app. The symbolic links allow you to easily 
-find these files.
+You should keep these together.
 
-You can move the NyquistIDE.app to the /Applications folder
-if you wish, and you can add NyquistIDE.app to the Dock. If you move
-NyquistIDE.app after it creates the nyquist directory, you might want
-to simply delete nyquist and let NyquistIDE.app create a new nyquist
-directory in the new location.
+NyquistIDE.app may ask you to find the nyquist directory because it
+contains documentation.
+
+NyquistIDE.app will also put symbolic links in nyquist to the lib and
+demos folders (hidden inside NyquistIDE.app) so that you can easily
+look in demos for descriptions and code (see nyquist/demos/index.html
+after the link is in place).
+
+You can move the NyquistIDE.app and nyquist directories to the
+/Applications folder if you wish, and you can add NyquistIDE.app to
+the Dock. If you move NyquistIDE.app, you should move the nyquist
+directory too, but it's not required.
 
 You will probably run Nyquist using the NyquistIDE application, but
 you can also run nyquist from the command line. The executable is
@@ -78,6 +81,5 @@ How To Build Nyquist on Mac OS X
 --------------------------------
 You need to install Xcode, Apple's free software development system
 for OS X, and CMake for OS X. Use CMake to build the xcode project.
-The "source code" directory is nyquist/macosxproject.
-"Where to build the binaries" is also nyquist/macosxproject.
-
+Get the sources from SourceForge, and run CMake on
+nyquist/CMakeLists.txt.

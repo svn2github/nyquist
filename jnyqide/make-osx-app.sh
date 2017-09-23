@@ -51,7 +51,7 @@ rm -rf $JAVA_FOLDER/{runtime,lib,demos,doc}
 svn export ${SRC_ROOT}/runtime $JAVA_FOLDER/runtime
 svn export ${SRC_ROOT}/lib $JAVA_FOLDER/lib
 svn export ${SRC_ROOT}/demos $JAVA_FOLDER/demos
-svn export ${SRC_ROOT}/doc $JAVA_FOLDER/doc
+# svn export ${SRC_ROOT}/doc $JAVA_FOLDER/doc
 cp ${SRC_ROOT}/sys/unix/osx/system.lsp $JAVA_FOLDER/
 
 echo "ENDING make-osx-app.sh"

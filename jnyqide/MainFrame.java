@@ -300,19 +300,24 @@ public class MainFrame extends JFrame {
         try {
             // first, see if there is already a lib in docDir:
             File libFile = new File(docDir + "../lib");
-            if (libFile.exists()) {
+            if (libFile.exists() && !Files.isSymbolicLink(libFile.toPath())) {
                 System.out.println(docDir + "../lib already exists");
                 return; // seems to be a copy of lib there already,
                         // don't mess with it
             }
             File demosFile = new File(docDir + "../demos");
-            if (demosFile.exists()) {
+            if (demosFile.exists() && !Files.isSymbolicLink(demosFile.toPath())) {
                 System.out.println(docDir + "../demos already exists");
                 return; // don't mess with demos either
             }
-            // create missing links
+            // create missing links. If both lib and demos are symbolic links,
+            // NyquistIDE.app might have moved, so overwrite the links to make
+            // sure they are up-to-date
             File libTarget = new File(nyquistDir + "lib");
-            if (libTarget.exists()) {
+            if (libTarget.exists()) { 
+                if (libFile.exists()) { // must be a link, we can update it
+                    Files.delete(libFile.toPath());
+                }
                 Files.createSymbolicLink(libFile.toPath(),
                                          libTarget.toPath());
                 System.out.println(docDir + "../lib linked to " +
@@ -323,6 +328,9 @@ public class MainFrame extends JFrame {
             }
             File demosTarget = new File(nyquistDir + "demos");
             if (demosTarget.exists()) {
+                if (demosFile.exists()) { // must be a link, we can update it
+                    Files.delete(demosFile.toPath());
+                }
                 Files.createSymbolicLink(demosFile.toPath(),
                                          demosTarget.toPath());
                 System.out.println(docDir + "../demos linked to " +
@@ -378,11 +386,16 @@ public class MainFrame extends JFrame {
             hint = new String(Files.readAllBytes(
                     Paths.get(nyquistDir + "doc-dir-hint.txt")));
             System.out.println("Read doc-dir-hint.txt: " + hint);
+        } catch (IOException e) { // not an error
+            System.out.println("Could not find doc-dir-hint.txt - probably ok");
+        }
+        try {
             // guess that nyquist is next to NyquistIDE.app
             // because that's where it is in the download
             if (hint.equals("")) {
-                hint = new File(currentDir + "../../../nyquist/").
+                hint = new File(currentDir + "../../../nyquist/doc").
                                 getCanonicalPath() + "/";
+                System.out.println("docDir guess: " + hint);
             }
         } catch (IOException e) {
                 e.printStackTrace();
@@ -396,6 +409,7 @@ public class MainFrame extends JFrame {
             hintedFile = new File(hint);
             if (hintedFile.isDirectory()) {
                 docDir = hint;
+                System.out.println("assuming docDir is: " + hint);
                 return;
             }
         }
@@ -494,8 +508,8 @@ public class MainFrame extends JFrame {
                 //         getCanonicalPath() + "/";
             }
             // Debugging:
-            System.out.println("currentDir: |" + currentDir + "|");
-            System.out.println("nyquistDir: |" + nyquistDir + "|");
+            // System.out.println("currentDir: |" + currentDir + "|");
+            // System.out.println("nyquistDir: |" + nyquistDir + "|");
             // System.out.println("docDir: |" + docDir + "|");
             //
             // try to load special mac-specific code that won't even compile
@@ -704,9 +718,9 @@ public class MainFrame extends JFrame {
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jOutputPane.setVerticalScrollBarPolicy( 
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        jOutputArea.append("currentDir: |" + currentDir + "|\n");
-        jOutputArea.append("nyquistDir: |" + nyquistDir + "|\n");
-        jOutputArea.append("docDir: |" + docDir + "|\n");
+        // jOutputArea.append("currentDir: |" + currentDir + "|\n");
+        // jOutputArea.append("nyquistDir: |" + nyquistDir + "|\n");
+        // jOutputArea.append("docDir: |" + docDir + "|\n");
         
         jListOutputArea = new JTextArea();
         jListOutputArea.setLineWrap(true);
