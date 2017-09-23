@@ -6,14 +6,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
- */
 
 public class MainFrame_AboutBox extends JDialog implements ActionListener {
 
@@ -33,9 +25,10 @@ public class MainFrame_AboutBox extends JDialog implements ActionListener {
   FlowLayout flowLayout1 = new FlowLayout();
   GridLayout gridLayout1 = new GridLayout();
   String product = "jNyqIDE - Nyquist Integrated Development Environment";
-  String version = "Version 2.0";
+  String version = "Version 3.12";
   String copyright = "Copyright (c) 2002-2006";
-  String comments = "Jesse Clark, David Howard, David Mowatt, David Deangelis, and Roger B. Dannenberg";
+  String comments = "Jesse Clark, David Howard, David Mowatt, " +
+                    "David Deangelis, and Roger B. Dannenberg";
   public MainFrame_AboutBox(Frame parent) {
     super(parent);
     enableEvents(AWTEvent.WINDOW_EVENT_MASK);

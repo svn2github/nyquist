@@ -1309,7 +1309,8 @@ public class MainFrame extends JFrame {
         Dimension dlgSize = dlg.getPreferredSize();
         Dimension frmSize = getSize();
         Point loc = getLocation();
-        dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
+        dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
+                        (frmSize.height - dlgSize.height) / 2 + loc.y);
         dlg.setModal(true);
         dlg.setVisible(true);
         
@@ -1319,18 +1320,7 @@ public class MainFrame extends JFrame {
         
     }
     
-    /* see openManual()
-    public String findManualURL(String ext) {
-        String osName = System.getProperty("os.name");
-        if (osName != null && osName.startsWith("Mac OS")) {
-            System.out.println("This is a Mac");
-        } else if (osName.startsWith("Windows")) {
-            System.out.println("This is Windows");
-        }
-        return "file://" + docDir + ext;
-    }
-    */
-    
+
     public void doHelpManual(ActionEvent e) {
         // separate browser gets to use frames (with index) by 
         // opening home.html

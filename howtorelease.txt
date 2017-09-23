@@ -25,6 +25,8 @@ copyright years.
 
 Edit documentation to contain correct version number.
 
+Edit MainFrame_AboutBox.java to contain correct version number.
+
 Is documentation current and installed?
 [Update and Commit via SVN]
 
@@ -78,7 +80,6 @@ FOR THE MAC
 
 in XCode, choose ny target and Product > Build For > Archiving
   result should end up in /Users/rbd/nyquist/macosxproject/build/Release/ny
-copy result to jnyqide/ny  
 
 in XCode,
    make sure you are building a release version
@@ -87,7 +88,10 @@ in XCode,
    build NyquistIDE
    result should end up in /Users/rbd/nyquist/jnyqide/NyquistIDE.app
 
-run NyquistIDE.app just to make sure it works: cd jnyqide; open NyquistIDE.app
+** DO NOT run NyquistIDE.app just to make sure it works **
+I.e. DO NOT cd jnyqide; open NyquistIDE.app
+as this will write a hints file into jnyqide which will become part of
+the release.
 
 cd ..  -- back to the top-level nyquist directory
 source misc/cmu/cmuinstallmac.sh
