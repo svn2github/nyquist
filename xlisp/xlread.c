@@ -173,7 +173,7 @@ int xlload(const char *fname, int vflag, int pflag)
 
     /* print the information line */
     if (vflag)
-        { sprintf(buf,"; loading \"%s\"\n",fullname); stdputstr(buf); }
+        { snprintf(buf, STRMAX, "; loading \"%s\"\n", fullname); stdputstr(buf); }
 
 #ifdef DEBUG_INPUT
 	if (read_by_xlisp) {

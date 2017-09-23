@@ -125,26 +125,33 @@
 (defun hann-window (frame-size) (sa-fft-window frame-size 0.5 0.5))
 (defun hamming-window (frame-size) (sa-fft-window frame-size 0.54 0.46))
 
+
+;; Check that win-type is acceptable and return canonical form
+;;
+(defun sa-get-window-type (win-type)
+  (case win-type
+    ((:hann :hanning)    :hann)
+    ((nil :none)         :none)
+    (:hamming            :hamming)
+    (t (print "Warning: invalid window-type parameter: ~A~%" win-type)
+       (print "    Using :HAMMING instead.~%")
+       :hamming)))
+
+
+(defun sa-compute-window (len win-type)
+  (set win-type (sa-get-window-type win-type))
+  (case win-type
+    (:hann        (hann-window len))
+    (:none        nil)
+    (:hamming     (hamming-window len))))
+    
+
 (send sa-class :answer :isnew '(snd len skp win-type) '(
     (setf sound snd)
     (setf length len)
     (setf skip skp)
-    (setf window
-          (case win-type
-                ((:hann :hanning)
-                 (setf window-type :hann)
-                 (hann-window len))
-                ((nil :none)
-                 (setf window-type :none)
-                 nil)
-                (:hamming
-                 (setf window-type :hamming)
-                 (hamming-window len))
-                (t (print "Warning: invalid window-type paramter in SA-INIT: ~A~%"
-                          win-type)
-                   (print "    Using :HAMMING instead.~%")
-                   (setf window-type :hamming)
-                   (hamming-window len))))))
+    (setf window-type (sa-get-window-type win-type))
+    (setf window (sa-compute-window length window-type))))
 
 ;; sa-to-mono -- sum up the channels in an array
 ;;
@@ -199,7 +206,7 @@
 (send sa-class :answer :info '() '(
   (format t "Spectral Analysis object (instance of sa-class):~%")
   (format t "  resolution (bin width): ~A Hz~%" (/ (snd-srate sound) length))
-  (format t "  fft-dur: ~A s (~A samples)~%" (/ len (snd-srate sound)) len)
+  (format t "  fft-dur: ~A s (~A samples)~%" (/ length (snd-srate sound)) length)
   (format t "  skip-period: ~A s (~A samples)~%" (/ skip (snd-srate sound)) skip)
   (format t "  window: ~A~%" window-type)
   nil))
@@ -275,10 +282,11 @@
 
 
 (defun plot-test ()
-  (setf sa (sa-init :input "./rpd-cello.wav"))
-  (while t
-    (setf frame (sa-next sa))
-    (if (null sa) (return nil))
-    (sa-plot sa frame)))
+  (let (frame)
+    (setf sa (sa-init :input "./rpd-cello.wav"))
+    (while t
+      (setf frame (sa-next sa))
+      (if (null sa) (return nil))
+      (sa-plot sa frame))))
 
 

@@ -65,7 +65,7 @@
 (defun alpass (snd decay hz &optional min-hz)
   (multichan-expand "ALPASS" #'nyq:alpass
     '(((SOUND) "snd") ((NUMBER SOUND) "decay")
-      ((POSITIVE SOUND) "hz") ((POSITIVE) "min-hz"))
+      ((POSITIVE SOUND) "hz") ((POSITIVE-OR-NULL) "min-hz"))
     snd decay hz min-hz))
   
 (defun nyq:alpass (snd decay hz min-hz)
@@ -712,3 +712,4 @@
     (setf v (snd-inverse vinv (local-to-global 0) wrate))
     (setf w (integrate (snd-recip (snd-compose pitchfn v))))
     (sound-warp w (phasevocoder input v fftsize hopsize mode) wrate)))
+

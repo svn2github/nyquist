@@ -501,6 +501,11 @@ define function ex47()
              pwl(0.0, 200.0, 1.0, 1000.0, 1.0),
              20.0)
 
+define function ex48()
+  begin
+    load "reverb"
+    play reverb(seq(pluck(c4, 0.05), s-rest(8)), 10.0) * 0.2
+  end
 
 exec format(t, "\nType (ex1) through (ex47) to run these examples.\n")
 exec format(t, "See demos/stktest.lsp for more simple sound examples.\n")
@@ -513,7 +518,7 @@ define function ex-all ()
     exec format(t, "Warning: turning automatic normalization feature off~%")
     exec autonorm-off()
     loop
-      for i from 1 to 47
+      for i from 1 to 48
       for fn = list(intern(format(nil, "EX~A", i)))
       exec format(t, "~A~%", fn)
       exec eval(fn)

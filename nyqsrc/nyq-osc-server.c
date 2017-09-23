@@ -39,7 +39,7 @@ static int lo_fd;
 static void error(int num, const char *msg, const char *path)
 {
     char s[256];
-    sprintf(s, "liblo server error %d in path %s: %s\n", num, path, msg);
+    snprintf(s, 255, "liblo server error %d in path %s: %s\n", num, path, msg);
     stdputstr(s);
 }
 

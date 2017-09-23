@@ -35,11 +35,11 @@ you do not have it. At present, the cmake files work for Windows and
 OS X, but there are likely to be some problems with Linux that need
 to be solved.
 
-Unzip sources, creating a nyquist directory and some  
-subdirectories, and use cd to change the current directory:
+Unzip sources (e..g use the Archive Manager), creating a nyquist 
+directory and some subdirectories, and use cd to change the current
+directory:
 
-    gunzip nyqsrc3<nn>.zip
-    cd nyquist
+    cd nyquist (or "cd <path to the nyquist directory>")
 
 Build Nyquist with cmake and make:
 

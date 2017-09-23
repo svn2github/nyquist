@@ -21,6 +21,8 @@ echo "current directory (should be JNYQIDE_ROOT):"
 pwd
 BOOTCLASSPATH=/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/jce.jar:/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/dt.jar
 
+# execute immediately on compilation error
+set -e
 javac -source 1.7 -target 1.7 -XDignore.symbol.file=true *.java 
 
 # Important: run jar in parent dir because everything is in package jnyqide
@@ -37,7 +39,7 @@ ls -l $EXE_FOLDER
 
 cp ${SRC_ROOT}/macosxproject/Nyquist.icns $RES_FOLDER
 cp jnyqide.jar $JAVA_FOLDER/
-cp $SRC_ROOT/macosxproject/build/$CONFIGURATION/ny $JAVA_FOLDER/ny
+cp $SRC_ROOT/$CONFIGURATION/ny $JAVA_FOLDER/ny
 
 cp ${JNYQIDE_ROOT}/mac-os-x-link-script.sh $JAVA_FOLDER
 cp ${JNYQIDE_ROOT}/closefile.gif $JAVA_FOLDER/
@@ -53,4 +55,3 @@ svn export ${SRC_ROOT}/doc $JAVA_FOLDER/doc
 cp ${SRC_ROOT}/sys/unix/osx/system.lsp $JAVA_FOLDER/
 
 echo "ENDING make-osx-app.sh"
-ls -l $EXE_FOLDER

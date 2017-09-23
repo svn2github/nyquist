@@ -11,15 +11,22 @@
 ;; an example
 ;(play (phaser (s-read "example1.wav")))
 
-
-;; nyq:snd-tapv -- handles multichannel input sounds
+;; compute the delay-tapv after multichan expanding args
 ;;
-(defun nyq:snd-tapv (sound offset modulation maxdepth)
-  (multichan-expand #'snd-tapv sound offset modulation maxdepth))
+(defun nyq:delay-tapv (sound delay depth rate saturation
+                       src phase)
+  (let ((modulation (sum delay 
+                         (prod depth
+                               (lfo rate 10000.0 *sine-table* phase)))))
+    ;; add sound with variable delay to sound with fixed delay
+    (hp (sum (prod (tapv sound 0.0 modulation (+ delay depth))
+                   saturation)
+             sound)
+        10)))
+  
 
-
-(defun delay-tapv (sound maxdelay delay depth rate saturation 
-                   &optional (phase 0.0))
+(defun delay-tapv (input-sound delay depth rate saturation 
+                   &key (src "DELAY-TAPV") (phase 0.0))
   ;; delay a signal by delay plus a time-varying amount controlled 
   ;; by an LFO (sine) and add to the original sound
   ;; delay + depth must be greater than zero and less than maxdelay
@@ -28,15 +35,12 @@
   ;; saturation is the amount of modulated signal added to the
   ;; original (normally 0 to 1)
   ;; 
-  (let ((modulation (sum delay 
-                         (prod depth
-                               (lfo rate 10000.0 *sine-table* phase)))))
-    ;; add sound with variable delay to sound with fixed delay
-    (hp (sum (prod (nyq:snd-tapv sound 0.0 modulation maxdelay)
-                   saturation)
-             sound)
-        10)))
-
+  (multichan-expand src #'nyq:delay-tapv
+    '(((SOUND) "input-sound") ((NUMBER) "delay") ((NUMBER) "depth")
+      ((NUMBER) "rate") ((NUMBER) "saturation") ((STRING) "src")
+      ((NUMBER) "phase"))
+    input-sound delay depth rate saturation src phase))
+    
 
 ;; flanger:
 ;;         The flanging effect uses a time-varied delay
@@ -45,7 +49,7 @@
 ;;         feedback.
 
 (defun flange (input-sound)
-  (delay-tapv input-sound .02 .01 .01 0.2 0.9))
+  (delay-tapv input-sound .01 .01 0.2 0.9 :src "FLANGE"))
 
 
        
@@ -60,8 +64,8 @@
 (defun chorus (input-sound &key (delay 0.03) (depth 0.003) 
                                 (rate 0.3) (saturation 1.0)
                                 (phase 0.0)) 
-  (delay-tapv input-sound (+ delay depth) 
-              delay depth rate saturation phase))
+  (delay-tapv input-sound 
+              delay depth rate saturation :src "CHORUS" :phase phase))
 
 
 (defun stereo-chorus (input-sound &key (delay 0.03) (depth 0.003) 

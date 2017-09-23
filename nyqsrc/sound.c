@@ -81,8 +81,8 @@ long sound_frames = 0;
 double snd_set_latency(double latency)
 {
     double r = sound_latency;
-	sound_latency = latency;
-	return r;
+    sound_latency = latency;
+    return r;
 }
 
 

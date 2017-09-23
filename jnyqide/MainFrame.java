@@ -25,6 +25,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import javax.swing.border.EmptyBorder;
 import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.lang.ProcessBuilder;
 import javax.imageio.ImageIO;
 
@@ -108,6 +109,7 @@ public class MainFrame extends JFrame {
     public static final String prefAudioRateDefault = "44100";
     public static final String prefControlRateDefault = "2205";
     public static final String prefFontSizeDefault = "12";
+    public static final boolean prefLastDirectoryDefault = true;
 
     public static boolean prefStartInSalMode = prefStartInSalModeDefault;
     public static boolean prefSalShowLisp = prefSalShowLispDefault;
@@ -127,7 +129,14 @@ public class MainFrame extends JFrame {
     public static String prefAudioRate = prefAudioRateDefault;
     public static String prefControlRate = prefControlRateDefault;
     public static String prefFontSize = prefFontSizeDefault;
-    public static String prefDirectory = "";  // starting directory in prefs
+    // if Nyquist should use the last-used directory on start-up, this
+    //   is set to true
+    public static boolean prefLastDirectory = prefLastDirectoryDefault;
+    //   otherwise, the prefDirectory (if non-empty) is used as the
+    //   start-up directory. The prefDirectory is retained even if
+    //   lastDirectory is set, and we revert to it if lastDirectory is
+    //   turned off.
+    public static String prefDirectory = "";
     // directory when Nyquist was last closed: If starting directory is not
     //   given, we'll open the directory in use the last time NyquistIDE ran:
     public static String lastDirectory = "";
@@ -183,10 +192,10 @@ public class MainFrame extends JFrame {
     public boolean hasRightMouseButton = true;
 
     //Construct the frame
-    public MainFrame() {
+    public MainFrame(String[] args) {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         try {
-            mainFrameInit();
+            mainFrameInit(args);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -285,6 +294,42 @@ public class MainFrame extends JFrame {
         System.out.println("handlePrefs called");
     }
 
+    // if docDir is set, we try to make symbolic links from docDir to
+    // the Application. Assumes docDir is valid.
+    private void setupLibAndDemosLinks() {
+        try {
+            // first, see if there is already a lib in docDir:
+            File libFile = new File(docDir + "lib");
+            if (libFile.exists()) {
+                System.out.println(docDir + "lib already exists");
+                return; // seems to be a copy of lib there already,
+                        // don't mess with it
+            }
+            File demosFile = new File(docDir + "demos");
+            if (demosFile.exists()) {
+                System.out.println(docDir + "demos already exists");
+                return; // don't mess with demos either
+            }
+            // create missing links
+            File libTarget = new File(nyquistDir + "lib");
+            if (libTarget.exists()) {
+                Files.createSymbolicLink(libFile.toPath(),
+                                         libTarget.toPath());
+                System.out.println(docDir + "lib linked to " +
+                                   libTarget.getAbsolutePath());
+            }
+            File demosTarget = new File(nyquistDir + "demos");
+            if (demosTarget.exists()) {
+                Files.createSymbolicLink(demosFile.toPath(),
+                                         demosTarget.toPath());
+                System.out.println(docDir + "demos linked to " +
+                                   demosTarget.getAbsolutePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
 	/* THIS CODE WRITTEN FOR JAVA SE 7 -- NOT TESTED, USING SHELL SCRIPT INSTEAD
 	// create a symbolic link if it is not already there
 	private static void createSymbolicLinkConditional(Path link, File target) {
@@ -304,8 +349,106 @@ public class MainFrame extends JFrame {
 
     private boolean isTrue(String s) { return s != null && s.equals("true"); }
 
+    // save the location of nyquist/doc/.. in a file where we start
+    // This is not in prefs because you might have another NyquistIDE
+    // installation and we want each installation/version to have it's
+    // own copy of the Nyquist library, documentation, etc.
+    private void writeDocDirHint(String hint) {
+        try {
+            File file = new File(nyquistDir + "doc-dir-hint.txt");
+			FileWriter fileWriter = new FileWriter(file);
+			fileWriter.write(hint);
+			fileWriter.flush();
+			fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupDocDir() {
+        // look in preferences for a hint
+        String hint = "";
+        try {
+            hint = new String(Files.readAllBytes(
+                    Paths.get(nyquistDir + "doc-dir-hint.txt")));
+            // guess that nyquist is next to NyquistIDE.app
+            // because that's where it is in the download
+            if (hint.equals("")) {
+                hint = new File(currentDir + "../../../nyquist/").
+                                getCanonicalPath() + "/";
+            }
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+        File hintedFile = null;
+        File docDirFile = null;
+
+        // validate the hint
+        if (hint != null && !hint.equals("")) {
+            // see if the directory exists
+            hintedFile = new File(hint);
+            if (hintedFile.isDirectory()) {
+                // see if the directory contains doc
+                docDirFile = new File(hintedFile, "doc");
+                if (docDirFile.isDirectory()) {
+                    docDir = docDirFile.getAbsolutePath();
+                    return;
+                }
+            }
+        }
+        // hint failed; ask the user for the nyquist directory
+        String msg[] = {
+            "In order to show you documentation, NyquistIDE needs",
+            "to know where you installed the \"nyquist\" directory",
+            "that came in the same folder as NyquistIDE.app. The",
+            "next screen will be a file chooser so you can find",
+            "the \"nyquist\" directory. Click OK to continue." };
+        JOptionPane.showMessageDialog(this, msg,
+                    "Notice", JOptionPane.INFORMATION_MESSAGE);
+        JFileChooser fd = new JFileChooser(
+                "Select the folder named nyquist that you installed");
+        fd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        // if user hits cancel on file chooser and ignores warnings,
+        // after 3 tries, we give up
+        for (int i = 0; i < 3; i++) {
+            System.out.println("opening fd file dialog");
+            fd.showOpenDialog(this);
+            File file = fd.getSelectedFile();
+            if (file != null) {
+                // I tried to use the parent,child form of constructor
+                // but couldn't get it to work, so just use path+"/doc"
+                docDirFile = new File(file.getAbsolutePath() + "/doc");
+                if (docDirFile.isDirectory()) {
+                    String dirPath = docDirFile.getAbsolutePath();
+                    writeDocDirHint(dirPath);
+                    docDir = dirPath;
+                    System.out.println("docDir set to " + dirPath);
+                    return;
+                }
+            }
+            String msg2[] = {"That directory does not contain \"doc\" as ",
+                             "expected, so something is wrong. Try again",
+                             "to find the \"nyquist\" folder?"};
+            int r = JOptionPane.showConfirmDialog(this, msg2, 
+                             "alert", JOptionPane.OK_CANCEL_OPTION);
+            if (r != JOptionPane.OK_OPTION) {
+                String msg3[] =
+                          { "NyquistIDE did not find nyquist/doc folder.",
+                            "Help:Manual and other documentation links",
+                            "may not work. If you do not have nyquist/doc,",
+                            "reinstall NyquistIDE." };
+                JOptionPane.showMessageDialog(this, msg3,
+                            "Notice", JOptionPane.INFORMATION_MESSAGE);
+                        
+                return; // docDir is empty!!! Help:Manual will not work
+            }
+        }
+        return; // docDir is empty!!! Help:Manual will not work
+    }
+
+    
     //Component initialization
-    private void mainFrameInit()  throws Exception  {
+    private void mainFrameInit(String[] cmdlineArgs)  throws Exception  {
         // if this is a Mac, we want some menu items on the application menu, 
         // which is accessed via some special apple code, but the apple code 
         // is not going to be installed if you are running windows or linux,
@@ -321,21 +464,32 @@ public class MainFrame extends JFrame {
 		// them more accessible, look in the directory containing
 		// the application bundle for a directory named nyquist. This is
 		// normally created to hold documentation. Add links in nyquist
-		// to lib and demo
+		// to lib and demo. If we do not find the directory, tell user to
+        // set the directory in Preferences (because maybe we are in a sandbox).
 		//
-        System.out.println("This is a test of output" + "\n");
-        System.out.println("isMac(): " + isMac() + "\n");
+        System.out.println("mainFrameInit output test, args are:\n---");
+        for (String arg : cmdlineArgs) {
+            System.out.println(arg);
+        }
+        System.out.println("---\nisMac(): " + isMac() + "\n");
+
+        // "h" in cmdlineArgs means clear the hints for testing
+        if (cmdlineArgs.length > 0 && cmdlineArgs[0].contains("h")) {
+            writeDocDirHint("");
+        }
         // set current working directory if we are in an application bundle
         currentDir = Paths.get(MainFrame.class.getProtectionDomain().
                     getCodeSource().getLocation().toURI()).getParent().
                     toString() + "/";
+        prefs = Preferences.userNodeForPackage(Main.class);
         if (isMac()) {
             hasRightMouseButton = false;
             if (isTrue(System.getProperty("isOSXbundle"))) {
                 System.out.println("isOSXbundle: true\n");
                 nyquistDir = currentDir;
-                docDir = new File(currentDir + "../../../nyquist/doc").
-                         getCanonicalPath() + "/";
+                // docDir = findDocDir();
+                //docDir = new File(currentDir + "../../../nyquist/doc").
+                //         getCanonicalPath() + "/";
             }
             // Debugging:
             // System.out.println("currentDir: |" + currentDir + "|");
@@ -389,7 +543,6 @@ public class MainFrame extends JFrame {
              nyquistDir = new File(currentDir + "..").getCanonicalPath() + "/";
              docDir = nyquistDir + "doc/";
         }
-        prefs = Preferences.userNodeForPackage(Main.class);
         prefStartInSalMode = prefs.getBoolean("start-with-sal", 
                                               prefStartInSalMode);
         prefSalShowLisp = prefs.getBoolean("sal-show-lisp", prefSalShowLisp);
@@ -416,6 +569,8 @@ public class MainFrame extends JFrame {
         prefControlRate = prefs.get("control-rate", prefControlRate);
         prefFontSize = prefs.get("font-size", prefFontSize);
         prefDirectory = prefs.get("initial-directory", prefDirectory);
+        prefLastDirectory = prefs.getBoolean("use-last-directory",
+                                             prefLastDirectory);
         lastDirectory = prefs.get("last-directory", lastDirectory);
         prefSFDirectory = prefs.get("default-sf-directory", prefSFDirectory);
         prefsHaveBeenSet = false;
@@ -586,21 +741,7 @@ public class MainFrame extends JFrame {
                     (e.getModifiers() & InputEvent.ALT_MASK) != 0) {
                     String ext = WordList.getlink(line);
                     System.out.println(line + " : " + ext);
-                    String url, urlbase;
-              
-                    if (prefOnlineManual) urlbase = onlineManualURL;
-                    else urlbase = findManualURL("");
-                    url = urlbase + ext;
-                    
-                    if (prefInternalBrowser) {
-                        miniBrowser.setVisible(true);
-                        System.out.println("Mini browser URL is: " + url);
-                        miniBrowser.setPage(url);
-                    } else {
-                        System.out.println("BareBonesBrowserLaunch URL is: " + 
-                                           url);
-                        BareBonesBrowserLaunch.openURL(url);
-                    }
+                    openManual(ext);
             	} else {
                     // System.out.println(e.paramString());
             		if (line.length() > 0)
@@ -709,9 +850,44 @@ public class MainFrame extends JFrame {
             lastDirectory = System.getProperty("user.dir");
             System.out.println("lastDirectory was empty, set to " + lastDirectory);
         }
+
+        // do not trust currentDir to be where user put
+        // NyquistIDE.app -- OS X 10.12 relocates it to a
+        // randomized location, so we'll ask the user to find it
+        //
+        // the following is here because when we directly open a file chooser
+        // dialog box at this point, OS X apps hang. I don't know why, but
+        // certainly dialog boxes work in an initialized, running program,
+        // so that's when we'll try to complete the initialization.
+        if (isMac()) {
+            SwingUtilities.invokeLater(
+                    new Runnable() { public void run() {
+                        setupDocDir();
+                        if (!docDir.equals("")) {
+                            setupLibAndDemosLinks();
+                        }
+                    }});
+        }
     }
     
     
+    public void openManual(String ext) {
+        String url = (prefOnlineManual ? onlineManualURL : 
+                                         "file://" + docDir) +
+                     ext;
+        
+        if (prefInternalBrowser) {
+            miniBrowser.setVisible(true);
+            System.out.println("Mini browser URL is: " + url);
+            miniBrowser.setPage(url);
+        } else {
+            System.out.println("BareBonesBrowserLaunch URL is: " + 
+                               url);
+            BareBonesBrowserLaunch.openURL(url);
+        }
+    }
+    
+
     public void sendPreferenceData() {
         // send Nyquist the preference values (assumes in Lisp mode)
         sendInputLn(";; transferring preference data from jNyqIDE to Nyquist");
@@ -727,10 +903,10 @@ public class MainFrame extends JFrame {
         callFunction("set-sound-srate", prefAudioRate);
         callFunction("set-control-srate", prefControlRate);
         setFontSize(Integer.parseInt(prefFontSize));
-        if (prefDirectory.length() > 0) {
-            changeDirectory(prefDirectory);
-        } else if (lastDirectory.length() > 0) {
+        if (prefLastDirectory && lastDirectory.length() > 0) {
             changeDirectory(lastDirectory);
+        } else if (prefDirectory.length() > 0) {
+            changeDirectory(prefDirectory);
         }
         System.out.println("sendPreferenceData: prefDir " + prefDirectory + 
                            " lastDir " + lastDirectory);
@@ -837,6 +1013,7 @@ public class MainFrame extends JFrame {
             prefs.put("control-rate", prefControlRate);
             prefs.put("font-size", prefFontSize);
             prefs.put("initial-directory", prefDirectory);
+            prefs.putBoolean("use-last-directory", prefLastDirectory);
             prefs.put("last-directory", currentDir);
             prefs.put("default-sf-directory", prefSFDirectory);
             prefsHaveBeenSet = false;
@@ -972,6 +1149,7 @@ public class MainFrame extends JFrame {
             openFile(new File(path));
         }
     }
+
 
     private void openFile(File fileToOpen) {
         // see if file is already open
@@ -1123,6 +1301,7 @@ public class MainFrame extends JFrame {
         
     }
     
+    /* see openManual()
     public String findManualURL(String ext) {
         String osName = System.getProperty("os.name");
         if (osName != null && osName.startsWith("Mac OS")) {
@@ -1132,18 +1311,13 @@ public class MainFrame extends JFrame {
         }
         return "file://" + docDir + ext;
     }
+    */
     
     public void doHelpManual(ActionEvent e) {
-        if (prefInternalBrowser) {
-            miniBrowser.setVisible(true);
-            miniBrowser.setPage(findManualURL("title.html"));
-        } else {
-            // separate browser gets to use frames (with index) by 
-            // opening home.html
-            String url = findManualURL("home.html");
-            System.out.println("Try to open: " + url);
-            BareBonesBrowserLaunch.openURL(url);
-        }
+        // separate browser gets to use frames (with index) by 
+        // opening home.html
+        String ext = (prefInternalBrowser ? "title.html" : "home.html");
+        openManual(ext);
     }
     
     public void doProcessReplay(ActionEvent e)
@@ -1372,9 +1546,15 @@ public class MainFrame extends JFrame {
 
     /* this is a test function to simulate creating a slider panel */
     public void doProcessTest(ActionEvent e) {
-        createSliderPanel("PanelName2", 3);
+        /*        createSliderPanel("PanelName2", 3);
         createSlider("S1", 10, 0.3, 0.0, 2.0);
         createSlider("S2Long", 11, 0.3, 0.0, 1.0);
+        */
+        // System.setProperty("apple.awt.fileDialogForDirectories", "true");
+        JFileChooser xxx = new JFileChooser();
+        System.out.println("xxx open ...");
+        xxx.showOpenDialog(this);
+        System.out.println("xxx open returned");
     }
 
     public void createSliderPanel(String name, int color) {

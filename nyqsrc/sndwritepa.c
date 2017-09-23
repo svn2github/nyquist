@@ -185,7 +185,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
         }
         portaudio_initialized = TRUE;
     }
-        
+
     output_parameters.device = Pa_GetDefaultOutputDevice(); 
     output_parameters.channelCount = sf_info->channels;
     output_parameters.sampleFormat = paFloat32;
@@ -239,7 +239,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
     }
     flush_count = (long) (sf_info->samplerate * (sound_latency + 0.2));
 
-    if (portaudio_error(Pa_StartStream(audio_stream), 
+    if (portaudio_error(Pa_StartStream(audio_stream),
                         "could not start audio")) {
         return NIL;
     }

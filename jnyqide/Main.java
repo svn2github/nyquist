@@ -5,6 +5,10 @@ import javax.swing.UIManager;
 import java.awt.*;
 import java.util.Locale;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+
+
 /**
  * @author unascribed
  * @version 1.01
@@ -16,7 +20,7 @@ public class Main {
 	boolean packFrame = false;
 
 	// Construct the application
-	public Main() {
+	public Main(String[] args) {
 		String osName = System.getProperty("os.name");
 		System.out.println(osName);
 		Locale loc = Locale.getDefault();
@@ -31,7 +35,7 @@ public class Main {
 				System.out.println(e);
 			}
 		}
-		MainFrame frame = new MainFrame();
+		MainFrame frame = new MainFrame(args);
 		// Validate frames that have preset sizes
 		// Pack frames that have useful preferred size info, e.g. from their
 		// layout
@@ -62,7 +66,7 @@ public class Main {
 				(screenSize.height - frameSize.height) / 2);
 		frame.setVisible(true);
 		frame.tileCompletion();
-	}
+    }
 
 	// Main method
 	public static void main(String[] args) {
@@ -71,6 +75,6 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		new Main();
+		new Main(args);
 	}
 }

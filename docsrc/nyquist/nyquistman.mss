@@ -67,7 +67,7 @@
 @begin(titlebox)
 @blankspace(0.5 inch)
 @majorheading(Nyquist Reference Manual)
-@b(Version 3.11e)
+@b(Version 3.12)
 @blankspace(0.3 inch)
 @b(Copyright 2013, 2014, 2015, 2016, 2017 by Roger B. Dannenberg)
 @value(date)
@@ -1574,7 +1574,7 @@ control signals.  These can be overridden at any point by the
 transformations @code(sound-srate-abs) and @code(control-srate-abs); for
 example,
 @begin(example)
-sound-srate-abs(44100.0, osc(c4)
+sound-srate-abs(44100.0, osc(c4))
 @end(example)
 will compute a tone using a 44.1Khz sample rate even if the default rate
 is set to something different.
@@ -5299,23 +5299,50 @@ details.  Default is @code(*default-sf-bits*).
 
  @i(flag) @itemsep (T or NIL) swap byte order of each sample. Default is NIL.
 @end(itemize)
-If there is an error, for example if @i(offset) is greater than the length of the file, then @code(NIL) is returned rather than a sound. Information about the sound is also returned by @code(s-read) through @code(*rslt*)@foot(Since XLISP does not support multiple value returns, multiple value returns are simulated by having the function assign additional return values in a list to the global variable @code(*rslt*). Since this is a global, it should be inspected or copied immediately after the function return to insure that return values are not overwritten by another function.). The list assigned to @code(*rslt*) is of the form: (@i(format) @i(channels) @i(mode) @i(bits) @i(samplerate) @i(duration) @i(flags) @i(byte-offset)), which are defined as follows:
+If there is an error, for example if @i(offset) is greater than the length
+of the file, then @code(NIL) is returned rather than a sound. Information
+about the sound is also returned by @code(s-read)
+through @code(*rslt*)@foot(Since XLISP does not support multiple value
+returns, multiple value returns are simulated by having the function
+assign additional return values in a list to the global
+variable @code(*rslt*). Since this is a global, it should be inspected
+or copied immediately after the function return to insure that return
+values are not overwritten by another function.). The list assigned
+to @code(*rslt*) is of the form: (@i(format) @i(channels) @i(mode) @i(bits) @i(swap) @i(samplerate) @i(duration) @i(flags) @i(byte-offset)), which are defined as follows:
 @begin(itemize)
-@i(format) @itemsep the header format. See @code(s-save) for details.
+@i(format) @itemsep the header format. See @code(s-save) for details. Access
+this element of @code(*rslt*) by calling @code[snd-read-format(*rslt*)].
 
-@i(channels) @itemsep the number of channels.
+@i(channels) @itemsep the number of channels. Access
+this element of @code(*rslt*) by calling @code[snd-read-channels(*rslt*)].
 
-@i(mode) @itemsep the sample representation, e.g. PCM or float. See @code(s-save) for details.
+@i(mode) @itemsep the sample representation, e.g. PCM or float. Access
+this element of @code(*rslt*) by calling @code[snd-read-mode(*rslt*)].
+See @code(s-save) for details.
 
-@i(bits) @itemsep the number of bits per sample.
+@i(bits) @itemsep the number of bits per sample.  Access
+this element of @code(*rslt*) by calling @code[snd-read-bits(*rslt*)].
 
-@i(samplerate) @itemsep the sample rate, expressed as a @code(FLONUM).
+@i(swap) @itemsep 1 if byte-swapping is needed, 0 otherwise. Access
+this element of @code(*rslt*) by calling @code[snd-read-swap(*rslt*)].
 
-@i(duration) @itemsep the duration of the sound, in seconds.
 
-@i(flags) @itemsep The values for @i(format), @i(channels), @i(mode), @i(bits), @i(samplerate), and @i(duration) are initially just the values passed in as parameters or default values to @code(s-read).  If a value is actually read from the sound file header, a flag is set.  The flags are: @code(snd-head-format), @code(snd-head-channels), @code(snd-head-mode), @code(snd-head-bits), @code(snd-head-srate), and @code(snd-head-dur).  For example,
+@i(samplerate) @itemsep the sample rate, expressed as a @code(FLONUM). Access
+this element of @code(*rslt*) by calling @code[snd-read-srate(*rslt*)].
+
+
+@i(duration) @itemsep the duration of the sound, in seconds. Access
+this element of @code(*rslt*) by calling @code[snd-read-dur(*rslt*)].
+
+
+@i(flags) @itemsep The values
+for @i(format), @i(channels), @i(mode), @i(bits), @i(samplerate),
+and @i(duration) are initially just the values passed in as
+parameters or default values to @code(s-read).  If a value is actually
+read from the sound file header, a flag is set.  The flags
+are: @code(snd-head-type) (format), @code(snd-head-channels), @code(snd-head-mode), @code(snd-head-bits), @code(snd-head-srate), and @code(snd-head-dur).  For example,
 @begin(example)
-(let ((flags (caddr (cddddr  *rslt*))))
+(let ((flags (s-read-flags *rslt*)))
   (not (zerop (logand flags snd-head-srate))))
 @end(example)
 tells whether the sample rate was specified in the file. See also @code(sf-info) below.
@@ -6837,7 +6864,8 @@ it is advised that you copy the sound using @code[snd-copy] if there are any oth
 @i(sound). The length of the FFT is specified by @i(length), a @code[FIXNUM] (integer) which must
 be a power of 2. After 
 each FFT, the sound is advanced by @i(skip) samples, also of type @code[FIXNUM]. Overlapping FFTs, 
-where @i(skip) is less than @i(length), are allowed. If @i(window) is not @code[NIL], it must be a sound. 
+where @i(skip) is less than @i(length), are allowed.
+If @i(window) is not @code[NIL], it must be a sound. 
 The first @i(length) samples of @i(window) are multiplied by @i(length) samples of @i(sound) before
 performing the FFT. When there are no more samples in @i(sound) to transform,
 this function returns @code[NIL]. The coefficients in the returned array, in order, are the DC coefficient,
@@ -6854,11 +6882,12 @@ spectral frames were derived. To obtain each frame, the function sends the messa
 an array in the same format as obtained from @code[snd-fft], and the object should return @code[NIL]
 when the end of the sound is reached. After each frame is inverse transformed into the time domain, it is 
 added to the resulting sound. Each successive frame is added with a sample offset specified by @i(skip) 
-relative to the previous frame. This must be an integer greater than zero. If @i(window) is 
+relative to the previous frame. This must be an integer greater than zero and less than the frame (FFT) size. 
+If @i(window) is 
 not @code[NIL], it must be a sound. This window signal is multiplied by the inverse transformed frame 
 before the frame is added to the output sound. The length of each frame should be the same power of 2. 
 The length
-is implied by the array returned by @i(iterator), so it does not appear as a parameter. This length
+is implied by the first array returned by @i(iterator), so it does not appear as a parameter. This length
 is also the number of samples used from @i(window). Extra samples are ignored, and window is padded
 with zeros if necessary, so be sure @i(window) is the right length. The resulting sound is computed on
 demand as with other Nyquist sounds, so @code[:next] messages are sent to @i(iterator) only when new
@@ -8685,7 +8714,7 @@ details on handling program changes.
 
 @codef{score-write-smf(@pragma(defn)@index(score-write-smf)@index(midi file)@i(score), @i(filename),
 [@i(programs) @i(as-adagio)])} @c{[sal]}@*
-@altdef{@code{(score-write-smf @i(score) @i(filename) [@i(programs)]) @i(as-adagio)]} @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
+@altdef{@code{(score-write-smf @i(score) @i(filename) [@i(programs) @i(as-adagio)])} @c{[lisp]}}@\Write a standard MIDI file to @i(filename) 
 with notes in @i(score). In this function,
 @i(every) event in the score with a @code(pitch:) attribute, regardless of the
 ``instrument'' (or function name), generates a

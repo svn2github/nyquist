@@ -164,7 +164,7 @@ void xlisp_main_init(int argc, char *argv[])
 
     /* open the transcript file */
     if (transcript && (tfp = osaopen(transcript,"w")) == NULL) {
-        sprintf(buf,"error: can't open transcript file: %s",transcript);
+        snprintf(buf, STRMAX, "error: can't open transcript file: %s", transcript);
         stdputstr(buf);
     }
 

@@ -2038,18 +2038,36 @@ ignored.
 details.  Default is <code>*default-sf-bits*</code>.
 <li> <i>flag</i> &ndash; (T or NIL) swap byte order of each sample. Default is NIL.
 </ul>
-If there is an error, for example if <i>offset</i> is greater than the length of the file, then <code>NIL</code> is returned rather than a sound. Information about the sound is also returned by <code>s-read</code> through <code>*rslt*</code> <a href = "foot.html#foot4">(Footnote 4)</a> . The list assigned to <code>*rslt*</code> is of the form: (<i>format</i> <i>channels</i> <i>mode</i> <i>bits</i> <i>samplerate</i> <i>duration</i> <i>flags</i> <i>byte-offset</i>), which are defined as follows:
+If there is an error, for example if <i>offset</i> is greater than the length
+of the file, then <code>NIL</code> is returned rather than a sound. Information
+about the sound is also returned by <code>s-read</code>
+through <code>*rslt*</code> <a href = "foot.html#foot4">(Footnote 4)</a> . The list assigned
+to <code>*rslt*</code> is of the form: (<i>format</i> <i>channels</i> <i>mode</i> <i>bits</i> <i>swap</i> <i>samplerate</i> <i>duration</i> <i>flags</i> <i>byte-offset</i>), which are defined as follows:
 <ul>
 <li>
-<i>format</i> &ndash; the header format. See <code>s-save</code> for details.
-<li><i>channels</i> &ndash; the number of channels.
-<li><i>mode</i> &ndash; the sample representation, e.g. PCM or float. See <code>s-save</code> for details.
-<li><i>bits</i> &ndash; the number of bits per sample.
-<li><i>samplerate</i> &ndash; the sample rate, expressed as a <code>FLONUM</code>.
-<li><i>duration</i> &ndash; the duration of the sound, in seconds.
-<li><i>flags</i> &ndash; The values for <i>format</i>, <i>channels</i>, <i>mode</i>, <i>bits</i>, <i>samplerate</i>, and <i>duration</i> are initially just the values passed in as parameters or default values to <code>s-read</code>.  If a value is actually read from the sound file header, a flag is set.  The flags are: <code>snd-head-format</code>, <code>snd-head-channels</code>, <code>snd-head-mode</code>, <code>snd-head-bits</code>, <code>snd-head-srate</code>, and <code>snd-head-dur</code>.  For example,
+<i>format</i> &ndash; the header format. See <code>s-save</code> for details. Access
+this element of <code>*rslt*</code> by calling <code>snd-read-format(*rslt*)</code>.
+<li><i>channels</i> &ndash; the number of channels. Access
+this element of <code>*rslt*</code> by calling <code>snd-read-channels(*rslt*)</code>.
+<li><i>mode</i> &ndash; the sample representation, e.g. PCM or float. Access
+this element of <code>*rslt*</code> by calling <code>snd-read-mode(*rslt*)</code>.
+See <code>s-save</code> for details.
+<li><i>bits</i> &ndash; the number of bits per sample.  Access
+this element of <code>*rslt*</code> by calling <code>snd-read-bits(*rslt*)</code>.
+<li><i>swap</i> &ndash; 1 if byte-swapping is needed, 0 otherwise. Access
+this element of <code>*rslt*</code> by calling <code>snd-read-swap(*rslt*)</code>.
+<li><i>samplerate</i> &ndash; the sample rate, expressed as a <code>FLONUM</code>. Access
+this element of <code>*rslt*</code> by calling <code>snd-read-srate(*rslt*)</code>.
+<li><i>duration</i> &ndash; the duration of the sound, in seconds. Access
+this element of <code>*rslt*</code> by calling <code>snd-read-dur(*rslt*)</code>.
+<li><i>flags</i> &ndash; The values
+for <i>format</i>, <i>channels</i>, <i>mode</i>, <i>bits</i>, <i>samplerate</i>,
+and <i>duration</i> are initially just the values passed in as
+parameters or default values to <code>s-read</code>.  If a value is actually
+read from the sound file header, a flag is set.  The flags
+are: <code>snd-head-type</code> (format), <code>snd-head-channels</code>, <code>snd-head-mode</code>, <code>snd-head-bits</code>, <code>snd-head-srate</code>, and <code>snd-head-dur</code>.  For example,
 <p><pre>
-(let ((flags (caddr (cddddr  *rslt*))))
+(let ((flags (s-read-flags *rslt*)))
   (not (zerop (logand flags snd-head-srate))))
 </pre></p>
 

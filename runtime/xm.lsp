@@ -1873,15 +1873,37 @@ pattern argument (by default).
     (reverse result)))
 
 
+;; MAP-VOICE - helper function for SCORE-VOICE
+;; input: a score expression, e.g. '(note :pitch 60 :vel 100)
+;;        a replacement list, e.g. '((note foo) (* bar))
+;; output: the score expression with substitutions, e.g.
+;;              '(foo :pitch 60 :vel 100)
+;;
 (defun map-voice (expression replacement-list)
-  (let ((mapping (assoc (car expression) replacement-list)))
-    (cond (mapping (cons (second mapping)
-                         (cdr expression)))
-          (t expression))))
+  (cond (replacement-list
+         (cond ((or (eq (car expression) (caar replacement-list))
+                    (eq (caar replacement-list) '*))
+                (cons (cadar replacement-list) (cdr expression)))
+               (t (map-voice expression (cdr replacement-list)))))
+        (t expression)))
+
+
+(defun ny:assert-replacement-list (fun-name index formal actual)
+  (let ((lis actual) r)
+    (while lis
+      (if (not (consp actual))
+          (error (format nil "In ~A,~A argument (~A) should be a list, got ~A"
+                             fun-name (index-to-string index) formal actual)))
+      (setf r (car lis))
+      (if (not (and (listp r) (= 2 (length r)) (symbolp (car r)) (symbolp (cadr r))))
+          (error (format nil
+                   "In ~A,~A argument (~A) should be a list of lists of two symbols, got ~A"
+                   fun-name (index-to-string index) formal actual))))))
 
 
 (defun score-voice (score replacement-list &key
                     from-index to-index from-time to-time)
+  (ny:assert-replacement-list 'SCORE-VOICE 2 "replacement-list" replacement-list)
   (setf score (score-must-have-begin-end score))
   (let ((i 0) 
         (start (find-first-note score from-index from-time))

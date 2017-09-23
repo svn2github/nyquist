@@ -238,21 +238,21 @@
             (local-to-global 0) format nchans mode bits swap srate
             dur)))
 
+
 ;; SF-INFO -- print sound file info
 ;;
 (defun sf-info (filename)
   (let (s format channels mode bits swap srate dur flags)
     (format t "~A:~%" (soundfilename filename))
     (setf s (s-read filename))
-    (setf format (car *rslt*))
-    (setf channels (cadr *rslt*))
-    (setf mode (caddr *rslt*))
-    (setf bits (cadddr *rslt*))
-    (setf *rslt* (cddddr *rslt*))
-    (setf swap (car *rslt*))
-    (setf srate (cadr *rslt*))
-    (setf dur (caddr *rslt*))
-    (setf flags (cadddr *rslt*))
+    (setf format (s-read-type *rslt*))
+    (setf channels (s-read-channels *rslt*))
+    (setf mode (s-read-mode *rslt*))
+    (setf bits (s-read-bits *rslt*))
+    ; (setf swap (s-read-swap *rslt*))
+    (setf srate (s-read-srate *rslt*))
+    (setf dur (s-read-dur *rslt*))
+    (setf flags (s-read-flags *rslt*))
     (format t "Format: ~A~%" 
             (nth format '("none" "AIFF" "IRCAM" "NeXT" "Wave" "PAF" "SVX"
                           "NIST" "VOC" "W64" "MAT4" "Mat5" "PVF" "XI" "HTK"
@@ -318,7 +318,8 @@
 (defun s-read-swap (rslt) (car (cddddr rslt)))
 (defun s-read-srate (rslt) (cadr (cddddr rslt)))
 (defun s-read-dur (rslt) (caddr (cddddr rslt)))
-(defun s-read-byte-offset (rslt) (car (cddddr (cddddr rslt))))
+(defun s-read-flags (rslt) (car (cddddr (cddddr rslt))))
+(defun s-read-byte-offset (rslt) (cadr (cddddr (cddddr rslt))))
 
 ;; round is tricky because truncate rounds toward zero as does C
 ;; in other words, rounding is down for positive numbers and up

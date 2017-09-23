@@ -1,5 +1,7 @@
 (defun reverb (x time) 
-  (multichan-expand #'reverb-mono x time))
+  (multichan-expand "REVERB" #'reverb-mono
+     '(((SOUND) "snd") ((NUMBER) "time"))
+     x time))
 
 (defun reverb-mono (ga irevfactor)
   (let (sr ilowpass idel ihz icsc acomball allp1 allp2 allp3 alow allp4 allp5

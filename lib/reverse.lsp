@@ -4,7 +4,9 @@
 (setf *max-reverse-samples* 25000000) ;; about 100MB of memory
 (setf *reverse-blocksize* 10000) ;; how many to reverse at a time
 
-(defun s-reverse (snd) (multichan-expand #'nyq:s-reverse snd))
+(defun s-reverse (snd)
+  (multichan-expand "S-REVERSE" #'nyq:s-reverse
+    '(((SOUND) "snd")) snd))
 
 (defun nyq:s-reverse (snd)
   (let ((now (local-to-global 0)))

@@ -82,6 +82,9 @@
     (cond ((member 'INT-OR-NULL typs)
            (push "integer" lis)
            (push "NIL" lis)))
+    (cond ((member 'POSITIVE-OR-NULL typs)
+           (push "positive number" lis)
+           (push "NIL" lis)))
     (cond (multi
            (setf multi-clause
                  (cond ((> (length lis) 1) "array thereof")
@@ -101,7 +104,7 @@
   (let ((types-string (ny:type-list-as-string (first typ) multi)))
     (error (strcat "In " src "," (index-to-string index) " argument"
             (if (second typ) (strcat " (" (second typ) ")") "")
-            (if (eq (char types-string 0) #\i) " must be an " "must be a ")
+            (if (eq (char types-string 0) #\i) " must be an " " must be a ")
             types-string
             ", got " (param-to-string val)
             (if second-val (strcat ", and" (param-to-string val2)) "")))))
@@ -298,39 +301,39 @@ functions assume durations are always positive.")))
 (defun ny:assert-table (fun-name index formal actual)
   (if (not (and (listp actual) (= 3 (length actual))))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list of 3 elements"
-       fun-name index formal actual)))
+       "In ~A, ~A argument (~A) should be a list of 3 elements, got ~A"
+       fun-name (index-to-string index) formal actual)))
   (if (not (soundp (car actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list beginning with a sound"
-       fun-name index formal actual)))
+       "In ~A, ~A argument (~A) should be a list beginning with a sound, got ~A"
+       fun-name (index-to-string index) formal actual)))
   (if (not (numberp (second actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch)"
-       fun-name index formal actual)))
+       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch), got ~A"
+       fun-name (index-to-string index) formal actual)))
   (if (not (third actual))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 3rd element is true"
-       fun-name index formal actual))))
+       "In ~A, ~A argument (~A) should be a list whose 3rd element is true, got ~A"
+       fun-name (index-to-string index) formal actual))))
 
 
 (defun ny:assert-sample (fun-name index formal actual)
   (if (not (and (listp actual) (= 3 (length actual))))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list of 3 elements"
-       fun-name index formal actual)))
+       "In ~A, ~A argument (~A) should be a list of 3 elements, got ~A"
+       fun-name (index-to-string index) formal actual)))
   (if (not (soundp (car actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list beginning with a sound"
-       fun-name index formal actual)))
+       "In ~A, ~A argument (~A) should be a list beginning with a sound, got ~A"
+       fun-name (index-to-string index) formal actual)))
   (if (not (numberp (second actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch)"
-       fun-name index formal actual)))
+       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch), got ~A"
+       fun-name (index-to-string index) formal actual)))
   (if (not (numberp (third actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 3rd element is the sample start time"
-       fun-name index formal actual))))
+       "In ~A, ~A argument (~A) should be a list whose 3rd element is the sample start time, got ~A"
+       fun-name (index-to-string index) formal actual))))
 
 (defun ny:env-spec-p (env-spec)
   (prog (len (rslt t))
@@ -2202,7 +2205,8 @@ loop
 ;;   (arg1-info arg2-info ...), where each arg-info is
 ;;   (valid-type-list name-or-nil), where valid-type-list is a list 
 ;;      of valid types from among NUMBER, SOUND, POSITIVE (number > 0),
-;;      NONNEGATIVE (number >= 0), INTEGER, STEP, STRING, 
+;;      NONNEGATIVE (number >= 0), INTEGER, STEP, STRING,
+;;      POSITIVE-OR_NULL (a positive number or nil),
 ;;      INT-OR-NULL (integer or nil), or NULL (the value can be nil).
 ;;      It is implied that arrays of these are valid too.  name-or-nil 
 ;;      is the parameter name as a string if the parameter name should 
@@ -2234,6 +2238,8 @@ loop
                      ((and (member 'SOUND (car typ)) (soundp chan)))
                      ((and (eq nonsnd 'STEP) (numberp chan)))
                      ((and (eq nonsnd 'POSITIVE) (numberp chan) (> chan 0)))
+                     ((and (eq nonsnd 'POSITIVE-OR-NULL)
+                           (or (and (numberp chan) (> chan 0)) (null chan))))
                      ((and (eq nonsnd 'NONNEGATIVE) (numberp chan) (>= chan 0)))
                      ((and (eq nonsnd 'INTEGER) (integerp chan)))
                      ((and (eq nonsnd 'STRING) (stringp chan)))
@@ -2247,6 +2253,8 @@ loop
             ((and (member 'SOUND (car typ)) (soundp a)))
             ((and (eq nonsnd 'STEP) (numberp a)))
             ((and (eq nonsnd 'POSITIVE) (numberp a) (>= a 0)))
+            ((and (eq nonsnd 'POSITIVE-OR-NULL)
+                  (or (and (numberp a) (> a 0)) (null a))))
             ((and (eq nonsnd 'NONNEGATIVE) (numberp a) (>= a 0)))
             ((and (eq nonsnd 'INTEGER) (integerp a)))
             ((and (eq nonsnd 'STRING) (stringp a)))

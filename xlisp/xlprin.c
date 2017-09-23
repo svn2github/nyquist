@@ -247,7 +247,7 @@ LOCAL void putqstring(LVAL fptr, LVAL str)
 /* putatm - output an atom */
 void putatm(LVAL fptr, const char *tag, LVAL val)
 {
-    sprintf(buf,"#<%s: #",tag); xlputstr(fptr,buf);
+    snprintf(buf, STRMAX, "#<%s: #", tag); xlputstr(fptr,buf);
     sprintf(buf,AFMT,(long unsigned int)val); xlputstr(fptr,buf);
     xlputc(fptr,'>');
 }
@@ -255,7 +255,7 @@ void putatm(LVAL fptr, const char *tag, LVAL val)
 /* putsubr - output a subr/fsubr */
 LOCAL void putsubr(LVAL fptr, const char *tag, LVAL val)
 {
-    sprintf(buf,"#<%s-%s: #",tag,funtab[getoffset(val)].fd_name);
+    snprintf(buf, STRMAX, "#<%s-%s: #", tag, funtab[getoffset(val)].fd_name);
     xlputstr(fptr,buf);
     sprintf(buf,AFMT,(long unsigned int)val); xlputstr(fptr,buf);
     xlputc(fptr,'>');
@@ -266,7 +266,7 @@ LOCAL void putclosure(LVAL fptr, LVAL val)
 {
     LVAL name;
     if ((name = getname(val)))
-        sprintf(buf,"#<Closure-%s: #",getstring(getpname(name)));
+        snprintf(buf, STRMAX, "#<Closure-%s: #",getstring(getpname(name)));
     else
         strcpy(buf,"#<Closure: #");
     xlputstr(fptr,buf);
@@ -294,7 +294,7 @@ LOCAL void putfixnum(LVAL fptr, FIXTYPE n)
     LVAL val;
     fmt = ((val = getvalue(s_ifmt)) && stringp(val) ? getstring(val)
                                                     : (unsigned char *)IFMT);
-    sprintf(buf, (char *) fmt,n);
+    snprintf(buf, STRMAX, (char *) fmt, n);
     xlputstr(fptr,buf);
 }
 
@@ -305,7 +305,7 @@ LOCAL void putflonum(LVAL fptr, FLOTYPE n)
     LVAL val;
     fmt = ((val = getvalue(s_ffmt)) && stringp(val) ? getstring(val)
                                                     : (unsigned char *)"%g");
-    sprintf(buf,(char *) fmt,n);
+    snprintf(buf, STRMAX, (char *) fmt, n);
     xlputstr(fptr,buf);
 }
 

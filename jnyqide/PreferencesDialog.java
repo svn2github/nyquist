@@ -10,6 +10,23 @@ package jnyqide;
 //   <-|--> Relative height of completion box
 //
 
+// Algorithm for initial directory:
+// (MF is MainFrame)
+// on creating the dialog,
+//   copy MF.prefLastDirectory to useLastDirectory checkbox OK
+//   copy MF.prefDirectory to startfd OK
+// on copy prefs to Nyquist
+//   copy useLastDirectory state to MF.prefLastDirectory OK
+//   copy startfd directory to MF.prefDirectory OK
+// on starting Nyquist (in MF):
+//   copy "use-last-directory" pref to MF.prefLastDirectory OK
+//   copy "initial-directory" pref to MF.prefDirectory OK
+//   copy "last-directory" pref to MF.lastDirectory OK
+//   make  the current directory lastDirectory or prefDirectory OK
+// on quiting Nyquist (in MF):
+//   copy MF.prefLastDirectory to "use-last-directory" pref OK
+//   copy MF.prefDirectory to "initial-directory" pref OK
+//   copy current directory to "last-directory" pref OK
 
 import java.util.*;
 import java.awt.*;
@@ -51,8 +68,8 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private JTextField controlRate; // "Control Sample Rate"
     private JComboBox fontSize; // "Font Size"
     private JButton sfDirectory; // "Set Default Sound File Directory"
-    private JButton initialDirectory; // "Set Initial Directory"
-    private JButton lastDirectory; // "Last Used Directory is Initial Directory"
+    private JButton initialDirectory; // "Set Initial Directory" to this
+    private JCheckBox useLastDirectory; // "Last Used Directory is Initial Directory"
     private JFileChooser startfd;
     private JFileChooser fd;
     private String[] audioRates = { "96000", "48000", "44100", "22050", "16000",
@@ -156,16 +173,18 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                     mainFrame.setFontSize(size);
                 }
 
+                mainFrame.prefLastDirectory = useLastDirectory.isSelected();
+                
                 File file = startfd.getSelectedFile();
-
                 System.out.println("startfd.getSelectedFile() -> " + file);
-
                 if (file != null) {
                     String dir = file.toString().replaceAll("\\\\", "/");
                     System.out.println("startfd.getSelectedFile: " + dir);
                     if (dir != null && dir.length() > 0) {
                         mainFrame.prefDirectory = dir;
-                        mainFrame.changeDirectory(dir);
+                        if (!mainFrame.prefLastDirectory) {
+                            mainFrame.changeDirectory(dir);
+                        }
                     }
                 } else {
                     mainFrame.prefDirectory = "";
@@ -267,7 +286,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
 
         // Use full search for code completion (checkbox)
         fullSearch = makeCheckBox("Use full search for code completion",
-                                          mainFrame.prefFullSearch);
+                                  mainFrame.prefFullSearch);
         // Use internal window for manual (checkbox)
         internalBrowser = makeCheckBox("Use window in jNyqIDE for help browser",
                                        mainFrame.prefInternalBrowser);
@@ -357,11 +376,13 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         c.gridy += 1;
         panel.add(initialDirectory, c);
 
-        lastDirectory = new JButton("Last Used Directory is Initial Directory");
-        lastDirectory.addActionListener(this);
-        lastDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
+        useLastDirectory = makeCheckBox(
+                "Last Used Directory is Initial Directory",
+                mainFrame.prefLastDirectory);
+        //        lastDirectory.addActionListener(this);
+        //        lastDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
         c.gridy += 1;
-        panel.add(lastDirectory, c);
+        panel.add(useLastDirectory, c);
 
         c.gridy += 1;
         panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
@@ -436,8 +457,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
             fd.showOpenDialog(this);
         } else if (evt.getSource() == initialDirectory) {
             startfd.showOpenDialog(this);
-        } else if (evt.getSource() == lastDirectory) {
-            startfd.setSelectedFile(null);
+            useLastDirectory.setSelected(false);
         } else if (evt.getSource() == defaultPrefs) {
             startInSalMode.setSelected(mainFrame.prefStartInSalModeDefault);
             salShowLisp.setSelected(mainFrame.prefSalShowLispDefault);
