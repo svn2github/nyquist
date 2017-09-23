@@ -24,6 +24,7 @@
 #include	<string.h>
 #include	<ctype.h>
 #include	<time.h>
+#include        <stdint.h>
 #include	<inttypes.h>
 
 #include	"sndfile.h"

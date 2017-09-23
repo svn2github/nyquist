@@ -24,6 +24,8 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <stdint.h>
+intmax_t foo;
 #include <inttypes.h>
 
 #include "sndfile.h"

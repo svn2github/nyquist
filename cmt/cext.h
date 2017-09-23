@@ -46,6 +46,7 @@ EXIT(n)  -- calls exit(n) after shutting down/deallocating resources
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <stdint.h>
 #include <inttypes.h>
 
 #if HAS_STDLIB_H
