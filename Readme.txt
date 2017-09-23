@@ -1,4 +1,4 @@
-README file for Nyquist Version 3.11e
+README file for Nyquist Version 3.12
 1 Sep 2017
 Roger B. Dannenberg
 
@@ -27,6 +27,10 @@ other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.12 provides:
+    Fix for Help:Manual and links to docs on OS X 12 (I hope)
+    Fix for reverb function (3.11 broke it)    
+    Better type checking for OSC table parameter
 Version 3.11e provides:
     Works again as 64-bit executable on Windows 10
 Version 3.11b provides:

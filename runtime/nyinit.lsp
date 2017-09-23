@@ -31,7 +31,7 @@
 
 (format t "~%Nyquist -- A Language for Sound Synthesis and Composition~%")
 (format t "    Copyright (c) 1991,1992,1995,2007-2017 by Roger B. Dannenberg~%")
-(format t "    Version 3.11e~%~%")
+(format t "    Version 3.12~%~%")
 
 ;(setf *gc-flag* t)
 (print "DONE")

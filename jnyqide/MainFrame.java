@@ -77,7 +77,7 @@ public class MainFrame extends JFrame {
     // public static boolean evenParens;
     public static String currentDir = "";
     public static String nyquistDir = "";
-    public static String docDir = "";
+    public static String docDir = ""; // the nyquist/doc directory
     Runnable update = new ScrollUpdate(this);
     PlotFrame plotFrame;
     File homeDir = new File(".");
@@ -299,15 +299,15 @@ public class MainFrame extends JFrame {
     private void setupLibAndDemosLinks() {
         try {
             // first, see if there is already a lib in docDir:
-            File libFile = new File(docDir + "lib");
+            File libFile = new File(docDir + "../lib");
             if (libFile.exists()) {
-                System.out.println(docDir + "lib already exists");
+                System.out.println(docDir + "../lib already exists");
                 return; // seems to be a copy of lib there already,
                         // don't mess with it
             }
-            File demosFile = new File(docDir + "demos");
+            File demosFile = new File(docDir + "../demos");
             if (demosFile.exists()) {
-                System.out.println(docDir + "demos already exists");
+                System.out.println(docDir + "../demos already exists");
                 return; // don't mess with demos either
             }
             // create missing links
@@ -315,15 +315,21 @@ public class MainFrame extends JFrame {
             if (libTarget.exists()) {
                 Files.createSymbolicLink(libFile.toPath(),
                                          libTarget.toPath());
-                System.out.println(docDir + "lib linked to " +
+                System.out.println(docDir + "../lib linked to " +
                                    libTarget.getAbsolutePath());
+            } else {
+                System.out.println("not linked because " +
+                        libTarget.getAbsolutePath() + " doesn't existt");
             }
             File demosTarget = new File(nyquistDir + "demos");
             if (demosTarget.exists()) {
                 Files.createSymbolicLink(demosFile.toPath(),
                                          demosTarget.toPath());
-                System.out.println(docDir + "demos linked to " +
+                System.out.println(docDir + "../demos linked to " +
                                    demosTarget.getAbsolutePath());
+            } else {
+                System.out.println("not linked because " +
+                        demosTarget.getAbsolutePath() + " doesn't existt");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -349,7 +355,7 @@ public class MainFrame extends JFrame {
 
     private boolean isTrue(String s) { return s != null && s.equals("true"); }
 
-    // save the location of nyquist/doc/.. in a file where we start
+    // save the location of nyquist/doc in a file where we start
     // This is not in prefs because you might have another NyquistIDE
     // installation and we want each installation/version to have it's
     // own copy of the Nyquist library, documentation, etc.
@@ -371,6 +377,7 @@ public class MainFrame extends JFrame {
         try {
             hint = new String(Files.readAllBytes(
                     Paths.get(nyquistDir + "doc-dir-hint.txt")));
+            System.out.println("Read doc-dir-hint.txt: " + hint);
             // guess that nyquist is next to NyquistIDE.app
             // because that's where it is in the download
             if (hint.equals("")) {
@@ -384,16 +391,12 @@ public class MainFrame extends JFrame {
         File docDirFile = null;
 
         // validate the hint
-        if (hint != null && !hint.equals("")) {
+        if (hint != null && !hint.equals("") && hint.endsWith("/doc/")) {
             // see if the directory exists
             hintedFile = new File(hint);
             if (hintedFile.isDirectory()) {
-                // see if the directory contains doc
-                docDirFile = new File(hintedFile, "doc");
-                if (docDirFile.isDirectory()) {
-                    docDir = docDirFile.getAbsolutePath();
-                    return;
-                }
+                docDir = hint;
+                return;
             }
         }
         // hint failed; ask the user for the nyquist directory
@@ -419,10 +422,9 @@ public class MainFrame extends JFrame {
                 // but couldn't get it to work, so just use path+"/doc"
                 docDirFile = new File(file.getAbsolutePath() + "/doc");
                 if (docDirFile.isDirectory()) {
-                    String dirPath = docDirFile.getAbsolutePath();
-                    writeDocDirHint(dirPath);
-                    docDir = dirPath;
-                    System.out.println("docDir set to " + dirPath);
+                    docDir = docDirFile.getAbsolutePath() + "/";
+                    writeDocDirHint(docDir);
+                    System.out.println("docDir set to " + docDir);
                     return;
                 }
             }
@@ -492,8 +494,8 @@ public class MainFrame extends JFrame {
                 //         getCanonicalPath() + "/";
             }
             // Debugging:
-            // System.out.println("currentDir: |" + currentDir + "|");
-            // System.out.println("nyquistDir: |" + nyquistDir + "|");
+            System.out.println("currentDir: |" + currentDir + "|");
+            System.out.println("nyquistDir: |" + nyquistDir + "|");
             // System.out.println("docDir: |" + docDir + "|");
             //
             // try to load special mac-specific code that won't even compile
@@ -511,6 +513,7 @@ public class MainFrame extends JFrame {
 
                 System.out.println("isMac, so created instance of SpecialMacHandler");
 
+                /*
 				ProcessBuilder process = new ProcessBuilder(
                         "/bin/sh", "mac-os-x-link-script.sh");
                 process.redirectErrorStream(true).inheritIO();
@@ -524,6 +527,7 @@ public class MainFrame extends JFrame {
 				// protected nyquist (not a bad idea, really), or removed it.
 				System.out.println("Ran script to install lib and demos links,");
 				System.out.println("   -> result is " + result + " (0 == success)");
+                */
             } catch(Exception e) {
                 System.out.println(e);
             }
@@ -541,7 +545,7 @@ public class MainFrame extends JFrame {
         // Linux, Windows, and Mac debugging from command line are handled here
 		if (nyquistDir.equals("")) {
              nyquistDir = new File(currentDir + "..").getCanonicalPath() + "/";
-             docDir = nyquistDir + "doc/";
+             docDir = nyquistDir + "/doc/";
         }
         prefStartInSalMode = prefs.getBoolean("start-with-sal", 
                                               prefStartInSalMode);
