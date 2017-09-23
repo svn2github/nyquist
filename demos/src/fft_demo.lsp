@@ -48,7 +48,7 @@
 
 ;; if sfn does not exist, make a file (useful for testing)
 (cond ((null sfn)
-       (load "pmorales/b1.lsp")
+       (load "../pmorales/b1.lsp")
        ;; nyquist has no built-in function to remove a file, so this
        ;; sound file, temp-gong3melody.wav, will not be removed. It is
        ;; not large compared to Nyquist itself.

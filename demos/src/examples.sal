@@ -529,7 +529,7 @@ define function ex-global ()
   begin
     exec ex-all()
     exec autonorm-on()
-    load "allewis/cell_aut.lsp"
+    load "../allewis/cell_aut.lsp"
     exec cell-aut-demo()
     load "arp.sal"
     exec arp1()
@@ -560,13 +560,13 @@ define function ex-global ()
     exec ex-14()
     exec ex-15()
     exec ex-16()
-    load "mateos/gong.lsp"
+    load "../mateos/gong.lsp"
     exec dmhm-gong-test()
-    load "mateos/bell.lsp"
+    load "../mateos/bell.lsp"
     exec dmhm-bell-test()
-    load "mateos/organ.lsp"
+    load "../mateos/organ.lsp"
     exec dmhm-organ-test()
-    load "mateos/tuba.lsp"
+    load "../mateos/tuba.lsp"
     exec dmhm-tuba-test()
     load "osc-test.lsp"
     play hzosc-osc()
@@ -577,7 +577,7 @@ define function ex-global ()
     ;; windows user may not have drums installed so test first
     if fboundp(quote(play-drum-example)) then
       exec play-drum-example()
-    load "pmorales/all.lsp"
+    load "../pmorales/all.lsp"
     load "../sdl/inv-08.lsp"
     load "../sdl/ej2.lsp"
     load "shepard.lsp"
