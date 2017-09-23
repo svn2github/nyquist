@@ -126,12 +126,15 @@ void osinit(const char *banner)
 #endif
 
 #if USE_RANDOM
-USE_RANDOM is not supported, or at least the code should
-be inspected carefully if USE_RANDOM is set. Things to look
-for are: Is USE_RAND undefined to avoid conflicts? Should
-the seed be initialized (as in sranddev() above under USE_RAND)?
-Who uses random()? Nyquist uses random numbers in XLISP, in the
-noise() function, in STK's Noise class, and probably other places.
+#define USE_RANDOM something // see if compiler will tell us who
+    // set this first
+// USE_RANDOM is not supported, or at least the code should
+// be inspected carefully if USE_RANDOM is set. Things to look
+// for are: Is USE_RAND undefined to avoid conflicts? Should
+// the seed be initialized (as in sranddev() above under USE_RAND)?
+// Who uses random()? Nyquist uses random numbers in XLISP, in the
+// noise() function, in STK's Noise class, and probably other places.
+you must die here
     srandom(1);
 #endif
 
