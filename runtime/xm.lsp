@@ -1898,7 +1898,8 @@ pattern argument (by default).
       (if (not (and (listp r) (= 2 (length r)) (symbolp (car r)) (symbolp (cadr r))))
           (error (format nil
                    "In ~A,~A argument (~A) should be a list of lists of two symbols, got ~A"
-                   fun-name (index-to-string index) formal actual))))))
+                   fun-name (index-to-string index) formal actual)))
+      (setf lis (cdr lis))  )))
 
 
 (defun score-voice (score replacement-list &key
