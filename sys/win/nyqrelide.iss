@@ -14,7 +14,7 @@ AppId=3E29123D-0726-441C-8A38-42836B05F74C
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
 AppName=NyquistIDE
-AppVerName=NyquistIDE 3.11e
+AppVerName=NyquistIDE 3.12
 AppPublisher=Roger B. Dannenberg
 AppPublisherURL=http://www.cs.cmu.edu/~music/nyquist
 AppSupportURL=http://www.cs.cmu.edu/~music/nyquist
@@ -26,7 +26,7 @@ InfoAfterFile=nyqrelide\Readme.txt
 OutputDir=setup
 OutputBaseFilename=setupnyqiderun
 SetupIconFile=sys\win\wingui\nycon.ico
-SourceDir=c:\Users\rbd\nyquist
+SourceDir=c:\Users\roger\nyquist
 Compression=lzma
 SolidCompression=yes
 
