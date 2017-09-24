@@ -46,9 +46,12 @@
 ;; a convenient sound file name (change this to one of your soundfiles):
 (setf sfn nil) ; "/Users/rbd/class/icm2009/sounds/talking.wav") 
 
+(display "in fft_demo.lsp" (current-path))
+
 ;; if sfn does not exist, make a file (useful for testing)
 (cond ((null sfn)
-       (load "../pmorales/b1.lsp")
+       ;; try to make this work even if demos is not on XLISPPATH
+       (load (strcat (current-path) "../pmorales/b1.lsp"))
        ;; nyquist has no built-in function to remove a file, so this
        ;; sound file, temp-gong3melody.wav, will not be removed. It is
        ;; not large compared to Nyquist itself.

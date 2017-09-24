@@ -698,7 +698,7 @@ public class MainFrame extends JFrame {
         buttonInit("Save File", "Save File", menuButtonListener);
         buttonInit("Load", "Load File into Nyquist", menuButtonListener);
         buttonInit("Mark", "Get elapsed audio play time", menuButtonListener);
-        buttonInit("Test", "This should not be in released version.", menuButtonListener);
+        // buttonInit("Test", "This should not be in released version.", menuButtonListener);
 
         jMenuBar1.add(jMenuFile);
         jMenuBar1.add(jMenuEdit);
@@ -961,7 +961,7 @@ public class MainFrame extends JFrame {
         else if (cmd.equals("Save As...")) doFileSaveAs(e);
         else if (cmd.equals("Load") || cmd.equals("Load...")) doFileLoad(e);
         else if (cmd.equals("Mark")) doProcessMark(e);
-        else if (cmd.equals("Test")) doProcessTest(e);
+        else if (cmd.equals("Test")) doProcessTest(e); // usually disabled
         else if (cmd.equals("Preferences...")) Prefs();
         else if (cmd.equals("Exit")) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -1553,16 +1553,19 @@ public class MainFrame extends JFrame {
     String activeSliderPanelName;
 
     /* this is a test function to simulate creating a slider panel */
+    /* or you can put any other test in here - it should not be in release */
     public void doProcessTest(ActionEvent e) {
         /*        createSliderPanel("PanelName2", 3);
         createSlider("S1", 10, 0.3, 0.0, 2.0);
         createSlider("S2Long", 11, 0.3, 0.0, 1.0);
         */
+        /*
         // System.setProperty("apple.awt.fileDialogForDirectories", "true");
         JFileChooser xxx = new JFileChooser();
         System.out.println("xxx open ...");
         xxx.showOpenDialog(this);
         System.out.println("xxx open returned");
+        */
     }
 
     public void createSliderPanel(String name, int color) {
