@@ -35,7 +35,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.io.File;
 
-import com.sun.corba.se.spi.servicecontext.SendingContextServiceContext;
+// import com.sun.corba.se.spi.servicecontext.SendingContextServiceContext;
 
 import jnyqide.*;
 

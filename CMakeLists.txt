@@ -755,7 +755,7 @@ endif()
       endif(USE_ALSA)
       add_custom_target(jNyqIDE ALL 
           mv jnyqide/SpecialMacHandler.java jnyqide/SpecialMacHandler.hidden
-        COMMAND javac -source 1.6 jnyqide/*.java 
+        COMMAND javac jnyqide/*.java 
         COMMAND 
           mv jnyqide/SpecialMacHandler.hidden jnyqide/SpecialMacHandler.java
         COMMAND rm -f jnyqide/jNyqIDE.jar
