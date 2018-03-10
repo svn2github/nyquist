@@ -2,7 +2,7 @@
 ;;   spectrogram data
 ;;
 ;; Roger B. Dannenberg and Gus Xia
-;; Jan 2013
+;; Jan 2013, modified Oct 2017
 
 ;; API:
 ;;
@@ -39,12 +39,7 @@
 ;;     :hann, :hanning, :hamming, :none, nil, where :none and
 ;;     nil mean a rectangular window.
 ;; input can be a string (which specifies a sound file to read)
-;;     or a Nyquist SOUND to be analyzed. Input will be "destroyed"
-;;     via snd-fft, so if input is a SOUND stored in a variable,
-;;     you should probably pass in (snd-copy variable) or in SAL,
-;;     pass in snd-copy(variable). If snd-copy is used, the sound
-;;     samples might be retained in memory, so you should be 
-;;     careful with long sounds.
+;;     or a Nyquist SOUND to be analyzed.
 ;; Return value is an XLISP object that can be called to obtain
 ;;     parameters as well as a sequence of spectral frames.
 ;;
@@ -125,9 +120,6 @@
 (defun hann-window (frame-size) (sa-fft-window frame-size 0.5 0.5))
 (defun hamming-window (frame-size) (sa-fft-window frame-size 0.54 0.46))
 
-
-;; Check that win-type is acceptable and return canonical form
-;;
 (defun sa-get-window-type (win-type)
   (case win-type
     ((:hann :hanning)    :hann)
@@ -139,12 +131,14 @@
 
 
 (defun sa-compute-window (len win-type)
-  (set win-type (sa-get-window-type win-type))
   (case win-type
     (:hann        (hann-window len))
     (:none        nil)
-    (:hamming     (hamming-window len))))
-    
+    (:hamming     (hamming-window len))
+    (t (print "Warning: invalid window-type paramter: ~A~%" win-type)
+       (print "    Using :HAMMING instead.~%")
+       (hamming-window len))))
+  
 
 (send sa-class :answer :isnew '(snd len skp win-type) '(
     (setf sound snd)
@@ -152,6 +146,7 @@
     (setf skip skp)
     (setf window-type (sa-get-window-type win-type))
     (setf window (sa-compute-window length window-type))))
+
 
 ;; sa-to-mono -- sum up the channels in an array
 ;;
@@ -168,7 +163,9 @@
            (setf input (s-read input))))
     (cond ((arrayp input)
            (format t "Warning: sa-init is converting stereo sound to mono~%")
-           (setf input (sa-to-mono input))))
+           (setf input (sa-to-mono input)))
+          ((soundp input) ;; so that variables are not "consumed" by snd-fft
+           (setf input (snd-copy input))))
     (cond ((not (soundp input))
            (error
             (format nil
@@ -190,11 +187,12 @@
     (setf n 4)
     (while (< n len)
       (setf n (* n 2)))
-    (setf len n) ;; len is now an integer power of 2
+    (setf length n) ;; len is now an integer power of 2
+    ;(display "sa-init" length)
     ;; compute skip length - default is len/2
     (setf skip (if skip-period (round (* skip-period sr))
-                               (/ len 2)))
-    (send sa-class :new input len skip window)))
+                               (/ length 2)))
+    (send sa-class :new input length skip window)))
 
 
 (defun sa-next (sa-obj)
@@ -215,7 +213,7 @@
 (defun sa-plot (sa-obj frame)
   (send sa-obj :plot frame))
 
-(defun sa-magnitude (frame)
+(defun sa-magnitude(frame)
   (let* ((flen (length frame))
          (n (/ (length frame) 2)) ; size of amplitude spectrum - 1
          (as (make-array (1+ n))))  ; amplitude spectrum
@@ -288,5 +286,4 @@
       (setf frame (sa-next sa))
       (if (null sa) (return nil))
       (sa-plot sa frame))))
-
 

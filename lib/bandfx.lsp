@@ -101,12 +101,6 @@
 
 ;; First, a few helper functions
 
-;; CHECK-PIANO -- make sure pianosyn.lsp is loaded
-;;
-(defun check-piano ()
-  (cond ((not (boundp '*pianosyn-path*))
-         (load "pianosyn"))))
-
 ;; PN-RIFF -- make a sound to which we can add effects
 ;;
 (defun pn-riff ()
@@ -121,25 +115,21 @@
 ;; loading this file using the F2, F3, ... buttons in the IDE.
 
 (defun band-2 ()
-  (check-piano)
   (play (apply-banded-delay (pn-riff) c2 120 28 1.0 0.0 0.0 0.2)))
 
 (setfn f2 band-2)
 
 (defun band-3 ()
-  (check-piano)
   (play (apply-banded-delay (pn-riff) c2 120 28 0.0 1.0 0.0 0.2)))
 
 (setfn f3 band-3)
 
 (defun band-4 ()
-  (check-piano)
   (play (scale 0.4 (apply-banded-bass-boost (pn-riff) c2 120 28 5 10))))
 
 (setfn f4 band-4)
 
 (defun band-5 ()
-  (check-piano)
   (play (scale 0.4 (apply-banded-treble-boost (pn-riff) c2 120 28 5 10))))
 
 (setfn f5 band-5)

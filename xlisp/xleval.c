@@ -45,6 +45,7 @@ LVAL xleval(LVAL expr)
     /* check for control codes */
     if (--xlsample <= 0) {
         xlsample = SAMPLE;
+        run_time++;
         oscheck();
     }
 

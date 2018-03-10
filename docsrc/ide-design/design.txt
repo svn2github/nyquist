@@ -1,0 +1,45 @@
+Extension Manager
+-----------------
+
+Where to put extensions: lib would be good since it's on Nyquist's path.
+
+To find lib, we can modify NyquistThread to report the XLISPPATH value
+used for Nyquist. Then parse the lib path and use it for extensions.
+
+I considered allowing a preference setting for the extensions directory, 
+but then, you would need to put the path on the XLISPPATH, which might
+no match and cause confusion. Instead, since we already have ways to 
+change XLISPPATH, we'll just base the extensions directory on XLISPPATH,
+finding the (first) lib directory there.
+
+Updates: store the checksum in each extension as:
+         lib/ext-name/checksum.txt
+To check for updates, scan for all directories to get ext-name from each;
+then compare checksums to values in in extlist.txt and mark each entry that
+does not match.
+
+Status: Extension Manager window should show which extensions are installed
+
+*Uninstall: Get confirmation. Delete directory accordingly.
+
+Install: needs to check if files are there already; if so, do nothing.
+         Prompt to "update if desired"
+
+Documentation:
+    In ExtensionManager, you can open extension file in browser to read
+        headers
+    When you download extension, there should be a NyquistWords.txt in
+        lib/ext-name/NyquistWords.txt
+    This should have links to functions using the same syntax as
+         NyquistWords.txt in jnyqide/NyquistWords.txt, only the
+         URL should be a file relative to lib, e.g. 
+             ext-name/index.html#piano
+   Nyquist will have to scan each extension directory and insert new 
+         names into the data corresponding to NyquistWords.txt
+   Nyquist will need a way to refresh the words after installing an
+         extension.
+
+General documentation: There is none, but you can put it in 
+        ext-name/index.html by convention, and you can link to it from
+        any function in ext-name/NyquistWords.txt
+

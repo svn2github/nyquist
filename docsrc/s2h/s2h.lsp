@@ -1611,7 +1611,10 @@ ret
 
 (defun generate-top (title outf)
     (format outf "<html><head><title>~A</title>~%<link rel=\"stylesheet\" " title)
-    (format outf "type=\"text/css\" href=\"nyquiststyle.css\">~%</head>~%"))
+    (format outf "type=\"text/css\" href=\"nyquiststyle.css\">~%")
+    (format outf "<link rel=\"icon\" href=\"nyquist-icon.png\" />~%")
+    (format outf "<link rel=\"shortcut icon\" href=\"nyquist-icon.png\" />~%")
+    (format outf "</head>~%"))
 
 
 (defun generate-home (title filename)

@@ -1,9 +1,11 @@
 package jnyqide;
 
 
+import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,45 +44,59 @@ public class WordList {
         return s;
     }
     
-    public static void init(JTextArea a)
-    {
+    public static void init(JTextArea a, String extDir)
+            throws FileNotFoundException {
         textArea = a;
-        //System.out.println("initializing WordList.java");
+        String nw = MainFrame.currentDir + "NyquistWords.txt";
+        BufferedReader inf;
         try {
-            BufferedReader inf;
-            String nw = MainFrame.currentDir + "NyquistWords.txt";
-            try {
-                inf = new BufferedReader(new FileReader(nw));
-                System.out.println("\n\n**********Opened " + nw +
-                                   "*********\n\n");
-            } catch (IOException e) {
-                String nw2 = MainFrame.currentDir + "jnyqide/NyquistWords.txt";
-                System.out.println("could not find " + nw + ", trying " + nw2);
-                inf = new BufferedReader(new FileReader(nw2));
-            }
-            String word, link;
-            while ((word = inf.readLine()) != null) {                
-                //wordsTrie.addWord(word);
-                words.add(word);
-                link = inf.readLine();
-                if ((link == null) || (link.equals(""))) link = "home.html";
-                //char[] letters = word.toCharArray();
-                //if (letters[letters.length-1] == ')') word = "(" + word;
-                //URLLinks.put(word, link);
-                // word is usually an expression, e.g. 
-                // "transpose-abs amount beh)", so parse out the first word
-                int i = word.indexOf(" ");
-                if (i >= 0) word = word.substring(0, i);
-                i = word.indexOf(")");
-                if (i >= 0) word = word.substring(0, i);
-                URLLinks.put(word, link);
-            }
-            inf.close();
+            inf = new BufferedReader(new FileReader(nw));
+            System.out.println("\n\n**********Opened " + nw +
+                               "*********\n\n");
+            processWordFile(inf, false);
         } catch (IOException e) {
-            System.out.println("Error: could not open NyquistWords.txt");
+            String nw2 = MainFrame.currentDir + "jnyqide/NyquistWords.txt";
+            System.out.println("could not find " + nw + ", trying " + nw2);
+            inf = new BufferedReader(new FileReader(nw2));
         }
+
+        // now look for extensions
+        String[] directories = ExtensionManager.getExtensionDirs(extDir);
+        for (String dir : directories) {
+            String nw3 = extDir + dir + File.separator + "nyquistwords.txt";
+            try {
+                inf = new BufferedReader(new FileReader(nw3));
+                processWordFile(inf, true);
+            } catch (IOException e) {
+                continue; // must not have a nyquistwords.txt file, it's ok
+            }
+        }   
     }
     
+
+    public static void processWordFile(BufferedReader inf, boolean ext)
+            throws IOException {
+        String word, link;
+        while ((word = inf.readLine()) != null) {                
+            words.add(word);
+            link = inf.readLine();
+            if ((link == null) || (link.equals(""))) link = "home.html";
+
+            // mark links to extension documentation with "@" prefix
+            if (ext) {
+                link = "@" + link;
+            }
+
+            int i = word.indexOf(" ");
+            if (i >= 0) word = word.substring(0, i);
+            i = word.indexOf(")");
+            if (i >= 0) word = word.substring(0, i);
+            URLLinks.put(word, link);
+        }
+        inf.close();
+    }
+
+
     public static String removeChar(String word, char c) {
         int loc = word.indexOf(c);
         while (loc >= 0) {
@@ -90,12 +106,9 @@ public class WordList {
         return word;
     }
 
-    public static void appendSyntaxTip(StringBuffer s, String word, boolean sal) {
-        // let's keep the brackets until we copy the hint string into an editor
-          // first, remove brackets
-          // word = removeChar(removeChar(word, '['), ']');
-        // if this is a lisp expression, append close paren
-        if (word.charAt(word.length() - 1) == ')') {
+    public static void appendSyntaxTip(StringBuffer s, String word,
+                                       boolean sal) {
+        if (word.charAt(word.length() - 1) == ')') { // indicates a function
             if (sal) {
                 // make it prefix with commas
                 int loc = word.indexOf(' '); // end of function name
@@ -148,6 +161,14 @@ public class WordList {
             }
         }
         s.append(word);
+        // if this is external, add the package name
+        String link = getlink(word);
+        if (link.charAt(0) == '@') {
+            int loc = link.indexOf('/'); // end of external name
+            s.append(" ");
+            s.append("ext: ");
+            s.append(word.substring(1, loc));
+        }
         s.append("\n");
     }
     

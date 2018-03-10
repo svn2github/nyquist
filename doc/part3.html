@@ -1,5 +1,7 @@
 <html><head><title>The NyquistIDE Program</title>
 <link rel="stylesheet" type="text/css" href="nyquiststyle.css">
+<link rel="icon" href="nyquist-icon.png" />
+<link rel="shortcut icon" href="nyquist-icon.png" />
 </head>
 <body bgcolor="ffffff">
 <a href = "part2.html">Previous Section</a> | <a href = "part4.html">Next Section</a> | <a href = "title.html#toc">Table of Contents</a> | <a href = "indx.html">Index</a> | <a href = "title.html">Title Page</a>
@@ -51,11 +53,11 @@ This command replays the last computed sound.
 These commands are not built-in, and allow users to define their own
 custom actions.
 <li>Browse &ndash; <a name="index122"></a>Equivalent to the Window:Browse
-menu item. (See Section <a href = "#22">"Browser"</a>.)
+menu item. (See Section .)
 <li>EQ &ndash; <a name="index123"></a>Equivalent to the Window:EQ menu item.
-(See Section <a href = "#24">"Equalizer Editor"</a>.)
+(See Section .)
 <li>EnvEdit &ndash; <a name="index124"></a>Equivalent to the Window:Envelope Edit 
-menu item. (See Section <a href = "#23">"Envelope Editor"</a>.)
+menu item. (See Section .)
 <li>NewFile &ndash; <a name="index125"></a>Equivalent to the File:New menu
 item. Opens a new file editing window for creating and
 loading a Lisp or SAL program file.
@@ -69,7 +71,7 @@ item (found on the editing window's menu bar). Performs a Save operation,
 then sends a command to Nyquist that loads the file as a program.
 <li>Mark &ndash; <a name="index129"></a>Sends a Control-A to Nyquist. While
 playing a sound, this displays and records the approximate time in the
-audio stream. (See Section <a href = "part8.html#99">"Sound File Input and Output"</a> for more detail.)
+audio stream. (See Section  for more detail.)
 </ul>
 <p>
 <a name = "21"><h3>Command Completion</h3></a>
@@ -134,7 +136,7 @@ the expression <code>fast-attack()</code>.
 These edited envelopes are saved to a file named <code>workspace.lsp</code> 
  <a name="index135"></a> in
 the current directory. The workspace is Nyquist's mechanism for saving
-data of all kinds (see Section <a href = "part15.html#179">"Workspaces"</a>). The normal way to
+data of all kinds (see Section ). The normal way to
 work with workspaces is to (1) load the workspace, i.e.
  <code>load "workspace"</code>, as soon as you start Nyquist; (2) invoke
 the envelope editor to change values in the workspace; and (3) save the
@@ -250,7 +252,7 @@ play upic(upicdata)
 If you created your own names for waveforms or envelopes, you must be
 sure that these exist before calling the <code>upic</code> function. Each 
 waveform must be the name of a variable which is set to a Nyquist
-wave table. (See Section <a href = "part2.html#11">"Waveforms"</a> for information on how
+wave table. (See Section  for information on how
 to create a wave table.) Also, each envelope must name a function with
 no parameters that will return an amplitude envelope. The following is
 the built-in definition for <code>upic-env</code>:

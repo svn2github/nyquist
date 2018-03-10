@@ -46,12 +46,12 @@
 
 (defun sf-srate (filename)
   (s-read filename) ; s-read returns list of info in *rslt*
-  (s-read-srate *rslt*))
+  (snd-read-srate *rslt*))
 
 
 (defun sf-dur (filename)
   (s-read filename)
-  (s-read-dur *rslt*))
+  (snd-read-dur *rslt*))
 
 ;; ============================================================
 ;; Define some other handy support functions

@@ -23,7 +23,7 @@ BOOTCLASSPATH=/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/jce.
 
 # execute immediately on compilation error
 set -e
-javac -source 1.7 -target 1.7 -XDignore.symbol.file=true *.java 
+javac -XDignore.symbol.file=true *.java 
 
 # Important: run jar in parent dir because everything is in package jnyqide
 cd ..

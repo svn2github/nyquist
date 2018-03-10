@@ -260,7 +260,6 @@ END-SOUND
 Keyboard:piano[piano-note](float duration = 2 (0.1:9.9), 
 	                   int pitch = 70 (60:100),
                            int dynamic = 50 (0:100))
-REQUIRE "pianosyn.lsp"
 END-SOUND
 
 

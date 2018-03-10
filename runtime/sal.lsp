@@ -366,7 +366,7 @@
 
 (defun lisp-loader (filename &key (verbose t) print)
   (if (load filename :verbose verbose :print print)
-      nil ; be quiet if things work ok
+      t ; be quiet if things work ok
       (format t "error loading lisp file ~A~%" filename)))
 
 

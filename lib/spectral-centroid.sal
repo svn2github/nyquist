@@ -1,0 +1,126 @@
+; compute-spectral-centroid.sal -- a function to compute the spectral centroid
+;
+; Roger B. Dannenberg and Gus Xia
+; Feb 2013
+;
+;; The spectral centroid is a weighted average of the values in the
+;; amplitude (or magnitude) spectrum. The weights are frequencies 
+;; corresponding to each point in the dicrete Fourier transform.
+;; One way to think about a centroid is if you cut out the area
+;; under the amplitude spectrum and found the balance point, it
+;; would be the spectral centroid. Higher frequency content implies
+;; a higher centroid, and lower frequencies imply a lower centroid.
+;; The spectral centroid is thus a rough measure of "spectral 
+;; brightness." Often louder sounds have a higher spectral centroid.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; set sc = spectral-centroid(
+;                       resolution: <nil or Hz>,
+;;                      fft-dur: <nil or seconds>,
+;;                      skip-period: <seconds>,
+;;                      window: <window type>, 
+;;                      input: <filename or sound>)
+;; 
+;; spectral-centroid() computes the spectral centroid of the input signal.
+;;     A sound is returned such that the sample rate is the frame rate
+;;     of the FFT analysis, and each sample amplitude is the spectral
+;;     centroid of the frame. The parameters are identical to those for
+;;     spectral analysis (see spectral-analysis.lsp)
+;; 
+;; resolution is the width of each spectral bin in Hz. If nil of
+;;     not specified, the resolution is computed from fft-dur. 
+;;     The actual resolution will be finer than the specified 
+;;     resolution because fft sizes are rounded to a power of 2.
+;; fft-dur is the width of the FFT window in seconds. The actual
+;;     FFT size will be rounded up to the nearest power of two
+;;     in samples. If nil, fft-dur will be calculated from 
+;;     resolution. If both fft-size and resolution are nil
+;;     or not specified, the default value of 1024 samples,
+;;     corresponding to a duration of 1024 / signal-sample-rate,
+;;     will be used. If both resolution and fft-dur are
+;;     specified, the resolution parameter will be ignored.
+;;     Note that fft-dur and resolution are reciprocals.
+;; skip-period specifies the time interval in seconds between 
+;;     successive spectra (FFT windows). Overlapping FFTs are
+;;     possible. The default value overlaps windows by 50%. 
+;;     Non-overlapped and widely spaced windows that ignore 
+;;     samples by skipping over them entirely are also acceptable.
+;; window specifies the type of window. The default is raised
+;;     cosine (Hann or "Hanning") window. Options include
+;;     :hann, :hanning, :hamming, :none, nil, where :none and
+;;     nil mean a rectangular window.
+;; input can be a string (which specifies a sound file to read)
+;;     or a Nyquist SOUND to be analyzed.
+;; Return value is a sound object which contains the spectral centroid values.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; set sc-cen = sc-centroid(<bin-width in Hz>, <mag, an array>)
+;;
+;; bin-width is the bin size in Hz of each point in mag 
+;; mag is an array that contains a magnitude spectrum. 
+;; sc-cen is the spectral centroid, in Hz, which is a floating point number.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+
+load "spectral-analysis.lsp"
+load "spectral-centroid.lsp"
+
+;; a function to compute the spectral centroid values and return a sound
+function spectral-centroid(resolution: nil, fft-dur: nil,  skip-period: nil,
+                           window: nil, input: nil)
+  begin
+    with sa-obj = sa-init(resolution: resolution, fft-dur: fft-dur,
+                          skip-period: skip-period, window: window, 
+                          input: input),
+         sr = 1 / sa-get-fft-skip-period(sa-obj),
+         t0 = local-to-global(0)
+    return snd-fromobject(t0, sr, sc-init-internal(sa-obj))
+  end
+
+    
+
+;; a function to compute the spectral centroid of a spectrum
+;;
+function sc-centroid(bin-width, mag)
+  loop    
+    with weighted-sum = 0,
+         total-weight = 0,
+         centroid
+    for i from 0 below length(mag)
+    set weighted-sum += mag[i] * i
+    set total-weight += mag[i]
+    finally
+      begin
+        if total-weight < 0.000001 then return 0.0
+        return weighted-sum * bin-width / total-weight
+      end
+  end
+
+
+;; TEST sc-centroid itself
+;;
+function test-sc-centroid()
+  begin 
+    with mag = vector(0, 1, 2, 3, 4)
+    display length(mag)
+    display mag
+    print sc-centroid(50.0,  mag)
+  end
+
+;exec test-sc-centroid()
+
+
+;; TEST spectral-centroid
+;;
+function test-spectral-centroid()
+  begin
+    with sc = spectral-centroid(fft-dur: 0.1, skip-period: 0.1, window: :hann,
+                                input: hzosc(pwl(6, 4000)))
+    exec s-plot (sc)   
+end
+
+; exec test-spectral-centroid()
+
+
+
+

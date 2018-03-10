@@ -9,6 +9,8 @@
 
 ;; #### Error checking and reporting functions ####
 
+(setf *SAL-CALL-STACK* nil) ; because SEQ looks at this
+
 ;; MULTICHANNEL-SOUNDP - test for vector of sounds
 (defun multichannel-soundp (v)
   (prog ((rslt t))
@@ -662,7 +664,7 @@ loop
     (ny:error "SAMPLER" 1 '((STEP) "pitch") pitch))
   (ny:typecheck (not (soundp modulation))
     (ny:error "SAMPLER" 2 '((SOUND) "modulation") modulation))
-  (ny:assert-sample "SAMPLER" "3rd" "table" sample)
+  (ny:assert-sample "SAMPLER" 3 "table" sample)
   (ny:typecheck (not (integerp npoints))
     (ny:error "BUZZ" 3 '((INTEGER) "npoints") npoints))
   (let ((samp (car sample))
@@ -1272,46 +1274,6 @@ loop
                (ny:error "TRANSPOSE-ABS" 1 number-anon amt))
            (list amt))
       ,s))
-
-
-;; COMPUTE-DEFAULT-SOUND-FILE -- construct and set *default-sound-file*
-;;
-;; (this is harder than it might seem because the default place for
-;;  sound files is in /tmp, which is shared by users, so we'd like to
-;;  use a user-specific name to avoid collisions)
-;;
-(defun compute-default-sound-file () 
-  (let (inf user extension)
-      ; the reason for the user name is that if UserA creates a temp file,
-      ; then UserB will not be able to overwrite it. The user name is a
-      ; way to give each user a unique temp file name. Note that we don't
-      ; want each session to generate a unique name because Nyquist doesn't
-      ; delete the sound file at the end of the session.
-   (setf user (get-user))
-#|
-   (cond ((null user)           
-       (format t 
-"Please type your user-id so that I can construct a default 
-sound-file name.  To avoid this message in the future, add
-this to your .login file:
-    setenv USER <your id here>
-or add this to your init.lsp file:
-    (setf *default-sound-file* \"<your filename here>\")
-    (setf *default-sf-dir* \"<full pathname of desired directory here>\")
-
-Your id please: ")
-       (setf user (read))))
-|#
-    ; now compute the extension based on *default-sf-format*
-    (cond ((= *default-sf-format* snd-head-AIFF)
-           (setf extension ".aif"))
-          ((= *default-sf-format* snd-head-Wave)
-           (setf extension ".wav"))
-          (t
-           (setf extension ".snd")))
-    (setf *default-sound-file* 
-      (strcat (string-downcase user) "-temp" extension))
-    (format t "Default sound file is ~A.~%" *default-sound-file*)))
 
 
 ;; CONTROL-WARP -- apply a warp function to a control function
@@ -2405,39 +2367,35 @@ loop
     snd offset vardelay maxdelay))
 
 
-
-
 ;; autoload functions -- SELF-MODIFYING CODE!
-;; these functions replace themselves by loading more files
-;; and then re-call themselves as if they were already loaded
+;; generate functions that replace themselves by loading more files
+;; and then re-calling themselves as if they were already loaded
+;;
+(defun autoload (filename &rest fns)
+  ;; filename is the file to load (a string) from the current path
+  ;; fns are symbols to be defined as function that will load filename
+  ;;     the first time any one is called, and it is assumed that
+  ;;     filename will define each function in fns, so the called
+  ;;     function can be called again to execute the real implementation
+  (let ((cp (current-path)))
+    (cond ((string-equal cp "./") ;; this is the typical case
+           (setf cp (setdir "."))))
+    ;; make sure cp ends in file separator
+    (cond ((not (equal (char cp (1- (length cp))) *file-separator*))
+           (setf cp (strcat cp (string *file-separator*)))))
+    (setf cp (strcat cp filename))
+    (dolist (fn fns)
+      (eval `(defun ,fn (&rest args)
+               (autoload-helper ,cp ',fn args))))))
 
-(defun spec-plot (&rest args)
-  (if (abs-env (load "spec-plot.lsp"))
-      (apply 'spec-plot args)
-      (error "Could not load spec-plot.lsp")))
 
-(defun sa-init (&rest args)
-  (if (abs-env (load "spectral-analysis.lsp"))
-      (apply 'sa-init args)
-      (error "Could not load spec-plot.lsp")))
+(defun autoload-helper (path fn args)
+  (if (abs-env (sal-load path))
+      (apply fn args)
+      (error (strcat "Could not load " path))))
 
-(defun piano-note-2 (step dynamic)
-  (if (abs-env (load "pianosyn.lsp"))
-      (piano-note-2 step dynamic)
-      (error "Could not load pianosyn.lsp")))
 
-(defun piano-note (duration step dynamic)
-  (if (abs-env (load "pianosyn.lsp"))
-      (piano-note duration step dynamic)
-      (error "Could not load pianosyn.lsp")))
+(autoload "spec-plot.lsp" 'spec-plot)
 
-(defun piano-midi (midi-file-name)
-  (if (abs-env (load "pianosyn.lsp"))
-      (piano-midi midi-file-name)
-      (error "Could not load pianosyn.lsp")))
-
-(defun piano-midi2file (midi-file-name sound-file-name)
-  (if (abs-env (load "pianosyn.lsp"))
-      (piano-midi midi-file-name sound-file-name)
-      (error "Could not load pianosyn.lsp")))
+(autoload "spectral-analysis.lsp" 'sa-init)
 

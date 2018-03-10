@@ -72,12 +72,14 @@ public class MainFrame extends JFrame {
     MiniBrowser miniBrowser;
     
     NyquistThread nyquistThread;
-    JInternalFrame jFrame;
+
     // used by TextColor to communicate result back to MainFrame
     // public static boolean evenParens;
     public static String currentDir = "";
     public static String nyquistDir = "";
     public static String docDir = ""; // the nyquist/doc directory
+    public String extDir = ""; // the directory for extensions, normally lib
+
     Runnable update = new ScrollUpdate(this);
     PlotFrame plotFrame;
     File homeDir = new File(".");
@@ -85,9 +87,8 @@ public class MainFrame extends JFrame {
     public String replacePattern = "";
     boolean packFrame = false;
     EnvelopeFrame envelopeEditor;
-    /* BEGIN UPIC */
     UPICFrame upicEditor;
-    /* END UPIC */
+    ExtensionManager extensionManager;
     Jslide eqEditor;
     public Preferences prefs;
     public static final boolean prefStartInSalModeDefault = true;
@@ -654,23 +655,23 @@ public class MainFrame extends JFrame {
         menuAddItem(jMenuProcess, "Replay", 'r', null, menuButtonListener);
         menuAddItem(jMenuProcess, "Plot", 'p', null, menuButtonListener);
         menuAddItem(jMenuProcess, "Copy to Lisp", 'u', 
-            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U,
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U,
                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-            menuButtonListener);
+                menuButtonListener);
         menuAddItem(jMenuProcess, "Mark", 'a', null, menuButtonListener);
         
         jMenuWindow.setText("Window");
         menuAddItem(jMenuWindow, "Tile", 't', null, menuButtonListener);
         menuAddItem(jMenuWindow, "Browse", 'b', null, menuButtonListener);
         menuAddItem(jMenuWindow, "EQ", 'q', null, menuButtonListener);
-        menuAddItem(jMenuWindow, "Envelope Edit", 'e', null, menuButtonListener);
-        // menuAddItem(jMenuWindow, "Nyquistlator", 'y', null, menuButtonListener);
-        /* BEGIN UPIC */
+        menuAddItem(jMenuWindow, "Envelope Edit", 'e', null, 
+                    menuButtonListener);
         menuAddItem(jMenuWindow, "UPIC Edit", 'u', null, menuButtonListener);
-        /* END UPIC */
+        menuAddItem(jMenuWindow, "Extension Manager", 'x', null, 
+                    menuButtonListener);
         buttonInit("Info", "Print Lisp memory status", menuButtonListener);
         buttonInit("Break", "Break/interrupt Lisp interpreter",
-           menuButtonListener);
+                   menuButtonListener);
         // removed "Up" and "Cont" just to make some real-estate
         // buttonInit("Up", "Return from this break level", menuButtonListener);
         // buttonInit("Cont", "Continue Lisp execution", menuButtonListener);
@@ -689,7 +690,6 @@ public class MainFrame extends JFrame {
         buttonInit("EQ", "Equalizer Control Panel", menuButtonListener);
         buttonInit("EnvEdit", "Open Graphical Envelope Editor", 
                    menuButtonListener);
-        // buttonInit("Nyquistlator", "Nyquistlator", menuButtonListener);
         // buttonNew.setIcon(image1);
         buttonInit("New File", "New File", menuButtonListener);
         // buttonOpen.setIcon(image1);
@@ -759,7 +759,11 @@ public class MainFrame extends JFrame {
                     (e.getModifiers() & InputEvent.ALT_MASK) != 0) {
                     String ext = WordList.getlink(line);
                     System.out.println(line + " : " + ext);
-                    openManual(ext);
+                    if (ext.charAt(0) == '@') { // extension documentation
+                        openPage(ext.substring(1));
+                    } else {
+                        openManual(ext);
+                    }
             	} else {
                     // System.out.println(e.paramString());
             		if (line.length() > 0)
@@ -819,18 +823,19 @@ public class MainFrame extends JFrame {
         contentPane.add(statusBar, BorderLayout.SOUTH);
         setSize( new Dimension(800, 800) );
 
-        miniBrowser = new MiniBrowser("Nyquist Manual");
+        miniBrowser = new MiniBrowser("Nyquist Browser Window");
         miniBrowser.setBounds(50, 100, 700, 400);
         jDesktop.add(miniBrowser);
         
         TextColor.init();
-        WordList.init(jListOutputArea);
-        SalWordList.init();
         
         plotFrame = new PlotFrame(jInputAndPlot);
         
         nyquistThread = new NyquistThread();
         nyquistThread.start(jOutputArea, update, plotFrame, this);
+        // now extDir is set
+        WordList.init(jListOutputArea, extDir);
+        SalWordList.init();
         
         System.out.print("jDesktop size: ");
         System.out.println(jDesktop.getSize().toString());
@@ -891,9 +896,12 @@ public class MainFrame extends JFrame {
     
     public void openManual(String ext) {
         String url = (prefOnlineManual ? onlineManualURL : 
-                                         "file://" + docDir) +
-                     ext;
-        
+                                         "file://" + docDir) + ext;
+        openPage(url);
+    }
+
+
+    public void openPage(String url) {
         if (prefInternalBrowser) {
             miniBrowser.setVisible(true);
             System.out.println("Mini browser URL is: " + url);
@@ -976,6 +984,7 @@ public class MainFrame extends JFrame {
         else if (cmd.equals("Next")) doEditNext(e);
         else if (cmd.equals("Select Expression")) doEditSelectExpression(e);
         else if (cmd.equals("About")) About();
+        else if (cmd.equals("Extension Manager")) doExtensionManager();
         else if (cmd.equals("Manual")) doHelpManual(e);
         else if (cmd.equals("Replay")) doProcessReplay(e);
         else if (cmd.equals("Plot")) doProcessPlot(e);
@@ -984,10 +993,7 @@ public class MainFrame extends JFrame {
         else if (cmd.equals("EQ")) doWindowEQ(e);
         else if (cmd.equals("EnvEdit") || cmd.equals("Envelope Edit")) 
             doWindowEnvelope(e);
-        // else if (cmd.equals("Nyquistlator")) doNyquistlator(e);
-        /* BEGIN UPIC */
         else if (cmd.equals("UPIC Edit")) doWindowUPIC(e);
-        /* END UPIC */
         else if (cmd.equals("Info")) doProcessInfo(e);
         else if (cmd.equals("Break")) doProcessBreak(e);
         else if (cmd.equals("Up")) doProcessUp(e);
@@ -1313,41 +1319,63 @@ public class MainFrame extends JFrame {
                         (frmSize.height - dlgSize.height) / 2 + loc.y);
         dlg.setModal(true);
         dlg.setVisible(true);
-        
-        Graphics g = jFrame.getContentPane().getGraphics();
-        g.setColor(Color.cyan);
-        g.fillRect(50, 50, 100, 100);
-        
     }
     
 
+    public void doExtensionManager() {
+        // only one ExtensionManager instance allowed
+        if (extensionManager != null) {
+            JOptionPane.showMessageDialog(this,
+                        "Extension Manager is already open.",
+                        "alert", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        // open an Extension Manager window
+        extensionManager = new ExtensionManager(this);
+        extensionManager.validate();
+        jDesktop.add(extensionManager);
+        jDesktop.getDesktopManager().activateFrame(extensionManager);
+        jDesktop.setSelectedFrame(extensionManager);
+        extensionManager.setVisible(true);
+    }
+
+    
     public void doHelpManual(ActionEvent e) {
         // separate browser gets to use frames (with index) by 
         // opening home.html
         String ext = (prefInternalBrowser ? "title.html" : "home.html");
         openManual(ext);
     }
+
     
     public void doProcessReplay(ActionEvent e)
     {
         callFunction("r", "");
     }
+
     
     public void disconnectEnv() { // no more envelopeFrame, so kill pointer
         envelopeEditor = null;
     }
+
     
     public void disconnectEq() { // no more equalizer panel, so kill pointer
         eqEditor = null;
     }
 
-    /* BEGIN UPIC */
+
     public void disconnectUPIC() { // no more upicFrame, so kill pointer
         upicEditor = null;
     }
-    /* END UPIC */
     
-    public boolean workspaceWarning(String description) { // return true if OK to proceed
+
+    public void disconnectExtensionManager() { // no more extensionManager
+        extensionManager = null; // so kill pointer
+    }
+    
+
+    public boolean workspaceWarning(String description) { 
+        // return true if OK to proceed
         if (workspaceLoaded) return true;
         Object[] options = { "CANCEL", "LOAD", "SKIP" };
         int i = JOptionPane.showOptionDialog(this,
@@ -1406,24 +1434,7 @@ public class MainFrame extends JFrame {
         jDesktop.setSelectedFrame(envelopeFrame);
     }
     
-    /*
-    public void doNyquistlator(ActionEvent e)
-    {
-    	Nyquistlator nqltr = new Nyquistlator(this);
-        //nqltr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        nqltr.setVisible(true);
-        nqltr.setClosable(true);
-        nqltr.setMaximizable(true);
-        nqltr.setIconifiable(true);
-        
-    	nqltr.validate();
-    	jDesktop.add(nqltr);
-        jDesktop.getDesktopManager().activateFrame(nqltr);
-        jDesktop.setSelectedFrame(nqltr);
-    }
-    */
 
-    /* BEGIN UPIC */
     public void doWindowUPIC(ActionEvent e)
     {
         // only one editor instance allowed
@@ -1442,10 +1453,11 @@ public class MainFrame extends JFrame {
         jDesktop.getDesktopManager().activateFrame(upicFrame);
         jDesktop.setSelectedFrame(upicFrame);
     }
-    /* END UPIC */
+
     
     public void doWindowEQ(ActionEvent e) {
-          /* Code added by Rivera Create a slider object that is the graphic equalizer
+          /* Code added by Rivera 
+           * Create a slider object that is the graphic equalizer
            * Then add that slider object to the desktop, It will display
            * directly to the right of the output, given the outputs frame
            * width of 500

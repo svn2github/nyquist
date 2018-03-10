@@ -25,44 +25,50 @@
 ; later.  Finally, it is also necessary to save the current transformation
 ; environment until later.
 
+;; SEQ-EXPR-EXPAND - helper function, expands expression to push/pop entry 
+;;    on *sal-call-stack* to help debug calls into SAL from lazy evaluation
+;;    of SAL code by SEQ
+(defun seq-expr-expand (expr)
+  (if *sal-call-stack*
+    (list 'prog2 (list 'sal-trace-enter (list 'quote (list "Expression in SEQ:" expr)))
+                 expr
+                 '(sal-trace-exit))
+    expr))
+
+
 (defmacro seq (&rest list)
   (cond ((null list)
          (snd-zero (warp-time *WARP*) *sound-srate*))
         ((null (cdr list))
          (car list))
         ((null (cddr list))
-         ; (format t "SEQ with 2 behaviors: ~A~%" list)
-         `(let* ((first%sound ,(car list))
+         ;; SEQ with 2 behaviors
+         `(let* ((first%sound ,(seq-expr-expand (car list)))
                 (s%rate (get-srates first%sound)))
             (cond ((arrayp first%sound)
                    (snd-multiseq (prog1 first%sound (setf first%sound nil))
                      #'(lambda (t0)
-;                       (format t "MULTISEQ's 2nd behavior: ~A~%" ',(cadr list))
                         (with%environment ',(nyq:the-environment)
-;                           (display "MULTISEQ 1" t0)
                             (at-abs t0
-                                (force-srates s%rate ,(cadr list)))))))
+                                (force-srates s%rate ,(seq-expr-expand (cadr list))))))))
                   (t
                    ; allow gc of first%sound:
                    (snd-seq (prog1 first%sound (setf first%sound nil))
-                     #'(lambda (t0) 
-;                       (format t "SEQ's 2nd behavior: ~A~%" ',(cadr list))
+                     #'(lambda (t0)
                         (with%environment ',(nyq:the-environment)
                             (at-abs t0
-                                (force-srate s%rate ,(cadr list))))))))))
+                                (force-srate s%rate ,(seq-expr-expand (cadr list)))))))))))
 
-        (t
+        (t ;; SEQ with more than 2 behaviors
          `(let* ((nyq%environment (nyq:the-environment))
                  (first%sound ,(car list))
                  (s%rate (get-srates first%sound))
                  (seq%environment (getenv)))
             (cond ((arrayp first%sound)
-;                   (print "calling snd-multiseq")
                    (snd-multiseq (prog1 first%sound (setf first%sound nil))
                      #'(lambda (t0)
                         (multiseq-iterate ,(cdr list)))))
                   (t 
-;                   (print "calling snd-seq")
                    ; allow gc of first%sound:
                    (snd-seq (prog1 first%sound (setf first%sound nil))
                      #'(lambda (t0)
@@ -76,9 +82,10 @@
 
 (defmacro seq-iterate (behavior-list)
   (cond ((null (cdr behavior-list))
-         `(eval-seq-behavior ,(car behavior-list)))
-        (t
-         `(snd-seq (eval-seq-behavior ,(car behavior-list))
+         ;; last expression in list
+         `(eval-seq-behavior ,(seq-expr-expand (car behavior-list))))
+        (t ;; more expressions after this one
+         `(snd-seq (eval-seq-behavior ,(seq-expr-expand (car behavior-list)))
                    (evalhook '#'(lambda (t0) 
                                   ; (format t "lambda depth ~A~%" (envdepth (getenv)))
                                   (seq-iterate ,(cdr behavior-list)))
@@ -86,11 +93,10 @@
 
 (defmacro multiseq-iterate (behavior-list)
   (cond ((null (cdr behavior-list))
-         `(eval-multiseq-behavior ,(car behavior-list)))
+         `(eval-multiseq-behavior ,(seq-expr-expand (car behavior-list))))
         (t
-         `(snd-multiseq (eval-multiseq-behavior ,(car behavior-list))
+         `(snd-multiseq (eval-multiseq-behavior ,(seq-expr-expand (car behavior-list)))
                    (evalhook '#'(lambda (t0) 
-;                                 (format t "lambda depth ~A~%" (envdepth (getenv)))
                                   (multiseq-iterate ,(cdr behavior-list)))
                              nil nil seq%environment)))))
 
@@ -101,7 +107,6 @@
 
 (defmacro eval-multiseq-behavior (beh)
   `(with%environment nyq%environment 
-;                    (display "MULTISEQ 2" t0)
                      (at-abs t0
                              (force-srates s%rate ,beh))))
 
@@ -254,7 +259,7 @@
 ;; TIMED-SEQ-LINEAR - check to insure that times are strictly increasing
 ;;                    and >= 0 and stretches are >= 0
 (defun timed-seq-linear (score)
-  (let ((start-time 0) error-msg)
+  (let ((start-time 0) error-msg rslt)
     (dolist (event score)
       (cond ((< (car event) start-time)
              (error (format nil
@@ -274,20 +279,20 @@
           (t
            (at (caar score)
                (seqrep (i (length score))
-                 (cond ((cdr score)
-                        (let (event)
-                          (prog1
-                            (set-logical-stop
-                              (stretch (cadar score)
-                                (setf event (expand-and-eval-expr
-                                             (caddar score))))
-                              (- (caadr score) (caar score)))
-                            ;(display "timed-seq" (caddar score) 
-                            ;                     (local-to-global 0)
-                            ;                     (snd-t0 event)
-                            ;                     (- (caadr score) 
-                            ;                        (caar score)))
-                            (setf score (cdr score)))))
-                         (t
-                          (stretch (cadar score) (expand-and-eval-expr
-                                                  (caddar score)))))))))))
+                 (progn
+                   (cond (*sal-call-stack*
+                          (sal-trace-enter (list "Score event:" (car score)) nil nil)
+                          (setf *sal-line* 0)))
+                   (setf rslt
+                     (cond ((cdr score)
+                            (prog1
+                              (set-logical-stop
+                                (stretch (cadar score)
+                                  (expand-and-eval-expr (caddar score)))
+                                (- (caadr score) (caar score)))
+                              (setf score (cdr score))))
+                           (t
+                            (stretch (cadar score) (expand-and-eval-expr
+                                                    (caddar score))))))
+                   (if *sal-call-stack* (sal-trace-exit))
+                   rslt)))))))

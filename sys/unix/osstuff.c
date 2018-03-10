@@ -548,7 +548,7 @@ int ostgetc()
 
 /* ostputc - put a character to the terminal */
 void ostputc(int ch)
- {     
+{     
     oscheck();		/* check for control characters */
 
     /* output the character */
@@ -558,7 +558,7 @@ void ostputc(int ch)
     /* output the character to the transcript file */
     if (tfp) osaputc(ch,tfp);
     putchar(((char) ch));
- }
+}
  
 /* ostoutflush - flush output buffer */
 void ostoutflush()
@@ -667,7 +667,6 @@ void oscheck(void)
         }
     }
 
-    run_time++;
     // when compute-bound, run_time is incremented by 10000 in about 15s, so
     // that's about 700 Hz. We want to flush any output at about 2Hz, so 
     // we'll pick 400 as a round number.

@@ -1,9 +1,9 @@
 * expr ...)
-part19.html#index1616
+part19.html#index1617
 *a4-hertz*
 part9.html#index832
 *applyhook*
-part19.html#index1454
+part19.html#index1455
 *autonorm*
 part9.html#index833
 *autonorm-max-samples*
@@ -17,9 +17,9 @@ part9.html#index838
 *autonormflag*
 part9.html#index834
 *breakenable*
-part19.html#index1449
+part19.html#index1450
 *breakenable*
-part19.html#index1449
+part19.html#index1450
 *clipping-error*
 part9.html#index840
 *clipping-threshold*
@@ -29,7 +29,7 @@ part9.html#index843
 *control-srate*
 part9.html#index843
 *debug-io*
-part19.html#index1448
+part19.html#index1449
 *default-control-srate*
 part9.html#index849
 *default-plot-file*
@@ -47,29 +47,29 @@ part9.html#index848
 *default-sound-srate*
 part9.html#index850
 *error-output*
-part19.html#index1446
+part19.html#index1447
 *evalhook*
-part19.html#index1453
+part19.html#index1454
 *file-separator*
 part9.html#index851
 *float-format*
-part19.html#index1460
+part19.html#index1461
 *gc-flag*
-part19.html#index1457
-*gc-hook*
 part19.html#index1458
-*integer-format*
+*gc-hook*
 part19.html#index1459
+*integer-format*
+part19.html#index1460
 *loud*
 part4.html#index146
 *lpslider-cutoff*
 part9.html#index852
 *obarray*
-part19.html#index1443
+part19.html#index1444
 *print-case*
-part19.html#index1461
+part19.html#index1462
 *readtable*
-part19.html#index1455
+part19.html#index1456
 *rslt*
 part9.html#index853
 *saw-table*
@@ -93,9 +93,9 @@ part8.html#index671
 *spec-plot-res*
 part8.html#index669
 *standard-input*
-part19.html#index1444
-*standard-output*
 part19.html#index1445
+*standard-output*
+part19.html#index1446
 *start*
 part4.html#index149
 *stop*
@@ -105,61 +105,61 @@ part4.html#index148
 *table*
 part9.html#index831
 *trace-output*
-part19.html#index1447
+part19.html#index1448
 *tracelimit*
-part19.html#index1452
+part19.html#index1453
 *tracelist*
-part19.html#index1450
-*tracenable*
 part19.html#index1451
 *tracenable*
-part19.html#index1451
+part19.html#index1452
+*tracenable*
+part19.html#index1452
 *transpose*
 part4.html#index147
 *tri-table*
 part9.html#index870
 *unbound*
-part19.html#index1456
+part19.html#index1457
 *warp*
 part4.html#index145
 *~=tolerance*
 part9.html#index830
 + expr ...)
-part19.html#index1614
-- expr ...)
 part19.html#index1615
+- expr ...)
+part19.html#index1616
 / expr ...)
-part19.html#index1617
-/= n1 n2 ...)
-part19.html#index1644
-1+ expr)
 part19.html#index1618
-1- expr)
-part19.html#index1619
-< n1 n2 ...)
-part19.html#index1641
-<= n1 n2 ...)
-part19.html#index1642
-= n1 n2 ...)
-part19.html#index1643
-> n1 n2 ...)
-part19.html#index1646
->= n1 n2 ...)
+/= n1 n2 ...)
 part19.html#index1645
+1+ expr)
+part19.html#index1619
+1- expr)
+part19.html#index1620
+< n1 n2 ...)
+part19.html#index1642
+<= n1 n2 ...)
+part19.html#index1643
+= n1 n2 ...)
+part19.html#index1644
+> n1 n2 ...)
+part19.html#index1647
+>= n1 n2 ...)
+part19.html#index1646
 abs expr)
-part19.html#index1627
+part19.html#index1628
 abs-env beh)
 part8.html#index582
 add-action-to-workspace symbol)
-part15.html#index1263
+part15.html#index1264
 add-to-workspace symbol)
-part15.html#index1260
+part15.html#index1261
 address-of expr)
-part19.html#index1770
+part19.html#index1771
 agc input range rise-time fall-time [lookahead])
-part16.html#index1326
+part16.html#index1327
 alloc num)
-part19.html#index1760
+part19.html#index1761
 allpass2 signal hz [q])
 part8.html#index466
 allpoles-from-lpc snd lpc-frame)
@@ -169,37 +169,37 @@ part8.html#index427
 amosc pitch modulation [table phase])
 part8.html#index393
 and expr ...)
-part19.html#index1563
+part19.html#index1564
 append expr ...)
-part19.html#index1509
+part19.html#index1510
 apply fun args)
-part19.html#index1464
+part19.html#index1465
 apply-banded-bass-boost s lowp highp num-bands num-boost gain)
-part16.html#index1355
+part16.html#index1356
 apply-banded-delay s lowp highp num-bands lowd highd fb wet)
-part16.html#index1353
+part16.html#index1354
 apply-banded-treble-boost s lowp highp num-bands num-boost gain)
-part16.html#index1357
+part16.html#index1358
 arc-sine-dist )
-part15.html#index1184
+part15.html#index1185
 aref array n)
-part19.html#index1493
+part19.html#index1494
 areson sound center bandwidth [n])
 part8.html#index451
 args name)
 part14.html#index1094
 arrayp expr)
-part19.html#index1547
+part19.html#index1548
 assoc expr alist :test test :test-not test-not)
-part19.html#index1513
+part19.html#index1514
 at time beh)
 part8.html#index583
 at-abs time beh)
 part8.html#index585
 atan expr [expr2])
-part19.html#index1637
+part19.html#index1638
 atom expr)
-part19.html#index1535
+part19.html#index1536
 atone sound cutoff)
 part8.html#index446
 autonorm-off )
@@ -207,91 +207,91 @@ part8.html#index643
 autonorm-on )
 part8.html#index642
 backquote expr)
-part19.html#index1468
+part19.html#index1469
 baktrace [n])
-part19.html#index1606
+part19.html#index1607
 bandpass2 signal hz [q])
 part8.html#index464
 bernoulli-dist px1 [x1 x2])
-part15.html#index1191
+part15.html#index1192
 beta-dist a b)
-part15.html#index1189
+part15.html#index1190
 bigendianp )
-part19.html#index1766
+part19.html#index1767
 bilateral-exponential-dist xmu tau [low high])
-part15.html#index1177
+part15.html#index1178
 binomial-dist n p)
-part15.html#index1193
+part15.html#index1194
 biquad signal b0 b1 b2 a0 a1 a2)
 part8.html#index460
 biquad-m signal b0 b1 b2 a0 a1 a2)
 part8.html#index461
 block name expr ...)
-part19.html#index1586
+part19.html#index1587
 both-case-p chr)
-part19.html#index1682
+part19.html#index1683
 boundp sym)
-part19.html#index1551
+part19.html#index1552
 bowed step bowpress-env)
 part8.html#index525
 bowed-freq step bowpress-env freq-env)
 part8.html#index527
 break [bmsg [arg]])
-part19.html#index1601
+part19.html#index1602
 build-harmonic n table-size)
 part8.html#index360
 buzz n pitch modulation)
 part8.html#index397
 car expr)
-part19.html#index1497
-case expr case ...)
-part19.html#index1568
-catch sym expr ...)
-part19.html#index1574
-cauchy-dist tau [low high])
-part15.html#index1179
-cdr expr)
 part19.html#index1498
+case expr case ...)
+part19.html#index1569
+catch sym expr ...)
+part19.html#index1575
+cauchy-dist tau [low high])
+part15.html#index1180
+cdr expr)
+part19.html#index1499
 cerror cmsg emsg [arg])
-part19.html#index1600
+part19.html#index1601
 char string index)
-part19.html#index1679
+part19.html#index1680
 char-code chr)
-part19.html#index1684
+part19.html#index1685
 char-downcase chr)
-part19.html#index1687
+part19.html#index1688
 char-equal chr1 chr2 ...)
-part19.html#index1699
-char-greaterp chr1 chr2 ...)
-part19.html#index1702
-char-int chr)
-part19.html#index1689
-char-lessp chr1 chr2 ...)
-part19.html#index1697
-char-not-equal chr1 chr2 ...)
 part19.html#index1700
-char-not-greaterp chr1 chr2 ...)
+char-greaterp chr1 chr2 ...)
+part19.html#index1703
+char-int chr)
+part19.html#index1690
+char-lessp chr1 chr2 ...)
 part19.html#index1698
-char-not-lessp chr1 chr2 ...)
+char-not-equal chr1 chr2 ...)
 part19.html#index1701
+char-not-greaterp chr1 chr2 ...)
+part19.html#index1699
+char-not-lessp chr1 chr2 ...)
+part19.html#index1702
 char-upcase chr)
-part19.html#index1686
+part19.html#index1687
 char/= chr1 chr2 ...)
-part19.html#index1694
-char< chr1 chr2 ...)
-part19.html#index1691
-char<= chr1 chr2 ...)
-part19.html#index1692
-char= chr1 chr2 ...)
-part19.html#index1693
-char> chr1 chr2 ...)
-part19.html#index1696
-char>= chr1 chr2 ...)
 part19.html#index1695
+char< chr1 chr2 ...)
+part19.html#index1692
+char<= chr1 chr2 ...)
+part19.html#index1693
+char= chr1 chr2 ...)
+part19.html#index1694
+char> chr1 chr2 ...)
+part19.html#index1697
+char>= chr1 chr2 ...)
+part19.html#index1696
 characterp expr)
-part19.html#index1546
+part19.html#index1547
 chorus snd :delay delay :depth depth :rate rate :saturation saturation :phase phase)
-part16.html#index1347
+part16.html#index1348
 clarinet step breath-env)
 part8.html#index503
 clarinet-all step breath-env freq-env vibrato-freq vibrato-gain reed-stiffness noise)
@@ -299,33 +299,33 @@ part8.html#index509
 clarinet-freq step breath-env freq-env)
 part8.html#index506
 clean-up)
-part19.html#index1602
+part19.html#index1603
 clip sound peak)
 part8.html#index550
 close stream)
-part19.html#index1719
+part19.html#index1720
 close-slider-panel name)
 part10.html#index878
 code-char code)
-part19.html#index1685
+part19.html#index1686
 comb sound decay hz)
 part8.html#index428
 compress input map rise-time fall-time [lookahead])
-part16.html#index1324
+part16.html#index1325
 compress-map compress-ratio compress-threshold expand-ratio expand-threshold :limit limit :transition transition :verbose verbose)
-part16.html#index1322
+part16.html#index1323
 cond pair ...)
-part19.html#index1562
+part19.html#index1563
 congen gate risetime falltime)
 part8.html#index430
 cons expr1 expr2)
-part19.html#index1507
+part19.html#index1508
 consp expr)
-part19.html#index1542
+part19.html#index1543
 const value [duration])
 part8.html#index348
 continue)
-part19.html#index1604
+part19.html#index1605
 continuous-control-warp beh)
 part8.html#index587
 continuous-sound-warp beh)
@@ -339,7 +339,7 @@ part8.html#index364
 convolve sound response)
 part8.html#index433
 cos expr)
-part19.html#index1635
+part19.html#index1636
 cue sound)
 part8.html#index344
 cue-file filename)
@@ -347,7 +347,7 @@ part8.html#index345
 current-path )
 part14.html#index1106
 db-average input)
-part16.html#index1323
+part16.html#index1324
 db-to-linear x)
 part8.html#index306
 db-to-vel x [float])
@@ -355,43 +355,43 @@ part8.html#index307
 decf symbol)
 part14.html#index1098
 delete expr :test test :test-not test-not)
-part19.html#index1530
-delete-if test list)
 part19.html#index1531
-delete-if-not test list)
+delete-if test list)
 part19.html#index1532
+delete-if-not test list)
+part19.html#index1533
 describe symbol [description])
-part15.html#index1262
+part15.html#index1263
 diff a b)
 part8.html#index620
 digit-char n)
-part19.html#index1688
+part19.html#index1689
 digit-char-p chr)
-part19.html#index1683
+part19.html#index1684
 do (binding ...) (texpr rexpr ...) expr ...)
-part19.html#index1579
-do* (binding ...) (texpr rexpr ...) expr ...)
 part19.html#index1580
-dolist (sym expr [rexpr]) expr ...)
+do* (binding ...) (texpr rexpr ...) expr ...)
 part19.html#index1581
-dotimes (sym expr [rexpr]) expr ...)
+dolist (sym expr [rexpr]) expr ...)
 part19.html#index1582
+dotimes (sym expr [rexpr]) expr ...)
+part19.html#index1583
 dribble [fname])
-part19.html#index1757
+part19.html#index1758
 drum tracknum patternnum bpm)
-part16.html#index1398
-drum-loop snd duration numtimes)
 part16.html#index1399
+drum-loop snd duration numtimes)
+part16.html#index1400
 dtmf-tone key len space)
-part16.html#index1368
+part16.html#index1369
 echoenabled flag)
-part19.html#index1775
+part19.html#index1776
 endp list)
-part19.html#index1541
+part19.html#index1542
 env t1 t2 t4 l1 l2 l3 [dur])
 part8.html#index350
 eq expr1 expr2)
-part19.html#index1558
+part19.html#index1559
 eq-band signal hz gain width)
 part8.html#index471
 eq-highshelf signal hz gain [slope])
@@ -399,83 +399,83 @@ part8.html#index469
 eq-lowshelf signal hz gain [slope])
 part8.html#index467
 eql expr1 expr2)
-part19.html#index1559
-equal expr1 expr2)
 part19.html#index1560
+equal expr1 expr2)
+part19.html#index1561
 error emsg [arg])
-part19.html#index1599
+part19.html#index1600
 errset expr [pflag])
-part19.html#index1605
+part19.html#index1606
 eval expr)
-part19.html#index1463
+part19.html#index1464
 evalhook expr ehook ahook [env])
-part19.html#index1609
+part19.html#index1610
 evenp expr)
-part19.html#index1556
+part19.html#index1557
 event-dur event)
-part15.html#index1207
-event-end event)
-part15.html#index1211
-event-expression event)
-part15.html#index1209
-event-get-attr event attribute [default])
-part15.html#index1216
-event-has-attr event attribute)
-part15.html#index1215
-event-set-attr event attribute value)
-part15.html#index1217
-event-set-dur event dur)
 part15.html#index1208
-event-set-expression event dur)
+event-end event)
+part15.html#index1212
+event-expression event)
 part15.html#index1210
+event-get-attr event attribute [default])
+part15.html#index1217
+event-has-attr event attribute)
+part15.html#index1216
+event-set-attr event attribute value)
+part15.html#index1218
+event-set-dur event dur)
+part15.html#index1209
+event-set-expression event dur)
+part15.html#index1211
 event-set-time event time)
-part15.html#index1206
+part15.html#index1207
 event-time event)
-part15.html#index1205
+part15.html#index1206
 exit )
-part19.html#index1771
+part19.html#index1772
 exp x-expr)
-part19.html#index1639
+part19.html#index1640
 exp-dec hold halfdec length)
 part8.html#index351
 expand num)
-part19.html#index1759
+part19.html#index1760
 exponential-dist delta [high])
-part15.html#index1174
+part15.html#index1175
 expr-get-attr expression attribute [default])
-part15.html#index1213
-expr-has-attr expression attribute)
-part15.html#index1212
-expr-set-attr expr attribute value)
 part15.html#index1214
+expr-has-attr expression attribute)
+part15.html#index1213
+expr-set-attr expr attribute value)
+part15.html#index1215
 expt x-expr y-expr)
-part19.html#index1638
+part19.html#index1639
 extract start stop beh)
 part8.html#index591
 extract-abs start stop beh)
 part8.html#index592
 fboundp sym)
-part19.html#index1552
+part19.html#index1553
 feedback-delay sound delay feedback)
 part8.html#index438
 filep expr)
-part19.html#index1550
+part19.html#index1551
 find-in-xlisp-path filename)
-part19.html#index1733
+part19.html#index1734
 first expr)
-part19.html#index1502
+part19.html#index1503
 flange snd)
-part16.html#index1342
+part16.html#index1343
 flatc expr)
-part19.html#index1711
+part19.html#index1712
 flatsize expr)
-part19.html#index1710
+part19.html#index1711
 flet (binding ...) expr ...)
-part19.html#index1571
+part19.html#index1572
 float expr)
-part19.html#index1613
+part19.html#index1614
 floatp expr)
-part19.html#index1544
+part19.html#index1545
 flute step breath-env)
 part8.html#index519
 flute-all step breath-env freq-env vibrato-freq vibrato-gain jet-delay noise)
@@ -493,41 +493,41 @@ part8.html#index308
 force-srate srate sound)
 part8.html#index353
 format stream fmt arg ...)
-part19.html#index1713
+part19.html#index1714
 fourth expr)
-part19.html#index1505
+part19.html#index1506
 funcall fun arg ...)
-part19.html#index1465
+part19.html#index1466
 function expr)
-part19.html#index1467
+part19.html#index1468
 gamma-dist nu [high])
-part15.html#index1176
+part15.html#index1177
 gate sound lookahead risetime falltime floor threshold)
 part8.html#index312
 gaussian-dist xmu sigma [low high])
-part15.html#index1187
+part15.html#index1188
 gc )
-part19.html#index1758
+part19.html#index1759
 gcd n1 n2 ...)
-part19.html#index1628
+part19.html#index1629
 gensym [tag])
-part19.html#index1480
+part19.html#index1481
 geometric-dist p)
-part15.html#index1195
+part15.html#index1196
 get sym prop)
-part19.html#index1489
+part19.html#index1490
 get-duration dur)
 part8.html#index331
 get-env name)
-part19.html#index1751
+part19.html#index1752
 get-lambda-expression closure)
-part19.html#index1470
+part19.html#index1471
 get-loud )
 part8.html#index332
 get-output-stream-list stream)
-part19.html#index1749
+part19.html#index1750
 get-output-stream-string stream)
-part19.html#index1748
+part19.html#index1749
 get-slider-value name)
 part10.html#index885
 get-slider-value name)
@@ -543,19 +543,19 @@ part10.html#index885
 get-sustain )
 part8.html#index333
 get-temp-path )
-part19.html#index1727
+part19.html#index1728
 get-transpose )
 part8.html#index334
 get-user )
-part19.html#index1730
+part19.html#index1731
 get-warp )
 part8.html#index335
 go sym)
-part19.html#index1590
+part19.html#index1591
 grindef name)
 part14.html#index1092
 hash sym n)
-part19.html#index1487
+part19.html#index1488
 highpass2 signal hz [q])
 part8.html#index463
 highpass4 signal hz)
@@ -567,7 +567,7 @@ part8.html#index478
 hp sound cutoff)
 part8.html#index444
 hyperbolic-cosine-dist [low high])
-part15.html#index1181
+part15.html#index1182
 hz-to-step freq)
 part8.html#index315
 hzosc hz [table phase])
@@ -575,73 +575,73 @@ part8.html#index384
 incf symbol)
 part14.html#index1096
 info )
-part19.html#index1761
+part19.html#index1762
 int-char int)
-part19.html#index1690
+part19.html#index1691
 integerp expr)
-part19.html#index1543
+part19.html#index1544
 integrate signal)
 part8.html#index376
 intern pname)
-part19.html#index1481
+part19.html#index1482
 interpolate x x1 y1 x2 y2)
-part15.html#index1267
+part15.html#index1268
 intersection a b)
-part15.html#index1269
+part15.html#index1270
 jcrev sound decay mix)
 part8.html#index486
 labels (binding ...) expr ...)
-part19.html#index1572
+part19.html#index1573
 lambda args expr ...)
-part19.html#index1469
+part19.html#index1470
 last list)
-part19.html#index1511
+part19.html#index1512
 length expr)
-part19.html#index1517
+part19.html#index1518
 length-of-beat bpm)
-part16.html#index1400
+part16.html#index1401
 let (binding ...) expr ...)
-part19.html#index1569
-let* (binding ...) expr ...)
 part19.html#index1570
+let* (binding ...) expr ...)
+part19.html#index1571
 lfo freq [duration table phase])
 part8.html#index356
 linear-dist g)
-part15.html#index1172
+part15.html#index1173
 linear-to-db x)
 part8.html#index316
 linear-to-vel x [float])
 part8.html#index317
 list expr ...)
-part19.html#index1508
+part19.html#index1509
 listdir path)
-part19.html#index1722
+part19.html#index1723
 listp expr)
-part19.html#index1540
+part19.html#index1541
 load fname [:verbose verbose] [:print print])
-part19.html#index1754
+part19.html#index1755
 local-to-global local-time)
 part8.html#index336
 log x)
 part8.html#index319
 logand expr ...)
-part19.html#index1648
-logior expr ...)
 part19.html#index1649
-logistic-dist alpha beta [low high])
-part15.html#index1182
-lognot expr)
-part19.html#index1651
-logxor expr ...)
+logior expr ...)
 part19.html#index1650
+logistic-dist alpha beta [low high])
+part15.html#index1183
+lognot expr)
+part19.html#index1652
+logxor expr ...)
+part19.html#index1651
 loop expr ...)
-part19.html#index1578
+part19.html#index1579
 loud volume beh)
 part8.html#index593
 loud-abs volume beh)
 part8.html#index594
 lower-case-p chr)
-part19.html#index1681
+part19.html#index1682
 lowpass2 signal hz [q])
 part8.html#index462
 lowpass4 signal hz)
@@ -669,83 +669,83 @@ part10.html#index884
 lpslider panel name [dur])
 part10.html#index884
 macroexpand form)
-part19.html#index1471
-macroexpand-1 form)
 part19.html#index1472
+macroexpand-1 form)
+part19.html#index1473
 macrolet (binding ...) expr ...)
-part19.html#index1573
+part19.html#index1574
 make-accumulate sub-pattern :for for :max maximum :min minimum :name name :trace trace)
-part15.html#index1142
+part15.html#index1143
 make-accumulation items :name name :trace trace)
-part15.html#index1136
+part15.html#index1137
 make-array size)
-part19.html#index1494
+part19.html#index1495
 make-button name [normal])
 part10.html#index881
 make-copier sub-pattern :repeat repeat :merge merge :for for :name name :trace trace)
-part15.html#index1139
+part15.html#index1140
 make-cycle items :for for :name name :trace trace)
-part15.html#index1121
+part15.html#index1122
 make-eval expr :for for :name name :trace trace)
-part15.html#index1151
+part15.html#index1152
 make-heap items :for for :max max :name name :trace trace)
-part15.html#index1133
+part15.html#index1134
 make-length pattern length-pattern :name name :trace trace)
-part15.html#index1158
+part15.html#index1159
 make-line items :for for :name name :trace trace)
-part15.html#index1124
+part15.html#index1125
 make-lpanal-iterator sound framedur skiptime npoles)
 part13.html#index1077
 make-lpc-file-iterator filename)
 part13.html#index1078
 make-markov rules :past past :produces produces :for for :name name :trace trace)
-part15.html#index1162
+part15.html#index1163
 make-palindrome items :elide elide :for for :name name :trace trace)
-part15.html#index1130
+part15.html#index1131
 make-product x y :for for :name name :trace trace)
-part15.html#index1148
+part15.html#index1149
 make-random items :for for :name name :trace trace)
-part15.html#index1127
+part15.html#index1128
 make-slider name init low high)
 part10.html#index879
 make-slider-panel name color)
 part10.html#index875
 make-string-input-stream str [start [end]])
-part19.html#index1746
-make-string-output-stream) )
 part19.html#index1747
+make-string-output-stream) )
+part19.html#index1748
 make-sum x y :for for :name name :trace trace)
-part15.html#index1145
+part15.html#index1146
 make-symbol pname)
-part19.html#index1482
+part19.html#index1483
 make-window pattern length-pattern skip-pattern :name name :trace trace)
-part15.html#index1161
+part15.html#index1162
 maketable sound)
 part8.html#index359
 mandolin  step dur [detune])
 part8.html#index529
 mapc fcn list1 list ...)
-part19.html#index1520
-mapcar fcn list1 list ...)
 part19.html#index1521
-mapl fcn list1 list ...)
+mapcar fcn list1 list ...)
 part19.html#index1522
-maplist fcn list1 list ...)
+mapl fcn list1 list ...)
 part19.html#index1523
+maplist fcn list1 list ...)
+part19.html#index1524
 markov-create-rules sequence order [generalize])
-part15.html#index1165
+part15.html#index1166
 max expr ...)
-part19.html#index1625
+part19.html#index1626
 member expr list :test test :test-not test-not)
-part19.html#index1512
+part19.html#index1513
 midi-show the-seq [out-file])
-part16.html#index1363
+part16.html#index1364
 midi-show-file file-name)
-part16.html#index1360
+part16.html#index1361
 min expr ...)
-part19.html#index1623
+part19.html#index1624
 minusp expr)
-part19.html#index1553
+part19.html#index1554
 modalbar preset step dur)
 part8.html#index539
 mult a [b ...])
@@ -753,45 +753,47 @@ part8.html#index617
 mult beh1 beh2 ...)
 part8.html#index617
 nband input gains)
-part16.html#index1333
+part16.html#index1334
 nband-range input gains lowf highf)
-part16.html#index1330
+part16.html#index1331
 nconc list ...)
-part19.html#index1529
+part19.html#index1530
+next pattern-object [#t])
+part15.html#index1120
 noise [duration])
 part8.html#index574
 noise-gate sound [lookahead risetime falltime floor threshold])
 part8.html#index314
 not expr)
-part19.html#index1539
+part19.html#index1540
 notch2 signal hz [q])
 part8.html#index465
 nrev sound decay mix)
 part8.html#index482
 nstring-downcase str :start start :end end)
-part19.html#index1662
+part19.html#index1663
 nstring-upcase str :start start :end end)
-part19.html#index1661
+part19.html#index1662
 nth n list)
-part19.html#index1518
-nthcdr n list)
 part19.html#index1519
+nthcdr n list)
+part19.html#index1520
 null expr)
-part19.html#index1538
+part19.html#index1539
 numberp expr)
-part19.html#index1537
+part19.html#index1538
 Ny:all
 part2.html#index80
 objectp expr)
-part19.html#index1549
+part19.html#index1550
 oddp expr)
-part19.html#index1557
+part19.html#index1558
 open fname :direction direction)
-part19.html#index1715
-open-binary fname :direction direction)
 part19.html#index1716
+open-binary fname :direction direction)
+part19.html#index1717
 or expr ...)
-part19.html#index1564
+part19.html#index1565
 osc pitch [duration table phase])
 part8.html#index381
 osc-enable flag)
@@ -807,47 +809,47 @@ part8.html#index387
 pan sound where)
 part8.html#index367
 params-scale params keyword amount)
-part15.html#index1266
+part15.html#index1267
 params-transpose params keyword amount)
-part15.html#index1265
+part15.html#index1266
 partial pitch env)
 part8.html#index382
 patternp expression)
-part15.html#index1264
+part15.html#index1265
 peak expression maxlen)
 part8.html#index727
 peek addrs)
-part19.html#index1764
+part19.html#index1765
 peek-char [flag [stream]])
-part19.html#index1736
+part19.html#index1737
 phaser snd)
-part16.html#index1340
+part16.html#index1341
 phasevocoder s map [fftsize hopsize mode])
 part8.html#index543
 piano-midi midi-file-name)
-part16.html#index1320
-piano-midi2file midi-file-name sound-file-name)
 part16.html#index1321
+piano-midi2file midi-file-name sound-file-name)
+part16.html#index1322
 piano-note duration step dynamic)
-part16.html#index1317
+part16.html#index1318
 piano-note-2 step dynamic)
-part16.html#index1319
+part16.html#index1320
 pitshift sound shift mix)
 part8.html#index498
 pl-center snd)
-part16.html#index1390
-pl-doppler snd r)
-part16.html#index1395
-pl-left snd)
-part16.html#index1389
-pl-pan2d snd x y)
-part16.html#index1393
-pl-position snd x y config)
-part16.html#index1394
-pl-rear snd)
-part16.html#index1392
-pl-right snd)
 part16.html#index1391
+pl-doppler snd r)
+part16.html#index1396
+pl-left snd)
+part16.html#index1390
+pl-pan2d snd x y)
+part16.html#index1394
+pl-position snd x y config)
+part16.html#index1395
+pl-rear snd)
+part16.html#index1393
+pl-right snd)
+part16.html#index1392
 play sound
 part8.html#index626
 play-file filename)
@@ -855,51 +857,51 @@ part8.html#index641
 pluck pitch [duration final-amplitude])
 part8.html#index398
 plusp expr)
-part19.html#index1555
+part19.html#index1556
 poisson-dist delta)
-part15.html#index1197
+part15.html#index1198
 poke addrs value)
-part19.html#index1765
+part19.html#index1766
 pop lis)
 part14.html#index1101
 power x y)
 part14.html#index1112
 pprint expr [stream])
-part19.html#index1708
+part19.html#index1709
 prcrev sound decay mix)
 part8.html#index490
 prin1 expr [stream])
-part19.html#index1706
-princ expr [stream])
 part19.html#index1707
+princ expr [stream])
+part19.html#index1708
 print expr [stream])
-part19.html#index1705
+part19.html#index1706
 prod beh1 beh2 ...)
 part8.html#index369
 prod beh1 beh2 ...)
 part8.html#index369
 profile flag)
-part19.html#index1610
+part19.html#index1611
 prog (binding ...) expr ...)
-part19.html#index1584
-prog* (binding ...) expr ...)
 part19.html#index1585
+prog* (binding ...) expr ...)
+part19.html#index1586
 prog1 expr1 expr ...)
-part19.html#index1592
-prog2 expr1 expr2 expr ...)
 part19.html#index1593
-progn expr ...)
+prog2 expr1 expr2 expr ...)
 part19.html#index1594
+progn expr ...)
+part19.html#index1595
 progv slist vlist expr ...)
-part19.html#index1591
+part19.html#index1592
 prologic l c r s)
-part16.html#index1386
+part16.html#index1387
 psetq [sym expr] ...)
-part19.html#index1476
+part19.html#index1477
 push val lis)
 part14.html#index1100
 putprop sym val prop)
-part19.html#index1490
+part19.html#index1491
 pv-time-pitch s stretchfn pitchfn dur [fftsize hopsize mode])
 part8.html#index547
 pwe t1 l1 t2 l2 ... tn)
@@ -937,39 +939,39 @@ part8.html#index415
 quantize sound steps)
 part8.html#index566
 quote expr)
-part19.html#index1466
+part19.html#index1467
 ramp [duration])
 part12.html#index1058
 random n)
-part19.html#index1629
+part19.html#index1630
 random-seed n)
-part19.html#index1632
+part19.html#index1633
 read [stream [eof [rflag]]])
-part19.html#index1704
+part19.html#index1705
 read-byte [stream])
-part19.html#index1743
+part19.html#index1744
 read-char [stream])
-part19.html#index1734
+part19.html#index1735
 read-float [stream [length]])
-part19.html#index1740
+part19.html#index1741
 read-int [stream [length]])
-part19.html#index1738
+part19.html#index1739
 read-line [stream])
-part19.html#index1742
+part19.html#index1743
 real-random from to)
 part14.html#index1111
 recip sound)
 part8.html#index569
 rem expr ...)
-part19.html#index1620
+part19.html#index1621
 remove expr list :test test :test-not test-not)
-part19.html#index1514
-remove-if test list)
 part19.html#index1515
-remove-if-not test list)
+remove-if test list)
 part19.html#index1516
+remove-if-not test list)
+part19.html#index1517
 remprop sym prop)
-part19.html#index1491
+part19.html#index1492
 require-from fnsymbol filename [path])
 part14.html#index1104
 resample sound srate)
@@ -977,29 +979,29 @@ part8.html#index370
 reson sound center bandwidth [n])
 part8.html#index447
 rest expr)
-part19.html#index1506
+part19.html#index1507
 restore fname)
-part19.html#index1756
+part19.html#index1757
 return [expr])
-part19.html#index1587
-return-from name [value])
 part19.html#index1588
+return-from name [value])
+part19.html#index1589
 reverb snd time)
-part16.html#index1364
+part16.html#index1365
 reverse expr)
-part19.html#index1510
+part19.html#index1511
 rms sound [rate window-size])
 part8.html#index568
 room )
-part19.html#index1762
+part19.html#index1763
 round x)
 part8.html#index337
 rplaca list expr)
-part19.html#index1527
-rplacd list expr)
 part19.html#index1528
+rplacd list expr)
+part19.html#index1529
 rrandom )
-part19.html#index1630
+part19.html#index1631
 s-abs sound)
 part8.html#index552
 s-add-to expression maxlen filename [offset])
@@ -1021,11 +1023,11 @@ part8.html#index672
 s-read filename :time-offset offset :srate sr :dur dur :nchans chans :format format :mode mode :bits n :swap flag)
 part8.html#index650
 s-read-reverse filename :time-offset offset :srate sr :dur dur :nchans chans :format format :mode mode :bits n :swap flag)
-part16.html#index1339
+part16.html#index1340
 s-rest [duration])
 part8.html#index573
 s-reverse snd)
-part16.html#index1335
+part16.html#index1336
 s-save expression maxlen filename :format format :mode mode :bits bits :swap flag :play play)
 part8.html#index646
 s-sqrt sound)
@@ -1033,11 +1035,11 @@ part8.html#index554
 sampler pitch modulation [sample npoints])
 part8.html#index404
 save fname)
-part19.html#index1755
+part19.html#index1756
 save-lpc-file lpc-iterator filename)
 part13.html#index1079
 save-workspace )
-part15.html#index1261
+part15.html#index1262
 sax step breath-env)
 part8.html#index511
 sax-all step breath-env freq-env vibrato-freq vibrato-gain reed-stiffness noise blow-pos reed-table-offset)
@@ -1051,73 +1053,73 @@ part8.html#index372
 scale-srate sound scale)
 part8.html#index373
 score-adjacent-events score function :from-index i :to-index j :from-time x :to-time y)
-part15.html#index1241
-score-append score1 score2 ...)
-part15.html#index1227
-score-apply score function :from-index i :to-index j :from-time x :to-time y)
 part15.html#index1242
-score-filter-length score cutoff)
-part15.html#index1235
-score-filter-overlap score)
-part15.html#index1238
-score-gen :k1 e1 :k2 e2 ...)
-part15.html#index1202
-score-get-begin score)
-part15.html#index1231
-score-get-end score)
-part15.html#index1233
-score-indexof score function :from-index i :to-index j :from-time x :to-time y)
-part15.html#index1243
-score-last-indexof score function :from-index i :to-index j :from-time x :to-time y)
-part15.html#index1244
-score-merge score1 score2 ...)
-part15.html#index1226
-score-must-have-begin-end score)
-part15.html#index1234
-score-play score)
-part15.html#index1240
-score-print score)
-part15.html#index1239
-score-randomize-start score amt :from-index i :to-index j :from-time x :to-time y)
-part15.html#index1245
-score-read filename)
-part15.html#index1253
-score-read-smf filename)
-part15.html#index1251
-score-repeat score n)
-part15.html#index1236
-score-scale score keyword amount :from-index i :to-index j :from-time x :to-time y)
-part15.html#index1223
-score-select score predicate :from-index i :to-index j :from-time x :to-time y :reject flag)
+score-append score1 score2 ...)
 part15.html#index1228
-score-set-begin score time)
-part15.html#index1230
-score-set-end score time)
+score-apply score function :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1243
+score-filter-length score cutoff)
+part15.html#index1236
+score-filter-overlap score)
+part15.html#index1239
+score-gen :k1 e1 :k2 e2 ...)
+part15.html#index1203
+score-get-begin score)
 part15.html#index1232
-score-shift score offset :from-index i :to-index j :from-time x :to-time y)
-part15.html#index1220
-score-sort score [copy-flag])
-part15.html#index1219
-score-sorted score)
-part15.html#index1218
-score-stretch score factor :dur dur-flag :time time-flag :from-index i :to-index j :from-time x :to-time y)
-part15.html#index1221
-score-stretch-to-length score length)
+score-get-end score)
+part15.html#index1234
+score-indexof score function :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1244
+score-last-indexof score function :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1245
+score-merge score1 score2 ...)
+part15.html#index1227
+score-must-have-begin-end score)
+part15.html#index1235
+score-play score)
+part15.html#index1241
+score-print score)
+part15.html#index1240
+score-randomize-start score amt :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1246
+score-read filename)
+part15.html#index1254
+score-read-smf filename)
+part15.html#index1252
+score-repeat score n)
 part15.html#index1237
-score-sustain score factor :from-index i :to-index j :from-time x :to-time y)
+score-scale score keyword amount :from-index i :to-index j :from-time x :to-time y)
 part15.html#index1224
-score-transpose score keyword amount :from-index i :to-index j :from-time x :to-time y)
+score-select score predicate :from-index i :to-index j :from-time x :to-time y :reject flag)
+part15.html#index1229
+score-set-begin score time)
+part15.html#index1231
+score-set-end score time)
+part15.html#index1233
+score-shift score offset :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1221
+score-sort score [copy-flag])
+part15.html#index1220
+score-sorted score)
+part15.html#index1219
+score-stretch score factor :dur dur-flag :time time-flag :from-index i :to-index j :from-time x :to-time y)
 part15.html#index1222
-score-voice score replacement-list :from-index i :to-index j :from-time x :to-time y)
+score-stretch-to-length score length)
+part15.html#index1238
+score-sustain score factor :from-index i :to-index j :from-time x :to-time y)
 part15.html#index1225
-score-write score filename [programs])
-part15.html#index1257
+score-transpose score keyword amount :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1223
+score-voice score replacement-list :from-index i :to-index j :from-time x :to-time y)
+part15.html#index1226
+score-write score filename [programs absolute])
+part15.html#index1258
 score-write-smf score filename [programs as-adagio])
-part15.html#index1255
+part15.html#index1256
 second expr)
-part19.html#index1503
+part19.html#index1504
 Self
-part19.html#index1442
+part19.html#index1443
 seq beh1 [beh2 ...])
 part8.html#index610
 seq-create )
@@ -1139,11 +1141,11 @@ part12.html#index923
 seqrep var limit beh)
 part8.html#index611
 set sym expr)
-part19.html#index1474
+part19.html#index1475
 set-control-srate rate)
 part8.html#index320
 set-difference a b)
-part15.html#index1274
+part15.html#index1275
 set-logical-stop beh time)
 part8.html#index614
 set-pitch-names )
@@ -1151,15 +1153,15 @@ part8.html#index324
 set-sound-srate rate)
 part8.html#index322
 setdir path [verbose])
-part19.html#index1720
+part19.html#index1721
 setf [place expr] ...)
-part19.html#index1477
+part19.html#index1478
 setq [sym expr] ...)
-part19.html#index1475
+part19.html#index1476
 setup-console )
-part19.html#index1772
+part19.html#index1773
 sf-granulate filename grain-dur grain-dev ioi ioi-dev pitch-dev [file-start file-end])
-part16.html#index1359
+part16.html#index1360
 sf-info filename)
 part8.html#index659
 shape signal table origin)
@@ -1173,7 +1175,7 @@ part8.html#index612
 simrep var limit beh)
 part8.html#index613
 sin expr)
-part19.html#index1634
+part19.html#index1635
 sine pitch [duration])
 part8.html#index383
 siosc pitch modulation tables)
@@ -1429,9 +1431,9 @@ part8.html#index752
 snd-zero t0 srate)
 part8.html#index683
 soften-clipping snd cutoff)
-part16.html#index1328
+part16.html#index1329
 sort list test)
-part19.html#index1533
+part19.html#index1534
 sound sound)
 part8.html#index346
 sound-off )
@@ -1447,13 +1449,13 @@ part8.html#index661
 soundp sound)
 part8.html#index298
 span snd amt)
-part16.html#index1382
+part16.html#index1383
 spec-plot sound [offset :res res :bw bw :db db])
 part8.html#index665
 speed-dial thelist)
-part16.html#index1369
+part16.html#index1370
 sqrt expr)
-part19.html#index1640
+part19.html#index1641
 sref sound time)
 part8.html#index266
 sref-inverse sound value)
@@ -1463,69 +1465,69 @@ part8.html#index299
 step-to-hz pitch)
 part8.html#index330
 stereo-chorus snd :delay delay :depth depth :rate1 rate1 :rate2 rate2 :saturation saturation)
-part16.html#index1346
+part16.html#index1347
 stereoize snd)
-part16.html#index1374
+part16.html#index1375
 stkchorus sound depth freq mix [delay])
 part8.html#index494
 stop-on-zero s)
 part10.html#index887
 strcat expr ...)
-part19.html#index1663
+part19.html#index1664
 streamp expr)
-part19.html#index1548
+part19.html#index1549
 stretch factor beh)
 part8.html#index597
 stretch-abs factor beh)
 part8.html#index598
 string expr)
-part19.html#index1653
-string-downcase str :start start :end end)
-part19.html#index1660
-string-equal str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1674
-string-greaterp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1677
-string-left-trim bag str)
-part19.html#index1657
-string-lessp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1672
-string-not-equal str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1675
-string-not-greaterp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1673
-string-not-lessp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1676
-string-right-trim bag str)
-part19.html#index1658
-string-search pat str :start start :end end)
 part19.html#index1654
-string-trim bag str)
-part19.html#index1656
-string-upcase str :start start :end end)
+string-downcase str :start start :end end)
+part19.html#index1661
+string-equal str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1675
+string-greaterp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1678
+string-left-trim bag str)
+part19.html#index1658
+string-lessp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1673
+string-not-equal str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1676
+string-not-greaterp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1674
+string-not-lessp str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1677
+string-right-trim bag str)
 part19.html#index1659
+string-search pat str :start start :end end)
+part19.html#index1655
+string-trim bag str)
+part19.html#index1657
+string-upcase str :start start :end end)
+part19.html#index1660
 string/= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1669
-string< str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1666
-string<= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1667
-string= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1668
-string> str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
-part19.html#index1671
-string>= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
 part19.html#index1670
+string< str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1667
+string<= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1668
+string= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1669
+string> str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1672
+string>= str1 str2 :start1 start1 :end1 end1 :start2 start2 :end2 end2)
+part19.html#index1671
 stringp expr)
-part19.html#index1545
+part19.html#index1546
 sublis alist expr :test test :test-not test-not)
-part19.html#index1525
+part19.html#index1526
 subseq string start [end])
-part19.html#index1665
+part19.html#index1666
 subsetp a b)
-part15.html#index1275
+part15.html#index1276
 subst to from expr :test test :test-not test-not)
-part19.html#index1524
+part19.html#index1525
 sum a [b ...])
 part8.html#index615
 sustain factor beh)
@@ -1533,37 +1535,37 @@ part8.html#index599
 sustain-abs factor beh)
 part8.html#index603
 swapchannels snd)
-part16.html#index1383
+part16.html#index1384
 symbol-function sym)
-part19.html#index1485
-symbol-name sym)
-part19.html#index1483
-symbol-plist sym)
 part19.html#index1486
-symbol-value sym)
+symbol-name sym)
 part19.html#index1484
+symbol-plist sym)
+part19.html#index1487
+symbol-value sym)
+part19.html#index1485
 symbolp expr)
-part19.html#index1536
+part19.html#index1537
 tagbody expr ...)
-part19.html#index1589
+part19.html#index1590
 tan expr)
-part19.html#index1636
+part19.html#index1637
 tapv sound offset vardelay maxdelay)
 part8.html#index479
 terpri [stream])
-part19.html#index1709
+part19.html#index1710
 third expr)
-part19.html#index1504
+part19.html#index1505
 throw sym [expr])
-part19.html#index1575
+part19.html#index1576
 timed-seq score)
 part8.html#index622
 tone sound cutoff)
 part8.html#index443
 top-level)
-part19.html#index1603
+part19.html#index1604
 trace sym)
-part19.html#index1597
+part19.html#index1598
 transpose amount beh)
 part8.html#index604
 transpose-abs amount beh)
@@ -1571,21 +1573,21 @@ part8.html#index605
 trigger s beh)
 part10.html#index888
 truncate expr)
-part19.html#index1612
+part19.html#index1613
 type-of expr)
-part19.html#index1763
+part19.html#index1764
 union a b)
-part15.html#index1271
+part15.html#index1272
 unless texpr expr ...)
-part19.html#index1567
+part19.html#index1568
 untrace sym)
-part19.html#index1598
+part19.html#index1599
 unwind-protect expr cexpr ...)
-part19.html#index1576
+part19.html#index1577
 upper-case-p chr)
-part19.html#index1680
+part19.html#index1681
 vector expr ...)
-part19.html#index1495
+part19.html#index1496
 vel-to-db x)
 part8.html#index341
 vel-to-linear x)
@@ -1603,22 +1605,22 @@ part8.html#index533
 wg-uniform-bar step bowpress-env)
 part8.html#index531
 when test action)
-part19.html#index1566
+part19.html#index1567
 when texpr expr ...)
-part19.html#index1566
+part19.html#index1567
 while test expr1 expr2 ...)
 part14.html#index1102
 widen snd amt)
-part16.html#index1377
+part16.html#index1378
 write-byte byte [stream])
-part19.html#index1744
+part19.html#index1745
 write-char ch [stream])
-part19.html#index1737
+part19.html#index1738
 write-float ch [stream [length]])
-part19.html#index1741
+part19.html#index1742
 write-int ch [stream [length]])
-part19.html#index1739
+part19.html#index1740
 yin sound minstep maxstep stepsize)
 part8.html#index575
 zerop expr)
-part19.html#index1554
+part19.html#index1555

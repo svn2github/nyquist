@@ -40,7 +40,9 @@
 
 ;(load "typecheck-fns.lsp")
 ;(load "typechecks.lsp")
+(load "xmtest.lsp")
 
-(load "regression-test.lsp")
+;(load "regression-test.lsp")
+
 
 (exit)

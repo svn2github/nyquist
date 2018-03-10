@@ -68,6 +68,7 @@ public class NyquistThread extends Thread {
             System.out.println("soundBrowser file is " + soundBrowser);
 
             // build XLISPPATH environment specification
+            main.extDir = main.nyquistDir + "/lib/";
             String path = System.getenv("XLISPPATH"); // use getenv
             if (path == null) { // getenv failed, use a default setting
                 // note: used to use cwd here instead of nd, but on Win7
@@ -79,7 +80,34 @@ public class NyquistThread extends Thread {
             // if xlisppath file exists, use it instead
             path = "XLISPPATH=" + StringFromFile("xlisppath", path);
             System.out.println("XLISPPATH will be: " + path);
-            
+
+            // parse lib dir from path: first find "lib;" or "lib/;"
+            int loc = path.indexOf("lib/;");
+            int endloc = loc + 3;
+            if (loc == -1) {
+                loc = path.indexOf("lib;");
+                endloc = loc + 3;
+            }
+            if (loc == -1 && path.endsWith("lib/")) {
+                endloc = path.length();
+                loc = endloc - 4;
+            }
+            if (loc == -1 && path.endsWith("lib")) {
+                endloc = path.length();
+                loc = endloc - 3;
+            }
+            if (loc != -1) { // find beginning of path
+                // it will be the index of last ; before loc
+                int start = 0;
+                for (int i = 0; i < loc; i++) {
+                    if (path.charAt(i) == ';') {
+                        start = i + 1;
+                    }
+                }
+                main.extDir = path.substring(start, endloc) + File.separator;
+            }
+            System.out.println("extDir = " + main.extDir);
+
             // build TEMP environment specification
             String temp = System.getenv("TEMP"); // use getenv
             if (temp == null) { // getenv failed, use a default setting

@@ -332,7 +332,7 @@ void oscheck(void) {
         osflush();
         xlbreak("BREAK", s_unbound);
     }
-    run_time++;
+
     if (run_time % 30 == 0) {
         // maybe we should call fflush here like in Unix; I'm not sure if this is 
 	// a bug or it is not necessary for Windows - RBD

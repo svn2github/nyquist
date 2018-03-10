@@ -18,8 +18,7 @@
 ;; Function definition
 ;; ================================================
 (defun readdat (filename dim data)
-  (setf filename (strcat *pianosyn-path* "piano" 
-                         (string *file-separator*) filename))
+  (setf filename (strcat *pianosyn-path* filename))
   (setq fp (open-binary filename :direction :input))
   (dotimes (count 4) 
     (setf (aref dim count) (read-int fp)))
@@ -304,8 +303,7 @@
                          (string (int-char (+ (truncate (/ pncount 10)) 48)))
                          (string (int-char (+ (rem pncount 10) 48)))
                          ".cod"))
-  (setq filename (strcat *pianosyn-path* "piano"
-                         (string *file-separator*) filename))
+  (setq filename (strcat *pianosyn-path* filename))
   (setq fp (open-binary filename))
 
   ;; Read cwdHdr in cwxx.cwd
@@ -452,8 +450,7 @@
         (-1 (setq attsrate (last attsratelist)))
         (0 (setq attsrate (nth 0 attsratelist)))))
 (setq filename (format nil "att~A.pcm" (truncate attsrate)))
-(setf filename (strcat *pianosyn-path* "piano" 
-                        (string *file-separator*) filename))
+(setf filename (strcat *pianosyn-path* filename))
 (setf attsound 
     (s-read filename :srate attsrate :dur attndur :format snd-head-raw
             :mode snd-mode-pcm :bits 16 :endian :big))                         
