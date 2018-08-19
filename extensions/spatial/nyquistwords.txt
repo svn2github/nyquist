@@ -1,0 +1,24 @@
+stereoize snd)
+spatial/spatial.lsp
+widen snd amt)
+spatial/spatial.lsp
+span snd amt)
+spatial/spatial.lsp
+swapchannels snd)
+spatial/spatial.lsp
+prologic l c r s)
+spatial/spatial.lsp
+pl-left snd)
+spatial/spatial.lsp
+pl-center snd)
+spatial/spatial.lsp
+pl-right snd)
+spatial/spatial.lsp
+pl-rear snd)
+spatial/spatial.lsp
+pl-pan2d snd x y)
+spatial/spatial.lsp
+pl-position snd x y config)
+spatial/spatial.lsp
+pl-doppler snd r)
+spatial/spatial.lsp

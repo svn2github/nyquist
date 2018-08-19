@@ -1,0 +1,169 @@
+<html>
+  <head>
+    <title>ext-template1</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body>
+<h1>Extension Template Example with HTML Documentation</h1>
+<h3>Extension name: <code>ext-template1</code></h3>
+<p><i>This extension is intended only to illustrate how to create an extension. </i>
+<hr>
+<!-- Version: 1.0; (version for extension metadata, do not change) -->
+Author Name: Azarakhsh Keipour and Roger B. Dannenberg;<br>
+Author Email: akeipour@andrew.cmu.edu and rbd@cs.cmu.edu;<br>
+<br>
+Additional File: c4-player.sal;<br>
+Additional File: piano-player.sal;<br>
+Additional File: pluck-player.sal;<br>
+Additional File: autoload.lsp;<br>
+Additional File: nyquistwords.txt;<br>
+<!-- End Metadata -->
+<hr>
+<h2>Usage:</h2>
+In SAL mode:
+<blockquote>
+<pre>
+exec play-piano-c4() 
+exec play-pluck-c4() 
+</pre>
+</blockquote>
+
+<h2>Description</h2>
+
+<p>This example uses an HTML file as the "root" of the extension. This is 
+the preferred format when there is separate documentation and code.
+
+<p>This file is parsed by the Extension Manager of the NyquistIDE up 
+to the line containing "End Metadata" (which in this file is inside 
+an HTML comment).
+
+<p>The parser looks for:
+<ul><li>"Version 1.0", which is the version of the extension file format, 
+<i>not</i> the version of the extension. To avoid confusing users, this
+string appears inside an HTML comment.
+    <li>"Additional File:", which indicates the installer should install 
+      an additional file. 
+  <ul>
+    <li>The additional file name is a path relative to the URL for this file.
+    <li>The file name <i>must</i> be terminated with a semicolon (;) 
+        or newline (&lt;br&gt; or other HTML tags will be parsed as part
+        of the file name).
+    <li>There may be any number of additional files listed.
+  </ul>
+    <li>"Author Name:" and "Author Email:" fields are recommended, but not 
+      currently parsed by the Extension Manager.</li>
+</ul>
+
+<h2>Functions</h2>
+This section describes the functions and global variables (if any)
+that are provided by this extension. Notice in the HTML source code
+of this file that each definition is named using an HTML anchor, e.g.
+<code>&lt;a name=play-piano-c4&gt;</code> before the definition of
+<code>play-piano-c4()</code>.
+
+<h3>Completion List Processing</h3>
+<p>There is an optional additional extension file named <code>nyquistwords.txt</code>
+that is parsed by NyquistIDE when it starts. The words in that file
+are added to the IDE Completion List system so that users can see
+these functions as completions. Users can also click on the
+completions to find documentation.
+<p>The <code><a href=nyquistwords.txt>nyquistwords.txt</a></code> for
+this extension contains:
+<blockquote>
+<pre>
+play-piano-c4 ) 
+ext-template1/ext-template1.html#play-piano-c4 
+play-pluck-c4 ) 
+ext-template1/ext-template1.html#play-pluck-c4 
+</pre>
+</blockquote>
+The meaning is as follows: Entries are pairs of lines. The first line
+of each pair gives the name to appear in the completion list. If the
+name is a function, follow the function name with a space, a list of
+parameters (possibly empty as in this case) and end with a close
+parenthesis ")". (There is no open parenthesis.) For example,
+<blockquote>
+<pre>eq-highshelf signal hz gain [slope])</pre>
+</blockquote>
+describes the <code>eq-highshelf</code> function which takes 3
+required positional and one optional parameters.
+<p>The second line of each pair is a URL, starting with the template
+name. Notice that the URL includes the anchor that directs the browser
+to exactly the definition of the function or variable. The NyquistIDE
+will complete the URL based on the location of the local copies of
+extensions (which will be in the <code>lib</code> directory.)
+<p>If you install this extension (<code>ext-template1</code>), and
+start to type "play-pian..." you will see <code>play-piano-c4()</code>
+in the Completion List.
+
+<h3>Sample Function Documentation</h3>
+
+<dl>
+  <a name=play-piano-c4>
+    <dt><code>play-piano-c4()</code> [SAL]</dt>
+    <dd>play a C4 note on the piano synthesizer.</dd>
+  </a>
+  <a name=play-pluck-c4>
+    <dt><code>play-pluck-c4()</code> [SAL]</dt>
+    <dd>play a C4 note on the pluck synthesizer.</dd>
+  </a>
+</dl>
+
+<h2>Autoload Facility</h2>
+Nyquist had many built-in functions, so users may be confused if they
+have to explicitly load extensions. On the other hand, loading
+<i>all</i> extensions at start-up will make loading slower and use
+more memory. A compromise is autoloading, where stubs are loaded to
+load real functions the first time the stub is called. The actual
+implementations overwrite the stubs so the next time the stub is
+called, no loading is needed or even checked.
+
+<p>To enable autoloading, simply add the file
+<code>autoload.lsp</code> to your files. Notice above that 
+<code>autoload.lsp</code> is one of the &ldquo;Additional
+Files.&rdquo; 
+
+<p>The <code>autoload.txt</code> file for this extension is:
+<blockquote><pre>
+;; autoload the ext-template1 functions 
+(autoload "c4-player.sal" 'play-piano-c4 'play-pluck-c4) 
+</pre></blockquote>
+
+This is a Lisp expression. The <code>autoload</code> function is
+built-in, and the first parameter is the (double-quoted) name of the
+file to load to load the extension. Note that there is no path (it
+will be loaded relative to the extension directory.)
+
+<p>The remaining parameters are simply the names of (some of) the
+functions that are declared by this extension. Any function on this
+list will be defined as a stub that loads the extension when the stub
+is called the first time. Note the use of the single quote.
+
+
+<p>Notice that
+<ol><li>There are no commas separating parameters. This is
+  how Lisp syntax works;</li>
+  <li>Function names have a single quote
+prefix. This denotes a symbol, one of Lisp's built-in types. Do no
+even think about a double quote, &ldquo;closing&rdquo; the single
+quote, or any other syntax.</li></ol>
+
+<p>If you autoload functions, your "Usage" instructions near the top
+of the file should probably not say anything about loading.
+
+<p>If you do <i>not</i> autoload functions, your "Usage" instructions
+in this extension would probably mention the <code>load</code>
+command, i.e.:
+<blockquote><pre>
+load "ext-template1/c4-player.sal"
+exec play-piano-c4() 
+exec play-pluck-c4() 
+</pre></blockquote>
+In this case, it is important to include the name of the extension in
+the path. Simply loading <code>"c4-player.sal"</code> will not work
+because <code>ext-template1</code> is not on Nyquist's load
+path. However, <code>lib</code> is on the load path, and
+<code>ext-template1</code> is in <code>lib</code>, so
+<code>"ext-template1/c4-player.sal"</code> will work.
+</body>
+</html>

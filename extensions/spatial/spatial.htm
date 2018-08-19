@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+    <title>Midi Tutorial</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body>
+    <h1>Dolby Surround(R), Stereo and Spatialization Effects</h1>
+<h3>Extension name: <code>spatial</code></h3>
+<i>This extension is a library for spatialization.</i>
+<hr>
+<!-- Version: 1.0; (version for extension metadata, do not change) -->
+Author Name: Adam Hartman and Roger B. Dannenberg;<br>
+Author Email: rbd@cs.cmu.edu;<br>
+<br>
+Additional File: spatial.lsp;<br>
+Additional File: autoload.lsp;<br>
+Additional File: nyquistwords.txt;<br>
+<!-- End Metadata -->
+<hr>
+<p>
+The <code>spatial.lsp</code> library implements various functions for stereo
+manipulation and spatialization. It also includes some functions for
+Dolby Pro-Logic panning, which encodes left, right, center, and surround 
+channels into stereo. The stereo signal can then be played through
+a Dolby decoder to drive a surround speaker array. This library has
+a somewhat simplified encoder, so you should certainly test the
+output. Consider using a high-end encoder for critical work. There
+are a number of functions in <code>spatial.lsp</code> for testing. See the
+source code for comments about these.
+<p>
+<dl>
+<dt>
+<code>stereoize(<a name="index1375"></a><a name="index1376"></a><a name="index1377"></a><i>snd</i>)</code> [SAL]<br>
+
+<code>(stereoize <i>snd</i>)</code> [LISP]<dd>Convert a mono sound, <i>snd</i>, to stereo. Four bands of 
+equalization and some delay are used to create a stereo effect.<br><br>
+<dt><code>widen(<a name="index1378"></a><a name="index1379"></a><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
+
+<code>(widen <i>snd</i> <i>amt</i>)</code> [LISP]<dd>Artificially
+widen the stereo field in <i>snd</i>, a two-channel sound. The amount of widening
+is <i>amt</i>, which varies from 0 (<i>snd</i> is unchanged) to 1 (maximum widening).
+The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
+<dt><code>span(<a name="index1380"></a><a name="index1381"></a><a name="index1382"></a><a name="index1383"></a><i>snd</i>, <i>amt</i>)</code> [SAL]<br>
+
+<code>(span <i>snd</i> <i>amt</i>)</code> [LISP]<dd>Pan the virtual center channel of a stereo sound, <i>snd</i>,
+by <i>amt</i>, where 0 pans all the way to the left, while 1 pans all the way 
+to the right. The <i>amt</i> can be a <code>SOUND</code> or a number.<br><br>
+<dt><code>swapchannels(<a name="index1384"></a><a name="index1385"></a><a name="index1386"></a><i>snd</i>)</code> [SAL]<br>
+
+<code>(swapchannels <i>snd</i>)</code> [LISP]<dd>Swap left and right channels in <i>snd</i>, a stereo sound.<br><br>
+<dt><code>prologic(<a name="index1387"></a><a name="index1388"></a><a name="index1389"></a><i>l</i>, <i>c</i>, 
+<i>r</i>, <i>s</i>)</code> [SAL]<br>
+
+<code>(prologic <i>l</i> <i>c</i> <i>r</i> <i>s</i>)</code> [LISP]<dd>Encode four monaural <code>SOUND</code>s representing the front-left,
+front-center, front-right, and rear channels, respectively. 
+The return value is a stereo sound, which is a Dolby-encoded mix of the
+four input sounds. <br><br>
+<dt><code>pl-left(<a name="index1390"></a><i>snd</i>)</code> [SAL]<br>
+
+<code>(pl-left <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front left channel.<br><br>
+<dt><code>pl-center(<a name="index1391"></a><i>snd</i>)</code> [SAL]<br>
+
+<code>(pl-center <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front center channel.<br><br>
+<dt><code>pl-right(<a name="index1392"></a><i>snd</i>)</code> [SAL]<br>
+
+<code>(pl-right <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the front right channel.<br><br>
+<dt><code>pl-rear(<a name="index1393"></a><i>snd</i>)</code> [SAL]<br>
+
+<code>(pl-rear <i>snd</i>)</code> [LISP]<dd>Produce a Dolby-encoded (stereo)
+signal with <i>snd</i>, a <code>SOUND</code>, encoded as the rear, or surround, channel.<br><br>
+<dt><code>pl-pan2d(<a name="index1394"></a><i>snd</i>, <i>x</i>, <i>y</i>)</code> [SAL]<br>
+
+<code>(pl-pan2d <i>snd</i> <i>x</i> <i>y</i>)</code> [LISP]<dd>Comparable to Nyquist's
+existing pan function, <code>pl-pan2d</code> provides not only left-to-right
+panning, but front-to-back panning as well. The function
+accepts three parameters: <i>snd</i> is the (monophonic) input <code>SOUND</code>, 
+<i>x</i> is a left-to-right position, and <i>y</i> is a front-to-back position.
+Both position parameters may be numbers or <code>SOUND</code>s. An <i>x</i> value 
+of 0 means left, and 1 means right. Intermediate values map linearly
+between these extremes. Similarly, a <i>y</i> value of 0 causes the sound
+to play entirely through the front speakers(s), while 1 causes it to play
+entirely through the rear. Intermediate values map linearly.
+Note that, although there are usually two rear speakers in Pro-Logic systems,
+they are both driven by the same signal. Therefore any sound that is
+panned totally to the rear will be played over both rear speakers. For
+example, it is not possible to play a sound exclusively through the 
+rear left speaker.<br><br>
+<dt><code>pl-position(<a name="index1395"></a><i>snd</i>, <i>x</i>, <i>y</i>, <i>config</i>)</code> [SAL]<br>
+
+<code>(pl-position <i>snd</i> <i>x</i> <i>y</i> <i>config</i>)</code> [LISP]<dd>The
+position function builds upon speaker panning to allow more abstract
+placement of sounds. Like <code>pl-pan2d</code>, it accepts a (monaural) input
+sound as well as left-to-right (<i>x</i>) and front-to-back (<i>y</i>) coordinates,
+which may be <code>FLONUM</code>s or <code>SOUND</code>s. A fourth parameter <i>config</i> 
+specifies the distance from listeners to the speakers (in meters). Current
+settings assume this to be constant for all speakers, but this assumption 
+can be changed easily (see comments in the code for more detail).
+There are several important differences between <code>pl-position</code> and 
+<code>pl-pan2d</code>. First, <code>pl-position</code> uses a Cartesian coordinate 
+system that allows x and y coordinates outside of the
+range (0, 1). This model assumes a listener position of (0,0). Each speaker
+has a predefined position as well. The input sound's position,
+relative to the listener, is given by the vector (<i>x</i>,<i>y</i>).<br><br>
+<dt><code>pl-doppler(<a name="index1396"></a><a name="index1397"></a><i>snd</i>, 
+<i>r</i>)</code> [SAL]<br>
+
+<code>(pl-doppler <i>snd</i> <i>r</i>)</code> [LISP]<dd>Pitch-shift moving sounds according to the equation: <i>fr</i> =
+<i>f0</i>((<i>c</i>+<i>vr</i>)/<i>c</i>), where <i>fr</i> is the output frequency, 
+<i>f0</i> is the emitted (source) 
+frequency, <i>c</i> is the speed of sound (assumed to be 344.31 m/s), and 
+<i>vr</i> is the speed at which the emitter approaches the receiver. (<i>vr</i>
+is the first derivative of parameter <i>r</i>, the distance from the listener
+in meters.
+</dl>

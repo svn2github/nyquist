@@ -1,0 +1,105 @@
+;; labels.sal - read and write Audacity label files
+;;
+;; Nyquist Extension
+;; Version: 1.0;
+;;
+;; Author Name: Roger B. Dannenberg;
+;; Author Email: rbd@cs.cmu.edu;
+;;
+;; Additional File: autoload.lsp
+;; Additional File: nyquistwords.txt
+;;
+;; End Metadata
+
+;; Usage:
+;;    set labels = read-labels("filename")
+;;    exec write-labels("filename", labels)
+;;
+;; Description:
+;;
+;; This extension contains code to read and write Audacity label files.
+;; You can label audio segments, cues, or time points using Audacity's
+;; graphical interface. Then you can export the labels and get the times
+;; in Nyquist. Also, you can generate labels in Nyquist, write them to 
+;; a text file, and import them for display in Audacity.
+;;
+;; The main functions are:
+;;     read-labels(filename, start-time: 0, stop-time: nil) -  read labels
+;;         from a file within a timespan (default is read all).
+;;         Returns a list of triples of the form: (begin end "label")
+;;     write-labels(filename, labels) - write labels, which are represented
+;;         by a list of triples (as shown above). filename is a string.
+
+;; March, 2011
+
+;; read a label between tab and end-of-line
+;;
+;; return nil if error otherwise label as string
+define function read-label(inf)
+  begin
+    with tab = read-char(inf), c, s
+    if tab != char("\t", 0) then return nil
+    set c = read-char(inf), s = ""
+    loop
+      while c & c != char("\r", 0) & c != char("\n", 0)
+      set s = strcat(s, string(c)),
+          c = read-char(inf)
+    end
+    if c then ;; throw out CR or LF and look for next
+      set c = peek-char(nil, inf)
+    else
+      return nil
+    if c = char("\n", 0) then
+      exec read-char(inf) ;; throw out LF (this was CRLF sequence)
+    return s
+  end
+
+
+;; read labels from a file within a timespan (default is read all)
+;; returns a list of triples: (begin end "label")
+;;
+;; on error, returns a string
+;;
+define function read-labels(filename, start-time: 0, stop-time: nil)
+  begin
+    with inf = open(filename, direction: :input), token, triple, rslt, n
+    if ! inf then
+      return "error in read-labels: could not open file"
+    set label-start = read(inf)
+    loop with label-stop, label
+      while label-start
+      set label-stop = read(inf)
+      set label = read-label(inf)
+      if null(label) then
+        return "error in read-label: bad file format"
+      if ! numberp(label-start) | ! numberp(label-stop) then
+        return "error in read-labels: numbers expected"
+      if label-start >= start-time &
+         (! stop-time | label-start < stop-time) then
+          set rslt @= list(label-start, label-stop, label)
+      set label-start = read(inf)
+    end
+    exec close(inf)
+    return reverse(rslt)
+  end
+
+;; write labels to a file
+;;
+;; input is list of lists ((start end label-string) ...)
+;; 
+;; returns t on success, string on error
+;;
+define function write-labels(filename, labels)
+  begin
+    with outf = open(filename, direction: :output)
+    if ! outf then
+      return "error in write-labels: could not open file"
+    loop
+      for triple in labels
+      exec format(outf, "~A ~A \"~A\"\n", first(triple), second(triple),
+                  third(triple))
+    end
+    exec close(outf)
+    return t
+  end
+

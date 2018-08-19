@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Voice Synthesis Tutorial</title>
+<style>body {max-width: 40em}</style>
+</head>
+
+<body>
+<h1>Voice Synthesis Tutorial</h1>
+<h3>Extension name: <code>voice</code></h3>
+<p><i>Nyquist voice synthesis instrument by Eduardo Reck Miranda.</i></p>
+<hr>
+<!-- Version: 1.0; (version for extension metadata, do not change) -->
+Author Name: Eduardo Reck Miranda and Roger B. Dannenberg;<br>
+Author Email: rbd@cs.cmu.edu;<br>
+<br>
+Additional File: voice.lsp;<br>
+Additional File: voice.sal;<br>
+<!-- End Metadata -->
+<hr>
+<h2>Usage:</h2>
+In SAL mode:
+<blockquote>
+<pre>
+load "voice/voice"
+play vowel-n(1) ;; through vowel-n(18)
+exec play-all-vowels() ;; automatically play them all
+synthesise(f0, w1, w2, a, b, c, fm, h) - main voice synthesis function
+; f0 = pitch frequency 
+; w1 = amplitude of voicing source (min = 0.0 max = 1.0) 
+; w2 = amplitude of noise source (min = 0.0 max = 1.0) 
+; a = horizontal position of the tongue (0.0 = front -> 1.0 = back) 
+; b = vertical position of the tongue (0.0 = low -> 1.0 = high) 
+; c = rouding of the lips (0.0 = spread -> 1.0 = rounded) 
+; fm = vibrato rate (in Hz) 
+; h = duration in seconds 
+</pre>
+</blockquote>
+
+<h2>Description</h2>
+
+This singing voice synthesizer implements a geometrical articulator
+for tongue position (vertical and horizontal position) and  
+lips rouding. Four formants are modeled and driven with a table-lookup
+pulse waveform with vibrato.
+
+<h2>Demo</h2>
+To hear some example sounds, try
+<pre>load "voice/voice"
+exec play-all-vowels()</pre>
+
+<p>See the source code in <a href=voice.lsp>voice.lsp</a> or <a
+href=voice.sal>voice.sal</a> for more details.

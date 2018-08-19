@@ -760,14 +760,15 @@ public class MainFrame extends JFrame {
                     String ext = WordList.getlink(line);
                     System.out.println(line + " : " + ext);
                     if (ext.charAt(0) == '@') { // extension documentation
-                        openPage(ext.substring(1));
+                        openPage("file://" + extDir + ext.substring(1));
                     } else {
                         openManual(ext);
                     }
             	} else {
                     // System.out.println(e.paramString());
-            		if (line.length() > 0)
-            			WordList.replaceWithTemplate(line);
+            		if (line.length() > 0) {
+            			WordList.replaceWithTemplate(line, codeInputPane.isSal);
+                    }
                 }
             }
         });
@@ -1395,7 +1396,7 @@ public class MainFrame extends JFrame {
         if (i == 2) { // skip (proceed) option
             workspaceLoaded = true;
         } else if (i == 1) { // load workspace
-            callFunction("load", "\"workspace\"");
+            callFunction("sal-load", "\"workspace\"");
             i = 0;
             while (!workspaceLoaded && i < 10000) { // alow 10s
                 try { Thread.sleep(200); }

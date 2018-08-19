@@ -4700,8 +4700,15 @@ sets the pitch (in steps), and @i(dur) is the duration in seconds.
 @codef{sitar(@pragma(defn)@index(sitar)@index(STK sitar)@i(step), @i(dur))} @c{[sal]}@*
 @altdef{@code[(sitar @i(step) @i(dur))] @c{[lisp]}}@\A sitar physical model implemented in STK. 
 The parameter @i(step) is a @code(FLONUM) that sets the pitch,
- and @i(dur) is the duration.
+and @i(dur) is the duration.
+
+@label(stk-breath-env-sec)
+@codef{stk-breath-evn(@pragma(defn)@index(stk-breath-env)@index(breath envelope)@i(dur), @i(note-on) @i(note-off))} @c{[sal]}@*
+@altdef{@code[(stk-breath-env @i(dur) @i(note-on) @i(note-off))] @c{[lisp]}}@\A simple envelope function
+intended for STK instruments such as @code(CLARINET), where @i(dur) is the duration, @i(note-on) is the
+attack time, and @i(note-off) is the decay time, all @code(FLONUM)s in seconds.
 @end(fndefs)
+
 
 @paragraph(Phase Vocoder)
 @begin(fndefs)
@@ -8759,7 +8766,12 @@ starting at zero, matching the internal MIDI representation. This may be
 one less than displayed on MIDI hardware, sequencers, etc.) The 
  @i[as-adagio] optional parameter should normally be omitted. 
 If non-nil, the file is written in Adagio format, but if you 
-want to do that, call @code(score-write) instead.
+want to do that, call @code(score-write) instead. Xmusic scores do not specify
+tempo, so the MIDI file is written with a fixed tempo of 100bpm. If you create
+scores or stretch scores so that each beat is exactly 0.6s (100bpm), sequencers
+and score editors will quantize your scores correctly. Otherwise, the @i(timing)
+will be correct, but for example a score with one note every second will be 
+notated as 1 note every 1 2/3 beats.
 
 @codef{score-write(@pragma(defn)@index(score-write)@index(midi file)@i(score), @i(filename),
 [@i(programs), @i(absolute)])} @c{[sal]}@*

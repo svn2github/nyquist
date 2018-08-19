@@ -14,7 +14,6 @@
 (load "system.lsp" :verbose NIL)
 ;; now *file-separator* is defined, used by nyquist.lsp...
 (load "nyquist.lsp" :verbose NIL)
-(load "compress.lsp" :verbose NIL)
 
 
 (load "seqmidi.lsp" :verbose NIL)

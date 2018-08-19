@@ -19,7 +19,7 @@
     (setf _the-seq (seq-copy ,the-seq))
     (setf _nyq-environment (nyq:the-environment))
     (setf _seq-midi-closure #'(lambda (t0)
-      ; (format t "_seq_midi_closure: t0 = ~A~%" t0)
+      (format t "_seq_midi_closure: t0 = ~A~%" t0) ;DEBUG
       (prog (_the-sound)
 loop	; go forward until we find note to play (we may be there)
         ; then go forward to find time of next note
@@ -45,6 +45,7 @@ loop	; go forward until we find note to play (we may be there)
               ((and (= _tag seq-note-tag)
                     ,(make-note-test cases))
                (cond (_the-sound ; we now have time of next note
+                      ; (display "note" (seq-time _the-event))
                       (setf _next-time (/ (seq-time _the-event) 1000.0))
                       (go exit-loop))
                      (t
@@ -52,13 +53,13 @@ loop	; go forward until we find note to play (we may be there)
         (seq-next _the-seq)
         (go loop)
 exit-loop ; here, we know time of next note
-        ; (display "seq-midi" _next-time)
-        ; (format t "seq-midi calling snd-seq\n")
+        (display "seq-midi" _next-time) ;DEBUG
+        (format t "seq-midi calling snd-seq\n") ;DEBUG
         (return (snd-seq
                   (set-logical-stop-abs _the-sound 
                         (local-to-global _next-time))
                   _seq-midi-closure)))))
-    ; (display "calling closure" (get-lambda-expression _seq-midi-closure))
+    (display "calling closure" (get-lambda-expression _seq-midi-closure)) ; DEBUG
     (funcall _seq-midi-closure (local-to-global 0))))
 
 

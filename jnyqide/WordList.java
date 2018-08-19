@@ -29,7 +29,7 @@ public class WordList {
     
     public static String getlink(String word) {
         // strip off syntax help from word, e.g. (osc-tri hz) -> osc
-        System.out.println("getlink " + word);
+        // System.out.println("getlink " + word);
         if (word.charAt(0) == '(') {
             int i = word.indexOf(" ");
             if (i <= 0) i = word.length() - 1; // remove ")"
@@ -39,7 +39,7 @@ public class WordList {
             if (i > 0) word = word.substring(0, i);
         }
         String s = URLLinks.get(word);
-        System.out.println("getlink(" + word + ")->" + s);
+        // System.out.println("getlink(" + word + ")->" + s);
         if (s == null) return "home.html";
         return s;
     }
@@ -63,22 +63,48 @@ public class WordList {
         // now look for extensions
         String[] directories = ExtensionManager.getExtensionDirs(extDir);
         for (String dir : directories) {
-            String nw3 = extDir + dir + File.separator + "nyquistwords.txt";
-            try {
-                inf = new BufferedReader(new FileReader(nw3));
-                processWordFile(inf, true);
-            } catch (IOException e) {
-                continue; // must not have a nyquistwords.txt file, it's ok
-            }
+            processExtension(extDir + dir);
         }   
     }
+
     
+    public static void processExtension(String dir) {
+        String nw3 = dir + File.separator + "nyquistwords.txt";
+        BufferedReader inf;
+        try {
+            inf = new BufferedReader(new FileReader(nw3));
+            processWordFile(inf, true);
+        } catch (IOException e) {
+            return; // must not have a nyquistwords.txt file, it's ok
+        }
+    }
+
 
     public static void processWordFile(BufferedReader inf, boolean ext)
             throws IOException {
         String word, link;
-        while ((word = inf.readLine()) != null) {                
-            words.add(word);
+        while ((word = inf.readLine()) != null) {
+            System.out.println("processWordFile: word is |" + word + "|");
+            if (word.length() == 0) {
+                System.out.println("In processWordFile, encountered blank " +
+                                   "word. Maybe an extra newline? Skipping " +
+                                   "the rest of the file.");
+                break;
+            }
+            word = word.trim();
+
+            // only add word if it is not already there
+            boolean found = false;
+            for (String candidate : words) {
+                if (word.equals(candidate)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                words.add(word);
+            }
+
             link = inf.readLine();
             if ((link == null) || (link.equals(""))) link = "home.html";
 
@@ -108,6 +134,7 @@ public class WordList {
 
     public static void appendSyntaxTip(StringBuffer s, String word,
                                        boolean sal) {
+        // System.out.println("appendSyntaxTip word = |" + word + "|");
         if (word.charAt(word.length() - 1) == ')') { // indicates a function
             if (sal) {
                 // make it prefix with commas
@@ -160,14 +187,20 @@ public class WordList {
                 s.append("(");
             }
         }
+        // System.out.println("s.append(" + word + ")");
         s.append(word);
         // if this is external, add the package name
         String link = getlink(word);
         if (link.charAt(0) == '@') {
             int loc = link.indexOf('/'); // end of external name
-            s.append(" ");
-            s.append("ext: ");
-            s.append(word.substring(1, loc));
+            if (loc >= 0) {
+                s.append(" ");
+                s.append("ext: ");
+                s.append(link.substring(1, loc));
+            } else {
+                System.out.println("appendSyntaxTip " + link + " loc " + loc);
+                System.out.println("WARNING appendSyntaxTip didn't find /");
+            }            
         }
         s.append("\n");
     }
@@ -198,8 +231,10 @@ public class WordList {
 
     
     public static void getWordsFor(String str, StringBuffer s, boolean sal) {
-        for (int i = 0; i < words.size(); i++) {
-            String word = (String) words.get(i);
+        System.out.println("getWordsFor str = |" + str + "|");
+        for (String word : words) {
+            //int i = 0; i < words.size(); i++) {
+            //String word = (String) words.get(i);
             int pos = word.indexOf(str);
             if (pos == 0) {
                 appendSyntaxTip(s, word, sal);
@@ -234,29 +269,41 @@ public class WordList {
     }
 
 
-    public static void replaceWithTemplate(String template) {
-	// templates were displayed in textArea based on what the user
-	// typed. Now, the user has clicked on a template. Replace what
-	// the user typed (and parens) with the template string.
-	String before;
-	try {
-	    before = pane.getText(startPos - 1, 1);
-	    if (before.equals("(")) startPos--;
-	} catch (Exception ex) {
-	}
-	String after;
-	try {
-	    after = pane.getText(endPos, 1);
-	    while (Character.isWhitespace(after.charAt(0))) {
-		endPos++;
-		after = pane.getText(endPos, 1);
-	    }
-	    if (after.equals(")")) endPos++;
-	} catch (Exception ex) {
-	}
-	pane.select(startPos, endPos);
+    public static void replaceWithTemplate(String template, boolean isSal) {
+        // templates were displayed in textArea based on what the user
+        // typed. Now, the user has clicked on a template. Replace what
+        // the user typed (and parens) with the template string.
+        String before;
+        System.out.println("replace 1: startPos " + startPos + " endPos " + endPos);
+        try {
+            if (!isSal) {
+                startPos = startPos - 1;
+            }
+            before = pane.getText(startPos, 1);
+            if (before.equals("(")) startPos--;
+        } catch (Exception ex) {
+        }
+        String after;
+        try {
+            after = pane.getText(endPos, 1);
+            while (Character.isWhitespace(after.charAt(0))) {
+                endPos++;
+                after = pane.getText(endPos, 1);
+            }
+            if (after.equals(")")) endPos++;
+        } catch (Exception ex) {
+        }
+        pane.select(startPos, endPos);
         // remove those pesky brackets (denoting "optional")
         template = removeChar(removeChar(template, '['), ']');
-	pane.replaceSelection(template);
+        // if this is an extension, then there's an added suffix of the form
+        //    ext: package-name, which we should remove
+        int ext = template.indexOf(" ext: ");
+        if (ext > 0) {
+            template = template.substring(0, ext);
+        }
+        System.out.println("replace: startPos " + startPos + " endPos " + 
+                 endPos + " isSal " + isSal + " template |" + template + "|");
+        pane.replaceSelection(template);
     }
 }

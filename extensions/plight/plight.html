@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <title>plight extension</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body>
+<h1>Drum Machine and Samples</h1>
+<h3>Extension name: <code>plight</code></h3>
+<p><i>This extension implements a sampled drum kit. </i>
+<hr>
+<!-- Version: 1.0; (version for extension metadata, do not change) -->
+Author Name: Phil Light and Roger B. Dannenberg;<br>
+Author Email: rbd@cs.cmu.edu;<br>
+<br>
+Additional File: drum.lsp;<br>
+Additional File: beats.props;<br>
+... and wav files and more ...
+<!-- hidden from display, but still parsed by extension manager
+Additional File: 16-crash-1.wav.b64;
+Additional File: 16-crash-2.wav.b64;
+Additional File: 16-crash-3.wav.b64;
+Additional File: 16-crash-4.wav.b64;
+Additional File: 16-crash-5.wav.b64;
+Additional File: 16-crash-6.wav.b64;
+Additional File: 16-crash-7.wav.b64;
+Additional File: 16-crash-8.wav.b64;
+Additional File: 16-crash-9.wav.b64;
+Additional File: 20-ride-1.wav.b64;
+Additional File: 20-ride-2.wav.b64;
+Additional File: 20-ride-3.wav.b64;
+Additional File: 20-ride-4.wav.b64;
+Additional File: 20-ride-5.wav.b64;
+Additional File: 20-ride-6.wav.b64;
+Additional File: 20-ride-7.wav.b64;
+Additional File: 20-ride-8.wav.b64;
+Additional File: 20-ride-9.wav.b64;
+Additional File: big-tom-1.wav.b64;
+Additional File: big-tom-2.wav.b64;
+Additional File: big-tom-3.wav.b64;
+Additional File: big-tom-4.wav.b64;
+Additional File: big-tom-5.wav.b64;
+Additional File: big-tom-6.wav.b64;
+Additional File: big-tom-7.wav.b64;
+Additional File: big-tom-8.wav.b64;
+Additional File: big-tom-9.wav.b64;
+Additional File: cymbal-loop-1.wav.b64;
+Additional File: cymbal-roll.wav.b64;
+Additional File: fill-1.wav.b64;
+Additional File: fill-2.wav.b64;
+Additional File: fill-3.wav.b64;
+Additional File: fill-4.wav.b64;
+Additional File: fill-loop-1.wav.b64;
+Additional File: hi-closed-1.wav.b64;
+Additional File: hi-closed-2.wav.b64;
+Additional File: hi-closed-3.wav.b64;
+Additional File: hi-closed-4.wav.b64;
+Additional File: hi-closed-5.wav.b64;
+Additional File: hi-closed-6.wav.b64;
+Additional File: hi-closed-7.wav.b64;
+Additional File: hi-closed-8.wav.b64;
+Additional File: hi-closed-9.wav.b64;
+Additional File: hi-closing-1.wav.b64;
+Additional File: kick-1.wav.b64;
+Additional File: kick-2.wav.b64;
+Additional File: kick-3.wav.b64;
+Additional File: kick-4.wav.b64;
+Additional File: kick-5.wav.b64;
+Additional File: kick-6.wav.b64;
+Additional File: kick-7.wav.b64;
+Additional File: kick-8.wav.b64;
+Additional File: kick-9.wav.b64;
+Additional File: small-tom-1.wav.b64;
+Additional File: small-tom-2.wav.b64;
+Additional File: small-tom-9.wav.b64;
+Additional File: snare-1.wav.b64;
+Additional File: snare-2.wav.b64;
+Additional File: snare-3.wav.b64;
+Additional File: snare-4.wav.b64;
+Additional File: snare-5.wav.b64;
+-->
+<!-- End Metadata -->
+<hr>
+
+<h2>Usage:</h2>
+See description below for details. For a quick demo, try this:
+<pre>load "plight/drum.lsp"
+play plight-drum-example()</pre>
+
+<h2>Description</h2>
+
+<p>
+The drum machine software in <code>demos/plight</code> deserves further explanation. 
+to use the software, load the code by evaluating:
+<p><pre>
+load "plight/drum.lsp"
+exec load-props-file(strcat(*plight-drum-path*, 
+                            "beats.props"))
+exec create-drum-patches()
+exec create-patterns()
+</pre></p>
+
+<p>
+Drum sounds and patterns are specified in the <code>beats.props</code> file (or
+whatever name you give to <code>load-props-file</code>). This file
+contains two types of specifications. First, there are sound file specifications.
+Sound files are located by a line of the form:
+<p><pre>
+set sound-directory = "./"
+</pre></p>
+
+This gives the name of the sound file directory, relative to the 
+ <code>beats.props</code> file. Then, for each sound file, there should be a line of
+the form:
+<p><pre>
+track.2.5 = big-tom-5.wav
+</pre></p>
+
+This says that on track 2, a velocity value of 5 means to play the sound file
+ <code>big-tom-5.wav</code>. (Tracks and velocity values are described below.) 
+The <code>beats.props</code> file contains specifications for all the sound files
+in <code>plight</code> using 8 tracks. If you make your own specifications
+file, tracks should be numbered consecutively from 1, and velocities should be
+in the range of 1 to 9.
+<p>
+The second set of specifications is of beat patterns. A beat pattern is given
+by a line in the following form:
+<p><pre>
+beats.5 = 2--32--43-4-5---
+</pre></p>
+
+The number after <code>beats</code> is just a pattern number. Each pattern
+is given a unique number. After the equal sign, the digits and dashes are
+velocity values where a dash means "no sound." Beat patterns should be
+numbered consecutively from 1.
+<p>
+Once data is loaded, there are several functions to access drum patterns and 
+create drum sounds (described below). The <code>plight/drum.lsp</code> file
+contains an example function <code>play-drum-example()</code> to play some drums.
+There is also the file <code>plight/beats.props</code> to serve as an
+example of how to specify sound files and beat patterns.
+
+<p>The following functions do not "autoload", so be sure to call
+<pre>load "plight/drum.lsp"</pre>
+in your main program to load the functions.
+<p><dl><dt>
+<code>drum(<a name="index1399"></a><i>tracknum</i>, <i>patternnum</i>, <i>bpm</i>)</code> [SAL]<br>
+
+<code>(drum <i>tracknum</i> <i>patternnum</i> <i>bpm</i>)</code> [LISP]<dd>Create
+a sound by playing drums sounds associated with track <i>tracknum</i> (a 
+FIXNUM) using pattern <i>patternnum</i>. The tempo is given by <i>bpm</i> in
+beats per minute. Normally patterns are a sequence of sixteenth notes, so
+the tempo is in <i>sixteenth notes per minute</i>. For example,
+if <i>patternnum</i> is 10,
+then use the pattern specified for <code>beats.10</code>. If the third character
+of this pattern is 3 and <i>tracknum</i> is 5, then on the third beat, play
+the soundfile assigned to <code>track.5.3</code>. This function returns a <code>SOUND</code>.<br><br>
+<dt><code>drum-loop(<i>snd</i>, <i>duration</i>, <i>numtimes</i>)</code> [SAL]<br>
+
+<code>(drum-loop <i>snd</i> <i>duration</i> <i>numtimes</i>)</code> [LISP]<dd>Repeat the sound given by <i>snd</i> <i>numtimes</i> times. The repetitions occur at a time offset of <i>duration</i>, regardless of the actual duration of <i>snd</i>. A <code>SOUND</code> is returned.<br><br>
+<dt><code>length-of-beat(</a><i>bpm</i>)</code> [SAL]<br>
+
+<code>(length-of-beat <i>bpm</i>)</code> [LISP]<dd>Given a tempo of 
+<i>bpm</i>, return the duration of the beat in seconds. Note that this software
+has no real notion of beat. A "beat" is just the duration of each character
+in the beat pattern strings. This function returns a <code>FLONUM</code>.
+</dl>
+<p>
+
+</body>
+</html>

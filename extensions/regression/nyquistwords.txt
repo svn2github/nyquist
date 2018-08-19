@@ -1,0 +1,18 @@
+lnrg-new )
+regression/regression.sal  
+lnrg-point lnrg x y)
+regression/regression.sal  
+lnrg-remove-point lnrg x y)
+regression/regression.sal
+lnrg-regress lnrg)
+regression/regression.sal
+lnrg-f lnrg x)
+regression/regression.sal
+lnrg-f-inv lnrg y)
+regression/regression.sal
+lnrg-get-slope )
+regression/regression.sal
+lnrg-get-n )
+regression/regression.sal
+lnrg-init lnrg)
+regression/regression.sal

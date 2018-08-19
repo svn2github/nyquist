@@ -1,0 +1,14 @@
+;; Usage: 
+;;    load "ext-template1/c4-player.sal"
+;;    exec play-piano-c4()
+;;    exec play-pluck-c4()
+
+load "ext-template1/piano-player.sal"
+load "ext-template1/pluck-player.sal"
+
+function play-piano-c4()
+  exec play-piano(c4);
+
+function play-pluck-c4()
+  exec play-pluck(c4);
+

@@ -1,0 +1,28 @@
+;; warble.sal - an analog synth sound
+;; by Alex, Roger B. Dannenberg
+;; implemented as an extension, Aug 2018
+
+function warble(dur: 1, pch: 60)
+  return (env(0.017, 0.1, 0.004, 1, 0.7, 0.8, 1) *
+          amosc(pch, fmosc(hz-to-step(8), 
+                           pwl(0, 4, 0.2, -4, 0.56, 9, 0.7,
+                               0, 1, -8, 1))) +
+          env(0.2, 0.09, 0.07, 0.92, 0.8, 0.6, 1) ~ 0.96 *
+          amosc(pch, fmosc(pch * 1.414, 
+                           pwl(0.2, 80, 0.5, 4, 0.9,
+                               1120, 1, 200, 1)))) ~ dur
+
+function thicker()
+  return sim(0.5 * warble(dur: 8, pch: 48) @ 0.0,
+             0.3 * warble(dur: 8.05, pch: 47.9) @ 0.05)
+
+
+function blurp-mod(dur) 
+  return (pwl(0, 1000, 0.2, 200, 0.5, 8000, 1, 100, 1) *
+	  fmosc(c4, pwl(0, 1, 0.5, 3.25, 1, 0.74, 1))) ~ dur
+
+function blurp(dur)
+  return fmosc(c3, osc(7, dur) * blurp-mod(dur))
+
+function warble-demo()
+  return seq(warble(dur: 3), s-rest(), thicker(), s-rest(), blurp(5), s-rest())

@@ -1,0 +1,8 @@
+dmhm-organ pitch)
+mateos/organ.lsp
+dmhm-bell pitch)
+mateos/bell.lsp
+dmhm-gong pitch)
+mateos/gong.lsp
+dmhm-tuba pitch)
+mateos/tuba.lsp

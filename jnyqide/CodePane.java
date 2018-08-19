@@ -360,7 +360,7 @@ public class CodePane extends JScrollPane implements DocumentListener,
 				// back from there
 				identifier = getSalIdentifier(text, pos - start);
 				int len = identifier.length();
-				identLoc = pos - len;
+				identLoc = pos - len + 1;
 				forceExact = (len > 0 && identifier.charAt(len - 1) == ' ');
 				if (len == 0) { // not found
 					int openParenLoc = findOpenParen(text, pos - start);
@@ -379,8 +379,6 @@ public class CodePane extends JScrollPane implements DocumentListener,
 				int len = identifier.length();
 				forceExact = (len > 0 && identifier.charAt(len - 1) == ' ');
 			}
-			// System.out.println("keyTyped identifier is: |" + identifier +
-			// "|");
 			// put up words list
 			WordList.printList(identifier, pane, identLoc, pos + 1, forceExact,
 					isSal);

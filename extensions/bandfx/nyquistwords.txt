@@ -1,0 +1,19 @@
+separate-into-bands s p inc n)
+bandfx/bandfx.lsp 
+separate-into-bands-range s low high num-bands)
+bandfx/bandfx.lsp 
+reconstruct-from-bands bands)
+bandfx/bandfx.lsp
+banded-delay bands del inc fb wet)
+bandfx/bandfx.lsp
+apply-banded-delay s lowp highp num-bands lowd highd fb wet)
+bandfx/bandfx.lsp
+banded-bass-boost bands num-boost gain)
+bandfx/bandfx.lsp
+apply-banded-bass-boost s lowp highp num-bands num-boost gain)
+bandfx/bandfx.lsp
+banded-treble-boost bands num-boost gain)
+bandfx/bandfx.lsp
+apply-banded-treble-boost s lowp highp num-bands num-boost gain)
+bandfx/bandfx.lsp
+

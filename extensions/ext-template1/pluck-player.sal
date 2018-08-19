@@ -1,0 +1,3 @@
+function play-pluck(pitch)
+  play pluck(pitch);
+

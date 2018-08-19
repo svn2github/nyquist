@@ -1,0 +1,21 @@
+;; distortion - simple distortion example using shape function
+;;
+;; Roger B. Dannenberg
+
+variable *distortion* =
+      osc(hz-to-step(0.25), 2.01, *SINE-TABLE*, -90.0)
+
+function distort(snd)
+  return shape(snd, *distortion*, 1.0) 
+
+function distort-example-tune()
+  return seq(seqrep(i, 40, piano-note(0.2, random(12) + 48, 100) +
+                    piano-note(0.2, random(12) + 60, 100)),
+              piano-note(3, random(12) + 48, 100) +
+              piano-note(3, random(12) + 60, 100)) * ramp(12) * 12
+
+function distort-example()
+  begin
+    play distort(15.0 * ramp(4) * osc(c4, 4))
+    play distort(distort-example-tune())
+  end

@@ -1,0 +1,91 @@
+;; rhythm.sal - rhythm generation example
+;; Roger B. Dannenberg
+;; converted to extension, Aug 2018
+
+function pulse(dur)
+  return hp(noise(),
+            pwl(0, 15, 0.2, 6000, 0.6, 15000, 0.75, 7)) ~ dur
+
+function pulsepat(rep) 
+  return seqrep(i, rep, i * 0.1 *
+                seq(pulse(1), pulse(1), pulse(2), pulse(2))) ~ 0.2
+
+function rhythm-ex-1()
+  play pulsepat(17)
+
+function electrobass(dur, pch, scl)
+  begin
+    with modstep1 = hz-to-step(step-to-hz(pch) * sqrt(2.0)),
+         modstep2 = hz-to-step(step-to-hz(pch) * sqrt(11.0))
+    return (env(0.05, 0.1, 0.2, 1, 0.6, 0.24, 1) *
+            fmosc(pch, pwl(0.07, 1800, 0.15, 1000, 0.4, 680,
+                           0.8, 240, 1, 100, 1) * 
+		       scl * osc(modstep1) * osc(modstep2))) ~ dur
+  end
+
+function rhythm-ex-2()
+  play electrobass(0.4, 50, 1.2)
+
+function techno(rep)
+  return seqrep(i, rep, 0.8 *
+                sim(0.8 * electrobass(0.4, 50, 1.2) @ 0,
+                    0.6 * electrobass(0.2, 50, 0.9) @ 0.2,
+	            0.7 * electrobass(0.1, 50, 1.1) @ 0.3))
+
+function rhythm-ex-3()
+  play techno(3)
+
+function rhythm-ex-4()
+  play seqrep(i, 2, seq(techno(2),
+                      transpose(5, techno(2)),
+                      transpose(-2, techno(1)),
+                      transpose(3, techno(1)),
+                      techno(2)))
+
+function rhythm-ex-5()
+  play sim(0.4 * seqrep(i, 2,
+                        seq(techno(2),
+                            transpose(5, techno(2)),
+                            transpose(-2, techno(1)),
+                            transpose(3, techno(1)),
+                            techno(2))) @ 0,
+           0.2 * seqrep(i, 2,
+                        seq(transpose(2, techno(2)),
+                            transpose(7, techno(2)),
+                            transpose(-4, techno(1)),
+                            transpose(5, techno(1)),
+                            transpose(-2, techno(2)))) @ 0.1)
+
+function bass-line()
+  return seqrep(i, 2,
+            seq(techno(2),
+                transpose(5, techno(2)),
+                transpose(-2, techno(1)),
+                transpose(3, techno(1)),
+                techno(2)))
+
+function rhythm-ex-6()
+  play sim(0.4 * bass-line(),
+           0.2 * transpose(2, bass-line()) @ 0.1)
+
+function rhythm-ex-7()
+  play seqrep(i, 17, 
+              lp((i * 0.05 + 0.3) * 
+                 seq(transpose(-4, electrobass(0.1, 32, 0.6)), 
+                     transpose(-5, electrobass(0.05, 20, 0.2)),
+                     transpose(i, electrobass(0.1, 27, 0.5)), 
+                     transpose(-3, electrobass(0.05, 22, 0.1)), 
+                     transpose(i, electrobass(0.1, 28, 0.4)), 
+                     electrobass(0.05, 31, 0.7)),
+                 300 * i))
+
+function rhythm-all()
+  begin
+    exec rhythm-ex-1()
+    exec rhythm-ex-2()
+    exec rhythm-ex-3()
+    exec rhythm-ex-4()
+    exec rhythm-ex-5()
+    exec rhythm-ex-6()
+    exec rhythm-ex-7()
+  end

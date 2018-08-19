@@ -1,0 +1,8 @@
+compress-map compress-ratio compress-threshold expand-ratio
+compress/compress.lsp
+expand-threshold [limit] [transition] [verbose])
+compress/compress.lsp
+compress input mpa rise-time fall-timei [lookahead])
+compress/compress.lsp
+agc input range rise-time fall-time [lookahead])
+compress/compress.lsp

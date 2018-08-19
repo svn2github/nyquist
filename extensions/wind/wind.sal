@@ -1,0 +1,15 @@
+;; wind.sal
+;; by Alex and Roger B. Dannenberg
+;; extension implemented Aug. 2018
+
+function wind(dur: 3, scal: 3, cps: 590, bw: 40)
+  return (env(0.07, 0.08, 0.1, 1, 0.6, 0.8, 1) *
+	  (reson(scal * noise(), cps, bw, 2) +
+	   reson(scal * 1.13 * noise(), 
+                 cps * pwl(0, 0.74, 0.2, 0.96, 0.5, 0.8,
+                           0.75, 1.16, 0.9, 0.97, 1, 0.74, 1),
+                 bw * 1.042, 2))) ~ dur
+
+function multiwind()
+  return simrep(i, 4, wind() @ (i * 2.9))
+

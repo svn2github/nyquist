@@ -1,0 +1,4 @@
+s-reverse snd)
+reverse/reverse.lsp
+s-read-reverse filename :time-offset offset :srate sr :dur dur :nchans chans :format format mode: mode :bits bits :swap flag)
+reverse/reverse.lsp

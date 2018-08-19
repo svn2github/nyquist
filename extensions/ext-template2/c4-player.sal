@@ -1,0 +1,81 @@
+;; c4-player.sal - illustrates how to create an extension
+;;
+;; Nyquist Extension
+;; Version: 1.0;
+;;
+;; Author Name: Azarakhsh Keipour and Roger B. Dannenberg;
+;; Author Email: akeipour@andrew.cmu.edu and rbd@cs.cmu.edu;
+;; 
+;; Additional File: piano-player.sal;
+;; Additional File: pluck-player.sal;
+;;
+;; End Metadata
+
+;; Usage: 
+;;    load "ext-template2/c4-player.sal"
+;;    exec play-piano-c4()
+;;    exec play-pluck-c4()
+
+;; Description:
+;;
+;; This extension is intended only to illustrate how to create an extension. 
+;;
+;; This example uses a SAL file as the "root" of the extension. This is 
+;; the simplest format for use when there is no additional documentation.
+;;
+;; This file is parsed by the Extension Manager of the NyquistIDE up 
+;; to the line containing "End Metadata".
+;;
+;; The parser looks for:
+;;   - "Version 1.0", which is the version of the extension file format, 
+;;     *not* the version of the extension.
+;;
+;;   - "Additional File:", which indicates the installer should install 
+;;      an additional file. 
+;;        o The additional file name is a path relative to the URL for 
+;;          this file.
+;;        o The file name *must* be terminated with a semicolon (;) or newline.
+;;        o There may be any number of additional files listed.
+;;   - "Author Name:" and "Author Email:" fields are recommended, but not 
+;;     currently parsed by the Extension Manager.
+;;
+;; Additional notes for extension developers:
+;; 
+;; Below "Usage:", you should explain with short examples how to call the
+;; functions provided by the extension. Only list the "external" functions
+;; intended to be called by users. "Internal" support or helper functions
+;; should not be listed here.
+;;
+;; You have two choices as to how the code is loaded. The simple case, where
+;; the user explicitly loads the extension when it is needed is used in this
+;; example. Simply write under "Usage:" the command to load the extension, 
+;; e.g. load "ext-template2/c4-player.sal". Note that the extension files are
+;; stored in a subdirectory of lib. The lib directory is always on the search
+;; path, but the extension subdirectories are not, so you must include the
+;; subdirectory (the extension name) in the path. Hence, you should 
+;; load "ext-template2/c4-player.sal"; simply writing load "c4-player.sal" 
+;; will not work. Also, notice that if additional files must be loaded (in 
+;; this case, we load "piano-player.sal" and "pluck-player.sal", the
+;; subdirectory must also be included because the load command does not change
+;; the current directory to that of the loaded file. (See load commands below
+;; for examples of loading additional files when the extension is loaded.)
+;;
+;; The second choice is to "autoload" the extension when a function is called.
+;; In this case, you should not list a load command under "Usage:" since the 
+;; load will be automatic. See ext-template1 for details.
+;;
+;; The NyquistIDE has auto-completion and syntax coloring features that can
+;; make extensions easier to use. To enter extension functions into the
+;; list of functions that the IDE knows about, you must provide a file named
+;; nyquistwords.txt. See the ext-template1 extension for a description and an
+;; example.
+
+
+load "ext-template2/piano-player.sal"
+load "ext-template2/pluck-player.sal"
+
+function play-piano-c4()
+  exec play-piano(c4);
+
+function play-pluck-c4()
+  exec play-pluck(c4);

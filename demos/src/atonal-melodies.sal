@@ -72,10 +72,18 @@
 ;; select track-to-staff list, autoset to channels, eliminate split 
 ;; points if Finale creates any (click on the Split word and select 
 ;; Split none on the window that opens), select the desired quantization 
-;; settings, select in the score manager the desired instuments, 
-;; preferably with the Garritan sounds better than the midi default 
-;; ones, put your desired dynamisc, slurs, articulations, etc., and 
-;; playback. 
+;; settings, select in the score manager the desired instruments, 
+;; preferably with the Garritan sounds, which are better than the default 
+;; ones, put in your desired dynamics, slurs, articulations, etc., and 
+;; play back.
+;;
+;; Durations are based on beats, e.g. a duration of 1 means 1 quarter note.
+;; But score-write-smf() specifies a tempo of 100. In general, you should
+;; stretch scores by 1.2 so that original durations of 1 (second) become
+;; two quarter notes at 100 bpm (0.6s each, 1.2s per half note). You can
+;; then increase the tempo to 120 bpm to restore the original timing or
+;; select the tempo you like best.
+;; 
 ;; See example files:
 ;;    http://www.cs.cmu.edu/~rbd/algocompbook/jorge-sastre/Atonal%20aleatoric%20trio%20-%20Jorge%20Sastre%20-%20Nyquist.mid
 ;;    http://www.cs.cmu.edu/~rbd/algocompbook/jorge-sastre/Atonal%20aleatoric%20trio%20-%20Jorge%20Sastre%20-%20Nyquist.pdf
@@ -201,7 +209,8 @@ begin
   ;; sequencer with a proper quantization (if it has to be played by
   ;; humans) and separate by midi channels if you want to 
   ;; separate the different voices in different tracks/staffs:
-  exec score-write-smf(my-atonal-melody, "atonal-melody.mid")
+  exec score-write-smf( ;; stretch to match 100bpm tempo in midi file
+           score-stretch(my-atonal-melody, 1.2), "atonal-melody.mid")
   ;;
   ;; Create several atonal melodies to be played together 
   ;; with random start notes using a loop and being able to 
@@ -220,20 +229,20 @@ begin
          max-desired-pitch-list = list(g6, g4),
          min-desired-pitch-list = list(e3, bf1),
          speed-list = list(1, .5), ; to make the bassoon melody slower
-         ; both clarinet and basoon more regularly than flute:
+         ; both clarinet and bassoon more regularly than flute:
          rhythm-pat-type-list = list(1, 1), 
-         ;; less notes to the basoon since its note duration values are
+         ;; less notes to the bassoon since its note duration values are
          ;; approx. half those of the clarinet:
          score-length-list = list(50, 25),
          rest-notes-list = list(2, 1), ; more rests in the clarinet melody
-         ;; since the basoon has double note durations, we set the 
+         ;; since the bassoon has double note durations, we set the 
          ;; changes to half the clarinet value, and both to the double 
          ;; of the flute value so that their cycles are bigger
          length-changes-list = list(20, 10),
-         ;; since the basoon has double note durations, we set the 
+         ;; since the bassoon has double note durations, we set the 
          ;; random part of the changes to half the clarinet value
          length-changes-random-part-list = list(10, 5), 
-         ;; some notes at medium speed in the basoon and no one in 
+         ;; some notes at medium speed in the bassoon and no one in 
          ;; the clarinet, since the clarinet has already used medium 
          ;; speed (speed = 1):
          medium-speed-note-rate-list = list(-1, 3) 
@@ -258,5 +267,8 @@ begin
   ;; sequencer with a proper quantization (if it has to be played by 
   ;; humans) and using separation by midi channels to separate the 
   ;; different voices in different tracks/staffs  
-  exec score-write-smf(atonal-material, "atonal-simultaneous-melodies.mid") 
+  ;; 
+  ;; use score-stretch to match 100bpm in midi file
+  exec score-write-smf(score-stretch(atonal-material, 1.2),
+                       "atonal-simultaneous-melodies.mid") 
 end

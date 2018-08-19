@@ -1,0 +1,1 @@
+(autoload "moog.lsp" 'moog)

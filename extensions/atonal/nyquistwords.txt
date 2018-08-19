@@ -1,0 +1,4 @@
+atonal-melody :start-note p :max-pitch m1 :min-pitch m2 :speed s :chan c ...)
+atonal/atonal-melodies.sal
+atonal-melody-demo)
+atonal/atonal-melodies.sal

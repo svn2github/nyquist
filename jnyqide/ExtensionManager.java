@@ -51,20 +51,25 @@ import java.util.ArrayList;
 
 import java.security.MessageDigest;
 
+import java.util.Base64;
+
 public class ExtensionManager extends JNonHideableInternalFrame 
                               implements ActionListener {
 	/**
 	 * URL of the Extension list. Should directly point to the text file.
 	 */
 	private static String EXTENSION_LIST_URL = 
-        "https://www.cs.cmu.edu/~music/nyquist/extlist.txt";
-    
+            "https://www.cs.cmu.edu/~music/nyquist/extensions/extlist.txt";
+    /*      "file:///Users/rbd/nyquist/extensions/extlist.txt"; */
+
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private JPanel buttonPane = new JPanel();
 	private DefaultTableModel dtm;
     private MainFrame mainFrame;
     private boolean updating; // this is selected after user clicks Update
+    public enum Cols { EXTENSION, VERSION, DATE, INSTALLED, DESCRIPTION, URL, CHECKSUM };
+    public enum ExtList { EXTENSION, URL, VERSION, DATE, CHECKSUM, DESCRIPTION };
     // and it disables the prompt to see if you really want to install
     // over an existing extension.
     // This is cleared after each button press other than Update.
@@ -145,33 +150,41 @@ public class ExtensionManager extends JNonHideableInternalFrame
 			table.setCellSelectionEnabled(false);
 			table.setColumnSelectionAllowed(false);
 			table.setRowSelectionAllowed(true);
-			String header[] = new String[] { "Package", "Ver.", "Date", 
+			String header[] = new String[] { "Name", "Ver.", "Date", "Installed",
                                              "Description", "URL", "Checksum" };
 			dtm = new DefaultTableModel(0, 0)
                 {
                     Class[] columnTypes = new Class[] {
-						String.class, String.class, String.class, String.class,
-                        String.class, String.class
+						String.class, String.class, String.class, Boolean.class,
+                        String.class, String.class, String.class
                     };
                     public Class getColumnClass(int columnIndex) {
                         return columnTypes[columnIndex];
                     }
-                    boolean[] columnEditables = new boolean[] {
-                        false, false, false, false, false, true
-                    };
+/*                    boolean[] columnEditables = new boolean[] {
+                        false, false, false, false, false, false, false
+                    }; */
                     public boolean isCellEditable(int row, int column) {
-                        return columnEditables[column];
+                        return false;
                     }
                 };
 			dtm.setColumnIdentifiers(header);
 			table.setModel(dtm);
 			{
-				table.getColumnModel().getColumn(0).setPreferredWidth(182);
-				table.getColumnModel().getColumn(1).setPreferredWidth(100);
-				table.getColumnModel().getColumn(2).setPreferredWidth(150);
-				table.getColumnModel().getColumn(3).setPreferredWidth(302);
-				table.getColumnModel().getColumn(4).setPreferredWidth(212);
-				table.getColumnModel().getColumn(5).setPreferredWidth(150);
+				table.getColumnModel().getColumn(Cols.EXTENSION.ordinal()).
+                        setPreferredWidth(182);
+				table.getColumnModel().getColumn(Cols.VERSION.ordinal()).
+                        setPreferredWidth(40);
+				table.getColumnModel().getColumn(Cols.DATE.ordinal()).
+                        setPreferredWidth(120);
+				table.getColumnModel().getColumn(Cols.INSTALLED.ordinal()).
+                        setPreferredWidth(90);
+				table.getColumnModel().getColumn(Cols.DESCRIPTION.ordinal()).
+                        setPreferredWidth(302);
+				table.getColumnModel().getColumn(Cols.URL.ordinal()).
+                        setPreferredWidth(212);
+				table.getColumnModel().getColumn(Cols.CHECKSUM.ordinal()).
+                        setPreferredWidth(100);
 				getContentPane().add(table, BorderLayout.NORTH);
 			}
 			getContentPane().add(new JScrollPane(table));
@@ -183,7 +196,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
     
 	/**
 	 * This function adds 'Visit URL' button on the window.
-	 * Pressing this button will open the package URL in a browser.
+	 * Pressing this button will open the extension root file in a browser.
 	 */
 	private void addVisitURLButton()
 	{
@@ -204,7 +217,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
                     }
                     // get the URL
                     String url = table.getModel().getValueAt(
-                                      selectedRow, 4).toString();
+                            selectedRow, Cols.URL.ordinal()).toString();
                     // open the URL
                     mainFrame.openPage(url);
                 } catch (Exception e) {
@@ -221,7 +234,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
 
 	/**
 	 * This function adds 'Install' button on the window.
-	 * Pressing this button will install the packages selected in the table. 
+	 * Pressing this button will install the extensions selected in the table. 
 	 */
 	private void addInstallButton() {
 		JButton installButton = new JButton("Install");
@@ -246,50 +259,50 @@ public class ExtensionManager extends JNonHideableInternalFrame
             String extDir = createExtDirectory();
             if (extDir == null) return;
             
-            // Define lists for installed and failed packages 
+            // Define lists for installed and failed extensions
             // (used for the final message)
-            List<String> installedPackages = new ArrayList<String>();
-            List<String> failedPackages = new ArrayList<String>();
+            List<String> installedExtensions = new ArrayList<String>();
+            List<String> failedExtensions = new ArrayList<String>();
             
             // Retrieve the selected rows from table
             int[] selectedRows = table.getSelectedRows();
             if (selectedRows.length == 0) {
                 JOptionPane.showMessageDialog(contentPanel, 
-                        "No packages selected to install!", 
-                        "Packages", JOptionPane.WARNING_MESSAGE);
+                        "No extensions selected to install!", 
+                        "Extensions", JOptionPane.WARNING_MESSAGE);
                 updating = false;
                 return;
             }
             
-            // Install the selected packages
+            // Install the selected extensions
             for (int i = 0; i < selectedRows.length; ++i) {
                 // Create a sub-directory in extensions directory with 
-                // package name
-                String packageName = table.getModel().getValueAt(
-                                             selectedRows[i], 0).toString();
-                String packageDir = extDir + packageName;
-                String tmpPackageDir = extDir + "tmp-" + packageName +
+                // extension name
+                String extensionName = table.getModel().getValueAt(
+                        selectedRows[i], Cols.EXTENSION.ordinal()).toString();
+                String extensionDir = extDir + extensionName;
+                String tmpPackageDir = extDir + "tmp-" + extensionName +
                                        File.separator;
 
                 // Warn user if package already exists or tmp exists
-                boolean pdExists = (new File(packageDir)).exists();
+                boolean pdExists = (new File(extensionDir)).exists();
                 boolean tpdExists = (new File(tmpPackageDir)).exists();
                 if (!updating && (pdExists || tpdExists)) {
                     String exists;
                     if (pdExists && tpdExists) {
-                        exists = packageDir + " and \n" + tmpPackageDir;
+                        exists = extensionDir + " and \n" + tmpPackageDir;
                     } else if (pdExists) {
-                        exists = packageDir;
+                        exists = extensionDir;
                     } else {
                         exists = tmpPackageDir;
                     }
                     if (JOptionPane.showConfirmDialog(contentPanel,
-                            "Warning: Installing " + packageName +
+                            "Warning: Installing " + extensionName +
                             " will require the deletion of the existing\n" +
                             exists + "\nOK?",
                             "Directory Conflict", JOptionPane.YES_NO_OPTION) !=
                         JOptionPane.YES_OPTION) {
-                        failedPackages.add(packageName);
+                        failedExtensions.add(extensionName);
                         continue;
                     };
                     if (tpdExists) {
@@ -301,15 +314,15 @@ public class ExtensionManager extends JNonHideableInternalFrame
                     JOptionPane.showMessageDialog(contentPanel, 
                        "Error creating directory at the following " +
                        "path:\n'" + tmpPackageDir + "'\n\nPackage '" +
-                       packageName + "' not installed!",
+                       extensionName + "' not installed!",
                        "Directory Creation Problem", JOptionPane.ERROR_MESSAGE);
-                    failedPackages.add(packageName);
+                    failedExtensions.add(extensionName);
                     continue;
                 }
                 
                 // Read the contents of the selected package file
                 String url = table.getModel().getValueAt(
-                                 selectedRows[i], 4).toString();
+                        selectedRows[i], Cols.URL.ordinal()).toString();
                 String filepath = fileLocalPathFromURL(url, 
                                                        tmpPackageDir);
                 String fileContent = (filepath == null) ? null :
@@ -317,9 +330,9 @@ public class ExtensionManager extends JNonHideableInternalFrame
                 if (fileContent == null) {
                     JOptionPane.showMessageDialog(contentPanel,
                         "Error reading the following URL:\n'" + url +
-                        "'\n\nPackage '" + packageName + "' not installed!", 
+                        "'\n\nPackage '" + extensionName + "' not installed!", 
                         "Error", JOptionPane.ERROR_MESSAGE);
-                    failedPackages.add(packageName);
+                    failedExtensions.add(extensionName);
                     // remove tmp dir:
                     deleteDirectory(tmpPackageDir);
                     continue;
@@ -336,9 +349,9 @@ public class ExtensionManager extends JNonHideableInternalFrame
                     JOptionPane.showMessageDialog(contentPanel,
                         "Unknown error happened while parsing the " +
                         "extension file!\n'" + url + "'\n\nPackage '" +
-                        packageName + "' not installed!\n", 
+                        extensionName + "' not installed!\n", 
                         "Error", JOptionPane.ERROR_MESSAGE);
-                    failedPackages.add(packageName);
+                    failedExtensions.add(extensionName);
                     deleteDirectory(tmpPackageDir);
                     continue;
                 }
@@ -355,8 +368,11 @@ public class ExtensionManager extends JNonHideableInternalFrame
                 // Compare the checksum of the downloaded files 
                 // with the reference checksum 
                 String referenceChecksum = table.getModel().
-                        getValueAt(selectedRows[i], 5).toString(); 
+                        getValueAt(selectedRows[i], 
+                                   Cols.CHECKSUM.ordinal()).toString();
                 String downloadedChecksum = calculateFileChecksum(packageFiles);
+                System.out.println("ref " + referenceChecksum + " downloaded " + 
+                                   downloadedChecksum);
                 if (!downloadedChecksum.equalsIgnoreCase(referenceChecksum)) {
                     // remove the downloaded package if checksum is
                     // different
@@ -364,11 +380,11 @@ public class ExtensionManager extends JNonHideableInternalFrame
                     JOptionPane.showMessageDialog(contentPanel,
                         "Checksum of the available package is " +
                         "different than the verified version!\n" + 
-                        "Package '" + packageName + "' not installed!\n" +
+                        "Extension '" + extensionName + "' not installed!\n" +
                         "Downloaded checksum: " + downloadedChecksum,
                         "Checksum Error", JOptionPane.ERROR_MESSAGE);
                     System.out.println("Checksum: " + downloadedChecksum);
-                    failedPackages.add(packageName);
+                    failedExtensions.add(extensionName);
                     deleteDirectory(tmpPackageDir);
                     continue;
                 }
@@ -377,33 +393,53 @@ public class ExtensionManager extends JNonHideableInternalFrame
                 if (!saveToFile(tmpPackageDir + "checksum.txt",
                                 downloadedChecksum)) {
                     JOptionPane.showMessageDialog(contentPanel,
-                        "Package checksum for " + packageName + 
+                        "Extension checksum for " + extensionName + 
                         " could not be written to " + tmpPackageDir +
-                        "checksum.txt\n" + "Package '" + packageName + 
+                        "checksum.txt\n" + "Extension '" + extensionName + 
                         "' not installed!\n", 
                         "Checksum Error", JOptionPane.ERROR_MESSAGE);
-                    failedPackages.add(packageName);
+                    failedExtensions.add(extensionName);
                     deleteDirectory(tmpPackageDir);
                     continue;
                 }
                 
                 // everything looks good, replace the old directory
-                deleteDirectory(packageDir);
+                deleteDirectory(extensionDir);
                 String tmp = tmpPackageDir; // remove trailing "/"
                 // tmp = tmp.substring(0, tmp.length() - 1);
-                if (!renameDirectory(tmp, packageDir)) {
+                if (!renameDirectory(tmp, extensionDir)) {
                     JOptionPane.showMessageDialog(contentPanel,
-                        "Could not rename " + tmp + "\nto " + packageDir +
+                        "Could not rename " + tmp + "\nto " + extensionDir +
                         "\nLeaving the temporary directory, which contains " +
                         "good package files.", "Installation Failure", 
                         JOptionPane.ERROR_MESSAGE);
-                    failedPackages.add(packageName);
+                    failedExtensions.add(extensionName);
                     continue;
                 }
-                installedPackages.add(packageName);
+                installedExtensions.add(extensionName);
+                // Three things happen at startup:
+                // (1) autoload.lsp is loaded if found
+                for (String name : otherFiles) {
+                    if (name.equals("autoload.lsp")) {
+                        mainFrame.callFunction("lisp-loader", "\"" + extensionName + 
+                                               "/" + "autoload.lsp\"");
+                        break;
+                    }
+                }
+                // (2) nyquistwords.txt is processed if found
+                WordList.processExtension(extensionDir);
+                // (3) Installed field in table is set to true
+                for (int row = 0; row < dtm.getRowCount(); row++) {
+                    String name = (String) 
+                            dtm.getValueAt(row, Cols.EXTENSION.ordinal());
+                    if (name.equals(extensionName)) {
+                        dtm.setValueAt(true, row, Cols.INSTALLED.ordinal());
+                        break;
+                    }
+                }
             }
             // Show a message about the completion of installation
-            showPostInstallationMessage(installedPackages, failedPackages);
+            showPostInstallationMessage(installedExtensions, failedExtensions);
             updating = false;
         } catch (Exception e) {
             updating = false;
@@ -411,6 +447,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
                 "An unknown error happened installing the packages!\n" +
                 "Some packages may have been installed!\nError message: " +
                 e.toString(), "Unknown Problem", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }        
 
@@ -436,7 +473,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
                     return FileVisitResult.CONTINUE;
                 }
             });
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("WARNING in deleteDirectory: " + e.toString());
             return;
         }
@@ -502,10 +539,12 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	// ====================== Project-dependent functions ===============
     
 	/**
-	 * Loads the extension data from to the grid table.
+	 * Downloads the extension data and inserts it into the grid table.
 	 */
 	private void loadExtensionDataToTable() {
         dtm.setRowCount(0);
+        String extDir = createExtDirectory();
+        if (extDir == null) return;
                 
         String[] extensions = loadExtensionData(EXTENSION_LIST_URL);
         if (extensions == null) {
@@ -521,8 +560,15 @@ public class ExtensionManager extends JNonHideableInternalFrame
             if (extensions[i].trim().startsWith("#")) continue;
                 
             String[] ext = SplitExtensionData(extensions[i], 6);
-            dtm.addRow(new Object[] { ext[0], ext[2], ext[3], ext[5], 
-                                      ext[1], ext[4] });
+            boolean pdExists = (new File(extDir + 
+                    ext[ExtList.EXTENSION.ordinal()])).exists();
+            String installed = pdExists ? "Yes" : "No";
+
+            dtm.addRow(new Object[] { ext[ExtList.EXTENSION.ordinal()], 
+                    ext[ExtList.VERSION.ordinal()], ext[ExtList.DATE.ordinal()],
+                    pdExists, ext[ExtList.DESCRIPTION.ordinal()],
+                    ext[ExtList.URL.ordinal()], 
+                    ext[ExtList.CHECKSUM.ordinal()] });
         }
 	}
 
@@ -549,7 +595,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
         String[] directories = getExtensionDirs(mainFrame.extDir);
         // search directories in extDir to find packages to update
         Vector<Integer> needToUpdate = new Vector<Integer>();
-        Vector<String> unknownPackages = new Vector<String>();
+        Vector<String> unknownExtensions = new Vector<String>();
         for (String dir : directories) {
             System.out.println("Update checks " + dir);
             try {
@@ -566,21 +612,22 @@ public class ExtensionManager extends JNonHideableInternalFrame
 
                 // find row in table
                 File packageFile = new File(dir);
-                String packageName = packageFile.getName();
+                String extensionName = packageFile.getName();
                 int r;
                 for (r = 0; r < table.getModel().getRowCount(); r++) {
-                    String s = table.getModel().getValueAt(r, 0).toString();
-                    if (s.equalsIgnoreCase(packageName)) {
+                    String s = table.getModel().getValueAt(r, 
+                                   Cols.EXTENSION.ordinal()).toString();
+                    if (s.equalsIgnoreCase(extensionName)) {
                         break;
                     }
                 }
                 if (r == table.getModel().getRowCount()) {
-                    unknownPackages.add(packageName);
-                    System.out.println("Found unknown package: " + packageName);
+                    unknownExtensions.add(extensionName);
+                    System.out.println("Found unknown package: " + extensionName);
                     continue; // package not an official one
                 }
                 String referenceChecksum = table.getModel().
-                    getValueAt(r, 5).toString(); 
+                        getValueAt(r, Cols.CHECKSUM.ordinal()).toString();
                 System.out.println("refsum " + referenceChecksum +
                                    "\ncursum " + checksum);
                 if (!checksum.equalsIgnoreCase(referenceChecksum)) {
@@ -594,20 +641,20 @@ public class ExtensionManager extends JNonHideableInternalFrame
             }
         }
         // show unknown packages
-        if (unknownPackages.size() > 0) {
-            String unknown = unknownPackages.get(0);
-            for (int i = 1; i < unknownPackages.size(); i++) {
-                unknown = unknown + " " + unknownPackages.get(i);
+        if (unknownExtensions.size() > 0) {
+            String unknown = unknownExtensions.get(0);
+            for (int i = 1; i < unknownExtensions.size(); i++) {
+                unknown = unknown + " " + unknownExtensions.get(i);
             }
             JOptionPane.showMessageDialog(contentPanel,
                 "Discovered unknown packages: " + unknown,
-                "Warning: Unknown Packages", JOptionPane.WARNING_MESSAGE);
+                "Warning: Unknown Extensions", JOptionPane.WARNING_MESSAGE);
         }
         
         if (needToUpdate.size() == 0) {
             JOptionPane.showMessageDialog(contentPanel,
                 "All packages are up-to-date.",
-                "Package Update", JOptionPane.INFORMATION_MESSAGE);
+                "Extension Update", JOptionPane.INFORMATION_MESSAGE);
         } else {
             // mark out-of-date packages in table
             table.clearSelection(); // remove all current selections
@@ -618,7 +665,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
             JOptionPane.showMessageDialog(contentPanel,
                 "Out-of-date packages have been selected.\n" +
                 "Use the Install button to update the selections.",
-                "Package Update", JOptionPane.INFORMATION_MESSAGE);
+                "Extension Update", JOptionPane.INFORMATION_MESSAGE);
             updating = true;
         }            
     }
@@ -627,23 +674,23 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	/**
 	 * Shows a message after installation of the packages.
 	 */
-	private void showPostInstallationMessage(List<String> installedPackages, 
-                                             List<String> failedPackages)
+	private void showPostInstallationMessage(List<String> installedExtensions, 
+                                             List<String> failedExtensions)
 	{
 		// Announce the failed and installed packages
 		String endMessage = "Completed installation!";
 		int messageType = -1;
-		if (installedPackages.size() > 0) {
+		if (installedExtensions.size() > 0) {
             endMessage += 
                 "\n\nThe following package(s) were successfully installed:\n";
-            for (String pkg : installedPackages) 
+            for (String pkg : installedExtensions) 
                 endMessage += "'" + pkg + "'  ";
             messageType = JOptionPane.INFORMATION_MESSAGE;
         }
-		if (failedPackages.size() > 0) {
+		if (failedExtensions.size() > 0) {
             endMessage += 
                 "\n\nInstallation of the following package(s) failed:\n";
-            for (String pkg : failedPackages) 
+            for (String pkg : failedExtensions) 
                 endMessage += "'" + pkg + "'  ";
             if (messageType == -1)
                 messageType = JOptionPane.ERROR_MESSAGE;
@@ -698,11 +745,11 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	 */
 	private static String[] extractOtherFilesFromSAL(String fileContent) {
 		try {
-            // Extract lines from the SAL file
+            // Extract lines from the SAL/HTML file
             String[] lines = fileContent.split(System.getProperty(
                                                   "line.separator"));
                 
-            // Parse the header of SAL file to find the additional files 
+            // Parse the header of SAL/HTML file to find the additional files 
             List<String> fileNames = new ArrayList<String>();
             for (int i = 0; i < lines.length; ++i) {
                 String line = lines[i].trim();
@@ -782,12 +829,21 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	 */
 	private static String readFromURL(String urlString) {
 		try {
-            URL url = new URL(urlString);
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            Map<String, List<String>> header = http.getHeaderFields();
+            if (urlString.startsWith("file:")) {
+                FileInputStream stream = new FileInputStream(urlString.substring(7));
+                String s = getStringFromStream(stream);
+                stream.close();
+                return s;
+            } else {
+                URL url = new URL(urlString);
+                HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                Map<String, List<String>> header = http.getHeaderFields();
                 
-            InputStream stream = http.getInputStream();
-            return getStringFromStream(stream);
+                InputStream stream = http.getInputStream();
+                String s = getStringFromStream(stream);
+                stream.close();
+                return s;
+            }
         } catch (Exception e) {
             return null;
         }
@@ -841,19 +897,37 @@ public class ExtensionManager extends JNonHideableInternalFrame
     */    
     
 	/**
-	 * Reads a text file from a stream and saves it in a local directory.
-	 * Additionally, returns the read stream as a String object (only if 
-     * saved successfully).
+	 * Reads a file from a stream and saves it in a local directory.
+     * If the filename ends with ".b64", the extension is removed and
+     * the data is decoded before writing.
+	 * Additionally, returns the read and decoded stream as a String
+     * object (only if saved successfully).
 	 * Returns null on any type of error.
+     *
+     * To prepare a binary file as an extension file, do this on OS X
+     * (example uses demo.mid as the binary file in the extension):
+     *     openssl base64 -in demo.mid -out demo.mid.b64
 	 */
  	private static String saveFromURLtoFile(String url, String filename) {
 		String fileContent =  readFromURL(url);
+        byte[] bytes;
 		if (fileContent == null) return null;
-        
-        if (saveToFile(filename, fileContent)) {
-            return fileContent;
+
+        // .b64 extensions are removed and content is decoded
+        if (filename.endsWith(".b64")) {
+            bytes = Base64.getMimeDecoder().decode(fileContent);
+            filename = filename.substring(0, filename.length() - 4);
+            if (saveToBinaryFile(filename, bytes)) {
+                return "saveToBinaryFile success";
+            } else {
+                return null;
+            }
         } else {
-            return null;
+            if (saveToFile(filename, fileContent)) {
+                return fileContent;
+            } else {
+                return null;
+            }
         }
 	}
     
@@ -862,10 +936,23 @@ public class ExtensionManager extends JNonHideableInternalFrame
      * Writes string to file
      */
     private static boolean saveToFile(String filename, String content) {
-		try {
+        try {
             PrintWriter out = new PrintWriter(filename);
-            out.println(content);
+            out.print(content);
             out.close();
+            return true;
+        } catch (Exception e) { 
+            return false; 
+        }
+    }
+
+
+    /*
+     * Writes bytes to binary file
+     */
+    private static boolean saveToBinaryFile(String filename, byte[] bytes) {
+		try {
+            Files.write(Paths.get(filename), bytes);
             return true;
         } catch (Exception e) { 
             return false; 
@@ -931,29 +1018,29 @@ public class ExtensionManager extends JNonHideableInternalFrame
  	 */
 	public static String calculateFileChecksum(List<String> filenames) 
             throws Exception {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA1");
+        MessageDigest md = MessageDigest.getInstance("SHA1");
                 
-            for (String filename : filenames) {
-                FileInputStream fis = new FileInputStream(filename);
-                        
-                byte[] dataBytes = new byte[1024];
-                int nread = 0;
-                while ((nread = fis.read(dataBytes)) != -1) 
-                    md.update(dataBytes, 0, nread);
+        for (String filename : filenames) {
+            if (filename.endsWith(".b64")) {
+                // by now, .b64 has been removed and file decoded
+                filename = filename.substring(0, filename.length() - 4);
             }
-                
-            byte[] mdbytes = md.digest();
-                
-            // Convert the bytes to hex format
-            StringBuffer sb = new StringBuffer("");
-            for (int i = 0; i < mdbytes.length; i++) 
-                sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 
-                          16).substring(1));
-            return sb.toString();
-        } catch (Exception e) {
-            return null;
+            FileInputStream fis = new FileInputStream(filename);
+                        
+            byte[] dataBytes = new byte[1024];
+            int nread = 0;
+            while ((nread = fis.read(dataBytes)) != -1) 
+                md.update(dataBytes, 0, nread);
         }
+                
+        byte[] mdbytes = md.digest();
+                
+        // Convert the bytes to hex format
+        StringBuffer sb = new StringBuffer("");
+        for (int i = 0; i < mdbytes.length; i++) 
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 
+                                       16).substring(1));
+        return sb.toString();
 	}
     
     

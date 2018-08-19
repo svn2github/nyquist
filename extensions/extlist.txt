@@ -1,0 +1,39 @@
+# Each extension is on a separate line and has the following format:
+# package-name, url-of-the-main-package-file, version, date-of-release, checksum, description
+
+arpeggiator,file:///Users/rbd/nyquist/extensions/arpeggiator/arpeggiator.html,1.0, 12 Aug 2018, 662c2f071bf709e23007e89f372122d0d77c6fab, Arpeggiator 
+atonal,file:///Users/rbd/nyquist/extensions/atonal/atonal-melodies.sal,1.0, 12 Aug 2018, c9949abfb213dbfc79551ee4136799ad380b550e, Atonal melody generation 
+bandfx, file:///Users/rbd/nyquist/extensions/bandfx/bandfx.lsp, 1.0, 12 Aug 2018, 37e8da1c341ddec6cee631ed18da48511a6381a4, Audio FX based on separate frequency bands 
+cellautomata,file:///Users/rbd/nyquist/extensions/cellautomata/cellularautomata.html,1.0, 12 Aug 2018, 199ec3298764302d73d8978f8505a3bb434b587d, Cellular Automata  
+clipsoften, file:///Users/rbd/nyquist/extensions/clipsoften/soften.lsp, 1.0, 12 Aug 2018, bc39694965cf806beceefbfb9f42e7dd8472811b, Soften Harsh Clipping
+compress, file:///Users/rbd/nyquist/extensions/compress/compress.lsp, 1.0, 12 Aug 2018, 17be1fd25bee67907dd85ccc0f7d95dbf2d3e167, Dynamics Compression functions  
+convolve, file:///Users/rbd/nyquist/extensions/convolve/convolution.html, 1.0, 12 Aug 2018, b33283b2affd3aa288a2226cea8575ff1cbc1176, Convolution Tutorial
+distortion,file:///Users/rbd/nyquist/extensions/distortion/distortion.html,1.0, 12 Aug 2018, 3b39311f6d551ddd8db1ae231b0057bcdf83200d, Distortion Tutorial   
+dtmf,file:///Users/rbd/nyquist/extensions/dtmf/dtmf.lsp,1.0, 12 Aug 2018, 12ad35c485591c97d75d3145adcb84012e9e519b, Create DTMF dial tones  
+ext-template1, file:///Users/rbd/nyquist/extensions/ext-template1/ext-template1.html, 1.0, 12 Aug 2018, 4ed99460b216f88ad89769a36c095acd529e3e1a, Simple Extension Template - HTML 
+ext-template2, file:///Users/rbd/nyquist/extensions/ext-template2/c4-player.sal, 1.0, 12 Aug 2018, 3d4e8506ae1a4a0e49664af52f1adc5188b081b8, Simple Extension Template - SAL 
+fft,file:///Users/rbd/nyquist/extensions/fft/fft_tutorial.html,1.0, 12 Aug 2018, 946d50dfd245b885a299507dba3eaaf59e49da67, FFT Tutorial 
+fftsal,file:///Users/rbd/nyquist/extensions/fftsal/spectral-process.sal,1.0, 12 Aug 2018, b8d0bea69d61f395d10c45fd836b88985635f804, Spectral Processing in SAL
+fm-voices-chowning, file:///Users/rbd/nyquist/extensions/fm-voices-chowning/fm-voices-chowning.sal, 1.0, 12 Aug 2018, c45fcbc48fee6f1d4a0a1302b1d65f1e55c33515, FM Singing Voices 
+gran, file:///Users/rbd/nyquist/extensions/gran/gran.lsp, 1.0, 12 Aug 2018, 9717567cf5fc8cfdcd0c9756e6bb9cf5a5c5d829, Granular Synthesis   
+intro, file:///Users/rbd/nyquist/extensions/intro/examples.sal, 1.0, 12 Aug 2018, 65d2a6ac39de2f1f256c51799c73543854f72bf8, Introductory examples from Nyquist Manual
+labels, file:///Users/rbd/nyquist/extensions/labels/labels.sal, 1.0, 12 Aug 2018, 809c373d0b109fc1b6eae4ec6c59a4bba221a750, Read/write Audacity labels  
+lpc, file:///Users/rbd/nyquist/extensions/lpc/lpc_tutorial.html, 1.0, 12 Aug 2018, 85334ca2eb71e0eeea3b42ca87bda726556eb100, LPC Tutorial
+mateos,file:///Users/rbd/nyquist/extensions/mateos/organ.lsp,1.0, 12 Aug 2018, 10e52fe524debc3bb4b206d14ff09d2abe6b0376, Synthesis functions by Daniel Mateos
+midi,file:///Users/rbd/nyquist/extensions/midi/midi_tutorial.htm,1.0, 12 Aug 2018, 78829c1d5ebf1226f9e877439c719131d6cad923, Using MIDI files with Nyquist  
+moog,file:///Users/rbd/nyquist/extensions/moog/moog.html,1.0, 12 Aug 2018, 8beaf577e009fd0ca3c81f4a07940621d2e4b540, Minimoog-Inspired Synthesis   
+osc,file:///Users/rbd/nyquist/extensions/osc/osc-test.lsp,1.0, 12 Aug 2018, 9f08a468d86cf75839775da57c3475e16f1b5e9a, OSC (Open Sound Control) tests
+plight,file:///Users/rbd/nyquist/extensions/plight/plight.html,1.0, 12 Aug 2018, 42368ac140e80bf4289257aba41b9671887317a6, Drum Machine and Samples  
+pmorales,file:///Users/rbd/nyquist/extensions/pmorales/pmorales.html,1.0, 12 Aug 2018, 573d79dcb9a030241650ae9270eeec14a115866d, Synthesis Examples from Pedro Morales
+regression, file:///Users/rbd/nyquist/extensions/regression/regression.sal, 1.0, 12 Aug 2018, 28a6581bbeab03e951e81a8f2943fdb11b620978, Linear Regression functions 
+reverse, file:///Users/rbd/nyquist/extensions/reverse/reverse.lsp, 1.0, 12 Aug 2018, c4cc68de1d0c1f1306a452aaf1f15ba77f9fc293, Reverse Sounds 
+rhythm, file:///Users/rbd/nyquist/extensions/rhythm/rhythm.sal, 1.0, 12 Aug 2018, ac8f617698264f7ede929324624eb687d2dd36f3, Rhythmic Sounds
+sdl,file:///Users/rbd/nyquist/extensions/sdl/sdl.lsp,1.0, 12 Aug 2018, 0c234897e6a0747aa5b60fee07016a2a6881c5fd, SDL Score Description Language 
+shepard,file:///Users/rbd/nyquist/extensions/shepard/shepard.lsp,1.0, 12 Aug 2018, e76fbf621da5d7b475d125a70f11ffceeffaef0d, Shepard Tones 
+sliders,file:///Users/rbd/nyquist/extensions/sliders/slider-demos.sal,1.0, 12 Aug 2018, 29b2539e71f6481c24f72a1411816c26c7b2c257, Slider Demos 
+spatial,file:///Users/rbd/nyquist/extensions/spatial/spatial.htm,1.0, 12 Aug 2018, 51330d379e6149a9c4f94b55e627d50bce6a3ce2, Spatialization functions
+stk,file:///Users/rbd/nyquist/extensions/stk/stktest.lsp,1.0, 12 Aug 2018, 3452f2253d31245e99380a530936b49f9ea0327c, Synthesis Tool Kit (STK) demos
+voice,file:///Users/rbd/nyquist/extensions/voice/voice_synthesis.html,1.0, 12 Aug 2018, ed0d885e12e8783142789184b449a83ccc45d8cd, Singing Voice Synthesis
+vosim,file:///Users/rbd/nyquist/extensions/vosim/vosim.sal,1.0, 12 Aug 2018, 9946b50330c9d870325bd91ad402a6d607a89905, Vosim Examples
+warble,file:///Users/rbd/nyquist/extensions/warble/warble_tutorial.html,1.0, 12 Aug 2018, 6ac9da81f4c14161e3cbcb29b524cffb2d300b0d, Warble: analog synth sounds
+wind,file:///Users/rbd/nyquist/extensions/wind/wind_tutorial.html,1.0, 12 Aug 2018, 1c2b4ebdb5c6ca7b94123fc26c2aeb93dbafeb0e, Wind: a wind sound effect

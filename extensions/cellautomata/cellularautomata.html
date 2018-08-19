@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>Cellular Automata</title>
+    <style>body {max-width: 40em}</style>
+  </head>
+  <body bgcolor="#ffffff">
+<h1>Cellular Automata</h1>
+<h3>Extension name: <code>cellautomata</code></h3>
+<p><i>This extension generates music from a cellular automaton.</i></p>
+<hr>
+<!-- Version: 1.0; (version for extension metadata, do not change) -->
+Author Name: Ann Lewis and Roger B. Dannenberg;<br>
+Author Email: rbd@cs.cmu.edu;<br>
+<br>
+Additional File: cell_aut.lsp;<br>
+Additional File: rule30.jpg.b64;<br>
+<!-- End Metadata -->
+<hr>
+<h2>Usage:</h2>
+In SAL mode:
+<blockquote>
+<pre>load "cellautomata/cell_aut.lsp" ;; you must load the file to use this extension
+play cell-aut-demo() ;; play a demo
+cell-aut(sound-object-list, duration, update-rule, iter) - main function, where
+    sound-object-list is a list of expressions, one for each cell, and
+        the expression is evaluated when the cell is "1"
+    duration is the duration of each generation of the cellular automata
+    update-rule is an integer describing how the next generation is computed; see
+        the source code for details
+    iter is the number of iterations (generations) to compute</pre> 
+</blockquote>
+
+<h2>Description</h2>
+    <p>This extension harnesses the power of cellular automata for algorithmic
+      composition. Cellular automata have been applied to graphics and
+      visual patterns as well as music. In this work, the automaton
+      consists of an array of boxes, where each box is initialized to
+      either black or white (on/off, 0/1). At every step the next
+      row/generation (represented visually as below the previous array)
+      is computed from the first array using an update rule on each
+      array element. An update rule (that defines the automaton itself)
+      is simply a function from the array element's parent, and the
+      parent's left and right neighbors. This concept is illustrated
+      here: </p>
+    <pre>	A1 A2 A3 ... 
+	B1 B2 B3 ... </pre>
+    <p>Let B2 be the element whose value is being computed. B2 is
+      therefore dependent on the values of A1, A2, and A3 only. An
+      example of an update rule would be:</p>
+    <pre>if A1 = A3 and A2 = 1 then B2 = 1, else B2 = 0</pre>
+    <p> There are 2 possible values for each of A1, A2, and A3 which
+means there are 2^3 = 8 possible configurations. And there are 2^8
+= 256 possible functions from A1, A2, and A3 to B2. Therefore
+there are only 256 possible update rules. Note that the number of
+possible update rules is not dependent on the number of elements
+in the array. The rules can be numbered from 0 to 255. To determine
+the rule number, write the next-generation value for each
+configuration (the state of three neighbors) in the previous
+generation as shown near the top of the 
+figure below. Then read off these outcomes to form a bit string:
+00011110. Then convert this to a number: 00011110 = 30 base 10.
+<p>In the figure below, rule 30 is used to generate a series of rows,
+      starting with a single "one" in the first row.</p>
+    <p align="center"><img src="rule30.jpg" height="270"
+        width="370"></p>
+    <p>Instead of B1 = 1 indicating that a box be colored black and B1 =
+      0 indicated that a box be colored white, in the music model this
+      will correspond to turning certain sound objects on and off. For
+      example, here we have an array of oscillators. </p>
+    <pre>Osc 60 Osc 65 Osc 67 Osc 70 Osc 75 Osc 76 Osc 79</pre>
+    <p> If only the 1st and 3rd elements are "turned on" this would
+      result in the chord (sum (Osc 60) (Osc 67)). So each array, or
+      level of the automata would correspond to a chord, and the chord
+      progression would change over time as the automata developed. </p>
+    <p>This feature very versatile, so the user can specify the basic
+      sound array, the duration of each step, and which combining
+      function to bring the activated sounds together. This design
+      allows the user to use any expression to create sounds.</p>
+    <p>The main function, <code>cell-aut</code>, takes the following
+      parameters:</p>
+    <ol>
+      <li>an array of sound objects, specified using expressions to be
+        evaluated</li>
+      <li>the duration of each time step (also the duration for
+        computing sound objects)</li>
+      <li>the update rule to use on array evolution, specified by number
+        (0 - 255)</li>
+      <li>the number of iterations/generations the automata should allow
+        itself to grow </li>
+    </ol>
+    <p>Some interesting rules to try are Wolram's two most famous rules:
+      30 (chaotic) and 90 (fractal patterns). </p>
+    <h2>Algorithm Outline </h2>
+    <p>Here is an outline of the algorithm implemented in <tt>cell-aut.lsp</tt>.
+    </p>
+    <ol>
+      <li>create and initialize "current" and "previous" bit lists --
+        these should have the same length as the sound array the user
+        gave this function) -- potentially there could be a feature here
+        allowing the user to specify the initial state of the array. </li>
+      <li>create and initialize the list of sounds to return </li>
+      <li>loop iter times
+        <ol>
+          <li>get the list of currently activated sounds from the
+            "previous" bit list and extract the corresponding sounds
+            from the sound array </li>
+          <li>combine this set of sounds with the combining function
+            (specified by the user), and add the resulting sound to the
+            output list </li>
+          <li>compute the "current" bit list from the "previous" bit
+            list using the update rule iterated over all the elements --
+            this wraps around so that endpoints are treated as being
+            adjacent to each other </li>
+          <li>set the "previous" bit array to the "current" bit array </li>
+          <li>(end loop) </li>
+        </ol>
+      </li>
+      <li>return the output list of sounds </li>
+    </ol>
+    <h2>Demo</h2>
+    <p>The file <code><a href="cell_aut.lsp">lib/cellautomata/cell_aut.lsp</a></code>
+      includes the function <code>cell-aut-demo</code> which is
+    equivalent to the following:</p>
+    <pre>function cell-aut-demo()
+  exec require-from(piano-note-2, "pianosyn.lsp")
+  return cell-aut(cell-aut-major-scale(), 0.2, 30, 80) * 0.5</pre>
+    <p>so you can run this to hear an example output:</p>
+    <pre>play cell-aut-demo()</pre>
+    <h2>More Information</h2>
+    <p>Source code is in <code><a href="cell_aut.lsp">lib/cellautomata/cell_aut.lsp</a></code>.
+    </p>
+  </body>
+</html>

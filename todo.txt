@@ -1,3 +1,42 @@
+Extensions list:
+x    labels.sal
+x    regression.sal
+x    dynamics compression
+x    clipping softener
+x    sound reversal
+x    bandfx.lsp
+x    granular synthesis
+x    chowning FM voices
+x    atonal melody composition
+-    midi utilities
+x    dtmf encoding
+x    dolby surround
+x   drum machine
+x    minimoog
+x    arpeggiator
+x    cellular automata
+x    distortion tutorial
+x    SDL
+x    shepard tones
+x    slider demos
+x    STK Instruments demo
+delete    Vinyl scratch
+x    voice synthesis
+x    vosim
+x    warble
+x    wind
+test     intro
+x     mateos
+x     pmorales
+x     pvoc
+x     lpc
+x     rhythm
+     
+see if piano.htm is in manual
+see if distributions.htm is in manual
+see if sequence.htm is in manual
+
+
 Edward Williamson May 3, 9:12am -- security flaws
 
 nyquist plugins in Audacity slower on Linux than Windows:

@@ -1,0 +1,4 @@
+;; use-midi-directory.sal
+;;
+exec setdir(current-path())
+

@@ -1,0 +1,2 @@
+function play-piano(pitch)
+  play piano-note-2(pitch, 100);

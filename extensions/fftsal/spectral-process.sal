@@ -1,0 +1,226 @@
+;; spectral-process.sal -- example code for spectral processing
+;; March 2013, revised Oct 2016, converted to extension Aug 2018
+;;
+;; Nyquist Extension
+;; Version: 1.0;
+;;
+;; Author Name: Roger B. Dannenberg;
+;; Author Email: rbd@cs.cmu.edu;
+;; 
+;; Additional File: spectral-process.lsp;
+;;
+;; End Metadata
+
+;; Usage: 
+;;    load "fftsal/spectral-process.sal" ;; you must load this file first
+;;    exec sp-example-1()     ;; reconstruction
+;;    exec sp-example-2()     ;; time stretch
+;;    exec sp-example-3()     ;; random phase
+;;    exec sp-example-4(512)  ;; cross synthesis (voice and noise)
+;;    exec sp-example-5(512)  ;; spectral peaks
+
+
+;; Description:
+;;
+;; Spectral processing is supported by spectral-analysis.lsp for 
+;; analysis. See that file for documentation. The main idea is to
+;; create an object that returns a stream of spectral frames.
+;;
+;; Spectral processing is also supported by spectral-process.lsp. 
+;; See that file for documentation. The main idea is to pull frames 
+;; from a spectral analysis object and call a function to modify the 
+;; frame. This is done on demand from a Nyquist object that performs 
+;; inverse FFT's and reassembles a sound.
+
+load "fftsal/spectral-process.lsp"
+
+;; EXAMPLE 1 - transform a sound into spectral frames and reconstruct it.
+;; 
+; this is the function that processes frames. It is called with 
+; src - an sa-obj that is the source of frames (use this to find 
+;         the bin size, etc.
+; frame - the spectral frame to process, a 1-D array
+; count - the frame count. This illustrates how to preserve and access 
+;         state from frame to frame. You can have any number of state
+;         variables. One state variable is created and initialized for
+;         each extra parameter you pass to sp-init() after the first 
+;         two which are required. The state variables are passed as
+;         parameters to the processing function, and the processing
+;         function returns them in a list.
+;
+function reconstruct-fn(src, frame, count)
+  begin
+    if count % 100 = 0 then display "reconstruct", count
+    return list(frame, count + 1)
+  end
+;
+; process some audio with reconstruct-fn and play the result:
+;
+function sp-example-1()
+  begin
+    with sa = sa-init(input: audio-file("happy.wav"),
+                      skip-period: 256 / 44100.0,
+                      window: :hann),
+         sp = sp-init(sa, quote(reconstruct-fn), 0)
+    play sp-to-sound(sp)
+  end
+
+;exec sp-example-1()
+
+
+;; EXAMPLE 2 - time-stretch a sound. This is equivalent to granular synthesis
+;;    and there is no real need to work in the frequency domain, but the 
+;;    example illustrates frame-by-frame processing and different step size
+;;    in the analysis and synthesis stages. The results vary in quality
+;;    depending on parameters, e.g. shorter fft or greater overlap both
+;;    seem to degrade quality, but it depends on the source sound.
+;
+; process some audio - we can use reconstruct-fn to play the result
+;
+function sp-example-2()
+  begin
+    with sa = sa-init(input: audio-file("happy.wav"), 
+                      fft-dur: 4096 / 44100.0,
+                      skip-period: 512 / 44100.0,
+                      window: :hann),
+         sp = sp-init(sa, quote(reconstruct-fn), 0)
+    exec sa-info(sa)
+    exec sa-info(sp)
+    ; default skip-period would be the same as for analysis, so we must
+    ; give an explicit value to achieve time stretching
+    play sp-to-sound(sp, skip-period: 1024 / 44100.0)
+  end
+
+;exec sp-example-2()
+
+;; EXAMPLE 3 - resynthesize with random phase
+;;
+function phase-fn(src, frame, count)
+  begin
+    loop with real, imag, mag, phase
+      for i from 1 below length(frame) - 1 by 2
+      set real = frame[i], imag = frame[i + 1]
+      set mag = sqrt(real * real + imag * imag)
+      set phase = rrandom() * 2 * pi
+      set frame[i] = mag * cos(phase)
+      set frame[i + 1] = mag * sin(phase)
+    end
+    if count % 10 = 0 then display "phase-fn", count
+    return list(frame, count + 1)
+  end
+
+;; capture the location of audio files relative to the load
+;; path of this file
+variable *audio-path* = strcat(current-path(), "../../demos/audio/")
+
+function audio-file(name)
+  return strcat(*audio-path*, name)
+
+function sp-example-3()
+  begin
+    with sa = sa-init(input: audio-file("happy.wav"),
+                      skip-period: 1024 / 44100.0, 
+                      fft-dur: 4096 / 44100.0,
+                      window: :hann),
+         sp = sp-init(sa, quote(phase-fn), 0)
+    play sp-to-sound(sp)
+  end
+
+; exec sp-example-3()
+
+;; EXAMPLE 4 - multiply voice recording by the amplitude
+;;     spectrum of another signal
+;;
+function cross-synth-fn(src, frame, src2, count)
+  begin
+    with frame2 = sa-next(src2), mag
+    if null(frame2) then return nil
+    set mag = sa-magnitude(frame2)
+    set frame[0] *= mag[0]
+    loop
+      for i from 1 below length(frame) - 1 by 2
+      for j from 1
+      set frame[i] *= mag[j],
+          frame[i + 1] *= mag[j]
+    end
+    set frame[length(frame) - 1] *= frame2[length(frame2) - 1]
+    if count % 10 = 0 then display "phase-fn", count
+    return list(frame, src2, count + 1)
+  end
+
+
+function sp-example-4(len)
+  begin
+    ;; you can modulate anything with the voice spectrum. Best are
+    ;; broad-band sounds including noise, buzz with many harmonics, 
+    ;; and chords. 
+        ; buzz(30, c3, const(0, 5)), 
+        ; audio-file("happy.wav"), 
+        ; noise(5)
+    with sa1 = sa-init(input: noise(4.2), 
+                       ;; input: buzz(30, c3, pwl(4.2, -50, 4.2)), 
+                       ;; input: audio-file("happy.wav"),
+                       skip-period: (len / 4) / 44100.0, 
+                       fft-dur: len / 44100.0,
+                       window: :hann),
+         sa2 = sa-init(input: audio-file("pv.wav"),
+                       skip-period: (len / 4) / 44100.0,
+                       fft-dur: len / 44100.0,
+                       window: :hann),
+         ; here, sa2 will retain phase but will be modulated by amplitude of sa1
+         ; you can swap sa1 and sa2 and get a different effect
+         sp = sp-init(sa1, quote(cross-synth-fn), sa2, 0)
+    exec sa-info(sa1)
+    exec sa-info(sa2)
+    play sp-to-sound(sp)
+  end
+
+; exec sp-example-4(512)
+
+
+;; EXAMPLE 5 - spectral masking. Eliminate the spectrum
+;;   except where the magnitude of the bin is in some range. 
+;;   The system is adaptive because it picks bins relative
+;;   to the highest bin amplitude in the whole frame.
+;;
+function spectral-peaks(src, frame, count)
+  begin
+    with mag = sa-magnitude(frame),
+         peak = 0.0, 
+         low, high
+    loop ;; find the peak amplitude in the frame
+      for i below length(mag)
+      set peak = max(peak, mag[i])
+    end
+    ;; these parameters are arbitrary
+    set low = peak * 0.7 ;; allow only magnitude between 
+    set high = peak * 0.9 ;; low and high
+    loop
+      ;; i indexes the complex spectrum in frame
+      for i from 1 below length(frame) - 1 by 2
+      ;; j indexes the (real) magnitude spectrum in mag
+      for j from 1
+      ;; mag[j] corresponds to frame[i] and frame[i+1]
+      ;; eliminate spectrum except where low < mag[i] < high
+      if (mag[j] < low) | (mag[j] > high) then
+        set frame[i] = 0.0, frame[i + 1] = 0.0
+    end
+    ;; eliminate the DC and Nyquist bins, for no particular reason
+    set frame[0] = 0.0, frame[length(frame) - 1] = 0.0
+    if count % 10 = 0 then display "spectral-peaks", count
+    return list(frame, count + 1)
+  end
+
+
+function sp-example-5(len)
+  begin
+    with sa = sa-init(input: audio-file("happy.wav"),
+                      skip-period: (len / 4) / 44100.0,
+                      fft-dur: len /  44100.0,
+                      window: :hann),
+         sp = sp-init(sa, quote(spectral-peaks), 0)
+    exec sa-info(sa)
+    play sp-to-sound(sp)
+  end
+
+; exec sp-example-5(1024)
