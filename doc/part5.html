@@ -102,7 +102,7 @@ pitch rise rather than a continuous glissando?  This all relates to the idea
 of behavioral abstraction.  It is possible to design sounds that <i>do</i>
 glissando under the transpose transform, and you can even make sounds that
 <i>ignore</i> transpose altogether.  As explained in Chapter 
-, the transformations modify the
+<a href = "part4.html#26">"Behavioral Abstraction"</a>, the transformations modify the
 environment, and behaviors can reference the environment to determine what
 signals to generate.  All built-in functions, such as <code>osc</code>, have a
 default behavior.
@@ -164,13 +164,13 @@ location (4, 4).  Nyquist sounds are ordinarily open on the right.
 
 <hr>
 <p>
-Figure  shows a plot of this warp function.  Now, we can
+Figure <a href = "#39">2</a> shows a plot of this warp function.  Now, we can
 warp the tempo of the <code>tone-seq</code> defined above using <code>warp4</code>:
 <p><pre>
 play warp(warp4(), tone-seq())
 </pre></p>
 
-Figure  shows the result graphically.  Notice that the
+Figure <a href = "#39">3</a> shows the result graphically.  Notice that the
 durations of the tones are warped as well as their onsets.  Envelopes are 
 not shown in detail in the figure.  Because of the way <code>env</code> is
 defined, the tones will have constant attack and decay times, and the
@@ -250,7 +250,7 @@ time to 0.25 result in a tempo change?  When used within a <code>warp</code>
 transformation, the second argument to <code>set-logical-stop</code> refers to
 <i>score</i> time rather than <i>real</i> time.  Therefore, the score duration of
 0.25 is warped into real time, producing tempo changes according to the
-enviroment.  Figure  illustrates the result graphically.
+enviroment.  Figure <a href = "#40">4</a> illustrates the result graphically.
 <p>
 <hr>
 <blockquote>

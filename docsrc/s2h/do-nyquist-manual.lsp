@@ -5,4 +5,5 @@
 ;; sourcedir source       destdir  dest
 (g "../nyquist" "nyquistman" "../../doc" "home" t nil)
 ; (setf *token-trace* t)
+(print "**** STARTING SECOND PASS ****")
 (g "../nyquist" "nyquistman" "../../doc" "home" t t)

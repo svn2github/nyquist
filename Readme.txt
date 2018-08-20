@@ -27,6 +27,8 @@ other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.13 provides:
+    Extension Manager and many examples moved to extensions
 Version 3.12 provides:
     Fix for Help:Manual and links to docs on OS X 12 (I hope)
     Fix for reverb function (3.11 broke it)    

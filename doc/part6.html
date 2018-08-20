@@ -9,7 +9,7 @@
 <a name = "42"><h2>More Examples</h2></a>
 <p>
 This chapter explores Nyquist through additional examples.  The reader may
-wish to browse through these and move on to Chapter , which
+wish to browse through these and move on to Chapter <a href = "part8.html#81">"Nyquist Functions"</a>, which
 is a reference section describing Nyquist functions.
 <p>
 <a name = "43"><h3>Stretching Sampled Sounds</h3></a><a name="index164"></a>
@@ -76,7 +76,7 @@ stretched by time-varying amounts.
 (The <code>*transpose*</code> element of the environment is
 ignored by both <code>cue</code> and <code>sound</code>.)  
 <p>
-<b><i>Note:</i></b> <code>sound</code> may use linear interpolation rather than a high-quality resampling algorithm.  In some cases, this may introduce errors audible as noise. Use <code>resample</code> (see Section ) for high-quality interpolation.
+<b><i>Note:</i></b> <code>sound</code> may use linear interpolation rather than a high-quality resampling algorithm.  In some cases, this may introduce errors audible as noise. Use <code>resample</code> (see Section <a href = "part8.html#89">"Sound Synthesis"</a>) for high-quality interpolation.
 <p>
 In the functions <code>up</code> and <code>down</code>, the <code>*warp*</code> is set by
 <i>stretch</i> (<code>~</code>), which simply scales time by a constant scale factor. In this case,
@@ -350,7 +350,7 @@ in <code>demos/scratch_tutorial.htm</code>.<a name="index181"></a>
 <a name="index182"></a><a name="index183"></a>.
 <p>
 <a name = "47"><h3>Building a Wavetable</h3></a>
-In Section , we saw how to synthesize a wavetable.   A
+In Section <a href = "part2.html#11">"Waveforms"</a>, we saw how to synthesize a wavetable.   A
 wavetable for <code>osc</code> also can be extracted from any sound.  This is
 especially interesting if the sound is digitized from some external sound
 source and loaded using the <code>s-read</code> function.  Recall that a table
@@ -388,9 +388,9 @@ real numbers or signals as parameters.  If you pass a signal as a filter
 parameter, the filter coefficients are recomputed at the sample rate of the
 <i>control</i> signal.  Since filter coefficients are generally expensive to
 compute, you may want to select filter control rates carefully.  Use
-<code>control-srate-abs</code> (Section ) to specify
+<code>control-srate-abs</code> (Section <a href = "part8.html#97">"Transformations"</a>) to specify
 the default control sample rate, or use <code>force-srate</code> (Section
-) to resample a signal before passing it to a filter.  
+<a href = "part8.html#89">"Sound Synthesis"</a>) to resample a signal before passing it to a filter.  
 <p>
 Before presenting examples, let's generate some unfiltered white noise:
 <p><pre>
@@ -453,7 +453,7 @@ The drawback is that Nyquist must provide the DSP operations you need, or
 you are out of luck. When Nyquist is found lacking, you can either write a
 new primitive signal operation, or you can perform DSP in Lisp code. Neither
 option is recommended for inexperienced programmers. Instructions for
-extending Nyquist are given in Appendix . This section
+extending Nyquist are given in Appendix <a href = "part17.html#202">"Extending Nyquist"</a>. This section
 describes the process of writing a new signal processing function in Lisp.
 <p>
 Before implementing a new DSP function, you should decide which approach is
@@ -483,7 +483,7 @@ decide whether to use C or Lisp. (At present, SAL is not a good option
 because it has no support for object-oriented programming.) 
 To use C, you must have a C compiler, the
 full source code for Nyquist, and you must learn about extending Nyquist by
-reading Appendix . This is the more complex approach, but
+reading Appendix <a href = "part17.html#202">"Extending Nyquist"</a>. This is the more complex approach, but
 the result will be very efficient. A C implementation will deal properly
 with sounds that are not time-aligned or matched in sample rates.
 To use Lisp, you must learn something
@@ -522,7 +522,7 @@ Thus the goal is to design an XLISP object that, in response to a
 <code>:next</code> message will return a proper sequence of samples.  When the
 sound reaches the termination time, simply return <code>NIL</code>.
 <p>
-The XLISP manual (see Appendix ) describes the object system,
+The XLISP manual (see Appendix <a href = "part19.html#219">"XLISP: An Object-oriented Lisp"</a>) describes the object system,
 but in a very terse style, so this example will include some explanation of
 how the object system is used. First, we need to define a class for the
 objects that will compute sound products. Every class is a subclass of class

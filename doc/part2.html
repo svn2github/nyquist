@@ -29,7 +29,7 @@ Let me know if you have problems with
 any of these machines.
 <p>
 To use Nyquist, you should have a basic knowledge of Lisp.  An excellent text
-by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix  is
+by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#219">"XLISP: An Object-oriented Lisp"</a> is
 the reference manual for XLISP, of which Nyquist is a superset. Starting with
 Version 3, Nyquist supports a variant of SAL. SAL is a language distinct from 
 Lisp. It was introduced in Rick Taube's Common Music system. Since there are some
@@ -89,7 +89,7 @@ Additional information and instructions on installation can be found in:
 
 <p>
 <a name = "5"><h3>Using NyquistIDE</h3></a><a name="index8"></a><a name="index9"></a><a name="index10"></a>
-The program named NyquistIDE is an "integrated development environment" for Nyquist. When you run NyquistIDE, it starts the Nyquist program and displays all Nyquist output in a window. NyquistIDE helps you by providing a Lisp and SAL editor, hints for command completion and function parameters, some graphical interfaces for editing envelopes and graphical equalizers, and a panel of buttons for common operations. A more complete description of NyquistIDE is in Chapter .
+The program named NyquistIDE is an "integrated development environment" for Nyquist. When you run NyquistIDE, it starts the Nyquist program and displays all Nyquist output in a window. NyquistIDE helps you by providing a Lisp and SAL editor, hints for command completion and function parameters, some graphical interfaces for editing envelopes and graphical equalizers, and a panel of buttons for common operations. A more complete description of NyquistIDE is in Chapter <a href = "part3.html#18">"The NyquistIDE Program"</a>.
 <p>
 For now, all you really need to know is that you can enter Nyquist commands by typing into the upper left window. When you type return, the expression you typed is sent to Nyquist, and the results appear in the window below. You can edit files by clicking on the New File or Open File buttons. After editing some text, you can load the text into Nyquist by clicking the Load button. NyquistIDE always saves the file first; then it tells Nyquist to load the file. You will be prompted for a file name the first time you load a new file.
 <p>
@@ -195,7 +195,7 @@ get a Lisp prompt (<code>&gt; </code>). Commands can be entered manually by typi
 We will begin with some simple Nyquist programs. Throughout the manual,
 we will assume SAL mode and give examples in SAL, but it should be
 emphasized that all of these examples can be performed using Lisp
-syntax. See Section  on the relationship between
+syntax. See Section <a href = "part7.html#77">"Interoperability of SAL and XLISP"</a> on the relationship between
 SAL and Lisp.
 <p>
 Detailed explanations of the functions used in these examples will be
@@ -309,7 +309,7 @@ The <code>seq</code> function is used to invoke a sequence of behaviors.  Each
 note is started at the time the previous note finishes.  The parameters to
 <code>my-note</code> are predefined in Nyquist: <code>c4</code> is middle C, <code>i</code> (for
 eIghth note) is 0.5, and <code>q</code> (for Quarter note) is 1.0.  See Section
- for a complete description.  The result is the sum of
+<a href = "#16">"Predefined Constants"</a> for a complete description.  The result is the sum of
 all the computed sounds.
 <p>
 Sequences can also be constructed using the <code>at</code> transformation to 
@@ -325,7 +325,7 @@ multiplication using the <code>mult<a name="index36"></a></code> function.  The 
 the definition of <code>env-note<a name="index37"></a></code>, defined in terms of the
 <code>note</code> function in the previous example.  In <code>env-note</code>, a 4-phase
 envelope is generated using the <code>env<a name="index38"></a></code> function, which is
-illustrated in Figure .
+illustrated in Figure <a href = "#14">1</a>.
 <p>
 <hr>
 <blockquote>
@@ -374,7 +374,7 @@ play seq(seq(env-note(c4), env-note(d4)) ~ 0.25,
 In addition to <i>stretch</i>, there are a number of transformations supported
  by Nyquist,
 and transformations of abstract behaviors is perhaps <i>the</i> fundamental
-idea behind Nyquist.  Chapter  is devoted to
+idea behind Nyquist.  Chapter <a href = "part4.html#26">"Behavioral Abstraction"</a> is devoted to
 explaining this concept, and further elaboration can be found elsewhere
  <a href = "http://www.cs.cmu.edu/~rbd/bib-arctic.html#icmcfugue">(Dannenberg and Frayley 1989)</a>.
 <p>
@@ -580,7 +580,7 @@ brass sounds<a name="index105"></a>, tuba sound <a name="index106"></a>
 <li>Rhythmic patterns
 (<code>demos/rhythm_tutorial.htm</code>)<a name="index109"></a>
 <li>Drum Samples and Drum Machine
-(<code>demos/plight/drum.lsp</code>)<a name="index110"></a><a name="index111"></a><a name="index112"></a>. (See Section ).
+(<code>demos/plight/drum.lsp</code>)<a name="index110"></a><a name="index111"></a><a name="index112"></a>. (See Section <a href = "part16.html#201">"Drum Machine"</a>).
 </ul>
 <p>
 <hr>

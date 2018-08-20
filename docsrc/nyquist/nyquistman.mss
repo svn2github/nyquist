@@ -67,9 +67,9 @@
 @begin(titlebox)
 @blankspace(0.5 inch)
 @majorheading(Nyquist Reference Manual)
-@b(Version 3.12)
+@b(Version 3.13)
 @blankspace(0.3 inch)
-@b(Copyright 2013, 2014, 2015, 2016, 2017 by Roger B. Dannenberg)
+@b(Copyright 2013, 2014, 2015, 2016, 2017, 2018 by Roger B. Dannenberg)
 @value(date)
 @end(titlebox)
 @pragma(startscribe)
@@ -4703,7 +4703,7 @@ The parameter @i(step) is a @code(FLONUM) that sets the pitch,
 and @i(dur) is the duration.
 
 @label(stk-breath-env-sec)
-@codef{stk-breath-evn(@pragma(defn)@index(stk-breath-env)@index(breath envelope)@i(dur), @i(note-on) @i(note-off))} @c{[sal]}@*
+@codef{stk-breath-env(@pragma(defn)@index(stk-breath-env)@index(breath envelope)@i(dur), @i(note-on) @i(note-off))} @c{[sal]}@*
 @altdef{@code[(stk-breath-env @i(dur) @i(note-on) @i(note-off))] @c{[lisp]}}@\A simple envelope function
 intended for STK instruments such as @code(CLARINET), where @i(dur) is the duration, @i(note-on) is the
 attack time, and @i(note-off) is the decay time, all @code(FLONUM)s in seconds.
