@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.12
-1 Sep 2017
+README file for Nyquist Version 3.13
+20 Aug 2018
 Roger B. Dannenberg
 
 LICENSE: see license.txt

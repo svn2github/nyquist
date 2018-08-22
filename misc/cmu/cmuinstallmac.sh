@@ -28,6 +28,8 @@ mv nyqosx*.tgz ~/nyquist
 cd ~/nyquist
 rm -rf nyquist
 svn export -r BASE . nyquist
+rm -rf nyquist/extensions
+# this directory should be gone, but we'll delete it just in case:
 rm -rf nyquist/demos/plight
 zip -r "nyqsrc"$versionstring".zip" nyquist
 # THE FOLLOWING PUTS THE VERSION AT CMU, BUT NOW RELEASES GO TO SOURCEFORGE

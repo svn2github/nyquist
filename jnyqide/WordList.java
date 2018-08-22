@@ -84,7 +84,7 @@ public class WordList {
             throws IOException {
         String word, link;
         while ((word = inf.readLine()) != null) {
-            System.out.println("processWordFile: word is |" + word + "|");
+            // System.out.println("processWordFile: word is |" + word + "|");
             if (word.length() == 0) {
                 System.out.println("In processWordFile, encountered blank " +
                                    "word. Maybe an extra newline? Skipping " +

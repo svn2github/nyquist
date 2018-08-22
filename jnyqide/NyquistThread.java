@@ -75,10 +75,10 @@ public class NyquistThread extends Thread {
                 // cwd was the jnyqide directory, not the Nyquist directory
                 // where we ran jnyqide.bat
                 String nd = main.nyquistDir;
-                path = nd + "/lib/;" + nd + "/runtime/;" + nd + "/demos/;";
+                path = nd + "lib/;" + nd + "runtime/;" + nd + "demos/;";
             }
             // if xlisppath file exists, use it instead
-            path = "XLISPPATH=" + StringFromFile("xlisppath", path);
+            path = StringFromFile("xlisppath", path);
             System.out.println("XLISPPATH will be: " + path);
 
             // parse lib dir from path: first find "lib;" or "lib/;"
@@ -117,6 +117,8 @@ public class NyquistThread extends Thread {
             temp = "TEMP=" + StringFromFile("temp", temp);
 
             // construct SystemRoot for environment from file
+            // SystemRoot is needed by Nyquist on Windows if you use Open Sound Control
+            // If this is OS X or Linux, the value is not used and does not matter
             String systemroot = StringFromFile("systemroot", "SystemRoot=C:/windows");
             
             // See if we can get the USER
@@ -128,6 +130,7 @@ public class NyquistThread extends Thread {
             else user = "USER=" + user;
             
             // Construct the environment for nyquist subprocess
+            path = "XLISPPATH=" + path;
             System.out.println(path);
             System.out.println(user);
             System.out.println(temp);
