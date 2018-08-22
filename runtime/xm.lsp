@@ -2628,7 +2628,7 @@ exit
 (defun note (&key (pitch 60) (vel 100))
   ;; load the piano if it is not loaded already
   (if (not (boundp '*piano-srate*)) 
-      (abs-env (load "pianosyn")))
+      (abs-env (load "piano/pianosyn")))
   (piano-note-2 pitch vel))
 
 ;;================================================================
