@@ -1,9 +1,6 @@
 ;; phasevocoder.sal - phasevocoder test functions
 ;; Roger B. Dannenberg
 
-;; load pianosyn only once
-if ! fboundp(quote(piano-note)) then load "pianosyn"
-
 variable *in*, *map*, *stretch*, *pitch*
 
 ;; test 1 - 1s sine tone stretched about 4x

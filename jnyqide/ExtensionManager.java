@@ -62,8 +62,8 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	 * URL of the Extension list. Should directly point to the text file.
 	 */
 	private static String EXTENSION_LIST_URL = 
-            "https://www.cs.cmu.edu/~music/nyquist/extensions/extlist.txt";
-    /*      "file:///Users/rbd/nyquist/extensions/extlist.txt"; */
+        "https://www.cs.cmu.edu/~music/nyquist/extensions/extlist.txt";
+        /* "file:///Users/rbd/nyquist/extensions/extlist.txt"; */
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;

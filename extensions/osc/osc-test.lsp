@@ -85,8 +85,6 @@
 ;; TEST 3 - piano sequence
 
 (defun piano-osc ()
-  (if (not (fboundp 'piano-note))
-      (load "pianosyn"))
   (seqrep (i 200) (piano-note (+ 0.05 (* 0.2 (get-slider-value 1)))
                                (round (+ (real-random c1 c2)
                                          (* (get-slider-value 0) 60))) 

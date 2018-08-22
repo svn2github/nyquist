@@ -71,7 +71,6 @@
 
 (defun cell-aut-major-scale ()
   ;; for testing, this creates an 8-note scale
-  ;; requires (load "pianosyn") to get the piano library
   (let (scale offsets)
     (setf offsets '(0 2 4 5 7 9 11 12))
     (dolist (p offsets)
@@ -79,7 +78,6 @@
     (reverse scale)))
 
 (defun cell-aut-demo ()
-  (require-from piano-note-2 "pianosyn.lsp")
   (scale 0.5 (cell-aut (cell-aut-major-scale) 0.2 30 80)))
 
 ;; Try

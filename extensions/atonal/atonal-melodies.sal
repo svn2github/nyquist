@@ -112,8 +112,6 @@
 ;;    http://www.cs.cmu.edu/~rbd/algocompbook/jorge-sastre/Atonal%20aleatoric%20trio%20-%20Jorge%20Sastre%20-%20Nyquist.pdf
 ;;    http://www.cs.cmu.edu/~rbd/algocompbook/jorge-sastre/Atonal%20aleatoric%20trio%20-%20Jorge%20Sastre%20-%20Nyquist.wav
 
-load "pianosyn" ;; Piano sound selected to preview the result
-
 function atonal-melody(start-note: c3, max-pitch: c7, min-pitch: a1, 
                        speed: 1, chan: 0, rhythm-pat-type: 1, 
                        score-length: 50, rest-notes: 3, length-changes: 20, 

@@ -1,10 +1,10 @@
 # Each extension is on a separate line and has the following format:
 # package-name, url-of-the-main-package-file, version, date-of-release, checksum, description
 
-arpeggiator,file:///Users/rbd/nyquist/extensions/arpeggiator/arpeggiator.html,1.0, 12 Aug 2018, 662c2f071bf709e23007e89f372122d0d77c6fab, Arpeggiator 
-atonal,file:///Users/rbd/nyquist/extensions/atonal/atonal-melodies.sal,1.0, 12 Aug 2018, c9949abfb213dbfc79551ee4136799ad380b550e, Atonal melody generation 
+arpeggiator,file:///Users/rbd/nyquist/extensions/arpeggiator/arpeggiator.html,1.0, 12 Aug 2018, 7ddcdf4c8170094bd23ee3ab7db0fd162acdbf55, Arpeggiator 
+atonal,file:///Users/rbd/nyquist/extensions/atonal/atonal-melodies.sal,1.0, 12 Aug 2018, c49d30db23ed1884a49381f4ae2589e772e2cb71, Atonal melody generation 
 bandfx, file:///Users/rbd/nyquist/extensions/bandfx/bandfx.lsp, 1.0, 12 Aug 2018, 37e8da1c341ddec6cee631ed18da48511a6381a4, Audio FX based on separate frequency bands 
-cellautomata,file:///Users/rbd/nyquist/extensions/cellautomata/cellularautomata.html,1.0, 12 Aug 2018, 199ec3298764302d73d8978f8505a3bb434b587d, Cellular Automata  
+cellautomata,file:///Users/rbd/nyquist/extensions/cellautomata/cellularautomata.html,1.0, 12 Aug 2018, 3a2cd82646f0b10b6fb4c7fca3a4d69272489ff6, Cellular Automata  
 clipsoften, file:///Users/rbd/nyquist/extensions/clipsoften/soften.lsp, 1.0, 12 Aug 2018, bc39694965cf806beceefbfb9f42e7dd8472811b, Soften Harsh Clipping
 compress, file:///Users/rbd/nyquist/extensions/compress/compress.lsp, 1.0, 12 Aug 2018, 17be1fd25bee67907dd85ccc0f7d95dbf2d3e167, Dynamics Compression functions  
 convolve, file:///Users/rbd/nyquist/extensions/convolve/convolution.html, 1.0, 12 Aug 2018, b33283b2affd3aa288a2226cea8575ff1cbc1176, Convolution Tutorial
@@ -22,7 +22,7 @@ lpc, file:///Users/rbd/nyquist/extensions/lpc/lpc_tutorial.html, 1.0, 12 Aug 201
 mateos,file:///Users/rbd/nyquist/extensions/mateos/organ.lsp,1.0, 12 Aug 2018, 10e52fe524debc3bb4b206d14ff09d2abe6b0376, Synthesis functions by Daniel Mateos
 midi,file:///Users/rbd/nyquist/extensions/midi/midi_tutorial.htm,1.0, 12 Aug 2018, 78829c1d5ebf1226f9e877439c719131d6cad923, Using MIDI files with Nyquist  
 moog,file:///Users/rbd/nyquist/extensions/moog/moog.html,1.0, 12 Aug 2018, 8beaf577e009fd0ca3c81f4a07940621d2e4b540, Minimoog-Inspired Synthesis   
-osc,file:///Users/rbd/nyquist/extensions/osc/osc-test.lsp,1.0, 12 Aug 2018, 9f08a468d86cf75839775da57c3475e16f1b5e9a, OSC (Open Sound Control) tests
+osc,file:///Users/rbd/nyquist/extensions/osc/osc-test.lsp,1.0, 12 Aug 2018, 66506686c48bdc0c9665d0cd77d1c1573fbcd2b2, OSC (Open Sound Control) tests
 plight,file:///Users/rbd/nyquist/extensions/plight/plight.html,1.0, 12 Aug 2018, 42368ac140e80bf4289257aba41b9671887317a6, Drum Machine and Samples  
 pmorales,file:///Users/rbd/nyquist/extensions/pmorales/pmorales.html,1.0, 12 Aug 2018, 573d79dcb9a030241650ae9270eeec14a115866d, Synthesis Examples from Pedro Morales
 regression, file:///Users/rbd/nyquist/extensions/regression/regression.sal, 1.0, 12 Aug 2018, 28a6581bbeab03e951e81a8f2943fdb11b620978, Linear Regression functions 
