@@ -29,6 +29,9 @@ cd ~/nyquist
 rm -rf nyquist
 svn export -r BASE . nyquist
 rm -rf nyquist/extensions
+# lib/moog is empty directory in svn, but we do not want it in the release
+#    because it is an extension
+rm -rf nyquist/lib/moog
 # this directory should be gone, but we'll delete it just in case:
 rm -rf nyquist/demos/plight
 zip -r "nyqsrc"$versionstring".zip" nyquist
