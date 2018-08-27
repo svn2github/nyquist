@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 
 import javax.swing.JOptionPane;
+import java.lang.Thread;
 
 public class BareBonesBrowserLaunch {
 
@@ -36,8 +37,26 @@ public class BareBonesBrowserLaunch {
         try {
             if (osName.startsWith("Mac OS")) {
                 System.out.println("BareBonesBrowserLaunch: Mac OS detected");
-                // try a even newer way
-                Desktop.getDesktop().browse(new URI(url));
+// This was supposed to handle file: url's properly, but it does not work.
+//                if (url.startsWith("file:")) {
+//                    // first, open Safari in case it is not running
+//                    Runtime.getRuntime().exec(new String[] 
+//                            { "open" , "-a", "Safari" });
+//                    // next, pass url to Safari
+//                    Thread.sleep(1000);
+//                    String cmd = "'tell application \"Safari\" to open " +
+//                            "location \"" + url + "\"'";
+//                    Runtime.getRuntime().exec(new String[]
+//                            { "osascript",  "-e", cmd });
+//                    System.out.println("openURL applescript command " + cmd);
+//                } else {
+                    // this fails on #name suffix using file: protocol, but 
+                    // works with default browser if the protocol is http:
+                    URI uri = new URI(url);
+                    Desktop.getDesktop().browse(uri);
+                    System.out.println("openURL invoked with " + url + 
+                                       ", fragment is " + uri.getFragment());
+//                }
                 // try a new way
                 // Runtime.getRuntime().exec(new String[] {"/usr/bin/open", "\"" + url + "\""});
                 // here's the old way that does not handle #name suffix on url
@@ -46,16 +65,15 @@ public class BareBonesBrowserLaunch {
 //                Method openURL = fileMgr.getDeclaredMethod("openURL",
 //                                               new Class[] {String.class});
 //                openURL.invoke(null, new Object[] {url});
-                System.out.println("openURL invoked with " + url);
             } else if (osName.startsWith("Windows")) {
-		// The new method -- ZEYU
-		if (loadURL(url) == false) {
-		    // use the old ways is unsuccessful
-		    // in browser, \ is not supported. --ZEYU
-		    url = url.replace('\\','/');
-		    System.out.println(" Win 7 open: " + url);
-		    Desktop.getDesktop().browse(java.net.URI.create(url));
-		}
+                // The new method -- ZEYU
+                if (loadURL(url) == false) {
+                    // use the old ways is unsuccessful
+                    // in browser, \ is not supported. --ZEYU
+                    url = url.replace('\\','/');
+                    System.out.println(" Win 7 open: " + url);
+                    Desktop.getDesktop().browse(java.net.URI.create(url));
+                }
             } else { //assume Unix or Linux
                 String[] browsers = {
                     "htmlview", "firefox", "opera", "konqueror", 

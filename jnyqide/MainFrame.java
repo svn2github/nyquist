@@ -369,6 +369,7 @@ public class MainFrame extends JFrame {
     // installation and we want each installation/version to have it's
     // own copy of the Nyquist library, documentation, etc.
     private void writeDocDirHint(String hint) {
+        System.out.println("writeDocDirHint: nyquistDir " + nyquistDir);
         try {
             File file = new File(nyquistDir + "doc-dir-hint.txt");
 			FileWriter fileWriter = new FileWriter(file);
@@ -381,8 +382,13 @@ public class MainFrame extends JFrame {
     }
 
     private void setupDocDir() {
-        // look in preferences for a hint
+        // Goal is to have a nyquist directory with documentation, but
+        // where is it? We look for doc-dir-hint.txt and if we find it,
+        // we use it. If not, we ask user to find it, and we save it for
+        // next time. Save in the Contents/Java directory -- maybe that's
+        // a problem to write into /Applications subdirectory.
         String hint = "";
+        // 
         try {
             hint = new String(Files.readAllBytes(
                     Paths.get(nyquistDir + "doc-dir-hint.txt")));
@@ -903,6 +909,7 @@ public class MainFrame extends JFrame {
 
 
     public void openPage(String url) {
+        url = url.trim();
         if (prefInternalBrowser) {
             miniBrowser.setVisible(true);
             System.out.println("Mini browser URL is: " + url);
