@@ -70,8 +70,10 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private JButton sfDirectory; // "Set Default Sound File Directory"
     private JButton initialDirectory; // "Set Initial Directory" to this
     private JCheckBox useLastDirectory; // "Last Used Directory is Initial Directory"
+    private JButton nyquistDirectory; // "Set Initial Directory" to this
     private JFileChooser startfd;
     private JFileChooser fd;
+    private JFileChooser nyquistfd;
     private String[] audioRates = { "96000", "48000", "44100", "22050", "16000",
                                     "11025", "8000" };
     private String currentFontSize;
@@ -203,12 +205,24 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                     mainFrame.prefSFDirectory = "";
                 }
 
+                file = nyquistfd.getSelectedFile();
+                if (file != null) {
+                    String dir = file.toString().replaceAll("\\\\", "/");
+                    System.out.println("nyquistfd.getSelectedFile: " + dir);
+                    if (dir != null && dir.length() > 0) {
+                        mainFrame.nyquistPrefDir = dir;
+                    }
+                } else {
+                    mainFrame.nyquistPrefDir = "";
+                }
+
                 mainFrame.prefsHaveBeenSet = true;
                 dispose();
             }
 
             public void internalFrameOpened(InternalFrameEvent e) {
             }
+
             public void internalFrameClosed(InternalFrameEvent e) {
                 mainFrame.disconnectPreferences();
                 //System.out.println("FrameClosed");
@@ -392,15 +406,6 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         fd.setCurrentDirectory(new File(mainFrame.prefSFDirectory));
         fd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-        sfDirectory = new JButton("Set Default Soundfile Directory");
-        sfDirectory.addActionListener(this);
-        sfDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
-        c.gridy += 1;
-        panel.add(sfDirectory, c);
-        
-        c.gridy += 1;
-        panel.add(Box.createVerticalGlue(), c);
-                
         /*
         * The Nyquist IDE has a preferences dialog with a couple of things you
         * can change. It would be great to have a graphical way to set things
@@ -411,6 +416,18 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         * stack trace when an error is encountered, etc. (All of these things
         * can be set in Nyquist, but most users do not know how.)
         */
+
+        nyquistDirectory = new JButton("Set nyquist Directory");
+        nyquistDirectory.addActionListener(this);
+        nyquistDirectory.setAlignmentX(Component.LEFT_ALIGNMENT);
+        c.gridy += 1;
+        panel.add(nyquistDirectory, c);
+
+
+        nyquistfd = new JFileChooser("Select nyquist directory (containing " +
+                                     "doc, runtime, lib, and demos)");
+        nyquistfd.setCurrentDirectory(new File(mainFrame.nyquistDir));
+        nyquistfd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         pack();
         Dimension size = new Dimension(400, 400);
@@ -435,29 +452,14 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     }
     
 
-    /*
-    // On Mac OS X, we can select directories using the native file open dialog
-    void getDirectoryUsingFileDialog(String title) {
-        boolean saveUseJFC = Prefs.useJFileChooser;
-        Prefs.useJFileChooser = false;
-        System.setProperty("apple.awt.fileDialogForDirectories", "true");
-        OpenDialog od = new OpenDialog(title, defaultDir, null);
-        if (od.getDirectory()==null)
-            directory = null;
-        else
-            directory = od.getDirectory() + od.getFileName() + "/";
-        defaultDir = directory;
-        System.setProperty("apple.awt.fileDialogForDirectories", "false");
-        Prefs.useJFileChooser = saveUseJFC;
-    }
-    */
-
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == sfDirectory) {
             fd.showOpenDialog(this);
         } else if (evt.getSource() == initialDirectory) {
             startfd.showOpenDialog(this);
             useLastDirectory.setSelected(false);
+        } else if (evt.getSource() == nyquistDirectory) {
+            nyquistfd.showOpenDialog(this);
         } else if (evt.getSource() == defaultPrefs) {
             startInSalMode.setSelected(mainFrame.prefStartInSalModeDefault);
             salShowLisp.setSelected(mainFrame.prefSalShowLispDefault);
@@ -480,6 +482,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
             fontSize.setSelectedItem(mainFrame.prefFontSizeDefault);
             startfd.setSelectedFile(null);
             fd.setSelectedFile(null);
+            nyquistfd.setSelectedFile(null);
         }
     } 
 }

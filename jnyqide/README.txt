@@ -209,3 +209,31 @@ On OS X, we should have (in the same directory):
    NyquistIDE/Contents/Java/ny -- executable 
    NyquistIDE/Contents/Java/runtime -- the Nyquist lisp sources
 
+NEW INSTALLATION APPROACH
+
+I can't get NyquistIDE to work consistently on multiple versions of OS
+X, and the problem seems to be Apple's attempts to protect
+applications (or maybe collect more developer fees and have certified
+developers and signed applications.)
+
+I think the solution is make the Application read-only -- no
+extensions get installed there, no hint files are written there, no
+preferences, etc.
+
+Therefore, I will make an Application (without extensions) to go in
+/Applications, and everything else will go into an user-space nyquist
+directory, which will contain
+           lib
+           doc
+           demos
+And lib will contain extensions.
+
+The same structure will be used for Windows, where C:\Program Files\
+or whatever it's called is write protected, so you can't install
+extensions there.
+
+When the application starts, it will use preferences to find the
+nyquist folder. If preferences does not have it, look in the home
+directory. If not found there, ask the user to find it.
+Save whatever you find in Preferences so you can go there directly
+the next time the app is opened.

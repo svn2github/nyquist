@@ -67,7 +67,7 @@
 @begin(titlebox)
 @blankspace(0.5 inch)
 @majorheading(Nyquist Reference Manual)
-@b(Version 3.13)
+@b(Version 3.14)
 @blankspace(0.3 inch)
 @b(Copyright 2013, 2014, 2015, 2016, 2017, 2018 by Roger B. Dannenberg)
 @value(date)
@@ -292,32 +292,14 @@ cd ..
 @p(Note:) With Linux and the Macintosh OS X,
  NyquistIDE defines the environment passed to Nyquist. If you
 set @code(XLISPPATH)@index(XLISPPATH)@index(search path) as shown above, it 
-will be passed along to Nyquist under NyquistIDE. If not,
-a default XLISPPATH will be created with the @code(runtime),  @code(lib), 
-and @code(demos) directories that are located within the application 
-bundle (@code(NyquistIDE.app)).
+will be passed along to Nyquist under NyquistIDE run from the command
+line (e.g. in Linux), but with OS X, the application does not typically
+receive any environment variables. Instead, the OS X version of 
+NyquistIDE will prompt for the location of the @code(nyquist) directory that 
+contains @code(runtime),  @code(lib) and @code(demos) directories (and
+also documentation in @code(doc)).
 This does not apply to Windows because even though the environment is there, 
 the Windows version of Nyquist reads the @code(XLISPPATH) from the Registry.
-
-You can also specify the search path by creating the 
-file @code(xlisppath), which should have semicolon-separated paths
-on a single line of text. (Paths on a path list may also be separated by
-colons on OS X and Linux or by commas on Windows.) This @code(xlisppath) file 
-will override the environment variable @code(XLISPPATH). 
-
-The directory location of @code(xlisppath) should be the current directory 
-when Nyquist starts. You can use @code[(setdir ".")] to get the current
-directory when you start @code(NyquistIDE.app), probably
-@code(NyquistIDE.app/Contents/Resources/Java). Be sure to put full paths
-in @code(xlisppath). For example, if the path list contains relative paths
-such as @code(runtime;lib) and
-you change the initial directory (which @code(NyquistIDE) does when you open
-a file), the search directories will move.
-
-It is good to have @code(USER) in the environment with your user ID. This string
-is used to construct some file names. NyquistIDE will look for it in the environment.
-You can also specify your user ID using the file @code(nyquist/user), but
-if you have a shared installation of Nyquist, this will not be very useful.
 
 @p(Note:) Nyquist looks for the file @code(init.lsp) in the current
 directory.  If you look in the @code(init.lsp) in @code(runtime), you
@@ -341,16 +323,20 @@ Visual C++. You can build and run the command line version of Nyquist
 from within Visual C++. There is a batch file, @code(comp-ide.bat), for 
 bulding the Nyquist IDE. This requires the Java SDK from Sun Microsystems.
 
-The runtime version contain everything you need to run Nyquist, including the executable,
+The runtime version contain everything you need to run Nyquist, including
+the executable,
 examples, and documentation, packaged as an executable installer program.
 After executing the installer, just find Nyquist in your Start menu to run it. 
-You may begin typing expressions such as the ones in the following ``Examples'' section.
+You will be able to find documentation, Nyquist code and examples in the
+@code(nyquist) directory, which you normally put in your home directory.
+After opening the NyquistIDE, you may begin typing expressions such as 
+the ones in the following ``Examples'' section.
 
 @p(Optional:)@index(Registry)@index(xlisppath)@index(search path) Nyquist needs to know where to find the standard runtime files. The location of runtime files must be stored in the Registry.
 The installers create a registry entry, but if
 you move Nyquist or deal with different versions, you can edit the Registry manually as follows:
 @begin(itemize)
-Run the Registry editor. Under Windows NT, run @code(C:\WINNT\system32\regedt32.exe). Under Windows95, run @code(C:\WINDOWS\regedit.exe).
+Run the Registry editor. Under Windows, run @code(C:\WINNT\system32\regedt32.exe).
 
 Find and highlight the @code(SOFTWARE) key under @code(HKEY_LOCAL_MACHINE).
 

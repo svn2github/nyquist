@@ -25,7 +25,6 @@ public class NyquistThread extends Thread {
     String eqData;
     PlotFrame plotFrame;
     MainFrame mainFrame; // used to find current directory
-    String soundBrowser; // path for sound browser
     String scoreEditFileName;
 
     public NyquistThread() {
@@ -64,49 +63,13 @@ public class NyquistThread extends Thread {
             if (cwd.equals("")) {
                 cwd = System.getProperty("user.dir");
             }
-            soundBrowser = main.nyquistDir + "lib/instruments.txt";
-            System.out.println("soundBrowser file is " + soundBrowser);
 
             // build XLISPPATH environment specification
-            main.extDir = main.nyquistDir + "/lib/";
-            String path = System.getenv("XLISPPATH"); // use getenv
-            if (path == null) { // getenv failed, use a default setting
-                // note: used to use cwd here instead of nd, but on Win7
-                // cwd was the jnyqide directory, not the Nyquist directory
-                // where we ran jnyqide.bat
-                String nd = main.nyquistDir;
-                path = nd + "lib/;" + nd + "runtime/;" + nd + "demos/;";
-            }
-            // if xlisppath file exists, use it instead
-            path = StringFromFile("xlisppath", path);
+            // String path = System.getenv("XLISPPATH"); // use getenv
+            // if (path == null) { // getenv failed, use a default setting
+            String path = main.nyquistDir + "runtime/;" + main.extDir + ";" + 
+                          main.nyquistDir + "demos/;";
             System.out.println("XLISPPATH will be: " + path);
-
-            // parse lib dir from path: first find "lib;" or "lib/;"
-            int loc = path.indexOf("lib/;");
-            int endloc = loc + 3;
-            if (loc == -1) {
-                loc = path.indexOf("lib;");
-                endloc = loc + 3;
-            }
-            if (loc == -1 && path.endsWith("lib/")) {
-                endloc = path.length();
-                loc = endloc - 4;
-            }
-            if (loc == -1 && path.endsWith("lib")) {
-                endloc = path.length();
-                loc = endloc - 3;
-            }
-            if (loc != -1) { // find beginning of path
-                // it will be the index of last ; before loc
-                int start = 0;
-                for (int i = 0; i < loc; i++) {
-                    if (path.charAt(i) == ';') {
-                        start = i + 1;
-                    }
-                }
-                main.extDir = path.substring(start, endloc) + File.separator;
-            }
-            System.out.println("extDir = " + main.extDir);
 
             // build TEMP environment specification
             String temp = System.getenv("TEMP"); // use getenv

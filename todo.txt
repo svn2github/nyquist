@@ -25,12 +25,13 @@ x    voice synthesis
 x    vosim
 x    warble
 x    wind
-test     intro
-x     mateos
-x     pmorales
-x     pvoc
-x     lpc
-x     rhythm
+
+x    intro
+x    mateos
+x    pmorales
+x    pvoc
+x    lpc
+x    rhythm
      
 see if piano.htm is in manual
 see if distributions.htm is in manual

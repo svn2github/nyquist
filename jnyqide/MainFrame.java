@@ -1,5 +1,16 @@
-package jnyqide;
+// MainFrame.java - everything starts here
 
+/* Initialization:
+We can't create dialog boxes until swing is running, so at the end of
+mainFrameInit(), we use SwingUtilities.invokeLater() to run more
+code that first establishes the nyquistDir, which is the path to the
+user-local stuff (runtime, doc, lib, demos), then creates the
+NyquistThread window which runs Nyquist. Nyquist needs a searchpath,
+so it must start after lot of other things are initialized.
+*/
+
+
+package jnyqide;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -76,7 +87,8 @@ public class MainFrame extends JFrame {
     // used by TextColor to communicate result back to MainFrame
     // public static boolean evenParens;
     public static String currentDir = "";
-    public static String nyquistDir = "";
+    public static String nyquistDir = "";     // actual dir for this run
+    public static String nyquistPrefDir = ""; // selected dir for next time
     public static String docDir = ""; // the nyquist/doc directory
     public String extDir = ""; // the directory for extensions, normally lib
 
@@ -295,132 +307,69 @@ public class MainFrame extends JFrame {
         System.out.println("handlePrefs called");
     }
 
-    // if docDir is set, we try to make symbolic links from docDir to
-    // the Application. Assumes docDir is valid.
-    private void setupLibAndDemosLinks() {
-        try {
-            // first, see if there is already a lib in docDir:
-            File libFile = new File(docDir + "../lib");
-            if (libFile.exists() && !Files.isSymbolicLink(libFile.toPath())) {
-                System.out.println(docDir + "../lib already exists");
-                return; // seems to be a copy of lib there already,
-                        // don't mess with it
-            }
-            File demosFile = new File(docDir + "../demos");
-            if (demosFile.exists() && !Files.isSymbolicLink(demosFile.toPath())) {
-                System.out.println(docDir + "../demos already exists");
-                return; // don't mess with demos either
-            }
-            // create missing links. If both lib and demos are symbolic links,
-            // NyquistIDE.app might have moved, so overwrite the links to make
-            // sure they are up-to-date
-            File libTarget = new File(nyquistDir + "lib");
-            if (libTarget.exists()) { 
-                if (libFile.exists()) { // must be a link, we can update it
-                    Files.delete(libFile.toPath());
-                }
-                Files.createSymbolicLink(libFile.toPath(),
-                                         libTarget.toPath());
-                System.out.println(docDir + "../lib linked to " +
-                                   libTarget.getAbsolutePath());
-            } else {
-                System.out.println("not linked because " +
-                        libTarget.getAbsolutePath() + " doesn't existt");
-            }
-            File demosTarget = new File(nyquistDir + "demos");
-            if (demosTarget.exists()) {
-                if (demosFile.exists()) { // must be a link, we can update it
-                    Files.delete(demosFile.toPath());
-                }
-                Files.createSymbolicLink(demosFile.toPath(),
-                                         demosTarget.toPath());
-                System.out.println(docDir + "../demos linked to " +
-                                   demosTarget.getAbsolutePath());
-            } else {
-                System.out.println("not linked because " +
-                        demosTarget.getAbsolutePath() + " doesn't existt");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-    }
-	/* THIS CODE WRITTEN FOR JAVA SE 7 -- NOT TESTED, USING SHELL SCRIPT INSTEAD
-	// create a symbolic link if it is not already there
-	private static void createSymbolicLinkConditional(Path link, File target) {
-		try {
-			Path targetPath = Files.readSymbolicLink(link);
-			if (targetPath.equals(target.toPath())) {
-				System.out.println("link " + link + " points to " + 
-								  target + " already");
-				return;
-			}
-		} catch(Exception e) {
-			System.out.println("Failed to read " + link);
-		}
-		Files.createSymbolicLink(link, target.toPath());
-	}
-	*/
 
     private boolean isTrue(String s) { return s != null && s.equals("true"); }
 
-    // save the location of nyquist/doc in a file where we start
-    // This is not in prefs because you might have another NyquistIDE
-    // installation and we want each installation/version to have it's
-    // own copy of the Nyquist library, documentation, etc.
-    private void writeDocDirHint(String hint) {
-        System.out.println("writeDocDirHint: nyquistDir " + nyquistDir);
-        try {
-            File file = new File(nyquistDir + "doc-dir-hint.txt");
-			FileWriter fileWriter = new FileWriter(file);
-			fileWriter.write(hint);
-			fileWriter.flush();
-			fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    private boolean testNyquistDir() {
+        System.out.println("testNyquistDir " + nyquistDir);
+        if (nyquistDir.equals("")) return false;
+        if (nyquistDir.charAt(nyquistDir.length() - 1) != '/') {
+            nyquistDir = nyquistDir + "/";
         }
+        // see if we got a good path; must contain runtime and lib too
+        try {
+            File nyquistTarget = new File(nyquistDir);
+            File runtimeTarget = new File(nyquistDir + "runtime");
+            File libTarget = new File(nyquistDir + "lib");
+            File docTarget = new File(nyquistDir + "doc");
+            if (nyquistTarget.exists() && runtimeTarget.exists() && 
+                    libTarget.exists() && docTarget.exists()) {
+                return true; // nyquistDir seems to be valid
+            }
+        } catch (Exception e) {
+        }
+        return false;
     }
 
-    private void setupDocDir() {
-        // Goal is to have a nyquist directory with documentation, but
-        // where is it? We look for doc-dir-hint.txt and if we find it,
-        // we use it. If not, we ask user to find it, and we save it for
-        // next time. Save in the Contents/Java directory -- maybe that's
-        // a problem to write into /Applications subdirectory.
-        String hint = "";
-        // 
-        try {
-            hint = new String(Files.readAllBytes(
-                    Paths.get(nyquistDir + "doc-dir-hint.txt")));
-            System.out.println("Read doc-dir-hint.txt: " + hint);
-        } catch (IOException e) { // not an error
-            System.out.println("Could not find doc-dir-hint.txt - probably ok");
-        }
-        try {
-            // guess that nyquist is next to NyquistIDE.app
-            // because that's where it is in the download
-            if (hint.equals("")) {
-                hint = new File(currentDir + "../../../nyquist/doc").
-                                getCanonicalPath() + "/";
-                System.out.println("docDir guess: " + hint);
-            }
-        } catch (IOException e) {
-                e.printStackTrace();
-        }
-        File hintedFile = null;
-        File docDirFile = null;
 
-        // validate the hint
-        if (hint != null && !hint.equals("") && hint.endsWith("/doc/")) {
-            // see if the directory exists
-            hintedFile = new File(hint);
-            if (hintedFile.isDirectory()) {
-                docDir = hint;
-                System.out.println("assuming docDir is: " + hint);
-                return;
-            }
+    private void findNyquistDir() {
+        // nyquist directory has lib, doc, demos, but where is it?
+        // Look in preferences, then home directory, then prompt for it.
+        // Save what you find in preferences.
+
+        nyquistDir = prefs.get("nyquist-dir", "");
+        if (testNyquistDir()) {
+            System.out.println("Found nyquistDir in prefs: " + nyquistDir);
+            return; // found it and it's already in prefs
+        } else if (nyquistDir != "") {
+            String msg[] = {
+                "Your preferences are indicating an invalid nyquist directory:",
+                nyquistDir,
+                "This will be ignored; trying your home directory instead.",
+                "To explicitly select a nyquist directory to use, use",
+                "\"Set nyquist Directory\" in NyquistIDE Preferences",
+                "and restart NyquistIDE." };
+            JOptionPane.showMessageDialog(this, msg, 
+                    "Notice", JOptionPane.INFORMATION_MESSAGE);
         }
-        // hint failed; ask the user for the nyquist directory
+        // try home directory
+        nyquistDir = System.getProperty("user.home") + "/nyquist/";
+        if (testNyquistDir()) {
+            prefs.put("nyquist-dir", nyquistDir);
+            System.out.println("Found nyquistDir in user.home: " + nyquistDir);
+            String msg[] = {
+                "Found nyquist directory in your home directory. Setting",
+                "preferences to use this directory automatically in the future.",
+                "To select another nyquist directory, use",
+                "\"Set nyquist Directory\" in NyquistIDE Preferences",
+                "to select a directory with doc, lib and runtime, and",
+                "restart NyquistIDE." };
+            JOptionPane.showMessageDialog(this, msg, 
+                    "Notice", JOptionPane.INFORMATION_MESSAGE);            
+            return; // found it and it's already in prefs
+        }
+        // ask user to find it
         String msg[] = {
             "In order to show you documentation, NyquistIDE needs",
             "to know where you installed the \"nyquist\" directory",
@@ -438,35 +387,30 @@ public class MainFrame extends JFrame {
             System.out.println("opening fd file dialog");
             fd.showOpenDialog(this);
             File file = fd.getSelectedFile();
-            if (file != null) {
-                // I tried to use the parent,child form of constructor
-                // but couldn't get it to work, so just use path+"/doc"
-                docDirFile = new File(file.getAbsolutePath() + "/doc");
-                if (docDirFile.isDirectory()) {
-                    docDir = docDirFile.getAbsolutePath() + "/";
-                    writeDocDirHint(docDir);
-                    System.out.println("docDir set to " + docDir);
-                    return;
-                }
+            nyquistDir = (file == null ? "" :
+                          file.toString().replaceAll("\\\\", "/"));
+            if (file != null && testNyquistDir()) {
+                prefs.put("nyquist-dir", nyquistDir);
+                return;
             }
-            String msg2[] = {"That directory does not contain \"doc\" as ",
-                             "expected, so something is wrong. Try again",
-                             "to find the \"nyquist\" folder?"};
+            String msg2[] = {
+                "That directory does not contain \"doc\", \"lib\" and",
+                "\"runtime\", \" as expected, so something is wrong.",
+                "Try again to find the \"nyquist\" folder?"};
             int r = JOptionPane.showConfirmDialog(this, msg2, 
                              "alert", JOptionPane.OK_CANCEL_OPTION);
             if (r != JOptionPane.OK_OPTION) {
-                String msg3[] =
-                          { "NyquistIDE did not find nyquist/doc folder.",
-                            "Help:Manual and other documentation links",
-                            "may not work. If you do not have nyquist/doc,",
-                            "reinstall NyquistIDE." };
+                String msg3[] = {
+                    "NyquistIDE did not find nyquist folder.",
+                    "If you do not have a nyquist folder with doc, lib",
+                    "and runtime subfolders, reinstall NyquistIDE." };
                 JOptionPane.showMessageDialog(this, msg3,
                             "Notice", JOptionPane.INFORMATION_MESSAGE);
                         
-                return; // docDir is empty!!! Help:Manual will not work
+                return; // give up, but we're screwed without runtime and lib
             }
         }
-        return; // docDir is empty!!! Help:Manual will not work
+        return; // give up, but we're screwed without runtime and lib
     }
 
     
@@ -496,10 +440,6 @@ public class MainFrame extends JFrame {
         }
         System.out.println("---\nisMac(): " + isMac() + "\n");
 
-        // "h" in cmdlineArgs means clear the hints for testing
-        if (cmdlineArgs.length > 0 && cmdlineArgs[0].contains("h")) {
-            writeDocDirHint("");
-        }
         // set current working directory if we are in an application bundle
         currentDir = Paths.get(MainFrame.class.getProtectionDomain().
                     getCodeSource().getLocation().toURI()).getParent().
@@ -509,10 +449,6 @@ public class MainFrame extends JFrame {
             hasRightMouseButton = false;
             if (isTrue(System.getProperty("isOSXbundle"))) {
                 System.out.println("isOSXbundle: true\n");
-                nyquistDir = currentDir;
-                // docDir = findDocDir();
-                //docDir = new File(currentDir + "../../../nyquist/doc").
-                //         getCanonicalPath() + "/";
             }
             // Debugging:
             // System.out.println("currentDir: |" + currentDir + "|");
@@ -557,17 +493,13 @@ public class MainFrame extends JFrame {
             Image im = null;
             try {
                 im = ImageIO.read(new File(icon_path));
-            } catch (IOException ex) {
-                System.out.println(ex);
+            } catch (IOException e) {
+                System.out.println(e);
             }
             System.out.println("nycon" + im + " from " + icon_path);
             setIconImage(im);
         }
-        // Linux, Windows, and Mac debugging from command line are handled here
-		if (nyquistDir.equals("")) {
-             nyquistDir = new File(currentDir + "..").getCanonicalPath() + "/";
-             docDir = nyquistDir + "/doc/";
-        }
+
         prefStartInSalMode = prefs.getBoolean("start-with-sal", 
                                               prefStartInSalMode);
         prefSalShowLisp = prefs.getBoolean("sal-show-lisp", prefSalShowLisp);
@@ -838,12 +770,6 @@ public class MainFrame extends JFrame {
         
         plotFrame = new PlotFrame(jInputAndPlot);
         
-        nyquistThread = new NyquistThread();
-        nyquistThread.start(jOutputArea, update, plotFrame, this);
-        // now extDir is set
-        WordList.init(jListOutputArea, extDir);
-        SalWordList.init();
-        
         System.out.print("jDesktop size: ");
         System.out.println(jDesktop.getSize().toString());
 
@@ -881,23 +807,32 @@ public class MainFrame extends JFrame {
             System.out.println("lastDirectory was empty, set to " + lastDirectory);
         }
 
-        // do not trust currentDir to be where user put
-        // NyquistIDE.app -- OS X 10.12 relocates it to a
-        // randomized location, so we'll ask the user to find it
-        //
         // the following is here because when we directly open a file chooser
         // dialog box at this point, OS X apps hang. I don't know why, but
         // certainly dialog boxes work in an initialized, running program,
         // so that's when we'll try to complete the initialization.
-        if (isMac()) {
-            SwingUtilities.invokeLater(
-                    new Runnable() { public void run() {
-                        setupDocDir();
-                        if (!docDir.equals("")) {
-                            setupLibAndDemosLinks();
-                        }
-                    }});
-        }
+        final MainFrame mainFrame = this;
+        SwingUtilities.invokeLater(
+            new Runnable() { public void run() {
+                try {
+                    findNyquistDir();
+                    if (nyquistDir != null && !nyquistDir.equals("")) {
+                        docDir = nyquistDir + "doc/";
+                        extDir = nyquistDir + "lib/";
+                    }
+                    System.out.println("Starting nyquist with nyquistDir " +
+                           nyquistDir + "\n docDir " + docDir +
+                           "\n extDir " + extDir);
+                    nyquistThread = new NyquistThread();
+                    nyquistThread.start(jOutputArea, update, plotFrame, mainFrame);
+                    // now extDir is set
+                    WordList.init(jListOutputArea, extDir);
+                    SalWordList.init();
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                    e.printStackTrace(System.err);
+                }
+            }});
     }
     
     
@@ -1048,6 +983,7 @@ public class MainFrame extends JFrame {
             prefs.putBoolean("use-last-directory", prefLastDirectory);
             prefs.put("last-directory", currentDir);
             prefs.put("default-sf-directory", prefSFDirectory);
+            prefs.put("nyquist-dir", nyquistPrefDir);
             prefsHaveBeenSet = false;
         }
         JInternalFrame[] frames = jDesktop.getAllFrames();
@@ -1076,7 +1012,7 @@ public class MainFrame extends JFrame {
                 i = 0;
                 while (!workspaceSaved && i < 10000) { // allow 10s
                     try { Thread.sleep(200); }
-                    catch (InterruptedException ie) { }
+                    catch (InterruptedException e) { }
                     i += 200;
                 }
                 if (!workspaceSaved) {
@@ -1100,7 +1036,7 @@ public class MainFrame extends JFrame {
 		for (i = 0; i < 10; i++) {
             try {
                 Thread.sleep(200); // does it help Nyquist's exit to stall? 
-            } catch (InterruptedException ie) {
+            } catch (InterruptedException e) {
             }
 			if (!nyquistThread.nyquist_is_running) break;
 		}
@@ -1198,7 +1134,7 @@ public class MainFrame extends JFrame {
                     try {
                         file.setSelected(true);
                     }
-                    catch(PropertyVetoException ve) {
+                    catch(PropertyVetoException e) {
                         //System.out.println("setSelected was vetoed");
                     }
 
@@ -1407,7 +1343,7 @@ public class MainFrame extends JFrame {
             i = 0;
             while (!workspaceLoaded && i < 10000) { // alow 10s
                 try { Thread.sleep(200); }
-                catch (InterruptedException ie) { }
+                catch (InterruptedException e) { }
                 i += 200;
             }
             if (!workspaceLoaded) {

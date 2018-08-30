@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "finish-osx-app.sh -- I believe this file is obsolete"
+
 SRC_ROOT=..
 JNYQIDE_ROOT=$SRC_ROOT/jnyqide
 # Note: $CONFIGURATION comes from Xcode
