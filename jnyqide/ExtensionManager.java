@@ -112,8 +112,10 @@ public class ExtensionManager extends JNonHideableInternalFrame
                 } catch (Exception e) {
                 }
             } else if (task == "extlist") {
+                System.out.println("calling loadExtensionData " + url);
                 loadExtensionData(url);
             } else if (task == "files") {
+                System.out.println("calling downloadExtension " + url);
                 downloadExtension(ext, url, filepath, tmpdir, extdir, this);
             } else {
                 System.out.println(
@@ -657,6 +659,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
                      "Error Loading Extensions", JOptionPane.ERROR_MESSAGE);
             return;
         }                
+        System.out.println("loadExtensionDataToTable extDir: " + extDir);
         for (int i = 0; i < extensions.length; ++i) {
             // Ignore the line if it is a comment or if it is empty
             if (extensions[i].trim().isEmpty()) continue;
@@ -849,9 +852,9 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	private static String[] extractOtherFilesFromSAL(String fileContent) {
 		try {
             // Extract lines from the SAL/HTML file
-            String[] lines = fileContent.split(System.getProperty(
-                                                  "line.separator"));
-                
+            String[] lines = fileContent.split("\n");
+            // NOTE: line.separator doesn't work because we have to
+            // have Unix conventions here or checksums won't match
             // Parse the header of SAL/HTML file to find the additional files 
             List<String> fileNames = new ArrayList<String>();
             for (int i = 0; i < lines.length; ++i) {
@@ -917,9 +920,11 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	private void loadExtensionData(String url) {
         extensions = null;
 		try {
-            extensions = readFromURL(url).split(
-                    System.getProperty("line.separator"));
+            extensions = readFromURL(url).split("\n");
+            // note: using System.getProperty("line.separator"));
+            // FAILED because text from URL had unix newlines
         } catch (Exception e) {
+            System.out.println("loadExtensionData error " + e.toString());
             ;
         }
 	}
@@ -933,6 +938,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	 * Returns null on any type of error.
 	 */
 	private String readFromURL(String urlString) {
+        System.out.println("readFromURL: " + urlString);
 		try {
             if (urlString.startsWith("file:")) {
                 FileInputStream stream = new FileInputStream(urlString.substring(7));
@@ -1144,6 +1150,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
                 int nread = 0;
                 while ((nread = fis.read(dataBytes)) != -1) 
                     md.update(dataBytes, 0, nread);
+                fis.close();
             }
                 
             byte[] mdbytes = md.digest();

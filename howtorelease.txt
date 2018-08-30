@@ -63,8 +63,9 @@ copy the documentation from d:/rbd/nyquist to AFS, or
 ON WINDOWS
 
 Make release version of nyquist
-run comp-ide.bat to build NyquistIDE
+run comp-ide.bat to build NyquistIDE (now built by Visual Studio)
 Run releasenyqide.bat to create release directory.
+Check for extensions in nyqrelide/lib and remove them (other than piano)
 Run Inno Setup 5/Inno Setup Compiler
 Select C:\Users\rbd\nyquist\sys\win\nyqrelide.iss
 Update the version number in the code and save it
