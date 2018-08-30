@@ -49,10 +49,14 @@ var
   S: String;
 begin
   { Fill the 'Ready Memo' with the normal settings and the custom settings }
-  S := Space + DataDirPage.Values[0] + ' (nyquist directory location)' + NewLine;
+  S := Space + ExpandConstant('{app}') + ' (nyquist programs location)' + NewLine;
   S := S + NewLine; 
-  S := S + Space + ExpandConstant('{app}') + ' (nyquist programs location)' + NewLine;
-
+  S := S + Space + DataDirPage.Values[0] + ' (nyquist directory location)' + NewLine;
+  S := S + Newline;
+  S := S + 'Note: Once installation is complete, do not move or' + NewLine;
+  S := S + '      rename the nyquist directory unless you also' + NewLine;
+  S := S + '      update the Registry:' + NewLine;
+  S := S + '      HKLM Software\CMU\Nyquist\XLISPPATH.' + NewLine;
   Result := S;
 end;
 
@@ -107,7 +111,7 @@ Source: "nyqrelide\*.txt"; DestDir: "{code:GetDataDir}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
-Root: HKLM; Subkey: "Software\CMU\Nyquist"; ValueType: string; ValueName: "XLISPPATH"; ValueData: "{app}\runtime,{app}\lib,{app}\demos"
+Root: HKLM; Subkey: "Software\CMU\Nyquist"; ValueType: string; ValueName: "XLISPPATH"; ValueData: "{code:GetDataDir}\runtime,{code:GetDataDir}\lib,{code:GetDataDir}\demos"
 
 [Icons]
 Name: "{group}\NyquistIDE"; Filename: "{app}\jnyqide.bat"; WorkingDir: "{app}"

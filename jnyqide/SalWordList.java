@@ -4,10 +4,8 @@ package jnyqide;
 //  nyquist
 //
 //  Created by Roger Dannenberg on 12/18/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 Roger B. Dannenberg_. All rights reserved.
 //
-
-
 
 import java.util.HashMap;
 import java.util.Map;
