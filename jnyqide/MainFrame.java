@@ -339,25 +339,29 @@ public class MainFrame extends JFrame {
         // Save what you find in preferences.
 
         nyquistDir = prefs.get("nyquist-dir", "");
+        System.out.println("prefs.get(nyquist-dir, \"\") -> " + nyquistDir);
+        String atHome = System.getProperty("user.home") + "/nyquist/";
         if (testNyquistDir()) {
-            System.out.println("Found nyquistDir in prefs: " + nyquistDir);
             return; // found it and it's already in prefs
-        } else if (nyquistDir != "") {
+        } else if (!nyquistDir.equals("")) {
             String msg[] = {
                 "Your preferences are indicating an invalid nyquist directory:",
-                nyquistDir,
-                "This will be ignored; trying your home directory instead.",
-                "To explicitly select a nyquist directory to use, use",
-                "\"Set nyquist Directory\" in NyquistIDE Preferences",
+                "\"" + nyquistDir + "\"",
+                "This will be ignored; trying",
+                "\"" + atHome + "\"",
+                "instead. To explicitly select a nyquist directory to use,",
+                "click \"Set nyquist Directory\" in NyquistIDE Preferences",
                 "and restart NyquistIDE." };
             JOptionPane.showMessageDialog(this, msg, 
                     "Notice", JOptionPane.INFORMATION_MESSAGE);
         }
         // try home directory
-        nyquistDir = System.getProperty("user.home") + "/nyquist/";
+        nyquistDir = atHome;
         if (testNyquistDir()) {
-            prefs.put("nyquist-dir", nyquistDir);
-            System.out.println("Found nyquistDir in user.home: " + nyquistDir);
+            nyquistPrefDir = nyquistDir; // this will be saved to prefs unless
+            // user changes it with Preferences dialog. Whatever is in 
+            // nyquistPrefDir (thus prefs) when we quit will be used next time
+            System.out.println("prefs.put(nyquist-dir, " + nyquistDir + ")");
             String msg[] = {
                 "Found nyquist directory in your home directory. Setting",
                 "preferences to use this directory automatically in the future.",
@@ -367,15 +371,16 @@ public class MainFrame extends JFrame {
                 "restart NyquistIDE." };
             JOptionPane.showMessageDialog(this, msg, 
                     "Notice", JOptionPane.INFORMATION_MESSAGE);            
+            System.out.println("after showMessageDialog (nyquist at home)");
             return; // found it and it's already in prefs
         }
         // ask user to find it
         String msg[] = {
-            "In order to show you documentation, NyquistIDE needs",
-            "to know where you installed the \"nyquist\" directory",
-            "that came in the same folder as NyquistIDE.app. The",
-            "next screen will be a file chooser so you can find",
-            "the \"nyquist\" directory. Click OK to continue." };
+            "NyquistIDE needs to know where you installed the",
+            "\"nyquist\" directory that contains runtime, lib, doc",
+            "and demos subdirectories. The next screen will be a",
+            "file chooser so you can find the \"nyquist\" directory.",
+            "Click OK to continue." };
         JOptionPane.showMessageDialog(this, msg,
                     "Notice", JOptionPane.INFORMATION_MESSAGE);
         JFileChooser fd = new JFileChooser(
@@ -390,6 +395,8 @@ public class MainFrame extends JFrame {
             nyquistDir = (file == null ? "" :
                           file.toString().replaceAll("\\\\", "/"));
             if (file != null && testNyquistDir()) {
+                System.out.println("prefs.put(nyquist-dir, " + 
+                                   nyquistDir + ")");
                 prefs.put("nyquist-dir", nyquistDir);
                 return;
             }

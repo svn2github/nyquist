@@ -108,7 +108,6 @@ public class PlotFrame extends JPanel { //JPANEL: JInternalFrame {
         // now increase spacing to nearest multiple of 0.1, 0.2, 0.5, ...
         // first, get spacing between 0.1 and 1.0
         double tens = 1.0;
-        //System.out.print("spacing "); System.out.println(spacing);
         while (spacing < 0.1) {
             spacing = spacing * 10.0;
             tens = tens * 0.1;
@@ -141,18 +140,16 @@ public class PlotFrame extends JPanel { //JPANEL: JInternalFrame {
         // increase by one again. E.g. if the graph is divided in two, there are
         // three lines. (Always one more line than division.)
         numLines += 1;
-        System.out.print("minLabel "); System.out.print(minLabel);
-        System.out.print(" spacing "); System.out.println(spacing);
-        System.out.print(" numLines " + numLines);
+        System.out.println("minLabel " + minLabel + " spacing " + spacing +
+                           " numLines " + numLines);
     }
 
     public void renderGraph()
     {
         System.out.println("renderGraph");
         if (gGraph == null) {
-            System.out.print("creating graphbuffer"); 
-            System.out.print(graphBufferWidth); System.out.print(", ");
-            System.out.println(graphBufferHeight);
+            System.out.print("creating graphbuffer " + graphBufferWidth + 
+                             " " + graphBufferHeight);
             graphBuffer = createImage(graphBufferWidth, graphBufferHeight);
             //System.out.println(graphBuffer);
             if (graphBuffer == null) return; // Why does this fail?
@@ -164,7 +161,6 @@ public class PlotFrame extends JPanel { //JPANEL: JInternalFrame {
 
         System.out.println("calling AxisLayout");
         AxisLayout(graphBufferWidth, axisMinSpacing, minX, width);
-        //System.out.print("return from AxisLayout");
 		xExtent = spacing * (numLines - 1);
         minXlabel = minLabel;
         xSpacing = spacing;
@@ -235,10 +231,8 @@ public class PlotFrame extends JPanel { //JPANEL: JInternalFrame {
     public void paint(Graphics g2) {
         //    Graphics g = getContentPane().getGraphics();
         System.out.println("Painting...");
-        // because the window can be resized, check if we have the right width and height
-        //System.out.print("graph dim "); System.out.print(getWidth());
-        //System.out.print(", "); System.out.println(getHeight());
- 
+        // because the window can be resized, check if we have the right
+        // width and height
         if ((getHeight() != bufferHeight) ||
             (getWidth() != bufferWidth)) {
             g = null; // delete any existing double buffer to force an update

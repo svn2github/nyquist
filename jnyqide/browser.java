@@ -13,6 +13,7 @@ import java.awt.event.ItemListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
@@ -48,7 +49,7 @@ class Browser extends JNonHideableInternalFrame {
     NyquistThread nyquistThread;
     MainFrame mainFrame;
     ArrayList instruments;
-    InstrumentCharacteristics currentInstr;
+    InstrInfo currentInstr;
 
     /**
      * @ desc Default constructor, takes the nyquist thread from main frame
@@ -78,11 +79,26 @@ class Browser extends JNonHideableInternalFrame {
         }
     }
     
+
+    // If instrument requires an extension, display as 
+    //    name (requires extension foo)
+    private void addToSubcategory(InstrInfo info) {
+        String extensionName = info.getExtension();
+        String item = info.getSubcategoryName();
+        if (extensionName != null) {
+            String extensionDir = mainFrame.extDir + extensionName;
+            boolean haveExt = (new File(extensionDir)).exists();
+            if (!haveExt) {
+                item = item + " (requires extension " + extensionName + ")";
+            }
+        }
+        subcategoryCombo.addItem(item);
+    }
+
+
     /**
-     * @ desc intializes gui elements
-     *  @author prirags - removed all references to the log factory
+     * @ desc intializes gui elements for the Sound Browser dialog
      */
-    
     private void initGUI() {
         setTitle("Sound Browser");
         this.setSize(800, 513);
@@ -107,11 +123,9 @@ class Browser extends JNonHideableInternalFrame {
                     String category = (String) evt.getItem();
                     System.out.println("category is " + category);
                     for (int i = 0; i < instruments.size(); i++) {
-                        if (((InstrumentCharacteristics) instruments.get(i)).
-                            getCategoryName().equalsIgnoreCase(category)) {
-                            subcategoryCombo.addItem(
-                                    ((InstrumentCharacteristics) instruments.
-                                             get(i)).getSubcategoryName());
+                        InstrInfo info = (InstrInfo) instruments.get(i);
+                        if (info.getCategoryName().equalsIgnoreCase(category)) {
+                            addToSubcategory(info);
                         }
                     }
                 }
@@ -127,8 +141,7 @@ class Browser extends JNonHideableInternalFrame {
         subcategoryCombo.addItemListener(new ItemListener() {	
                 public void itemStateChanged(ItemEvent evt) {
                     for (int i = 0; i < instruments.size(); i++) {
-                        InstrumentCharacteristics ic =
-                            (InstrumentCharacteristics) instruments.get(i);
+                        InstrInfo ic = (InstrInfo) instruments.get(i);
                         String name = (String) evt.getItem();
                         if (ic.getSubcategoryName().equalsIgnoreCase(name)) {
                             currentInstr = ic;
@@ -216,9 +229,12 @@ class Browser extends JNonHideableInternalFrame {
             System.out.println("ERROR -- could not open " + instrPath);
             return;
         }
+        // parse instrument descriptions from buffered reader br
+        // add each instrument to ArrayList instruments, and search to
+        // see if the instrument category is in categoryCombo. If not,
+        // add it.
         while (true) {
-            InstrumentCharacteristics ic = 
-                new InstrumentCharacteristics();
+            InstrInfo ic = new InstrInfo();
             if (!ic.readData(br)) break;
             System.out.println("new IC: " + ic.getCategoryName() + ":" +
                                ic.getSubcategoryName());

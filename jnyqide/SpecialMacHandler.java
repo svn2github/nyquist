@@ -1,11 +1,13 @@
 package jnyqide;
 
 import jnyqide.*;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
-import com.apple.eawt.Application;
+// import com.apple.eawt.ApplicationAdapter;
+// import com.apple.eawt.ApplicationEvent;
+// import com.apple.eawt.Application;
 /* import com.apple.mrj.*; */
 import javax.swing.SwingUtilities;
+import java.awt.Desktop;
+import java.awt.desktop.*;
 
 /* OLD CODE -- the MRJ classes are deprecated.
 public class SpecialMacHandler
@@ -38,29 +40,30 @@ public class SpecialMacHandler
 }
 */
 
-public class SpecialMacHandler extends ApplicationAdapter {
+public class SpecialMacHandler implements AboutHandler, PreferencesHandler, QuitHandler {
 
     MainFrame us;
 
     public SpecialMacHandler(jnyqide.MainFrame theProgram) {
         System.out.println("SpecialMacHandler created");
         us = theProgram;
-        Application app = Application.getApplication();
-        app.addApplicationListener(this);
-        app.setEnabledPreferencesMenu(true);
+        Desktop dt = Desktop.getDesktop();
+        dt.setAboutHandler(this);
+        dt.setPreferencesHandler(this);
+        dt.setQuitHandler(this);
     }
 
-    public void handleAbout(ApplicationEvent e) {
-        e.setHandled(true);
+    public void handleAbout(AboutEvent e) {
         us.About();
     }
 
-    public void handlePreferences(ApplicationEvent e) {
+    public void handlePreferences(PreferencesEvent e) {
         us.Prefs();
     }
 
-    public void handleQuit(ApplicationEvent e) {
+    public void handleQuitRequestWith(QuitEvent e, QuitResponse r) {
         System.out.println("handleQuit in SpecialMacHandler called");
+        r.cancelQuit(); // we will do it later
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 us.Quit();
