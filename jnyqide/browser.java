@@ -36,7 +36,7 @@ import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-
+import javax.swing.SwingUtilities;
 
 /***
 ** Class: Browser
@@ -67,10 +67,14 @@ class Browser extends JNonHideableInternalFrame {
             setLocation(50+10, 50+10);
             setSize(600, 500);
             setResizable(true);
-            setVisible(true);
             setClosable(true);
             setMaximizable(true);
             setIconifiable(true);
+            final Browser browser = this;
+            SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        browser.show();
+                    }});
             // setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
             System.out.println("at end of Browser()");
         }
@@ -80,17 +84,29 @@ class Browser extends JNonHideableInternalFrame {
     }
     
 
-    // If instrument requires an extension, display as 
-    //    name (requires extension foo)
-    private void addToSubcategory(InstrInfo info) {
-        String extensionName = info.getExtension();
-        String item = info.getSubcategoryName();
+    // See if an instrument needs an extension
+    // returns null or string name of extension
+    private String instrNeedsExtension(InstrInfo instr) {
+        String extensionName = instr.getExtension();
+        String item = instr.getSubcategoryName();
         if (extensionName != null) {
             String extensionDir = mainFrame.extDir + extensionName;
             boolean haveExt = (new File(extensionDir)).exists();
             if (!haveExt) {
-                item = item + " (requires extension " + extensionName + ")";
+                return extensionName;
             }
+        }
+        return null; // no extension needed or we have it
+    }
+
+
+    // If instrument requires an extension, display as 
+    //    name (requires extension foo)
+    private void addToSubcategory(InstrInfo instr) {
+        String item = instr.getSubcategoryName();
+        String extensionName = instrNeedsExtension(instr);
+        if (extensionName != null) {
+            item = item + " (requires extension " + extensionName + ")";
         }
         subcategoryCombo.addItem(item);
     }
@@ -143,6 +159,12 @@ class Browser extends JNonHideableInternalFrame {
                     for (int i = 0; i < instruments.size(); i++) {
                         InstrInfo ic = (InstrInfo) instruments.get(i);
                         String name = (String) evt.getItem();
+                        // if item is "name (requires extension foo)", then
+                        // extract the name only to compare to instruments
+                        int end = name.indexOf("(requires extension ") - 1;
+                        if (end > 0) {
+                            name = name.substring(0, end);
+                        }
                         if (ic.getSubcategoryName().equalsIgnoreCase(name)) {
                             currentInstr = ic;
                             visitSound();
@@ -269,6 +291,7 @@ class Browser extends JNonHideableInternalFrame {
     private JPanel jPanel2;
     private JLabel[] paramLabels = null;
     private JSlider[] paramSliders = null;
+    private JLabel extLabel = null;
     
     public void newParameterCount(int n) {
         // make array for new labels and sliders
@@ -318,6 +341,29 @@ class Browser extends JNonHideableInternalFrame {
     public void visitSound() {
         System.out.println("visitSound called: " + 
                            currentInstr.getSubcategoryName());
+        
+        // first, find out if we need an extension
+        String extensionName = instrNeedsExtension(currentInstr);
+        if (extensionName != null) {
+            // cannot play this sound
+            newParameterCount(0);
+            if (extLabel == null) extLabel = new JLabel();
+            jPanel3.add(extLabel);
+            extLabel.setText("<html>This sound requires the extension <b>" +
+                    extensionName + "</b>.<br><br>You can download it " +
+                    "with the Extension Manager item in the Window " +
+                    "menu.</html>");
+            extLabel.setVisible(true);
+            SpringUtilities.makeCompactGrid(jPanel3, 1, 1, 6, 6, 6, 6);
+            return;
+        } else {
+            if (extLabel != null) {
+                jPanel3.remove(extLabel);
+                extLabel = null;
+            }
+        }
+
+
         /*
          * This hides the labels and the sliders that could have 
          * been created in previous runs

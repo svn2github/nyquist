@@ -315,10 +315,8 @@ The Win32 version of Nyquist is packaged as a compiled (runtime) system in an
 download is for Win32, Mac OS X, and Linux). The source version is
 intended for developers who
 want to recompile Nyquist. 
-The contents of the source archive are extracted to the @code(C:\nyquist) 
-directory,
-but you can put it anywhere you like. You can then open the workspace file,
-nyquist.sln, using Microsoft
+To build from sources, you should use CMake to make a "solution" file 
+for Microsoft
 Visual C++. You can build and run the command line version of Nyquist
 from within Visual C++. There is a batch file, @code(comp-ide.bat), for 
 bulding the Nyquist IDE. This requires the Java SDK from Sun Microsystems.
@@ -334,7 +332,7 @@ the ones in the following ``Examples'' section.
 
 @p(Optional:)@index(Registry)@index(xlisppath)@index(search path) Nyquist needs to know where to find the standard runtime files. The location of runtime files must be stored in the Registry.
 The installers create a registry entry, but if
-you move Nyquist or deal with different versions, you can edit the Registry manually as follows:
+you move the nyquist directory with @code(runtime) and @code(lib) or deal with different versions, you can edit the Registry manually as follows:
 @begin(itemize)
 Run the Registry editor. Under Windows, run @code(C:\WINNT\system32\regedt32.exe).
 

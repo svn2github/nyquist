@@ -173,7 +173,7 @@ public class InstrInfo {
                 int extPos = line.indexOf("EXTENSION");
                 if (extPos >= 0) {
                     extPos += 9; // length of "EXTENSION"
-                    extension = line.substring(reqPos).trim();
+                    extension = line.substring(extPos).trim();
                     line = br.readLine();
                 }
                 int reqPos = line.indexOf("REQUIRE");
