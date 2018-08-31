@@ -63,7 +63,7 @@ end;
 function GetDataDir(Param: String): String;
 begin
   { Return the selected DataDir }
-  Result := DataDirPage.Values[0];
+  Result := DataDirPage.Values[0] + '\nyquist';
 end;
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.

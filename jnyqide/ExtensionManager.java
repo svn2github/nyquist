@@ -702,48 +702,51 @@ public class ExtensionManager extends JNonHideableInternalFrame
         // search directories in extDir to find packages to update
         Vector<Integer> needToUpdate = new Vector<Integer>();
         Vector<String> unknownExtensions = new Vector<String>();
-        for (String dir : directories) {
-            System.out.println("Update checks " + dir);
-            try {
-                // check checksum in each directory
-                String checksum = "";
-                FileInputStream fis = new FileInputStream(mainFrame.extDir +
-                                       dir + File.separator + "checksum.txt");
-                byte[] dataBytes = new byte[1024];
-                int nread = 0;
-                if ((nread = fis.read(dataBytes)) == -1) 
-                    continue;
-                checksum = new String(dataBytes);
-                checksum = checksum.trim(); // remove newlines etc.
-
-                // find row in table
-                File packageFile = new File(dir);
-                String extensionName = packageFile.getName();
-                int r;
-                for (r = 0; r < table.getModel().getRowCount(); r++) {
-                    String s = table.getModel().getValueAt(r, 
-                                   Cols.EXTENSION.ordinal()).toString();
-                    if (s.equalsIgnoreCase(extensionName)) {
-                        break;
+        if (directories != null) {
+            for (String dir : directories) {
+                System.out.println("Update checks " + dir);
+                try {
+                    // check checksum in each directory
+                    String checksum = "";
+                    FileInputStream fis = new FileInputStream(mainFrame.extDir +
+                            dir + File.separator + "checksum.txt");
+                    byte[] dataBytes = new byte[1024];
+                    int nread = 0;
+                    if ((nread = fis.read(dataBytes)) == -1) 
+                        continue;
+                    checksum = new String(dataBytes);
+                    checksum = checksum.trim(); // remove newlines etc.
+                    
+                    // find row in table
+                    File packageFile = new File(dir);
+                    String extensionName = packageFile.getName();
+                    int r;
+                    for (r = 0; r < table.getModel().getRowCount(); r++) {
+                        String s = table.getModel().getValueAt(r, 
+                                Cols.EXTENSION.ordinal()).toString();
+                        if (s.equalsIgnoreCase(extensionName)) {
+                            break;
+                        }
                     }
-                }
-                if (r == table.getModel().getRowCount()) {
-                    unknownExtensions.add(extensionName);
-                    System.out.println("Found unknown package: " + extensionName);
-                    continue; // package not an official one
-                }
-                String referenceChecksum = table.getModel().
-                        getValueAt(r, Cols.CHECKSUM.ordinal()).toString();
-                System.out.println("refsum " + referenceChecksum +
-                                   "\ncursum " + checksum);
-                if (!checksum.equalsIgnoreCase(referenceChecksum)) {
-                    System.out.println("NOT EQUAL: \n" +
-                                       "refsum " + referenceChecksum +
+                    if (r == table.getModel().getRowCount()) {
+                        unknownExtensions.add(extensionName);
+                        System.out.println("Found unknown package: " +
+                                           extensionName);
+                        continue; // package not an official one
+                    }
+                    String referenceChecksum = table.getModel().
+                            getValueAt(r, Cols.CHECKSUM.ordinal()).toString();
+                    System.out.println("refsum " + referenceChecksum +
                                        "\ncursum " + checksum);
-                    needToUpdate.add(r);
+                    if (!checksum.equalsIgnoreCase(referenceChecksum)) {
+                        System.out.println("NOT EQUAL: \n" +
+                                           "refsum " + referenceChecksum +
+                                           "\ncursum " + checksum);
+                        needToUpdate.add(r);
+                    }
+                } catch (Exception e) {
+                    System.out.println("ERROR: " + e.toString());
                 }
-            } catch (Exception e) {
-                System.out.println("ERROR: " + e.toString());
             }
         }
         // show unknown packages

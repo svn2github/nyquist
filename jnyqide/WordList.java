@@ -62,8 +62,10 @@ public class WordList {
 
         // now look for extensions
         String[] directories = ExtensionManager.getExtensionDirs(extDir);
-        for (String dir : directories) {
-            processExtension(extDir + dir);
+        if (directories != null) {
+            for (String dir : directories) {
+                processExtension(extDir + dir);
+            }
         }   
     }
 

@@ -28,6 +28,7 @@ import jnyqide.*;
 // this won't work on non-Mac, so use reflection tricks below
 // import com.apple.mrj.*; // import Mac menu support
 import java.lang.reflect.*; // import Constructor class
+import java.lang.Math;
 import java.util.prefs.*;
 import java.util.Collection;
 import java.util.HashMap;
@@ -229,6 +230,18 @@ public class MainFrame extends JFrame {
         return(strOS != null && strOS.indexOf("Mac OS") >= 0);
     }
 
+    public boolean isWindows() {
+        // the following suggested by Raymond Martin:
+        final String strOS;
+
+        try { strOS = System.getProperty("os.name"); }
+        catch(final SecurityException e) {
+            System.out.println("In isWindows: error " + e);
+            return(false); 
+        }
+        return(strOS != null && strOS.indexOf("Windows") >= 0);
+    }
+
     PreferencesDialog preferencesDialog;
     
     public void disconnectPreferences() {
@@ -314,6 +327,7 @@ public class MainFrame extends JFrame {
     private boolean testNyquistDir() {
         System.out.println("testNyquistDir " + nyquistDir);
         if (nyquistDir.equals("")) return false;
+        nyquistDir = nyquistDir.replaceAll("\\\\", "/");
         if (nyquistDir.charAt(nyquistDir.length() - 1) != '/') {
             nyquistDir = nyquistDir + "/";
         }
@@ -332,12 +346,45 @@ public class MainFrame extends JFrame {
         return false;
     }
 
+    private void findNyquistDirInRegistry() {
+        String xlispPath = WindowsRegistry.readRegistry(
+                "HKLM\\Software\\CMU\\Nyquist", "XLISPPATH");
+        System.out.println("readRegistry: " + xlispPath);
+        // now extract nyquistDir from path, which has the form
+        //   path\runtime,path\lib,path\demos
+        nyquistDir = ""; // indicates not found
+        if (xlispPath == null) return; // not found
+        int end = xlispPath.indexOf("runtime");
+        if (end < 0) return; // not found
+        // search backwards for last comma or semicolon
+        // (not colon because of C:\... )
+        int start1 = xlispPath.lastIndexOf(',', end);
+        int start2 = xlispPath.lastIndexOf(';', end);
+        int start = Math.max(start1, start2);
+        if (start < 0) start = 0;
+        nyquistDir = xlispPath.substring(start, end);
+        if (!testNyquistDir()) nyquistDir = "";
+        return;
+    }
+
 
     private void findNyquistDir() {
         // nyquist directory has lib, doc, demos, but where is it?
-        // Look in preferences, then home directory, then prompt for it.
+        // First, if this is Windows, use the registry because Nyquist
+        // will be using the registry to find runtime, and we want to
+        // be consistent.
+        // Then, look in preferences, then home directory, then prompt for it.
         // Save what you find in preferences.
 
+        if (isWindows()) {
+            System.out.println("isWindows, nyquistDir from reg " +
+                               nyquistDir);
+            findNyquistDirInRegistry();
+            if (nyquistDir != "") {
+                System.out.println("Found nyquistDir in reg: " + nyquistDir);
+                return; // found it, not putting it in prefs
+            }                
+        }
         nyquistDir = prefs.get("nyquist-dir", "");
         System.out.println("prefs.get(nyquist-dir, \"\") -> " + nyquistDir);
         String atHome = System.getProperty("user.home") + "/nyquist/";
@@ -392,8 +439,7 @@ public class MainFrame extends JFrame {
             System.out.println("opening fd file dialog");
             fd.showOpenDialog(this);
             File file = fd.getSelectedFile();
-            nyquistDir = (file == null ? "" :
-                          file.toString().replaceAll("\\\\", "/"));
+            nyquistDir = (file == null ? "" : file.toString());
             if (file != null && testNyquistDir()) {
                 System.out.println("prefs.put(nyquist-dir, " + 
                                    nyquistDir + ")");
@@ -450,7 +496,7 @@ public class MainFrame extends JFrame {
         // set current working directory if we are in an application bundle
         currentDir = Paths.get(MainFrame.class.getProtectionDomain().
                     getCodeSource().getLocation().toURI()).getParent().
-                    toString() + "/";
+                    toString() + File.separator;
         prefs = Preferences.userNodeForPackage(Main.class);
         if (isMac()) {
             hasRightMouseButton = false;
@@ -533,9 +579,12 @@ public class MainFrame extends JFrame {
         prefControlRate = prefs.get("control-rate", prefControlRate);
         prefFontSize = prefs.get("font-size", prefFontSize);
         prefDirectory = prefs.get("initial-directory", prefDirectory);
+        System.out.println("MainFrame prefDirectory " + prefDirectory);
         prefLastDirectory = prefs.getBoolean("use-last-directory",
                                              prefLastDirectory);
+        System.out.println("MainFrame prefLastDirectory " + prefLastDirectory);
         lastDirectory = prefs.get("last-directory", lastDirectory);
+        System.out.println("MainFrame lastDirectory " + lastDirectory);
         prefSFDirectory = prefs.get("default-sf-directory", prefSFDirectory);
         prefsHaveBeenSet = false;
 
@@ -558,13 +607,13 @@ public class MainFrame extends JFrame {
         // Menu Bar
         jMenuFile.setText("File");
         menuAddItem(jMenuFile, "New", 'n', 
-            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N,
-                       Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-            menuButtonListener);
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+                menuButtonListener);
         menuAddItem(jMenuFile, "Open", 'o', 
-            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O,
-                       Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-            menuButtonListener);
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+                menuButtonListener);
 
         if (!isMac()) {  // if isMac(), Quit (not Exit) and Prefs are on the 
                          // application menu
@@ -576,19 +625,19 @@ public class MainFrame extends JFrame {
         jMenuEdit.setText("Edit");
 
         menuAddItem(jMenuEdit, "Previous", 'p',
-            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P,
-                       Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-            menuButtonListener);
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+                menuButtonListener);
 
         menuAddItem(jMenuEdit, "Next", 'n', 
-            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D,
-                       Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-            menuButtonListener);
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+                menuButtonListener);
 
         menuAddItem(jMenuEdit, "Select Expression", 'e',
-                    KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E,
-                                           Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-                    menuButtonListener);
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+                menuButtonListener);
 
         jMenuHelp.setText("Help");
         if (!isMac()) {  // if isMac(), About is on the application menu
@@ -601,7 +650,7 @@ public class MainFrame extends JFrame {
         menuAddItem(jMenuProcess, "Plot", 'p', null, menuButtonListener);
         menuAddItem(jMenuProcess, "Copy to Lisp", 'u', 
                 KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U,
-                       Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                 menuButtonListener);
         menuAddItem(jMenuProcess, "Mark", 'a', null, menuButtonListener);
         
@@ -1118,7 +1167,6 @@ public class MainFrame extends JFrame {
         fileDialog.setVisible(true);
         if (fileDialog.getDirectory() != null && fileDialog.getFile() != null) {
             String path = fileDialog.getDirectory() + 
-                    System.getProperty("file.separator") + 
                     fileDialog.getFile();
             System.out.println("You chose to open this file: " + path);
             openFile(new File(path));
@@ -1687,8 +1735,10 @@ public class MainFrame extends JFrame {
     // set current directory
     public void changeDirectory(String dir) {
         // currentDir must be "" or end in "/"
-        if (dir.length() > 0 && dir.charAt(dir.length() - 1) != '/') {
-            dir = dir + "/";
+        String sep = System.getProperty("file.separator");
+        char sch = sep.charAt(0);
+        if (dir.length() > 0 && dir.charAt(dir.length() - 1) != sch) {
+            dir = dir + sep;
         }
         System.out.println("changeDirectory: currentDir " + currentDir +
                            " to " + dir);

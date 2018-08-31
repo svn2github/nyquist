@@ -71,9 +71,10 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private JButton initialDirectory; // "Set Initial Directory" to this
     private JCheckBox useLastDirectory; // "Last Used Directory is Initial Directory"
     private JButton nyquistDirectory; // "Set Initial Directory" to this
-    private JFileChooser startfd;
-    private JFileChooser fd;
-    private JFileChooser nyquistfd;
+    private JFileChooser startfd; // prefs for starting directory
+    private JFileChooser sndfd; // prefs for sound file directory
+    private JFileChooser nyquistfd; // prefs for nyquist directory
+    // (this is overridden by Registry in Windows)
     private String[] audioRates = { "96000", "48000", "44100", "22050", "16000",
                                     "11025", "8000" };
     private String currentFontSize;
@@ -192,10 +193,10 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                     mainFrame.prefDirectory = "";
                 }
                         
-                file = fd.getSelectedFile();
+                file = sndfd.getSelectedFile();
                 if (file != null) {
                     String dir = file.toString().replaceAll("\\\\", "/");
-                    System.out.println("fd.getSelectedFile: " + dir);
+                    System.out.println("sndfd.getSelectedFile: " + dir);
                     if (dir != null && dir.length() > 0) {
                         mainFrame.prefSFDirectory = dir;
                         mainFrame.setVariable("*default-sf-dir*",
@@ -402,9 +403,9 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         panel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         // Select Sound File Output Directory (button)
-        fd = new JFileChooser("Select Default Soundfile Directory");
-        fd.setCurrentDirectory(new File(mainFrame.prefSFDirectory));
-        fd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        sndfd = new JFileChooser("Select Default Soundfile Directory");
+        sndfd.setCurrentDirectory(new File(mainFrame.prefSFDirectory));
+        sndfd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         /*
         * The Nyquist IDE has a preferences dialog with a couple of things you
@@ -454,7 +455,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == sfDirectory) {
-            fd.showOpenDialog(this);
+            sndfd.showOpenDialog(this);
         } else if (evt.getSource() == initialDirectory) {
             startfd.showOpenDialog(this);
             useLastDirectory.setSelected(false);
@@ -481,7 +482,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
             controlRate.setText(mainFrame.prefControlRateDefault);
             fontSize.setSelectedItem(mainFrame.prefFontSizeDefault);
             startfd.setSelectedFile(null);
-            fd.setSelectedFile(null);
+            sndfd.setSelectedFile(null);
             nyquistfd.setSelectedFile(null);
         }
     } 

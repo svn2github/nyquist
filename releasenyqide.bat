@@ -40,6 +40,7 @@ copy todo.txt nyqrelide
 copy license.txt nyqrelide
 mkdir nyqrelide\jnyqide
 copy Release\ny.exe nyqrelide\jnyqide\nyquist.exe
+copy jnyqide\nycon.png nyqrelide\jnyqide
 copy jnyqide\NyquistWords.txt nyqrelide\jnyqide
 copy jnyqide\jNyqIDE.jar nyqrelide\jnyqide
 copy jnyqide.bat nyqrelide\jnyqide.bat
