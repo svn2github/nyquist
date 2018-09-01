@@ -8,20 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.Dialog;
 
 import javax.print.attribute.standard.OutputDeviceAssigned;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import javax.swing.SwingWorker;
-import javax.swing.JLabel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.AbstractListModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.JOptionPane;
-import javax.swing.JInternalFrame;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.event.InternalFrameEvent;
 
@@ -64,6 +53,7 @@ public class ExtensionManager extends JNonHideableInternalFrame
 	private static String EXTENSION_LIST_URL = 
         "https://www.cs.cmu.edu/~music/nyquist/extensions/extlist.txt";
         /* "file:///Users/rbd/nyquist/extensions/extlist.txt"; */
+        /* "file://c:/Users/Roger/nyquist/extensions/extlist.txt"; */
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
@@ -533,9 +523,12 @@ public class ExtensionManager extends JNonHideableInternalFrame
         // (1) autoload.lsp is loaded if found
         for (String name : otherFiles) {
             if (name.equals("autoload.lsp")) {
-                mainFrame.callFunction("lisp-loader", "\"" + ext + 
-                                       "/" + "autoload.lsp\"");
-                return;
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        mainFrame.callFunction("lisp-loader", "\"" + ext +
+                                               "/" + "autoload.lsp\"");
+                        return;
+                    }});
             }
         }
         // (2) nyquistwords.txt is processed if found
@@ -545,8 +538,14 @@ public class ExtensionManager extends JNonHideableInternalFrame
             String name = (String) 
                 dtm.getValueAt(row, Cols.EXTENSION.ordinal());
             if (name.equals(ext)) {
-                dtm.setValueAt(true, row, Cols.INSTALLED.ordinal());
-                return;
+                // some boxes are not getting updated, so maybe this
+                // is a threading issue
+                final int r = row;
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        dtm.setValueAt(true, r, Cols.INSTALLED.ordinal());
+                        return;
+                    }});
             }
         }
     }

@@ -163,6 +163,7 @@ public class InstrInfo {
                     // space or tab
                     line = br.readLine();
                 }
+                // System.out.println("* |" + line + "| *");
                 if (line == null) {
                     System.out.println(
                             "expected LISP-SOURCE or SAL-SOURCE, EXTENSION, " +
@@ -174,6 +175,7 @@ public class InstrInfo {
                 if (extPos >= 0) {
                     extPos += 9; // length of "EXTENSION"
                     extension = line.substring(extPos).trim();
+                    // System.out.println("  found extension " + extension);
                     line = br.readLine();
                 }
                 int reqPos = line.indexOf("REQUIRE");

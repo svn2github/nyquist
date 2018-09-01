@@ -149,10 +149,11 @@ public class MainFrame extends JFrame {
     //   otherwise, the prefDirectory (if non-empty) is used as the
     //   start-up directory. The prefDirectory is retained even if
     //   lastDirectory is set, and we revert to it if lastDirectory is
-    //   turned off.
+    //   turned off. Initially, prefDirectory is the nyquist directory.
     public static String prefDirectory = "";
     // directory when Nyquist was last closed: If starting directory is not
-    //   given, we'll open the directory in use the last time NyquistIDE ran:
+    //   given, we'll open the directory in use the last time NyquistIDE ran.
+    //   lastDirectory is represented with forward slashes even on Windows
     public static String lastDirectory = "";
     public static String prefSFDirectory = "";
 
@@ -522,22 +523,6 @@ public class MainFrame extends JFrame {
                 new_one.newInstance(args);
 
                 System.out.println("isMac, so created instance of SpecialMacHandler");
-
-                /*
-				ProcessBuilder process = new ProcessBuilder(
-                        "/bin/sh", "mac-os-x-link-script.sh");
-                process.redirectErrorStream(true).inheritIO();
-                process.directory(new File(currentDir));
-                Process p = process.start();
-				int result = p.waitFor();
-				// if this fails, something is wrong, but it would be annoying to
-				// pop up a dialog box every time the user starts NyquistIDE, so 
-				// we'll just print the error to aid with debugging and ignore the
-				// failure, which could happen if the user intentionally write
-				// protected nyquist (not a bad idea, really), or removed it.
-				System.out.println("Ran script to install lib and demos links,");
-				System.out.println("   -> result is " + result + " (0 == success)");
-                */
             } catch(Exception e) {
                 System.out.println(e);
             }
@@ -857,12 +842,6 @@ public class MainFrame extends JFrame {
         // you can't get dimensions of the desktop and layout is faulty)
         // tileCompletion(); 
 
-        // set directory according to preferences or user.dir:
-        if (lastDirectory.length() == 0) {
-            lastDirectory = System.getProperty("user.dir");
-            System.out.println("lastDirectory was empty, set to " + lastDirectory);
-        }
-
         // the following is here because when we directly open a file chooser
         // dialog box at this point, OS X apps hang. I don't know why, but
         // certainly dialog boxes work in an initialized, running program,
@@ -873,6 +852,18 @@ public class MainFrame extends JFrame {
                 try {
                     findNyquistDir();
                     if (nyquistDir != null && !nyquistDir.equals("")) {
+                        if (prefDirectory.equals("")) {
+                            System.out.println("prefDirectory <- nyquistDir");
+                            prefDirectory = nyquistDir;
+                            prefsHaveBeenSet = true;
+                        }
+                        // and since the default is use the last directory,
+                        // if we do not have a last directory, use nyquistDir
+                        if (lastDirectory.equals("")) {
+                            System.out.println("lastDirectory <- nyquistDir");
+                            lastDirectory = nyquistDir;
+                            prefsHaveBeenSet = true;
+                        }
                         docDir = nyquistDir + "doc/";
                         extDir = nyquistDir + "lib/";
                     }
@@ -1735,10 +1726,17 @@ public class MainFrame extends JFrame {
     // set current directory
     public void changeDirectory(String dir) {
         // currentDir must be "" or end in "/"
-        String sep = System.getProperty("file.separator");
+        String sep = File.separator;
         char sch = sep.charAt(0);
-        if (dir.length() > 0 && dir.charAt(dir.length() - 1) != sch) {
-            dir = dir + sep;
+        // last char on windows can be 
+        if (dir.length() > 0 &&
+                dir.charAt(dir.length() - 1) != sch &&
+                dir.charAt(dir.length() - 1) != '/') {
+            // need to add separator at end
+            // which do we use? Even on Windows, sometimes we use forward
+            // slash instead of backslash, so if sep is in dir, append sep.
+            // If not, use forward slash.
+            dir = dir + ((dir.indexOf(sep) <= 0) ? "/" : sep);
         }
         System.out.println("changeDirectory: currentDir " + currentDir +
                            " to " + dir);

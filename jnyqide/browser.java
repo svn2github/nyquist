@@ -89,13 +89,20 @@ class Browser extends JNonHideableInternalFrame {
     private String instrNeedsExtension(InstrInfo instr) {
         String extensionName = instr.getExtension();
         String item = instr.getSubcategoryName();
+        System.out.println("instrNeedsExtension(" + item + "), extensionName " +
+                           extensionName);
         if (extensionName != null) {
             String extensionDir = mainFrame.extDir + extensionName;
             boolean haveExt = (new File(extensionDir)).exists();
+            System.out.println("    extensionDir " + extensionDir +
+                               " haveExt " + haveExt);
             if (!haveExt) {
+                System.out.println("    instrNeedsExtension returns " +
+                                   extensionName);
                 return extensionName;
             }
         }
+        System.out.println("    instrNeedsExtension returns null");
         return null; // no extension needed or we have it
     }
 
