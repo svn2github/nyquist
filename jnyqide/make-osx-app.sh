@@ -79,6 +79,61 @@ echo "read 'icns' (-16455) \"macosxproject/Nyquist.icns\";" >> Icon.rsrc
 Rez -a Icon.rsrc -o nyquist-install.dmg
 SetFile -a C nyquist-install.dmg
 rm Icon.rsrc
+rm -rf ${SRC_ROOT}/tmp.dmg
 popd
 echo "created nyquist-install.dmg -- maybe you should add version number"
 echo "ENDING make-osx-app.sh"
+
+# 
+# June 2008, Guy Hoffman
+# 
+# here is the step-by-step instruction to making a dmg to distribute 
+# your software that will open in icon mode, with a background image,
+# and symbolic links (aliases) to drop your file in.
+# 
+# for people who don't want to "read more" or trust os x magic.
+# 
+# just a step-by-step. follow me.
+# 
+#     Open Disk Utility
+#     Press on 'New Image'. Use the following options:
+#         Pick a Volume Name - we will from now call it NAME
+#         Volume Size - should be enough to contain your files. Note 
+#           that you can pick a custom size, not just the preset ones. 
+#           Don't worry if it's bigger than you think you need. There's
+#           a some overhead. The final file will be smaller.
+#         Leave everything else as is. Make sure the Image Format is 
+#           "read/write disk image".
+#     Save as NAME.dmg
+#     If it's not already open, open the new dmg file. This creates a 
+#       Disk Volume mount, and an icon on the Desktop
+#     Using the terminal, create a directory called .background inside
+#       the Volume. Your new Volume can be found under /Volumes/NAME/ -
+#       the directory can be any name, the dot just makes sure it's not
+#       visible in the Finder
+#     Put your background image in that directory
+#     Double-click on the Disk Volume icon on the Desktop, to open it 
+#       as most users will
+#     Arrange the folder as you like it - remove the menu bar, change
+#       it to icon mode, make aliases to your install folders and drag
+#       them into the window, and using Cmd-J open the Display Preferences
+#      to choose the background image. Make sure you select the one that's
+#      inside the Volume's background folder.
+#     Eject (Unmount) the Volume
+#     Mount the volume again (by double-clicking on the dmg file)
+#     Now make a new directory somewhere, let's call it staging
+#     Put all the same files you put in the Volume into staging, 
+#       including the .background directory with the image.
+#     In the terminal, copy the .DS_Store file from the Volume to staging
+#     You can now eject/unmount the Volume
+#     In the terminal, go to the directory containing staging and run the
+#       following two commands (credit goes to jwz)
+#         hdiutil makehybrid -hfs -hfs-volume-name NAME -hfs-openfolder staging staging -o tmp.dmg
+#         hdiutil convert -format UDZO tmp.dmg -o NAME.dmg
+#         Remember, NAME is your App/Volume/Dist name, all the rest is verbatim
+#     You can now remove tmp.dmg
+# 
+# Voilà! You now have a properly sized, compressed, read-only dmg file
+#   that will open as you want it with a background image and links to folders.
+# 
+# For comments, suggestions, and bug-reports, please write guyθmedia·mit·edu

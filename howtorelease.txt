@@ -90,6 +90,8 @@ in XCode,
    result should end up in /Users/rbd/nyquist/jnyqide/NyquistIDE.app
    and nyquist/nyquist-install.dmg
 
+rename nyquist-install.dmg to nyquist-install-314.dmg
+
 ** DO NOT run NyquistIDE.app just to make sure it works **
 I.e. DO NOT cd jnyqide; open NyquistIDE.app
 as this will write a hints file into jnyqide which will become part of
