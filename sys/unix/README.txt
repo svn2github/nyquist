@@ -27,7 +27,7 @@ link step, so it does not try to link with ALSA. I assume this works
 because the PortAudio library which is included in the Nyquist sources
 configures itself differently on Debian and doesn't need ALSA.
 
-Note 3: You will also need Java and ant
+Note 3: You will also need Java and (maybe) ant
 
 Note 4: Nyquist has recently switched from a
 home-brew makefile system to CMake. You'll need to install cmake if
@@ -108,7 +108,7 @@ Then try running jNyqIDE by typing:
 If the NyquistIDE window does not appear, make sure you have Java
 installed (if not, you probably already encountered errors when you
 ran the make command.) You can also try recompiling the Java
-files. Note that jnyqide/SpecialMacHandler.java will NOT compile
+files. Note that jnyqide/SpecialMacHandler.java may NOT compile
 under non-OS X systems. The Makefile renames this file to "hide" it
 from the Java compiler, compiles all the remaining java files, and
 then restores jnyqide/SpecialMacHandler.java:
@@ -122,11 +122,6 @@ along to Nyquist under jNyqIDE. If not, a default XLISPPATH will have
 the lib and runtime directories only. This does not apply to Windows
 because even though the environment is there, the Windows version of
 Nyquist reads the XLISPPATH from the Registry. 
-
-You can also specify the search path by creating the file
-nyquist/xlisppath, which should have colon-separated paths on a single
-(long) line of text. This file will override the environment variable
-XLISPPATH.
 
 MORE DETAILS
 ============

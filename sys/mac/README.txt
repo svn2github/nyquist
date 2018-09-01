@@ -30,20 +30,10 @@ NyquistIDE application, which includes executables, documentation, and
 libraries all in one package and one directory:
      NyquistIDE.app, and
      nyquist
-You should keep these together.
-
-NyquistIDE.app may ask you to find the nyquist directory because it
-contains documentation.
-
-NyquistIDE.app will also put symbolic links in nyquist to the lib and
-demos folders (hidden inside NyquistIDE.app) so that you can easily
-look in demos for descriptions and code (see nyquist/demos/index.html
-after the link is in place).
-
-You can move the NyquistIDE.app and nyquist directories to the
-/Applications folder if you wish, and you can add NyquistIDE.app to
-the Dock. If you move NyquistIDE.app, you should move the nyquist
-directory too, but it's not required.
+Typically, put NyquistIDE.app in /Applications and nyquist in your
+home directory, but anywhere is fine. If nyquist is not copied to your
+home directory, NyquistIDE.app will prompt you to find it when you 
+run NyquistIDE.app for the first time.
 
 You will probably run Nyquist using the NyquistIDE application, but
 you can also run nyquist from the command line. The executable is
@@ -70,9 +60,7 @@ automatically in every instance of your command line shell.
 
 On the topic of the XLISPPATH, note that this variable is set by
 NyquistIDE when running with that application, overriding any other
-value. You can extend the search path by creating the file xlisppath
-in the same directory as the nyquist executable ny. The xlisppath file
-should have colon-separated paths on a single line of text.
+value. 
 
 You can also build Nyquist from sources, as described below.
 
