@@ -63,6 +63,7 @@ svn export ${SRC_ROOT}/lib $NYQUIST_ROOT/lib
 rm -rf ${NYQUIST_ROOT}/lib/moog
 svn export ${SRC_ROOT}/demos ${NYQUIST_ROOT}/demos
 svn export ${SRC_ROOT}/doc ${NYQUIST_ROOT}/doc
+cp ${SRC_ROOT}/sys/mac/README.txt ${NYQUIST_ROOT}/doc/
 cp ${SRC_ROOT}/sys/unix/osx/system.lsp ${NYQUIST_ROOT}/runtime
 
 rm -rf ${SRC_ROOT}/nyquist-install.dmg

@@ -88,23 +88,27 @@ in XCode,
    build ny (just to make sure)
    build NyquistIDE
    result should end up in /Users/rbd/nyquist/jnyqide/NyquistIDE.app
+   and nyquist/nyquist-install.dmg
 
 ** DO NOT run NyquistIDE.app just to make sure it works **
 I.e. DO NOT cd jnyqide; open NyquistIDE.app
 as this will write a hints file into jnyqide which will become part of
 the release.
 
-cd ..  -- back to the top-level nyquist directory
-source misc/cmu/cmuinstallmac.sh
+<OLD- BEGIN IGNORE
+    cd ..  -- back to the top-level nyquist directory
+    source misc/cmu/cmuinstallmac.sh 
 
-FOR PLIGHT DRUM MACHINE -- SHOULD NOT BE NECESSARY
+    FOR PLIGHT DRUM MACHINE -- SHOULD NOT BE NECESSARY
 
-(this is a separate download because it is large)
-source install-plight.sh
+    (this is a separate download because it is large)
+     source install-plight.sh
+ OLD- END IGNORE>
 
 FOR THE MAC TO BUILD RELEASE FOR UNIX
 
-source release is built along with Mac release by cmuinstallmac.sh
+source release is built by cmuinstallmac.sh:
+    source misc/cmu/cmuinstallmac.sh 
 
 ******************************************************
 * OLD INSTRUCTIONS FOR AUTOMATIC RELEASE TO CMU WEB: *

@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.13
-20 Aug 2018
+README file for Nyquist Version 3.14
+1 Sep 2018
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -12,8 +12,13 @@ After downloading, please see
       +---------------------------------------+
       | http://www.cs.cmu.edu/~music/nyquist/ |
       +---------------------------------------+
+for additional information, or look for one of
+      - nyquist/doc/readme-win.txt
+      - nyquist/doc/readme-mac.txt
+      - nyquist/doc/readme-linux.txt
 
-Also, see one of
+You can compile Nyquist from sources for Windows, OS X, linux,
+and other versions of Unix. For details, see one of these files:
  - sys/win/README.txt
  - sys/mac/README.txt
  - sys/unix/README.txt

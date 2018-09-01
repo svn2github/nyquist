@@ -2,28 +2,30 @@
 # run this like this: source cmuinstallmac.sh
 
 ls ~/nyquist/*/*~
-echo "build jNyqIDE deployment project with Xcode and type return"
-read
-mkdir -p ~/tmp/Applications
-cd ~/tmp/Applications
-## can't remove and replace plight -- if you do, it won't work. 
-## I don't know why. Also, the following fails without sudo...
-# rm -rf NyquistIDE.app/Contents/Resources/Java/demos/plight
-rm -rf nyquist
-mkdir nyquist
-mkdir nyquist/doc
-cp ~/nyquist/doc/* nyquist/doc
-cp ~/nyquist/sys/mac/README.txt nyquist/doc/readme-mac.txt
+# echo "build jNyqIDE release project with Xcode and type return"
+# read
+# mkdir -p ~/tmp/Applications
+# cd ~/tmp/Applications
+# ## can't remove and replace plight -- if you do, it won't work. 
+# ## I don't know why. Also, the following fails without sudo...
+# # rm -rf NyquistIDE.app/Contents/Resources/Java/demos/plight
+# rm -rf nyquist
+# mkdir nyquist
+# mkdir nyquist/doc
+# cp ~/nyquist/doc/* nyquist/doc
+# cp ~/nyquist/sys/mac/README.txt nyquist/doc/readme-mac.txt
 echo "type the version string, e.g. \"232\" : "
 read versionstring
-# to get NyquistIDE.app in the right place in the zip file, move it to here
-mv ~/nyquist/jnyqide/NyquistIDE.app .
-# add a copy of the README.txt for OSX
-cp ~/nyquist/sys/mac/README.txt .
-tar cvfz "nyqosx"$versionstring".tgz" NyquistIDE.app nyquist README.txt
-# restore NyquistIDE.app to its original location
-mv NyquistIDE.app ~/nyquist/jnyqide/NyquistIDE.app
-mv nyqosx*.tgz ~/nyquist
+# # to get NyquistIDE.app in the right place in the zip file, move it to here
+# mv ~/nyquist/jnyqide/NyquistIDE.app .
+# # add a copy of the README.txt for OSX
+# cp ~/nyquist/sys/mac/README.txt .
+# tar cvfz "nyqosx"$versionstring".tgz" NyquistIDE.app nyquist README.txt
+# # restore NyquistIDE.app to its original location
+# mv NyquistIDE.app ~/nyquist/jnyqide/NyquistIDE.app
+# mv nyqosx*.tgz ~/nyquist
+
+
 # Make source release
 cd ~/nyquist
 rm -rf nyquist
@@ -34,6 +36,8 @@ rm -rf nyquist/extensions
 rm -rf nyquist/lib/moog
 # this directory should be gone, but we'll delete it just in case:
 rm -rf nyquist/demos/plight
+# add doc for linux as described in Readme.txt
+cp sys/unix/README.txt nyquist/doc/readme-linux.txt
 zip -r "nyqsrc"$versionstring".zip" nyquist
 # THE FOLLOWING PUTS THE VERSION AT CMU, BUT NOW RELEASES GO TO SOURCEFORGE
 #scp "nyqosx"$versionstring".tgz" rbd@linux.gp.cs.cmu.edu:music/web/nyquist/
@@ -49,4 +53,5 @@ zip -r "nyqsrc"$versionstring".zip" nyquist
 echo go to sourceforge.net/projects/nyquist, Files, open nyquist
 echo Add Folder for current version, click the folder to open it
 echo Add File and browse to ~/nyquist/nyqsrcNNN.zip
-echo Add File and browse to ~/nyquist/nyqosxNNN.tgz
+# echo Add File and browse to ~/nyquist/nyqosxNNN.tgz
+echo Add File and browse to ~/nyquist/nyquist-install-NNN.dmg
