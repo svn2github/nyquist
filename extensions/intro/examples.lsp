@@ -21,18 +21,18 @@
        (mkwave)
        (setf *mkwave* t)))
 
-(defun note (pitch dur) 
+(defun my-note (pitch dur) 
   (osc pitch dur *table*))
 
 (defun ex3 ()
-  (play (seq (note c4 i)
-             (note d4 i)
-             (note f4 i)
-             (note g4 i)
-             (note d4 q))))
+  (play (seq (my-note c4 i)
+             (my-note d4 i)
+             (my-note f4 i)
+             (my-note g4 i)
+             (my-note d4 q))))
 
 (defun env-note (p)
-  (mult (note p 1.0)
+  (mult (my-note p 1.0)
         (env 0.05 0.1 0.5 1.0 0.5 0.4)))
 
 (defun ex4 ()
@@ -49,11 +49,11 @@
              (env-note c4))))
 
 (defun ex6 ()
-  (play (seq (note c4 q) (note d4 i))))
+  (play (seq (my-note c4 q) (my-note d4 i))))
 
 
 (defun ex7 ()
-  (play (scale 0.5 (sim (note c4 q) (note d4 i)))))
+  (play (scale 0.5 (sim (my-note c4 q) (my-note d4 i)))))
 
 ;; previous versions could not get current-path to locate demo-snd.aiff...
 ;(format t "~%examples.lsp tries to load demo-snd.aiff from the~%")

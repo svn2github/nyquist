@@ -58,6 +58,10 @@ cp ${JNYQIDE_ROOT}/NyquistWords.txt $JAVA_FOLDER/
 
 rm -rf ${NYQUIST_ROOT}
 mkdir ${NYQUIST_ROOT}
+cp ${SRC_ROOT}/advantages.txt $NYQUIST_ROOT/
+cp ${SRC_ROOT}/Readme.txt $NYQUIST_ROOT/
+cp ${SRC_ROOT}/license.txt $NYQUIST_ROOT/
+
 svn export ${SRC_ROOT}/runtime $NYQUIST_ROOT/runtime
 svn export ${SRC_ROOT}/lib $NYQUIST_ROOT/lib
 rm -rf ${NYQUIST_ROOT}/lib/moog
