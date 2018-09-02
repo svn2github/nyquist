@@ -20,7 +20,7 @@ ext-template1, ROOT/extensions/ext-template1/ext-template1.html, 1.0, 12 Aug 201
 ext-template2, ROOT/extensions/ext-template2/c4-player.sal, 1.0, 12 Aug 2018, 3d4e8506ae1a4a0e49664af52f1adc5188b081b8, Simple Extension Template - SAL 
 fft,ROOT/extensions/fft/fft_tutorial.html,1.0, 12 Aug 2018, 946d50dfd245b885a299507dba3eaaf59e49da67, FFT Tutorial 
 fftsal,ROOT/extensions/fftsal/spectral-process.sal,1.0, 12 Aug 2018, b8d0bea69d61f395d10c45fd836b88985635f804, Spectral Processing in SAL
-fm-voices-chowning, ROOT/extensions/fm-voices-chowning/fm-voices-chowning.sal, 1.0, 12 Aug 2018, c45fcbc48fee6f1d4a0a1302b1d65f1e55c33515, FM Singing Voices 
+fm-voices-chowning, ROOT/extensions/fm-voices-chowning/fm-voices-chowning.sal, 1.0, 12 Aug 2018, a69904052ad5f7df339e3ecceedfecad6a5e1c3a, FM Singing Voices 
 gran, ROOT/extensions/gran/gran.lsp, 1.0, 12 Aug 2018, 9717567cf5fc8cfdcd0c9756e6bb9cf5a5c5d829, Granular Synthesis   
 intro, ROOT/extensions/intro/examples.sal, 1.0, 12 Aug 2018, 701fe8d0e45312e5fe544ac6ba676214946c931f, Introductory examples from Nyquist Manual
 labels, ROOT/extensions/labels/labels.sal, 1.0, 12 Aug 2018, 809c373d0b109fc1b6eae4ec6c59a4bba221a750, Read/write Audacity labels  

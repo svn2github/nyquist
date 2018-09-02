@@ -79,6 +79,8 @@ Visit https://frs.sourceforge.net/webupload and upload setupnyqiderunNNN.exe
 
 FOR THE MAC
 
+Edit the version numbers and copyright in jnyqide/Info.plist
+
 in XCode, choose ny target and Product > Build For > Archiving
   result should end up in /Users/rbd/nyquist/macosxproject/build/Release/ny
 
