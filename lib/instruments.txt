@@ -117,26 +117,26 @@ END-SOUND
 
 
 Vocal:Chowning-FM-Voices-23[fm-voice-23](int repeat-number = 2 (1:10))
-EXTENSION fm-voices-chowning  
-REQUIRE "fm-voices-chowning.sal" 
+EXTENSION fm-voices-chowning
+REQUIRE "fm-voices-chowning/fm-voices-chowning.sal" 
 END-SOUND  
 
  
 Vocal:Chowning-FM-Voices-33[fm-voice-33](int repeat-number = 2 (1:10))
-EXTENSION fm-voices-chowning  
-REQUIRE "fm-voices-chowning.sal" 
+EXTENSION fm-voices-chowning
+REQUIRE "fm-voices-chowning/fm-voices-chowning.sal" 
 END-SOUND  
 
  
 Vocal:Chowning-FM-Voices-39[fm-voice-39](int repeat-number = 2 (1:10))
-EXTENSION fm-voices-chowning  
-REQUIRE "fm-voices-chowning.sal" 
+EXTENSION fm-voices-chowning
+REQUIRE "fm-voices-chowning/fm-voices-chowning.sal"
 END-SOUND  
  
 
 Vocal:Chowning-FM-Voices-40[fm-voice-40](int repeat-number = 2 (1:10))
 EXTENSION fm-voices-chowning
-REQUIRE "fm-voices-chowning.sal"
+REQUIRE "fm-voices-chowning/fm-voices-chowning.sal"
 END-SOUND
 
 
@@ -144,13 +144,6 @@ Vocal:buzz-ah[ah](int pitch = 36 (24:72),
 		  float dur = 1 (0.1:9.9))  
 EXTENSION pmorales
 REQUIRE "pmorales/buzz.lsp" 
-END-SOUND
-
-
-Vocal:buzz-ah[ah](int pitch = 36 (24:72),
-		  float dur = 1 (0.1:9.9))
-EXTENSION pmorales
-REQUIRE "pmorales/buzz.lsp"
 END-SOUND
 
 
@@ -242,7 +235,8 @@ END-SOUND
 
 
 FM:v-fm(int pitch = 67 (48:84),
-	float break = 0.3 (0.0:1.0),
+    float break = 0.2 (0.0:1.0),
+	float mid = 0.3 (0.0:1.0),
 	float dur = 3.0 (1.0:10.0),
 	float rev = 0.5 (0.0:1.0))
 EXTENSION pmorales
