@@ -1,3 +1,8 @@
+x spaces in path
+startup path if in prefs seems to be removed from prefs
+s-reverse not working
+
+
 Extensions list:
 x    labels.sal
 x    regression.sal
@@ -36,6 +41,9 @@ x    rhythm
 see if piano.htm is in manual
 see if distributions.htm is in manual
 see if sequence.htm is in manual
+
+In More Examples section of manual, change all the descriptions of what are
+in demos to descriptions of extensions (demos files are mostly gone now.)
 
 
 Edward Williamson May 3, 9:12am -- security flaws

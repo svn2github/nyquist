@@ -67,7 +67,7 @@
 @begin(titlebox)
 @blankspace(0.5 inch)
 @majorheading(Nyquist Reference Manual)
-@b(Version 3.14)
+@b(Version 3.15)
 @blankspace(0.3 inch)
 @b(Copyright 2013, 2014, 2015, 2016, 2017, 2018 by Roger B. Dannenberg)
 @value(date)
@@ -619,7 +619,7 @@ Now that we have defined a function, the last step of this example is to
 build the wave.  The following code calls
 @code(mkwave) the first time the code is executed (loaded from a file).  The second time, the variable @code(*mkwave*) will be true, so @code(mkwave) will not be invoked:
 @begin(example)
-if ! fboundp(quote(*mkwave*)) then
+if ! boundp(quote(*mkwave*)) then
   begin
     exec mkwave()
     set *mkwave* = #t
@@ -697,10 +697,7 @@ play env-note(c4)
 
 While this example shows a smooth envelope multiplied by an audio signal,
 you can also multiply audio signals to achieve
-what is often called @i(ring modulation)@index(ring modulation). See
-the code and description in 
-@code(demos/scratch_tutorial.htm)@index(demos, ring modulation) for an
-interesting use of ring modulation to create ``scratch'' sounds.
+what is often called @i(ring modulation)@index(ring modulation). 
 
 In the next example, The @i(stretch) operator (@code(~))@index(stretch) 
 is used to modify durations:

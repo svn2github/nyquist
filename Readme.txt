@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.14
-1 Sep 2018
+README file for Nyquist Version 3.15
+5 Sep 2018
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -27,6 +27,9 @@ and other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.15 provides:
+    Fix to retain selected nyquist directory
+    Fix for NyquistIDE in paths with spaces
 Version 3.14 provides:
     New runtime configuration: a nyquist directory in user's home
         directory has all documentation, libraries, extensions,
@@ -118,32 +121,32 @@ Version 2.38 provides:
     bug fixes in Equalizer editor
     additional documentation for demos/plight/drums.lsp
     option click or right click on completion list to get help
-    manual can be displayed in an internal window in jNyqIDE
+    manual can be displayed in an internal window in NyquistIDE
 Version 2.37 provides:
     fix for byte order on Mac PPC that prevented pianosyn.lsp from loading
 Version 2.36 provides:
-    cross-platform browser launching in jNyqIDE
-    fix search path set by jNyqIDE (OS X-related bug introduced in 2.35)
+    cross-platform browser launching in NyquistIDE
+    fix search path set by NyquistIDE (OS X-related bug introduced in 2.35)
     fix bug in slider update code on OS X
 Version 2.35 provides:
     fix for Open Sound Control under Windows/jNyqIDE
-    other minor jNyqIDE fixes    
+    other minor NyquistIDE fixes    
 Version 2.34 provides:
-    fix to ^U (send selection to Nyquist) in jNyqIDE
+    fix to ^U (send selection to Nyquist) in NyquistIDE
     default sound file path for Mac OS X is /tmp
     Nyquist exits when EOF detected -- try to make orphans abort
 Version 2.33 provides:
     additional documentation for Open Sound Control
         interface and utility programs
 Version 2.32 provides:
-    envelope editor in jNyqIDE
-    EQ editor in jNyqIDE
-    score editor in jNyqIDE
+    envelope editor in NyquistIDE
+    EQ editor in NyquistIDE
+    score editor in NyquistIDE
     slider support in Nyquist
     OSC (Open Sound Control) interface
     OSC test program and serial-to-OSC program
     drum machine (as separate download)
-    jNyqIDE has pop-up menus and per-file menu bars
+    NyquistIDE has pop-up menus and per-file menu bars
 Version 2.31 provides:
     new compositional algorithm support in xm.lsp
     many bug fixes

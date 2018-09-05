@@ -16,9 +16,9 @@
 ; 
 ;     s-reverse(snd) - reverse a sound
 ;     s-read-reverse(filename, time-offset: 0, srate: *sound-srate*,
-                     dur: 10000, nchans: 1, format: *default-sf-format*,
-                     mode: *default-sf-mode*, bits: *default-sf-bits*,
-                     swap: nil) - read file in reverse 
+;                    dur: 10000, nchans: 1, format: *default-sf-format*,
+;                    mode: *default-sf-mode*, bits: *default-sf-bits*,
+;                    swap: nil) - read file in reverse 
 ;
 ; s-reverse has a length restriction of *max-reverse-samples*, which is
 ; initialized to 25M or about 9.4mins at 44100Hz sample rate.

@@ -24,7 +24,7 @@ public class MainFrame_AboutBox extends JDialog implements ActionListener {
   BorderLayout borderLayout2 = new BorderLayout();
   FlowLayout flowLayout1 = new FlowLayout();
   GridLayout gridLayout1 = new GridLayout();
-  String product = "jNyqIDE - Nyquist Integrated Development Environment";
+  String product = "NyquistIDE - Nyquist Integrated Development Environment";
   String version = "Version 3.14";
   String copyright = "Copyright (c) 2002-2018";
   String comments = "Jesse Clark, David Howard, David Mowatt, " +

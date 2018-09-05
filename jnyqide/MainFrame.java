@@ -390,6 +390,8 @@ public class MainFrame extends JFrame {
         System.out.println("prefs.get(nyquist-dir, \"\") -> " + nyquistDir);
         String atHome = System.getProperty("user.home") + "/nyquist/";
         if (testNyquistDir()) {
+            nyquistPrefDir = nyquistDir; // currently nyquistPrefDir is "", but
+            // nyquistPrefDir gets written to nyquist-dir when we exit NyquistIDE
             return; // found it and it's already in prefs
         } else if (!nyquistDir.equals("")) {
             String msg[] = {
@@ -906,7 +908,7 @@ public class MainFrame extends JFrame {
 
     public void sendPreferenceData() {
         // send Nyquist the preference values (assumes in Lisp mode)
-        sendInputLn(";; transferring preference data from jNyqIDE to Nyquist");
+        sendInputLn(";; transferring preference data from NyquistIDE to Nyquist");
         sendInputLn("(progn");
         setBoolean("*sal-compiler-debug*", prefSalShowLisp);
         callFunction(prefEnableSound ? "sound-on" : "sound-off", "");

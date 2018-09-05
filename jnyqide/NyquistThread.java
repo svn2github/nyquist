@@ -299,9 +299,9 @@ public class NyquistThread extends Thread {
         }
     }
 
-    // testForCmd looks for Nyquist output that the jNyqIDE wants to know
+    // testForCmd looks for Nyquist output that the NyquistIDE wants to know
     // about -- originally just plot command output, but now there are many
-    // Lisp functions that communicate and synchronize with the jNyqIDE
+    // Lisp functions that communicate and synchronize with the NyquistIDE
     public void testForCmd(String output) {
         int iNameStart;
         int iNameStop;

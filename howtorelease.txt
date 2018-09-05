@@ -16,7 +16,7 @@ appear in the right place or if not they should be manually copied.)
 
 ON EITHER WINDOWS OR MAC
 
-Edit Readme.txt to contain correct version number at top.
+Edit Readme.txt to contain correct version number at top (and date).
 
 Add changes to Readme.txt changelog.
 

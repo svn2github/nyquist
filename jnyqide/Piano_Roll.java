@@ -31,7 +31,7 @@ package jnyqide;
     should be simplified to one structure with accessor methods
     if necessary to translate into different representation for display
  10) the score window should be resizable
- 11) should the score window be a subwindow to the jNyqIDE main window?
+ 11) should the score window be a subwindow to the NyquistIDE main window?
  
  How does it work? See xm.lsp for SCORE-EDIT, the function that you
  call to open a score editor, and SCORE-RESTORE, the function this 

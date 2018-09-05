@@ -2690,14 +2690,14 @@ exit
              (return nil))))
     result))
 
-;; functions to support score editing in jNyqIDE
+;; functions to support score editing in NyquistIDE
 
 (if (not (boundp '*default-score-file*))
     (setf *default-score-file* "score.dat"))
 
-;; SCORE-EDIT -- save a score for editing by jNyqIDE
+;; SCORE-EDIT -- save a score for editing by NyquistIDE
 ;;
-;; file goes to a data file to be read by jNyqIDE
+;; file goes to a data file to be read by NyquistIDE
 ;; Note that the parameter is a global variable name, not a score,
 ;; but you do not quote the global variable name, e.g. call
 ;;    (score-edit my-score)

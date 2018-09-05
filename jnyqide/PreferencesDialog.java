@@ -59,7 +59,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private JCheckBox fullSearch;
                       // "Use full search for code completion"
     private JCheckBox internalBrowser;
-                      // "Use window in jNyqIDE for help browser"
+                      // "Use window in NyquistIDE for help browser"
     private JCheckBox onlineManual; 
                       // "Use online manual instead of local copy"
     private JScrollBar completionListPercent; 
@@ -269,42 +269,43 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         
         // Start in Sal mode (not Lisp)"
         startInSalMode = makeCheckBox("Start in SAL mode (not Lisp)", 
-                                    mainFrame.prefStartInSalMode);
+                mainFrame.prefStartInSalMode);
         // Show translation of SAL to Lisp
         salShowLisp = makeCheckBox("Show translation of SAL to Lisp",
-                                   mainFrame.prefSalShowLisp);
+                mainFrame.prefSalShowLisp);
         // Automatically insert close-parenthesis (checkbox)
         parenAutoInsert = makeCheckBox(
-                                "Automatically insert close-parentheses",
-                                mainFrame.prefParenAutoInsert);
+                "Automatically insert close-parentheses",
+                mainFrame.prefParenAutoInsert);
         // Enable sound output (checkbox)
         enableSound = makeCheckBox("Enable sound output in PLAY command",
-                                   mainFrame.prefEnableSound);
+                mainFrame.prefEnableSound);
         // AutoNorm (checkbox)
         autoNorm = makeCheckBox("AutoNorm", mainFrame.prefAutoNorm);
         
         // Enable SAL Stack Traceback on Error
         salTraceBack = makeCheckBox("Print SAL traceback on SAL error",
-                                    mainFrame.prefSalTraceBack);
+                mainFrame.prefSalTraceBack);
         // break into XLISP debugger on SAL error
         salBreak = makeCheckBox("Enable XLISP break on SAL error",
-                                 mainFrame.prefSalBreak);
+                mainFrame.prefSalBreak);
         // Enable XLISP Break when XLISP encounters error
         xlispBreak = makeCheckBox("Enable XLISP break on XLISP error",
-                                  mainFrame.prefXlispBreak);
+                mainFrame.prefXlispBreak);
         // print XLISP TraceBack on XLISP error
         xlispTraceBack = makeCheckBox("Print XLISP traceback on XLISP error",
-                                       mainFrame.prefXlispTraceBack);
+                mainFrame.prefXlispTraceBack);
         // printGC
         printGC = makeCheckBox("Print info about garbage collection",
-                               mainFrame.prefPrintGC);
+                mainFrame.prefPrintGC);
 
         // Use full search for code completion (checkbox)
         fullSearch = makeCheckBox("Use full search for code completion",
-                                  mainFrame.prefFullSearch);
+                mainFrame.prefFullSearch);
         // Use internal window for manual (checkbox)
-        internalBrowser = makeCheckBox("Use window in jNyqIDE for help browser",
-                                       mainFrame.prefInternalBrowser);
+        internalBrowser = makeCheckBox(
+                "Use window in NyquistIDE for help browser",
+                mainFrame.prefInternalBrowser);
         // Use online manual (checkbox)
         onlineManual = makeCheckBox("Use online manual instead of local copy",
                                     mainFrame.prefOnlineManual);
