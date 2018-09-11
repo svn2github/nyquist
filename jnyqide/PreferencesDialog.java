@@ -71,9 +71,11 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
     private JButton initialDirectory; // "Set Initial Directory" to this
     private JCheckBox useLastDirectory; // "Last Used Directory is Initial Directory"
     private JButton nyquistDirectory; // "Set Initial Directory" to this
+    private JButton extensionPath; // "Set Initial Directory" to this
     private JFileChooser startfd; // prefs for starting directory
     private JFileChooser sndfd; // prefs for sound file directory
     private JFileChooser nyquistfd; // prefs for nyquist directory
+    private JFileChooser extensionfp; // pref to get extensions from a file
     // (this is overridden by Registry in Windows)
     private String[] audioRates = { "96000", "48000", "44100", "22050", "16000",
                                     "11025", "8000" };
@@ -178,6 +180,7 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
 
                 mainFrame.prefLastDirectory = useLastDirectory.isSelected();
                 
+                mainFrame.prefDirectory = "";
                 File file = startfd.getSelectedFile();
                 System.out.println("startfd.getSelectedFile() -> " + file);
                 if (file != null) {
@@ -189,10 +192,9 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                             mainFrame.changeDirectory(dir);
                         }
                     }
-                } else {
-                    mainFrame.prefDirectory = "";
                 }
                         
+                mainFrame.prefSFDirectory = "";
                 file = sndfd.getSelectedFile();
                 if (file != null) {
                     String dir = file.toString().replaceAll("\\\\", "/");
@@ -202,10 +204,9 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                         mainFrame.setVariable("*default-sf-dir*",
                                               "\"" + dir + "\"");
                     }
-                } else {
-                    mainFrame.prefSFDirectory = "";
                 }
 
+                mainFrame.nyquistPrefDir = "";
                 file = nyquistfd.getSelectedFile();
                 if (file != null) {
                     String dir = file.toString().replaceAll("\\\\", "/");
@@ -213,9 +214,18 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
                     if (dir != null && dir.length() > 0) {
                         mainFrame.nyquistPrefDir = dir;
                     }
-                } else {
-                    mainFrame.nyquistPrefDir = "";
                 }
+
+                mainFrame.extensionFilePath = "";
+                file = extensionfp.getSelectedFile();
+                if (file != null) {
+                    String path = file.toString().replaceAll("\\\\", "/");
+                    System.out.println("extensionfp.getSelectedFile: " + path);
+                    if (path != null && path.length() > 0) {
+                        mainFrame.extensionFilePath = path;
+                    }
+                }
+                    
 
                 mainFrame.prefsHaveBeenSet = true;
                 dispose();
@@ -425,11 +435,22 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
         c.gridy += 1;
         panel.add(nyquistDirectory, c);
 
-
         nyquistfd = new JFileChooser("Select nyquist directory (containing " +
                                      "doc, runtime, lib, and demos)");
         nyquistfd.setCurrentDirectory(new File(mainFrame.nyquistDir));
         nyquistfd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+
+        extensionPath = new JButton("Set Extension List File");
+        extensionPath.addActionListener(this);
+        extensionPath.setAlignmentX(Component.LEFT_ALIGNMENT);
+        c.gridy += 1;
+        panel.add(extensionPath, c);
+
+        extensionfp = new JFileChooser("Select extensions list file " +
+                       "(extlist.txt) for NyquistIDE to use until the next " +
+                       "restart.");
+        extensionfp.setCurrentDirectory(new File(mainFrame.nyquistDir));
 
         pack();
         Dimension size = new Dimension(400, 400);
@@ -462,6 +483,8 @@ class PreferencesDialog extends JInternalFrame implements ActionListener {
             useLastDirectory.setSelected(false);
         } else if (evt.getSource() == nyquistDirectory) {
             nyquistfd.showOpenDialog(this);
+        } else if (evt.getSource() == extensionPath) {
+            extensionfp.showOpenDialog(this);
         } else if (evt.getSource() == defaultPrefs) {
             startInSalMode.setSelected(mainFrame.prefStartInSalModeDefault);
             salShowLisp.setSelected(mainFrame.prefSalShowLispDefault);

@@ -2052,18 +2052,18 @@ pattern argument (by default).
   (let ((i 1) 
         (start (find-first-note score from-index from-time))
         (stop (find-last-note score to-index to-time))
+        (begin (cadr (event-expression (car score))))
         (end (caddr (event-expression (car score))))
         result)
     (dolist (event (cdr score))
       (cond ((and (<= start i) (< i stop))
              (setf event (event-set-time 
                           event (+ (event-time event) offset)))
+             (setf begin (min begin (event-time event)))
              (setf end (max end (event-end event)))))
       (setf result (push-sort event result))
       (incf i))
-    (cons (list 0 0 (list 'SCORE-BEGIN-END
-                          (cadr (event-expression (car score)))
-                          end))
+    (cons (list 0 0 (list 'SCORE-BEGIN-END begin end))
           (reverse result))))
 
 
@@ -2104,6 +2104,7 @@ pattern argument (by default).
 ;;
 (defun score-stretch (score factor &key (dur t) (time t)
                       from-index to-index (from-time 0) (to-time FOREVER))
+  (if (zerop factor) (print "WARNING: score-stretch called with zero stretch factor."))
   (setf score (score-must-have-begin-end score))
   (let ((begin-end (event-expression (car score)))
         (i 1))
@@ -2411,11 +2412,25 @@ pattern argument (by default).
     (go loop)))
 
 
-(defun score-print (score)
- (format t "(")
- (dolist (event score)
-  (format t "~S~%" event))
- (format t ")~%"))
+(defun score-print (score &optional lines)
+  (let ((len (length score))) ;; len will be how many events left
+    (format t "(")
+    (cond (lines 
+           (setf lines (max lines 3))) ;; always allow up to 3 lines
+          (t ;; no limit on lines, pick a conservatively large number
+           (setf lines (+ 100 len))))
+    (dolist (event score)
+      (cond ((or (> lines 2) (= 1 len))
+             ;; print if we have more than 2 lines left to print or
+             ;; if we are at the last line (always printed)
+             (format t "~S~%" event)
+             (setf lines (1- lines)))
+            ((and (= lines 2) (> len 2)) ;; need ellipsis
+             (format t "... skipping ~A events ...~%" (- len lines))
+             (setf lines (1- lines)))
+            (t nil)) ;; print nothing until end if lines is 1
+      (setf len (1- len)))
+    (format t ")~%")))
 
 (defun score-play (score)
   (play (timed-seq score)))

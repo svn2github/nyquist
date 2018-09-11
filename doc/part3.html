@@ -24,54 +24,54 @@ to automatically lay out windows in a rational way. There is a preference
 setting to determine the height of the completion list relative to the height of the output 
 window.
 <p>
-Many of the key commands for editing files are standard and built into Java. In particular, Control-Z is the "undo" command, even on OS X where you would expect to use Command-Z.<a name="index113"></a> A special command, "Copy to Lisp," or Control-U (Command-U on OS x)copies the selection and enters it into the input window as if it had been typed there.
+Many of the key commands for editing files are standard and built into Java. In particular, Control-Z is the "undo" command, even on OS X where you would expect to use Command-Z.<a name="index112"></a> A special command, "Copy to Lisp," or Control-U (Command-U on OS x)copies the selection and enters it into the input window as if it had been typed there.
 <p>
 <a name = "20"><h3>The Button Bar</h3></a>
-<a name="index114"></a>
+<a name="index113"></a>
 There are a number of buttons with frequently-used operations. These are:
 <ul>
 <li>
-Info &ndash; <a name="index115"></a>Print information about Nyquist memory
+Info &ndash; <a name="index114"></a>Print information about Nyquist memory
 utilization, including
 the number of free cons cells, the number of garbage collections,
 the total number of cons cells, the total amount of sample buffer memory,
 and the amount of memory in free sample buffers.
-<li>Break &ndash; <a name="index116"></a>Send a break character to XLISP. This
+<li>Break &ndash; <a name="index115"></a>Send a break character to XLISP. This
 can be used to enter the debugger (the break loop) while a program is 
 running. Resume by typing <code>(co)</code>.
-<li>SAL/Lisp &ndash; <a name="index117"></a><a name="index118"></a>Switch modes.
+<li>SAL/Lisp &ndash; <a name="index116"></a><a name="index117"></a>Switch modes.
 The button names the mode (SAL or Lisp) you will switch to, not the 
 current mode. For example, if you are in Lisp mode and want to type
 a SAL command, click the SAL button first.
-<li>Top &ndash; <a name="index119"></a>Enters <code>(top)</code> into Nyquist.
+<li>Top &ndash; <a name="index118"></a>Enters <code>(top)</code> into Nyquist.
 If the XLISP prompt is <code>1&gt;</code> or 
 some other integer followed by "<code>&gt;</code>", clicking the Top button
 will exit the debug loop and return to the top-level prompt.
-<li>Replay &ndash; <a name="index120"></a>Enters <code>(r)</code> into Nyquist.
+<li>Replay &ndash; <a name="index119"></a>Enters <code>(r)</code> into Nyquist.
 This command replays the last computed sound.
-<li>F2-F12 &ndash; <a name="index121"></a>Enters <code>(f2)</code> etc. into Nyquist.
+<li>F2-F12 &ndash; <a name="index120"></a>Enters <code>(f2)</code> etc. into Nyquist.
 These commands are not built-in, and allow users to define their own
 custom actions.
-<li>Browse &ndash; <a name="index122"></a>Equivalent to the Window:Browse
-menu item. (See Section <a href = "#22">"Browser"</a>.)
-<li>EQ &ndash; <a name="index123"></a>Equivalent to the Window:EQ menu item.
-(See Section <a href = "#24">"Equalizer Editor"</a>.)
-<li>EnvEdit &ndash; <a name="index124"></a>Equivalent to the Window:Envelope Edit 
-menu item. (See Section <a href = "#23">"Envelope Editor"</a>.)
-<li>NewFile &ndash; <a name="index125"></a>Equivalent to the File:New menu
+<li>Browse &ndash; <a name="index121"></a>Equivalent to the Window:Browse
+menu item. (See Section <a href = "#23">"Browser"</a>.)
+<li>EQ &ndash; <a name="index122"></a>Equivalent to the Window:EQ menu item.
+(See Section <a href = "#25">"Equalizer Editor"</a>.)
+<li>EnvEdit &ndash; <a name="index123"></a>Equivalent to the Window:Envelope Edit 
+menu item. (See Section <a href = "#24">"Envelope Editor"</a>.)
+<li>NewFile &ndash; <a name="index124"></a>Equivalent to the File:New menu
 item. Opens a new file editing window for creating and
 loading a Lisp or SAL program file.
-<li>OpenFile &ndash; <a name="index126"></a>Equivalent to the File:Open menu
+<li>OpenFile &ndash; <a name="index125"></a>Equivalent to the File:Open menu
 item. Opens an existing Lisp or SAL program file for editing and loading.
-<li>SaveFile &ndash; <a name="index127"></a>Equivalent to the File:Save menu
+<li>SaveFile &ndash; <a name="index126"></a>Equivalent to the File:Save menu
 item (found on the editing window's menu bar). Saves the contents
 of an editing window to its associated file.
-<li>Load &ndash; <a name="index128"></a>Equivalent to the File:Load menu
+<li>Load &ndash; <a name="index127"></a>Equivalent to the File:Load menu
 item (found on the editing window's menu bar). Performs a Save operation,
 then sends a command to Nyquist that loads the file as a program.
-<li>Mark &ndash; <a name="index129"></a>Sends a Control-A to Nyquist. While
+<li>Mark &ndash; <a name="index128"></a>Sends a Control-A to Nyquist. While
 playing a sound, this displays and records the approximate time in the
-audio stream. (See Section <a href = "part8.html#99">"Sound File Input and Output"</a> for more detail.)
+audio stream. (See Section <a href = "part8.html#100">"Sound File Input and Output"</a> for more detail.)
 </ul>
 <p>
 <a name = "21"><h3>Command Completion</h3></a>
@@ -92,9 +92,62 @@ by the "Use window in NyquistIDE for help browser" preference.) Currently, the
 external browser option does not seem to locate documentation properly, but 
 this should be fixed in the future.
 <p>
-<a name = "22"><h3>Browser</h3></a>
+<a name = "22"><h3>Extension Manager</h3></a>
+The NyquistIDE Extension Manager is a facility to download extensions that
+are written in Lisp or SAL. (If you want to extend the nyquist program itself
+or the NyquistIDE program, you will have to write C or Java respectively and 
+recompile. See Appendix <a href = "part17.html#203">"Extending Nyquist"</a> for information on writing new
+DSP functions, also known as unit generators.)
+<p>
+Selecting the Extension Manager item in the Window menu will open a window
+in the NyquistIDE with a list of extensions. Each extension is stored as
+a subdirectory of the <code>lib</code> directory, which should be on the search
+path (<code>XLISPPATH</code>) for <code>nyquist</code>. A list of extensions is hosted
+in a fixed location 
+(<code>https://www.cs.cmu.edu/~music/nyquist/extensions/extlist.txt</code>)
+along with secure checksums to guard against malicious code.
+<p>
+When you install an extension, a single file is first downloaded 
+using a URL that is obtained from the list of extensions, and the file 
+is scanned for a header that can specify additional files to download.
+<p>
+Some special files may be included in an extension. <code>autoload.lsp</code> is
+a Lisp file that is loaded automatically when nyquist is started. Nyquist
+scans the subdirectories of the <code>lib</code> directory to find all the
+<code>autoload.lsp</code> files. Typically, <code>autoload.lsp</code> files are used
+to create stubs for functions in the extensions so that extension
+code is mostly loaded dynamically on demand, saving time and space when
+nyquist starts.
+<p>
+Extensions may also include <code>nyquistwords.txt</code>, which is a description
+of functions in the extensions that is used to generate the completion list.
+When an extension function appears in the completion list, it is followed by
+"ext:" and the extension name, e.g. the completion item 
+"speed-dial(list) ext: dtmf" means that the <code>speed-dial</code> function is 
+defined in the <code>dtmf</code> directory. By convention, any function in the 
+completion list should be directly callable, with an entry in 
+ <code>autoload.lsp</code> so that the function will be dynamically loaded.
+<p>
+To create a new extension, see the extension <code>ext-template1</code> for an 
+example with documentation in HTML, or <code>ext-template2</code> for a simple
+single-file extension where the documentation consists of comments in the
+SAL source file. 
+<p>
+To submit an extension for possible publication, it is best to put the 
+extension file(s) in a local directory and use a customized local list of 
+extensions. The Nyquist Preferences includes a button where you can designate
+a local file for the list of extensions. It should have the same format
+as <code>extlist.txt</code> at the URL given above (you can simply open the URL
+in your browser to see it. The extension under development
+can be referenced in the extension list using a URL with the <code>file://</code> 
+protocol. For the checksum, use any value. The Extension Manager will compute
+the correct checksum and display it, so you can then copy that into your
+<code>extlist.txt</code>, click the Update button to fetch it, and try again to 
+install the extension.
+<p>
+<a name = "23"><h3>Browser</h3></a>
 
-<a name="index130"></a><a name="index131"></a>
+<a name="index129"></a><a name="index130"></a>
 If you click on the Browse button or use the Window:Browse menu command, 
 NyquistIDE will display a browser window that is pre-loaded with a number of
  Nyquist commands to create sounds. You can adjust parameters, audition
@@ -112,11 +165,11 @@ the sound you want into a function defined in a Lisp (<code>.lsp</code>) or SAL
 command to load a SAL file), and call the function from the language of 
 your choice.
 <p>
-<a name = "23"><h3>Envelope Editor</h3></a>
+<a name = "24"><h3>Envelope Editor</h3></a>
 
+<a name="index131"></a>
 <a name="index132"></a>
 <a name="index133"></a>
-<a name="index134"></a>
 The envelope editor allows you graphically to design and edit piece-wise
 linear and exponential envelopes. The editor maintains a list of envelopes
 and you select the one to edit or delete using the drop down list in the 
@@ -134,9 +187,9 @@ can create the envelope within a Nyquist SAL program by writing
 the expression <code>fast-attack()</code>.
 <p>
 These edited envelopes are saved to a file named <code>workspace.lsp</code> 
- <a name="index135"></a> in
+ <a name="index134"></a> in
 the current directory. The workspace is Nyquist's mechanism for saving
-data of all kinds (see Section <a href = "part15.html#179">"Workspaces"</a>). The normal way to
+data of all kinds (see Section <a href = "part15.html#180">"Workspaces"</a>). The normal way to
 work with workspaces is to (1) load the workspace, i.e.
  <code>load "workspace"</code>, as soon as you start Nyquist; (2) invoke
 the envelope editor to change values in the workspace; and (3) save the
@@ -167,16 +220,16 @@ The Load button refreshes the editor from data saved in the Nyquist
 process. Normally, there is no need to use this because the editor
 automatically loads data when you open it.
 <p>
-<a name = "24"><h3>Equalizer Editor</h3></a>
-<a name="index136"></a><a name="index137"></a>
+<a name = "25"><h3>Equalizer Editor</h3></a>
+<a name="index135"></a><a name="index136"></a>
 The Equalizer Editor provides a graphical EQ interface for creating and
 adjusting equalizers. Unlike the envelope editor, where you can type
 any envelope name, equalizers are named <code>eq-0</code>, <code>eq-1</code>, etc.,
 and you select the equalizer to edit using a pull-down menu. The <code>Set</code>
 button should be use to record changes. 
 <p>
-<a name = "25"><h3>UPIC Editor</h3></a>
-<a name="index138"></a><a name="index139"></a><a name="index140"></a>The 
+<a name = "26"><h3>UPIC Editor</h3></a>
+<a name="index137"></a><a name="index138"></a><a name="index139"></a>The 
 UPIC Editor is inspired by the UPIC system by Iannis Xenakis at the Centre
 d'Edudes de Mathematique et Automatique Musicales (CEMaMu). The UPIC Editor
 is accessed by the "Upic Edit" menu item in the "Window" menu of the 

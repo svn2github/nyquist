@@ -29,7 +29,7 @@ Let me know if you have problems with
 any of these machines.
 <p>
 To use Nyquist, you should have a basic knowledge of Lisp.  An excellent text
-by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#219">"XLISP: An Object-oriented Lisp"</a> is
+by Touretzky is recommended  <a href = "musicbib.html#touretzky">(Touretzky 1984)</a>.  Appendix <a href = "part19.html#220">"XLISP: An Object-oriented Lisp"</a> is
 the reference manual for XLISP, of which Nyquist is a superset. Starting with
 Version 3, Nyquist supports a variant of SAL. SAL is a language distinct from 
 Lisp. It was introduced in Rick Taube's Common Music system. Since there are some
@@ -152,7 +152,7 @@ process copies the appropriate <tt>system.lsp</tt> from <tt>nyquist/sys/*</tt> t
 <p>
 <a name = "8"><h3>Helpful Hints</h3></a>
 Under Win95 and Win98, the console sometimes locks up. Activating another window and then reactivating the Nyquist window should unlock the output. 
-(We suggest you use JNyqIDE, the interactive development environment rather than a console window.)
+(We suggest you use NyquistIDE, the interactive development environment rather than a console window.)
 <p>
 You can cut and paste text into Nyquist, but for serious work, you will want to use the Lisp <code>load</code> command. To save even more time, write a 
 function to load your working file, e.g. <code>(defun l () (load "myfile.lsp"))</code>. Then you can type <code>(l)</code> to (re)load your file.
@@ -195,7 +195,7 @@ get a Lisp prompt (<code>&gt; </code>). Commands can be entered manually by typi
 We will begin with some simple Nyquist programs. Throughout the manual,
 we will assume SAL mode and give examples in SAL, but it should be
 emphasized that all of these examples can be performed using Lisp
-syntax. See Section <a href = "part7.html#77">"Interoperability of SAL and XLISP"</a> on the relationship between
+syntax. See Section <a href = "part7.html#78">"Interoperability of SAL and XLISP"</a> on the relationship between
 SAL and Lisp.
 <p>
 Detailed explanations of the functions used in these examples will be
@@ -273,7 +273,7 @@ Now that we have defined a function, the last step of this example is to
 build the wave.  The following code calls
 <code>mkwave</code> the first time the code is executed (loaded from a file).  The second time, the variable <code>*mkwave*</code> will be true, so <code>mkwave</code> will not be invoked:
 <p><pre>
-if ! fboundp(quote(*mkwave*)) then
+if ! boundp(quote(*mkwave*)) then
   begin
     exec mkwave()
     set *mkwave* = #t
@@ -355,12 +355,9 @@ play env-note(c4)
 <p>
 While this example shows a smooth envelope multiplied by an audio signal,
 you can also multiply audio signals to achieve
-what is often called <i>ring modulation</i><a name="index39"></a>. See
-the code and description in 
-<code>demos/scratch_tutorial.htm</code><a name="index40"></a> for an
-interesting use of ring modulation to create "scratch" sounds.
+what is often called <i>ring modulation</i><a name="index39"></a>. 
 <p>
-In the next example, The <i>stretch</i> operator (<code>~</code>)<a name="index41"></a> 
+In the next example, The <i>stretch</i> operator (<code>~</code>)<a name="index40"></a> 
 is used to modify durations:
 <p><pre>
 <i>; now use stretch to play different durations
@@ -374,7 +371,7 @@ play seq(seq(env-note(c4), env-note(d4)) ~ 0.25,
 In addition to <i>stretch</i>, there are a number of transformations supported
  by Nyquist,
 and transformations of abstract behaviors is perhaps <i>the</i> fundamental
-idea behind Nyquist.  Chapter <a href = "part4.html#26">"Behavioral Abstraction"</a> is devoted to
+idea behind Nyquist.  Chapter <a href = "part4.html#27">"Behavioral Abstraction"</a> is devoted to
 explaining this concept, and further elaboration can be found elsewhere
  <a href = "http://www.cs.cmu.edu/~rbd/bib-arctic.html#icmcfugue">(Dannenberg and Frayley 1989)</a>.
 <p>
@@ -445,48 +442,48 @@ based on the notation of the Adagio score language, as follows:
 <b>Dynamics</b>
 Note: these dynamics values are subject to change.
 <blockquote>
-<tt>lppp<a name="index42"></a></tt> = -12.0 (dB)<br>
+<tt>lppp<a name="index41"></a></tt> = -12.0 (dB)<br>
 
-<tt>lpp<a name="index43"></a></tt> = -9.0<br>
+<tt>lpp<a name="index42"></a></tt> = -9.0<br>
 
-<tt>lp<a name="index44"></a></tt> = -6.0<br>
+<tt>lp<a name="index43"></a></tt> = -6.0<br>
 
-<tt>lmp<a name="index45"></a></tt> = -3.0<br>
+<tt>lmp<a name="index44"></a></tt> = -3.0<br>
 
-<tt>lmf<a name="index46"></a></tt> = 3.0<br>
+<tt>lmf<a name="index45"></a></tt> = 3.0<br>
 
-<tt>lf<a name="index47"></a></tt> = 6.0<br>
+<tt>lf<a name="index46"></a></tt> = 6.0<br>
 
-<tt>lff<a name="index48"></a></tt> = 9.0<br>
+<tt>lff<a name="index47"></a></tt> = 9.0<br>
 
-<tt>lfff<a name="index49"></a></tt> = 12.0<br>
+<tt>lfff<a name="index48"></a></tt> = 12.0<br>
 
-<tt>dB0<a name="index50"></a></tt> = 1.00<br>
+<tt>dB0<a name="index49"></a></tt> = 1.00<br>
 
-<tt>dB1<a name="index51"></a></tt> = 1.122<br>
+<tt>dB1<a name="index50"></a></tt> = 1.122<br>
 
-<tt>dB10<a name="index52"></a></tt> = 3.1623<br>
+<tt>dB10<a name="index51"></a></tt> = 3.1623<br>
 
 </blockquote>
-<li><b>Durations<a name="index53"></a></b>
+<li><b>Durations<a name="index52"></a></b>
 <blockquote>
-<tt>s<a name="index54"></a></tt> = Sixteenth<a name="index55"></a> = 0.25<br>
+<tt>s<a name="index53"></a></tt> = Sixteenth<a name="index54"></a> = 0.25<br>
 
-<tt>i<a name="index56"></a></tt> = eIghth<a name="index57"></a> = 0.5<br>
+<tt>i<a name="index55"></a></tt> = eIghth<a name="index56"></a> = 0.5<br>
 
-<tt>q<a name="index58"></a></tt> = Quarter<a name="index59"></a> = 1.0<br>
+<tt>q<a name="index57"></a></tt> = Quarter<a name="index58"></a> = 1.0<br>
 
-<tt>h<a name="index60"></a></tt> = Half<a name="index61"></a> = 2.0<br>
+<tt>h<a name="index59"></a></tt> = Half<a name="index60"></a> = 2.0<br>
 
-<tt>w<a name="index62"></a></tt> = Whole<a name="index63"></a> = 4.0<br>
+<tt>w<a name="index61"></a></tt> = Whole<a name="index62"></a> = 4.0<br>
 
-<tt>sd<a name="index64"></a>, id<a name="index65"></a>, qd<a name="index66"></a>, hd<a name="index67"></a>, wd<a name="index68"></a></tt> = dotted durations<a name="index69"></a>.<br>
+<tt>sd<a name="index63"></a>, id<a name="index64"></a>, qd<a name="index65"></a>, hd<a name="index66"></a>, wd<a name="index67"></a></tt> = dotted durations<a name="index68"></a>.<br>
 
-<tt>st<a name="index70"></a>, it<a name="index71"></a>, qt<a name="index72"></a>, ht<a name="index73"></a>, wt<a name="index74"></a></tt> = triplet<a name="index75"></a> durations.<br>
+<tt>st<a name="index69"></a>, it<a name="index70"></a>, qt<a name="index71"></a>, ht<a name="index72"></a>, wt<a name="index73"></a></tt> = triplet<a name="index74"></a> durations.<br>
 
 </blockquote>
-<li><b>Pitches<a name="index76"></a></b> 
-<a name="index77"></a><a name="index78"></a><a name="index79"></a>
+<li><b>Pitches<a name="index75"></a></b> 
+<a name="index76"></a><a name="index77"></a><a name="index78"></a>
 Pitches are based on an A4 of 440Hz.  To achieve a different tuning,
 set <code>*A4-Hertz*</code> to the desired frequency for A4, and call
 <code>(set-pitch-names)</code>.  This will recompute the names listed below with a
@@ -538,7 +535,7 @@ different tuning.  In all cases, the pitch value 69.0 corresponds exactly to
 </blockquote>
 <li><b>Miscellaneous</b>
 <blockquote>
-<code>ny:all</code><a name="index80"></a> = "all the samples" (i.e. a big number) = 1000000000<br>
+<code>ny:all</code><a name="index79"></a> = "all the samples" (i.e. a big number) = 1000000000<br>
 
 </blockquote>
 </ul>
@@ -555,32 +552,32 @@ The file <code>demos/index.htm</code> is an index to all the demo descriptions. 
 <ul>
 <li>
 Code to create atonal melodies (<code>demos/src/atonal-melodies.sal</code>).
-<li>How to make arpeggios (<code>demos/arpeggiator.htm</code> and <code>demos/src/arp.sal</code>)<a name="index81"></a>
-<li>Gong sounds by additive synthesis<a name="index82"></a>
-(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code>)<a name="index83"></a><a name="index84"></a>
+<li>How to make arpeggios (<code>demos/arpeggiator.htm</code> and <code>demos/src/arp.sal</code>)<a name="index80"></a>
+<li>Gong sounds by additive synthesis<a name="index81"></a>
+(<code>demos/pmorales/b1.lsp</code> and <code>demos/mateos/gong.lsp</code>)<a name="index82"></a><a name="index83"></a>
 <li>Risset's spectral analysis of a chord
-(<code>demos/pmorales/b2.lsp</code>)<a name="index85"></a><a name="index86"></a>
+(<code>demos/pmorales/b2.lsp</code>)<a name="index84"></a><a name="index85"></a>
 <li>Bell sounds 
-(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index87"></a><a name="index88"></a>
+(<code>demos/pmorales/b3.lsp</code>, <code>demos/pmorales/e2.lsp</code>, <code>demos/pmorales/partial.lsp</code>, and <code>demos/mateos/bell.lsp</code>)<a name="index86"></a><a name="index87"></a>
 <li>Drum sounds by Risset
-(<code>demos/pmorales/b8.lsp</code><a name="index89"></a><a name="index90"></a>
-<li>Shepard tones (<code>demos/src/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index91"></a><a name="index92"></a>
+(<code>demos/pmorales/b8.lsp</code><a name="index88"></a><a name="index89"></a>
+<li>Shepard tones (<code>demos/src/shepard.lsp</code> and <code>demos/pmorales/b9.lsp</code>)<a name="index90"></a><a name="index91"></a>
 <li>Random signals (<code>demos/pmorales/c1.lsp</code>)
 <li>Buzz with formant filters 
-(<code>demos/pmorales/buzz.lsp</code>)<a name="index93"></a><a name="index94"></a>
+(<code>demos/pmorales/buzz.lsp</code>)<a name="index92"></a><a name="index93"></a>
 <li>Computing samples directly in Lisp (using Karplus-Strong and physical modelling
 as examples)
-(<code>demos/pmorales/d1.lsp</code>)<a name="index95"></a><a name="index96"></a><a name="index97"></a><a name="index98"></a><a name="index99"></a><a name="index100"></a>
+(<code>demos/pmorales/d1.lsp</code>)<a name="index94"></a><a name="index95"></a><a name="index96"></a><a name="index97"></a><a name="index98"></a><a name="index99"></a>
 <li>FM Synthesis examples, including FM voices (<code>demos/src/fm-voices-chowning.sal</code>)
-designed by John Chowning<a name="index101"></a><a name="index102"></a>,
-bell<a name="index103"></a>, wood drum<a name="index104"></a>,
-brass sounds<a name="index105"></a>, tuba sound <a name="index106"></a>
- (<code>demos/mateos/tuba.lsp</code>) and clarinet sounds<a name="index107"></a> 
-(<code>demos/pmorales/e2.lsp</code>)<a name="index108"></a>
+designed by John Chowning<a name="index100"></a><a name="index101"></a>,
+bell<a name="index102"></a>, wood drum<a name="index103"></a>,
+brass sounds<a name="index104"></a>, tuba sound <a name="index105"></a>
+ (<code>demos/mateos/tuba.lsp</code>) and clarinet sounds<a name="index106"></a> 
+(<code>demos/pmorales/e2.lsp</code>)<a name="index107"></a>
 <li>Rhythmic patterns
-(<code>demos/rhythm_tutorial.htm</code>)<a name="index109"></a>
+(<code>demos/rhythm_tutorial.htm</code>)<a name="index108"></a>
 <li>Drum Samples and Drum Machine
-(<code>demos/plight/drum.lsp</code>)<a name="index110"></a><a name="index111"></a><a name="index112"></a>. (See Section <a href = "part16.html#201">"Drum Machine"</a>).
+(<code>demos/plight/drum.lsp</code>)<a name="index109"></a><a name="index110"></a><a name="index111"></a>. (See Section <a href = "part16.html#202">"Drum Machine"</a>).
 </ul>
 <p>
 <hr>

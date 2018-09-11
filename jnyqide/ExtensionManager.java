@@ -254,13 +254,28 @@ public class ExtensionManager extends JNonHideableInternalFrame
 		}
 	}
     
+
+    // return the name of the selected extension
+    private String selectedExtName() {
+        int selectedRow = table.getSelectedRow();
+        String extensionName = table.getModel().getValueAt(
+                selectedRow, Cols.EXTENSION.ordinal()).toString();
+        return extensionName;
+    }
     
+
+    // return the path to the selected extension
+    private String selectedExtPath() {
+        String extensionDir = mainFrame.extDir + selectedExtName();
+        return extensionDir;
+    }
+
+
 	/**
 	 * This function adds 'Visit URL' button on the window.
 	 * Pressing this button will open the extension root file in a browser.
 	 */
-	private void addVisitURLButton()
-	{
+	private void addVisitURLButton() {
 		JButton visitButton = new JButton("Visit URL");
         
 		// Define 'Visit URL' button functionality 
@@ -276,9 +291,19 @@ public class ExtensionManager extends JNonHideableInternalFrame
                          "Unknown Problem", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    // get the URL
+                    // get the URL -- if the Extension is installed, read
+                    // doc from local file. Otherwise, read from web.
+                    boolean installed = (Boolean) table.getModel().
+                            getValueAt(selectedRow, Cols.INSTALLED.ordinal());
                     String url = table.getModel().getValueAt(
-                            selectedRow, Cols.URL.ordinal()).toString();
+                                     selectedRow, Cols.URL.ordinal()).toString();
+                    if (installed) {
+                        String dir = selectedExtPath();
+                        // file to open will be the last element of URL
+                        int loc = url.lastIndexOf('/');
+                        url = "file://" + dir + "/" + url.substring(loc + 1);
+                    }
+                    System.out.println("Extension doc url is " + url);
                     // open the URL
                     mainFrame.openPage(url);
                 } catch (Exception e) {
@@ -345,10 +370,9 @@ public class ExtensionManager extends JNonHideableInternalFrame
                 selectedRow = selectedRows[i];
                 // Create a sub-directory in extensions directory with 
                 // extension name
-                String extensionName = table.getModel().getValueAt(
-                        selectedRow, Cols.EXTENSION.ordinal()).toString();
-                String extensionDir = extDir + extensionName;
-                String tmpPackageDir = extDir + "tmp-" + extensionName +
+                String extensionName = selectedExtName();
+                String extensionDir = selectedExtPath();
+                String tmpPackageDir = extDir + "tmp-" + extensionName + 
                                        File.separator;
 
                 // Warn user if package already exists or tmp exists
@@ -463,8 +487,8 @@ public class ExtensionManager extends JNonHideableInternalFrame
         String downloadedChecksum = calculateFileChecksum(packageFiles);
         if (downloadedChecksum == null) {
             JOptionPane.showMessageDialog(contentPanel,
-                    "Failure computing checksum; maybe a downloaded file\n" +
-                        "was deleted or not stored for Extension " + ext,
+                    "Failure computing checksum; maybe a downloaded " +
+                    "file was deleted or not stored for Extension " + ext,
                     "Checksum Error", JOptionPane.ERROR_MESSAGE);
         } else {
             System.out.println("ref " + referenceChecksum + " downloaded " + 
@@ -474,11 +498,16 @@ public class ExtensionManager extends JNonHideableInternalFrame
         if (!downloadedChecksum.equalsIgnoreCase(referenceChecksum)) {
             // remove the downloaded package if checksum is
             // different
-            JOptionPane.showMessageDialog(contentPanel,
-                    "Checksum of the available package is different than " + 
-                        "the verified version!\nExtension " + ext + 
-                        " not installed!\n" + "Downloaded checksum: " + 
-                        downloadedChecksum,
+            JTextArea textArea = new JTextArea(10, 60);
+            textArea.setText("Checksum of the available package is different " +
+                             "from the verified version!\nExtension " + ext + 
+                             " not installed!\n" + "Downloaded checksum: " + 
+                             downloadedChecksum);
+            textArea.setWrapStyleWord(true);
+            textArea.setLineWrap(true);
+            textArea.setCaretPosition(0);
+            textArea.setEditable(false);
+            JOptionPane.showMessageDialog(contentPanel, textArea,
                     "Checksum Error", JOptionPane.ERROR_MESSAGE);
             downloadedChecksum = null; // enables common failure code below
             System.out.println("Checksum: " + downloadedChecksum);
@@ -649,12 +678,15 @@ public class ExtensionManager extends JNonHideableInternalFrame
         String extDir = createExtDirectory();
         if (extDir == null) return;
                 
+        String extlistURL = (mainFrame.extensionFilePath.equals("") ? 
+                             EXTENSION_LIST_URL : 
+                             "file://" + mainFrame.extensionFilePath);
         doLongTask("extlist", "Downloading list of extensions", null, 
-                   EXTENSION_LIST_URL, null, null, null);
+                   extlistURL, null, null, null);
         if (extensions == null) {
             JOptionPane.showMessageDialog(contentPanel,
                     "Error loading the extension list from the following " +
-                      "path: \n'" + EXTENSION_LIST_URL + "'",
+                      "path: \n'" + extlistURL + "'",
                      "Error Loading Extensions", JOptionPane.ERROR_MESSAGE);
             return;
         }                

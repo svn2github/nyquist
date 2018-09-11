@@ -480,7 +480,7 @@ process copies the appropriate @t(system.lsp) from @t(nyquist/sys/*) to
 
 @section(Helpful Hints)
 Under Win95 and Win98, the console sometimes locks up. Activating another window and then reactivating the Nyquist window should unlock the output. 
-(We suggest you use JNyqIDE, the interactive development environment rather than a console window.)
+(We suggest you use NyquistIDE, the interactive development environment rather than a console window.)
 
 You can cut and paste text into Nyquist, but for serious work, you will want to use the Lisp @code(load) command. To save even more time, write a 
 function to load your working file, e.g. @code[(defun l () (load "myfile.lsp"))]. Then you can type @code[(l)] to (re)load your file.
@@ -989,9 +989,62 @@ by the ``Use window in NyquistIDE for help browser'' preference.) Currently, the
 external browser option does not seem to locate documentation properly, but 
 this should be fixed in the future.
 
-@section(Browser)
+@section(Extension Manager)
+The NyquistIDE Extension Manager is a facility to download extensions that
+are written in Lisp or SAL. (If you want to extend the nyquist program itself
+or the NyquistIDE program, you will have to write C or Java respectively and 
+recompile. See Appendix @ref(extending-app) for information on writing new
+DSP functions, also known as unit generators.)
+
+Selecting the Extension Manager item in the Window menu will open a window
+in the NyquistIDE with a list of extensions. Each extension is stored as
+a subdirectory of the @code(lib) directory, which should be on the search
+path (@code(XLISPPATH)) for @code(nyquist). A list of extensions is hosted
+in a fixed location 
+(@code(https://www.cs.cmu.edu/~music/nyquist/extensions/extlist.txt))
+along with secure checksums to guard against malicious code.
+
+When you install an extension, a single file is first downloaded 
+using a URL that is obtained from the list of extensions, and the file 
+is scanned for a header that can specify additional files to download.
+
+Some special files may be included in an extension. @code(autoload.lsp) is
+a Lisp file that is loaded automatically when nyquist is started. Nyquist
+scans the subdirectories of the @code(lib) directory to find all the
+@code(autoload.lsp) files. Typically, @code(autoload.lsp) files are used
+to create stubs for functions in the extensions so that extension
+code is mostly loaded dynamically on demand, saving time and space when
+nyquist starts.
+
+Extensions may also include @code(nyquistwords.txt), which is a description
+of functions in the extensions that is used to generate the completion list.
+When an extension function appears in the completion list, it is followed by
+"ext:" and the extension name, e.g. the completion item 
+"speed-dial(list) ext: dtmf" means that the @code(speed-dial) function is 
+defined in the @code(dtmf) directory. By convention, any function in the 
+completion list should be directly callable, with an entry in 
+ @code(autoload.lsp) so that the function will be dynamically loaded.
+
+To create a new extension, see the extension @code(ext-template1) for an 
+example with documentation in HTML, or @code(ext-template2) for a simple
+single-file extension where the documentation consists of comments in the
+SAL source file. 
+
+To submit an extension for possible publication, it is best to put the 
+extension file(s) in a local directory and use a customized local list of 
+extensions. The Nyquist Preferences includes a button where you can designate
+a local file for the list of extensions. It should have the same format
+as @code(extlist.txt) at the URL given above (you can simply open the URL
+in your browser to see it. The extension under development
+can be referenced in the extension list using a URL with the @code(file://) 
+protocol. For the checksum, use any value. The Extension Manager will compute
+the correct checksum and display it, so you can then copy that into your
+@code(extlist.txt), click the Update button to fetch it, and try again to 
+install the extension.
+
+@SECTION(Browser)
 @label(browser)
-@index(browser, jnyqide)@index(sound browser, jnyqide)
+@index(browser, NyquistIDE)@index(sound browser, NyquistIDE)
 If you click on the Browse button or use the Window:Browse menu command, 
 NyquistIDE will display a browser window that is pre-loaded with a number of
  Nyquist commands to create sounds. You can adjust parameters, audition
@@ -8436,8 +8489,12 @@ that scores are sorted, and all operations return a sorted score.
  :to-time @i(y))} @c{[lisp]}}@\Add a constant 
 @i(offset) to the starting time of a set of notes in @i(score). By default,
 all notes are modified, but the range of notes can be limited with the
-keyword parameters. The begin time of the score is not changed, but the 
-end time is increased by @i(offset).
+keyword parameters. The begin time of the score is decreased if necessary to 
+the minimum time of any event that is moved to an earlier time (by a negative
+@i(offset)), and the end time of the score is increased if necessary 
+to the maximum end time of any event that is moved to a later time. If
+ all shifted events remain within the score's begin-to-end range, the begin
+and end times are not changed.
 The original score is not modified, and a new score is returned.
 
 @codef{score-stretch(@pragma(defn)@index(score-stretch)@i(score), @i(factor), dur: @i(dur-flag), time: @i(time-flag), @latex(\\
@@ -8610,9 +8667,9 @@ positional order within the note list (which is also time order).
 The original score is not modified, 
 and a new score is returned.
 
-@codef{score-print(@pragma(defn)@index(score-print)@i(score))} @c{[sal]}@*
-@altdef{@code[(score-print @i(score))] @c{[lisp]}}@\Print a score with
-one note per line. Returns @code(nil).
+@codef{score-print(@pragma(defn)@index(score-print)@i(score), [@i(lines)])} @c{[sal]}@*
+@altdef{@code{(score-print @i(score) [@i(lines)])} @c{[lisp]}}@\Print a score with
+one note per line. Returns @code(nil). If @i(lines) (optional FIXNUM) is given, print a maximum of that many lines (but the minimum is at least 3). The format is first @i(lines)-2 score events, the line "@code(...)", and the last score event.
 
 @codef{score-play(@pragma(defn)@index(score-play)@i(score))} @c{[sal]}@*
 @altdef{@code[(score-play @i(score))] @c{[lisp]}}@\Play @i(score)

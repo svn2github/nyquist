@@ -1,5 +1,5 @@
 README file for Nyquist Version 3.15
-5 Sep 2018
+11 Sep 2018
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -30,6 +30,7 @@ IMPLEMENTATION STATUS
 Version 3.15 provides:
     Fix to retain selected nyquist directory
     Fix for NyquistIDE in paths with spaces
+    Extension list file can be selected in Preferences for testing
 Version 3.14 provides:
     New runtime configuration: a nyquist directory in user's home
         directory has all documentation, libraries, extensions,

@@ -91,6 +91,7 @@ public class MainFrame extends JFrame {
     public static String nyquistDir = "";     // actual dir for this run
     public static String nyquistPrefDir = ""; // selected dir for next time
     public static String docDir = ""; // the nyquist/doc directory
+    public static String extensionFilePath = "";
     public String extDir = ""; // the directory for extensions, normally lib
 
     Runnable update = new ScrollUpdate(this);
