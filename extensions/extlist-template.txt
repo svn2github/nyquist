@@ -31,6 +31,7 @@ moog,ROOT/extensions/moog/moog.html,1.0, 12 Aug 2018, 8beaf577e009fd0ca3c81f4a07
 osc,ROOT/extensions/osc/osc-test.lsp,1.0, 12 Aug 2018, 66506686c48bdc0c9665d0cd77d1c1573fbcd2b2, OSC (Open Sound Control) tests
 plight,ROOT/extensions/plight/plight.html,1.0, 12 Aug 2018, 42368ac140e80bf4289257aba41b9671887317a6, Drum Machine and Samples  
 pmorales,ROOT/extensions/pmorales/pmorales.html,1.0, 12 Aug 2018, 573d79dcb9a030241650ae9270eeec14a115866d, Synthesis Examples from Pedro Morales
+pvoc,ROOT/extensions/pvoc/phasevocoder.html,1.0, 25 Sep 2018, 56c3b054c5f3d3c9982c695d8495cb6853c71f3f, phase vocoder examples (pitch shift and time stretch)
 regression, ROOT/extensions/regression/regression.sal, 1.0, 12 Aug 2018, 28a6581bbeab03e951e81a8f2943fdb11b620978, Linear Regression functions 
 reverse, ROOT/extensions/reverse/reverse.lsp, 1.0, 12 Aug 2018, 761abfa675453186fead7d81bbcd42191a7d6fb2, Reverse Sounds 
 rhythm, ROOT/extensions/rhythm/rhythm.sal, 1.0, 12 Aug 2018, ac8f617698264f7ede929324624eb687d2dd36f3, Rhythmic Sounds
