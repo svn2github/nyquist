@@ -303,38 +303,38 @@ functions assume durations are always positive.")))
 (defun ny:assert-table (fun-name index formal actual)
   (if (not (and (listp actual) (= 3 (length actual))))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list of 3 elements, got ~A"
+       "In ~A,~A argument (~A) should be a list of 3 elements, got ~A"
        fun-name (index-to-string index) formal actual)))
   (if (not (soundp (car actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list beginning with a sound, got ~A"
+       "In ~A,~A argument (~A) should be a list beginning with a sound, got ~A"
        fun-name (index-to-string index) formal actual)))
   (if (not (numberp (second actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch), got ~A"
+       "In ~A,~A argument (~A) should be a list whose 2nd element is a step number (pitch), got ~A"
        fun-name (index-to-string index) formal actual)))
   (if (not (third actual))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 3rd element is true, got ~A"
+       "In ~A,~A argument (~A) should be a list whose 3rd element is true, got ~A"
        fun-name (index-to-string index) formal actual))))
 
 
 (defun ny:assert-sample (fun-name index formal actual)
   (if (not (and (listp actual) (= 3 (length actual))))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list of 3 elements, got ~A"
+       "In ~A,~A argument (~A) should be a list of 3 elements, got ~A"
        fun-name (index-to-string index) formal actual)))
   (if (not (soundp (car actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list beginning with a sound, got ~A"
+       "In ~A,~A argument (~A) should be a list beginning with a sound, got ~A"
        fun-name (index-to-string index) formal actual)))
   (if (not (numberp (second actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 2nd element is a step number (pitch), got ~A"
+       "In ~A,~A argument (~A) should be a list whose 2nd element is a step number (pitch), got ~A"
        fun-name (index-to-string index) formal actual)))
   (if (not (numberp (third actual)))
       (error (format nil
-       "In ~A, ~A argument (~A) should be a list whose 3rd element is the sample start time, got ~A"
+       "In ~A,~A argument (~A) should be a list whose 3rd element is the sample start time, got ~A"
        fun-name (index-to-string index) formal actual))))
 
 (defun ny:env-spec-p (env-spec)
@@ -357,7 +357,7 @@ functions assume durations are always positive.")))
     (ny:error "AMOSC" 1 '((STEP) "pitch") pitch))
   (ny:typecheck (not (soundp modulation))
     (ny:error "AMOSC" 2 '((SOUND) "modulation") modulation))
-  (ny:assert-table "AMOSC" "3rd" "table" sound)
+  (ny:assert-table "AMOSC" 3 "table" sound)
   (ny:typecheck (not (numberp phase))
     (ny:error "AMOSC" 4 '((NUMBER) "phase") phase))
   (let ((modulation-srate (snd-srate modulation))
@@ -384,7 +384,7 @@ functions assume durations are always positive.")))
     (ny:error "FMOSC" 1 '((STEP) "pitch") pitch))
   (ny:typecheck (not (soundp modulation))
     (ny:error "FMOSC" 2 '((SOUND) "modulation") modulation))
-  (ny:assert-table "FMOSC" "3rd" "table" sound)
+  (ny:assert-table "FMOSC" 3 "table" sound)
   (ny:typecheck (not (numberp phase))
     (ny:error "FMOSC" 4 '((NUMBER) "phase") phase))
   (let ((modulation-srate (snd-srate modulation))
@@ -463,7 +463,7 @@ functions assume durations are always positive.")))
 (defun hzosc (hz &optional (sound *table*) (phase 0.0))
   (ny:typecheck (not (or (numberp hz) (soundp hz)))
     (ny:error "HZOSC" 1 '((NUMBER SOUND) "hz") hz))
-  (ny:assert-table "HZOSC" "2nd" "table" sound)
+  (ny:assert-table "HZOSC" 2 "table" sound)
   (ny:typecheck (not (numberp phase))
     (ny:error "HZOSC" 3 '((NUMBER) "phase") phase))
   (let (hz-srate)
@@ -574,7 +574,7 @@ loop
     (ny:error "LFO" 1 '((NUMBER) "freq") freq))
   (ny:typecheck (not (numberp duration))
     (ny:error "LFO" 2 '((NUMBER) "duration") duration))
-  (ny:assert-table "LFO" "3rd" "table" sound)
+  (ny:assert-table "LFO" 3 "table" sound)
   (ny:typecheck (not (numberp phase))
     (ny:error "LFO" 4 '((NUMBER) "phase") phase))
   (let ((d (get-duration duration)))
@@ -599,7 +599,7 @@ loop
 (defun fmlfo (freq &optional (sound *SINE-TABLE*) (phase 0.0))
   (ny:typecheck (not (soundp freq))
     (ny:error "FMLFO" 1 '((SOUND) "freq") freq))
-  (ny:assert-table "FMLFO" "2nd" "table" sound)
+  (ny:assert-table "FMLFO" 2 "table" sound)
   (ny:typecheck (not (numberp phase))
     (ny:error "FMLFO" 3 '((NUMBER) "phase") phase))
   (let ()
@@ -622,7 +622,7 @@ loop
     (ny:error "OSC" 1 '((STEP) "pitch") pitch))
   (ny:typecheck (not (numberp duration))
     (ny:error "OSC" 2 '((NUMBER) "duration") duration))
-  (ny:assert-table "OSC" "3rd" "table" sound)
+  (ny:assert-table "OSC" 3 "table" sound)
   (ny:typecheck (not (numberp phase))
     (ny:error "OSC" 4 '((NUMBER) "phase") phase))
   (let ((d  (get-duration duration))
@@ -1507,7 +1507,7 @@ loop
     "In OSCNOTE, 3rd argument (env-spec) must be a  list of 6 or 7 numbers to pass as arguments to ENV")
   (ny:typecheck (not (numberp volume))
     (ny:error "OSC-NOTE" 4 '((NUMBER) "volume") volume))
-  (ny:assert-table "OSC-NOTE" "5th" "table" table)
+  (ny:assert-table "OSC-NOTE" 5 "table" table)
     
   (ny:set-logical-stop
    (mult (loud volume (osc pitch duration table))

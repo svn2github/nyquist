@@ -3023,7 +3023,7 @@ end
 The @code(play) statement plays the sound denoted by @i(expr), an expression.
 
 @paragraph(plot)
-@index(plot statement, sal)
+@index(plot statement, sal)@index(plot)
 @code(plot) @i(expr) {, @i(dur), @i(n)}
 
 The @code(plot) statement plots the sound denoted by @i(expr), an

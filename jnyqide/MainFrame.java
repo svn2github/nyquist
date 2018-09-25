@@ -448,6 +448,7 @@ public class MainFrame extends JFrame {
                 System.out.println("prefs.put(nyquist-dir, " + 
                                    nyquistDir + ")");
                 prefs.put("nyquist-dir", nyquistDir);
+                nyquistPrefDir = nyquistDir; // set as prefered nyquist dir<
                 return;
             }
             String msg2[] = {
